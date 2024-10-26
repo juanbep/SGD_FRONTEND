@@ -1,0 +1,8 @@
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.file-upload label {
+    content: "Cargar soporte";
+    background-image: url(../assets/icons/sidebar/icon-evaluation.svg);
+}

@@ -1,0 +1,133 @@
+{
+    "Actividades":[
+        {
+            "codigoActividad": "Resolución 8.4.3– 90.2 / 288, 04 de noviembre de 22, Consejo de Facultad",
+            "nombre": "Direccion Trabajo de grado",
+            "horas": "27",
+            "fechaCreacion": "2024-10-17T23:29:08",
+            "fechaActualizacion": "2024-10-17T23:29:08",
+            "tipoActividad": {
+                "oidTipoActividad": 2,
+                "nombre": "Trabajos Docencia",
+                "horasTotales": 135.0,
+                "descripcion": "Actividades relacionadas con trabajos de docencia"
+            },
+            "fuentes": [
+                {
+                    "oidFuente": 1,
+                    "tipoFuente": "1",
+                    "calificacion": 5.0,
+                    "nombreDocumento": "PRUEBA",
+                    "fechaCreacion": "2022-06-30 23:59:59",
+                    "fechaActualizacion": "2022-06-30 23:59:59",
+                    "estadoFuente": "Diligenciado"
+                },
+                {
+                    "oidFuente": 2,
+                    "tipoFuente": "2",
+                    "calificacion": 5.0,
+                    "nombreDocumento": "PRUEBA",
+                    "fechaCreacion": "2022-06-30 23:59:59",
+                    "fechaActualizacion": "2022-06-30 23:59:59",
+                    "estadoFuente": "Diligenciado"
+                }
+            ],
+            "evaluador": {
+                "oidUsuario": 1,
+                "identificacion": "5458547",
+                "roles": [
+                    {
+                        "nombre": "Docente",
+                        "estado": "activo"
+                    }
+                ]
+            }
+        },
+        {
+            "codigoActividad": "Resolución 8.4.3– 90.2 / 288, 04 de noviembre de 22, Consejo de Facultad",
+            "nombre": "Direccion Trabajo de grado",
+            "horas": "27",
+            "fechaCreacion": "2024-10-17T23:29:08",
+            "fechaActualizacion": "2024-10-17T23:29:08",
+            "tipoActividad": {
+                "oidTipoActividad": 2,
+                "nombre": "Administración",
+                "horasTotales": 135.0,
+                "descripcion": "Actividades relacionadas con trabajos de docencia"
+            },
+            "fuentes": [
+                {
+                    "oidFuente": 1,
+                    "tipoFuente": "1",
+                    "calificacion": 5.0,
+                    "nombreDocumento": "PRUEBA",
+                    "fechaCreacion": "2022-06-30 23:59:59",
+                    "fechaActualizacion": "2022-06-30 23:59:59",
+                    "estadoFuente": "Pendiente"
+                },
+                {
+                    "oidFuente": 2,
+                    "tipoFuente": "2",
+                    "calificacion": 5.0,
+                    "nombreDocumento": "PRUEBA",
+                    "fechaCreacion": "2022-06-30 23:59:59",
+                    "fechaActualizacion": "2022-06-30 23:59:59",
+                    "estadoFuente": "Diligenciado"
+                }
+            ],
+            "evaluador": {
+                "oidUsuario": 1,
+                "identificacion": "5458547",
+                "roles": [
+                    {
+                        "nombre": "Docente",
+                        "estado": "activo"
+                    }
+                ]
+            }
+        },
+        {
+            "codigoActividad": "Resolución 8.4.3– 90.2 / 288, 04 de noviembre de 22, Consejo de Facultad",
+            "nombre": "Direccion Trabajo de grado",
+            "horas": "27",
+            "fechaCreacion": "2024-10-17T23:29:08",
+            "fechaActualizacion": "2024-10-17T23:29:08",
+            "tipoActividad": {
+                "oidTipoActividad": 2,
+                "nombre": "Trabajos Docencia",
+                "horasTotales": 135.0,
+                "descripcion": "Actividades relacionadas con trabajos de docencia"
+            },
+            "fuentes": [
+                {
+                    "oidFuente": 1,
+                    "tipoFuente": "1",
+                    "calificacion": 5.0,
+                    "nombreDocumento": "PRUEBA",
+                    "fechaCreacion": "2022-06-30 23:59:59",
+                    "fechaActualizacion": "2022-06-30 23:59:59",
+                    "estadoFuente": "Diligenciado"
+                },
+                {
+                    "oidFuente": 2,
+                    "tipoFuente": "2",
+                    "calificacion": 5.0,
+                    "nombreDocumento": "PRUEBA",
+                    "fechaCreacion": "2022-06-30 23:59:59",
+                    "fechaActualizacion": "2022-06-30 23:59:59",
+                    "estadoFuente": "Diligenciado"
+                }
+            ],
+            "evaluador": {
+                "oidUsuario": 1,
+                "identificacion": "5458547",
+                "roles": [
+                    {
+                        "nombre": "Docente",
+                        "estado": "activo"
+                    }
+                ]
+            }
+        }
+    ]
+}

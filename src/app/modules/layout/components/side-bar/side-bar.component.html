@@ -9,29 +9,15 @@
     </div>
 
     <ul class="sidebar-nav">
-        <li class="sidebar-item">
+        <li class="sidebar-item" *ngFor="let item of sidebarItems">
             <a class="sidebar-link menu-one text-nowrap collapse">
-                <img src="assets/icons/sidebar/icon-evaluation.svg" alt="icon-evaluation">
-                <span class="text-body-heavy mx-3">Evaluación Docente</span>
+                <img src='{{item.icon}}' alt="icon-evaluation">
+                <span class="text-body-heavy mx-3">{{item.label}}</span>
             </a>
-            <ul class="list-unstyled collapsed">
+            <ul class="list-unstyled collapsed" *ngFor="let itemList of item.sub ">
                 <li class="sidebar-item">
-                    <a routerLink="/app/gestion-soportes" class="sidebar-link collapse text-body-item menu-two">
-                        Mis Actividades
-                    </a>
-                </li>
-            </ul>
-            <ul class="list-unstyled collapsed">
-                <li class="sidebar-item">
-                    <a routerLink="/app/gestion-soportes" class="sidebar-link collapse text-body-item menu-two">
-                        Mis Responsabilidades
-                    </a>
-                </li>
-            </ul>
-            <ul class="list-unstyled collapsed">
-                <li class="sidebar-item">
-                    <a routerLink="/app/gestion-soportes" class="sidebar-link collapse text-body-item menu-two">
-                        Consolidado
+                    <a routerLink="{{itemList.url}}" class="sidebar-link collapse text-body-item menu-two">
+                        {{itemList.label}}
                     </a>
                 </li>
             </ul>

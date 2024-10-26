@@ -1,178 +1,81 @@
-<div *ngIf="laborData != null; else nullData">
-    <div class="table-responsive">
-        <table class="table ">
-            <thead>
-                <tr style="display: flex;">
-                    <th class="head-table-one">
-                        <span class="text-body-heavy">Actividades</span>
-                    </th>
-                    <th class="text-body-heavy head-table-two" colspan="2">
-                        <span class="text-body-heavy">Autoevalución</span>
-                    </th>
-                    <th class="text-body-heavy head-table-three">
-                        <span class="text-body-heavy">Fuente 2</span>
-                    </th>
-                </tr>
-                <tr style="display:flex;">
-                    <th class="subhead-table-one">
-                        <span class="text-body-small-r">Nombre actividad</span>
-                    </th>
-                    <th class="text-body-small-r subhead-table-two">
-                        <span class="text-body-small-r">Estado</span>
-                    </th>
-                    <th class="text-body-small-r subhead-table-three">
-                        <span class="text-body-small-r">Acciones</span>
-                    </th>
-                    <th class="text-body-small-r subhead-table-four">
-                        <span class="text-body-small-r">Evaluador</span>
-                    </th>
-                    <th class="text-body-small-r subhead-table-four">
-                        <span class="text-body-small-r">Rol Evaluador</span>
-                    </th>
-                    <th class="text-body-small-r subhead-table-two" style="background-color: var(--Gray-background);">
-                        <span class="text-body-small-r">Estado</span>
-                    </th>
-                    <th class="text-body-small-r subhead-table-three" style="background-color: var(--Gray-background);">
-                        <span class="text-body-small-r">Acciones</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody *ngFor="let activitieType of laborData.labor; let isLastLaborType = last">
-                <tr>
-                    <td class="type-source text-body-heavy"><span class="text-body-heavy">{{ activitieType.type
-                            }}</span>
-                    </td>
-                </tr>
-                <tr style="display: flex ;"
-                    *ngFor="let activitie of activitieType.activities; let isLastActivitie = last">
-                    <th class="subhead-table-one" [ngStyle]="{
-                    'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                    'border-radius': isLastLaborType && isLastActivitie ? '0px 0px 0px 8px' : ''
-                  }">
-                        <span class="text-body-small-r">{{activitie.activities_name}}</span>
-                    </th>
-                    <div style="display: contents;" *ngFor="let source of activitie.source">
-                        <div [ngSwitch]="source.name_source" style="display: contents;">
-                            <div *ngSwitchCase="'Autoevaluación'" style="display: contents;">
-                                <div *ngIf="source.state=='Pendiente firma'" style="display: flex;">
-                                    <th nowrap class="subhead-table-two" [ngStyle]="{
-                                'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                              }">
-                                        <span class="text-body-small-r" style="color:#FF9800;">{{source.state}}</span>
-                                    </th>
-                                    <th class="text-body-small-r subhead-table-three" [ngStyle]="{
-                                'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                              }">
-                                        <img src="assets/icons/tables/icon-view.svg" alt="icon-see">
-                                    </th>
-                                </div>
-                                <div *ngIf="source.state=='Pendiente'" style="display: flex;">
-                                    <th nowrap class="subhead-table-two" [ngStyle]="{
-                                    'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                                  }">
-                                        <span class="text-body-small-r" style="color:#FF554C;">{{source.state}}</span>
-                                    </th>
-                                    <th class="text-body-small-r subhead-table-three" [ngStyle]="{
-                                    'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                                  }">
-                                        <img src="assets/icons/tables/upload.svg" alt="upload">
-                                    </th>
+<div *ngIf="(activities.length != 0) || (activities == null) ; else nullData ">
+    <table>
+        <thead>
+            <tr>
+                <th class="text-body-heavy center-text"> {{headDataTable[0]}} </th>
+                <th class="text-body-heavy center-text" colspan="2"> {{headDataTable[1]}} </th>
+                <th class="text-body-heavy center-text" colspan="4"> {{headDataTable[2]}} </th>
+            </tr>
+            <tr>
+                <th class="text-body-regular" *ngFor="let item of subHeadDataTable">
+                    <span>{{item}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let item of activitiesByType">
+            <tr class="text-body-heavy" style="text-align: center;">
+                <td colspan="7">
+                    {{item.nombreType}}
+                </td>
+            </tr>
+            <tr class="text-body-small-r" *ngFor="let item of item.activities">
+                <td>
+                    {{item.nombre}}
+                </td>
+                <td>
+                    {{item.fuentes[0].estadoFuente}}
+                </td>
+                <td style="text-align: center;">
+                    <a>
+                        <img *ngIf="item.fuentes[0].estadoFuente=='Diligenciado'"
+                            src="assets/icons/tables/icon-view.svg" alt="view">
+                    </a>
+                    <a>
+                        <img *ngIf="item.fuentes[0].estadoFuente=='Pendiente firma'"
+                            src="assets/icons/tables/icon-view.svg" alt="view">
+                    </a>
 
-                                </div>
-
-                            </div>
-                            <div *ngSwitchCase="'Fuente 2'" style="display: contents;">
-                                <th class="text-body-small-r subhead-table-four" [ngStyle]="{
-                                'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                              }">
-                                    <span class="text-body-small-r">{{source.evaluator}}</span>
-                                </th>
-                                <th class="text-body-small-r subhead-table-four" [ngStyle]="{
-                                'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                              }">
-                                    <span class="text-body-small-r">{{source.rol_evaluator}}</span>
-                                </th>
-                                <div style="display: flex;" *ngIf="source.state=='Diligenciado'">
-                                    <th class="text-body-small-r subhead-table-two"
-                                        style="background-color: var(--Gray-background);" [ngStyle]="{
-                                    'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                                  }">
-                                        <span class="text-body-small-r" style="color: #5BAE40;">{{source.state}}</span>
-                                    </th>
-                                    <th class="text-body-small-r subhead-table-three"
-                                        style="background-color: var(--Gray-background);" [ngStyle]="{
-                                    'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                                    'border-radius': isLastLaborType && isLastActivitie ? '0px 0px 8px 0px' : ''
-                                  }">
-                                        <img src="assets/icons/tables/icon-view.svg" alt="icon-view">
-                                    </th>
-                                </div>
-
-                                <div *ngIf="source.state=='Pendiente'" style="display: flex;">
-                                    <th class="text-body-small-r subhead-table-two"
-                                        style="background-color: var(--Gray-background);" [ngStyle]="{
-                                    'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                                  }">
-                                        <span class="text-body-small-r" style="color: #FF554C;">{{source.state}}</span>
-                                    </th>
-                                    <th class="text-body-small-r subhead-table-three"
-                                        style="background-color: var(--Gray-background);" [ngStyle]="{
-                                    'border-bottom': isLastLaborType && isLastActivitie ? '1px solid var(--blue)' : '',
-                                    'border-radius': isLastLaborType && isLastActivitie ? '0px 0px 8px 0px' : ''
-                                  }">
-                                    </th>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                </td>
+                <td>
+                    {{item.evaluador.identificacion}}
+                </td>
+                <td>
+                    {{item.evaluador.roles[0].nombre}}
+                </td>
+                <td>
+                    {{item.fuentes[1].estadoFuente}}
+                </td>
+                <td style="text-align: center;">
+                    <a>
+                        <img *ngIf="item.fuentes[1].estadoFuente=='Diligenciado'"
+                            src="assets/icons/tables/icon-view.svg" alt="view">
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <ng-template #nullData>
-    <thead>
-        <tr style="display: flex;">
-            <th class="head-table-one">
-                <span class="text-body-heavy">Actividades</span>
-            </th>
-            <th class="text-body-heavy head-table-two" colspan="2">
-                <span class="text-body-heavy">Autoevalución</span>
-            </th>
-            <th class="text-body-heavy head-table-three">
-                <span class="text-body-heavy">Fuente 2</span>
-            </th>
-        </tr>
-        <tr style="display:flex;">
-            <th class="subhead-table-one">
-                <span class="text-body-small-r">Nombre actividad</span>
-            </th>
-            <th class="text-body-small-r subhead-table-two">
-                <span class="text-body-small-r">Estado</span>
-            </th>
-            <th class="text-body-small-r subhead-table-three">
-                <span class="text-body-small-r">Acciones</span>
-            </th>
-            <th class="text-body-small-r subhead-table-four">
-                <span class="text-body-small-r">Evaluador</span>
-            </th>
-            <th class="text-body-small-r subhead-table-four">
-                <span class="text-body-small-r">Rol Evaluador</span>
-            </th>
-            <th class="text-body-small-r subhead-table-two" style="background-color: var(--Gray-background);">
-                <span class="text-body-small-r">Estado</span>
-            </th>
-            <th class="text-body-small-r subhead-table-three" style="background-color: var(--Gray-background);">
-                <span class="text-body-small-r">Acciones</span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th style="border-bottom: 1px solid var(--blue); border-radius: 0px 0px 8px 8px;" class="type-source text-body-heavy"> 
-                No cuenta con actividades registradas
-             </th>
-        </tr>
-    </tbody>
+    <table>
+        <thead>
+            <tr>
+                <th class="text-body-heavy"> {{headDataTable[0]}} </th>
+                <th class="text-body-heavy" colspan="2"> {{headDataTable[1]}} </th>
+                <th class="text-body-heavy" colspan="4"> {{headDataTable[2]}} </th>
+            </tr>
+            <tr>
+                <th class="text-body-regular" *ngFor="let item of subHeadDataTable">
+                    <span>{{item}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-body-regular" style="text-align: center;">
+                <th colspan="7">
+                    No cuenta con actividades registradas
+                </th>
+            </tr>
+        </tbody>
+    </table>
 </ng-template>

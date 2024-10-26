@@ -1,0 +1,14 @@
+table {
+    border-collapse: collapse;
+    border-radius: 8px;
+    width: 100%;
+    border-style: hidden;
+    /* hide standard table (collapsed) border */
+    box-shadow: 0 0 0 1px var(--blue);
+    /* this draws the table border  */
+}
+
+tr,th,td {
+    border: 1px solid var(--blue);
+    padding: 8px;
+}

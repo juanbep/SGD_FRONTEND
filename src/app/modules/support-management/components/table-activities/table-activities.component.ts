@@ -1,143 +1,62 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchResponse } from '../../../../core/labor.interfaces';
+import { Actividad, ActividadesPorTipoActividad } from '../../../../core/activities.interface';
+
 import { CommonModule } from '@angular/common';
+import { SupportMangementComponent } from '../../pages/support-mangement/support-mangement.component';
+import { SupportManagementService } from '../../services/support-management.service';
+import { } from '@angular/common/http';
+
 
 @Component({
   selector: 'supportManagement-table-activities',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './table-activities.component.html',
-  styleUrl: './table-activities.component.css'
+  styleUrl: './table-activities.component.css',
 })
-export class TableActivitiesComponent {
-  public laborData2: SearchResponse | null | undefined;
-  public laborData: SearchResponse = {
-    labor: [
-      {
-        type: "Trabajo docencia",
-        activities: [
-          {
-            activities_name: "Metodología de la investigación",
-            source: [
-              {
-                name_source: "Autoevaluación",
-                state: "Pendiente firma",
-                evaluator: "Pepito Perez"
-              },
-              {
-                name_source: "Fuente 2",
-                state: "Diligenciado",
-                rol_evaluator: "Jefe de departamento",
-                evaluator: "Alejandro Toledo Tovar",
-                evaluated: "Pepito Perez"
-              }
-            ]
-          },
-          {
-            activities_name: "Inteligencia Artificial",
-            source: [
-              {
-                name_source: "Autoevaluación",
-                state: "Pendiente",
-                evaluator: "Pepito Perez"
-              },
-              {
-                name_source: "Fuente 2",
-                state: "Pendiente",
-                rol_evaluator: "Jefe de departamento",
-                evaluator: "Alejandro Toledo Tovar",
-                evaluated: "Pepito Perez"
-              }
-            ]
-          },
-          {
-            activities_name: "Gestión de proyecto informáticos",
-            source: [
-              {
-                name_source: "Autoevaluación",
-                state: "Pendiente firma",
-                evaluator: "Pepito Perez"
-              },
-              {
-                name_source: "Fuente 2",
-                state: "Pendiente",
-                rol_evaluator: "Jefe de departamento",
-                evaluator: "Alejandro Toledo Tovar",
-                evaluated: "Pepito Perez"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        type: "Dirección de trabajo de grado",
-        activities: [
-          {
-            activities_name:
-              "Resolución 8.4.3–90.2 / 288, 04 de noviembre de 22,Consejo de Facultad",
-            source: [
-              {
-                name_source: "Autoevaluación",
-                state: "Pendiente firma",
-                evaluator: "Pepito Perez"
-              },
-              {
-                name_source: "Fuente 2",
-                state: "Diligenciado",
-                rol_evaluator: "Estudiante",
-                evaluator: "Federico Sánchez",
-                evaluated: "Pepito Perez"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        type: "Investigación",
-        activities: [
-          {
-            activities_name:
-              "Ciência cidadã e cocriação como meios de regeneração de rios e minimização de riscos",
-            source: [
-              {
-                name_source: "Autoevaluación",
-                state: "Pendiente firma",
-                evaluator: "Pepito Perez"
-              },
-              {
-                name_source: "Fuente 2",
-                state: "Diligenciado",
-                rol_evaluator: "Coordinador/a",
-                evaluator: "Diana Sánchez",
-                evaluated: "Pepito Perez"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        type: "Administración",
-        activities: [
-          {
-            activities_name:
-              "Resolución Superior 005 del 4 de febrero de 2015 - Jefe Departamento",
-            source: [
-              {
-                name_source: "Autoevaluación",
-                state: "Pendiente firma",
-                evaluator: "Pepito Perez"
-              },
-              {
-                name_source: "Fuente 2",
-                state: "Diligenciado",
-                rol_evaluator: "Coordinador/a",
-                evaluator: "Martín López",
-                evaluated: "Pepito Perez"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  };
+
+
+export class TableActivitiesComponent implements OnInit {
+
+  public activitiesByType!: ActividadesPorTipoActividad[];
+
+  constructor (private activitieService: SupportManagementService ) {}
+
+    public headDataTable = ["Actividades","Autoevaluación","Fuente 2"]
+    
+    public subHeadDataTable = ["Nombre actividad","Estado","Acciones","Evaluador","Rol Evaluador","Estado","Acciones"]
+
+    public activities: Actividad[] = [];
+
+  ngOnInit(): void {
+    this.activitieService.allActivities().subscribe(activities=>{
+      this.activities = activities;
+      this.reloadActivities();
+    })
+    
+  }
+
+  public reloadActivities() {
+     this.activitiesByType = Object.values(
+      this.activities.reduce((acc, activity) => {
+        const tipoNombre = activity.tipoActividad.nombre;
+    
+        // Si el tipo de actividad no existe como clave, la inicializamos
+        if (!acc[tipoNombre]) {
+          acc[tipoNombre] = {
+            nombreType: tipoNombre,
+            activities: []
+          };
+        }
+    
+        // Añadimos la actividad al grupo correspondiente
+        acc[tipoNombre].activities.push(activity);
+    
+        return acc;
+      }, {} as { [key: string]: ActividadesPorTipoActividad })
+    );
+    }
+
+
 }

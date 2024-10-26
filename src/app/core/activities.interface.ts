@@ -1,0 +1,43 @@
+export interface Actividad {
+    codigoActividad:    string;
+    nombre:             string;
+    horas:              string;
+    fechaCreacion:      string;
+    fechaActualizacion: string;
+    tipoActividad:      TipoActividad;
+    fuentes:            Fuente[];
+    evaluador:          Evaluador;
+}
+
+export interface Evaluador {
+    oidUsuario:     number;
+    identificacion: string;
+    roles:          Role[];
+}
+
+export interface Role {
+    nombre: string;
+    estado: string;
+}
+
+export interface Fuente {
+    oidFuente:          number;
+    tipoFuente:         string;
+    calificacion:       number;
+    nombreDocumento:    string;
+    fechaCreacion:      string;
+    fechaActualizacion: string;
+    estadoFuente:       string;
+}
+
+export interface TipoActividad {
+    oidTipoActividad: number;
+    nombre:           string;
+    horasTotales:     number;
+    descripcion:      string;
+}
+
+export interface ActividadesPorTipoActividad {
+    nombreType: string;
+    activities: Actividad[];
+}
