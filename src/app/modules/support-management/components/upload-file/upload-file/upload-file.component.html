@@ -24,8 +24,8 @@
             </div>
         </div>
         <p class="title-three">Actividad y evaluación</p>
-        <div class="table-responsive" style="width: 100%; max-height: 378px;">
-            <table >
+        <div class="table-responsive" style="width: 100%; max-height: 378px; display: inline-table;">
+            <table class="upload-table">
                 <thead>
                     <tr>
                         <th>
@@ -39,86 +39,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr *ngFor="let activitie of myActivities">
                         <td>
-                            <span class="text-body-small-r">Metodología de la investigación</span>
+                            <span class="text-body-small-r">{{activitie.codigoActividad}}</span>
                         </td>
                         <td style="padding: 0px; margin: 0px;">
                             <input class="input-evaluation text-body-heavy" style="padding: 0px; margin: 0px;"
                                 placeholder="Ingrese la evaluación">
-                            <img src="assets/icons/tables/icon-pen.svg" alt="">
+                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="">
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <span class="text-body-small-r">Metodología de la investigación</span>
-                        </td>
-                        <td style="padding: 0px; margin: 0px;">
-                            <input class="input-evaluation text-body-heavy" style="padding: 0px; margin: 0px;"
-                                placeholder="Ingrese la evaluación">
-                            <img src="assets/icons/tables/pen-icon.svg" alt="">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="text-body-small-r">Metodología de la investigación</span>
-                        </td>
-                        <td style="padding: 0px; margin: 0px;">
-                            <input class="input-evaluation text-body-heavy" style="padding: 0px; margin: 0px;"
-                                placeholder="Ingrese la evaluación">
-                            <img src="assets/icons/tables/pen-icon.svg" alt="">
-                        </td>
-                    </tr>
-                    <!-- <tr>
-                        <td>
-                            <span class="text-body-small-r">Metodología de la investigación</span>
-                        </td>
-                        <td style="padding: 0px; margin: 0px;">
-                            <input class="input-evaluation text-body-heavy" style="padding: 0px; margin: 0px;"
-                                placeholder="Ingrese la evaluación">
-                            <img src="assets/icons/tables/pen-icon.svg" alt="">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="text-body-small-r">Metodología de la investigación</span>
-                        </td>
-                        <td style="padding: 0px; margin: 0px;">
-                            <input class="input-evaluation text-body-heavy" style="padding: 0px; margin: 0px;"
-                                placeholder="Ingrese la evaluación">
-                            <img src="assets/icons/tables/pen-icon.svg" alt="">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span class="text-body-small-r">Metodología de la investigación</span>
-                        </td>
-                        <td style="padding: 0px; margin: 0px;">
-                            <input class="input-evaluation text-body-heavy" style="padding: 0px; margin: 0px;"
-                                placeholder="Ingrese la evaluación">
-                            <img src="assets/icons/tables/pen-icon.svg" alt="">
-                        </td>
-                    </tr>
-                </tbody> -->
             </table>
         </div>
-        <!-- <section style="padding-top: 25px;">
+
+        <section style="padding-top: 25px;">
             <span class="title-three">Soporte</span>
-            <div class="button-radius" style="margin: 5px;">
-                <p class="title-three" style="margin: 0px;">Cargar soporte</p>
-                <label for="myfile">Carga soporte</label>
-                <input type="file" id="myfile">
-                <button class="button" id="btnUploadFile" id="button">
-                    <img src="assets/icons/buttons/icon-upload.svg">
-                </button> 
+            <div class="input-file-container">  
+                <label for="button-upload" class="label-file text-body-small-sb" >Soporte</label>          
+                <input class="input-file text-body-custom" id="button-upload" type="file" accept=".pdf">
+                <button class="btn-file"></button>
             </div>
-        </section> -->
-
-        <div class="file-upload">
-            <label for="inputFileSupport" class="title-three">Cargar soporte</label>
-            <input type="file" id="inputFileSupport">
-        </div>
-
+        </section>
+           
         <section style="padding-top: 25px; width: 100%;">
             <span class="title-three">Observaciones</span>
             <p></p>

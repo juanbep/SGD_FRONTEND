@@ -1,8 +1,47 @@
-.file-upload input[type="file"] {
-    display: none;
+.input-file-container {
+    position: relative;
+    display: grid;
+    z-index: 1;
+    margin-top: 10px;
 }
 
-.file-upload label {
-    content: "Cargar soporte";
-    background-image: url(../assets/icons/sidebar/icon-evaluation.svg);
+.input-file {
+    height: 63px;
+    border: 1px solid var(--blue);
+    color: var(--blue) !important;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1;
+    padding-left: 9px;
+    padding-right: 70px;
+}
+
+.input-file::-webkit-file-upload-button {
+    visibility: hidden;
+    height: 72px;
+    width: 0;
+}
+
+.btn-file {
+    position: absolute;
+    border: none;
+    right: 0;
+    width: 54px;
+    height: 63px;
+    border-radius: 0px 8px 8px 0px;
+    background-color: var(--blue);
+    background-image: url(../assets//icons/buttons/icon-upload-button.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.label-file {
+    position: absolute;
+    top: 15% !important;
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+    color: var(--blue) !important;
+    background-color: transparent !important;
 }

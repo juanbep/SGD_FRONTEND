@@ -39,19 +39,19 @@
 /* titles */
 .title-one {
     font-family: "FiraSans-Black";
-    font-size: 48px;
+    font-size: 36px;
     color: var(--blue);
 }
 
 .title-two {
     font-family: "FiraSans-Bold";
-    font-size: 32px;
+    font-size: 30px;
     color: var(--blue);
 }
 
 .title-three {
     font-family: "FiraSans-Semibold";
-    font-size: 22px;
+    font-size: 24px;
     color: var(--blue);
 }
 

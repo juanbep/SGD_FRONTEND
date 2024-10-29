@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { immediateProvider } from 'rxjs/internal/scheduler/immediateProvider';
+import { SupportManagementService } from '../../../services/support-management.service';
+import { Actividad } from '../../../../../core/activities.interface';
 
 @Component({
   selector: 'supportMangement-upload-file',
@@ -9,9 +11,26 @@ import { immediateProvider } from 'rxjs/internal/scheduler/immediateProvider';
   templateUrl: './upload-file.component.html',
   styleUrl: './upload-file.component.css'
 })
-export class UploadFileComponent {
+export class UploadFileComponent implements OnInit {
+  
   private myModal:HTMLElement|null=null;
 
+  public myActivities: Actividad[] = [];
+  
+  constructor(private activitieService: SupportManagementService){
+
+  }
+
+  ngOnInit(): void {
+    this.dataActivities();
+    
+  }
+
+  dataActivities(){
+    this.activitieService.allActivities().subscribe(activities => {
+      this.myActivities = activities;
+    })
+  }
 
   openModal():void{
     this.myModal=document.getElementById("myModal");
@@ -21,7 +40,6 @@ export class UploadFileComponent {
   }
 
   closeModal(){
- 
     if(this.myModal){
       
       this.myModal.style.display="none";
