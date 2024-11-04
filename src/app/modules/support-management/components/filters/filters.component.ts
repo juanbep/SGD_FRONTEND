@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { SupportManagementService } from '../../services/support-management.service';
 import { HttpParams } from '@angular/common/http';
-import { Actividad } from '../../../../core/activities.interface';
 
 @Component({
   selector: 'supportManagement-filters',
@@ -11,7 +10,8 @@ import { Actividad } from '../../../../core/activities.interface';
   templateUrl: './filters.component.html',
   styleUrl: './filters.component.css'
 })
-export class FiltersComponent {
+
+export class FiltersComponent implements OnInit{
 
   // Opciones del dropdown
   stateSource1 = [
@@ -20,6 +20,13 @@ export class FiltersComponent {
     { valor: 'opcion2', texto: 'Pendiente' },
     { valor: 'opcion2', texto: 'Pendiente firma' },
   ];
+
+  stateSource2=[
+    { valor: 'default', texto: 'Estado' },
+    { valor: 'opcion1', texto: 'Diligenciado' },
+    { valor: 'opcion2', texto: 'Pendiente' },
+  ]
+
   source = [
     { valor: 'default', texto: 'Fuente' },
     { valor: 'opcion1', texto: 'Fuente 1' },
@@ -42,13 +49,20 @@ export class FiltersComponent {
     { valor: 'opcion5', texto: 'Otros servicios' }
   ];
 
+  public stateSourceSelected = this.stateSource1;
+
+  valueActivity: string | null = '';
   valuetypeActivity: string = this.typeActivity[0].texto;
   valueRolEvaluator: string = this.rolEvualator[0].texto;
-  valueSource: string = this.source[0].texto;
+  valueSource: string = this.source[1].texto;
   valueState: string = this.stateSource1[0].texto;
 
   constructor(private service:SupportManagementService){
 
+  }
+
+  ngOnInit(): void {
+      
   }
 
 
@@ -72,7 +86,9 @@ export class FiltersComponent {
   seleccionarOpcionSource(event: Event, opcion: { valor: string, texto: string }) {
     event.preventDefault();
     this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
+    this.valueState = this.stateSource1[0].texto;
     this.valueSource = opcion.texto;
+    this.valueSource == 'Fuente 1'? this.stateSourceSelected = this.stateSource1 : this.stateSourceSelected=this.stateSource2;
   }
 
   seleccionarOpcionStateSource(event: Event, opcion: { valor: string, texto: string }) {
@@ -80,16 +96,14 @@ export class FiltersComponent {
     this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
     this.valueState = opcion.texto;
   }
-  public activities: Actividad[] = [];
-  
+
   filterAction(){
-
+    this.valueActivity = (<HTMLInputElement>document.getElementById("activity")).value;
     let params = new HttpParams()
-      .set('codigoActividad','')
-      .set('tipoActividad', this.valuetypeActivity)
-      .set('nombreEvaluador', '')
-      .set('roles',this.valueRolEvaluator)
-
+      .set('codigoActividad', this.valueActivity)
+      // .set('tipoActividad', this.valuetypeActivity)
+      // .set('nombreEvaluador', '')
+      // .set('roles',this.valueRolEvaluator)
     this.service.actualizarFiltro(params);
   }
 

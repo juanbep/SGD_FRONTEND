@@ -17,15 +17,13 @@ export class SupportMangementComponent implements OnInit{
   private btnUploadFile? = document.getElementById("btnUploadFile");
 
   public upluadModal: any | null = null;
+  
   ngOnInit(): void {
     if(this.btnUploadFile){
       this.upluadModal= this.btnUploadFile.onclick;
     }
   }
   
-
-  
-
   modalUploadFile(value:HTMLElement) {
       value.style.display = "block";
 

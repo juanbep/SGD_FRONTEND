@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SearchResponse } from '../../../../core/labor.interfaces';
 import { Actividad, ActividadesPorTipoActividad } from '../../../../core/activities.interface';
-
 import { CommonModule } from '@angular/common';
-import { SupportMangementComponent } from '../../pages/support-mangement/support-mangement.component';
 import { SupportManagementService } from '../../services/support-management.service';
-import { } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 
 
