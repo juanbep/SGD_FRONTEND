@@ -20,11 +20,11 @@ export class SideBarComponent {
       sub: [
         {
           label:'Mis actividades',
-          url: '/app/gestion-soportes'
+          url: '/app/gestion-soportes/actividades'
         },
         {
           label:'Mis responsabilidades',
-          url: ''
+          url: '/app/gestion-soportes/responsabilidades'
         },
         {
           label:'Consolidado',

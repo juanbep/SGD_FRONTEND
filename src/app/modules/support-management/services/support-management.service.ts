@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environments } from '../../../../environments/environments.pro';
+import { environments } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
 import { Actividad } from '../../../core/activities.interface';
+
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,20 +13,22 @@ export class SupportManagementService {
 
   private baseUrl: string = environments.baseUrl;
 
+  private filtroParamSubject = new BehaviorSubject<any>({});
+  filtroParam$ = this.filtroParamSubject.asObservable();
+
   constructor(private httpClient: HttpClient) { }
 
   //All teacher activities
-  allActivities (): Observable<Actividad[]>{
-    return this.httpClient.get<Actividad[]>(`http://localhost:3000/Actividades`)
+  allActivitiesByUser(idUser:string): Observable<Actividad[]>{
+    return this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/findActivitiesByEvaluado/${idUser}`)
   }
   
   //Activitie by Id
-  activitie (id: string): Observable<Actividad> | null{
-    return null;
+  activitieByFilter (params:HttpParams): Observable<Actividad[]> | null{
+    return this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/actividades`,{params});
   }
 
   //uploadSupport
-  
   uploadSupport(){
     return this.httpClient.post;
   }
@@ -40,5 +44,11 @@ export class SupportManagementService {
   responsabilitie(id: string){
     return this.httpClient.get
   }
+
+  actualizarFiltro(params: any){
+    this.filtroParamSubject.next(params);
+  }
   
+
+
 }

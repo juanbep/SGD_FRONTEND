@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { SupportManagementService } from '../../services/support-management.service';
+import { HttpParams } from '@angular/common/http';
+import { Actividad } from '../../../../core/activities.interface';
 
 @Component({
   selector: 'supportManagement-filters',
@@ -9,6 +12,7 @@ import { Component } from '@angular/core';
   styleUrl: './filters.component.css'
 })
 export class FiltersComponent {
+
   // Opciones del dropdown
   stateSource1 = [
     { valor: 'default', texto: 'Estado' },
@@ -32,9 +36,9 @@ export class FiltersComponent {
   typeActivity = [
     { valor: 'default', texto: 'Tipo actividad' },
     { valor: 'opcion1', texto: 'Docencia' },
-    { valor: 'opcion2', texto: 'Trabajo docencia' },
-    { valor: 'opcion3', texto: 'Trabajo de investigación' },
-    { valor: 'opcion4', texto: 'Administración' },
+    { valor: 'opcion2', texto: 'Trabajos Docencia' },
+    { valor: 'opcion3', texto: 'Trabajos de Investigacion' },
+    { valor: 'opcion4', texto: 'Administracion' },
     { valor: 'opcion5', texto: 'Otros servicios' }
   ];
 
@@ -42,6 +46,10 @@ export class FiltersComponent {
   valueRolEvaluator: string = this.rolEvualator[0].texto;
   valueSource: string = this.source[0].texto;
   valueState: string = this.stateSource1[0].texto;
+
+  constructor(private service:SupportManagementService){
+
+  }
 
 
   // Mensaje para mostrar la opción seleccionada
@@ -71,6 +79,18 @@ export class FiltersComponent {
     event.preventDefault();
     this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
     this.valueState = opcion.texto;
+  }
+  public activities: Actividad[] = [];
+  
+  filterAction(){
+
+    let params = new HttpParams()
+      .set('codigoActividad','')
+      .set('tipoActividad', this.valuetypeActivity)
+      .set('nombreEvaluador', '')
+      .set('roles',this.valueRolEvaluator)
+
+    this.service.actualizarFiltro(params);
   }
 
   

@@ -27,7 +27,7 @@ export class UploadFileComponent implements OnInit {
   }
 
   dataActivities(){
-    this.activitieService.allActivities().subscribe(activities => {
+    this.activitieService.allActivitiesByUser("6").subscribe(activities => {
       this.myActivities = activities;
     })
   }

@@ -1,0 +1,27 @@
+<table>
+    <thead>
+        <tr>
+            <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
+            <th class="text-body-heavy center-text" colspan="4"> {{headDataTable[1]}}</th>
+        </tr>
+        <tr>
+            <th class="text-body-regular" *ngFor="let subHead of subHeadDataTableStudents">
+                <span>{{subHead}}</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr >
+            <td class="text-body-heavy center-text" colspan="5">Evaluación de trabajo pregrado</td>
+        </tr>
+        <tr>
+            <td class="text-body-regular">Dirección trabajo de grado</td>
+            <td class="text-body-regular">Pepíto Perez</td>
+            <td class="text-body-regular">Docente</td>
+            <td class="text-body-regular">Pendiente</td>
+            <td class="center-text">
+                <img src="assets/icons/tables/icon-upload.svg" alt="">
+            </td>
+        </tr>
+    </tbody>
+</table>
