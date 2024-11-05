@@ -101,9 +101,9 @@ export class FiltersComponent implements OnInit{
     this.valueActivity = (<HTMLInputElement>document.getElementById("activity")).value;
     let params = new HttpParams()
       .set('codigoActividad', this.valueActivity)
-      // .set('tipoActividad', this.valuetypeActivity)
-      // .set('nombreEvaluador', '')
-      // .set('roles',this.valueRolEvaluator)
+      .set('tipoActividad', this.valuetypeActivity)
+      .set('nombreEvaluador', '')
+      .set('roles',this.valueRolEvaluator)
     this.service.actualizarFiltro(params);
   }
 

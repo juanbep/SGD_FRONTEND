@@ -38,14 +38,14 @@ export class TableActivitiesComponent implements OnInit {
       this.reloadActivities();
     })
 
-    this.filtroSubscription = this.activitieService.filtroParam$.subscribe(params =>{
-      this.filtroParams = params;
-      this.activitieService.activitieByFilter(this.filtroParams)?.subscribe(activities =>{
-        this.activities = activities
-        this.reloadActivities();
+    // this.filtroSubscription = this.activitieService.filtroParam$.subscribe(params =>{
+    //   this.filtroParams = params;
+    //   this.activitieService.activitieByFilter(this.filtroParams)?.subscribe(activities =>{
+    //     this.activities = activities
+    //     this.reloadActivities();
 
-      } )
-    })
+    //   } )
+    // })
 
   }
 
