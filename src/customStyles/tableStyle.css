@@ -12,3 +12,9 @@ tr,th,td {
     border: 1px solid var(--blue);
     padding: 8px;
 }
+
+
+.button-table {
+    border: none;
+    background-color: var(--white);
+}

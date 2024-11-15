@@ -1,0 +1,24 @@
+.messages-container{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+    height: 81px;
+    padding: 8.5px 20px;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--Colores-secundarios-Azl-tertiary-95, #ECF0FF);
+}
+
+
+.messages-continter-green {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    width: 100%;
+    height: 81px;
+    padding: 8.5px 20px;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--green-one, #ECF0FF);
+}

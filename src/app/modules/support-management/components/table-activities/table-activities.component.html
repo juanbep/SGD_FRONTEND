@@ -1,4 +1,4 @@
-<div *ngIf="(activities.length != 0) || (activities == null) ; else nullData ">
+<ng-container *ngIf="activities?.length; else nullData">
     <table>
         <thead>
             <tr>
@@ -12,49 +12,48 @@
                 </th>
             </tr>
         </thead>
-        <tbody *ngFor="let item of activitiesByType">
+        <tbody *ngFor="let type of activitiesByType">
             <tr class="text-body-heavy center-text">
                 <td colspan="7">
-                    {{item.nombreType}}
+                    {{type.nombreType}}
                 </td>
             </tr>
-            <tr class="text-body-small-r" *ngFor="let item of item.activities">
+            <tr class="text-body-small-r" *ngFor="let activity of type.activities">
                 <td>
-                    {{item.nombre}}
+                    {{activity.nombre}}
                 </td>
-                <td>
-                    {{item.fuentes[0].estadoFuente}}
-                </td>
-                <td style="text-align: center;">
-                    <a>
-                        <img *ngIf="item.fuentes[0].estadoFuente=='Diligenciado'"
-                            src="assets/icons/tables/icon-view.svg" alt="view">
-                    </a>
-                    <a>
-                        <img *ngIf="item.fuentes[0].estadoFuente=='Pendiente firma'"
-                            src="assets/icons/tables/icon-view.svg" alt="view">
-                    </a>
 
-                </td>
                 <td>
-                    {{item.evaluador.identificacion}}
+                    {{activity.fuentes[0].tipoFuente == '1' ? activity.fuentes[0].estadoFuente : activity.fuentes[1].estadoFuente}}
                 </td>
-                <td>
-                    {{item.evaluador.roles[0].nombre}}
-                </td>
-                <td>
-                    {{item.fuentes[1].estadoFuente}}
-                </td>
-                <td style="text-align: center;">
+                <td class="center-text">
+                    <button class="button-table" *ngIf=" activity.fuentes[0].estadoFuente == 'Diligenciado'" (click)="openModal(activity,1)">
+                        <img src="assets/icons/tables/icon-view.svg" alt="">
+                    </button>
+                    <support-management-download-file *ngIf="openModalSelected && activitySelected === activity && sourceSelected==1" [fuente]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="true" (closeModalSelected)="closeModal($event)"></support-management-download-file>
                     <a>
-                        <img *ngIf="item.fuentes[1].estadoFuente=='Diligenciado'"
-                            src="assets/icons/tables/icon-view.svg" alt="view">
+                        <img *ngIf="activity.fuentes[0].estadoFuente == 'Pendiente firma'" src="assets/icons/tables/icon-view.svg" alt="View pendiente firma">
                     </a>
+                </td>
+                <td>
+                    {{activity.evaluador.nombres}} {{activity.evaluador.apellidos}}
+                </td>
+                <td>
+                    {{activity.evaluador.roles[0].nombre}}
+                </td>
+                <td>
+                    {{activity.fuentes[1].tipoFuente == '2' ? activity.fuentes[1].estadoFuente : activity.fuentes[0].estadoFuente}}
+                </td>
+                <td class="center-text">
+                    <button class="button-table" *ngIf=" activity.fuentes[1].estadoFuente == 'Diligenciado'" (click)="openModal(activity,2)">
+                        <img src="assets/icons/tables/icon-view.svg" alt="">
+                    </button>
+                    <support-management-download-file *ngIf="openModalSelected && activitySelected === activity && sourceSelected==2" [fuente]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="true" (closeModalSelected)="closeModal($event)"></support-management-download-file>
                 </td>
             </tr>
         </tbody>
     </table>
-</div>
+</ng-container>
 
 <ng-template #nullData>
     <table>
@@ -79,3 +78,4 @@
         </tbody>
     </table>
 </ng-template>
+

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SupportManagementService } from '../../services/support-management.service';
 import { HttpParams } from '@angular/common/http';
 
@@ -11,7 +11,7 @@ import { HttpParams } from '@angular/common/http';
   styleUrl: './filters.component.css'
 })
 
-export class FiltersComponent implements OnInit{
+export class FiltersComponent implements OnInit {
 
   // Opciones del dropdown
   stateSource1 = [
@@ -21,7 +21,7 @@ export class FiltersComponent implements OnInit{
     { valor: 'opcion2', texto: 'Pendiente firma' },
   ];
 
-  stateSource2=[
+  stateSource2 = [
     { valor: 'default', texto: 'Estado' },
     { valor: 'opcion1', texto: 'Diligenciado' },
     { valor: 'opcion2', texto: 'Pendiente' },
@@ -34,10 +34,11 @@ export class FiltersComponent implements OnInit{
   ];
 
   rolEvualator = [
-    { valor: 'default', texto: 'Rol Evaluador' },
+    { valor: 'default', texto: 'Rol evaluador' },
     { valor: 'opcion1', texto: 'Estudiante' },
     { valor: 'opcion2', texto: 'Coordirnado' },
     { valor: 'opcion3', texto: 'Jefe de Departamento' },
+    { valor: 'opcion4', texto: 'Docente' },
   ];
 
   typeActivity = [
@@ -52,17 +53,18 @@ export class FiltersComponent implements OnInit{
   public stateSourceSelected = this.stateSource1;
 
   valueActivity: string | null = '';
+  valueEvaluator: string | null = '';
   valuetypeActivity: string = this.typeActivity[0].texto;
   valueRolEvaluator: string = this.rolEvualator[0].texto;
   valueSource: string = this.source[1].texto;
   valueState: string = this.stateSource1[0].texto;
 
-  constructor(private service:SupportManagementService){
+  constructor(private service: SupportManagementService) {
 
   }
 
   ngOnInit(): void {
-      
+
   }
 
 
@@ -88,7 +90,7 @@ export class FiltersComponent implements OnInit{
     this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
     this.valueState = this.stateSource1[0].texto;
     this.valueSource = opcion.texto;
-    this.valueSource == 'Fuente 1'? this.stateSourceSelected = this.stateSource1 : this.stateSourceSelected=this.stateSource2;
+    this.valueSource == 'Fuente 1' ? this.stateSourceSelected = this.stateSource1 : this.stateSourceSelected = this.stateSource2;
   }
 
   seleccionarOpcionStateSource(event: Event, opcion: { valor: string, texto: string }) {
@@ -97,16 +99,36 @@ export class FiltersComponent implements OnInit{
     this.valueState = opcion.texto;
   }
 
-  filterAction(){
+  filterAction() {
     this.valueActivity = (<HTMLInputElement>document.getElementById("activity")).value;
+    this.valueEvaluator = (<HTMLInputElement>document.getElementById("evaluator")).value;
+
     let params = new HttpParams()
+      .set('idEvaluado', '6')
       .set('codigoActividad', this.valueActivity)
-      .set('tipoActividad', this.valuetypeActivity)
-      .set('nombreEvaluador', '')
-      .set('roles',this.valueRolEvaluator)
-    this.service.actualizarFiltro(params);
+      .set('tipoActividad', this.valuetypeActivity == 'Tipo actividad' ? '' : this.valuetypeActivity)
+      .set('nombreEvaluador', this.valueEvaluator)
+      .set('roles', this.valueRolEvaluator == 'Rol evaluador' ? '' : this.valueRolEvaluator)
+    // .set('tipoFuente',this.valueSource=='Fuente 1'?'1':'2')
+    // .set('estadoFuente', this.valueState== 'Estado'? this.valueState = '': this.valueState)
+
+    this.service.uploadActivitiesFilter(params);
   }
 
-  
+  clearAction() {
+    (<HTMLInputElement>document.getElementById("activity")).value = '';
+    (<HTMLInputElement>document.getElementById("evaluator")).value = '';
 
+    let params = new HttpParams()
+      .set('idEvaluado', '6')
+      .set('codigoActividad', '')
+      .set('tipoActividad', '')
+      .set('nombreEvaluador', '')
+      .set('roles','')
+    
+    
+    this.valuetypeActivity != 'Tipo actividad'? this.valuetypeActivity = this.typeActivity[0].texto : this.valuetypeActivity;
+    this.valueRolEvaluator != 'Rol evaluador'? this.valueRolEvaluator = this.rolEvualator[0].texto : this.valueRolEvaluator;
+    this.service.uploadActivitiesFilter(params);
+  }
 }

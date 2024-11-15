@@ -2,53 +2,100 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
-import { Actividad } from '../../../core/activities.interface';
-
+import { Actividad, SourceEvaluation } from '../../../core/activities.interface';
 import { BehaviorSubject } from 'rxjs';
+import { MessagesInfoService } from '../../../shared/services/messages-info.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupportManagementService {
 
+
   private baseUrl: string = environments.baseUrl;
-
+  private dataActivitie = new BehaviorSubject<any>({});
   private filtroParamSubject = new BehaviorSubject<any>({});
-  filtroParam$ = this.filtroParamSubject.asObservable();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private toastr: MessagesInfoService) { }
+
+  //All activities without filter
+  allActivitiesWithoutFilter(userId: string): Observable<Actividad[]> {
+    let params = new HttpParams().set('idEvaluado', userId);
+    return this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/findActivitiesByEvaluado`, { params });
+  }
+
+  getDataActivities(): Observable<Actividad[]> {
+    return this.dataActivitie.asObservable();
+  }
 
   //All teacher activities
-  allActivitiesByUser(idUser:string): Observable<Actividad[]>{
-    return this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/findActivitiesByEvaluado/${idUser}`)
-  }
-  
-  //Activitie by Id
-  activitieByFilter (params:HttpParams): Observable<Actividad[]> | null{
-    return this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/actividades`,{params});
+  allActivitiesByUser(userIda: string) {
+    let params = new HttpParams().set('idEvaluado', userIda);
+    this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/findActivitiesByEvaluado`, { params }).subscribe(
+      {
+        next: data => {
+          this.dataActivitie.next(data);
+        },
+        error: error => {
+          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        }
+      }
+    )
   }
 
+
+  uploadActivitiesFilter(params: HttpParams) {
+    console.log(params);
+    this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/findActivitiesByEvaluado`, { params }).subscribe(
+      {
+        next: data => {
+          this.dataActivitie.next(data);
+        },
+        error: error => {
+          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        }
+      });
+  }
+
+  sendActivities(file: File, observation: string, source: SourceEvaluation[]): void {
+    const formData: FormData = new FormData();
+    formData.append('archivo', file);
+    formData.append('observacion', observation);
+    formData.append('fuentes', JSON.stringify(source));
+    this.httpClient.post(`${this.baseUrl}/fuente/save`, formData, { responseType: 'text' }).subscribe({
+      next: data => {
+        this.allActivitiesByUser("6");
+        this.toastr.showSuccessMessage('La evaluación se ha enviado correctamente', 'Evaluación enviada');
+      },
+      error: error => {
+        this.toastr.showErrorMessage('Error al enviar la evaluación', 'Error');
+      }
+    });
+  }
+
+
   //uploadSupport
-  uploadSupport(){
+  uploadSupport() {
     return this.httpClient.post;
   }
 
   //All user responsabilities
-  
-  AllResponsabilities(){
+
+  AllResponsabilities() {
     return this.httpClient.get
   }
 
   //Responsabilitie by Id
 
-  responsabilitie(id: string){
+  responsabilitie(id: string) {
     return this.httpClient.get
   }
 
-  actualizarFiltro(params: any){
+  actualizarFiltro(params: any) {
     this.filtroParamSubject.next(params);
   }
-  
+
 
 
 }

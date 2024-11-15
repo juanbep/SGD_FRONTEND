@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableActivitiesComponent } from "../../components/table-activities/table-activities.component";
-import { FiltersComponent } from "../../components/filters/filters.component";
-import { UploadFileComponent } from '../../components/upload-file/upload-file/upload-file.component';
+import { FiltersComponent } from "../../components/filters-self-assesment/filters.component";
+import { UploadFileComponent } from '../../components/upload-file-self-assessment/upload-file-self-assessment.component';
 
 @Component({
   selector: 'pages-support-mangement',

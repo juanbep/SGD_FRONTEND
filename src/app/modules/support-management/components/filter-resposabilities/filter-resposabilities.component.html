@@ -30,7 +30,7 @@
       </div>
       <!-- Evaluator name filter -->
       <div class="col" style="margin: 1px;">
-        <input class="button-main" placeholder="Nombre evaluador">
+        <input class="button-main" id="evaluator" placeholder="Nombre evaluador">
       </div>
       <!-- Evaluator rol filter -->
       <div class="col" style="margin: 1px;">
@@ -48,24 +48,8 @@
           </div>
         </div>
       </div>
-      <!-- source type filter -->
-      <div class="col" style="margin: 1px">
-        <div class="dropdown">
-          <button class="dropbtn">
-            <span>{{valueSource}}</span>
-            <img src="assets\icons\tables\icon-down.svg" alt="">
-          </button>
-          <div class="dropdown-content">
-            <div *ngFor="let opcion of source">
-              <a *ngIf="opcion.valor!='default'" href="#" (click)="seleccionarOpcionSource($event, opcion)">
-                <span class="text-body-small-r">{{ opcion.texto }}</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- source filter -->
-      <div class="col" style="margin: 1px;">
+      <!-- <div class="col" style="margin: 1px;">
         <div class="dropdown">
           <button class="dropbtn">
             <span>{{valueState}}</span>
@@ -79,13 +63,13 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="col-9">
         <div class="row">
           <button class="clearButton col" (click)="filterAction()">
             <span style="color: var(--white);">Buscar</span>
           </button>
-          <button class="clearButton col">
+          <button class="clearButton col" (click)="clearAction()">
             <span style="color: var(--white);">Limpiar</span>
           </button>
         </div>

@@ -1,0 +1,63 @@
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="title-three">Carga de soporte</span>
+        <div class="line"></div>
+        <div class="messages-container">
+            <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
+            <span class="text-body-regular">Por favor, ingrese el soporte y la nota de la actividad que desea evaluar</span>
+        </div>
+        <!--Sección carga de autoevaluación -->
+        <section id="upload-file-responsability">
+            <span class="title-three">Soporte</span>
+            <div class="input-file-container">
+                <label for="button-upload" class="label-file text-body-small-sb">Soporte</label>
+                <input [ngClass]="{
+                    'input-file text-body-custom': errorMessageFile==='',
+                    'input-file-error text-body-custom': errorMessageFile!=''
+                }
+                "  id="input-upload" type="file" accept=".pdf" (change)="onFileSelected($event)">
+                <button [ngClass]="{
+                    'btn-file': errorMessageFile==='',
+                    'btn-file-error': errorMessageFile!=''
+                }" ></button>
+            </div>
+            <span [ngClass]="{
+                'text-error text-body-text-body-small-r' : errorMessageFile!='',
+                'text' : errorMessageFile===''
+            }" >El formato no es permitido </span>
+        </section>
+        <!-- Sección diligenciar evaluación -->
+        <section id="assessment-fill-out-responsability">
+            <div class="messages-container">
+                <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
+                <span class="text-body-regular">Asegurese que la evaluación ingresada sea la misma que se encuentra en el soporte</span>
+            </div>
+            <span class="title-three">Evaluación</span><br>
+            <input id="input-note" [(ngModel)]="evaluation" [ngClass]="getInputClass()"  class="input-nota text-body-heavy" type="text" placeholder="Nota"><br>
+            <span [ngClass]="{
+                'text' : errorMessageNote!='',
+                'text-display text-body-regular-small-r': errorMessageNote===''
+            }">Valores permitidos 0-100</span>
+            <span [ngClass]="{
+                'text-error text-body-text-body-small-r' : errorMessageNote!='',
+                'text' : errorMessageNote===''
+            }">La nota debe estar entre 0 y 100</span>
+        </section >
+        <!-- Observation section -->
+        <section id="observation-responsability" >
+            <span class="title-three">Observaciones</span>
+            <input class="input-text-observation text-body-regular" type="text" placeholder="Ingrese sus observaciones" [(ngModel)]="observacionSend">
+        </section>
+        <!-- Buttons section -->
+         <section id="buttons-responsability">
+             <div class="modal-buttons">
+                 <button class="button-modal text-body-heavy" (click)="closeModal()" >
+                     Cerrar
+                 </button>
+                 <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
+                     Guardar
+                 </button>
+             </div>
+         </section>
+    </div>
+</div>

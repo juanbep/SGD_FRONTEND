@@ -1,4 +1,4 @@
-<div *ngIf="(responsabilities.length != 0) || (responsabilities == null); else nullData">
+<ng-container *ngIf="responsabilities?.length; else nullData">
     <table>
         <thead>
             <tr>
@@ -15,20 +15,31 @@
             <tr>
                 <td class="text-body-heavy center-text" colspan="5">{{responsabilties.nombreType}}</td>
             </tr>
-            <tr *ngFor="let responsabilitie of responsabilities">
-                <td class="text-body-regular">{{responsabilitie.nombre}}</td>
-                <td class="text-body-regular">{{responsabilitie.evaluado.nombres}}
-                    {{responsabilitie.evaluado.apellidos}}</td>
-                <td class="text-body-regular">{{responsabilitie.evaluado.roles[0].nombre}}</td>
-                <td class="text-body-regular">{{responsabilitie.fuentes[0].estadoFuente}}</td>
+            <tr *ngFor="let responsability of responsabilties.activities">
+                <td class="text-body-regular">{{responsability.nombre}}</td>
+                <td class="text-body-regular">{{responsability.evaluado.nombres}}
+                    {{responsability.evaluado.apellidos}}</td>
+                <td class="text-body-regular">{{responsability.evaluado.roles[0].nombre}}</td>
+                <td class="text-body-regular">{{responsability.fuentes[1].estadoFuente}}</td>
                 <td class="center-text">
-                    <img src="assets/icons/tables/icon-upload.svg" alt="">
+                    <button *ngIf="responsability.fuentes[1].estadoFuente==='Pendiente'" class="button-table"
+                        id="button-table" (click)="openModalUpload(responsability)">
+                        <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload">
+                    </button>
+                    <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
+                        <img src="assets/icons/tables/icon-view.svg" alt="icon-view" (click)="openModalView(responsability)">
+                    </button>
+                    <!-- <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
+                        <img src="assets/icons/tables/icon-pen.svg" alt="icon-view" (click)="openModalEdit(responsability)">
+                    </button> -->
+                    <support-management-upload-responsabilities-file *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='Pendiente'" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></support-management-upload-responsabilities-file>
+                    <support-management-download-file *ngIf="openModalViewSelected && resposabilitySelected === responsability" [fuente]="responsability.fuentes[1]" [responsability]="responsability" [openModalSelected]="true" (closeModalSelected)="closeModalView($event)"></support-management-download-file>
+                    <!-- <support-management-edit-assessment *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [openModalSelected]="true"></support-management-edit-assessment> -->
                 </td>
             </tr>
-
         </tbody>
     </table>
-</div>
+</ng-container>
 
 
 <ng-template #nullData>
@@ -37,6 +48,11 @@
             <tr>
                 <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
                 <th class="text-body-heavy center-text" colspan="4"> {{headDataTable[1]}}</th>
+            </tr>
+            <tr>
+                <th class="text-body-regular" *ngFor="let subHead of subHeadDataTableStudents">
+                    <span>{{subHead}}</span>
+                </th>
             </tr>
         </thead>
         <tbody>

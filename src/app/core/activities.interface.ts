@@ -1,18 +1,21 @@
 export interface Actividad {
-    codigoActividad:    string;
-    nombre:             string;
-    horas:              string;
-    fechaCreacion:      string;
+    oidActividad: number;
+    codigoActividad: string;
+    nombre: string;
+    horas: string;
+    fechaCreacion: string;
     fechaActualizacion: string;
-    tipoActividad:      TipoActividad;
-    fuentes:            Fuente[];
-    evaluador:          Evaluador;
+    tipoActividad: TipoActividad;
+    fuentes: Fuente[];
+    evaluador: Evaluador;
 }
 
 export interface Evaluador {
-    oidUsuario:     number;
+    oidUsuario: number;
     identificacion: string;
-    roles:          Role[];
+    nombres: string,
+    apellidos: string,
+    roles: Role[];
 }
 
 export interface Role {
@@ -21,23 +24,31 @@ export interface Role {
 }
 
 export interface Fuente {
-    oidFuente:          number;
-    tipoFuente:         string;
-    calificacion:       number;
-    nombreDocumento:    string;
-    fechaCreacion:      string;
+    oidFuente: number;
+    tipoFuente: string;
+    calificacion: number;
+    nombreDocumento: string;
+    observacion: string;
+    fechaCreacion: string;
     fechaActualizacion: string;
-    estadoFuente:       string;
+    estadoFuente: string;
 }
 
 export interface TipoActividad {
     oidTipoActividad: number;
-    nombre:           string;
-    horasTotales:     number;
-    descripcion:      string;
+    nombre: string;
+    horasTotales: number;
+    descripcion: string;
 }
 
 export interface ActividadesPorTipoActividad {
     nombreType: string;
     activities: Actividad[];
+}
+
+
+export interface SourceEvaluation{
+    tipoFuente: string;
+    calificacion: number;
+    oidActividad: number;
 }

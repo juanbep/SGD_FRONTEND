@@ -1,4 +1,5 @@
 export interface Responsabilidad {
+    oidActividad:       number;
     codigoActividad:    string;
     nombre:             string;
     horas:              string;

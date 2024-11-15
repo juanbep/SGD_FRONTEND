@@ -1,0 +1,143 @@
+
+<!-- Sección mensaje estado de la autoevaluación -->
+<section id="self-assessment-message-section">
+    <ng-container *ngIf="evaluationPendingVar; else allEvaluationsCompletedMessage">
+        <div class="messages">
+            <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+            <span  class="text-body-regular">Seleccione esta opción si desea cargar la autoevaluación utilizando un formato
+                externo.</span>
+        </div>
+    </ng-container>
+    <ng-template #allEvaluationsCompletedMessage>
+        <div class="messages-continter-green">
+            <img src="assets/icons/messages/icon-check.svg" alt="teacher-icon">
+            <span  class="text-body-regular">Todas las autoevaluaciones han sido completadas.</span>
+        </div>
+    </ng-template>
+</section>
+    
+<!-- Sección botón autoevaluación -->
+<section id="button-self-assessment">
+    <div class="button-radius">
+        <p class="title-three">Autoevaluación</p>
+        <button [ngClass]="{'button': evaluationPendingVar==true,
+                            'button-disabled': evaluationPendingVar==false
+        }" id="btnUploadFile" (click)="openModal()">
+            <img src="assets/icons/buttons/go-icon.svg">
+        </button>
+    </div>
+</section>
+
+<!-- Sección modal de carga de soporte autoevaluación -->
+<section id="self-assessmet-modal">
+    <ng-container *ngIf="evaluationPendingVar==true">
+        <div id="myModalUploadFile" class="modal">
+            <div class="modal-content">
+                <p class="title-three">Carga de soporte autoevaluación</p>
+                <div class="line"></div>
+                <!--Sección mensaje informativo -->
+                <section id="information-message">
+                    <div class="message-container row">
+                        <div class="col-1">
+                            <img class="img-container" src="assets/icons/messages/icon-info.svg" alt="">
+                        </div>
+                        <div class="col">
+                            <p class="text-body-regular ">Por favor, ingrese la evaluación de sus actividades. Asegúrese de que la
+                                evaluación coincida con la información del documento de soporte que desea cargar.</p>
+                        </div>
+                    </div>
+                </section>
+      
+                <!-- Sección diligenciamiento de la evaluación -->
+                <section id="assessment-fill-out">
+                    <p class="title-three">Actividad y evaluación</p>
+                    <div class="message-container row">
+                        <div class="col-1">
+                            <img  src="assets/icons/messages/icon-info.svg" alt="">
+                        </div>
+                        <div class="col">
+                            <p class="text-body-regular ">Asegurese que la evaluación ingresada sea la misma que se encuentra en el soporte</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-responsive-custom" >
+                        <table class="upload-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <span class="text-body-heavy ">
+                                            Actividad
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="text-body-heavy">Evaluación</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let activitie of myActivities; let i = index">
+                                    <td>
+                                        <span class="text-body-small-r">{{activitie.codigoActividad}}</span>
+                                    </td>
+                                    <td>
+                                        <input id="input-evaluation" 
+                                        [ngClass]="{'input-evaluation-error text-body-heavy': errorCalificacion==true && indexSelected==i,
+                                        
+                                        }"
+                                        class="input-evaluation text-body-heavy"
+                                             placeholder="Ingrese la evaluación" (input)="updateEvaluation($event, activitie, i)" >
+                                        <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span [ngClass]="{
+                            'text' : errorCalificacion==true,
+                            'text-display text-body-regular-small-r': errorCalificacion==false
+                        }">Valores permitidos 0-100</span>
+                        <span [ngClass]="{
+                            'text-error text-body-text-body-small-r' : errorCalificacion==true,
+                            'text' : errorCalificacion == false
+                        }">La nota debe estar entre 0 y 100</span>
+                    </div>
+                </section>
+                <!-- Sección de carga de archivos -->
+                <section id="upload-file-asessment">
+                    <span class="title-three">Soporte</span>
+                    <div class="input-file-container">
+                        <label for="button-upload" class="label-file text-body-small-sb">Soporte</label>
+                        <input [ngClass]="{
+                            'input-file text-body-custom': errorMessageFile==='',
+                            'input-file-error text-body-custom': errorMessageFile!=''
+                        }
+                        " id="input-upload" type="file" accept=".pdf" (change)="onFileSelected($event)">
+                        <button [ngClass]="{
+                            'btn-file': errorMessageFile==='',
+                            'btn-file-error': errorMessageFile!=''
+                        }"></button>
+                    </div>
+                    <span [ngClass]="{
+                        'text-error text-body-text-body-small-r' : errorMessageFile!='',
+                        'text' : errorMessageFile===''
+                    }">El formato no es permitido </span>
+                </section>
+                <!-- Sección de observaciones-->
+                <section id="comments-self-assessment">
+                    <span class="title-three">Observaciones</span>
+                    <input class="input-text text-body-regular" type="text" placeholder="Ingrese sus observaciones" [(ngModel)]="observacionSend">
+                </section>
+                <!-- Sección de botonoes-->
+                 <section id="button-self-assessment">
+                     <div class="modal-buttons">
+                         <button class="button-modal text-body-heavy" (click)="closeModal()">
+                             Cerrar
+                         </button>
+                         <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
+                             Guardar
+                         </button>
+                     </div>
+                 </section>
+            </div>
+        </div>
+    </ng-container>
+</section>
+

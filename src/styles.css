@@ -1,13 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-    --blue: #000066;
-    --white: #FFFFFF;
-    --red-light: #DB141C;
-    --neutral-95: #F2EFFA;
-    --neutral-90: #E4E1EC;
-    --blue-60: #828AE3;
-    --Gray-background: #E4E1EC;
-
+    /*AZUL: Color institucional primario: */
+    --blue: #000066; /* Color primario */
+    /*ROJO: Color institucional secundario:*/
+    --red-light: #DB141C; /* Color secundario */
+    /*OTROS COLORES*/
+    --Gray-background: #E5E1E5;
+    --white: #FFFFFF; /* Blanco */
+    --neutral-95: #F2EFFA; /* Neutral 95 */
+    --neutral-90: #E4E1EC; /* Neutral 90 */
+    --neutral-80: #C8C5D0; /* Neutral 80 */
+    --neutral-70: #ADAAB4; /* Neutral 70 */
+    --neutral-60: #928F9A; /* Neutral 60 */
+    --neutral-50: #777680; /* Neutral 50 */
+    --neutral-35: #535256; /* Neutral 35 */
+    --blue-ligth: #5056AC; /* Color secundario ligth */
+    --blue-60:    #828AE3; /* Azul 60 */
+    --blue-tertiary-95: #ECF0FF; /* Azul tertiary 95 */
+    --blue-tertiary-90: #D6E2FF; /* Azul tertiary 90 */
+    --error-ligth: #A04200; /* Error light */
+    --error-ligth-2: #FFDBCC; /* Error light 2 */
+    --error-light-3: #FDF2EA; /* Error light 3 */
+    --yellow-color-two: #FFB000; /* Amarillo color dos */
+    --green-color-three: #5BAE40; /* Verde color tres */
+    --green-one: #EEFFE9; /* Verde 1 */
 }
 
 

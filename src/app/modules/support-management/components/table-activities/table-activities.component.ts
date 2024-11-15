@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Actividad, ActividadesPorTipoActividad } from '../../../../core/activities.interface';
 import { CommonModule } from '@angular/common';
 import { SupportManagementService } from '../../services/support-management.service';
-import { Subscription } from 'rxjs';
+import { DownloadFileComponent } from '../download-file/download-file.component';
 
 
 @Component({
   selector: 'supportManagement-table-activities',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DownloadFileComponent ],
   templateUrl: './table-activities.component.html',
   styleUrl: './table-activities.component.css',
 })
@@ -16,43 +16,38 @@ import { Subscription } from 'rxjs';
 
 export class TableActivitiesComponent implements OnInit {
 
-  public activitiesByType!: ActividadesPorTipoActividad[];
-
-
-  public headDataTable = ["Actividades", "Autoevaluación", "Fuente 2"]
-
-  public subHeadDataTable = ["Nombre actividad", "Estado", "Acciones", "Evaluador", "Rol Evaluador", "Estado", "Acciones"]
-
   public activities: Actividad[] = [];
-
-  public filtroParams: any;
-
-  private filtroSubscription?: Subscription;
-
+  public activitiesByType!: ActividadesPorTipoActividad[];
+  public headDataTable = ["Actividades", "Autoevaluación", "Fuente 2"]
+  public subHeadDataTable = ["Nombre actividad", "Estado", "Acciones", "Evaluador", "Rol Evaluador", "Estado", "Acciones"]
+  public openModalSelected: boolean = false;
+  public activitySelected: Actividad | undefined;
+  public sourceSelected: 1 | 2 | undefined;
+  
   constructor(private activitieService: SupportManagementService) { }
 
 
   ngOnInit(): void {
-    this.activitieService.allActivitiesByUser("6").subscribe(activities => {
-      this.activities = activities;
+
+    this.activitieService.allActivitiesByUser('6');
+
+    this.activitieService.getDataActivities().subscribe(data => {
+      this.activities = data;
       this.reloadActivities();
     })
 
-    // this.filtroSubscription = this.activitieService.filtroParam$.subscribe(params =>{
-    //   this.filtroParams = params;
-    //   this.activitieService.activitieByFilter(this.filtroParams)?.subscribe(activities =>{
-    //     this.activities = activities
-    //     this.reloadActivities();
-
-    //   } )
-    // })
-
   }
 
-  public filterUpdate(){
-    
+  public openModal(activity: Actividad, source: 1 | 2) {
+    this.openModalSelected = !this.openModalSelected;
+    this.sourceSelected = source;
+    this.activitySelected = activity;
   }
 
+  public closeModal(event: boolean) {
+    this.openModalSelected = !event;
+  }
+  
   public reloadActivities() {
     this.activitiesByType = Object.values(
       this.activities.reduce((acc, activity) => {

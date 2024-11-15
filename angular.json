@@ -28,7 +28,10 @@
               "src/customStyles/containerStyles.css",
               "src/customStyles/dropdownFilter.css",
               "src/customStyles/tableStyle.css",
-              "src/customStyles/formStyle.css"
+              "src/customStyles/formStyle.css",
+              "src/customStyles/infoMessages.css",
+              "src/customStyles/toastStyles.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },

@@ -2,34 +2,70 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { SupportManagementResponsabilitiesService } from '../../services/support-management-responabilities.service';
 import { Responsabilidad, ResponsabilidadesPorTipoActividad } from '../../../../core/responsabilitie.interface';
+import { UploadResponsabilitiesFileComponent } from '../upload-responsabilities-file/upload-responsabilities-file.component';
+import { DownloadFileComponent } from "../download-file/download-file.component";
+import { EditAssessmentComponent } from "../edit-assessment/edit-assessment.component";
 
 @Component({
   selector: 'support-management-table-activities-responsabilities',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UploadResponsabilitiesFileComponent, DownloadFileComponent, EditAssessmentComponent],
   templateUrl: './table-activities-responsabilities.component.html',
   styleUrl: './table-activities-responsabilities.component.css'
 })
-export class TableActivitiesResponsabilitiesComponent implements OnInit{
-  public headDataTable = ["Actividad","Fuente 2"];
-  
-  public headDataTableCoodinator = ["Actividad","Fuente", "Informe"];
-  
-  public subHeadDataTableStudents = ["Nombre actividad","Evaluado","Rol evaluado","Estado soporte","Acciones"];
-  
-  public subHeadDataTableCoorinator = ["Nombre actividad","Evaluado","Rol evaluado","Estado soporte","Acciones", "Acciones"];
-  
-  public responsabilities : Responsabilidad[] = [];
+export class TableActivitiesResponsabilitiesComponent implements OnInit {
+
+  public headDataTable = ["Actividad", "Fuente 2"];
+  public headDataTableCoodinator = ["Actividad", "Fuente", "Informe"];
+  public subHeadDataTableCoorinator = ["Nombre actividad", "Evaluado", "Rol evaluado", "Estado soporte", "Acciones", "Acciones"];
+  public subHeadDataTableStudents = ["Nombre actividad", "Evaluado", "Rol evaluado", "Estado soporte", "Acciones"];
 
   public responsabilitieByType: ResponsabilidadesPorTipoActividad[] = [];
-  
-  constructor(private service: SupportManagementResponsabilitiesService){}
+  public responsabilities: Responsabilidad[] = [];
+
+  public openModalResposabilitySelected: boolean = false;
+  public resposabilitySelected: Responsabilidad | undefined;
+
+  public openModalViewSelected: boolean = false;
+
+  public openModalEditSelected: boolean = false;
+
+  constructor(private service: SupportManagementResponsabilitiesService) { }
 
   ngOnInit(): void {
-    this.service.allResponsabilitiesByUser("5").subscribe(responsabilitie => {
-      this.responsabilities = responsabilitie;
-      this.reloadActivities();
+    this.service.allResponsabilitiesByUser('4');
+    this.service.getDataResponsabilities().subscribe(data => {
+      this.responsabilities = data;
+      if (this.responsabilities.length > 0) {
+        this.reloadActivities();
+        console.log(this.responsabilitieByType);
+
+      }
     })
+
+  }
+
+  public openModalUpload(responsability: Responsabilidad) {
+    this.openModalResposabilitySelected = !this.openModalResposabilitySelected;
+    this.resposabilitySelected = responsability;
+  }
+
+  public closeModalUpload(event: boolean) {
+    this.openModalResposabilitySelected = !event;
+  }
+
+  public openModalView(responsability: Responsabilidad) {
+    this.openModalViewSelected = !this.openModalViewSelected;
+    this.resposabilitySelected = responsability;
+  }
+
+  public openModalEdit(responsability: Responsabilidad) {
+    this.openModalEditSelected = !this.openModalEditSelected;
+    this.resposabilitySelected = responsability;
+  }
+
+  public closeModalView(event: boolean) {
+    this.openModalViewSelected = !event;
   }
 
 
@@ -53,8 +89,8 @@ export class TableActivitiesResponsabilitiesComponent implements OnInit{
       }, {} as { [key: string]: ResponsabilidadesPorTipoActividad })
     );
   }
-  
 
-  
+
+
 
 }
