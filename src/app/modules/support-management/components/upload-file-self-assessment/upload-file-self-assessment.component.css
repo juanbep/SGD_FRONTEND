@@ -1,5 +1,5 @@
 .modal {
-    display: none;
+    display: diplay;
     position: fixed;
     z-index: 1;
     padding-top: 100px;
@@ -33,6 +33,7 @@
     border: none;
     padding-left: 29px;
     align-items: center;
+    vertical-align: middle;
     gap: 22px;
     border-radius: 8px;
     border: 1px solid var(--blue);
@@ -101,8 +102,8 @@
 }
 
 .input-evaluation {
-    width: 90%;
-    height: 63px;
+    width: 85%;
+    height: 20px;
     margin: 50px;
     border-radius: 0px;
     border: none;
@@ -111,7 +112,7 @@
     font-size: 24px !important;
 }
 .input-evaluation-error {
-    width: 90%;
+    width: 80%;
     height: 63px;
     margin: 50px;
     border-radius: 0px;
@@ -127,6 +128,9 @@ td {
     max-width: 100px;
 }
 
+.no-margin{
+    margin: 0px;
+}
 
 .input-evaluation:focus {
     border: none;
@@ -198,4 +202,12 @@ section{
 #input-evaluation {
     padding: 0px;
     margin: 0px;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.button-border-radius {
+    border-radius: 0px 8px 8px 0px;
 }

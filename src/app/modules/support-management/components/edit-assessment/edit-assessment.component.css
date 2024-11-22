@@ -1,5 +1,5 @@
 .modal {
-    display: none;
+    display: block;
     position: fixed;
     z-index: 1;
     padding-top: 100px;
@@ -43,8 +43,30 @@ section {
     width: 100%;
 }
 
-.file-actions {
-    display: flex;
-    align-items: center;
-    height: 100%;
-  }
+.button-radius-custom{
+    border-radius: 0px;
+    border-right: 1px solid var(--white);
+}
+
+.text-error{
+    display: block;
+    color: var(--red-light);
+}
+
+.text-display {
+    display: block;
+}
+
+.text{
+    display: none;
+}
+
+section{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.button-border-radius {
+    border-radius: 0px 8px 8px 0px;
+}

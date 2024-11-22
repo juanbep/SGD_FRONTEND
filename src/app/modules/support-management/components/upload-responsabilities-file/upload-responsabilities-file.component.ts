@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, WritableSignal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SupportManagementService } from '../../services/support-management.service';
-import { SourceEvaluation } from '../../../../core/activities.interface';
+import { SourceEvaluation, SourceResposability } from '../../../../core/activities.interface';
 import { Responsabilidad } from '../../../../core/responsabilitie.interface';
 import { SupportManagementResponsabilitiesService } from '../../services/support-management-responabilities.service';
 
@@ -30,8 +30,10 @@ export class UploadResponsabilitiesFileComponent implements OnInit {
   public inputValue: string = '';
   public evaluation: number | null = null;
   public selectedFile: File | null = null;
-  public sendSource: SourceEvaluation[] | null = null;
+  public sendSource: SourceResposability[] | null = null;
   public observacionSend: string = '';
+  public fileNameSelected: WritableSignal<string> = signal('');
+
 
 
   constructor( private service: SupportManagementResponsabilitiesService) {
@@ -82,15 +84,26 @@ export class UploadResponsabilitiesFileComponent implements OnInit {
         this.selectedFile = null;
       } else {
         this.selectedFile = file;
+        this.fileNameSelected.set(this.selectedFile.name)
         this.errorMessageFile = '';
       }
     }
   }
 
+  triggerFileUpload() {
+    const fileUpload = document.getElementById('uploadFileAssessmentResponsability') as HTMLInputElement;
+    if (fileUpload) {
+      fileUpload.click();
+    }
+  }
+
+
   saveEvaluation(): void {
+
+
     if(this.responsability && this.evaluation && this.selectedFile){
       console.log(this.responsability);
-      this.sendSource = [{
+       this.sendSource = [{
         tipoFuente: "2",
         calificacion: this.evaluation,
         oidActividad: this.responsability.oidActividad

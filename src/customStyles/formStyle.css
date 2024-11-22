@@ -1,102 +1,74 @@
 /* Upload file input style */
 
-.input-file-container {
-    position: relative;
-    display: grid;
-    z-index: 1;
-    margin-top: 10px;
-}
-
-.input-file {
-    height: 63px;
+.file-upload-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    width: 100%;
+    height: 64px;
     border: 1px solid var(--blue);
-    color: var(--blue) !important;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-radius: 8px;
+}
+
+.file-upload-label {
+    display: flex;
+    flex: 1;
+    align-items: center;
     cursor: pointer;
-    z-index: 1;
-    padding-left: 9px;
-    padding-right: 70px;
+    height: 100%;
+    background-color: var(--white);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
-.input-file-error {
-    height: 63px;
-    border: 1px solid var(--red-light);
-    color: var(--red-light) !important;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-radius: 8px;
-    cursor: pointer;
-    z-index: 1;
-    padding-left: 9px;
-    padding-right: 70px;
+.file-details {
+    margin-right: auto;
+    height: 100%;
+    width: 100%;
 }
 
-.input-file::-webkit-file-upload-button {
-    visibility: hidden;
-    height: 72px;
-    width: 0;
+.file-title {
+    padding-left: 26px;
+    padding-top: 14px;
 }
 
-.input-file-error::-webkit-file-upload-button {
-    visibility: hidden;
-    height: 72px;
-    width: 0;
+.file-name {
+    position: relative;
+    bottom: 21px;
+    left: 26px;
 }
 
-.btn-file {
-    position: absolute;
-    border: none;
-    right: 0;
+.file-actions {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.button-actions {
     width: 54px;
-    height: 63px;
-    border-radius: 0px 8px 8px 0px;
+    height: 100%;
+    border: none;
+    padding: 0;
+    display: flex; /* Añadir flexbox al botón */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+}
+
+.button-upload {
+    background-image: url('../assets/icons/buttons/upload-icon.svg');
+    background-size: 36px 36px !important; /* Ajusta el tamaño del SVG */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center; /* Centrar la imagen */
     background-color: var(--blue);
-    background-image: url(../assets//icons/buttons/icon-upload-button.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-}
+    pointer-events: all;
+}    
 
-.btn-file-view {
-    position: absolute;
-    border: none;
-    right: 0;
-    width: 54px;
-    height: 63px;
-    border-radius: 0px 8px 8px 0px;
-    background-color: var(--blue);
-    background-image: url(../assets//icons/buttons/view-icon.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
- .btn-file-error {
-    position: absolute;
-    border: none;
-    right: 0;
-    width: 54px;
-    height: 63px;
-    border-radius: 0px 8px 8px 0px;
-    background-color: var(--red-light);
-    background-image: url(../assets//icons/buttons/icon-upload-button.svg);
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.label-file {
-    position: absolute;
-    top: 15% !important;
-    padding-left: 30px !important;
-    padding-right: 30px !important;
-    color: var(--blue) !important;
-    background-color: transparent !important;
-}
 
 /* download file input style */
 
-.btn-file-download {
-    position: absolute;
+
+.button-download {
     border: none;
     z-index: 1;
     right: 0;
@@ -107,33 +79,39 @@
     background-image: url(../assets/icons/buttons/download-icon.svg);
     background-position: center;
     background-repeat: no-repeat;
-}
+}    
 
 .download-file-container {
-    position: relative;
-    display: grid;
-    width: 400px;
-    z-index: 1;
-    margin-top: 10px;
-}
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    width: 100%;
+    height: 64px;
+    border: 1px solid var(--blue);
+}    
+
+.button-delete {
+    background-image: url('../assets/icons/buttons/delete-icon.svg');
+    background-size: 36px 36px !important; /* Ajusta el tamaño del SVG */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center; /* Centrar la imagen */
+    background-color: var(--blue);
+    pointer-events: all;
+}    
 
 .download-file-label {
-    height: 63px;
-    width: 100%;
-    border: 1px solid var(--blue);
-    color: var(--blue) !important;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    border-radius: 8px;
-    cursor: pointer;
-    z-index: 1;
-    padding-left: 9px;
-    padding-right: 70px;
-    padding-top: 10px;
-    /* display: flex;
+    margin: 15px;
+    padding-top: 5px;
+    flex: 1;
     align-items: center;
-    vertical-align: center; */
-}
+    cursor: pointer;
+    height: 100%;
+    background-color: var(--white);
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}    
 
 
 .evaluation {
@@ -146,7 +124,13 @@
     border: 1px solid var(--blue);
     font-size: 25px;
     margin: 0px;
-    text-align: center; 
+    text-align: center;
+}   
+
+
+.text-error {
+    display: block;
+    color: var(--red-light);
 }
 
 .observation {
@@ -160,7 +144,7 @@
     border: 1px solid var(--blue);
     background: var(--white);
     outline: none;
-}
+}    
 
 .button-modal {
     display: flex;
@@ -175,10 +159,44 @@
     border-radius: 100px;
     background: var(--blue);
     color: #FFF;
-}
+}    
 
 .modal-buttons {
     display: flex;
     width: 100%;
     justify-content: flex-end;
+}    
+
+
+.input-nota {
+    height: 64px;
+    width: 128px;
+    border-radius: 16px;
+    border: 1px solid var(--blue);
+    font-size: 25px;
+    margin: 0px;
+    text-align: center;
+    outline: none;
+}
+
+.input-nota-error {
+    height: 64px;
+    width: 128px;
+    border-radius: 16px;
+    border: 1px solid var(--red-light);
+    font-size: 25px;
+    margin: 0px;
+    text-align: center;
+    outline: none;
+    color: var(--red-light);
+}
+
+.input-nota-error {
+    height: 64px;
+    width: 128px;
+    border-radius: 16px;
+    border: 1px solid var(--red-light);
+    font-size: 25px;
+    margin: 0px;
+    text-align: center;
 }

@@ -7,24 +7,27 @@
             <span class="text-body-regular">Por favor, ingrese el soporte y la nota de la actividad que desea evaluar</span>
         </div>
         <!--Sección carga de autoevaluación -->
-        <section id="upload-file-responsability">
-            <span class="title-three">Soporte</span>
-            <div class="input-file-container">
-                <label for="button-upload" class="label-file text-body-small-sb">Soporte</label>
-                <input [ngClass]="{
-                    'input-file text-body-custom': errorMessageFile==='',
-                    'input-file-error text-body-custom': errorMessageFile!=''
-                }
-                "  id="input-upload" type="file" accept=".pdf" (change)="onFileSelected($event)">
-                <button [ngClass]="{
-                    'btn-file': errorMessageFile==='',
-                    'btn-file-error': errorMessageFile!=''
-                }" ></button>
+        <section id="upload-file-asessment">
+            <div class="file-upload-container">
+                <label for="uploadFileAssessment" class="file-upload-label">
+                    <div class="file-details">
+                        <p class="file-title text-body-small-sb">
+                            Soporte
+                        </p>
+                        <p class="file-name text-body-small-r">
+                            {{fileNameSelected()? fileNameSelected() : 'Seleccione un archivo'}}
+                        </p>
+                    </div>
+                    <input type="file" id="uploadFileAssessmentResponsability" (change)="onFileSelected($event)" hidden>
+                </label>
+                <div class="file-actions">
+                        <button class="button-upload button-actions button-border-radius" (click)="triggerFileUpload()"></button>
+                </div>
             </div>
             <span [ngClass]="{
                 'text-error text-body-text-body-small-r' : errorMessageFile!='',
                 'text' : errorMessageFile===''
-            }" >El formato no es permitido </span>
+            }">El formato no es permitido </span>
         </section>
         <!-- Sección diligenciar evaluación -->
         <section id="assessment-fill-out-responsability">
@@ -32,7 +35,7 @@
                 <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
                 <span class="text-body-regular">Asegurese que la evaluación ingresada sea la misma que se encuentra en el soporte</span>
             </div>
-            <span class="title-three">Evaluación</span><br>
+            <span class="title-three">Calificación</span><br>
             <input id="input-note" [(ngModel)]="evaluation" [ngClass]="getInputClass()"  class="input-nota text-body-heavy" type="text" placeholder="Nota"><br>
             <span [ngClass]="{
                 'text' : errorMessageNote!='',

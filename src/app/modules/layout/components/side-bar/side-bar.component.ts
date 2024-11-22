@@ -28,7 +28,7 @@ export class SideBarComponent {
         },
         {
           label:'Consolidado',
-          url:''
+          url:'/app/gestion-soportes/consolidado'
         },
         {
           label:'CPD',

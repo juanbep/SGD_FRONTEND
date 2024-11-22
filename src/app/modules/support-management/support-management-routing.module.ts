@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { SupportMangementComponent } from './pages/support-mangement/support-mangement.component';
 import { SupportManagementResonsabilitiesComponent } from './pages/support-management-resonsabilities/support-management-resonsabilities.component';
+import { SupportManagementConsolidatedComponent } from './pages/support-management-consolidated/support-management-consolidated.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'responsabilidades',
     component: SupportManagementResonsabilitiesComponent
+  },
+  {
+    path: 'consolidado',
+    component: SupportManagementConsolidatedComponent
   }
 ]
 

@@ -1,0 +1,49 @@
+<div class="line"></div>
+
+<div class="row">
+    <div class="col-5" style="width: 50px">
+        <img src="assets/icons/tables/icon-filter.svg" alt="filters">
+    </div>
+
+    <div class="col">
+        <div class="row">
+            <!-- Activitie filter -->
+            <div class="col-3" style="margin: 1px;">
+                <input type="text" id="activity" class="button-main" placeholder="Nombre docente">
+            </div>
+            <!-- Type Activitie filter -->
+            <div class="col-3" style="margin: 1px">
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        <span>{{valueState}}</span>
+                        <img src="assets\icons\tables\icon-down.svg" alt="">
+                    </button>
+                    <div class="dropdown-content">
+                        <div *ngFor="let opcion of states">
+                            <a *ngIf="opcion.valor!='default'" href="#" (click)="seleccionarOpcionState($event, opcion)">
+                                <span class="text-body-small-r">{{ opcion.texto }}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- state filter -->
+            <div class="col-3" style="margin: 1px">
+                <div class="dropdown">
+                    <button class="dropbtn">
+                        <span>{{valueState}}</span>
+                        <img src="assets\icons\tables\icon-down.svg" alt="">
+                    </button>
+                    <div class="dropdown-content">
+                        <div *ngFor="let opcion of states">
+                            <a *ngIf="opcion.valor!='default'" href="#" (click)="seleccionarOpcionState($event, opcion)">
+                                <span class="text-body-small-r">{{ opcion.texto }}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="line"></div>

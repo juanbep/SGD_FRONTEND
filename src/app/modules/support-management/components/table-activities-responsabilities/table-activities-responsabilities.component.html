@@ -29,12 +29,12 @@
                     <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
                         <img src="assets/icons/tables/icon-view.svg" alt="icon-view" (click)="openModalView(responsability)">
                     </button>
-                    <!-- <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
+                    <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
                         <img src="assets/icons/tables/icon-pen.svg" alt="icon-view" (click)="openModalEdit(responsability)">
-                    </button> -->
+                    </button>
                     <support-management-upload-responsabilities-file *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='Pendiente'" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></support-management-upload-responsabilities-file>
                     <support-management-download-file *ngIf="openModalViewSelected && resposabilitySelected === responsability" [fuente]="responsability.fuentes[1]" [responsability]="responsability" [openModalSelected]="true" (closeModalSelected)="closeModalView($event)"></support-management-download-file>
-                    <!-- <support-management-edit-assessment *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [openModalSelected]="true"></support-management-edit-assessment> -->
+                    <support-management-edit-assessment *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [openModalSelected]="true" (closeModalEditSelected)="closeModalEdit($event)"></support-management-edit-assessment>
                 </td>
             </tr>
         </tbody>

@@ -3,6 +3,7 @@ export interface Actividad {
     codigoActividad: string;
     nombre: string;
     horas: string;
+    informeEjecutivo: boolean;
     fechaCreacion: string;
     fechaActualizacion: string;
     tipoActividad: TipoActividad;
@@ -27,7 +28,9 @@ export interface Fuente {
     oidFuente: number;
     tipoFuente: string;
     calificacion: number;
-    nombreDocumento: string;
+    nombreDocumentoFuente: string;
+    nombreDocumentoInforme: string;
+    informeEjecutivo: string;
     observacion: string;
     fechaCreacion: string;
     fechaActualizacion: string;
@@ -48,6 +51,13 @@ export interface ActividadesPorTipoActividad {
 
 
 export interface SourceEvaluation{
+    tipoFuente: string;
+    calificacion: number;
+    oidActividad: number;
+    informeEjecutivo: string;
+}
+
+export interface SourceResposability{
     tipoFuente: string;
     calificacion: number;
     oidActividad: number;

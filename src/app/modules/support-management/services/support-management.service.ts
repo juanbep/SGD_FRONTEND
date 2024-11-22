@@ -58,11 +58,14 @@ export class SupportManagementService {
       });
   }
 
-  sendActivities(file: File, observation: string, source: SourceEvaluation[]): void {
+  sendActivities(file: File, observation: string, source: SourceEvaluation[], reports:File[]): void {
     const formData: FormData = new FormData();
-    formData.append('archivo', file);
-    formData.append('observacion', observation);
-    formData.append('fuentes', JSON.stringify(source));
+    formData.append('informeFuente', file);
+    formData.append('observation', observation);
+    formData.append('sources', JSON.stringify(source));
+    reports.forEach((report, index) => {
+      formData.append('informeEjecutivo' + (index+1), report);
+    });
     this.httpClient.post(`${this.baseUrl}/fuente/save`, formData, { responseType: 'text' }).subscribe({
       next: data => {
         this.allActivitiesByUser("6");

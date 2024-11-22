@@ -27,7 +27,9 @@ export interface Fuente {
     oidFuente:          number;
     tipoFuente:         string;
     calificacion:       number;
-    nombreDocumento:    string;
+    nombreDocumentoFuente: string;
+    nombreDocumentoInforme: string;
+    informeEjecutivo:  string;
     observacion:        string;
     fechaCreacion:      string;
     fechaActualizacion: string;

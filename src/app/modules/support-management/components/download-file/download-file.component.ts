@@ -3,13 +3,12 @@ import { Actividad, Fuente } from '../../../../core/activities.interface';
 import { SupportManagementResponsabilitiesService } from '../../services/support-management-responabilities.service';
 import { Responsabilidad } from '../../../../core/responsabilitie.interface';
 import { CommonModule } from '@angular/common';
-import { EditAssessmentComponent } from '../edit-assessment/edit-assessment.component';
 
 @Component({
   selector: 'support-management-download-file',
   standalone: true,
   imports: [
-    CommonModule, EditAssessmentComponent
+    CommonModule
   ],
   templateUrl: './download-file.component.html',
   styleUrl: './download-file.component.css'
@@ -34,7 +33,7 @@ export class DownloadFileComponent implements OnInit {
 
   private myModal: HTMLElement | null = null;
 
-  public evaluation: number = 0;
+  public evaluation: string = '';
 
   public observation: string = "";
 
@@ -56,8 +55,8 @@ export class DownloadFileComponent implements OnInit {
   
   ngOnInit(): void {
     if (this.fuente) {
-      this.documentName = this.fuente.nombreDocumento;
-      this.evaluation = this.fuente.calificacion;
+      this.documentName = this.fuente.nombreDocumentoFuente;
+      this.evaluation = this.fuente.calificacion.toFixed(1);
       this.observation = this.fuente.observacion;
       
     }
@@ -68,7 +67,7 @@ export class DownloadFileComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = this.fuente!.nombreDocumento;
+        a.download = this.fuente!.nombreDocumentoFuente;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -83,7 +82,7 @@ export class DownloadFileComponent implements OnInit {
       this.myModal.style.display = "none";
       this.closeModalSelected.emit(true);
       this.documentName = '';
-      this.evaluation = 0;
+      this.evaluation = '';
       this.observation = '';
     }
   }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Responsabilidad } from '../../../core/responsabilitie.interface';
 import { environments } from '../../../../environments/environments';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Fuente, SourceEvaluation } from '../../../core/activities.interface';
+import { Fuente, SourceEvaluation, SourceResposability } from '../../../core/activities.interface';
 import { MessagesInfoService } from '../../../shared/services/messages-info.service';
 
 @Injectable({providedIn: 'root'})
@@ -35,11 +35,11 @@ export class SupportManagementResponsabilitiesService {
     }
 
 
-    sendEvaluationResponsabilities(file: File, observation: string, source: SourceEvaluation[]) {
+    sendEvaluationResponsabilities(file: File, observation: string, source: SourceResposability[]) {
         const formData = new FormData();
-        formData.append('archivo', file);
-        formData.append('observacion', observation);
-        formData.append('fuentes', JSON.stringify(source));
+        formData.append('informeFuente', file);
+        formData.append('observation', observation);
+        formData.append('sources', JSON.stringify(source));
         this.httpClient.post(`${this.baseUrl}/fuente/save`, formData,{ responseType: 'text' }).subscribe(
             {
                 next: data => {

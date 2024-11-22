@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { SupportManagementService } from '../../services/support-management.service';
 import { Actividad, SourceEvaluation } from '../../../../core/activities.interface';
 import { FormsModule } from '@angular/forms';
-import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
 
 
 @Component({
@@ -25,6 +24,12 @@ export class UploadFileComponent implements OnInit {
   public evaluationPendingVar: boolean = false;
   public errorCalificacion: boolean = false;
   public indexSelected: number = 0;
+  public filesSelected: File[] = [];
+
+  public fileNameSelected: WritableSignal<string> = signal('');
+  
+  public selectedFileReport: File | null = null;
+  public activityFileReport: Actividad | null = null;
 
   constructor(private activitieService: SupportManagementService) {
 
@@ -62,7 +67,23 @@ export class UploadFileComponent implements OnInit {
       } else {
         this.selectedFile = file;
         this.errorMessageFile = '';
+        this.fileNameSelected.set(file.name);
       }
+    }
+  }
+
+  triggerFileUpload() {
+    const fileUpload = document.getElementById('uploadFileAssessment') as HTMLInputElement;
+    if (fileUpload) {
+      fileUpload.click();
+    }
+  }
+
+  triggerFileUploadReport(actividad: Actividad) {
+    const fileUpload = document.getElementById('uploadFileReport') as HTMLInputElement;
+    if (fileUpload) {
+      this.activityFileReport = actividad;
+      fileUpload.click();
     }
   }
 
@@ -74,17 +95,20 @@ export class UploadFileComponent implements OnInit {
   }
 
   saveEvaluation(): void {
-
+    
     if(this.myActivities){
+      console.log(this.myActivities);
+      
       this.sendSource = this.myActivities.map(activitie => ({
         tipoFuente: "1",
         calificacion: activitie.fuentes[0].calificacion,
-        oidActividad: activitie.oidActividad
+        oidActividad: activitie.oidActividad,
+        informeEjecutivo: activitie?.fuentes[0].informeEjecutivo || ''
       }));
     }
-  
+    
     if (this.selectedFile) {
-      this.activitieService.sendActivities(this.selectedFile, this.observacionSend, this.sendSource);
+      this.activitieService.sendActivities(this.selectedFile, this.observacionSend, this.sendSource, this.filesSelected);
       this.evaluationPendingVar = false;
       this.closeModal();
     } else {
@@ -92,9 +116,8 @@ export class UploadFileComponent implements OnInit {
     }
   }
 
-  updateEvaluation(event: Event, activitie: Actividad, index: number): void {
+  updateEvaluation(event: Event, activitie: Actividad): void {
     let evaluationInput = event.target as HTMLInputElement;
-    this.indexSelected = index;
     const calificacion = parseFloat(evaluationInput.value);
     if (!isNaN(calificacion)) {
       if(calificacion >= 0 && calificacion <= 100){
@@ -102,6 +125,26 @@ export class UploadFileComponent implements OnInit {
         this.errorCalificacion = false;
       }else{
         this.errorCalificacion = true;
+      }
+    }
+  }
+
+  uploadReport(activitie: Actividad, event: Event, index: number): void {
+    console.log(index);
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      console.log(file);
+      if (file.type !== 'application/pdf') {
+        this.errorMessageFile = 'El archivo seleccionado no es un PDF';
+        this.selectedFile = null;
+      } else {
+        this.selectedFileReport = file;
+        this.errorMessageFile = '';
+        console.log(this.activityFileReport+ ' ' + file.name);
+        this.activityFileReport!.fuentes[0].informeEjecutivo = file.name;
+        console.log(this.myActivities);
+        this.filesSelected.push(file);
       }
     }
   }

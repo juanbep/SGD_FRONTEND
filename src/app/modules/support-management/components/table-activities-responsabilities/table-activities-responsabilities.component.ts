@@ -68,6 +68,10 @@ export class TableActivitiesResponsabilitiesComponent implements OnInit {
     this.openModalViewSelected = !event;
   }
 
+  public closeModalEdit(event: boolean) {
+    this.openModalEditSelected = !event
+  }
+
 
   public reloadActivities() {
     this.responsabilitieByType = Object.values(
