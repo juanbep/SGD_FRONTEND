@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-responsibilities',
+  selector: 'support-management-responsibilities',
   standalone: true,
   imports: [],
   templateUrl: './responsibilities.component.html',

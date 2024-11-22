@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-consolidated',
+  selector: 'support-management-consolidated',
   standalone: true,
   imports: [],
   templateUrl: './consolidated.component.html',
