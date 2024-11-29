@@ -1,0 +1,37 @@
+<nav aria-label="Page navigation">
+    <ul class="pagination text-body-heavy">
+      <li class="page-item" [class.disabled]="currentPage == 1 || totalPages === 1">
+        <a class="page-link" (click)="goToFirstPage()">
+          <span aria-hidden="true">
+            <img [src]="'./../../../../assets/icons/pagination/double-arrow-left.svg'" alt="Previus Icon" />
+          </span>
+        </a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage == 1 || totalPages === 1">
+        <a class="page-link" (click)="previousPage()">
+          <span aria-hidden="true">
+            <img [src]="'./../../../../assets/icons/pagination/arrow-left.svg'" alt="Previus Icon" />
+          </span>
+        </a>
+      </li>
+      <li class="page-item" *ngFor="let page of totalPagesArray" [class.active]="page == currentPage">
+        <a class="page-link" *ngIf="page !== '...'" [class.single-page]="singlePage" (click)="changePage(page)">{{ page }}</a>
+        <span class="page-link" *ngIf="page === '...'">{{ page }}</span>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage == totalPages || totalPages === 1">
+        <a class="page-link" (click)="nextPage()">
+          <span aria-hidden="true">
+            <img [src]="'./../../../../assets/icons/pagination/arrow-rigth.svg'" alt="Next Icon" />
+          </span>
+        </a>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage == totalPages || totalPages === 1">
+        <a class="page-link" (click)="goToLastPage()">
+          <span aria-hidden="true">
+            <img [src]="'./../../../../assets/icons/pagination/double-arrow-rigth.svg'" alt="Next Icon" />
+          </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  

@@ -1,4 +1,3 @@
-
 <ng-container *ngIf="activities?.length; else nullData">
     <table>
         <thead>
@@ -28,13 +27,17 @@
                     {{activity.fuentes[0].tipoFuente == '1' ? activity.fuentes[0].estadoFuente : activity.fuentes[1].estadoFuente}}
                 </td>
                 <td class="center-text">
-                    <button class="button-table" *ngIf=" activity.fuentes[0].estadoFuente == 'Diligenciado'" (click)="openModal(activity,1)">
+                    <button class="button-table" *ngIf="activity.fuentes[0].estadoFuente == 'Diligenciado'" (click)="openModalView(activity,1)">
                         <img src="assets/icons/tables/icon-view.svg" alt="">
                     </button>
-                    <!-- <support-management-download-file *ngIf="openModalSelected && activitySelected === activity && sourceSelected==1" [fuente]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="true" (closeModalSelected)="closeModal($event)"></support-management-download-file> -->
-                    <a>
-                        <img *ngIf="activity.fuentes[0].estadoFuente == 'Pendiente firma'" src="assets/icons/tables/icon-view.svg" alt="View pendiente firma">
-                    </a>
+
+                    <button class="button-table" *ngIf="activity.fuentes[0].estadoFuente == 'Diligenciado'" (click)="openModalEdit(activity)">
+                        <img src="assets/icons/tables/icon-pen.svg" alt="">
+                    </button>
+
+                    <activities-view-evaluation *ngIf="openModalViewSelected && activitySelected === activity && sourceSelected==1" [source]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="openModalViewSelected" (closeModalSelected)="closeModalView($event)"></activities-view-evaluation>
+                    <activities-edit-evaluation *ngIf="openModalEditSelected && activitySelected === activity" [activity]="activity" [source]="activity.fuentes[0]" [openModalSelected]="openModalEditSelected" (closeModalEditSelected)="closeModalEdit($event)"></activities-edit-evaluation>
+
                 </td>
                 <td>
                     {{activity.evaluador.nombres}} {{activity.evaluador.apellidos}}
@@ -46,10 +49,10 @@
                     {{activity.fuentes[1].tipoFuente == '2' ? activity.fuentes[1].estadoFuente : activity.fuentes[0].estadoFuente}}
                 </td>
                 <td class="center-text">
-                    <button class="button-table" *ngIf=" activity.fuentes[1].estadoFuente == 'Diligenciado'" (click)="openModal(activity,2)">
+                    <button class="button-table" *ngIf=" activity.fuentes[1].estadoFuente == 'Diligenciado'" (click)="openModalView(activity,2)">
                         <img src="assets/icons/tables/icon-view.svg" alt="">
                     </button>
-                    <!-- <support-management-download-file *ngIf="openModalSelected && activitySelected === activity && sourceSelected==2" [fuente]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="true" (closeModalSelected)="closeModal($event)"></support-management-download-file> -->
+                    <activities-view-evaluation *ngIf="openModalViewSelected && activitySelected === activity && sourceSelected==2" [source]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="true" (closeModalSelected)="closeModalView($event)"></activities-view-evaluation>
                 </td>
             </tr>
         </tbody>

@@ -1,7 +1,7 @@
-import { HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { SupportManagementService } from '../../../../services/support-management.service';
 import { CommonModule } from '@angular/common';
+import { ActivitiesServicesService } from '../../services/activities-services.service';
+import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 
 @Component({
   selector: 'activities-filter',
@@ -53,14 +53,14 @@ export class ActivitiesFilterComponent {
 
   public stateSourceSelected = this.stateSource1;
 
-  valueActivity: string | null = '';
-  valueEvaluator: string | null = '';
-  valuetypeActivity: string = this.typeActivity[0].texto;
-  valueRolEvaluator: string = this.rolEvualator[0].texto;
-  valueSource: string = this.source[1].texto;
-  valueState: string = this.stateSource1[0].texto;
+  public valueActivity: string | null = '';
+  public valueEvaluator: string | null = '';
+  public valuetypeActivity: string = this.typeActivity[0].texto;
+  public valueRolEvaluator: string = this.rolEvualator[0].texto;
+  public valueSource: string = this.source[1].texto;
+  public valueState: string = this.stateSource1[0].texto;
 
-  constructor(private service: SupportManagementService) {
+  constructor(private service: ActivitiesServicesService,  private toastr: MessagesInfoService) {
 
   }
 
@@ -68,27 +68,19 @@ export class ActivitiesFilterComponent {
 
   }
 
-
-  // Mensaje para mostrar la opción seleccionada
-  mensajeSeleccion: string = '';
-
   // Función para capturar la opción seleccionada
   seleccionarOpcionActivity(event: Event, opcion: { valor: string, texto: string }) {
     event.preventDefault();
-    this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
     this.valuetypeActivity = opcion.texto;
-    console.log(this.mensajeSeleccion)
   }
 
   seleccionarOpcionEvaluator(event: Event, opcion: { valor: string, texto: string }) {
     event.preventDefault();
-    this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
     this.valueRolEvaluator = opcion.texto;
   }
 
   seleccionarOpcionSource(event: Event, opcion: { valor: string, texto: string }) {
     event.preventDefault();
-    this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
     this.valueState = this.stateSource1[0].texto;
     this.valueSource = opcion.texto;
     this.valueSource == 'Fuente 1' ? this.stateSourceSelected = this.stateSource1 : this.stateSourceSelected = this.stateSource2;
@@ -96,40 +88,37 @@ export class ActivitiesFilterComponent {
 
   seleccionarOpcionStateSource(event: Event, opcion: { valor: string, texto: string }) {
     event.preventDefault();
-    this.mensajeSeleccion = `Opción seleccionada: ${opcion.texto} (${opcion.valor})`;
     this.valueState = opcion.texto;
   }
 
   filterAction() {
     this.valueActivity = (<HTMLInputElement>document.getElementById("activity")).value;
     this.valueEvaluator = (<HTMLInputElement>document.getElementById("evaluator")).value;
+    
+    this.service.getActivities('6', this.valueActivity, this.valuetypeActivity == 'Tipo actividad' ? '' : this.valuetypeActivity, this.valueEvaluator, this.valueRolEvaluator == 'Rol evaluador' ? '' : this.valueRolEvaluator).subscribe({
+      next: data => {
+        this.service.setDataActivities(data);
+      },
+      error: error => {
+        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+      }
+    });
 
-    let params = new HttpParams()
-      .set('idEvaluado', '6')
-      .set('codigoActividad', this.valueActivity)
-      .set('tipoActividad', this.valuetypeActivity == 'Tipo actividad' ? '' : this.valuetypeActivity)
-      .set('nombreEvaluador', this.valueEvaluator)
-      .set('roles', this.valueRolEvaluator == 'Rol evaluador' ? '' : this.valueRolEvaluator)
-    // .set('tipoFuente',this.valueSource=='Fuente 1'?'1':'2')
-    // .set('estadoFuente', this.valueState== 'Estado'? this.valueState = '': this.valueState)
-
-    this.service.uploadActivitiesFilter(params);
   }
 
   clearAction() {
     (<HTMLInputElement>document.getElementById("activity")).value = '';
     (<HTMLInputElement>document.getElementById("evaluator")).value = '';
 
-    let params = new HttpParams()
-      .set('idEvaluado', '6')
-      .set('codigoActividad', '')
-      .set('tipoActividad', '')
-      .set('nombreEvaluador', '')
-      .set('roles','')
-    
-    
     this.valuetypeActivity != 'Tipo actividad'? this.valuetypeActivity = this.typeActivity[0].texto : this.valuetypeActivity;
-    this.valueRolEvaluator != 'Rol evaluador'? this.valueRolEvaluator = this.rolEvualator[0].texto : this.valueRolEvaluator;
-    this.service.uploadActivitiesFilter(params);
+    this.valueRolEvaluator != 'Rol evaluado'? this.valueRolEvaluator = this.rolEvualator[0].texto : this.valueRolEvaluator;
+    this.service.getActivities('6', '', '', '', '').subscribe({
+      next: data => {
+        this.service.setDataActivities(data);
+      },
+      error: error => {
+        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+      }
+    });
   }
 }

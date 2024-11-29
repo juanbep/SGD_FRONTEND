@@ -1,176 +1,179 @@
-.sidebar-container{
-    background-color: var(--blue);
-    padding-top: 19px;
+.sidebar-container {
+  background-color: var(--blue);
+  padding-top: 19px;
 }
 
-.image-container{
-    align-items: center;
-    text-align: center;
-    display: flex;
-    padding-left: 40px;
+.image-container {
+  align-items: center;
+  text-align: center;
+  display: flex;
+  padding-left: 40px;
 }
 
 
-.title-menu{
-    font-family: "myGaramond";
-    font-size: 16px;
+
+.title-menu {
+  font-family: "myGaramond";
+  font-size: 16px;
 }
 
 #sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: var(--blue);
-    flex-direction: column;
+  width: 250px;
+  height: 100vh;
+  background-color: var(--blue);
+  flex-direction: column;
+  transition: left 0.3s ease;
 }
 
-.container-line {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 24px;
+
+#sidebar-toggle {
+  display: none;
+  width: 50px;
+  height: 100vh;
+  background-color: var(--blue);
+  flex-direction: column;
 }
+
+#sidebar-toggle.active {
+  display: flex;
+}
+
+#sidebar.active {
+  left: 0;
+  position:static;
+}
+.nav-container {
+  display: none;
+  position: fixed;
+  align-items: center;
+  top: 25px;
+  left: 10px;
+  z-index: 1;
+  height: 50px; /* Aumenta el tamaño del contenedor */
+  cursor: pointer; /* Añade un cursor de puntero */
+}
+
+.nav-toggle {
+  width: 30px;
+  height: 3px;
+  position: relative;
+  background-color: var(--neutral-95);
+  transition: all 0.3s ease;
+  z-index: 1;
+  
+}
+
+
+.container-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 24px;
+}
+
 .line {
-    height: 2px;
-    background-color: var(--red-light);
-    width: 250px;
+  height: 2px;
+  background-color: var(--red-light);
+  width: 250px;
 }
 
 .sidebar-nav {
-    text-decoration: none;
-    padding-top: 32px;
-    padding-left: 0px;
+  text-decoration: none;
+  padding-top: 32px;
+  padding-left: 0px;
 }
 
-.text-body-heavy{
-    color: var(--neutral-95);
+.text-body-heavy {
+  color: var(--neutral-95);
 }
 
-.text-body-item{
-    color: var(--neutral-95);
-    font-family: "FiraSans-Regular";
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+.text-body-item {
+  color: var(--neutral-95);
+  font-family: "FiraSans-Regular";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 
 .sidebar-link {
-    display: block;
+  display: block;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
-.menu-one{
-    padding-left: 36px;
-    padding-right: 38px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    height: 50px;
-    cursor: pointer !important;
+.menu-one {
+  padding-left: 36px;
+  padding-right: 38px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  height: 50px;
+  cursor: pointer !important;
 }
 
 .menu-two {
-    padding-left: 86px;
-    padding-right: 38px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    cursor: pointer !important;
+  padding-left: 86px;
+  padding-right: 38px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  cursor: pointer !important;
 }
 
-.menu-two:hover{
-    background-color: var(--blue-60);
+.menu-two:hover {
+  background-color: var(--blue-60);
 }
 
 
+.nav-toggle:before,
+.nav-toggle:after {
+  content: "";
+  width: 30px;
+  height: 3px;
+  background-color: var(--neutral-95);
+  position: absolute;
+  transition: all 0.3s ease;
+}
 
-.nav-container {
-    position: relative;
-    display: inline-block;
-    max-width: 50px; /* $toggleSize + $toggleMargin */
-    max-height: 50px; /* $toggleSize + $toggleMargin */
-    overflow: visible;
-    outline: none;
+.nav-toggle:before {
+  top: -10px;
+}
+
+.nav-toggle:after {
+  top: 10px;
+}
+
+.nav-container.is-active .nav-toggle {
+  background-color: transparent !important;
+}
+
+.nav-container.is-active .nav-toggle:before {
+  transform: rotate(45deg) !important;
+  top: 0px;
+
+}
+
+.nav-container.is-active .nav-toggle:after {
+  transform: rotate(-45deg) !important;
+  top: 0px;
+}
+
+.nav-container.is-active {
+  left: 200px;
+}
+
+@media(max-width: 1280px){
+
+
+  #sidebar{
+    left: -250px;
+    position: fixed;
+  }
+
+  .nav-container{
+    display: flex;
+
   }
   
-  .nav-container.is-active .nav-toggle:before, 
-  .nav-container.is-active .nav-toggle:after {
-    box-shadow: none;
-  }
-  
-  .nav-container.is-active .nav-toggle:before {
-    transform: rotate(-45deg);
-  }
-  
-  .nav-container.is-active .nav-toggle:after {
-    transform: rotate(45deg);
-  }
-  
-  .nav-container.is-active .nav-items {
-    transform: translate(0, 0);
-  }
-  
-  .nav-toggle {
-    position: relative;
-    width: 40px; /* $toggleSize */
-    height: 40px; /* $toggleSize */
-    margin: 10px; /* $toggleMargin */
-    z-index: 2;
-  }
-  
-  .nav-toggle:hover {
-    cursor: pointer;
-  }
-  
-  .nav-toggle:before, 
-  .nav-toggle:after {
-    content: "";
-    position: absolute;
-    top: 18px; /* $offset - $toggleLine / 2 */
-    left: 0;
-    transform: translate(0, 0);
-    width: 100%;
-    height: 4px; /* $toggleLine */
-    background: var(--blue); /* $toggleColor */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .nav-toggle:before {
-    box-shadow: 0 13.33px 0 0 red; /* $offset / 1.5 and $toggleColor */
-  }
-  
-  .nav-toggle:after {
-    box-shadow: 0 -13.33px 0 0 red; /* -$offset / 1.5 and $toggleColor */
-  }
-  
-  .nav-items {
-    position: absolute;
-    top: 0;
-    left: 0;
-    min-width: 300px;
-    max-width: 50vw;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1;
-    padding: 80px 20px 20px 10px;
-    transition: transform 0.3s ease;
-    transform: translate(calc(-100% - 50px), 0);
-    background: #EFEFEF;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 5px 0;
-    align-content: start;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
-  }
-  
-  .nav-items .nav-item {
-    background: #DADADA; /* darken(#EFEFEF, 5%) */
-    padding: 10px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .nav-items .nav-item:hover {
-    cursor: pointer;
-    background: #C9C9C9; /* darken(#EFEFEF, 10%) */
-  }
+}

@@ -1,26 +1,40 @@
-<aside id="sidebar">
-    <div class="sidebar-container text-light">
-        <div class="image-container">
-            <img src="assets/images/logo-unicauca.svg" alt="Logo Unicauca">
+<ng-container *ngIf="isSidebarActive; else noActive">
+    <aside id="sidebar" [class.active]="isSidebarActive">
+        <div class="sidebar-container text-light">
+            <div class="image-container">
+                <img src="assets/images/logo-unicauca.svg" alt="Logo Unicauca">
+            </div>
+            <div class="container-line">
+                <div class="line"></div>
+            </div>
         </div>
-        <div class="container-line">
-            <div class="line"></div>
-        </div>
-    </div>
 
-    <ul class="sidebar-nav">
-        <li class="sidebar-item" *ngFor="let item of sidebarItems">
-            <a class="sidebar-link menu-one text-nowrap collapse">
-                <img src='{{item.icon}}' alt="icon-evaluation">
-                <span class="text-body-heavy mx-3">{{item.label}}</span>
-            </a>
-            <ul class="list-unstyled collapsed" *ngFor="let itemList of item.sub ">
-                <li class="sidebar-item">
-                    <a routerLink="{{itemList.url}}" class="sidebar-link collapse text-body-item menu-two">
-                        {{itemList.label}}
-                    </a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</aside>
+        <ul class="sidebar-nav">
+            <li class="sidebar-item" *ngFor="let item of sidebarItems">
+                <a class="sidebar-link menu-one text-nowrap collapse">
+                    <img src='{{item.icon}}' alt="icon-evaluation">
+                    <span class="text-body-heavy mx-3">{{item.label}}</span>
+                </a>
+                <ul class="list-unstyled collapsed" *ngFor="let itemList of item.sub">
+                    <li class="sidebar-item">
+                        <a routerLink="{{itemList.url}}" class="sidebar-link collapse text-body-item menu-two">
+                            {{itemList.label}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+</ng-container>
+
+
+<ng-template #noActive>
+    <aside id="sidebar-toggle" [class.active]="!isSidebarActive">
+
+    </aside>
+</ng-template>
+
+
+<div class="nav-container" [class.is-active]="isSidebarActive" (click)="toggleSidebar()">
+    <div class="nav-toggle"></div>
+</div>

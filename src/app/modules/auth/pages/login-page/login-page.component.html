@@ -1,0 +1,58 @@
+<div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+        <div class="col-md-6 col-12 d-flex align-items-center justify-content-center">
+            <div class="login-container">
+                <h2 class="title-two mb-5">Iniciar Sesión</h2>
+                <form [formGroup]="authForm" (ngSubmit)="onLogin()" autocomplete="off">
+
+                    <div class="form-group mb-3">
+                        <label for="email" class="text-body-heavy mb-2"
+                            [ngClass]="{'error-label': isValidField('email')}">Correo electrónico <span
+                                class="obligatoryField" pTooltip="Campo obligatorio"> * </span></label>
+                        <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo"
+                            formControlName="email"
+                            [ngClass]="{'input-error': isValidField('email'), 'input': !isValidField('email')}">
+                        <span *ngIf="isValidField('email')" class="error-message text-body-small-r ms-1">
+                            {{ getFieldError("email") }}
+                        </span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="password" class="text-body-heavy mb-2"
+                            [ngClass]="{'error-label': isValidField('password')}">Contraseña <span
+                                class="obligatoryField" pTooltip="Campo obligatorio"> * </span></label>
+                        <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña"
+                            formControlName="password"
+                            [ngClass]="{'input-error': isValidField('password'), 'input': !isValidField('password')}">
+                        <span *ngIf="isValidField('password')" class="error-message text-body-small-r ms-1">
+                            {{ getFieldError("password") }}
+                        </span>
+                    </div>
+
+                    <div class="d-flex mt-2 mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input custom-check" type="checkbox" id="flexCheckDefault"
+                                formControlName="remember" />
+                            <label class="form-check-label text-body-small-r" for="flexCheckDefault"> Recordarme
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-custom-normal text-body-heavy w-100 mb-3">Ingresar</button>
+
+                    <div class="d-flex">
+                        <img src="../../../../../assets/icons/lock.svg" Salt="Icono"
+                            class="svg-icon me-2 pt-2 align-self-start">
+                        <span class="text-body-small-r">Recuerda que los datos personales y credenciales están
+                            protegidos por nuestra <b>Política de Protección de Datos Personales.</b></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6 col-12 d-flex align-items-center justify-content-center">
+            <div class="w-100 h-100 position-relative">
+                <img src="../../../../../assets/images/login.svg" alt="" class="img-fluid w-100 h-100 object-fit-cover">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+.login-container {
+    width: 420px;
+}
+
+.input {
+    border-color: var(--blue) !important;
+    padding-left: 10px !important;
+    height: 63px !important;
+    color: var(--blue) !important;
+}
+
+.input-error {
+    border-color: var(--error-ligth) !important;
+    padding-left: 10px !important;
+    height: 63px !important;
+    color: var(--error-ligth) !important;
+}
+
+.input-error::placeholder {
+    color: var(--error-ligth) !important;
+}
+
+.input::placeholder {
+    color: var(--blue) !important;
+}
+
+.input:focus {
+    border-color: var(--neutral-70) !important;
+    /* Cambiar el color del borde al enfocar y le quita la sombra */
+    box-shadow: none !important;
+    /* quitar la sombra al enfocar*/
+}
+
+.btn-custom-normal {
+    color: var(--white);
+    background-color: var(--blue);
+    border: none;
+    border-radius: 8px;
+    width: 120px;
+    height: 45px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.custom-check:checked {
+    background-color: var(--blue);
+    border-color: var(--blue);
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.custom-position {
+    margin-top: 24px;
+    margin-left: 40px;
+}

@@ -1,0 +1,43 @@
+.pagination {
+    --bs-pagination-padding-x: 0.1rem;
+    --bs-pagination-padding-y: 0.1rem;
+  }
+  
+  .page-link {
+    color: var(--blue);
+    background-color: transparent;
+    border-color: transparent;
+    vertical-align: middle;
+    padding: 0 1rem;
+  }
+  
+  .page-link:hover {
+    color: var(--red-light);
+  }
+  
+  .page-link img:hover {
+    filter: invert(41%) sepia(88%) saturate(6683%) hue-rotate(329deg) brightness(100%) contrast(100%);
+  }
+  
+  .page-item.active .page-link {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--red-light);
+  }
+  
+  .text-body-heavy {
+    color: var(--neutral-60) !important;
+  }
+  
+  .page-item.disabled .page-link img {
+    filter: brightness(0) saturate(100%) invert(66%) sepia(2%) saturate(1032%) hue-rotate(215deg) brightness(87%) contrast(87%);
+  }
+  
+  .page-link img {
+    filter: brightness(0) saturate(100%) invert(7%) sepia(72%) saturate(7421%) hue-rotate(243deg) brightness(66%) contrast(117%);
+  }
+  
+  .page-link.single-page {
+    color: var(--neutral-60) !important;
+  }
+  

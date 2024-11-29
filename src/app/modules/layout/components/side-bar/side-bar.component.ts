@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -12,7 +12,8 @@ import { RouterModule } from '@angular/router';
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.css'
 })
-export class SideBarComponent {
+export class SideBarComponent implements OnInit {
+  public isSidebarActive: boolean = true;
   public sidebarItems = [
     {
       label: 'Evaluación Docente', 
@@ -28,7 +29,7 @@ export class SideBarComponent {
         },
         {
           label:'Consolidado',
-          url:'/app/gestion-soportes/consolidado'
+          url:'/app/gestion-soportes/consolidado/lista-docentes'
         },
         {
           label:'CPD',
@@ -41,7 +42,32 @@ export class SideBarComponent {
       ]
     },
 
+  
+
     // { label: '', icon: '', url: '' },
     // { label: '', icon: '', url: '' }
   ]
+
+  ngOnInit(): void {
+    
+  }
+  
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkScreenSize();
+  }
+  
+
+  toggleSidebar() {
+    this.isSidebarActive = !this.isSidebarActive;
+  }
+
+  private checkScreenSize() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 1280) {
+      this.isSidebarActive = false;
+    } else {
+      this.isSidebarActive = true;
+    }
+  }
 }

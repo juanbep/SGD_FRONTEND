@@ -1,0 +1,129 @@
+<div class="view-container">
+    <span class="title-two">Consolidado</span>
+
+    <div class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+        <span class="text-body-heavy">A continuación, encontrará el listado de actividades asignadas al docente.</span>
+    </div>
+
+    <div class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+        <span class="text-body-heavy">Tenga en cuenta que, para que el consolidado pueda ser enviado al CPD, este debe
+            ser aprobado.</span>
+    </div>
+
+    <!-- Información del docente -->
+    <section>
+        <span class="title-three">Información docente</span>
+        <div class="spacing"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        <span class="text-body-regular">Nombres y apellidos</span>
+                        <br>
+                        <span class="text-body-small-sb">Pepito</span>
+                    </th>
+                    <th>
+                        <span class="text-body-regular">Num.Id</span>
+                        <br>
+                        <span class="text-body-small-sb">99999999</span>
+                    </th>
+                    <th>
+                        <span class="text-body-regular">Vinculación</span>
+                        <br>
+                        <span class="text-body-small-sb">Planta</span>
+                    </th>
+                    <th>
+                        <span class="text-body-regular">Dedicación</span>
+                        <br>
+                        <span class="text-body-small-sb">Tiempo completo </span>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="text-body-regular">
+                            <span class="text-body-regular">Facultad</span>
+                            <br>
+                            <span class="text-body-small-sb">FIET</span>
+                        </span>
+                    </th>
+                    <th>
+                        <span class="text-body-regular">Departamento</span>
+                        <br>
+                        <span class="text-body-small-sb">Sistemas</span> 
+                    </th>
+                    <th>
+                        <span class="text-body-regular">Periodo consolidado</span>
+                        <br>
+                        <span class="text-body-small-sb">2023-1</span> 
+                    </th>
+                    <th>
+                        <span class="text-body-regular">Total horas</span>
+                        <br>
+                        <span class="text-body-small-sb">84</span> 
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </section>
+
+    <span class="title-three">Actividades</span>
+
+    <!-- Filtros de actividades -->
+
+    <consolidated-teacher-filter></consolidated-teacher-filter>
+
+    <!-- Tabla de actividades -->
+
+    <consolidated-teacher-table></consolidated-teacher-table>
+
+    <!-- Resumen evaluación actividades -->
+    <section>
+        <div class="row">
+            <div class="col messages-container">
+                <span class="text-body-regular">Porcentaje de evaluación completado: </span> <span class="text-body-heavy">50%</span>
+            </div>
+            <div class="col-1"></div>
+            <div class="col messages-container">
+                <span class="text-body-regular">Acumulado evaluación: </span> <span class="text-body-heavy">100.0</span>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Botones de acción -->
+    <section id="consolidate-teacher-button-main">
+        <button class="button-main text-body-heavy" style="color: var(--white) !important">Aprobar consolidado</button>
+    </section>
+
+    <!-- Historial de consolidados -->
+
+    <section>
+        <span class="title-three"> Historial de consolidados generados</span>
+        <div class="spacing"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Fecha de generación
+                    </th>
+                    <th>
+                        Consolidado
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        2023-01-01 12:00:00
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+</div>

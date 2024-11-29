@@ -1,0 +1,78 @@
+<ng-container *ngIf="responsabilities?.length; else nullData">
+    <table>
+        <thead>
+            <tr>
+                <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
+                <th colspan="4"> {{headDataTable[1]}}</th>
+                <th class="text-body-heavy center-text"> {{headDataTable[2]}}</th>
+            </tr>
+            <tr>
+                <th class="text-body-regular" *ngFor="let subHead of subHeadDataTableStudents">
+                    <span>{{subHead}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let responsabilties of responsabilitieByType">
+            <tr>
+                <td class="text-body-heavy text-center" colspan="5">{{responsabilties.nombreType}}</td>
+            </tr>
+            <tr *ngFor="let responsability of responsabilties.activities">
+                <td class="text-body-regular">{{responsability.nombre}}</td>
+                <td class="text-body-regular">{{responsability.evaluado.nombres}}
+                    {{responsability.evaluado.apellidos}}</td>
+                <td class="text-body-regular">{{responsability.evaluado.roles[0].nombre}}</td>
+                <td class="text-body-regular">{{responsability.fuentes[1].estadoFuente}}</td>
+                <td class="text-center">
+                    <button *ngIf="responsability.fuentes[1].estadoFuente==='Pendiente'" class="button-table"
+                        id="button-table" (click)="openModalUpload(responsability)">
+                        <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload">
+                    </button>
+                    <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
+                        <img src="assets/icons/tables/icon-view.svg" alt="icon-view" (click)="openModalView(responsability)">
+                    </button>
+                    <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
+                        <img src="assets/icons/tables/icon-pen.svg" alt="icon-view" (click)="openModalEdit(responsability)">
+                    </button>
+                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='Pendiente'" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
+                    <responsibilities-view-evaluation *ngIf="openModalViewSelected && resposabilitySelected === responsability" [source]="responsability.fuentes[1]" [responsability]="responsability" [openModalSelected]="true" (closeModalSelected)="closeModalView($event)"></responsibilities-view-evaluation>
+                    <responsibilities-edit-evaluation *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [openModalSelected]="true" (closeModalEditSelected)="closeModalEdit($event)"></responsibilities-edit-evaluation>
+                </td>
+                <td class="text-center">
+                    <ng-container *ngIf="responsability.informeEjecutivo==true; else noReport">
+                        <button *ngIf="responsability.fuentes[0].nombreDocumentoFuente" class="button-table">
+                            <img src="assets/icons/tables/icon-download.svg" alt="icon-view" (click)="downloadReport(responsability)">
+                        </button>
+                        <span *ngIf="!responsability.fuentes[0].nombreDocumentoFuente"> Pendiente </span>
+                    </ng-container>
+                    <ng-template #noReport>
+                        <span>N/A</span>
+                    </ng-template>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-container>
+
+
+<ng-template #nullData>
+    <table>
+        <thead>
+            <tr>
+                <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
+                <th class="text-body-heavy center-text" colspan="4"> {{headDataTable[1]}}</th>
+            </tr>
+            <tr>
+                <th class="text-body-regular" *ngFor="let subHead of subHeadDataTableStudents">
+                    <span>{{subHead}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-body-regular text-center">
+                <th colspan="7">
+                    No cuenta con actividades registradas
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</ng-template>

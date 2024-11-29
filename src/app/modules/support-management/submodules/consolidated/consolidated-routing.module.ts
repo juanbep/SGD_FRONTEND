@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ConsolidatedComponent } from './pages/consolidated/consolidated.component';
+import { TeachersListComponent } from './pages/teachers-list/teachers-list.component';
+import { ConsolidatedTeacherComponent } from './pages/consolidated-teacher/consolidated-teacher.component';
 
 export const routes: Routes = [
     {
-        path: '',
-        component: ConsolidatedComponent 
+        path: 'lista-docentes',
+        component: TeachersListComponent 
+    },
+    {
+      path: 'consolidado-docente',
+      component: ConsolidatedTeacherComponent
     }
 ]
 

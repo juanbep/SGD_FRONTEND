@@ -1,1 +1,123 @@
-<p>activities-edit-evaluation works!</p>
+<div id="myModalEdit" class="modal">
+    <div class="modal-content">
+        <span class="title-three">Editar evaluación</span>
+        <div class="line"></div>
+        <div class="messages-container">
+            <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
+            <span class="text-body-regular">A continuación encontrará la información de la actividad seleccionada</span>
+        </div>
+        <!--Sección carga de autoevaluación -->
+        <section id="dowload-support">
+            <span class="title-three">Soporte</span>
+            <ng-container *ngIf="fileDeleted==false; else fileDeletedTemplate">
+                <div class="download-file-container">
+                    <div class="download-file-label">
+                        <span class="text-body-small-r">Soporte</span>
+                        <br>
+                        <span class="text-body-small-sb">
+                            {{fileNameSelected()}}
+                        </span>
+                    </div>
+                    <div class="file-actions">
+                        <button class="button-actions button-delete button-radius-custom" (click)="deleteFile()"></button>
+                        <button class="button-actions button-download" (click)="downloadFile()"></button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #fileDeletedTemplate>
+                <div class="file-upload-container">
+                    <label for="uploadFileAssessment" class="file-upload-label">
+                        <div class="file-details">
+                            <p class="file-title text-body-small-sb">
+                                Soporte
+                            </p>
+                            <p class="file-name text-body-small-r">
+                                {{fileNameSelected()? fileNameSelected() : 'Seleccione un archivo'}}
+                            </p>
+                        </div>
+                        <input type="file" id="uploadFileAssessment" (change)="onFileSelected($event)" hidden>
+                    </label>
+                    <div class="file-actions">
+                            <button class="button-upload button-actions button-border-radius" (click)="triggerFileUpload()"></button>
+                    </div>
+                </div>
+            </ng-template>
+        </section>
+
+        <!-- Sección diligenciar informe ejecutivo -->
+        <section id="dowload-support" *ngIf="activity?.informeEjecutivo===true">
+            <span class="title-three">Informe ejecutivo</span>
+            <ng-container *ngIf="reportDeleted==false && activity!.fuentes[0].nombreDocumentoInforme!=null; else reportDeletedTemplate">
+                <div class="download-file-container">
+                    <div class="download-file-label">
+                        <span class="text-body-small-r">Informe ejecutivo</span>
+                        <br>
+                        <span class="text-body-small-sb">
+                            {{fileReportNameSelected()}}
+                        </span>
+                    </div>
+                    <div class="file-actions">
+                        <button class="button-actions button-delete button-radius-custom" (click)="deleteReport()"></button>
+                        <button class="button-actions button-download" (click)="downloadReport()"></button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #reportDeletedTemplate>
+                <div class="file-upload-container">
+                    <label for="uploadFileAssessment" class="file-upload-label">
+                        <div class="file-details">
+                            <p class="file-title text-body-small-sb">
+                                Informe ejecutivo
+                            </p>
+                            <p class="file-name text-body-small-r">
+                                {{fileReportNameSelected()? fileReportNameSelected() : 'Seleccione un archivo'}}
+                            </p>
+                        </div>
+                        <input type="file" id="uploadFileAssessment" (change)="onFileReportSelected($event)" hidden>
+                    </label>
+                    <div class="file-actions">
+                            <button class="button-upload button-actions button-border-radius" (click)="triggerFileUpload()"></button>
+                    </div>
+                </div>
+            </ng-template>
+        </section>
+
+        <!-- Sección diligenciar evaluación -->
+        <section id="assessment-fill-out-responsability">
+            <div class="messages-container">
+                <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
+                <span class="text-body-regular">Asegurese que la evaluación ingresada sea la misma que se encuentra en
+                    el soporte</span>
+            </div>
+            <span class="title-three">Calificación</span><br>
+            <input id="input-note" [(ngModel)]="evaluation" [ngClass]="getInputClass()"    
+            class="evaluation text-body-heavy" type="text" placeholder="Nota"><br>
+            <span [ngClass]="{
+                'text' : errorEvaluation===true,
+                'text-display text-body-regular-small-r': errorEvaluation===false
+            }">Valores permitidos 0-100</span>
+            <span [ngClass]="{
+                'text-error text-body-text-body-small-r' : errorEvaluation===true,
+                'text' : errorEvaluation===false
+            }">La nota debe estar entre 0 y 100</span>
+        </section>
+        <!-- Observation section -->
+        <section id="observation-responsability">
+            <span class="title-three">Observaciones</span>
+            <input class="observation text-body-regular" type="text" placeholder="Ingrese sus observaciones"
+                [(ngModel)]="observation">
+        </section>
+        <!-- Buttons section -->
+        <section id="buttons-responsability">
+            <div class="modal-buttons">
+                <button class="button-modal text-body-heavy" (click)="closeModal()">
+                    Cerrar
+                </button>
+                <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
+                    Guardar
+                </button>
+            </div>
+        </section>
+    </div>
+</div>
+

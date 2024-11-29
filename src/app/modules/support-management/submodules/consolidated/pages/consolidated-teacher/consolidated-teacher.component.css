@@ -1,0 +1,33 @@
+section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.spacing {
+    margin-bottom: 10px;
+}
+
+.messages-container {
+    height: 54px !important;
+}
+
+.button-main {
+    display: flex;
+    width: 254px;
+    height: 64px;
+    margin-left: 10px;
+    margin-top: 1px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 100px;
+    border: none;
+    background: var(--blue);
+
+
+}
+
+#consolidate-teacher-button-main{
+    width: 100%;
+    justify-items: center;
+}

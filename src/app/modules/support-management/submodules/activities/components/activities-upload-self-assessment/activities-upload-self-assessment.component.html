@@ -81,7 +81,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let activitie of myActivities; let i = index">
+                                <tr *ngFor="let activitie of userActivities; let i = index">
                                     <td>
                                         <span class="text-body-small-r">{{activitie.codigoActividad}}</span>
                                     </td>
@@ -94,20 +94,28 @@
                                     </td>
 
                                     <ng-container *ngIf="activitie.informeEjecutivo; else noReport">
-                                        <td  class="center-text">
-                                            <img src="assets/icons/tables/icon-upload.svg" alt=""
-                                                (click)="triggerFileUploadReport(activitie)" style="cursor: pointer;">
-                                            <input type="file" id="uploadFileReport"
-                                                (change)="uploadReport(activitie,$event,i)" hidden>
-                                        </td>
+                                        <ng-container  *ngIf="!activitie.fuentes[0].informeEjecutivo; else viewReportUploaded">
+                                            <td  class="center-text">
+                                                <img src="assets/icons/tables/icon-upload.svg" alt=""
+                                                    (click)="triggerReportFileUpload(activitie)" style="cursor: pointer;">
+                                                <input type="file" id="uploadFileReport"
+                                                    (change)="onRepportFileSelected($event)" hidden>
+                                            </td>
+                                        </ng-container>
+                                        <ng-template #viewReportUploaded>
+                                            <td class="center-text">
+                                                <img src="assets/icons/tables/icon-view.svg" alt="" (click)="downloadReportFile(activitie)" style="cursor: pointer;">
+                                                <img src="assets/icons/tables/icon-trash.svg" alt="" (click)="deleteReportFile(activitie)" >
+                                            </td>
+                                        </ng-template>
                                     </ng-container>
-
 
                                     <ng-template #noReport>
                                         <td class="center-text">
                                             <span>N/A</span>
                                         </td>
                                     </ng-template>
+
                                 </tr>
                             </tbody>
                         </table>
@@ -133,11 +141,11 @@
                                     {{fileNameSelected()? fileNameSelected() : 'Seleccione un archivo'}}
                                 </p>
                             </div>
-                            <input type="file" id="uploadFileAssessment" (change)="onFileSelected($event)" hidden>
+                            <input type="file" id="uploadFileAssessment" (change)="onSupportFileSelected($event)" hidden>
                         </label>
                         <div class="file-actions">
                             <button class="button-upload button-actions button-border-radius"
-                                (click)="triggerFileUpload()"></button>
+                                (click)="triggerSupportFileUpload()"></button>
                         </div>
                     </div>
                     <span [ngClass]="{
