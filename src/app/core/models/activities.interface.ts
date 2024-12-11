@@ -35,7 +35,8 @@ export interface Fuente {
     calificacion: number;
     nombreDocumentoFuente: string;
     nombreDocumentoInforme: string;
-    informeEjecutivo: string;
+    informeEjecutivo: File | null;
+    soporte: File | null;
     observacion: string;
     fechaCreacion: string;
     fechaActualizacion: string;

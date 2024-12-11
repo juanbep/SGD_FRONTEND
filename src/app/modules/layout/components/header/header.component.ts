@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'layout-header',
@@ -9,4 +10,10 @@ import { Component } from '@angular/core';
 })
 export class HeaderComponent {
 
+  private router: Router = inject(Router);
+
+  logOut(){
+    sessionStorage.removeItem('token');
+    this.router.navigate(['/auth']);
+  }
 }

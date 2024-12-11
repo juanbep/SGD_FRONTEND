@@ -64,12 +64,12 @@ export class SmActivitiesServicesService {
   /*
     * Method to download the report file
     * @param idSource:number
-    * @param isReport:boolean
+    * @param report:boolean
     * @returns void
     * */
 
-  downloadReportFile(idSource: number, isReport:boolean ): Observable<any> {
-    let params = new HttpParams().set('isReport', isReport);
+  downloadReportFile(idSource: number, report:boolean ): Observable<any> {
+    let params = new HttpParams().set('report', report);
     return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { params, responseType: 'blob' });
   }
   

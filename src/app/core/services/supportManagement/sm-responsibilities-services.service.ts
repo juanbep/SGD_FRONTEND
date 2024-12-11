@@ -2,7 +2,6 @@
 import { environments } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { MessagesInfoService } from '../../../shared/services/messages-info.service';
 import { Responsabilidad } from '../../models/responsibilitie.interface';
 import { SourceEvaluation } from '../../models/responsibilitie.interface';
 
@@ -13,7 +12,7 @@ export class SmResponsibilitiesServicesService {
 
     private baseUrl: string = environments.baseUrl;
 
-    constructor(private httpClient: HttpClient, private toastr: MessagesInfoService) { }
+    constructor(private httpClient: HttpClient) { }
 
 
     /*
@@ -66,12 +65,12 @@ export class SmResponsibilitiesServicesService {
     /*
         * Method to download the report file
         * @param idSource:number
-        * @param isReport:boolean
+        * @param report:boolean
         * @returns Observable<any>
         */
 
-    downloadReportFile(idSource: number, isReport:boolean ): Observable<any> {
-        let params = new HttpParams().set('isReport', isReport);
+    downloadReportFile(idSource: number, report:boolean ): Observable<any> {
+        let params = new HttpParams().set('report', report);
         return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { params, responseType: 'blob' });
       }
       

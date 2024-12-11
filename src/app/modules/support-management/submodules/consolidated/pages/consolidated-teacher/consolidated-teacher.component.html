@@ -94,7 +94,7 @@
 
     <!-- Botones de acción -->
     <section id="consolidate-teacher-button-main">
-        <button class="button-main text-body-heavy" style="color: var(--white) !important">Aprobar consolidado</button>
+        <button class="button-main text-body-heavy" style="color: var(--white) !important" (click)="createConsolidated()">Aprobar consolidado</button>
     </section>
 
     <!-- Historial de consolidados -->
@@ -127,3 +127,5 @@
     </section>
     
 </div>
+
+<app-approve-consolidated-confirm-dialog></app-approve-consolidated-confirm-dialog>

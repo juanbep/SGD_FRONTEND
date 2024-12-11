@@ -20,7 +20,6 @@ export class ActivitiesTableComponent {
   public headDataTable = ["Actividades", "Autoevaluación", "Fuente 2"]
   public subHeadDataTable = ["Nombre actividad", "Estado", "Acciones", "Evaluador", "Rol Evaluador", "Estado", "Acciones"]
   public openModalViewSelected: boolean = false;
-  public openModalEditSelected: boolean = false;
   public activitySelected: Actividad | undefined;
   public sourceSelected: 1 | 2 | undefined;
   
@@ -30,17 +29,10 @@ export class ActivitiesTableComponent {
       this.reloadActivities();
     });
    }
+   
 
   ngOnInit(): void {
-    this.service.getActivities('6', '', '', '', '').subscribe({
-       next: data => {
-        this.service.setDataActivities(data);
-       },
-       error: error => {
-        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-      } 
-    });
- 
+    this.activities = this.service.getDataActivities();
   }
 
   public openModalView(activity: Actividad, source: 1 | 2) {
@@ -49,18 +41,8 @@ export class ActivitiesTableComponent {
     this.activitySelected = activity;
   }
 
-  public openModalEdit(activity: Actividad) {
-    this.openModalEditSelected = !this.openModalEditSelected;
-    this.activitySelected = activity;
-  }
-
   public closeModalView(event: boolean) {
     this.openModalViewSelected = !event;
-    console.log(this.openModalViewSelected);
-  }
-
-  public closeModalEdit(event: boolean) {
-    this.openModalEditSelected = !event;
     console.log(this.openModalViewSelected);
   }
   

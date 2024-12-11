@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { Actividad, Fuente } from '../../../../../../core/models/activities.interface';
-import { Responsabilidad } from '../../../../../../core/models/responsibilitie.interface';
+import { Fuente, Responsabilidad } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
@@ -17,9 +16,6 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 export class ResponsibilitiesViewEvaluationComponent {
   @Input()
   public source: Fuente | null = null;
-
-  @Input()
-  public activity: Actividad | null = null;
 
   @Input()
   public responsability: Responsabilidad | null = null;

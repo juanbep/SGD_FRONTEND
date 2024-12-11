@@ -8,6 +8,39 @@
     <p class="title-three">Listado de actividades asignadas para el periodo 2024-2</p>
     <activities-filter></activities-filter>
     <activities-table></activities-table>
-    <activities-upload-self-assessment></activities-upload-self-assessment>
 
+
+    <!-- Sección mensaje estado de la autoevaluación -->
+    <section id="self-assessment-message-section">
+        <ng-container >
+            <div class="messages-container">
+                <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+                <span class="text-body-regular">Seleccione esta opción si desea cargar la autoevaluación utilizando un
+                    formato
+                    externo.</span>
+            </div>
+        </ng-container>
+        <ng-template>
+            <div class="messages-continter-green">
+                <img src="assets/icons/messages/icon-check.svg" alt="teacher-icon">
+                <span class="text-body-regular">Todas las autoevaluaciones han sido completadas.</span>
+            </div>
+        </ng-template>
+    </section>
+
+    <section style="width: 40%;">
+        <div class="buttons-container" >
+            <span class="title-three">Autoevaluación</span>
+            <div class="buttons-actions">
+                <button [ngClass]="{'button-fill-out': checkActivitiesPendingVar,
+                ' button-fill-out-disabled': !checkActivitiesPendingVar
+                }" class="button-actions" (click)="uploadSelfAssessment()"></button>
+                <button [ngClass]="{'button-edit': !checkActivitiesPendingVar,
+                'button-edit-disabled': checkActivitiesPendingVar
+                }"  id="activities-table-button-edit" class="button-actions" (click)="editSelfAssessment()"></button>
+            </div>
+        </div>
+    </section>
 </div>
+<activities-upload-self-assessment></activities-upload-self-assessment>
+<activities-edit-evaluation></activities-edit-evaluation>

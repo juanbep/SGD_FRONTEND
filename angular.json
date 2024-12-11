@@ -31,6 +31,7 @@
               "src/customStyles/formStyle.css",
               "src/customStyles/infoMessages.css",
               "src/customStyles/toastStyles.css",
+              "src/customStyles/buttonsStyles.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []

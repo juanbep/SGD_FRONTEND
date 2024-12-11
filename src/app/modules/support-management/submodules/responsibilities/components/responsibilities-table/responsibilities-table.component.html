@@ -39,10 +39,10 @@
                 </td>
                 <td class="text-center">
                     <ng-container *ngIf="responsability.informeEjecutivo==true; else noReport">
-                        <button *ngIf="responsability.fuentes[0].nombreDocumentoFuente" class="button-table">
+                        <button *ngIf="responsability.fuentes[0].nombreDocumentoInforme" class="button-table">
                             <img src="assets/icons/tables/icon-download.svg" alt="icon-view" (click)="downloadReport(responsability)">
                         </button>
-                        <span *ngIf="!responsability.fuentes[0].nombreDocumentoFuente"> Pendiente </span>
+                        <span *ngIf="!responsability.fuentes[0].nombreDocumentoInforme"> Pendiente </span>
                     </ng-container>
                     <ng-template #noReport>
                         <span>N/A</span>

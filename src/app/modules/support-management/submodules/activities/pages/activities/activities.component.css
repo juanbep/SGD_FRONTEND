@@ -1,0 +1,9 @@
+#activities-table-button-edit {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid var(--white);
+}
+
+section {
+    margin-bottom: 15px;
+}

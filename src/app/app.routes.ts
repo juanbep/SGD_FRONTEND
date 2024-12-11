@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './security/auth.guard';
 
 export const routes: Routes = [
     {
         path:'app',
-        loadChildren: ()=> import('./modules/layout/layout-routing.module').then(m=>m.LayoutRoutingModule)
+        loadChildren: ()=> import('./modules/layout/layout-routing.module').then(m=>m.LayoutRoutingModule),
+        canActivate: [AuthGuard]
     },
     {
         path:'auth',
@@ -11,6 +13,6 @@ export const routes: Routes = [
     },
     {
         path:'**',
-        redirectTo: 'app'
+        redirectTo: 'auth'
     }
 ];

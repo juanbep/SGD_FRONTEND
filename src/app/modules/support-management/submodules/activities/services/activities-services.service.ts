@@ -1,4 +1,4 @@
-import { effect, Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { SmActivitiesServicesService } from '../../../../../core/services/supportManagement/sm-activities-services.service';
 import { Actividad, SourceEvaluation } from '../../../../../core/models/activities.interface';
 
@@ -29,8 +29,8 @@ export class ActivitiesServicesService {
         return this.service.downloadSourceFile(idSource);
     }
     
-    getDownloadReportFile(idSource: number, isReport:boolean) {
-        return this.service.downloadReportFile(idSource, isReport);
+    getDownloadReportFile(idSource: number, report:boolean) {
+        return this.service.downloadReportFile(idSource, report);
     }
 
 

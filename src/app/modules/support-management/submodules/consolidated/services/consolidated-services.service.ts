@@ -49,6 +49,16 @@ export class ConsolidatedServicesService {
     getConslidatedByTeacher(teacherId: number): any {
         return this.service.getConslidatedByTeacher(teacherId);
     }
+
+    /*
+    * Send email
+    * @param {number} teacherId
+    * @param {any} email
+    * @returns {any}
+    * */
+    sendEmail(emails: string[], observation:string): any {
+        return this.service.sendEmail(emails, observation);
+    }
 }
 
 

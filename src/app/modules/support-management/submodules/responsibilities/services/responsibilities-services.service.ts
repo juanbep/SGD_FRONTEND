@@ -32,8 +32,8 @@ export class ResponsibilitiesServicesService {
         return this.service.downloadSourceFile(idSource);
     }
 
-    getDownloadReportFile(idSource: number, isReport:boolean) {
-        return this.service.downloadReportFile(idSource, isReport);
+    getDownloadReportFile(idSource: number, report:boolean) {
+        return this.service.downloadReportFile(idSource, report);
     }
 
 

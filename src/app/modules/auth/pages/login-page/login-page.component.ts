@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthServiceService } from '../../service/auth-service.service';
 
 @Component({
   selector: 'login-page',
@@ -15,6 +17,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 export class LoginPageComponent {
   
   private formBuilder: FormBuilder = inject(FormBuilder);
+  private router: Router = inject(Router);
+  private service: AuthServiceService = inject(AuthServiceService);
 
   authForm: FormGroup = this.formBuilder.group({
     email: [''],
@@ -25,7 +29,11 @@ export class LoginPageComponent {
    * On login form submit
    */
   onLogin(){
-    //TODO: Implement login logic
+    this.service.login(this.authForm.value.email, this.authForm.value.password);
+    this.service.getUserInfo(6).subscribe((data) => {
+      console.log(data);
+    });
+    this.router.navigate(['/app']);
   }
 
 

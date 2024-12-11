@@ -4,7 +4,7 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 
 const routes: Routes = [
   {
-    path: 'inicio-sesion',
+    path: '',
     component: LoginPageComponent,
   }
 ];
