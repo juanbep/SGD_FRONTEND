@@ -1,6 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
+import { Consolidated, Teacher } from '../../models/consolidated.interface';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +18,8 @@ export class SmConsolidatedServicesService {
     * @returns {any}
     * */
 
-  getTeachers():any{
-    return this.http.get(this.apiUrl + '/teachers');
+  getTeachers():Observable<Teacher[]>{
+    return this.http.get<Teacher[]>(this.apiUrl + '/usuario/obtenerDocentes');
   }
 
   /*
@@ -35,8 +37,11 @@ export class SmConsolidatedServicesService {
   * @param {number} teacherId
   * @returns {any}
   * */
-  getConsolidatedByTeacher(teacherId: number):any{
-    return this.http.get(this.apiUrl + '/consolidated/' + teacherId);
+  getConsolidatedByTeacher(teacherId: number, department: string):Observable<Consolidated>{
+    let params = new HttpParams()
+      .set('evaluadoId', teacherId.toString())
+      .set('departamento', department);
+    return this.http.get<Consolidated>(this.apiUrl + '/consolidado/generarConsolidado', {params});
   }
 
   /*

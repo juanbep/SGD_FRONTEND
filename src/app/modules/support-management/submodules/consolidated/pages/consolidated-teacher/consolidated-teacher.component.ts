@@ -1,7 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ConsolidatedTeacherFilterComponent } from "../../components/consolidated-teacher-filter/consolidated-teacher-filter.component";
 import { ConsolidatedTeacherTableComponent } from "../../components/consolidated-teacher-table/consolidated-teacher-table.component";
 import { ApproveConsolidatedConfirmDialogComponent } from '../../components/approve-consolidated-confirm-dialog/approve-consolidated-confirm-dialog.component';
+import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
+import { Consolidated } from '../../../../../../core/models/consolidated.interface';
+import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 
 @Component({
   selector: 'app-consolidated-teacher',
@@ -10,12 +13,32 @@ import { ApproveConsolidatedConfirmDialogComponent } from '../../components/appr
   templateUrl: './consolidated-teacher.component.html',
   styleUrl: './consolidated-teacher.component.css'
 })
-export class ConsolidatedTeacherComponent {
-
+export class ConsolidatedTeacherComponent implements OnInit {
+  
   @ViewChild(ApproveConsolidatedConfirmDialogComponent)
   approveConsolidatedConfirmDialog!: ApproveConsolidatedConfirmDialogComponent;
 
+  consolidatedTeacher: Consolidated | null = null;
 
+  consolidatedServicesService = inject(ConsolidatedServicesService);
+  toastr = inject(MessagesInfoService);
+  
+  ngOnInit(): void {
+    this.recoverConsolidatedTeacher();
+  }
+
+  recoverConsolidatedTeacher(){
+    this.consolidatedServicesService.getConsolidatedByTeacher(6, 'Sistemas').subscribe({
+      next: data => {
+        this.consolidatedTeacher = data;
+        this.consolidatedServicesService.setDataConsolidatedTeacher(data);
+      },
+      error: error => {
+        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+      }
+    });
+  }
+  
   createConsolidated(): void {
     this.approveConsolidatedConfirmDialog.open();
   }

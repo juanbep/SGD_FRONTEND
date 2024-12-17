@@ -11,12 +11,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Nombre docente</td>
-                <td>Identificación</td>
-                <td>Tipo contrato</td>
-                <td>% Evaluación completado</td>
-                <td>Estado consolidado</td>
+            <tr *ngFor="let teacher of teacherList">
+                <td>
+                    <span>{{teacher.nombreDocente}}</span>
+                </td>
+                <td>
+                    <span>{{teacher.identificacion}}</span> 
+                </td>
+                <td>
+                    <span>{{teacher.contratacion}}</span>
+                </td>
+                <td>
+                    <span>{{teacher.porcentajeEvaluacionCompletado}}</span>
+                </td>
+                <td>
+                   <span>{{teacher.estadoConsolidado}}</span>
+                 </td>
                 <td class="text-center">
                     <button class="button-table">
                         <a [routerLink]="['../consolidado-docente']" routerLinkActive="router-link-active">

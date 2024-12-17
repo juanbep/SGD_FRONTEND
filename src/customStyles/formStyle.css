@@ -10,6 +10,8 @@
     border: 1px solid var(--blue);
 }
 
+
+
 .file-upload-label {
     display: flex;
     flex: 1;
@@ -64,6 +66,15 @@
     pointer-events: all;
 }    
 
+.button-upload-error{ 
+    background-image: url('../assets/icons/buttons/upload-icon.svg');
+    background-size: 36px 36px !important; /* Ajusta el tamaño del SVG */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center; /* Centrar la imagen */
+    background-color: var(--red-light);
+    pointer-events: all;
+}
 
 /* download file input style */
 

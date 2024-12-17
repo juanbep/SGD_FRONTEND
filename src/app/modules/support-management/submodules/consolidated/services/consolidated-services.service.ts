@@ -1,16 +1,38 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { SmConsolidatedServicesService } from '../../../../../core/services/supportManagement/sm-consolidated-services.service';
+import { Consolidated, Teacher } from '../../../../../core/models/consolidated.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ConsolidatedServicesService {
 
+    private teacherList: WritableSignal<Teacher[]> = signal([]);
+    private consolidatedTeacher: WritableSignal<any> = signal({});
+
     constructor(private service: SmConsolidatedServicesService) { }
+
+
+    setDataTeachersList(newData: Teacher[]) {
+        this.teacherList.update(data => data = newData);
+    }
+
+
+    getDataTeachersList() {
+        return this.teacherList();
+    }
+
+    setDataConsolidatedTeacher(newData: Consolidated) {
+        this.consolidatedTeacher.update(data => data = newData);
+    }
+    
+    getDataConsolidatedTeacher() {
+        return this.consolidatedTeacher();
+    }
 
     /*
     * Get teachers
     * @returns {any}
     * */
-    getTeachers(): any {
+    getTeachers() {
         return this.service.getTeachers();
     }
 
@@ -28,8 +50,8 @@ export class ConsolidatedServicesService {
     * @param {number} teacherId
     * @returns {any}
     * */
-    getConsolidatedByTeacher(teacherId: number): any {
-        return this.service.getConsolidatedByTeacher(teacherId);
+    getConsolidatedByTeacher(teacherId: number, department: string){
+        return this.service.getConsolidatedByTeacher(teacherId, department);
     }
 
     /*
@@ -41,14 +63,6 @@ export class ConsolidatedServicesService {
         return this.service.saveConsolidated(consolidated);
     }
 
-    /*
-    * Get consolidated by teacher
-    * @param {number} teacherId
-    * @returns {any}
-    * */
-    getConslidatedByTeacher(teacherId: number): any {
-        return this.service.getConslidatedByTeacher(teacherId);
-    }
 
     /*
     * Send email

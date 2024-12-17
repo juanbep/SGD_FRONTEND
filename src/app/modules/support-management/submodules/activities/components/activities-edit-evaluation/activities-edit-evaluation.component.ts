@@ -1,9 +1,10 @@
 import { Component, effect, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { Actividad, SourceEvaluation } from '../../../../../../core/models/activities.interface';
+import { ValidatorsService } from '../../../../../../shared/services/validators.service';
 
 @Component({
   selector: 'activities-edit-evaluation',
@@ -18,65 +19,292 @@ import { Actividad, SourceEvaluation } from '../../../../../../core/models/activ
 })
 export class ActivitiesEditEvaluationComponent {
 
-  private myModal: HTMLElement | null = null;
-
-  public activitiesTeacher: Actividad[] = [];
-
-  private formBuilder: FormBuilder = inject(FormBuilder);
-
-  private service: ActivitiesServicesService = inject(ActivitiesServicesService);
-
-  private toastr: MessagesInfoService = inject(MessagesInfoService);
-
   private activityFileReport: Actividad | null = null;
-
-  public filesSelected: File[] = [];
-
-  public errorMessageFile: string = '';
-
+  private myModal: HTMLElement | null = null;
+  public teacherActivities: Actividad[] = [];
+  public errorFileInput: boolean = false;
   public fileNameSelected: string = '';
-
+  public filesSelected: File[] = [];
+  public selectedSourceFile: File | null = null;
+  public sendSource: SourceEvaluation[] = [];
   public sourceFileDeleted: boolean = false;
 
-  public selectedSourceFile: File | null = null;
+  // Inyección de dependencias
+  private formBuilder: FormBuilder = inject(FormBuilder);
+  private service: ActivitiesServicesService = inject(ActivitiesServicesService);
+  private toastr: MessagesInfoService = inject(MessagesInfoService);
+  private validatorService: ValidatorsService = inject(ValidatorsService);
 
-  public sendSource: SourceEvaluation[] = [];
-
-
-  formGroup: FormGroup = this.formBuilder.group({
+  formSelfEvaluation: FormGroup = this.formBuilder.group({
     activities: this.formBuilder.array([]),
-    observation: ['']
-
+    observation: [''],
   });
 
+  /*
+  *  Esta pendiente de la variable activitiesTeacher, si cambia, se actualiza el valor de la variable
+  */
   constructor() {
     effect(() => {
-      this.activitiesTeacher = this.service.getDataActivities();
+      this.teacherActivities = this.service.getDataActivities();
     });
   }
 
-  get activities(): FormArray {
-    return this.formGroup.get('activities') as FormArray;
+  /*
+  *  Abre el modal de edición de la evaluación
+  */
+  openModal() {
+    this.myModal = document.getElementById('modal-edit-evaluation');
+    if (this.myModal) {
+      this.teacherActivities = this.service.getDataActivities();
+      this.recoverReports();
+      this.recoverSource();
+      this.populateForm();
+      this.myModal.style.display = "flex";
+    }
   }
 
+  /*
+  *  Cierra el modal de edición de la evaluación
+  */
+  closeModal() {
+    if (this.myModal) {
+      this.myModal.style.display = "none";
+      this.formSelfEvaluation.reset();
+      this.activities.clear();
+      this.filesSelected = [];
+      this.errorFileInput = false;
+      this.fileNameSelected = '';
+      this.sourceFileDeleted = false;
+      this.selectedSourceFile = null;
+    }
+  }
+
+  //Métodos para manejar el formulario
+
+  /*
+  *  Retorna un arreglo de actividades
+  */
+  get activities(): FormArray {
+    return this.formSelfEvaluation.get('activities') as FormArray;
+  }
+
+  /*
+  *  Llena el formulario con la información de las actividades
+  */
   populateForm(): void {
-    this.fileNameSelected = this.activitiesTeacher[0].fuentes[0].nombreDocumentoFuente;
-    this.formGroup.get('observation')?.setValue(this.activitiesTeacher[0].fuentes[0].observacion);
-    this.activitiesTeacher.forEach(activitie => {
+    this.fileNameSelected = this.teacherActivities[0].fuentes[0].nombreDocumentoFuente;
+    this.formSelfEvaluation.get('observation')?.setValue(this.teacherActivities[0].fuentes[0].observacion);
+    this.teacherActivities.forEach(activitie => {
       this.activities.push(this.formBuilder.group({
         codigoActividad: [activitie.codigoActividad],
-        calificacion: [activitie.fuentes[0].calificacion, [Validators.required, Validators.min(0), Validators.max(100)]],
+        calificacion: [activitie.fuentes[0].calificacion, [Validators.required, Validators.pattern(this.validatorService.numericPattern), Validators.min(0), Validators.max(100)]],
       }));
     });
   }
 
+  /*
+  *  Retorna si un campo es inválido
+  */
+
+  isInvalidField(control: AbstractControl) {
+    if (control.invalid && (control.dirty || control.touched)) {
+      return true;
+    }
+    return false;
+  }
+
+  /*
+  *  Retorna el mensaje de error de un campo
+  */
+  getFieldError(control: AbstractControl, field: string) {
+    const errors = control.get(field)?.errors || {};
+    if (control.get(field)?.errors) {
+      for (const key of Object.keys(errors)) {
+        switch (key) {
+          case 'required':
+            return 'Campo equerido';
+          case 'min':
+            return 'Valor mínimo es 0';
+          case 'max':
+            return 'Valor máximo es 100';
+          case 'pattern':
+            return 'Solo se permiten números';
+          default:
+            return key;
+        }
+      }
+    }
+    return null;
+  }
+
+
+  //Métodos para recuperar los archivos de fuente e informe ejecutivo
+
+  /*
+  *  Recupera el archivo de fuente
+  */
+  recoverSource() {
+    this.teacherActivities.forEach((activity, index) => {
+      if (activity.fuentes[0].oidFuente) {
+        this.service.getdownloadSourceFile(activity.fuentes[0].oidFuente).subscribe(
+          {
+            next: (response) => {
+              const blob = new Blob([response], { type: 'application/pdf' });
+              activity.fuentes[0].soporte = new File([blob], activity.fuentes[0].nombreDocumentoFuente, { type: 'application/pdf' });
+              this.selectedSourceFile = activity.fuentes[0].soporte;
+            },
+            error: (error) => {
+              this.toastr.showErrorMessage('Error', `Error al descargar el archivo para la actividad ${index + 1}`);
+            }
+          }
+        );
+      }
+    });
+  }
+
+  /*
+  *  Recupera los archivos de informe ejecutivo
+  */
+  recoverReports(): void {
+    this.teacherActivities.forEach((activity, index) => {
+      if (activity.informeEjecutivo && activity.fuentes[0].nombreDocumentoInforme) {
+        this.service.getDownloadReportFile(activity.fuentes[0].oidFuente, true).subscribe(
+          {
+            next: (response) => {
+              const blob = new Blob([response], { type: 'application/pdf' });
+              const url = window.URL.createObjectURL(blob);
+              activity.fuentes[0].informeEjecutivo = new File([blob], 'informeEjecutivo.pdf', { type: 'application/pdf' });
+            },
+            error: (error) => {
+              this.toastr.showErrorMessage('Error', `Error al descargar el archivo para la actividad ${index + 1}`);
+            }
+          }
+        );
+      }
+    });
+  }
+
+  //Métodos para descargar archivos de fuente e informe ejecutivo
+
+  /*
+  *  Descarga el archivo de fuente
+  */
+  downloadSourceFile(): void {
+    this.service.getdownloadSourceFile(this.teacherActivities[0].fuentes[0].oidFuente).subscribe(
+      {
+        next: (response) => {
+          const blob = new Blob([response], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);
+        },
+        error: (error) => {
+          this.toastr.showErrorMessage('Error', 'Error al descargar el archivo');
+        }
+      }
+    )
+  }
+
+  /*
+  *  Descarga el archivo de informe ejecutivo
+  */
+  downloadReport(sourceId: number): void {
+    this.teacherActivities.forEach((activity, index) => {
+      if (activity.fuentes[0].oidFuente === sourceId) {
+        if (activity.fuentes[0].informeEjecutivo) {
+          const blob = new Blob([activity.fuentes[0].informeEjecutivo], { type: 'application/pdf' });
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);
+        }
+      }
+    });
+  }
+
+  //Métodos para eliminar archivos de fuente e informe ejecutivo
+
+  /*
+  *  Elimina el archivo de fuente
+  */
+  deleteSourceFile(): void {
+    this.sourceFileDeleted = true;
+    this.fileNameSelected = '';
+    this.selectedSourceFile = null;
+  }
+
+  /*
+  *  Elimina el archivo de informe ejecutivo
+  */
+  deleteReport(activitie: Actividad): void {
+    if (activitie) {
+      activitie.fuentes[0].nombreDocumentoInforme = '';
+      activitie.fuentes[0].informeEjecutivo = null;
+    }
+  }
+
+
+
+  //Métodos para subir archivos de fuente e informe ejecutivo
+
+  triggerSourceFileUpload() {
+    const fileUpload = document.getElementById('uploadFileSource') as HTMLInputElement;
+    if (fileUpload) {
+      fileUpload.click();
+    }
+  }
+
+  onSourceFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file.type !== 'application/pdf') {
+        this.errorFileInput = true;
+        this.selectedSourceFile = null;
+      } else {
+        this.selectedSourceFile = file;
+        this.errorFileInput = false;
+        this.fileNameSelected = file.name;
+        this.teacherActivities.forEach((activity, index) => {
+          activity.fuentes[0].soporte = file;
+        });
+      }
+    }
+  }
+
+  triggerReportFileUpload(actividad: Actividad) {
+    const fileUpload = document.getElementById('uploadFileReportEdit') as HTMLInputElement;
+    if (fileUpload) {
+      this.activityFileReport = actividad;
+      fileUpload.click();
+    }
+  }
+
+  onRepportFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      if (file.type !== 'application/pdf') {
+        this.errorFileInput = true;
+      } else {
+        this.errorFileInput = false;
+        this.activityFileReport!.fuentes[0].nombreDocumentoInforme = file.name;
+        this.activityFileReport!.fuentes[0].informeEjecutivo = file;
+        this.filesSelected.push(file);
+      }
+    }
+  }
+
+
+
+
+  /*
+  *  Guarda la información de la evaluación
+  */
   saveEvaluation(): void {
-    if (this.formGroup.valid) {
-      const formValues = this.formGroup.value;
-      this.activitiesTeacher.forEach((activitie, index) => {
+    if (this.formSelfEvaluation.valid && !this.errorFileInput && this.selectedSourceFile) {
+      const formValues = this.formSelfEvaluation.value;
+      this.teacherActivities.forEach((activitie, index) => {
         activitie.fuentes[0].calificacion = formValues.activities[index].calificacion;
       });
-      this.sendSource = this.activitiesTeacher.map(activitie => ({
+      this.sendSource = this.teacherActivities.map(activitie => ({
         tipoFuente: '1',
         calificacion: activitie.fuentes[0].calificacion,
         oidActividad: activitie.oidActividad,
@@ -104,157 +332,7 @@ export class ActivitiesEditEvaluationComponent {
       );
 
     } else {
-      console.log('Form is invalid');
-    }
-  }
-
-  openModal() {
-    this.myModal = document.getElementById('modal-edit-evaluation');
-    if (this.myModal) {
-      this.activitiesTeacher = this.service.getDataActivities();
-      this.recoveryReports();
-      this.recoverSource();
-      this.populateForm();
-      this.myModal.style.display = "flex";
-    }
-  }
-
-  closeModal() {
-    if (this.myModal) {
-      this.myModal.style.display = "none";
-      this.formGroup.reset();
-      this.activities.clear();
-      this.filesSelected = [];
-      this.errorMessageFile = '';
-      this.fileNameSelected = '';
-      this.sourceFileDeleted = false;
-      this.selectedSourceFile = null;
-    }
-  }
-
-  triggerReportFileUpload(actividad: Actividad) {
-    const fileUpload = document.getElementById('uploadFileReportEdit') as HTMLInputElement;
-    if (fileUpload) {
-      this.activityFileReport = actividad;
-      fileUpload.click();
-    }
-  }
-
-  onRepportFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (file.type !== 'application/pdf') {
-        this.errorMessageFile = 'El archivo seleccionado no es un PDF';
-      } else {
-        this.errorMessageFile = '';
-        this.activityFileReport!.fuentes[0].nombreDocumentoInforme = file.name;
-        this.activityFileReport!.fuentes[0].informeEjecutivo = file;
-        this.filesSelected.push(file);
-      }
-    }
-  }
-
-  downloadReport(sourceId: number): void {
-    this.activitiesTeacher.forEach((activity, index) => {
-      if (activity.fuentes[0].oidFuente === sourceId) {
-        if (activity.fuentes[0].informeEjecutivo) {
-          const blob = new Blob([activity.fuentes[0].informeEjecutivo], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-        }
-      }
-    });
-  }
-
-  deleteReport(activitie: Actividad): void {
-    if (activitie) {
-      activitie.fuentes[0].nombreDocumentoInforme = '';
-      activitie.fuentes[0].informeEjecutivo = null;
-    }
-  }
-
-  deleteSourceFile(): void {
-    this.sourceFileDeleted = true;
-    this.fileNameSelected = '';
-    this.selectedSourceFile = null;
-  }
-
-  recoveryReports(): void {
-    this.activitiesTeacher.forEach((activity, index) => {
-      if (activity.informeEjecutivo && activity.fuentes[0].nombreDocumentoInforme) {
-        this.service.getDownloadReportFile(activity.fuentes[0].oidFuente, true).subscribe(
-          {
-            next: (response) => {
-              const blob = new Blob([response], { type: 'application/pdf' });
-              const url = window.URL.createObjectURL(blob);
-              activity.fuentes[0].informeEjecutivo = new File([blob], 'informeEjecutivo.pdf', { type: 'application/pdf' });
-            },
-            error: (error) => {
-              this.toastr.showErrorMessage('Error', `Error al descargar el archivo para la actividad ${index + 1}`);
-            }
-          }
-        );
-      }
-    });
-  }
-
-  recoverSource(){
-    this.activitiesTeacher.forEach((activity, index) => {
-      if (activity.fuentes[0].oidFuente) {
-        this.service.getdownloadSourceFile(activity.fuentes[0].oidFuente).subscribe(
-          {
-            next: (response) => {
-              const blob = new Blob([response], { type: 'application/pdf' });
-              activity.fuentes[0].soporte = new File([blob], 'informeEjecutivo.pdf', { type: 'application/pdf' });
-              this.selectedSourceFile = activity.fuentes[0].soporte;
-            },
-            error: (error) => {
-              this.toastr.showErrorMessage('Error', `Error al descargar el archivo para la actividad ${index + 1}`);
-            }
-          }
-        );
-      }
-    });
-  }
-  
-  downloadSourceFile(): void {
-    this.service.getdownloadSourceFile(this.activitiesTeacher[0].fuentes[0].oidFuente).subscribe(
-      {
-        next: (response) => {
-          const blob = new Blob([response], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-        },
-        error: (error) => {
-          this.toastr.showErrorMessage('Error', 'Error al descargar el archivo');
-        }
-      }
-    )
-  }
-
-  onSourceFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      if (file.type !== 'application/pdf') {
-        this.errorMessageFile = 'El archivo seleccionado no es un PDF';
-        this.selectedSourceFile = null;
-      } else {
-        this.selectedSourceFile = file;
-        this.errorMessageFile = '';
-        this.fileNameSelected = file.name;
-        this.activitiesTeacher.forEach((activity, index) => {
-          activity.fuentes[0].soporte = file;
-        });
-      }
-    }
-  }
-
-  triggerSourceFileUpload() {
-    const fileUpload = document.getElementById('uploadFileSource') as HTMLInputElement;
-    if (fileUpload) {
-      fileUpload.click();
+      this.toastr.showWarningMessage('Por favor, asegúrese de llenar todos los campos correctamente', 'Alerta');
     }
   }
 

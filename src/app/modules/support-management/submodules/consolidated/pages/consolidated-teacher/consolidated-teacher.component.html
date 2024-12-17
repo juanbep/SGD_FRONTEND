@@ -22,22 +22,22 @@
                     <th>
                         <span class="text-body-regular">Nombres y apellidos</span>
                         <br>
-                        <span class="text-body-small-sb">Pepito</span>
+                        <span class="text-body-small-sb">{{consolidatedTeacher?.nombreDocente}}</span>
                     </th>
                     <th>
                         <span class="text-body-regular">Num.Id</span>
                         <br>
-                        <span class="text-body-small-sb">99999999</span>
+                        <span class="text-body-small-sb">{{consolidatedTeacher?.numeroIdentificacion}}</span>
                     </th>
                     <th>
                         <span class="text-body-regular">Vinculación</span>
                         <br>
-                        <span class="text-body-small-sb">Planta</span>
+                        <span class="text-body-small-sb">{{consolidatedTeacher?.tipoContratacion}}</span>
                     </th>
                     <th>
                         <span class="text-body-regular">Dedicación</span>
                         <br>
-                        <span class="text-body-small-sb">Tiempo completo </span>
+                        <span class="text-body-small-sb">{{consolidatedTeacher?.dedicacion}} </span>
                     </th>
                 </tr>
                 <tr>
@@ -45,23 +45,23 @@
                         <span class="text-body-regular">
                             <span class="text-body-regular">Facultad</span>
                             <br>
-                            <span class="text-body-small-sb">FIET</span>
+                            <span class="text-body-small-sb">{{consolidatedTeacher?.facultad}}</span>
                         </span>
                     </th>
                     <th>
                         <span class="text-body-regular">Departamento</span>
                         <br>
-                        <span class="text-body-small-sb">Sistemas</span> 
+                        <span class="text-body-small-sb">{{consolidatedTeacher?.departamento}}</span> 
                     </th>
                     <th>
                         <span class="text-body-regular">Periodo consolidado</span>
                         <br>
-                        <span class="text-body-small-sb">2023-1</span> 
+                        <span class="text-body-small-sb">{{consolidatedTeacher?.periodoAcademico}}</span> 
                     </th>
                     <th>
                         <span class="text-body-regular">Total horas</span>
                         <br>
-                        <span class="text-body-small-sb">84</span> 
+                        <span class="text-body-small-sb">{{consolidatedTeacher?.totalHorasSemanales}}</span> 
                     </th>
                 </tr>
             </thead>
@@ -82,11 +82,11 @@
     <section>
         <div class="row">
             <div class="col messages-container">
-                <span class="text-body-regular">Porcentaje de evaluación completado: </span> <span class="text-body-heavy">50%</span>
+                <span class="text-body-regular">Porcentaje de evaluación completado: </span> <span class="text-body-heavy">{{consolidatedTeacher?.totalPorcentaje}}%</span>
             </div>
             <div class="col-1"></div>
             <div class="col messages-container">
-                <span class="text-body-regular">Acumulado evaluación: </span> <span class="text-body-heavy">100.0</span>
+                <span class="text-body-regular">Acumulado evaluación: </span> <span class="text-body-heavy">{{consolidatedTeacher?.totalAcumulado}}</span>
 
             </div>
         </div>

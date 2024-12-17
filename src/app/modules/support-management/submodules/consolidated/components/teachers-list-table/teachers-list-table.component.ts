@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit } from '@angular/core';
 import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
 import { RouterLink } from '@angular/router';
+import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
+import { Teacher } from '../../../../../../core/models/consolidated.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'consolidated-teachers-list-table',
   standalone: true,
   imports: [
     PaginatorComponent,
-    RouterLink
+    RouterLink,
+    CommonModule
   ],
   templateUrl: './teachers-list-table.component.html',
   styleUrl: './teachers-list-table.component.css'
@@ -15,21 +19,20 @@ import { RouterLink } from '@angular/router';
 export class TeacherListTableComponent implements OnInit {
   
   //TODO Declarar variables
+  teacherList: Teacher[] = [];
 
-  constructor() {
-    //TODO Mantener la tabla actualizada utilizando effect
+  constructor(private conlidatedServicesService: ConsolidatedServicesService) {
+    effect(()=>{
+      this.teacherList = this.conlidatedServicesService.getDataTeachersList();
+    })
    }
 
 
   ngOnInit(): void {
-    //TODO Llamar al método para obtener los datos de la tabla
+    this.teacherList = this.conlidatedServicesService.getDataTeachersList();
   }
 
   //TODO Método para obtener los datos de la tabla
-
-  
-
-
 
 
 }

@@ -61,41 +61,40 @@
             </th>
         </tr>
     </thead>
-    <tbody>
+    <tbody *ngFor="let key of getObjectKeys(consolidatedTeacher!.actividades)">
         <tr>
             <td colspan="9" class="center-text">
-                <span>Docencia directa</span>
+                <span>{{key}}</span>
             </td>
         </tr>
-        <tr>
+        <tr *ngFor="let activity of getActivities(key)">
             <td>
-                <span>Metodología de la investigación</span>
+                <span>{{activity.nombre}}</span>
             </td>
             <td>
-                <span>30</span>
+                <span>{{activity.horas}}</span>
             </td>
             <td>
-                <span>15%</span>
+                <span>{{activity.porcentaje}}</span>
             </td>
             <td>
-                <span>Diligenciado</span>
+                <span>{{activity.fuentes[0].estadoFuente}}</span>
             </td>
             <td>
-                <span>100</span>
+                <span>{{activity.fuentes[0].calificacion}}</span>
             </td>
             <td>
-                <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()">
+                <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
             </td>
             <td>
-                <span>Diligenciado</span>
+                <span>{{activity.fuentes[1].estadoFuente}}</span>
             </td>
             <td>
-                <span>100</span>
+                <span>{{activity.fuentes[1].calificacion}}</span>
             </td>
             <td>
-                <span></span>
+                <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
             </td>
-
         </tr>
     </tbody>
 </table>
