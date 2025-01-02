@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { SideBarComponent } from '../side-bar/side-bar.component';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { RouterOutlet } from '@angular/router';
+import { AuthServiceService } from '../../../auth/service/auth-service.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -16,6 +17,11 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css'
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent implements OnInit {
+  public authServiceService = inject(AuthServiceService);
 
+  ngOnInit(): void {
+    console.log('MainLayoutComponent');
+    this.authServiceService.getUserInfo(6).subscribe();
+  }
 }

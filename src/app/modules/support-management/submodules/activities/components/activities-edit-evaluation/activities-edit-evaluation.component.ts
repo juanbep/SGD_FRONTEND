@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { Actividad, SourceEvaluation } from '../../../../../../core/models/activities.interface';
+import { Activity, ActivityResponse, SourceEvaluation } from '../../../../../../core/models/activities.interface';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
+declare var bootstrap: any;
 
 @Component({
   selector: 'activities-edit-evaluation',
@@ -17,11 +18,11 @@ import { ValidatorsService } from '../../../../../../shared/services/validators.
   templateUrl: './activities-edit-evaluation.component.html',
   styleUrls: ['./activities-edit-evaluation.component.css']
 })
-export class ActivitiesEditEvaluationComponent {
+export class ActivitiesEditEvaluationComponent  {
 
-  private activityFileReport: Actividad | null = null;
+  private activityFileReport: Activity | null = null;
   private myModal: HTMLElement | null = null;
-  public teacherActivities: Actividad[] = [];
+  public teacherActivities: ActivityResponse | null = null;
   public errorFileInput: boolean = false;
   public fileNameSelected: string = '';
   public filesSelected: File[] = [];
@@ -39,36 +40,43 @@ export class ActivitiesEditEvaluationComponent {
     activities: this.formBuilder.array([]),
     observation: [''],
   });
-
-  /*
-  *  Esta pendiente de la variable activitiesTeacher, si cambia, se actualiza el valor de la variable
-  */
-  constructor() {
-    effect(() => {
-      this.teacherActivities = this.service.getDataActivities();
-    });
-  }
-
+  
   /*
   *  Abre el modal de edición de la evaluación
   */
   openModal() {
     this.myModal = document.getElementById('modal-edit-evaluation');
     if (this.myModal) {
-      this.teacherActivities = this.service.getDataActivities();
-      this.recoverReports();
-      this.recoverSource();
-      this.populateForm();
-      this.myModal.style.display = "flex";
+      var bootstrapModal = new bootstrap.Modal(this.myModal);
+      this.recoverActivities();
+      bootstrapModal.show();
     }
   }
+
+  /*
+  *  Recupera las actividades
+  */
+  recoverActivities() {
+    this.service.getActivities('6', '', '', '', '',null,null).subscribe({
+      next: data => {
+        this.teacherActivities = data;
+        this.recoverReports();
+        this.recoverSource();
+        this.populateForm();
+      },
+      error: error => {
+        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+      }
+    });
+  }
+
+
 
   /*
   *  Cierra el modal de edición de la evaluación
   */
   closeModal() {
     if (this.myModal) {
-      this.myModal.style.display = "none";
       this.formSelfEvaluation.reset();
       this.activities.clear();
       this.filesSelected = [];
@@ -92,9 +100,9 @@ export class ActivitiesEditEvaluationComponent {
   *  Llena el formulario con la información de las actividades
   */
   populateForm(): void {
-    this.fileNameSelected = this.teacherActivities[0].fuentes[0].nombreDocumentoFuente;
-    this.formSelfEvaluation.get('observation')?.setValue(this.teacherActivities[0].fuentes[0].observacion);
-    this.teacherActivities.forEach(activitie => {
+    this.fileNameSelected = this.teacherActivities?.content[0].fuentes[0].nombreDocumentoFuente || '';
+    this.formSelfEvaluation.get('observation')?.setValue(this.teacherActivities?.content[0].fuentes[0].observacion);
+    this.teacherActivities?.content.forEach(activitie => {
       this.activities.push(this.formBuilder.group({
         codigoActividad: [activitie.codigoActividad],
         calificacion: [activitie.fuentes[0].calificacion, [Validators.required, Validators.pattern(this.validatorService.numericPattern), Validators.min(0), Validators.max(100)]],
@@ -122,7 +130,7 @@ export class ActivitiesEditEvaluationComponent {
       for (const key of Object.keys(errors)) {
         switch (key) {
           case 'required':
-            return 'Campo equerido';
+            return 'Campo requerido';
           case 'min':
             return 'Valor mínimo es 0';
           case 'max':
@@ -144,14 +152,14 @@ export class ActivitiesEditEvaluationComponent {
   *  Recupera el archivo de fuente
   */
   recoverSource() {
-    this.teacherActivities.forEach((activity, index) => {
-      if (activity.fuentes[0].oidFuente) {
-        this.service.getdownloadSourceFile(activity.fuentes[0].oidFuente).subscribe(
+    this.teacherActivities!.content.forEach((content, index) => {
+      if (content.fuentes[0].oidFuente) {
+        this.service.getdownloadSourceFile(content.fuentes[0].oidFuente).subscribe(
           {
             next: (response) => {
               const blob = new Blob([response], { type: 'application/pdf' });
-              activity.fuentes[0].soporte = new File([blob], activity.fuentes[0].nombreDocumentoFuente, { type: 'application/pdf' });
-              this.selectedSourceFile = activity.fuentes[0].soporte;
+              content.fuentes[0].soporte = new File([blob], content.fuentes[0].nombreDocumentoFuente || 'default.pdf', { type: 'application/pdf' });
+              this.selectedSourceFile = content.fuentes[0].soporte;
             },
             error: (error) => {
               this.toastr.showErrorMessage('Error', `Error al descargar el archivo para la actividad ${index + 1}`);
@@ -166,14 +174,15 @@ export class ActivitiesEditEvaluationComponent {
   *  Recupera los archivos de informe ejecutivo
   */
   recoverReports(): void {
-    this.teacherActivities.forEach((activity, index) => {
-      if (activity.informeEjecutivo && activity.fuentes[0].nombreDocumentoInforme) {
-        this.service.getDownloadReportFile(activity.fuentes[0].oidFuente, true).subscribe(
+    this.teacherActivities?.content.forEach((content, index) => {
+      if (content.informeEjecutivo && content.fuentes[0].nombreDocumentoInforme) {
+        this.service.getDownloadReportFile(content.fuentes[0].oidFuente, true).subscribe(
           {
             next: (response) => {
               const blob = new Blob([response], { type: 'application/pdf' });
               const url = window.URL.createObjectURL(blob);
-              activity.fuentes[0].informeEjecutivo = new File([blob], 'informeEjecutivo.pdf', { type: 'application/pdf' });
+              this.filesSelected.push(new File([blob], content.fuentes[0].nombreDocumentoInforme || 'default.pdf', { type: 'application/pdf' }));
+              content.fuentes[0].informeEjecutivo = new File([blob], 'informeEjecutivo.pdf', { type: 'application/pdf' });
             },
             error: (error) => {
               this.toastr.showErrorMessage('Error', `Error al descargar el archivo para la actividad ${index + 1}`);
@@ -190,28 +199,31 @@ export class ActivitiesEditEvaluationComponent {
   *  Descarga el archivo de fuente
   */
   downloadSourceFile(): void {
-    this.service.getdownloadSourceFile(this.teacherActivities[0].fuentes[0].oidFuente).subscribe(
-      {
-        next: (response) => {
-          const blob = new Blob([response], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-        },
-        error: (error) => {
-          this.toastr.showErrorMessage('Error', 'Error al descargar el archivo');
+    const oidFuente = this.teacherActivities?.content[0].fuentes[0].oidFuente;
+    if (oidFuente !== undefined) {
+      this.service.getdownloadSourceFile(oidFuente).subscribe(
+        {
+          next: (response) => {
+            const blob = new Blob([response], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            window.open(url);
+          },
+          error: (error) => {
+            this.toastr.showErrorMessage('Error', 'Error al descargar el archivo');
+          }
         }
-      }
-    )
+      )
+    }
   }
 
   /*
   *  Descarga el archivo de informe ejecutivo
   */
   downloadReport(sourceId: number): void {
-    this.teacherActivities.forEach((activity, index) => {
-      if (activity.fuentes[0].oidFuente === sourceId) {
-        if (activity.fuentes[0].informeEjecutivo) {
-          const blob = new Blob([activity.fuentes[0].informeEjecutivo], { type: 'application/pdf' });
+    this.teacherActivities?.content.forEach((content, index) => {
+      if (content.fuentes[0].oidFuente === sourceId) {
+        if (content.fuentes[0].informeEjecutivo) {
+          const blob = new Blob([content.fuentes[0].informeEjecutivo], { type: 'application/pdf' });
           const url = window.URL.createObjectURL(blob);
           window.open(url);
         }
@@ -233,10 +245,12 @@ export class ActivitiesEditEvaluationComponent {
   /*
   *  Elimina el archivo de informe ejecutivo
   */
-  deleteReport(activitie: Actividad): void {
+  deleteReport(activitie: Activity): void {
     if (activitie) {
       activitie.fuentes[0].nombreDocumentoInforme = '';
       activitie.fuentes[0].informeEjecutivo = null;
+      this.filesSelected.splice(this.filesSelected.findIndex(file => file.name === activitie.fuentes[0].nombreDocumentoInforme), 1);
+
     }
   }
 
@@ -262,14 +276,14 @@ export class ActivitiesEditEvaluationComponent {
         this.selectedSourceFile = file;
         this.errorFileInput = false;
         this.fileNameSelected = file.name;
-        this.teacherActivities.forEach((activity, index) => {
-          activity.fuentes[0].soporte = file;
+        this.teacherActivities?.content.forEach((content, index) => {
+          content.fuentes[0].soporte = file;
         });
       }
     }
   }
 
-  triggerReportFileUpload(actividad: Actividad) {
+  triggerReportFileUpload(actividad: Activity) {
     const fileUpload = document.getElementById('uploadFileReportEdit') as HTMLInputElement;
     if (fileUpload) {
       this.activityFileReport = actividad;
@@ -301,10 +315,10 @@ export class ActivitiesEditEvaluationComponent {
   saveEvaluation(): void {
     if (this.formSelfEvaluation.valid && !this.errorFileInput && this.selectedSourceFile) {
       const formValues = this.formSelfEvaluation.value;
-      this.teacherActivities.forEach((activitie, index) => {
+      this.teacherActivities?.content.forEach((activitie, index) => {
         activitie.fuentes[0].calificacion = formValues.activities[index].calificacion;
       });
-      this.sendSource = this.teacherActivities.map(activitie => ({
+      this.sendSource = this.teacherActivities!.content.map(activitie => ({
         tipoFuente: '1',
         calificacion: activitie.fuentes[0].calificacion,
         oidActividad: activitie.oidActividad,
@@ -313,7 +327,7 @@ export class ActivitiesEditEvaluationComponent {
       this.service.saveSelfAssessment(this.selectedSourceFile!, formValues.observation, this.sendSource, this.filesSelected).subscribe(
         {
           next: (response) => {
-            this.service.getActivities('6', '', '', '', '').subscribe({
+            this.service.getActivities('6', '', '', '', '',0,10).subscribe({
               next: data => {
                 this.service.setDataActivities(data);
                 this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');
@@ -335,5 +349,4 @@ export class ActivitiesEditEvaluationComponent {
       this.toastr.showWarningMessage('Por favor, asegúrese de llenar todos los campos correctamente', 'Alerta');
     }
   }
-
 }

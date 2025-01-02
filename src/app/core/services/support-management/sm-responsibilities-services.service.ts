@@ -2,7 +2,7 @@
 import { environments } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Responsabilidad } from '../../models/responsibilitie.interface';
+import { ResponsabilityResponse } from '../../models/responsibilitie.interface';
 import { SourceEvaluation } from '../../models/responsibilitie.interface';
 
 @Injectable({
@@ -14,7 +14,6 @@ export class SmResponsibilitiesServicesService {
 
     constructor(private httpClient: HttpClient) { }
 
-
     /*
         * Method to get the responsibilities by user
         * @param evaluatorId:string
@@ -22,18 +21,19 @@ export class SmResponsibilitiesServicesService {
         * @param activityType:string
         * @param evaluatorName:string
         * @param roles:string
-        * @returns Observable<Responsabilidad[]>
+        * @returns Observable<Responsabilidad>
         */
 
-    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string): Observable<Responsabilidad[]> {
+    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page:number|null, totalPage:number|null): Observable<ResponsabilityResponse> {
         let params = new HttpParams()
             .set( 'idEvaluador', evaluatorId )
             .set( 'codigoActividad', activityCode )
             .set( 'tipoActividad', activityType )
             .set( 'nombreEvaluado', evaluatorName )
-            .set( 'roles', roles );
-
-        return this.httpClient.get<Responsabilidad[]>(`${this.baseUrl}/actividad/findActivitiesByEvaluador`, { params });
+            .set( 'roles', roles )
+            .set( 'page', page? page.toString() : '' )
+            .set( 'size', totalPage? totalPage.toString() : '' );
+        return this.httpClient.get<ResponsabilityResponse>(`${this.baseUrl}/actividad/findActivitiesByEvaluador`, { params });
     }
 
     /*
@@ -58,7 +58,7 @@ export class SmResponsibilitiesServicesService {
         * @returns Observable<Blob>
         */
 
-    downloadSourceFile(idSource: number): Observable<Blob> {
+    downloadSourceFile(idSource: number): Observable<any> {
         return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { responseType: 'blob' });
     }
 

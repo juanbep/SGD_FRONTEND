@@ -1,0 +1,22 @@
+<div class="view-container">
+    <span class="title-two">Usuarios</span>
+    <div class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+        <span class="text-body-heavy">A continuación encontrará el listado de usuarios registrados en el sistema</span>
+    </div>
+
+    <div class="mb-3"></div>
+
+    <users-management-users-filter></users-management-users-filter>
+    <user-management-users-table-users></user-management-users-table-users>
+
+
+    <div class="mb-3"></div>
+
+
+    <section id="users-button-main">
+        <button class="button-main text-body-heavy" style="color: var(--white) !important" [routerLink]="['./nuevo-usuario']" routerLinkActive="router-link-active" >Nuevo usuario</button>
+    </section>
+
+    
+</div>

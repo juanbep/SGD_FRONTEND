@@ -1,12 +1,12 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { SmConsolidatedServicesService } from '../../../../../core/services/supportManagement/sm-consolidated-services.service';
+import { SmConsolidatedServicesService } from '../../../../../core/services/support-management/sm-consolidated-services.service';
 import { Consolidated, Teacher } from '../../../../../core/models/consolidated.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ConsolidatedServicesService {
 
     private teacherList: WritableSignal<Teacher[]> = signal([]);
-    private consolidatedTeacher: WritableSignal<any> = signal({});
+    private consolidatedTeacher: WritableSignal<Consolidated> = signal({} as Consolidated);
 
     constructor(private service: SmConsolidatedServicesService) { }
 
@@ -59,8 +59,8 @@ export class ConsolidatedServicesService {
     * @param {any} consolidated
     * @returns {any}
     * */
-    saveConsolidated(consolidated: any): any {
-        return this.service.saveConsolidated(consolidated);
+    saveConsolidated(idEvaluado:number): any {
+        return this.service.saveConsolidated(idEvaluado);
     }
 
 
@@ -73,6 +73,39 @@ export class ConsolidatedServicesService {
     sendEmail(emails: string[], observation:string): any {
         return this.service.sendEmail(emails, observation);
     }
+
+    
+      /*
+        * Method to download the source file
+        * @param idSource:number
+        * @returns void
+        */
+      downloadSourceFile(idSource: number){
+        return this.service.downloadSourceFile(idSource);
+      }
+    
+      /*
+        * Method to download the report file
+        * @param idSource:number
+        * @param report:boolean
+        * @returns void
+        * */
+    
+      downloadReportFile(idSource: number, report:boolean ){
+        return this.service.downloadReportFile(idSource, report);
+    }
+    
+
+      /*
+      * Method to get all the activities by user
+      * @param evaluatedId: string
+      * @returns observable<Actividad>
+      * */
+      getActivityByOidActivity(oidActivity: number){
+        return this.service.getActivityByOidActivity(oidActivity);
+      }
+    
+
 }
 
 

@@ -1,0 +1,241 @@
+<div class="view-container">
+    <div class="title-two">Nuevo usuario</div>
+
+    <form [formGroup]="newUserForm">
+        <fieldset>
+            <legend class="text-body-heavy">Rol nuevo usuario</legend>
+            <div class="row row-cols-auto mb-3">
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="role" formControlName="role">
+                            <option [ngValue]="null" selected>Seleccione un rol</option>
+                            <option *ngFor="let role of roleOptions" [value]="role.value">{{role.text}}</option>
+                        </select>
+                        <label for="role" class="label-custom text-body-small-sb">Rol</label>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend class="text-body-heavy">Datos personales</legend>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom" id="userName"
+                            placeholder="Digitar respuesta" formControlName="name" [ngClass]="{
+                            'input-text-disabled': isDisabledField('name'),
+                            'error-input': isInvaldField('name')
+                            }">
+                        <label for="userName" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('name')
+                        }
+                        ">Nombre(s)</label>
+                    </div>
+                    <span *ngIf="isInvaldField('name')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('name')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom" id="lastName"
+                            placeholder="Digitar respuesta" formControlName="lastName" [ngClass]="{
+                                'input-text-disabled': isDisabledField('lastName'),
+                                'error-input': isInvaldField('lastName')
+                                }">
+                        <label for="lastName" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('lastName')
+                        }">Apellido(s)</label>
+                    </div>
+                    <span *ngIf="isInvaldField('lastName')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('lastName')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom" id="email"
+                            placeholder="Digitar respuesta" formControlName="email" [ngClass]="{
+                                'input-text-disabled': isDisabledField('email'),
+                                'error-input': isInvaldField('email')
+                                }">
+                        <label for="email" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('email')
+                        }">Correo</label>
+                    </div>
+                    <span *ngIf="isInvaldField('email')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('email')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom" id="idUser"
+                            placeholder="Digitar respuesta" formControlName="idUser" [ngClass]="{
+                                'input-text-disabled': isDisabledField('idUser'),
+                                'error-input': isInvaldField('idUser')
+                                }">
+                        <label for="idUser" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('idUser')
+                        }">Identificación</label>
+                    </div>
+                    <span *ngIf="isInvaldField('idUser')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('idUser')}}
+                    </span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="faculty" formControlName="faculty"
+                            [ngClass]="{
+                                'input-select-disabled': isDisabledField('faculty'),
+                                'error-input': isInvaldField('faculty'),
+                                'error-select-background': isInvaldField('faculty')
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let faculty of facultyOptions" [value]="faculty.value">{{faculty.text}}
+                            </option>
+                        </select>
+                        <label for="faculty" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('faculty')
+                        }">Facultad</label>
+                    </div>
+                    <span *ngIf="isInvaldField('faculty')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('faculty')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="program" formControlName="program"
+                            [ngClass]="{
+                                'input-select-disabled': isDisabledField('program'),
+                                'error-input': isInvaldField('program'),
+                                'error-select-background': isInvaldField('program')
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let program of programOptions" [value]="program.value">{{program.text}}
+                            </option>
+                        </select>
+                        <label for="program" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('program')
+                        }">Programa</label>
+                    </div>
+                    <span *ngIf="isInvaldField('program')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('program')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="typeContract"
+                            formControlName="typeContract" [ngClass]="{
+                                'input-select-disabled': isDisabledField('typeContract'),
+                                'error-input': isInvaldField('typeContract'),
+                                'error-select-background': isInvaldField('typeContract')
+
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let typeContract of typeContractOptions" [value]="typeContract.value">
+                                {{typeContract.text}}</option>
+                        </select>
+                        <label for="typeContract" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('typeContract')
+                        }">Tipo de contrato</label>
+                    </div>
+                    <span *ngIf="isInvaldField('typeContract')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('typeContract')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="studies" formControlName="studies"
+                            [ngClass]="{
+                                'input-select-disabled': isDisabledField('studies'),
+                                'error-input': isInvaldField('studies'),
+                                'error-select-background': isInvaldField('studies')
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let studies of studiesOptions" [value]="studies.value">{{studies.text}}
+                            </option>
+                        </select>
+                        <label for="studies" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('studies')
+                        }">Estudios</label>
+                    </div>
+                    <span *ngIf="isInvaldField('studies')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('studies')}}
+                    </span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="category"
+                            formControlName="category" [ngClass]="{
+                                'input-select-disabled': isDisabledField('category'),
+                                'error-input': isInvaldField('category'),
+                                'error-select-background': isInvaldField('category')
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let category of categoryOptions" [value]="category.value">{{category.text}}
+                            </option>
+                        </select>
+                        <label for="category" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('category')
+                        }">Categoría</label>
+                    </div>
+                    <span *ngIf="isInvaldField('category')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('category')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="dedication"
+                            formControlName="dedication" [ngClass]="{
+                                'input-select-disabled': isDisabledField('dedication'),
+                                'error-input': isInvaldField('dedication'),
+                                'error-select-background': isInvaldField('dedication')
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let dedication of dedicationOptions" [value]="dedication.value">
+                                {{dedication.text}}</option>
+                        </select>
+                        <label for="dedication" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('dedication')
+                        }">Dedicación</label>
+                    </div>
+                    <span *ngIf="isInvaldField('dedication')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('dedication')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="state" formControlName="state"
+                            [ngClass]="{
+                                'input-select-disabled': isDisabledField('state'),
+                                'error-input': isInvaldField('state'),
+                                'error-select-background': isInvaldField('state')
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let state of stateOptions" [value]="state.value">{{state.text}}</option>
+                        </select>
+                        <label for="state" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('state')
+                        }">Estado</label>
+                    </div>
+                    <span *ngIf="isInvaldField('state')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('state')}}
+                    </span>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="row row-cols-auto justify-content-center">
+            <div class="col d-flex justify-content-center">
+                <button type="submit" class="button-normal">Guardar</button>
+                <button type="" class="button-normal">Cancelar</button>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>

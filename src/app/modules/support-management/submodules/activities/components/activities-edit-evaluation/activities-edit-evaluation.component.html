@@ -1,136 +1,150 @@
-<div id="modal-edit-evaluation" class="modal">
-    <div class="modal-content">
-        <p class="title-three">Editar soporte de evaluación</p>
-        <div class="line"></div>
-        <section id="information-message">
-            <div class="message-container row">
-                <div class="col-1">
-                    <img class="img-container" src="assets/icons/messages/icon-info.svg" alt="">
-                </div>
-                <div class="col">
-                    <p class="text-body-regular ">En esta sección puede editar la autoevaluación</p>
+<div class="modal fade" id="modal-edit-evaluation" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="title-three mx-3" id="exampleModalLabel">Editar soporte autoevaluación</span>
+                <div class="header-container col-auto">
                 </div>
             </div>
-        </section>
+            <div class="modal-body">
+                <section>
+                    <p class="title-three">Actividad y evaluación</p>
+                    <div class="messages-container row">
+                        <div class="col-auto">
+                            <img src="assets/icons/messages/icon-info.svg" alt="">
 
-        <section>
-            <p class="title-three">Actividad y evaluación</p>
-            <div class="message-container row">
-                <div class="col-1">
-                    <img src="assets/icons/messages/icon-info.svg" alt="">
-                </div>
-                <div class="col">
-                    <p class="text-body-regular ">Asegurese que la evaluación ingresada sea la misma que se
-                        encuentra en el soporte</p>
-                </div>
-            </div>
-        </section>
-        <form [formGroup]="formSelfEvaluation" (ngSubmit)="saveEvaluation()">
-            <section>
-                <table class="table-responsive table-responsive-custom">
-                    <thead>
-                        <tr>
-                            <th>
-                                <span class="text-body-heavy">Actividad</span>
-                            </th>
-                            <th>
-                                <span class="text-body-heavy">Calificación</span>
-                            </th>
-                            <th>
-                                <span class="text-body-heavy">Informe</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody formArrayName="activities">
-                        <tr *ngFor="let item of activities.controls; let i = index" [formGroupName]="i">
-                            <td>
-                                <span class="text-body-regular">{{teacherActivities[i].codigoActividad}}</span>
-                            </td>
-                            <td>
-                                <input [ngClass]="{'text-error': isInvalidField(item)}" id="input-evaluation-edit" class="input-evaluation text-body-regular"
-                                    formControlName="calificacion">
-                              <!-- <span *ngIf="isInvalidField(item)" class="text-body-small-sb">{{getFieldError(item,'calificacion')}}</span>       -->
-                            </td>
-                            <td>
-                                <ng-container *ngIf="teacherActivities[i].informeEjecutivo; else noReport">
-                                    <ng-container
-                                        *ngIf="teacherActivities[i].fuentes[0].nombreDocumentoInforme; else missingReport">
-                                        <img src="assets/icons/tables/icon-view.svg" alt="" style="cursor: pointer;"
-                                            (click)="downloadReport(teacherActivities[i].fuentes[0].oidFuente)">
-                                        <img src="assets/icons/tables/icon-trash.svg" alt="" style="cursor: pointer;"
-                                            (click)="deleteReport(teacherActivities[i])">
-                                    </ng-container>
-                                    <ng-template #missingReport>
-                                        <img src="assets/icons/tables/icon-upload.svg" alt="" style="cursor: pointer;"
-                                            (click)="triggerReportFileUpload(teacherActivities[i])">
-                                        <input type="file" id="uploadFileReportEdit"
-                                            (change)="onRepportFileSelected($event)" hidden>
-                                    </ng-template>
-                                </ng-container>
-                                <ng-template #noReport>
-                                    N/A
-                                </ng-template>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <span *ngIf="isInvalidField(activities)" class="text-body-regular text-error">La evaluación no debe ser un valor menor a 0, superior a 100 o alfanumérico</span>
-                <!--Sección carga de autoevaluación -->
-
-
-                <section id="dowload-support">
-                    <span class="title-three">Soporte</span>
-                    <ng-container *ngIf="sourceFileDeleted==false; else fileDeletedTemplate">
-                        <div class="download-file-container">
-                            <div class="download-file-label">
-                                <span class="text-body-small-r">Soporte</span>
-                                <br>
-                                <span class="text-body-small-sb">
-                                    {{fileNameSelected}}
-                                </span>
-                            </div>
-                            <div class="file-actions">
-                                <button type="button" class="button-actions button-delete button-radius-custom"
-                                    (click)="deleteSourceFile()"></button>
-                                <button type="button" class="button-actions button-download" (click)="downloadSourceFile()"></button>
-                            </div>
                         </div>
-                    </ng-container>
-                    <ng-template #fileDeletedTemplate>
-                        <div class="file-upload-container">
-                            <label for="uploadFileSource" class="file-upload-label">
-                                <div class="file-details">
-                                    <p class="file-title text-body-small-sb">
-                                        Soporte
-                                    </p>
-                                    <p class="file-name text-body-small-r">
-                                        {{fileNameSelected? fileNameSelected : 'Seleccione un archivo'}}
-                                    </p>
+                        <div class="col">
+                            <span class="text-body-regular ">Asegurese que la evaluación ingresada sea la misma que se
+                                encuentra en el soporte</span>
+                        </div>
+                    </div>
+                </section>
+                <form [formGroup]="formSelfEvaluation" (ngSubmit)="saveEvaluation()">
+                    <section>
+                        <table class="table-responsive-custom table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <span class="text-body-heavy">Actividad</span>
+                                    </th>
+                                    <th>
+                                        <span class="text-body-heavy">Calificación</span>
+                                    </th>
+                                    <th>
+                                        <span class="text-body-heavy">Informe</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody formArrayName="activities">
+                                <tr *ngFor="let item of activities.controls; let i = index" [formGroupName]="i">
+                                    <td>
+                                        <span
+                                            class="text-body-regular">{{teacherActivities!.content[i].codigoActividad}}</span>
+                                    </td>
+                                    <td>
+                                        <input [ngClass]="{'text-error': isInvalidField(item)}"
+                                            id="input-evaluation-edit" class="input-evaluation text-body-regular"
+                                            formControlName="calificacion">
+                                        <!-- <span *ngIf="isInvalidField(item)" class="text-body-small-sb">{{getFieldError(item,'calificacion')}}</span>       -->
+                                    </td>
+                                    <td>
+                                        <ng-container
+                                            *ngIf="teacherActivities!.content[i].informeEjecutivo; else noReport">
+                                            <ng-container
+                                                *ngIf="teacherActivities!.content[i].fuentes[0].nombreDocumentoInforme; else missingReport">
+                                                <img src="assets/icons/tables/icon-view.svg" alt=""
+                                                    style="cursor: pointer;"
+                                                    (click)="downloadReport(teacherActivities!.content[i].fuentes[0].oidFuente)">
+                                                <img src="assets/icons/tables/icon-trash.svg" alt=""
+                                                    style="cursor: pointer;"
+                                                    (click)="deleteReport(teacherActivities!.content[i])">
+                                            </ng-container>
+                                            <ng-template #missingReport>
+                                                <img src="assets/icons/tables/icon-upload.svg" alt=""
+                                                    style="cursor: pointer;"
+                                                    (click)="triggerReportFileUpload(teacherActivities!.content[i])">
+                                                <input type="file" id="uploadFileReportEdit"
+                                                    (change)="onRepportFileSelected($event)" hidden>
+                                            </ng-template>
+                                        </ng-container>
+                                        <ng-template #noReport>
+                                            N/A
+                                        </ng-template>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span *ngIf="isInvalidField(activities)" class="text-body-regular text-error">La evaluación no
+                            debe ser un valor menor a 0, superior a 100 o alfanumérico</span>
+                        <!--Sección carga de autoevaluación -->
+
+
+                        <section id="dowload-support">
+                            <span class="title-three">Soporte</span>
+                            <ng-container *ngIf="sourceFileDeleted==false; else fileDeletedTemplate">
+                                <div class="download-file-container">
+                                    <div class="download-file-label">
+                                        <span class="text-body-small-r">Soporte</span>
+                                        <br>
+                                        <span class="text-body-small-sb">
+                                            {{fileNameSelected}}
+                                        </span>
+                                    </div>
+                                    <div class="file-actions">
+                                        <button type="button" class="button-actions button-delete button-radius-custom"
+                                            (click)="deleteSourceFile()"></button>
+                                        <button type="button" class="button-actions button-download"
+                                            (click)="downloadSourceFile()"></button>
+                                    </div>
                                 </div>
-                                <input type="file" formControlName="uploadFileSource" id="uploadFileSource" (change)="onSourceFileSelected($event)" hidden>
-                            </label>
-                            <div class="file-actions">
-                                <button type="button" [ngClass]="{'button-upload-error': errorFileInput, 'button-upload':!errorFileInput}" class="button-actions button-border-radius"
-                                    (click)="triggerSourceFileUpload()"></button>
-                            </div>
-                        </div>
-                        <span *ngIf="errorFileInput" class="text-body-regular text-error">Únicamente se permiten archivos en formato PDF</span>
-                    </ng-template>
-                </section>
-                <section id="comments-self-assessment">
-                    <span class="title-three">Observaciones</span>
-                    <input class="observation text-body-regular" type="text" placeholder="Ingrese sus observaciones"
-                        formControlName="observation">
-                </section>
+                            </ng-container>
+                            <ng-template #fileDeletedTemplate>
+                                <div class="file-upload-container">
+                                    <label for="uploadFileSource" class="file-upload-label">
+                                        <div class="file-details">
+                                            <p class="file-title text-body-small-sb">
+                                                Soporte
+                                            </p>
+                                            <p class="file-name text-body-small-r">
+                                                {{fileNameSelected? fileNameSelected : 'Seleccione un archivo'}}
+                                            </p>
+                                        </div>
+                                        <input type="file" formControlName="uploadFileSource" id="uploadFileSource"
+                                            (change)="onSourceFileSelected($event)" hidden>
+                                    </label>
+                                    <div class="file-actions">
+                                        <button type="button"
+                                            [ngClass]="{'button-upload-error': errorFileInput, 'button-upload':!errorFileInput}"
+                                            class="button-actions button-border-radius"
+                                            (click)="triggerSourceFileUpload()"></button>
+                                    </div>
+                                </div>
+                                <span *ngIf="errorFileInput" class="text-body-regular text-error">Únicamente se permiten
+                                    archivos en formato PDF</span>
+                            </ng-template>
+                        </section>
+                        <section id="comments-self-assessment">
+                            <span class="title-three">Observaciones</span>
+                            <input class="observation text-body-regular" type="text"
+                                placeholder="Ingrese sus observaciones" formControlName="observation">
+                        </section>
+                        
+                    </section>
+                </form>
+            </div>
+            <div class="modal-footer">
                 <div class="modal-buttons">
-                    <button type="button" (click)="closeModal()" class="button-modal text-body-heavy">
+                    <button type="button" (click)="closeModal()" class="button-modal text-body-heavy"
+                        data-bs-dismiss="modal">
                         Cerrar
                     </button>
-                    <button type="submit" class="button-modal text-body-heavy">
+                    <button type="submit" class="button-modal text-body-heavy" (click)="saveEvaluation()">
                         Guardar
                     </button>
                 </div>
-            </section>
-        </form>
+            </div>
+        </div>
     </div>
 </div>

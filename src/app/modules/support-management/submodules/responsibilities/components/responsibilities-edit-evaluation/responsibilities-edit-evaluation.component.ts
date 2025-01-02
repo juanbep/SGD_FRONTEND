@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
 import {  Fuente, SourceEvaluation } from '../../../../../../core/models/responsibilitie.interface';
-import { Responsabilidad } from '../../../../../../core/models/responsibilitie.interface';
+import { Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
@@ -22,7 +22,7 @@ export class ResponsibilitiesEditEvaluationComponent {
   source: Fuente | null = null;
 
   @Input()
-  public responsability: Responsabilidad | null = null;
+  public responsability: Responsability | null = null;
 
   @Input()
   public openModalSelected: boolean = false;
@@ -55,7 +55,7 @@ export class ResponsibilitiesEditEvaluationComponent {
   ngOnInit(): void {
     if (this.source) {
       this.evaluation = this.source.calificacion.toFixed(1);
-      this.observation = this.source.observacion;
+      this.observation = this.source.observacion? this.source.observacion : '';
       this.fileNameSelected.set(this.source.nombreDocumentoFuente);
       this.getFilebyName();
     }
@@ -75,7 +75,7 @@ export class ResponsibilitiesEditEvaluationComponent {
           next: () => {
             this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
             this.closeModalEditSelected.emit(true);
-            this.service.getResponsibilities('4', '', '', '', '').subscribe(
+            this.service.getResponsibilities('4', '', '', '', '',0,10).subscribe(
               {
                 next: data => {
                   this.service.setResponsibilitiesData(data);

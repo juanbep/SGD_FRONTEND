@@ -9,6 +9,9 @@ import { Userinfo } from '../models/auth.interface';
 })
 export class AsAuthServiceService {
 
+  public usersLogin: {email:string, pass:string} [] = [{email: 'admin',pass: 'admin'}];
+
+
   private apiUrl = environments.baseUrl;
 
   constructor(private http: HttpClient) { }
@@ -18,8 +21,10 @@ export class AsAuthServiceService {
    * @param username
    * @param password
    */
-  login(username: string, password: string): void {
-    sessionStorage.setItem('token', 'Bearer token');
+  login(userEmail: string, password: string): void {
+    if(this.usersLogin.find(user => user.email === userEmail && user.pass === password)) {
+      sessionStorage.setItem('token', 'Bearer token');
+    }
   }
 
   /**

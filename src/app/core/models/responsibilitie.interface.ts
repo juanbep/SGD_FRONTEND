@@ -2,15 +2,28 @@
 * Interface que define la estructura de las actividades y sus fuentes asociadas un docente que se consumo en el servicio de responsabilidades
 */
 
+export interface ResponsabilityResponse {
+    content:          Responsability[];
+    pageable:         Pageable;
+    totalElements:    number;
+    last:             boolean;
+    totalPages:       number;
+    size:             number;
+    number:           number;
+    sort:             Sort;
+    numberOfElements: number;
+    first:            boolean;
+    empty:            boolean;
+}
 
-export interface Responsabilidad {
+export interface Responsability {
     oidActividad:       number;
     codigoActividad:    string;
     nombre:             string;
-    horas:              string;
-    informeEjecutivo: boolean;
-    fechaCreacion:      string;
-    fechaActualizacion: string;
+    horas:              number;
+    informeEjecutivo:   boolean;
+    fechaCreacion:      Date;
+    fechaActualizacion: Date;
     tipoActividad:      TipoActividad;
     fuentes:            Fuente[];
     evaluado:           Evaluado;
@@ -30,16 +43,15 @@ export interface Role {
 }
 
 export interface Fuente {
-    oidFuente:          number;
-    tipoFuente:         string;
-    calificacion:       number;
-    nombreDocumentoFuente: string;
+    oidFuente:              number;
+    tipoFuente:             string;
+    calificacion:           number;
+    nombreDocumentoFuente:  string;
     nombreDocumentoInforme: string;
-    informeEjecutivo:  string;
-    observacion:        string;
-    fechaCreacion:      string;
-    fechaActualizacion: string;
-    estadoFuente:       string;
+    observacion?:           string;
+    fechaCreacion:          Date;
+    fechaActualizacion:     Date;
+    estadoFuente:           string;
 }
 
 export interface TipoActividad {
@@ -49,11 +61,25 @@ export interface TipoActividad {
     descripcion:      string;
 }
 
-export interface ResponsabilidadesPorTipoActividad {
-    nombreType: string;
-    activities: Responsabilidad[];
+export interface Pageable {
+    pageNumber: number;
+    pageSize:   number;
+    sort:       Sort;
+    offset:     number;
+    paged:      boolean;
+    unpaged:    boolean;
 }
 
+export interface Sort {
+    empty:    boolean;
+    sorted:   boolean;
+    unsorted: boolean;
+}
+
+export interface ResponsabilidadesPorTipoActividad {
+    nombreType: string;
+    activities: Responsability[];
+}
 
 /*
 * Interface para guardar la evaluacion de una fuente

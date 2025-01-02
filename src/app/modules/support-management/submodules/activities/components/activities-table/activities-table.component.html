@@ -1,5 +1,5 @@
-<ng-container *ngIf="activities?.length; else nullData">
-    <table>
+<ng-container *ngIf="activities; else nullData">
+    <table class="table-bordered">
         <thead>
             <tr>
                 <th class="text-body-heavy center-text"> {{headDataTable[0]}} </th>
@@ -67,7 +67,7 @@
 </ng-container>
 
 <ng-template #nullData>
-    <table>
+    <table class="table-bordered">
         <thead>
             <tr>
                 <th class="text-body-heavy"> {{headDataTable[0]}} </th>
@@ -89,3 +89,9 @@
         </tbody>
     </table>
 </ng-template>
+
+<div class="mb-3"></div>
+
+<section id="paginator-section-activities">
+    <shared-paginator [currentPage]="currentPage" [totalPages]="activities?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
+</section>

@@ -57,3 +57,51 @@ export enum EstadoFuente {
     Diligenciado = "Diligenciado",
     Pendiente = "Pendiente",
 }
+
+
+//Información actividad
+
+export interface Actividad {
+    oidActividad:       number;
+    codigoActividad:    string;
+    nombre:             string;
+    horas:              number;
+    informeEjecutivo:   boolean;
+    fechaCreacion:      Date;
+    fechaActualizacion: Date;
+    tipoActividad:      TipoActividad;
+    fuentes:            FuenteActividad[];
+    evaluador:          Evaluador;
+}
+
+export interface Evaluador {
+    oidUsuario:     number;
+    identificacion: string;
+    nombres:        string;
+    apellidos:      string;
+    roles:          Role[];
+}
+
+export interface Role {
+    nombre: string;
+    estado: string;
+}
+
+export interface FuenteActividad {
+    oidFuente:              number;
+    tipoFuente:             string;
+    calificacion:           number;
+    fechaCreacion:          string;
+    fechaActualizacion:     string;
+    estadoFuente:           string;
+    nombreDocumentoFuente:  string;
+    nombreDocumentoInforme: string;
+    observacion:           string;
+}
+
+export interface TipoActividad {
+    oidTipoActividad: number;
+    nombre:           string;
+    horasTotales:     number;
+    descripcion:      string;
+}

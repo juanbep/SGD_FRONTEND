@@ -1,5 +1,5 @@
-<ng-container *ngIf="responsabilities?.length; else nullData">
-    <table>
+<ng-container *ngIf="responsabilities?.content; else nullData">
+    <table class="table-bordered">
         <thead>
             <tr>
                 <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
@@ -55,7 +55,7 @@
 
 
 <ng-template #nullData>
-    <table>
+    <table class="table-bordered">
         <thead>
             <tr>
                 <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
@@ -76,3 +76,9 @@
         </tbody>
     </table>
 </ng-template>
+
+<div class="mb-3"></div>
+
+<section id="paginator-section-responsabilities">
+    <shared-paginator [currentPage]="currentPage" [totalPages]="responsabilities?.totalPages || 1"></shared-paginator>
+</section>

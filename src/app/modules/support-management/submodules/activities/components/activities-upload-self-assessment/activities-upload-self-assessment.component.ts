@@ -1,9 +1,10 @@
-import { Component, effect, Input, signal, WritableSignal } from '@angular/core';
-import { Actividad, SourceEvaluation } from '../../../../../../core/models/activities.interface';
+import { Component, effect, inject, Input, signal, WritableSignal } from '@angular/core';
+import { Activity, ActivityResponse, SourceEvaluation } from '../../../../../../core/models/activities.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+declare var bootstrap: any;
 
 @Component({
   selector: 'activities-upload-self-assessment',
@@ -21,7 +22,8 @@ export class ActivitiesUploadSelfAssessmentComponent {
   
   private myModal: HTMLElement | null = null;
   public errorMessageFile: string = '';
-  public userActivities: Actividad[] = [];
+  public activityResponse: ActivityResponse | null = null;
+  public userActivities: Activity[] = [];
   public observacionSend: string = '';
   public selectedFile: File | null = null;
   public selfEvaluation: number[] = [];
@@ -32,11 +34,21 @@ export class ActivitiesUploadSelfAssessmentComponent {
 
   public fileNameSelected: WritableSignal<string> = signal('');
 
-  public activityFileReport: Actividad | null = null;
+  public activityFileReport: Activity | null = null;
 
-  constructor(private service: ActivitiesServicesService, private toastr: MessagesInfoService) {
-    effect(() => {
-      this.openModalOptionSelected? this.userActivities = this.service.getDataActivities() : this.userActivities = [];
+  private service = inject(ActivitiesServicesService);
+  private toastr = inject(MessagesInfoService);
+
+
+  recoverActivities(): void {
+    this.service.getActivities('6', '', '', '', '',null,null).subscribe({
+      next: data => {
+        this.userActivities = data.content;
+        this.activityResponse = this.service.getDataActivities();
+      },
+      error: error => {
+        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+      }
     });
   }
 
@@ -44,11 +56,11 @@ export class ActivitiesUploadSelfAssessmentComponent {
   * Method to open the modal
   */
   openModal(): void {
-    this.myModal = document.getElementById("myModalUploadFile");
+    this.myModal = document.getElementById("modal-upload-evaluation");
     if (this.myModal) {
-      this.openModalOptionSelected = true;
-      this.userActivities = this.service.getDataActivities();
-      this.myModal.style.display = "flex";
+      var bootstrapModal = new bootstrap.Modal(this.myModal)
+      this.recoverActivities();
+      bootstrapModal.show();
     }
   }
 
@@ -57,10 +69,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   */
 
   closeModal() {
-    if (this.myModal) {
-      this.openModalOptionSelected = false;
-      this.myModal.style.display = "none";
-    }
+    
   }
 
   /*
@@ -96,7 +105,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   /*
   * Method to trigger the report file upload
   */
-  triggerReportFileUpload(actividad: Actividad) {
+  triggerReportFileUpload(actividad: Activity) {
     const fileUpload = document.getElementById('uploadFileReport') as HTMLInputElement;
     if (fileUpload) {
       this.activityFileReport = actividad;
@@ -126,7 +135,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   * Method to download the report file
   */
 
-  downloadReportFile(actividad: Actividad): void {
+  downloadReportFile(actividad: Activity): void {
     let file: File[] = this.filesSelected.filter(file => file.name === actividad.fuentes[0].nombreDocumentoInforme);
     if (file) {
       var a = document.createElement("a");
@@ -136,7 +145,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
     }
   }
 
-  deleteReportFile(actividad: Actividad): void {
+  deleteReportFile(actividad: Activity): void {
     this.filesSelected.splice(this.filesSelected.findIndex(file => file.name === actividad.fuentes[0].nombreDocumentoInforme), 1);
     actividad.fuentes[0].nombreDocumentoInforme = '';
     console.log(this.filesSelected);
@@ -145,7 +154,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   /*
   * Method to update the evaluation of the activity
   */
-  updateEvaluation(event: Event, activitie: Actividad): void {
+  updateEvaluation(event: Event, activitie: Activity): void {
     let evaluationInput = event.target as HTMLInputElement;
     const calificacion: number = parseFloat(evaluationInput.value);
     if (!isNaN(calificacion)) {
@@ -176,7 +185,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
       }
       this.service.saveSelfAssessment(this.selectedFile, this.observacionSend, this.sendSource, this.filesSelected).subscribe({
         next: data => {
-          this.service.getActivities('6', '', '', '', '').subscribe({
+          this.service.getActivities('6', '', '', '', '',0,10).subscribe({
             next: data => {
               this.service.setDataActivities(data);
               this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');

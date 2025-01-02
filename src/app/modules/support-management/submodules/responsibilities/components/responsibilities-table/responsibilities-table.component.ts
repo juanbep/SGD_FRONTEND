@@ -1,11 +1,12 @@
 import { Component, effect } from '@angular/core';
-import { Responsabilidad, ResponsabilidadesPorTipoActividad } from '../../../../../../core/models/responsibilitie.interface';
+import { ResponsabilityResponse, ResponsabilidadesPorTipoActividad, Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesUploadEvaluationComponent } from "../responsibilities-upload-evaluation/responsibilities-upload-evaluation.component";
 import { ResponsibilitiesViewEvaluationComponent } from "../responsibilities-view-evaluation/responsibilities-view-evaluation.component";
 import { ResponsibilitiesEditEvaluationComponent } from "../responsibilities-edit-evaluation/responsibilities-edit-evaluation.component";
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
 
 @Component({
   selector: 'responsibilities-table',
@@ -14,23 +15,25 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
     CommonModule,
     ResponsibilitiesUploadEvaluationComponent,
     ResponsibilitiesViewEvaluationComponent,
-    ResponsibilitiesEditEvaluationComponent
+    ResponsibilitiesEditEvaluationComponent,
+    PaginatorComponent
 ],
   templateUrl: './responsibilities-table.component.html',
   styleUrl: './responsibilities-table.component.css'
 })
 export class ResponsibilitiesTableComponent {
 
+  public currentPage: number = 1;
   public headDataTable = ["Actividad", "Fuente 2", "Informe"];
   public headDataTableCoodinator = ["Actividad", "Fuente", "Informe"];
   public subHeadDataTableCoorinator = ["Nombre actividad", "Evaluado", "Rol evaluado", "Estado soporte", "Acciones", "Acciones"];
   public subHeadDataTableStudents = ["Nombre actividad", "Evaluado", "Rol evaluado", "Estado soporte", "Acciones","Acciones"];
 
   public responsabilitieByType: ResponsabilidadesPorTipoActividad[] = [];
-  public responsabilities: Responsabilidad[] = [];
+  public responsabilities: ResponsabilityResponse | null = null;
 
   public openModalResposabilitySelected: boolean = false;
-  public resposabilitySelected: Responsabilidad | undefined;
+  public resposabilitySelected: Responsability | undefined;
 
   public openModalViewSelected: boolean = false;
 
@@ -44,7 +47,11 @@ export class ResponsibilitiesTableComponent {
   }
 
   ngOnInit(): void {
-    this.service.getResponsibilities('4', '', '', '', '').subscribe({
+    this.recoverResponsabilities(this.currentPage, 10);
+  }
+
+  recoverResponsabilities(page: number, totalPage: number) {
+    this.service.getResponsibilities('4', '', '', '', '',page-1, totalPage).subscribe({
       next: data => {
         this.service.setResponsibilitiesData(data);
       },
@@ -52,11 +59,10 @@ export class ResponsibilitiesTableComponent {
         this.toastr.showErrorMessage('Error al consultar la información', 'Error');
       }
     });
-    
-
   }
 
-  public openModalUpload(responsability: Responsabilidad) {
+
+  public openModalUpload(responsability: Responsability) {
     this.openModalResposabilitySelected = !this.openModalResposabilitySelected;
     this.resposabilitySelected = responsability;
   }
@@ -65,12 +71,12 @@ export class ResponsibilitiesTableComponent {
     this.openModalResposabilitySelected = !event;
   }
 
-  public openModalView(responsability: Responsabilidad) {
+  public openModalView(responsability: Responsability) {
     this.openModalViewSelected = !this.openModalViewSelected;
     this.resposabilitySelected = responsability;
   }
 
-  public openModalEdit(responsability: Responsabilidad) {
+  public openModalEdit(responsability: Responsability) {
     this.openModalEditSelected = !this.openModalEditSelected;
     this.resposabilitySelected = responsability;
   }
@@ -83,7 +89,7 @@ export class ResponsibilitiesTableComponent {
     this.openModalEditSelected = !event
   }
 
-  public downloadReport(responsability: Responsabilidad) {
+  public downloadReport(responsability: Responsability) {
     this.service.getDownloadReportFile(responsability.fuentes[0].oidFuente, true).subscribe(
       {
         next: blob => {
@@ -106,8 +112,8 @@ export class ResponsibilitiesTableComponent {
   public reloadActivities() {
     if(this.responsabilities) {
       this.responsabilitieByType = Object.values(
-        this.responsabilities.reduce((acc, responsabiltite) => {
-          const tipoNombre = responsabiltite.tipoActividad.nombre;
+        this.responsabilities.content.reduce((acc, responsability) => {
+          const tipoNombre = responsability.tipoActividad.nombre;
   
           // Si el tipo de actividad no existe como clave, la inicializamos
           if (!acc[tipoNombre]) {
@@ -118,7 +124,7 @@ export class ResponsibilitiesTableComponent {
           }
   
           // Añadimos la actividad al grupo correspondiente
-          acc[tipoNombre].activities.push(responsabiltite);
+          acc[tipoNombre].activities.push(responsability);
   
           return acc;
         }, {} as { [key: string]: ResponsabilidadesPorTipoActividad })

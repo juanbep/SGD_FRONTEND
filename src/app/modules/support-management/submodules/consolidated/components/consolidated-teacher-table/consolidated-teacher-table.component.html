@@ -1,4 +1,4 @@
-<table>
+<table class=" table-bordered" >
     <thead>
         <tr>
             <th colspan="3">
@@ -84,6 +84,7 @@
                 <span>{{activity.fuentes[0].calificacion}}</span>
             </td>
             <td>
+                <img *ngIf="activity.fuentes[0].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
                 <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
             </td>
             <td>
@@ -93,10 +94,13 @@
                 <span>{{activity.fuentes[1].calificacion}}</span>
             </td>
             <td>
+                <img *ngIf="activity.fuentes[1].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceTwoModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
                 <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
-            </td>
+            </td> 
         </tr>
     </tbody>
 </table>
 
 <app-email-notification></app-email-notification>
+<app-view-details-source-one></app-view-details-source-one>
+<app-view-details-source-two></app-view-details-source-two>

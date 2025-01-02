@@ -16,6 +16,20 @@ export class SideBarComponent implements OnInit {
   public isSidebarActive: boolean = true;
   public sidebarItems = [
     {
+      label: 'Gestion usuarios',
+      icon: 'assets/icons/sidebar/icon-user.svg',
+      sub: [
+        {
+          label: 'Usuarios',
+          url: '/app/gestion-usuarios/usuarios'
+        },
+        {
+          label: 'Actividades',
+          url: '/app/gestion-usuarios/actividades'
+        }
+      ]
+    },
+    {
       label: 'Evaluación Docente', 
       icon: 'assets/icons/sidebar/icon-evaluation.svg', 
       sub: [

@@ -2,10 +2,10 @@ import { Component, effect, OnInit, ViewChild } from '@angular/core';
 import { ActivitiesTableComponent } from "../../components/activities-table/activities-table.component";
 import { ActivitiesFilterComponent } from "../../components/activities-filter/activities-filter.component";
 import { ActivitiesUploadSelfAssessmentComponent } from "../../components/activities-upload-self-assessment/activities-upload-self-assessment.component";
-import { Actividad } from '../../../../../../core/models/activities.interface';
 import { CommonModule } from '@angular/common';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { ActivitiesEditEvaluationComponent } from '../../components/activities-edit-evaluation/activities-edit-evaluation.component';
+import { ActivityResponse } from '../../../../../../core/models/activities.interface';
 
 @Component({
   selector: 'support-management-activities',
@@ -23,7 +23,7 @@ export class ActivitiesComponent implements OnInit{
   @ViewChild(ActivitiesEditEvaluationComponent)
   editSelfAssessmentComponent!: ActivitiesEditEvaluationComponent;
 
-  public activities: Actividad[] = [];
+  public activityResponse: ActivityResponse | null = null;
 
   public checkActivitiesPendingVar: boolean = false;
 
@@ -31,28 +31,19 @@ export class ActivitiesComponent implements OnInit{
 
   constructor(private activitiesServices: ActivitiesServicesService) { 
     effect(() => {
-      this.activities = this.activitiesServices.getDataActivities();
+      this.activityResponse = this.activitiesServices.getDataActivities();
       this.checkActivitiesPendingVar=this.checkActivitiesPending();
    });
   }
   
   ngOnInit(): void {
-    this.activitiesServices.getActivities('6', '', '', '', '').subscribe({
-      next: data => {
-        this.activities = data;
-        this.activitiesServices.setDataActivities(data);
-        this.checkActivitiesPendingVar = this.checkActivitiesPending();
-      },
-      error: error => {
-        console.error('Error al consultar la información', error);
-      }
-    });
+   
   }
 
   private checkActivitiesPending(){
-    if (this.activities) {
-      for (let i = 0; i < this.activities.length; i++) {
-        if (this.activities[i].fuentes[0].estadoFuente === "Pendiente") {
+    if (this.activityResponse?.content) {
+      for (let i = 0; i < this.activityResponse.content.length; i++) {
+        if (this.activityResponse.content[i].fuentes[0].estadoFuente === "Pendiente") {
           return true;
         }
       }

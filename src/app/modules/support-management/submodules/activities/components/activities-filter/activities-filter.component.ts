@@ -19,7 +19,7 @@ export class ActivitiesFilterComponent {
     { valor: 'default', texto: 'Estado' },
     { valor: 'opcion1', texto: 'Diligenciado' },
     { valor: 'opcion2', texto: 'Pendiente' },
-    { valor: 'opcion2', texto: 'Pendiente firma' },
+    { valor: 'opcion3', texto: 'Pendiente firma' },
   ];
 
   stateSource2 = [
@@ -95,7 +95,7 @@ export class ActivitiesFilterComponent {
     this.valueActivity = (<HTMLInputElement>document.getElementById("activity")).value;
     this.valueEvaluator = (<HTMLInputElement>document.getElementById("evaluator")).value;
     
-    this.service.getActivities('6', this.valueActivity, this.valuetypeActivity == 'Tipo actividad' ? '' : this.valuetypeActivity, this.valueEvaluator, this.valueRolEvaluator == 'Rol evaluador' ? '' : this.valueRolEvaluator).subscribe({
+    this.service.getActivities('6', this.valueActivity, this.valuetypeActivity == 'Tipo actividad' ? '' : this.valuetypeActivity, this.valueEvaluator, this.valueRolEvaluator == 'Rol evaluador' ? '' : this.valueRolEvaluator,0,10).subscribe({
       next: data => {
         this.service.setDataActivities(data);
       },
@@ -112,7 +112,7 @@ export class ActivitiesFilterComponent {
 
     this.valuetypeActivity != 'Tipo actividad'? this.valuetypeActivity = this.typeActivity[0].texto : this.valuetypeActivity;
     this.valueRolEvaluator != 'Rol evaluado'? this.valueRolEvaluator = this.rolEvualator[0].texto : this.valueRolEvaluator;
-    this.service.getActivities('6', '', '', '', '').subscribe({
+    this.service.getActivities('6', '', '', '', '',0,2).subscribe({
       next: data => {
         this.service.setDataActivities(data);
       },

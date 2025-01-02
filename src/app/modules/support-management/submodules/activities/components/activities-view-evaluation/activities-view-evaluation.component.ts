@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { Actividad, Fuente } from '../../../../../../core/models/activities.interface';
-import { Responsabilidad } from '../../../../../../core/models/responsibilitie.interface';
+import { Activity, Fuente } from '../../../../../../core/models/activities.interface';
+import { Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
@@ -19,10 +19,10 @@ export class ActivitiesViewEvaluationComponent {
   public source: Fuente | null = null;
 
   @Input()
-  public activity: Actividad | null = null;
+  public activity: Activity | null = null;
 
   @Input()
-  public responsability: Responsabilidad | null = null;
+  public responsability: Responsability | null = null;
 
   @Input()
   public openModalSelected: boolean = false;
@@ -35,11 +35,11 @@ export class ActivitiesViewEvaluationComponent {
 
   public evaluation: string = '';
 
-  public observation: string = "";
+  public observation: string | undefined = "";
 
-  public documentName: string = "";
+  public documentName: string | undefined = "";
 
-  public reportName: string = "";
+  public reportName: string | undefined = "";
 
   public editSelected: WritableSignal<boolean> = signal(false);
 
@@ -72,7 +72,7 @@ export class ActivitiesViewEvaluationComponent {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = this.source!.nombreDocumentoInforme;
+            a.download = this.source!.nombreDocumentoInforme || 'default-report-name';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -93,7 +93,7 @@ export class ActivitiesViewEvaluationComponent {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = this.source!.nombreDocumentoFuente;
+            a.download = this.source!.nombreDocumentoFuente || 'default-document-name';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

@@ -18,6 +18,8 @@ export class ConsolidatedTeacherComponent implements OnInit {
   @ViewChild(ApproveConsolidatedConfirmDialogComponent)
   approveConsolidatedConfirmDialog!: ApproveConsolidatedConfirmDialogComponent;
 
+  responseConsolidatedConfirmDialog: string = '';
+
   consolidatedTeacher: Consolidated | null = null;
 
   consolidatedServicesService = inject(ConsolidatedServicesService);
@@ -38,9 +40,29 @@ export class ConsolidatedTeacherComponent implements OnInit {
       }
     });
   }
+
+  responseApproveConsolidated(response: string | void): void {
+    console.log(response);
+    if (response === 'Si') {
+      this.consolidatedServicesService.saveConsolidated(6).subscribe({
+        next: () => {
+          this.toastr.showSuccessMessage('Consolidado aprobado  y generado correctamente', 'Éxito');
+          this.closeApproveConsolidatedDialog();
+        },
+        error: (error:any) => {
+          this.toastr.showErrorMessage('Error al aprobar el consolidado', 'Error');
+        }
+      });
+    } else {
+      this.closeApproveConsolidatedDialog();
+    }
+  }
   
   createConsolidated(): void {
     this.approveConsolidatedConfirmDialog.open();
   }
 
+  closeApproveConsolidatedDialog(): void {
+    this.approveConsolidatedConfirmDialog.closeModal();
+  }
 }

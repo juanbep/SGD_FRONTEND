@@ -3,7 +3,7 @@ import { environments } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessagesInfoService } from '../../../shared/services/messages-info.service';
-import { Actividad, SourceEvaluation } from '../../models/activities.interface';
+import { ActivityResponse, SourceEvaluation } from '../../models/activities.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class SmActivitiesServicesService {
   
   private baseUrl: string = environments.baseUrl;
   
-  constructor(private httpClient: HttpClient, private toastr: MessagesInfoService) { }
+  constructor(private httpClient: HttpClient) { }
 
   /*
     * Method to get all the activities by user
@@ -23,14 +23,16 @@ export class SmActivitiesServicesService {
     * @param roles:string
     * @returns void
     */
-  getActivities(evaluatedId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string): Observable<Actividad[]> {
+  getActivities(evaluatedId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage:number |null ): Observable<ActivityResponse> {
     let params = new HttpParams()
       .set('idEvaluado', evaluatedId)
       .set('codigoActividad', activityCode)
       .set('tipoActividad', activityType)
       .set('nombreEvaluador', evaluatorName)
-      .set('roles', roles);
-    return this.httpClient.get<Actividad[]>(`${this.baseUrl}/actividad/findActivitiesByEvaluado`, { params });
+      .set('roles', roles)
+      .set('page', page? page.toString() : '' )
+      .set('size', totalPage? totalPage.toString() : '' );
+    return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/actividad/findActivitiesByEvaluado`, { params });
   }
 
   /*

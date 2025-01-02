@@ -77,7 +77,7 @@ export class ResponsibilitiesFilterComponent {
     let valueActivity = (<HTMLInputElement>document.getElementById("activity")).value;
     let valueEvaluator = (<HTMLInputElement>document.getElementById("evaluator")).value;
     
-    this.service.getResponsibilities('4', valueActivity, this.valuetypeActivity == 'Tipo actividad' ? '' : this.valuetypeActivity, valueEvaluator, this.valueRolEvaluator == 'Rol evaluado' ? '' : this.valueRolEvaluator).subscribe
+    this.service.getResponsibilities('4', valueActivity, this.valuetypeActivity == 'Tipo actividad' ? '' : this.valuetypeActivity, valueEvaluator, this.valueRolEvaluator == 'Rol evaluado' ? '' : this.valueRolEvaluator, 0,10).subscribe
       ({
         next: data => {
           this.service.setResponsibilitiesData(data);
@@ -95,7 +95,7 @@ export class ResponsibilitiesFilterComponent {
     this.valuetypeActivity != 'Tipo actividad' ? this.valuetypeActivity = this.typeActivity[0].texto : this.valuetypeActivity;
     this.valueRolEvaluator != 'Rol evaluador' ? this.valueRolEvaluator = this.rolEvualator[0].texto : this.valueRolEvaluator;
 
-    this.service.getResponsibilities('4', '', '', '', '').subscribe({
+    this.service.getResponsibilities('4', '', '', '', '',0,10).subscribe({
       next: data => {
         this.service.setResponsibilitiesData(data);
       },

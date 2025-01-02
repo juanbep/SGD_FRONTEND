@@ -9,6 +9,11 @@ const routes: Routes = [
         component: MainLayoutComponent,
         children: [
             {
+                path: 'gestion-usuarios',
+                loadChildren: () => import('../user-management/user-management-routing.module').then(m => m.UserManagementRoutingModule),
+                
+            },
+            {
                 path: 'gestion-soportes',
                 loadChildren: () => import('../support-management/support-management-routing.module').then(m => m.SupportManagementRoutingModule),
                 title: 'Gestión de Soportes'

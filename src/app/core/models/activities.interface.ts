@@ -3,25 +3,40 @@
 * Interface que define la estructura de las actividades y sus fuentes asociadas un docente que se consumo en el servicio de actividades
 */
 
-export interface Actividad {
-    oidActividad: number;
-    codigoActividad: string;
-    nombre: string;
-    horas: string;
-    informeEjecutivo: boolean;
-    fechaCreacion: string;
-    fechaActualizacion: string;
-    tipoActividad: TipoActividad;
-    fuentes: Fuente[];
-    evaluador: Evaluador;
+export interface ActivityResponse {
+    content:          Activity[];
+    pageable:         Pageable;
+    totalPages:       number;
+    totalElements:    number;
+    last:             boolean;
+    size:             number;
+    number:           number;
+    sort:             Sort;
+    numberOfElements: number;
+    first:            boolean;
+    empty:            boolean;
+}
+
+export interface Activity {
+    oidActividad:       number;
+    codigoActividad:    string;
+    nombre:             string;
+    horas:              number;
+    informeEjecutivo:   boolean;
+    fechaCreacion:      Date;
+    fechaActualizacion: Date;
+    tipoActividad:      TipoActividad;
+    fuentes:            Fuente[];
+    evaluador:          Evaluador;
+
 }
 
 export interface Evaluador {
-    oidUsuario: number;
+    oidUsuario:     number;
     identificacion: string;
-    nombres: string,
-    apellidos: string,
-    roles: Role[];
+    nombres:        string;
+    apellidos:      string;
+    roles:          Role[];
 }
 
 export interface Role {
@@ -30,32 +45,53 @@ export interface Role {
 }
 
 export interface Fuente {
-    oidFuente: number;
-    tipoFuente: string;
-    calificacion: number;
-    nombreDocumentoFuente: string;
-    nombreDocumentoInforme: string;
-    informeEjecutivo: File | null;
-    soporte: File | null;
-    observacion: string;
-    fechaCreacion: string;
-    fechaActualizacion: string;
-    estadoFuente: string;
+    oidFuente:               number;
+    tipoFuente:              string;
+    calificacion:            number;
+    nombreDocumentoFuente?:  string;
+    observacion?:            string;
+    fechaCreacion:           Date;
+    fechaActualizacion:      Date;
+    estadoFuente:            EstadoFuente;
+    nombreDocumentoInforme?: string;
+    soporte:                 File | null;
+    informeEjecutivo:        File | null,
+}
+
+export enum EstadoFuente {
+    Diligenciado = "Diligenciado",
+    Pendiente = "Pendiente",
 }
 
 export interface TipoActividad {
     oidTipoActividad: number;
-    nombre: string;
-    horasTotales: number;
-    descripcion: string;
+    nombre:           string;
+    horasTotales:     number;
+    descripcion:      string;
 }
+
+export interface Pageable {
+    pageNumber: number;
+    pageSize:   number;
+    sort:       Sort;
+    offset:     number;
+    unpaged:    boolean;
+    paged:      boolean;
+}
+
+export interface Sort {
+    empty:    boolean;
+    unsorted: boolean;
+    sorted:   boolean;
+}
+
 
 /*
 * Interface que nos apoyo con organizar las actividades por tipo de actividad
 */
 export interface ActividadesPorTipoActividad {
     nombreType: string;
-    activities: Actividad[];
+    activities: Activity[];
 }
 
 /*

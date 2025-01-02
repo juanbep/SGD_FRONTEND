@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { Responsabilidad } from '../../../../../../core/models/responsibilitie.interface';
+import { Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { SourceEvaluation } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 export class ResponsibilitiesUploadEvaluationComponent {
 
   @Input()
-  responsability: Responsabilidad | null = null;
+  responsability: Responsability | null = null;
 
   @Input()
   openModalUploadSelected: boolean = false;
@@ -112,7 +112,7 @@ export class ResponsibilitiesUploadEvaluationComponent {
       this.service.saveResponsibilityEvaluation(this.selectedFile, this.observacionSend, this.sendSource).subscribe({
         next: data => {
           this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
-          this.service.getResponsibilities('4', '', '', '', '').subscribe({
+          this.service.getResponsibilities('4', '', '', '', '',0,10).subscribe({
             next: data => {
               this.service.setResponsibilitiesData(data);
             },

@@ -13,7 +13,7 @@
                             formControlName="email"
                             [ngClass]="{'input-error': isValidField('email'), 'input': !isValidField('email')}">
                         <span *ngIf="isValidField('email')" class="error-message text-body-small-r ms-1">
-                            {{ getFieldError("email") }}
+                            {{getFieldError("email")}}
                         </span>
                     </div>
 

@@ -7,3 +7,9 @@ section {
 .text-center{
     text-align: center;
 }
+
+#paginator-section-responsabilities {
+    display: flex;
+    justify-content: center;
+    
+}

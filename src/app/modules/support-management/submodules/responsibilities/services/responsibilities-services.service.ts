@@ -1,18 +1,16 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
-import { SmResponsibilitiesServicesService } from '../../../../../core/services/supportManagement/sm-responsibilities-services.service';
-import { Responsabilidad } from '../../../../../core/models/responsibilitie.interface';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { SmResponsibilitiesServicesService } from '../../../../../core/services/support-management/sm-responsibilities-services.service';
+import { ResponsabilityResponse } from '../../../../../core/models/responsibilitie.interface';
 import { SourceEvaluation } from '../../../../../core/models/activities.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilitiesServicesService {
 
-    private userResponsibilities: WritableSignal<Responsabilidad[]> = signal([]);
+    private userResponsibilities: WritableSignal<ResponsabilityResponse | null> = signal(null);
 
-    constructor(private service: SmResponsibilitiesServicesService) {
+    private smResponsibilitiesServicesService = inject(SmResponsibilitiesServicesService);
 
-    }
-
-    setResponsibilitiesData(newData: Responsabilidad[]) {
+    setResponsibilitiesData(newData: ResponsabilityResponse) {
         this.userResponsibilities.update(data => data = newData);
     }   
 
@@ -20,20 +18,20 @@ export class ResponsibilitiesServicesService {
         return this.userResponsibilities();
     }
 
-    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string) {
-        return this.service.getResponsibilities(evaluatorId, activityCode, activityType, evaluatorName, roles);
+    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage: number | null) {
+        return this.smResponsibilitiesServicesService.getResponsibilities(evaluatorId, activityCode, activityType, evaluatorName, roles, page, totalPage);
     }
 
     saveResponsibilityEvaluation(file: File, observation: string, source: SourceEvaluation[]) {
-        return this.service.saveResponsibilityEvaluation(file, observation, source)
+        return this.smResponsibilitiesServicesService.saveResponsibilityEvaluation(file, observation, source)
     }
 
     getdownloadSourceFile(idSource: number) {
-        return this.service.downloadSourceFile(idSource);
+        return this.smResponsibilitiesServicesService.downloadSourceFile(idSource);
     }
 
     getDownloadReportFile(idSource: number, report:boolean) {
-        return this.service.downloadReportFile(idSource, report);
+        return this.smResponsibilitiesServicesService.downloadReportFile(idSource, report);
     }
 
 

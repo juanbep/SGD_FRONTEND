@@ -1,146 +1,156 @@
 <!-- Sección modal de carga de soporte autoevaluación -->
-<section id="self-assessmet-modal">
-    <div id="myModalUploadFile" class="modal">
+<div class="modal fade" id="modal-upload-evaluation" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <p class="title-three">Carga de soporte autoevaluación</p>
-            <div class="line"></div>
-            <!--Sección mensaje informativo -->
-            <section id="information-message">
-                <div class="message-container row">
-                    <div class="col-1">
-                        <img class="img-container" src="assets/icons/messages/icon-info.svg" alt="">
-                    </div>
-                    <div class="col">
-                        <p class="text-body-regular ">Por favor, ingrese la evaluación de sus actividades. Asegúrese
-                            de que la
-                            evaluación coincida con la información del documento de soporte que desea cargar.</p>
-                    </div>
+            <div class="modal-header">
+                <span class="title-three mx-3" id="exampleModalLabel">Carga de soporte autoevaluación</span>
+                <div class="header-container col-auto">
                 </div>
-            </section>
-
-            <!-- Sección diligenciamiento de la evaluación -->
-            <section id="assessment-fill-out">
-                <p class="title-three">Actividad y evaluación</p>
-                <div class="message-container row">
-                    <div class="col-1">
-                        <img src="assets/icons/messages/icon-info.svg" alt="">
+            </div>
+            <div class="modal-body">
+                <!--Sección mensaje informativo -->
+                <section id="information-message">
+                    <div class="message-container row">
+                        <div class="col-1">
+                            <img class="img-container" src="assets/icons/messages/icon-info.svg" alt="">
+                        </div>
+                        <div class="col">
+                            <p class="text-body-regular ">Por favor, ingrese la evaluación de sus actividades. Asegúrese
+                                de que la
+                                evaluación coincida con la información del documento de soporte que desea cargar.</p>
+                        </div>
                     </div>
-                    <div class="col">
-                        <p class="text-body-regular ">Asegurese que la evaluación ingresada sea la misma que se
-                            encuentra en el soporte</p>
-                    </div>
-                </div>
-                <div class="table-responsive table-responsive-custom">
-                    <table class="upload-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <span class="text-body-heavy ">
-                                        Actividad
-                                    </span>
-                                </th>
-                                <th>
-                                    <span class="text-body-heavy">Calificación</span>
-                                </th>
-                                <th>
-                                    <span class="text-body-heavy">Informe</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let activitie of userActivities; let i = index">
-                                <td>
-                                    <span class="text-body-small-r">{{activitie.codigoActividad}}</span>
-                                </td>
-                                <td>
-                                    <input id="input-evaluation" [ngClass]="{'input-evaluation-error text-body-regular': errorCalificacion==true,
-                                        
-                                        }" class="input-evaluation text-body-regular" placeholder="0-100"
-                                        (input)="updateEvaluation($event,activitie)">
-                                    <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal">
-                                </td>
+                </section>
 
-                                <ng-container *ngIf="activitie.informeEjecutivo; else noReport">
-                                    <ng-container
-                                        *ngIf="!activitie.fuentes[0].nombreDocumentoInforme; else viewReportUploaded">
-                                        <td class="center-text">
-                                            <img src="assets/icons/tables/icon-upload.svg" alt=""
-                                                (click)="triggerReportFileUpload(activitie)" style="cursor: pointer;">
-                                            <input type="file" id="uploadFileReport"
-                                                (change)="onRepportFileSelected($event)" hidden>
-                                        </td>
+                <!-- Sección diligenciamiento de la evaluación -->
+                <section id="assessment-fill-out">
+                    <p class="title-three">Actividad y evaluación</p>
+                    <div class="message-container row">
+                        <div class="col-1">
+                            <img src="assets/icons/messages/icon-info.svg" alt="">
+                        </div>
+                        <div class="col">
+                            <p class="text-body-regular ">Asegurese que la evaluación ingresada sea la misma que se
+                                encuentra en el soporte</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive table-responsive-custom">
+                        <table class="upload-table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <span class="text-body-heavy ">
+                                            Actividad
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="text-body-heavy">Calificación</span>
+                                    </th>
+                                    <th>
+                                        <span class="text-body-heavy">Informe</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let activitie of userActivities; let i = index">
+                                    <td>
+                                        <span class="text-body-small-r">{{activitie.codigoActividad}}</span>
+                                    </td>
+                                    <td>
+                                        <input id="input-evaluation" [ngClass]="{'input-evaluation-error text-body-regular': errorCalificacion==true,
+                                                
+                                                }" class="input-evaluation text-body-regular" placeholder="0-100"
+                                            (input)="updateEvaluation($event,activitie)">
+                                        <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal">
+                                    </td>
+
+                                    <ng-container *ngIf="activitie.informeEjecutivo; else noReport">
+                                        <ng-container
+                                            *ngIf="!activitie.fuentes[0].nombreDocumentoInforme; else viewReportUploaded">
+                                            <td class="center-text">
+                                                <img src="assets/icons/tables/icon-upload.svg" alt=""
+                                                    (click)="triggerReportFileUpload(activitie)"
+                                                    style="cursor: pointer;">
+                                                <input type="file" id="uploadFileReport"
+                                                    (change)="onRepportFileSelected($event)" hidden>
+                                            </td>
+                                        </ng-container>
+                                        <ng-template #viewReportUploaded>
+                                            <td class="center-text">
+                                                <img src="assets/icons/tables/icon-view.svg" alt=""
+                                                    (click)="downloadReportFile(activitie)" style="cursor: pointer;">
+                                                <img src="assets/icons/tables/icon-trash.svg" alt=""
+                                                    (click)="deleteReportFile(activitie)">
+                                            </td>
+                                        </ng-template>
                                     </ng-container>
-                                    <ng-template #viewReportUploaded>
+
+                                    <ng-template #noReport>
                                         <td class="center-text">
-                                            <img src="assets/icons/tables/icon-view.svg" alt=""
-                                                (click)="downloadReportFile(activitie)" style="cursor: pointer;">
-                                            <img src="assets/icons/tables/icon-trash.svg" alt=""
-                                                (click)="deleteReportFile(activitie)">
+                                            <span>N/A</span>
                                         </td>
                                     </ng-template>
-                                </ng-container>
 
-                                <ng-template #noReport>
-                                    <td class="center-text">
-                                        <span>N/A</span>
-                                    </td>
-                                </ng-template>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                    <span [ngClass]="{
-                            'text' : errorCalificacion==true,
-                            'text-display text-body-regular-small-r': errorCalificacion==false
-                        }">Valores permitidos 0-100</span>
-                    <span [ngClass]="{
-                            'text-error text-body-text-body-small-r' : errorCalificacion==true,
-                            'text' : errorCalificacion == false
-                        }">La nota debe estar entre 0 y 100</span>
-                </div>
-            </section>
-            <!-- Sección de carga de archivos -->
-            <section id="upload-file-asessment">
-                <div class="file-upload-container">
-                    <label for="uploadFileAssessment" class="file-upload-label">
-                        <div class="file-details">
-                            <p class="file-title text-body-small-sb">
-                                Soporte
-                            </p>
-                            <p class="file-name text-body-small-r">
-                                {{fileNameSelected()? fileNameSelected() : 'Seleccione un archivo'}}
-                            </p>
-                        </div>
-                        <input type="file" id="uploadFileAssessment" (change)="onSupportFileSelected($event)" hidden>
-                    </label>
-                    <div class="file-actions">
-                        <button class="button-upload button-actions button-border-radius"
-                            (click)="triggerSupportFileUpload()"></button>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span [ngClass]="{
+                                    'text' : errorCalificacion==true,
+                                    'text-display text-body-regular-small-r': errorCalificacion==false
+                                }">Valores permitidos 0-100</span>
+                        <span [ngClass]="{
+                                    'text-error text-body-text-body-small-r' : errorCalificacion==true,
+                                    'text' : errorCalificacion == false
+                                }">La nota debe estar entre 0 y 100</span>
                     </div>
-                </div>
-                <span [ngClass]="{
-                        'text-error text-body-text-body-small-r' : errorMessageFile!='',
-                        'text' : errorMessageFile===''
-                    }">El formato no es permitido </span>
-            </section>
-            <!-- Sección de observaciones-->
-            <section id="comments-self-assessment">
-                <span class="title-three">Observaciones</span>
-                <input class="input-text text-body-regular" type="text" placeholder="Ingrese sus observaciones"
-                    [(ngModel)]="observacionSend">
-            </section>
-            <!-- Sección de botonoes-->
-            <section id="button-self-assessment">
-                <div class="modal-buttons">
-                    <button class="button-modal text-body-heavy" (click)="closeModal()">
-                        Cerrar
-                    </button>
-                    <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
-                        Guardar
-                    </button>
-                </div>
-            </section>
+                </section>
+                <!-- Sección de carga de archivos -->
+                <section id="upload-file-asessment">
+                    <div class="file-upload-container">
+                        <label for="uploadFileAssessment" class="file-upload-label">
+                            <div class="file-details">
+                                <p class="file-title text-body-small-sb">
+                                    Soporte
+                                </p>
+                                <p class="file-name text-body-small-r">
+                                    {{fileNameSelected()? fileNameSelected() : 'Seleccione un archivo'}}
+                                </p>
+                            </div>
+                            <input type="file" id="uploadFileAssessment" (change)="onSupportFileSelected($event)"
+                                hidden>
+                        </label>
+                        <div class="file-actions">
+                            <button class="button-upload button-actions button-border-radius"
+                                (click)="triggerSupportFileUpload()"></button>
+                        </div>
+                    </div>
+                    <span [ngClass]="{
+                                'text-error text-body-text-body-small-r' : errorMessageFile!='',
+                                'text' : errorMessageFile===''
+                            }">El formato no es permitido </span>
+                </section>
+                <!-- Sección de observaciones-->
+                <section id="comments-self-assessment">
+                    <span class="title-three">Observaciones</span>
+                    <input class="input-text text-body-regular" type="text" placeholder="Ingrese sus observaciones"
+                        [(ngModel)]="observacionSend">
+                </section>
+                
+            </div>
+            <div class="modal-footer">
+                <!-- Sección de botonoes-->
+                <section id="button-self-assessment">
+                    <div class="modal-buttons">
+                        <button class="button-modal text-body-heavy" (click)="closeModal()"  data-bs-dismiss="modal">
+                            Cerrar
+                        </button>
+                        <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
+                            Guardar
+                        </button>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
-
-</section>
+</div>

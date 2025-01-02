@@ -51,27 +51,34 @@
     height: 100%;
     border: none;
     padding: 0;
-    display: flex; /* Añadir flexbox al botón */
-    justify-content: center; /* Centrar horizontalmente */
-    align-items: center; /* Centrar verticalmente */
+    display: flex;
+    /* Añadir flexbox al botón */
+    justify-content: center;
+    /* Centrar horizontalmente */
+    align-items: center;
+    /* Centrar verticalmente */
 }
 
 .button-upload {
     background-image: url('../assets/icons/buttons/upload-icon.svg');
-    background-size: 36px 36px !important; /* Ajusta el tamaño del SVG */
+    background-size: 36px 36px !important;
+    /* Ajusta el tamaño del SVG */
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center; /* Centrar la imagen */
+    background-position: center;
+    /* Centrar la imagen */
     background-color: var(--blue);
     pointer-events: all;
-}    
+}
 
-.button-upload-error{ 
+.button-upload-error {
     background-image: url('../assets/icons/buttons/upload-icon.svg');
-    background-size: 36px 36px !important; /* Ajusta el tamaño del SVG */
+    background-size: 36px 36px !important;
+    /* Ajusta el tamaño del SVG */
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center; /* Centrar la imagen */
+    background-position: center;
+    /* Centrar la imagen */
     background-color: var(--red-light);
     pointer-events: all;
 }
@@ -90,7 +97,7 @@
     background-image: url(../assets/icons/buttons/download-icon.svg);
     background-position: center;
     background-repeat: no-repeat;
-}    
+}
 
 .download-file-container {
     display: flex;
@@ -100,17 +107,19 @@
     width: 100%;
     height: 64px;
     border: 1px solid var(--blue);
-}    
+}
 
 .button-delete {
     background-image: url('../assets/icons/buttons/delete-icon.svg');
-    background-size: 36px 36px !important; /* Ajusta el tamaño del SVG */
+    background-size: 36px 36px !important;
+    /* Ajusta el tamaño del SVG */
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center; /* Centrar la imagen */
+    background-position: center;
+    /* Centrar la imagen */
     background-color: var(--blue);
     pointer-events: all;
-}    
+}
 
 .download-file-label {
     margin: 15px;
@@ -122,7 +131,7 @@
     background-color: var(--white);
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
-}    
+}
 
 
 .evaluation {
@@ -136,7 +145,7 @@
     font-size: 25px;
     margin: 0px;
     text-align: center;
-}   
+}
 
 
 .text-error {
@@ -155,7 +164,7 @@
     border: 1px solid var(--blue);
     background: var(--white);
     outline: none;
-}    
+}
 
 .button-modal {
     display: flex;
@@ -170,13 +179,13 @@
     border-radius: 100px;
     background: var(--blue);
     color: #FFF;
-}    
+}
 
 .modal-buttons {
     display: flex;
     width: 100%;
     justify-content: flex-end;
-}    
+}
 
 
 .input-nota {
@@ -210,4 +219,127 @@
     font-size: 25px;
     margin: 0px;
     text-align: center;
+}
+
+
+/* formularios CRUD */
+
+.form-floating label {
+    transition: none !important;
+    text-wrap: wrap !important;
+    height: auto !important;
+}
+
+/* Input text */
+.input-text {
+    padding-right: 30px !important;
+}
+
+.label-custom {
+    transform: translateY(-50%) !important;
+    top: 35% !important;
+    padding-left: 30px !important;
+    padding-right: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    color: var(--neutral-70) !important;
+    background-color: transparent !important;
+    pointer-events: all !important;
+}
+
+.input-text::placeholder {
+    position: absolute !important;
+    color: var(--blue) !important;
+    top: 29px !important;
+    left: 30px !important;
+}
+
+/* Input text disabled */
+.input-text-disabled {
+    color: var(--neutral-60) !important;
+    background-color: var(--neutral-95) !important;
+    border-color: var(--neutral-95) !important;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.input-text-disabled::placeholder {
+    color: var(--neutral-70) !important;
+}
+
+.input-date,
+.input-select,
+.input-text {
+    /* border-color: var(--blue) !important; */
+    /* Cambia el color del borde sin enfocar */
+    padding-left: 30px !important;
+    height: 63px !important;
+    color: var(--blue) !important;
+}
+
+/* Input select */
+.input-select {
+    padding-right: 50px !important;
+}
+
+.input-select {
+    background-image: url('../assets/icons/forms/select-normal.svg') !important;
+    background-size: 20px 20px !important;
+    background-repeat: no-repeat !important;
+    background-position: right 25px center !important;
+}
+
+/* Input select disabled */
+.input-select-disabled {
+    color: var(--neutral-60) !important;
+    background-color: var(--neutral-95) !important;
+    border-color: var(--neutral-95) !important;
+    pointer-events: none;
+    background-image: url('../assets/icons/forms/select-disabled.svg') !important;
+}
+
+.error-select-background{
+    background-image: url('../assets/icons/forms/select-error.svg') !important;
+    background-size: 20px 20px !important;
+    background-repeat: no-repeat !important;
+  }
+
+/* ERRORS */
+.error-label {
+    color: var(--error-ligth) !important;
+    ;
+}
+
+.label-disabled {
+    pointer-events: none !important;
+}
+
+.error-input {
+    border-color: var(--error-ligth) !important;
+    color: var(--error-ligth) !important;
+    ;
+}
+
+.error-input::placeholder {
+    color: var(--error-ligth) !important;
+    ;
+}
+
+/* Error message */
+.error-message {
+    color: var(--error-ligth) !important;
+}
+
+/* ---------- */
+
+.obligatoryField {
+    color: var(--error-ligth);
+}
+
+.obligatoryField-disabled {
+    color: var(--neutral-60);
+}
+
+.container-buttons {
+    margin-top: 50px !important;
 }

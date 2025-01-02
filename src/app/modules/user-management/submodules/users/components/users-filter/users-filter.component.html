@@ -1,0 +1,57 @@
+<div class="line-filter"></div>
+
+<div class="row">
+    <div class="col-1" style="width: 50px;">
+        <img src="assets/icons/tables/icon-filter.svg" alt="">
+    </div>
+    <div class="col">
+        <form [formGroup]="formFilter">
+            <div class="row row-cols-auto">
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre de usuario">
+                </div>
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre de usuario">
+                </div>
+                <div class="col m-1">
+                    <select class="input-select-filter">
+                        <option *ngFor="let option of facultyOptions" value="{{option.value}}">
+                            {{option.text}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col m-1">
+                    <select class="input-select-filter">
+                        <option *ngFor="let option of programOptions" value="{{option.value}}">
+                            {{option.text}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col m-1">
+                    <select class="input-select-filter">
+                        <option *ngFor="let option of roleOptions" value="{{option.value}}">
+                            {{option.text}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col m-1">
+                    <select class="input-select-filter">
+                        <option *ngFor="let option of stateOptions" value="{{option.value}}">
+                            {{option.text}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col mt-1" >
+                    <button class="button-normal">Buscar</button>
+                </div>
+                <div class="col mt-1">
+                    <button class="button-normal">Limpiar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="line-filter"></div>

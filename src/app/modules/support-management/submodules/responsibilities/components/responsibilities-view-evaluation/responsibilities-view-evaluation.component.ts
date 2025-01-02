@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { Fuente, Responsabilidad } from '../../../../../../core/models/responsibilitie.interface';
+import { Fuente, Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
@@ -18,7 +18,7 @@ export class ResponsibilitiesViewEvaluationComponent {
   public source: Fuente | null = null;
 
   @Input()
-  public responsability: Responsabilidad | null = null;
+  public responsability: Responsability | null = null;
 
   @Input()
   public openModalSelected: boolean = false;
@@ -53,8 +53,7 @@ export class ResponsibilitiesViewEvaluationComponent {
     if (this.source) {
       this.documentName = this.source.nombreDocumentoFuente;
       this.evaluation = this.source.calificacion.toFixed(1);
-      this.observation = this.source.observacion;
-      
+      this.observation = this.source.observacion ? this.source.observacion : '';
     }
   }
   downloadFile() {

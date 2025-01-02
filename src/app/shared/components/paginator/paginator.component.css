@@ -4,6 +4,7 @@
   }
   
   .page-link {
+    z-index: 0 !important;
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;

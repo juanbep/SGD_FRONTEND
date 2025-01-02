@@ -16,7 +16,7 @@
     <section>
         <span class="title-three">Información docente</span>
         <div class="spacing"></div>
-        <table>
+        <table class="table-bordered">
             <thead>
                 <tr>
                     <th>
@@ -102,7 +102,7 @@
     <section>
         <span class="title-three"> Historial de consolidados generados</span>
         <div class="spacing"></div>
-        <table>
+        <table class="table-bordered">
             <thead>
                 <tr>
                     <th>
@@ -128,4 +128,4 @@
     
 </div>
 
-<app-approve-consolidated-confirm-dialog></app-approve-consolidated-confirm-dialog>
+<app-approve-consolidated-confirm-dialog (confirmed)="responseApproveConsolidated($event)"></app-approve-consolidated-confirm-dialog>
