@@ -1,3 +1,17 @@
+export interface ConsolidatedTeachersResponse {
+    content:          Teacher[];
+    pageable:         Pageable;
+    last:             boolean;
+    totalPages:       number;
+    totalElements:    number;
+    size:             number;
+    number:           number;
+    sort:             Sort;
+    numberOfElements: number;
+    first:            boolean;
+    empty:            boolean;
+}
+
 export interface Teacher {
     nombreDocente:                  string;
     identificacion:                 string;
@@ -5,6 +19,22 @@ export interface Teacher {
     porcentajeEvaluacionCompletado: number;
     estadoConsolidado:              string;
 }
+
+export interface Pageable {
+    pageNumber: number;
+    pageSize:   number;
+    sort:       Sort;
+    offset:     number;
+    paged:      boolean;
+    unpaged:    boolean;
+}
+
+export interface Sort {
+    empty:    boolean;
+    sorted:   boolean;
+    unsorted: boolean;
+}
+
 
 /*
 * Interfaz que representa la estructura de un consolidado
@@ -26,13 +56,12 @@ export interface Consolidated {
 }
 
 export interface Actividades {
-    "Docencia":                  InfoActivities[];
-    "Trabajos de Investigacion": InfoActivities[];
-    "Trabajos Docencia":         InfoActivities[];
-    "Trabajos investigación":    InfoActivities[];
-    "Administración":         InfoActivities[];
-    "Asesoría":         InfoActivities[];
-    "Otros servicios":         InfoActivities[];
+    "DOCENCIA":                  InfoActivities[];
+    "TRABAJOS DE INVESTIGACION": InfoActivities[];
+    "TRABAJOS DOCENCIA":         InfoActivities[];
+    "ADMINISTRACION":         InfoActivities[];
+    "ASESORIA":         InfoActivities[];
+    "OTROS SERVICIOS":         InfoActivities[];
 }
 
 export interface InfoActivities {

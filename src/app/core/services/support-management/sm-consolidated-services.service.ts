@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
-import { Actividad, Consolidated, Teacher } from '../../models/consolidated.interface';
+import { Actividad, Consolidated, ConsolidatedTeachersResponse, Teacher } from '../../models/consolidated.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,8 +18,11 @@ export class SmConsolidatedServicesService {
     * @returns {any}
     * */
 
-  getTeachers():Observable<Teacher[]>{
-    return this.httpClient.get<Teacher[]>(this.baseUrl + '/usuario/obtenerDocentes');
+  getTeachers(page:number, totalPage:number):Observable<ConsolidatedTeachersResponse>{
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', totalPage.toString());
+    return this.httpClient.get<ConsolidatedTeachersResponse>(this.baseUrl + '/usuario/obtenerEvaluacionDocente', {params});
   }
 
   /*

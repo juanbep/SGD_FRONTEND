@@ -1,3 +1,7 @@
+.obligatoryField{
+    color: var(--error-ligth) !important;
+  }
+
 /* Upload file input style */
 
 .file-upload-container {

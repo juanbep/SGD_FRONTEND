@@ -33,6 +33,7 @@
               "src/customStyles/toastStyles.css",
               "src/customStyles/buttonsStyles.css",
               "src/customStyles/filterStyles.css",
+              "src/customStyles/modalStyles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css"
             ],

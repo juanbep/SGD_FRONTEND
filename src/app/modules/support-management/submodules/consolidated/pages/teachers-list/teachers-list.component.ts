@@ -12,29 +12,6 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
   templateUrl: './teachers-list.component.html',
   styleUrl: './teachers-list.component.css'
 })
-export class TeachersListComponent implements OnInit {
-
-
-  public teachers: Teacher[] = [];
-  
-  constructor(private conlidatedServicesService: ConsolidatedServicesService, private toastr: MessagesInfoService) { }
-
-
-  ngOnInit(): void {
-    this.recoverTeachers();
-  }
-
-  recoverTeachers(): void {
-    this.conlidatedServicesService.getTeachers().subscribe({
-      next: data => {
-        this.teachers = data;
-        this.conlidatedServicesService.setDataTeachersList(data);
-      },
-      error: error => {
-        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-      }
-    });
-  }
-
+export class TeachersListComponent  {
 
 }

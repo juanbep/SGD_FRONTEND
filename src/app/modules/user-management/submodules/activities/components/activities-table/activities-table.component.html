@@ -1,0 +1,45 @@
+<span class="text-body-heavy">Actividades registradas</span>
+<div class="mb-2"></div>
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th>Tipo de actividad</th>
+            <th>Código</th>
+            <th>Acto administrativo</th>
+            <th>Cod. VRI</th>
+            <th>Total de horas</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <ng-container>
+        <tbody *ngIf="activities.length>0; else nullData">
+            <tr *ngFor="let activity of activities">
+                <td>{{activity.tipoActividad.nombre | titlecase}}</td>
+                <td>{{activity.codigoActividad}}</td>
+                <td>{{activity.actoAdministrativo}}</td>
+                <td>{{activity.codVRI}}</td>
+                <td>{{activity.horas}}</td>
+                <td>
+                    <img src="assets/icons/tables/icon-view.svg" (click)="openActivitieDetails(activity)" alt="Ver detalles" title="Ver detalles" style="cursor: pointer;">
+                    <img src="/assets/icons/tables/icon-pen.svg" alt="Editar" title="Editar" style="cursor: pointer;">
+                    <img src="/assets/icons/tables/icon-trash.svg" alt="Eliminar" title="Eliminar" style="cursor: pointer;">
+                </td>
+            </tr>
+        </tbody>
+    </ng-container>
+    <ng-template #nullData>
+        <tbody>
+            <tr class="text-body-regular center-text">
+                <th class="text-center justify-content-center" colspan="6">
+                    No cuenta con actividades registradas
+                </th>
+            </tr>
+        </tbody>
+    </ng-template>
+</table>
+<div class="mb-3"></div>
+<section id="paginator-section-consolidated">
+    <shared-paginator [currentPage]="currentPage" [totalPages]="activityResponse?.totalPages || 1" (pageChange)="pageChanged($event)" class="d-flex justify-content-center"></shared-paginator>
+</section>
+
+<user-management-modal-activitie-details></user-management-modal-activitie-details>

@@ -1,27 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { UsersServiceService } from '../../services/users-service.service';
+import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { ValidatorsService } from '../../../../../../shared/services/validators.service';
+import { NewUser } from '../../../../../../core/models/users.interfaces';
 
 @Component({
   selector: 'user-management-new-user',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    ConfirmDialogComponent
   ],
   templateUrl: './new-user.component.html',
   styleUrl: './new-user.component.css'
 })
 export class NewUserComponent implements OnInit {
 
+  @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
+
+  public messageConfirmDialog: string = '¿Está seguro de crear el usuario?';
+  public titleConfirmDialog: string = 'Confirmar creación de usuario';
+
   private formBuilder: FormBuilder = inject(FormBuilder);
+  private messageToast = inject(MessagesInfoService);
+  private userServices = inject(UsersServiceService);
+  private validatorsService = inject(ValidatorsService);
 
   newUserForm: FormGroup = this.formBuilder.group({
     role: [null, Validators.required],
     name: [null, Validators.required],
     lastName: [null, Validators.required],
-    email: [null, Validators.required],
-    idUser: [null, Validators.required],
+    email: [null, [Validators.required, Validators.email]],
+    idUser: [null, [Validators.required, Validators.pattern(this.validatorsService.numericPattern)]],
     faculty: [null, Validators.required],
     program: [null, Validators.required],
     typeContract: [null, Validators.required],
@@ -34,22 +48,22 @@ export class NewUserComponent implements OnInit {
 
   roleOptions = [
     {
-      value: 'administrador',
+      value: '3',
       text: 'administrador'
     },
     {
-      value: 'docente',
+      value: '1',
       text: 'Docente'
     },
     {
-      value: 'estudiante',
+      value: '2',
       text: 'Estudiante'
     }
   ]
 
   facultyOptions = [
     {
-      value: 'opcion1',
+      value: 'Facultad de Ingeniería Electrónica y Telecomunicaciones',
       text: 'FIET'
     },
     {
@@ -60,22 +74,22 @@ export class NewUserComponent implements OnInit {
 
   programOptions = [
     {
-      value: 'opcion1',
-      text: 'Ingeniería de Sistemas'
+      value: 'Sistemas',
+      text: 'Sistemas'
     },
     {
-      value: 'opcion2',
+      value: 'Electrónica',
       text: 'Ingeniería electrónica'
     }
   ]
 
   stateOptions = [
     {
-      value: 'opcion1',
+      value: '1',
       text: 'Activo'
     },
     {
-      value: 'opcion2',
+      value: '0',
       text: 'Inactivo'
     }
   ]
@@ -153,7 +167,6 @@ export class NewUserComponent implements OnInit {
   }
 
   isDisabledField(field: string) {
-    console.log(this.newUserForm.get(field));
     return this.newUserForm.get(field)?.disabled;
   }
 
@@ -167,15 +180,14 @@ export class NewUserComponent implements OnInit {
     this.newUserForm.get('role')?.valueChanges.subscribe((value) => {
       this.disableField();
       switch (value) {
-        case 'administrador':
+        case '3':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
           this.newUserForm.get('email')?.enable();
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('state')?.enable();
-
           break;
-        case 'docente':
+        case '1':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
           this.newUserForm.get('email')?.enable();
@@ -188,7 +200,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('dedication')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
-        case 'estudiante':
+        case '2':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
           this.newUserForm.get('email')?.enable();
@@ -204,20 +216,81 @@ export class NewUserComponent implements OnInit {
   }
 
   getFieldError(field: string): string | null {
-    if(!this.newUserForm.controls[field]) return null;
-
+    if (!this.newUserForm.controls[field]) return null;
     const control = this.newUserForm.controls[field];
     const errors = control.errors || {};
-
-    for(const key of Object.keys(errors)) {
+    for (const key of Object.keys(errors)) {
       switch (key) {
         case 'required':
           return 'Este campo es requerido';
+        case 'email':
+          return 'El email no es válido';
+        case 'pattern':
+          return 'El campo solo acepta números';
         default:
           return null;
       }
     }
     return null;
   }
+
+  openConfirmDialog() {
+    this.confirmDialog.open();
+  }
+
+  closeConfirmDialog() {
+    this.confirmDialog.close();
+  }
+
+  onConfirm(event: boolean | void): void {
+    if (event) {
+      this.newUserForm.markAllAsTouched();
+      if (this.newUserForm.valid) {
+        let newUser: NewUser = {
+          nombres: this.newUserForm.get('name')?.value,
+          apellidos: this.newUserForm.get('lastName')?.value,
+          correo: this.newUserForm.get('email')?.value,
+          estado: this.newUserForm.get('state')?.value,
+          usuarioDetalle: {
+            identificacion: this.newUserForm.get('idUser')?.value,
+            facultad: this.newUserForm.get('faculty')?.value,
+            departamento: this.newUserForm.get('program')?.value,
+            categoria: this.newUserForm.get('category')?.value,
+            contratacion: this.newUserForm.get('typeContract')?.value,
+            dedicacion: this.newUserForm.get('dedication')?.value,
+            estudios: this.newUserForm.get('studies')?.value,
+          },
+          roles: [
+            {
+              oid: this.newUserForm.get('role')?.value
+            }
+          ]
+        }
+        this.userServices.saveUser(newUser).subscribe(
+          {
+            next: () => {
+              this.messageToast.showSuccessMessage('Usuario creado correctamente', 'Usuario creado');
+              this.clearFormFields();
+              this.closeConfirmDialog();
+            },
+            error: () => {
+              this.messageToast.showErrorMessage('Error al crear el usuario', 'Error');
+            }
+          }
+        );
+      } else {
+        this.messageToast.showWarningMessage('Por favor, verifica los campos', 'Advertencia');
+      }
+    }
+  }
+
+  goBack() {
+    window.history.back();
+  }
+
+  clearFormFields() {
+    this.newUserForm.reset();
+  }
+
 
 }

@@ -1,0 +1,298 @@
+<div class="view-container">
+
+    <div class="title-two">Nueva actividad</div>
+
+    <form [formGroup]="newActivityForm">
+        <fieldset>
+            <legend class="text-body-heavy">Tipo de actividad</legend>
+            <div class="row row-cols-auto mb-3">
+                <div class="col-3">
+                    <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="typeActivity"
+                            formControlName="typeActivity" [ngClass]="{
+                                'input-select-disabled': isDisabledField('typeActivity'),
+                                'error-input': isInvaldField('typeActivity'),
+                                'error-select-background': isInvaldField('typeActivity')
+                            }">
+                            <option [ngValue]="null" selected>Seleccionar respuesta</option>
+                            <option *ngFor="let tipoActividad of catalogResponse?.tipoActividades"
+                                value="{{tipoActividad.nombre}}">
+                                {{tipoActividad.nombre| titlecase}}
+                            </option>
+                        </select>
+                        <label for="typeActivity" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('typeActivity')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span> Tipo
+                            actividad</label>
+
+
+                    </div>
+                    <span *ngIf="isInvaldField('typeActivity')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('typeActivity')}}
+                    </span>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend class="text-body-heavy">Datos actividad</legend>
+            <div class="row mb-3">
+                <!-- Nombre actividad -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="nameActivity" formControlName="nameActivity" [ngClass]="{
+                                'input-text-disabled': isDisabledField('nameActivity'),
+                                'error-input': isInvaldField('nameActivity'),
+                                'error-input-background': isInvaldField('nameActivity')
+                            }">
+                        <label for="nameActivity" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('nameActivity')
+                        }">Nombre de la actividad</label>
+                    </div>
+                    <span *ngIf="isInvaldField('nameActivity')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('nameActivity')}}
+                    </span>
+                </div>
+                <!-- Código -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="codeActivity" formControlName="codeActivity" [ngClass]="{
+                                'input-text-disabled': isDisabledField('codeActivity'),
+                                'error-input': isInvaldField('codeActivity'),
+                                'error-input-background': isInvaldField('codeActivity')
+                            }">
+                        <label for="codeActivity" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('codeActivity')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                            Código</label>
+                    </div>
+                    <span *ngIf="isInvaldField('codeActivity')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('codeActivity')}}
+                    </span>
+                </div>
+                <!-- Acto administrativo -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="administrativeAct" formControlName="administrativeAct"
+                            [ngClass]="{
+                                'input-text-disabled': isDisabledField('administrativeAct'),
+                                'error-input': isInvaldField('administrativeAct'),
+                                'error-input-background': isInvaldField('administrativeAct')
+                            }">
+                        <label for="administrativeAct" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('administrativeAct')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span> Acto
+                            administrativo</label>
+                    </div>
+                    <span *ngIf="isInvaldField('administrativeAct')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('administrativeAct')}}
+                    </span>
+                </div>
+                <!-- VRI -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="VRI" formControlName="VRI" [ngClass]="{
+                                'input-text-disabled': isDisabledField('VRI'),
+                                'error-input': isInvaldField('VRI'),
+                                'error-input-background': isInvaldField('VRI')
+                            }">
+                        <label for="VRI" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('VRI')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                            VRI</label>
+                    </div>
+                    <span *ngIf="isInvaldField('VRI')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('VRI')}}
+                    </span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <!-- total de horas -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="totalHours" formControlName="totalHours" [ngClass]="{
+                                'input-text-disabled': isDisabledField('totalHours'),
+                                'error-input': isInvaldField('totalHours'),
+                                'error-input-background': isInvaldField('totalHours')
+                            }">
+                        <label for="totalHours" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('totalHours')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span> Total de
+                            horas</label>
+                    </div>
+                    <span *ngIf="isInvaldField('totalHours')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('totalHours')}}
+                    </span>
+                </div>
+                <!-- Materia -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="subject" formControlName="subject" [ngClass]="{
+                                'input-text-disabled': isDisabledField('subject'),
+                                'error-input': isInvaldField('subject'),
+                                'error-input-background': isInvaldField('subject')
+                            }">
+                        <label for="subject" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('subject')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                            Materia</label>
+                    </div>
+                    <span *ngIf="isInvaldField('subject')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('subject')}}
+                    </span>
+                </div>
+                <!-- Nombre del proyecto -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="projectName" formControlName="projectName" [ngClass]="{
+                                'input-text-disabled': isDisabledField('projectName'),
+                                'error-input': isInvaldField('projectName'),
+                                'error-input-background': isInvaldField('projectName')
+                            }">
+                        <label for="projectName" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('projectName')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span> Nombre
+                            del proyecto</label>
+                    </div>
+                    <span *ngIf="isInvaldField('projectName')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('projectName')}}
+                    </span>
+                </div>
+                <!-- Grupo -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="group" formControlName="group" [ngClass]="{
+                                'input-text-disabled': isDisabledField('group'),
+                                'error-input': isInvaldField('group'),
+                                'error-input-background': isInvaldField('group')
+                            }">
+                        <label for="group" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('group')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                            Grupo</label>
+                    </div>
+                    <span *ngIf="isInvaldField('group')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('group')}}
+                    </span>
+                </div>
+
+            </div>
+            <div class="row mb-3">
+                <!-- Identificación estudiante -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="idStudent" formControlName="idStudent" [ngClass]="{
+                                'input-text-disabled': isDisabledField('idStudent'),
+                                'error-input': isInvaldField('idStudent'),
+                                'error-input-background': isInvaldField('idStudent')
+                            }">
+                        <label for="idStudent" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('idStudent')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                            Identificación estudiante</label>
+                    </div>
+                    <span *ngIf="isInvaldField('idStudent')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('idStudent')}}
+                    </span>
+                </div>
+                <!-- Nombre estudiante -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="studentName" formControlName="studentName" [ngClass]="{
+                                'input-text-disabled': isDisabledField('studentName'),
+                                'error-input': isInvaldField('studentName'),
+                                'error-input-background': isInvaldField('studentName')
+                            }">
+                        <label for="studentName" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('studentName')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span> Nombre
+                            estudiante</label>
+                    </div>
+                    <span *ngIf="isInvaldField('studentName')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('studentName')}}
+                    </span>
+                </div>
+                <!-- Actividad -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="activity" formControlName="activity" [ngClass]="{
+                                'input-text-disabled': isDisabledField('activity'),
+                                'error-input': isInvaldField('activity'),
+                                'error-input-background': isInvaldField('activity')
+                            }">
+                        <label for="activity" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('activity')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                            Actividad</label>
+                    </div>
+                    <span *ngIf="isInvaldField('activity')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('activity')}}
+                    </span>
+                </div>
+            </div>
+        </fieldset>
+        <div class="mb-3"></div>
+        <fieldset>
+            <legend class="text-body-heavy">Evaluador</legend>
+            <div class="row">
+                <!-- Nombre e identicación del evaluador -->
+                <div class="col">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="evaluator" value="{{evaluator?.apellidos || ''}}" formControlName="evaluator"
+                            [ngClass]="{
+                                'input-text-disabled': isDisabledField('evaluator'),
+                                'error-input': isInvaldField('evaluator'),
+                                'error-input-background': isInvaldField('evaluator')
+                            }">
+                        <label for="evaluator" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('evaluator')
+                        }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span> Nombre e
+                            identificación del evaluador</label>
+                    </div>
+                    <span *ngIf="isInvaldField('evaluator')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('evaluator')}}
+                    </span>
+                </div>
+            </div>
+        </fieldset>
+        <div class="mb-3"></div>
+        <div class="row row-cols-auto justify-content-center">
+            <div class="col d-flex justify-content-center">
+                <button class="button-normal" (click)="goBack()">Cancelar</button>
+                <button type="submit" class="button-normal">Guardar</button>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="mb-3"></div>
+
+    <user-management-activities-activities-table></user-management-activities-activities-table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>

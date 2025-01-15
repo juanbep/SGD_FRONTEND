@@ -19,6 +19,8 @@ export interface ActivityResponse {
 
 export interface Activity {
     oidActividad:       number;
+    codVRI:             string;
+    actoAdministrativo: string;
     codigoActividad:    string;
     nombre:             string;
     horas:              number;

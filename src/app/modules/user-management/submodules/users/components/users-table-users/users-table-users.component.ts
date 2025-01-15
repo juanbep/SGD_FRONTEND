@@ -1,27 +1,34 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { UsersServiceService } from '../../services/users-service.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { Role, Users } from '../../../../../../core/models/users.interfaces';
+import { Role, User, UsersResponse } from '../../../../../../core/models/users.interfaces';
 import { CommonModule } from '@angular/common';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
+import { ModalUserDetailslComponent } from "../modal-user-details/modal-user-details.component";
+import {RouterModule } from '@angular/router';
 
 @Component({
   selector: 'user-management-users-table-users',
   standalone: true,
   imports: [
     CommonModule,
-    PaginatorComponent
+    PaginatorComponent,
+    ModalUserDetailslComponent,
+    RouterModule
 ],
   templateUrl: './users-table-users.component.html',
   styleUrl: './users-table-users.component.css'
 })
 export class UsersTableUsersComponent implements OnInit {
 
-  currentPage: number = 1;
-  users: Users | null = null;
+
+  @ViewChild(ModalUserDetailslComponent) modalUserDetails: ModalUserDetailslComponent | null = null;
+
+  public currentPage: number = 1;
+  public users: UsersResponse | null = null;
   
-  usersService = inject(UsersServiceService);
-  toastService = inject(MessagesInfoService); 
+  private usersService = inject(UsersServiceService);
+  private toastService = inject(MessagesInfoService); 
   
   ngOnInit(): void {
     this.getAllUsers(this.currentPage, 5);
@@ -38,6 +45,12 @@ export class UsersTableUsersComponent implements OnInit {
         this.toastService.showErrorMessage('Error al obtener los usuarios', 'Error');
       }
     })
+  }
+
+  viewUserDetails(userDetails: User) {
+    if(this.modalUserDetails){
+      this.modalUserDetails.open(userDetails);
+    }
   }
 
 

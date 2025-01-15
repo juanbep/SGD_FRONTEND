@@ -1,0 +1,49 @@
+<div class="line-filter"></div>
+
+<div class="row">
+    <div class="col-1" style="width: 50px;">
+        <img src="assets/icons/tables/icon-filter.svg" alt="">
+    </div>
+    <div class="col">
+        <form [formGroup]="formFilter">
+            <div class="row row-cols-auto">
+                <!-- Tipo de actividad -->
+                <div class="col m-1">
+                    <select class="input-select-filter">
+                        <option *ngFor="let option of catalogDataResponse?.tipoActividades" value="{{option.nombre}}">
+                            {{option.nombre | titlecase}}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Código de actividad -->
+
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Código de actividad">
+                </div>
+
+                <!-- Acto administrativo -->
+
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Acto administrativo">
+                </div>
+
+                <!-- COD. VRI -->
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="COD. VRI">
+                </div>
+
+                <div class="col mt-1" >
+                    <button class="button-normal">Buscar</button>
+                </div>
+                <div class="col mt-1">
+                    <button class="button-normal">Limpiar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="line-filter"></div>

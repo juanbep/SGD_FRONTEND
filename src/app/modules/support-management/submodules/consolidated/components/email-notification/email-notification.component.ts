@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { EmailService } from '../../../../../../shared/services/email.service';
 
 @Component({
   selector: 'app-email-notification',
@@ -11,12 +12,10 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 })
 export class EmailNotificationComponent {
 
-  constructor (
-    private service: ConsolidatedServicesService,
-    private toastr: MessagesInfoService
-  ) {}
+  private emailService: EmailService = inject(EmailService);
+  private service: ConsolidatedServicesService = inject(ConsolidatedServicesService);
+  private toastr: MessagesInfoService = inject(MessagesInfoService);
 
-  
   public recipients:string[] = [];
   public observationInput: string = '';
 
@@ -55,7 +54,7 @@ export class EmailNotificationComponent {
   }
 
   sendEmail(){
-    this.service.sendEmail(this.recipients, this.observationInput).subscribe(
+    this.emailService.sendEmail(this.recipients, 'Observación actividad',this.observationInput).subscribe(
       {
         next: () => {
           this.toastr.showSuccessMessage('Correo enviado exitosamente', 'Email sent');

@@ -1,0 +1,116 @@
+<div class="modal fade" id="modal-activitie-details">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="title-three mx-3">Detalles de la actividad</span>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Nombre de la actividad -->
+                    <div class="col-4 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="activitieName"
+                                placeholder="" formControlName="name" disabled value="{{activitieDetails?.nombre}}">
+                            <label for="activitieName" class="label-custom text-body-small-sb">Nombre de la
+                                actividad</label>
+                        </div>
+                    </div>
+                    <!-- Código de la actividad -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails?.codigoActividad">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="activitieCode"
+                                placeholder="" formControlName="activitieCode" disabled
+                                value="{{activitieDetails?.codigoActividad}}">
+                            <label for="activitieCode" class="label-custom text-body-small-sb">Código</label>
+                        </div>
+                    </div>
+                    <!-- Acto administrativo-->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails?.actoAdministrativo">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="administrativeAct"
+                                placeholder="" formControlName="administrativeAct" disabled
+                                value="{{activitieDetails?.actoAdministrativo}}">
+                            <label for="administrativeAct" class="label-custom text-body-small-sb">Acto
+                                administrativo</label>
+                        </div>
+                    </div>
+                    <!-- COD. VRI -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails?.codVRI">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="VRI" placeholder=""
+                                formControlName="VRI" disabled value="{{activitieDetails?.codVRI}}">
+                            <label for="VRI" class="label-custom text-body-small-sb">COD. VRI</label>
+                        </div>
+                    </div>
+                    <!-- Total de horas -->
+                    <div class="col-4 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="totalHours"
+                                placeholder="" formControlName="totalHours" disabled
+                                value="{{activitieDetails?.horas}}">
+                            <label for="totalHours" class="label-custom t<ext-body-small-sb">Total de horas</label>
+                        </div>
+                    </div>
+                    <!-- Materia -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="subject"
+                                placeholder="" formControlName="subject" disabled>
+                            <label for="subject" class="label-custom text-body-small-sb">Materia</label>
+                        </div>
+                    </div>
+                    <!-- Nombre del proyecto -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="projectName"
+                                placeholder="" formControlName="projectName" disabled>
+                            <label for="projectName" class="label-custom text-body-small-sb">Nombre del
+                                proyecto</label>
+                        </div>
+                    </div>
+                    <!-- Grupo -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="group"
+                                placeholder="" formControlName="group" disabled>
+                            <label for="group" class="label-custom text-body-small-sb">Grupo</label>
+                        </div>
+                    </div>
+                    <!-- Identificación del estudiante -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom"
+                                id="studentIdentification" placeholder="" formControlName="studentIdentification"
+                                disabled>
+                            <label for="studentIdentification" class="label-custom text-body-small-sb">Identificación
+                                del
+                                estudiante</label>
+                        </div>
+                    </div>
+                    <!-- Nombre del estudiante -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="studentName"
+                                placeholder="" formControlName="studentName" disabled>
+                            <label for="studentName" class="label-custom text-body-small-sb">Nombre del
+                                estudiante</label>
+                        </div>
+                    </div>
+                    <!-- Actividad -->
+                    <div class="col-4 mb-3" *ngIf="activitieDetails">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="activity"
+                                placeholder="" formControlName="activity" disabled>
+                            <label for="activity" class="label-custom text-body-small-sb">Actividad</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-cols-auto justify-content-end">
+                    <div class="col d-flex justify-content-end">
+                        <button class="button-normal" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

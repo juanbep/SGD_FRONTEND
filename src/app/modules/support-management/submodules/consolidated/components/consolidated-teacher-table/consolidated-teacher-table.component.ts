@@ -70,20 +70,18 @@ export class ConsolidatedTeacherTableComponent implements OnInit{
 
   getActivities(typeActivity: string): InfoActivities[] {
     switch (typeActivity) {
-      case 'Docencia':
-        return this.consolidatedTeacher?.actividades.Docencia || [];
-      case 'Trabajos de Investigacion':
-        return this.consolidatedTeacher?.actividades['Trabajos de Investigacion'] || [];
-      case 'Trabajos Docencia':
-        return this.consolidatedTeacher?.actividades['Trabajos Docencia'] || [];
-      case 'Trabajos investigación':
-        return this.consolidatedTeacher?.actividades['Trabajos investigación'] || [];
-      case 'Administración':
-        return this.consolidatedTeacher?.actividades.Administración || [];
-      case 'Asesoría':
-        return this.consolidatedTeacher?.actividades.Asesoría || [];
-      case 'Otros servicios':
-        return this.consolidatedTeacher?.actividades['Otros servicios'] || [];
+      case 'DOCENCIA':
+        return this.consolidatedTeacher?.actividades['DOCENCIA'] || [];
+      case 'TRABAJOS DE INVESTIGACION':
+        return this.consolidatedTeacher?.actividades['TRABAJOS DE INVESTIGACION'] || [];
+      case 'TRABAJOS DOCENCIA':
+        return this.consolidatedTeacher?.actividades['TRABAJOS DOCENCIA'] || [];
+      case 'ADMINISTRACION':
+        return this.consolidatedTeacher?.actividades['ADMINISTRACION'] || [];
+      case 'ASESORIA':
+        return this.consolidatedTeacher?.actividades['ASESORIA'] || [];
+      case 'OTROS SERVICIOS':
+        return this.consolidatedTeacher?.actividades['OTROS SERVICIOS'] || [];
       default:
         return [];
     }

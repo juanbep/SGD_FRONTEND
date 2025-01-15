@@ -1,12 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ActivitiesComponent } from './pages/activities/activities.component';
+import { UsersComponent } from './pages/users/users.component';
+import { NewActivityComponent } from './pages/new-activity/new-activity.component';
+import { LayoutComponent } from './pages/layout/layout.component';
 
 export const routes: Routes = [
     {
         path: '',
-        component: ActivitiesComponent
-    }
+        component: LayoutComponent,
+        children: [
+            {
+                path: 'usuarios',
+                component: UsersComponent
+            },
+            {
+                path: 'actividades-usuario/:id',
+                component: ActivitiesComponent
+            },
+            {
+                path: 'nueva-actividad/:id',
+                component: NewActivityComponent
+            }
+        ]
+    },
 ];
 
 

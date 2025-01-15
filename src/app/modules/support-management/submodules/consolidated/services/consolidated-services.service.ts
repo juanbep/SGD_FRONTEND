@@ -32,8 +32,8 @@ export class ConsolidatedServicesService {
     * Get teachers
     * @returns {any}
     * */
-    getTeachers() {
-        return this.service.getTeachers();
+    getTeachers(page: number, totalPage: number){
+        return this.service.getTeachers(page, totalPage);
     }
 
     /*

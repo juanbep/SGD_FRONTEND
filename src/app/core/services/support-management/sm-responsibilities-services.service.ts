@@ -33,7 +33,7 @@ export class SmResponsibilitiesServicesService {
             .set( 'roles', roles )
             .set( 'page', page? page.toString() : '' )
             .set( 'size', totalPage? totalPage.toString() : '' );
-        return this.httpClient.get<ResponsabilityResponse>(`${this.baseUrl}/actividad/findActivitiesByEvaluador`, { params });
+        return this.httpClient.get<ResponsabilityResponse>(`${this.baseUrl}/actividad/buscarActividadesPorEvaluador`, { params });
     }
 
     /*

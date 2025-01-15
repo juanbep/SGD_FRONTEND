@@ -39,5 +39,5 @@
     </table>
 </section>
 <section id="paginator-section-consolidated">
-    <shared-paginator></shared-paginator>
+    <shared-paginator [currentPage]="currentPage" [totalPages]="teacherServiceResponse?.totalPages || 1"></shared-paginator>
 </section>

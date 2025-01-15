@@ -25,7 +25,7 @@ export class SideBarComponent implements OnInit {
         },
         {
           label: 'Actividades',
-          url: '/app/gestion-usuarios/actividades'
+          url: '/app/gestion-usuarios/actividades/usuarios'
         }
       ]
     },
@@ -45,14 +45,14 @@ export class SideBarComponent implements OnInit {
           label:'Consolidado',
           url:'/app/gestion-soportes/consolidado/lista-docentes'
         },
-        {
-          label:'CPD',
-          url:''
-        },
-        {
-          label:'Resolución',
-          url:'',
-        }
+        // {
+        //   label:'CPD',
+        //   url:''
+        // },
+        // {
+        //   label:'Resolución',
+        //   url:'',
+        // }
       ]
     },
 

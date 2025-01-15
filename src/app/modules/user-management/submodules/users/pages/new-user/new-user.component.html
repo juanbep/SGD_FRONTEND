@@ -7,12 +7,22 @@
             <div class="row row-cols-auto mb-3">
                 <div class="col-3">
                     <div class="form-floating">
-                        <select class="form-select input-select text-body-custom" id="role" formControlName="role">
+                        <select class="form-select input-select text-body-custom" id="role" formControlName="role"
+                        [ngClass]="{
+                            'input-select-disabled': isDisabledField('role'),
+                            'error-input': isInvaldField('role'),
+                            'error-select-background': isInvaldField('role')
+                            }">
                             <option [ngValue]="null" selected>Seleccione un rol</option>
                             <option *ngFor="let role of roleOptions" [value]="role.value">{{role.text}}</option>
                         </select>
-                        <label for="role" class="label-custom text-body-small-sb">Rol</label>
+                        <label for="role" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('role')
+                        }">Rol</label>
                     </div>
+                    <span *ngIf="isInvaldField('role')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('role')}}
+                    </span>
                 </div>
             </div>
         </fieldset>
@@ -230,8 +240,8 @@
 
         <div class="row row-cols-auto justify-content-center">
             <div class="col d-flex justify-content-center">
-                <button type="submit" class="button-normal">Guardar</button>
-                <button type="" class="button-normal">Cancelar</button>
+                <button type="" class="button-normal" (click)="goBack()">Cancelar</button>
+                <button type="submit" class="button-normal" (click)="openConfirmDialog()">Guardar</button>
             </div>
 
         </div>
@@ -239,3 +249,6 @@
     </form>
 
 </div>
+
+<shared-confirm-dialog [message]="this.messageConfirmDialog" [title]="titleConfirmDialog"
+    (confirm)="onConfirm($event)"></shared-confirm-dialog>

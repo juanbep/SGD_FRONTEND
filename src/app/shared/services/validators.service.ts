@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class ValidatorsService {
@@ -8,10 +9,14 @@ export class ValidatorsService {
 
     public emailPattern: string = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
 
-
-    public validateFileFormat(fileName: string): boolean {
-        const allowedExtensions = /(\.pdf|\.doc|\.docx|\.xls|\.xlsx)$/i;
-        return allowedExtensions.test(fileName);
+    public validateNumericFormat(control: AbstractControl): ValidationErrors | null {
+        if (control.value) {
+            if(!control.value.match(/^\d+(\.\d+)?$/)) {
+                console.log('invalid');
+                return { invalidNumber: true };
+            }
+        }
+        return  null;
     }
 
 }

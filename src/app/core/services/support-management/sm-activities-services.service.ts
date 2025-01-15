@@ -32,7 +32,7 @@ export class SmActivitiesServicesService {
       .set('roles', roles)
       .set('page', page? page.toString() : '' )
       .set('size', totalPage? totalPage.toString() : '' );
-    return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/actividad/findActivitiesByEvaluado`, { params });
+    return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/actividad/buscarActividadesPorEvaluado`, { params });
   }
 
   /*

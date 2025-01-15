@@ -1,0 +1,17 @@
+<div class="modal fade" id="modal-confirm-dialog" data-bs-backdrop="static" tabindex="1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="title-three mx-3">{{this.title}}</span>
+            </div>
+            <div class="modal-body">
+                <span class="text-body-regular">{{this.message}}</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button-modal text-body-heavy" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="button-modal text-body-heavy" (click)="onConfirm()"
+                    data-bs-dismiss>Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>

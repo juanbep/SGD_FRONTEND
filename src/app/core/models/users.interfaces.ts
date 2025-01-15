@@ -1,8 +1,8 @@
 /*
 * Interface de usuarios para el manejo de los datos de los usuarios que se obtienen del backend
 */
-export interface Users {
-    content:          Content[];
+export interface UsersResponse {
+    content:          User[];
     pageable:         Pageable;
     last:             boolean;
     totalPages:       number;
@@ -15,7 +15,7 @@ export interface Users {
     empty:            boolean;
 }
 
-export interface Content {
+export interface User {
     oidUsuario:     number;
     usuarioDetalle: UsuarioDetalle;
     nombres:        string;
@@ -59,4 +59,30 @@ export interface Sort {
     empty:    boolean;
     sorted:   boolean;
     unsorted: boolean;
+}
+
+
+//Nuevo usuarios
+
+export interface NewUser {
+    nombres:        string;
+    apellidos:      string;
+    correo:         string;
+    estado:         number;
+    usuarioDetalle: NewUsuarioDetalle;
+    roles:          NewUserRole[];
+}
+
+export interface NewUserRole {
+    oid: number;
+}
+
+export interface NewUsuarioDetalle {
+    identificacion: string;
+    facultad:       string;
+    departamento:   string;
+    categoria:      string;
+    contratacion:   string;
+    dedicacion:     string;
+    estudios:       string;
 }

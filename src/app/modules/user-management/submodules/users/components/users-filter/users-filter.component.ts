@@ -7,13 +7,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+],
   templateUrl: './users-filter.component.html',
   styleUrl: './users-filter.component.css'
 })
 export class UsersFilterComponent implements OnInit {
-  
+
   private formBuilder: FormBuilder = inject(FormBuilder);
   public nameUserOptionSelected: string = '';
   public idUserOptionSelected: string = '';
@@ -106,7 +106,5 @@ export class UsersFilterComponent implements OnInit {
       this.facultyOptionSelected = value;
     })
   }
-
-
 
 }

@@ -1,0 +1,32 @@
+.modal .modal-dialog {
+    max-width: 702px;
+}
+
+.modal .modal-content {
+    border-radius: 13px;
+}
+
+.modal-content {
+    border: none;
+    box-shadow: 8px 8px 8px 0px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+    height: 82px;
+    padding-left: 40px;
+    justify-content: left;
+}
+
+.modal-body {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 30px;
+    padding-bottom: 50px;
+    border-top: 1px solid rgba(134, 135, 143, 0.70);
+}
+
+.modal-footer {
+    padding-bottom: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+}

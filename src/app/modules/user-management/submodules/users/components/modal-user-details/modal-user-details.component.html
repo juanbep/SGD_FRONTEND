@@ -1,0 +1,142 @@
+<div class="modal fade" id="modal-user-details" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="title-three mx-3">Detalles del usuario</span>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <!-- Nombre(s) -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userName"
+                                placeholder="Digitar respuesta" formControlName="name" disabled
+                                value="{{userDetails?.nombres}}">
+                            <label for="userName" class="label-custom text-body-small-sb">Nombre(s)</label>
+                        </div>
+                    </div>
+                    <!-- Apellido(s) -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userLastName"
+                                placeholder="Digitar respuesta" formControlName="lastName" disabled
+                                value="{{userDetails?.apellidos}}">
+                            <label for="userLastName" class="label-custom text-body-small-sb">Apellido(s)</label>
+                        </div>
+                    </div>
+                    <!-- Identificación -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userIdentification"
+                                placeholder="Digitar respuesta" formControlName="identification" disabled
+                                value="{{userDetails?.usuarioDetalle?.identificacion}}">
+                            <label for="userIdentification"
+                                class="label-custom text-body-small-sb">Identificación</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <!-- Correo -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userEmail"
+                                placeholder="Digitar respuesta" formControlName="email" disabled
+                                value="{{userDetails?.correo}}">
+                            <label for="userEmail" class="label-custom text-body-small-sb">Correo</label>
+                        </div>
+                    </div>
+                    <!-- Estado -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userState"
+                                placeholder="Digitar respuesta" formControlName="state" disabled
+                                value="{{userDetails?.estado}}">
+                            <label for="userState" class="label-custom text-body-small-sb">Estado</label>
+                        </div>
+                    </div>
+                    <!-- Rol(es) -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userRoles"
+                                placeholder="Digitar respuesta" formControlName="roles" disabled
+                                value="{{returnAllRoles(userDetails?.roles || null) | titlecase}}">
+                            <label for="userRoles" class="label-custom text-body-small-sb">Rol(es)</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Facultad -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userFaculty"
+                                placeholder="Digitar respuesta" formControlName="faculty" disabled
+                                value="{{userDetails?.usuarioDetalle?.facultad | titlecase}}">
+                            <label for="userFaculty" class="label-custom text-body-small-sb">Facultad</label>
+                        </div>
+                    </div>
+                    <!-- Departamento -->
+                    <div class="col-4">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userDepartment"
+                                placeholder="Digitar respuesta" formControlName="department" disabled
+                                value="{{userDetails?.usuarioDetalle?.departamento | titlecase}}">
+                            <label for="userDepartment" class="label-custom text-body-small-sb">Departamento</label>
+                        </div>
+                    </div>
+                    <!-- Categoría -->
+                    <div class="col-4" *ngIf="userDetails?.usuarioDetalle?.categoria">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userCategory"
+                                placeholder="Digitar respuesta" formControlName="category" disabled
+                                value="{{userDetails?.usuarioDetalle?.categoria}}">
+                            <label for="userCategory" class="label-custom text-body-small-sb">Categoría</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <!-- Contratación -->
+                    <div class="col-4" *ngIf="userDetails?.usuarioDetalle?.contratacion">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userHiring"
+                                placeholder="Digitar respuesta" formControlName="hiring" disabled
+                                value="{{userDetails?.usuarioDetalle?.contratacion}}">
+                            <label for="userHiring" class="label-custom text-body-small-sb">Contratación</label>
+                        </div>
+                    </div>
+                    <!-- Dedicación -->
+                    <div class="col-4" *ngIf="userDetails?.usuarioDetalle?.dedicacion">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userDedication"
+                                placeholder="Digitar respuesta" formControlName="dedication" disabled
+                                value="{{userDetails?.usuarioDetalle?.dedicacion}}">
+                            <label for="userDedication" class="label-custom text-body-small-sb">Dedicación</label>
+                        </div>
+                    </div>
+                    <!-- Estudios -->
+                    <div class="col-4" *ngIf="userDetails?.usuarioDetalle?.estudios">
+                        <div class="form-floating">
+                            <input type="text" class="form-control input-text text-body-custom" id="userStudies"
+                                placeholder="Digitar respuesta" formControlName="studies" disabled
+                                value="{{userDetails?.usuarioDetalle?.estudios}}">
+                            <label for="userStudies" class="label-custom text-body-small-sb">Estudios</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <span class="text-body-heavy">Fecha de creación: <span
+                                class="text-body-regular">{{userDetails?.fechaCreacion | date:'dd/MM/yyyy, h:mm:ss
+                                a':'es-CO'}}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button-normal text-body-heavy" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

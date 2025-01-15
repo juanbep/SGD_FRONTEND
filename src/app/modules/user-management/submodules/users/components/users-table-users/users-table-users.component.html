@@ -31,13 +31,16 @@
                 {{user.estado}}
             </td>
             <td>
-                <img src="/assets/icons/tables/icon-view.svg" alt="Detalles usuario" title="Detalles usuario" style="cursor: pointer;">
-                <img src="/assets/icons/tables/icon-pen.svg" alt="Editar usuario" title="Editar usuario" style="cursor: pointer;">
+                <img src="/assets/icons/tables/icon-view.svg" alt="Detalles usuario" title="Detalles usuario" (click)="viewUserDetails(user)" style="cursor: pointer;">
+                <img src="/assets/icons/tables/icon-pen.svg" alt="Editar usuario" title="Editar usuario" style="cursor: pointer;" [routerLink]="['./editar-usuario/',user.oidUsuario]">
+                
             </td>
         </tr>
     </tbody>
 </table>
 <div class="mb-3"></div>
 <section id="paginator-section-consolidated">
-    <shared-paginator [currentPage]="currentPage" [totalPages]="users!.totalPages" (pageChange)="pageChanged($event)"></shared-paginator>
+    <shared-paginator [currentPage]="currentPage" [totalPages]="users?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
 </section>
+
+<users-management-users-modal-user-details></users-management-users-modal-user-details>
