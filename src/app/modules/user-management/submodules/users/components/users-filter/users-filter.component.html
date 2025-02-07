@@ -5,47 +5,51 @@
         <img src="assets/icons/tables/icon-filter.svg" alt="">
     </div>
     <div class="col">
-        <form [formGroup]="formFilter">
+        <form [formGroup]="formFilter" (ngSubmit)="searchUsers()">
             <div class="row row-cols-auto">
                 <div class="col m-1">
-                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre de usuario">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre de usuario" formControlName="nameUser">
                 </div>
                 <div class="col m-1">
-                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre de usuario">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Identificación" formControlName="identification">
                 </div>
                 <div class="col m-1">
-                    <select class="input-select-filter">
-                        <option *ngFor="let option of facultyOptions" value="{{option.value}}">
-                            {{option.text}}
+                    <select class="input-select-filter" formControlName="faculty">
+                        <option [value]="null" selected>Facultad</option>
+                        <option *ngFor="let facultad of catalogData?.facultades" value="{{facultad.codigo}}">
+                            {{facultad.nombre | titlecase}}
                         </option>
                     </select>
                 </div>
                 <div class="col m-1">
-                    <select class="input-select-filter">
-                        <option *ngFor="let option of programOptions" value="{{option.value}}">
-                            {{option.text}}
+                    <select class="input-select-filter" formControlName="program">
+                        <option [value]="null" selected>Programa</option>
+                        <option *ngFor="let program of catalogData?.departamentos" value="{{program.codigo}}">
+                            {{program.nombre | titlecase}}
                         </option>
                     </select>
                 </div>
                 <div class="col m-1">
-                    <select class="input-select-filter">
-                        <option *ngFor="let option of roleOptions" value="{{option.value}}">
-                            {{option.text}}
+                    <select class="input-select-filter" formControlName="rol">
+                        <option [value]="null" selected>Rol</option>
+                        <option *ngFor="let rol of catalogData?.roles" value="{{rol.codigo}}">
+                            {{rol.nombre | titlecase}}
                         </option>
                     </select>
                 </div>
                 <div class="col m-1">
-                    <select class="input-select-filter">
+                    <select class="input-select-filter" formControlName="state">
+                        <option [value]="null" selected>Estado</option>
                         <option *ngFor="let option of stateOptions" value="{{option.value}}">
                             {{option.text}}
                         </option>
                     </select>
                 </div>
                 <div class="col mt-1" >
-                    <button class="button-normal">Buscar</button>
+                    <button class="button-normal" type="submit">Buscar</button>
                 </div>
                 <div class="col mt-1">
-                    <button class="button-normal">Limpiar</button>
+                    <button class="button-normal" (click)="clearFilter()">Limpiar</button>
                 </div>
 
             </div>

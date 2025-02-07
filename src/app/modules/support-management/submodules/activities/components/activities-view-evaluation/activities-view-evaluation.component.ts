@@ -43,6 +43,10 @@ export class ActivitiesViewEvaluationComponent {
 
   public editSelected: WritableSignal<boolean> = signal(false);
 
+  public sourceOne: Fuente | null = null;
+
+  public sourceTwo: Fuente | null = null;
+
   constructor(private service: ActivitiesServicesService, private toastr: MessagesInfoService) { }
 
   ngAfterViewInit() {

@@ -16,6 +16,16 @@ export class SideBarComponent implements OnInit {
   public isSidebarActive: boolean = true;
   public sidebarItems = [
     {
+      label: 'Periodo académico',
+      icon: 'assets/icons/sidebar/icon-calendar.svg',
+      sub:[
+        {
+          label: 'Gestión periodo académico',
+          url: '/app/gestion-periodo-academico'
+        }
+      ]
+    },
+    {
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [

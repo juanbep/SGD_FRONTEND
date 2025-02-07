@@ -51,7 +51,7 @@ export class ResponsibilitiesViewEvaluationComponent {
   
   ngOnInit(): void {
     if (this.source) {
-      this.documentName = this.source.nombreDocumentoFuente;
+      this.documentName = this.source.nombreDocumentoFuente || '';
       this.evaluation = this.source.calificacion.toFixed(1);
       this.observation = this.source.observacion ? this.source.observacion : '';
     }
@@ -64,7 +64,7 @@ export class ResponsibilitiesViewEvaluationComponent {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = this.source!.nombreDocumentoFuente;
+            a.download = this.source!.nombreDocumentoFuente || '';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

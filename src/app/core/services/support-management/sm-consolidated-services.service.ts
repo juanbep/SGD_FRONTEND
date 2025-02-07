@@ -22,7 +22,7 @@ export class SmConsolidatedServicesService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', totalPage.toString());
-    return this.httpClient.get<ConsolidatedTeachersResponse>(this.baseUrl + '/usuario/obtenerEvaluacionDocente', {params});
+    return this.httpClient.get<ConsolidatedTeachersResponse>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', {params});
   }
 
   /*
@@ -43,8 +43,8 @@ export class SmConsolidatedServicesService {
   getConsolidatedByTeacher(teacherId: number, department: string):Observable<Consolidated>{
     let params = new HttpParams()
       .set('idEvaluado', teacherId.toString())
-      .set('departamento', department);
-    return this.httpClient.get<Consolidated>(this.baseUrl + '/consolidado/generarConsolidado', {params});
+     
+    return this.httpClient.get<Consolidated>(this.baseUrl + '/api/consolidado/generarConsolidado', {params});
   }
 
   /*
@@ -53,8 +53,8 @@ export class SmConsolidatedServicesService {
   * @returns {any}
   * */
   saveConsolidated(idEvaluado:number):any{
-    let params = new HttpParams().set('idEvaluado', idEvaluado);
-    return this.httpClient.post(this.baseUrl + '/consolidado/aprobarConsolidado', '', { params: params, responseType: 'text' });
+    let params = new HttpParams().set('idEvaluado', 15).set('idEvaluador',18).set('nota','nota');
+    return this.httpClient.post(this.baseUrl + '/api/consolidado/aprobarConsolidado', '', { params: params, responseType: 'text' });
   }
 
   /*
@@ -110,7 +110,9 @@ export class SmConsolidatedServicesService {
     return this.httpClient.get<Actividad>(`${this.baseUrl}/actividad/find/${oidActivity}`);
   }
 
-
-
+  //TODO: Downloads all support files
+  downloadAllSupportFiles(teacherId: number): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}/soporte/download/${teacherId}`, { responseType: 'blob' });
+  }
 
 }

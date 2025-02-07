@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
 import { CommonModule } from '@angular/common';
 import { ActivitiesManagementService } from '../../services/activities-management.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Activity, ActivityResponse } from '../../../../../../core/models/activities.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ModalActivitieDetailsComponent } from '../modal-activitie-details/modal-activitie-details.component';
@@ -13,10 +13,11 @@ import { ModalActivitieDetailsComponent } from '../modal-activitie-details/modal
   imports: [
     CommonModule,
     PaginatorComponent,
-    ModalActivitieDetailsComponent
+    ModalActivitieDetailsComponent,
+    RouterModule
 ],
   templateUrl: './activities-table.component.html',
-  styleUrl: './activities-table.component.css'
+  styleUrls: ['./activities-table.component.css']
 })
 export class ActivitiesTableComponent implements OnInit {
 
@@ -30,15 +31,23 @@ export class ActivitiesTableComponent implements OnInit {
   public activityResponse: ActivityResponse | null = null;
   public activities: Activity[] = [];
   public currentPage: number = 1;
+  public sizePage: number = 10;
+
+  public filterParams: {nameActivity: string | null, typeActivity: string | null, activityCode: string | null, administrativeCode: string | null, vriCode: string | null} | null = null;
+
+  activitiesEffect = effect(()=>{
+    this.filterParams=this.activitiesManagementService.getParamsActivitiesFilter();
+    this.currentPage = 1;
+    this.recoverActivitiesByUser(this.currentPage, this.sizePage);
+  })
 
   ngOnInit(): void {
     this.idUserParam = this.activitieRouter.snapshot.params['id'];
-    this.recoverActivitiesByUser(this.currentPage, 2);
   }
 
-  pageChanged(event: any) {
+  pageChanged(event: number) {
     this.currentPage = event;
-    this.recoverActivitiesByUser(this.currentPage, 2);
+    this.recoverActivitiesByUser(this.currentPage, this.sizePage);
   }
 
   openActivitieDetails(activity: Activity){
@@ -48,8 +57,9 @@ export class ActivitiesTableComponent implements OnInit {
   }
 
   recoverActivitiesByUser(page: number, size: number) {
+    const { nameActivity = '', typeActivity = '', activityCode = '', administrativeCode = '', vriCode = '' } = this.filterParams || {};
     if (this.idUserParam) {
-      this.activitiesManagementService.getActivitiesByUser(page-1, size, this.idUserParam).subscribe(
+      this.activitiesManagementService.getActivitiesByParams(page-1, size, this.idUserParam, nameActivity, typeActivity, activityCode, administrativeCode, vriCode).subscribe(
         {
           next: (response) => {
             this.activityResponse = response;
@@ -59,11 +69,13 @@ export class ActivitiesTableComponent implements OnInit {
           },
           error: (error) => {
             this.messageToast.showErrorMessage('Error al recuperar las actividades del usuario', 'Error');
+            this.filterParams = null;
           }
         }
       );
     }
   }
+
 
 
 }

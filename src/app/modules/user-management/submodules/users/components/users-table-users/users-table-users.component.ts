@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { UsersServiceService } from '../../services/users-service.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { Role, User, UsersResponse } from '../../../../../../core/models/users.interfaces';
@@ -23,23 +23,32 @@ export class UsersTableUsersComponent implements OnInit {
 
 
   @ViewChild(ModalUserDetailslComponent) modalUserDetails: ModalUserDetailslComponent | null = null;
-
-  public currentPage: number = 1;
-  public users: UsersResponse | null = null;
   
   private usersService = inject(UsersServiceService);
   private toastService = inject(MessagesInfoService); 
+
+  public currentPage: number = 1;
+  public sizePage: number = 10;
+  public users: UsersResponse | null = null;
+
+  public filterParams: {nameUser: string | null, identification: string | null, faculty: string | null, program: string | null, rol: string | null, state: string | null} | null = null;
+
+  usersEffect = effect(()=>{
+    this.filterParams=this.usersService.getParamsFilter();
+    this.currentPage = 1;
+    this.getAllUsers(this.currentPage, this.sizePage);
+  })
   
   ngOnInit(): void {
-    this.getAllUsers(this.currentPage, 5);
   }
   
 
   getAllUsers(page: number, totalPage: number) {
-    this.usersService.getAllUsers(page-1, totalPage).subscribe({
-      next: (data) => {
-        this.users = data;
-        console.log(data);
+    const paramsFilter = this.usersService.getParamsFilter();
+    this.usersService.getAllUsersByParams(page-1, totalPage, paramsFilter?.identification || '', paramsFilter?.nameUser || '', paramsFilter?.faculty || '', paramsFilter?.program || '','','','','',paramsFilter?.rol || '', paramsFilter?.state || '' ).subscribe({
+      next: (response) => {
+        this.users = response;
+        this.usersService.setUsers(response);
       },
       error: (error) => {
         this.toastService.showErrorMessage('Error al obtener los usuarios', 'Error');
@@ -64,7 +73,7 @@ export class UsersTableUsersComponent implements OnInit {
 
   pageChanged(event: any) {
     this.currentPage = event;
-    this.getAllUsers(this.currentPage, 5);
+    this.getAllUsers(this.currentPage, this.sizePage);
   }
 
 

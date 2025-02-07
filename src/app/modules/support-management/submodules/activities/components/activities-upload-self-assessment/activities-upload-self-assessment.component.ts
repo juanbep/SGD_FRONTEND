@@ -41,7 +41,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
 
 
   recoverActivities(): void {
-    this.service.getActivities('6', '', '', '', '',null,null).subscribe({
+    this.service.getActivities('92', '', '', '', '',null,null).subscribe({
       next: data => {
         this.userActivities = data.content;
         this.activityResponse = this.service.getDataActivities();
@@ -148,7 +148,6 @@ export class ActivitiesUploadSelfAssessmentComponent {
   deleteReportFile(actividad: Activity): void {
     this.filesSelected.splice(this.filesSelected.findIndex(file => file.name === actividad.fuentes[0].nombreDocumentoInforme), 1);
     actividad.fuentes[0].nombreDocumentoInforme = '';
-    console.log(this.filesSelected);
   }
 
   /*

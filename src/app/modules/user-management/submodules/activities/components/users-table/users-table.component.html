@@ -1,42 +1,54 @@
 <table class="table-bordered">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Identificación</th>
-            <th>Facultad</th>
-            <th>Programa</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th class="text-body-heavy">Nombre</th>
+            <th class="text-body-heavy">Identificación</th>
+            <th class="text-body-heavy">Facultad</th>
+            <th class="text-body-heavy">Programa</th>
+            <th class="text-body-heavy">Rol</th>
+            <th class="text-body-heavy">Estado</th>
+            <th class="text-body-heavy">Acciones</th>
         </tr>
     </thead>
-    <tbody>
-        <tr *ngFor="let user of usersResponse?.content" >
-            <td class="text-body-small-sb ">
-                {{ user.nombres }} {{ user.apellidos }}
-            </td>
-            <td class="text-body-small-sb ">  
-                {{user.usuarioDetalle.identificacion }}
-            </td>
-            <td class="text-body-small-sb ">
-                {{user.usuarioDetalle.facultad }}
-            </td>
-            <td class="text-body-small-sb ">
-                {{user.usuarioDetalle.departamento }}
-            </td>
-            <td class="text-body-small-sb ">
-                {{returnAllRoles(user.roles)}}
-            </td>
-            <td class="text-body-small-sb ">
-                {{user.estado}}
-            </td>
-            <td>
-                <img src="assets/icons/tables/icon-form.svg" alt="Actividades" title="Actividades" style="cursor: pointer;" [routerLink]="['../actividades-usuario/',user.oidUsuario]">
-            </td>
-        </tr>
-    </tbody>
+    <ng-container *ngIf="usersResponse && usersResponse.content.length > 0; else nullData">
+        <tbody>
+            <tr *ngFor="let user of usersResponse?.content">
+                <td class="text-body-regular">
+                    {{ user.nombres }} {{ user.apellidos }}
+                </td>
+                <td class="text-body-regular">
+                    {{user.identificacion }}
+                </td>
+                <td class="text-body-regular">
+                    {{user.usuarioDetalle.facultad | titlecase}}
+                </td>
+                <td class="text-body-regular">
+                    {{user.usuarioDetalle.departamento | titlecase}}
+                </td>
+                <td class="text-body-regular">
+                    {{returnAllRoles(user.roles) | titlecase}}
+                </td>
+                <td class="text-body-regular">
+                    {{user.estadoUsuario.nombre | titlecase}}
+                </td>
+                <td>
+                    <img src="assets/icons/tables/icon-form.svg" alt="Actividades" title="Actividades"
+                        style="cursor: pointer;" [routerLink]="['../actividades-usuario/',user.oidUsuario]">
+                </td>
+            </tr>
+        </tbody>
+    </ng-container>
+    <ng-template #nullData>
+        <tbody>
+            <tr class="text-center">
+                <td colspan="7" class="text-body-regular">No se encontraron docentes registrados en el sistema</td>
+            </tr>
+        </tbody>
+
+    </ng-template>
 </table>
 
 <div class="mb-3"></div>
 
-<shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="usersResponse?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
+<shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage"
+    [totalPages]="usersResponse?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>

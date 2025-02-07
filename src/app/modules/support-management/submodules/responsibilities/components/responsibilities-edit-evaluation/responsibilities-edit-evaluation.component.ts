@@ -56,7 +56,7 @@ export class ResponsibilitiesEditEvaluationComponent {
     if (this.source) {
       this.evaluation = this.source.calificacion.toFixed(1);
       this.observation = this.source.observacion? this.source.observacion : '';
-      this.fileNameSelected.set(this.source.nombreDocumentoFuente);
+      this.fileNameSelected.set(this.source.nombreDocumentoFuente || '');
       this.getFilebyName();
     }
   }
@@ -153,32 +153,32 @@ export class ResponsibilitiesEditEvaluationComponent {
   }
 
   downloadFile() {
-    if (this.source) {
-      this.service.getdownloadSourceFile(this.source.oidFuente).subscribe(
-        {
-          next: blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = this.source!.nombreDocumentoFuente;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          },
-          error: error => {
-            this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-          }
+    // if (this.source) {
+    //   this.service.getdownloadSourceFile(this.source.oidFuente).subscribe(
+    //     {
+    //       next: blob => {
+    //         const url = window.URL.createObjectURL(blob);
+    //         const a = document.createElement('a');
+    //         a.href = url;
+    //         a.download = this.source!.nombreDocumentoFuente;
+    //         document.body.appendChild(a);
+    //         a.click();
+    //         document.body.removeChild(a);
+    //         window.URL.revokeObjectURL(url);
+    //       },
+    //       error: error => {
+    //         this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+    //       }
 
-        });
-    }
+    //     });
+    // }
   }
 
   private getFilebyName() {
     this.service.getdownloadSourceFile(this.source!.oidFuente).subscribe(
       {
         next: file => {
-          this.selectedFile = new File([file], this.source!.nombreDocumentoFuente, { type: file.type, lastModified: Date.now() })
+         // this.selectedFile = new File([file], this.source?.nombreDocumentoFuente, { type: file.type, lastModified: Date.now() })
         },
         error: error => {
           this.toastr.showErrorMessage('Error al consultar la información', 'Error');

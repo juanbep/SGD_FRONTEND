@@ -3,34 +3,29 @@
 <table class="table-bordered">
     <thead>
         <tr>
-            <th>Tipo de actividad</th>
-            <th>Código</th>
-            <th>Acto administrativo</th>
-            <th>Cod. VRI</th>
-            <th>Total de horas</th>
-            <th>Acciones</th>
+            <th class="text-body-heavy">Tipo de actividad</th>
+            <th class="text-body-heavy">Nombre actividad</th>
+            <th class="text-body-heavy">Total de horas</th>
+            <th class="text-body-heavy">Acciones</th>
         </tr>
     </thead>
     <ng-container>
         <tbody *ngIf="activities.length>0; else nullData">
             <tr *ngFor="let activity of activities">
-                <td>{{activity.tipoActividad.nombre | titlecase}}</td>
-                <td>{{activity.codigoActividad}}</td>
-                <td>{{activity.actoAdministrativo}}</td>
-                <td>{{activity.codVRI}}</td>
-                <td>{{activity.horas}}</td>
+                <td class="text-body-regular">{{activity.tipoActividad.nombre | titlecase}}</td>
+                <td class="text-body-regular">{{activity.nombreActividad}}</td>
+                <td>{{activity.horas*activity.semanas}}</td>
                 <td>
-                    <img src="assets/icons/tables/icon-view.svg" (click)="openActivitieDetails(activity)" alt="Ver detalles" title="Ver detalles" style="cursor: pointer;">
-                    <img src="/assets/icons/tables/icon-pen.svg" alt="Editar" title="Editar" style="cursor: pointer;">
-                    <img src="/assets/icons/tables/icon-trash.svg" alt="Eliminar" title="Eliminar" style="cursor: pointer;">
+                    <img src="assets/icons/tables/icon-view.svg" (click)="openActivitieDetails(activity)" alt="Ver detalles" title="Ver detalles" style="cursor: pointer;" aria-label="Ver detalles">
+                    <img src="/assets/icons/tables/icon-pen.svg" [routerLink]="['/app/gestion-usuarios/actividades/editar-actividad/', activity.oidActividad]" routerLinkActive="router-link-active" alt="Editar" title="Editar" style="cursor: pointer;" aria-label="Editar">
                 </td>
             </tr>
         </tbody>
     </ng-container>
     <ng-template #nullData>
         <tbody>
-            <tr class="text-body-regular center-text">
-                <th class="text-center justify-content-center" colspan="6">
+            <tr class="text-center">
+                <th class="text-body-regular" colspan="6">
                     No cuenta con actividades registradas
                 </th>
             </tr>

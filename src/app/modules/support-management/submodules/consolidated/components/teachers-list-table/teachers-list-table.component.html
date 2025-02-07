@@ -2,40 +2,51 @@
     <table class="table-bordered">
         <thead>
             <tr>
-                <th>Nombre docente</th>
-                <th>Identificación</th>
-                <th>Tipo contrato</th>
-                <th>% Evaluación completado</th>
-                <th>Estado consolidado</th>
-                <th>Acciones</th>
+                <th class="text-body-heavy">Nombre docente</th>
+                <th class="text-body-heavy">Identificación</th>
+                <th class="text-body-heavy">Tipo contrato</th>
+                <th class="text-body-heavy">% Evaluación completado</th>
+                <th class="text-body-heavy">Estado consolidado</th>
+                <th class="text-body-heavy">Acciones</th>
             </tr>
         </thead>
-        <tbody>
-            <tr *ngFor="let teacher of teacherList">
-                <td>
-                    <span>{{teacher.nombreDocente}}</span>
-                </td>
-                <td>
-                    <span>{{teacher.identificacion}}</span> 
-                </td>
-                <td>
-                    <span>{{teacher.contratacion}}</span>
-                </td>
-                <td>
-                    <span>{{teacher.porcentajeEvaluacionCompletado}}</span>
-                </td>
-                <td>
-                   <span>{{teacher.estadoConsolidado}}</span>
-                 </td>
-                <td class="text-center">
-                    <button class="button-table">
-                        <a [routerLink]="['../consolidado-docente']" routerLinkActive="router-link-active">
-                            <img src="assets/icons/tables/icon-consolidated.svg" alt="icon-view">
-                        </a>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
+        <ng-container *ngIf="teacherList.length > 0; else noData">
+            <tbody>
+                <tr *ngFor="let teacher of teacherList">
+                    <td>
+                        <span class="text-body-regular">{{teacher.nombreDocente}}</span>
+                    </td>
+                    <td>
+                        <span class="text-body-regular">{{teacher.identificacion}}</span> 
+                    </td>
+                    <td>
+                        <span class="text-body-regular">{{teacher.contratacion}}</span>
+                    </td>
+                    <td>
+                        <span class="text-body-regular">{{teacher.porcentajeEvaluacionCompletado}}</span>
+                    </td>
+                    <td>
+                       <span class="text-body-regular">{{teacher.estadoConsolidado}}</span>
+                     </td>
+                    <td class="text-center">
+                        <button class="button-table">
+                            <a [routerLink]="['../consolidado-docente']" routerLinkActive="router-link-active">
+                                <img src="assets/icons/tables/icon-consolidated.svg" alt="icon-view">
+                            </a>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </ng-container>
+        <ng-template #noData>
+            <tbody>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <span class="text-body-regular">No hay docente registrados en el sistema</span>
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>
     </table>
 </section>
 <section id="paginator-section-consolidated">

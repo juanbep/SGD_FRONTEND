@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role.guard';
+import { DataResolverService } from '../../resolvers/data.resolver.service';
 
 const routes: Routes = [
   {
@@ -9,20 +10,22 @@ const routes: Routes = [
     children: [
       {
         path: 'actividades',
+        resolve: { data: DataResolverService},
         canActivate: [RoleGuard],
-        data: { roles: ['Docente'] },
+        data: { roles: ['DOCENTE'] },
         loadChildren: () => import('./submodules/activities/activities-routing.module' ).then(m => m.ActivitiesRoutingModule),
       },
       {
         path: 'responsabilidades',
+        resolve: { data: DataResolverService},
         canActivate: [RoleGuard],
-        data: { roles: ['Docente','Jefe de departamento','Estudiante'] },
+        data: { roles: ['DOCENTE','JEFE DE DEPARTAMENTO','ESTUDIANTE'] },
         loadChildren: () => import('./submodules/responsibilities/responsibilities-routing.module').then(m => m.ResponsibilitiesRoutingModule)
       },
       {
         path: 'consolidado',
         canActivate: [RoleGuard],
-        data: { roles: ['Jefe de departamento'] },
+        data: { roles: ['JEFE DE DEPARTAMENTO'] },
         loadChildren: () => import('./submodules/consolidated/consolidated-routing.module').then(m => m.ConsolidatedRoutingModule)
       }
     ]

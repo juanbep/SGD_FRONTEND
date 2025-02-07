@@ -7,41 +7,51 @@ export interface UsersResponse {
     last:             boolean;
     totalPages:       number;
     totalElements:    number;
+    first:            boolean;
     size:             number;
     number:           number;
     sort:             Sort;
     numberOfElements: number;
-    first:            boolean;
     empty:            boolean;
 }
 
 export interface User {
     oidUsuario:     number;
     usuarioDetalle: UsuarioDetalle;
+    estadoUsuario:  EstadoUsuario;
+    identificacion: string;
     nombres:        string;
     apellidos:      string;
+    username:       string;
     correo:         string;
-    estado:         number;
     fechaCreacion:  Date;
     ultimoIngreso:  Date;
     roles:          Role[];
 }
 
+export interface EstadoUsuario {
+    oidEstadoUsuario?:  number;
+    nombre:             string;
+    fechaCreacion:      Date;
+    fechaActualizacion: Date;
+    oid?:               number;
+}
+
 export interface Role {
-    oid:    number;
-    nombre: string;
-    estado: number;
+    oid:                number;
+    nombre:             string;
+    fechaCreacion:      Date;
+    fechaActualizacion: Date;
 }
 
 export interface UsuarioDetalle {
     oidUsuarioDetalle:  number;
-    identificacion:     string;
     facultad:           string;
     departamento:       string;
-    categoria:          null | string;
-    contratacion:       null | string;
-    dedicacion:         null | string;
-    estudios:           null | string;
+    categoria:          null;
+    contratacion:       null;
+    dedicacion:         null;
+    estudios:           null;
     fechaCreacion:      Date;
     fechaActualizacion: Date;
 }
@@ -62,15 +72,22 @@ export interface Sort {
 }
 
 
+
 //Nuevo usuarios
 
 export interface NewUser {
     nombres:        string;
     apellidos:      string;
     correo:         string;
-    estado:         number;
+    username:       string;
+    identificacion: string;
+    estadoUsuario:  NewEstadoUsuario;
     usuarioDetalle: NewUsuarioDetalle;
     roles:          NewUserRole[];
+}
+
+export interface NewEstadoUsuario {
+    oidEstadoUsuario: number;
 }
 
 export interface NewUserRole {
@@ -78,11 +95,11 @@ export interface NewUserRole {
 }
 
 export interface NewUsuarioDetalle {
-    identificacion: string;
-    facultad:       string;
-    departamento:   string;
-    categoria:      string;
-    contratacion:   string;
-    dedicacion:     string;
-    estudios:       string;
+    facultad:     string;
+    departamento: string;
+    categoria:    string;
+    contratacion: string;
+    dedicacion:   string;
+    estudios:     string;
 }
+

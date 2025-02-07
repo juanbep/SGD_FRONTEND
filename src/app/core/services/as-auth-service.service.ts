@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environments } from '../../../environments/environments';
 import { Observable } from 'rxjs';
-import { Userinfo } from '../models/auth.interface';
+import { UserInfo } from '../models/auth.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -23,17 +23,17 @@ export class AsAuthServiceService {
    */
   login(userEmail: string, password: string): void {
     if(this.usersLogin.find(user => user.email === userEmail && user.pass === password)) {
-      sessionStorage.setItem('token', 'Bearer token');
+      sessionStorage.setItem('token', '1234567890');
     }
   }
 
   /**
    * get user info
    * @param idUser
-   * @returns Observable<Userinfo>
+   * @returns Observable<UserInfo>
    */
-  getUserInfo(idUser: number): Observable<Userinfo> {
-    return this.http.get<Userinfo>(`${this.apiUrl}/users/${idUser}`);
+  getUserInfo(idUser: number): Observable<UserInfo> {
+    return this.http.get<UserInfo>(`${this.apiUrl}/api/usuarios/${idUser}`);
   }
 
 

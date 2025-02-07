@@ -30,7 +30,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
   }
 
   recoverConsolidatedTeacher(){
-    this.consolidatedServicesService.getConsolidatedByTeacher(6, 'Sistemas').subscribe({
+    this.consolidatedServicesService.getConsolidatedByTeacher(92, 'Sistemas').subscribe({
       next: data => {
         this.consolidatedTeacher = data;
         this.consolidatedServicesService.setDataConsolidatedTeacher(data);
@@ -42,7 +42,6 @@ export class ConsolidatedTeacherComponent implements OnInit {
   }
 
   responseApproveConsolidated(response: string | void): void {
-    console.log(response);
     if (response === 'Si') {
       this.consolidatedServicesService.saveConsolidated(6).subscribe({
         next: () => {

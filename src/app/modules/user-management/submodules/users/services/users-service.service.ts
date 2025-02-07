@@ -1,11 +1,48 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
-import { NewUser, User } from '../../../../../core/models/users.interfaces';
+import { NewUser, User, UsersResponse } from '../../../../../core/models/users.interfaces';
 
 @Injectable({providedIn: 'root'})
 export class UsersServiceService {
     
-    umUsersServicesService = inject(UmUsersServicesService);
+    private umUsersServicesService = inject(UmUsersServicesService);
+    
+    private usersSignal: WritableSignal<UsersResponse | null> = signal(null);
+
+    private paramsFilterSignal: WritableSignal< {nameUser:string | null, identification:string | null, faculty:string | null, program: string | null, rol: string | null, state: string | null   }  | null> = signal(null);
+
+
+    /*
+    * Method to set the params filter signal
+    * @param newData:{nameUser:string, identification:string, faculty:string, program: string, rol: string, state: string}
+    * */
+    setParamsFilter(newData: {nameUser:string, identification:string, faculty:string, program: string, rol: string, state: string   }){
+        this.paramsFilterSignal.update(data => data = newData);
+    }
+
+    /*
+    * Method to get the params filter signal
+    * @returns {nameUser:string, identification:string, faculty:string, program: string, rol: string, state: string} | null
+    * */
+    getParamsFilter(){
+        return this.paramsFilterSignal();
+    }
+
+    /*
+    * Method to set the users signal
+    * @param newData:User[]
+    * */
+    setUsers(newData: UsersResponse){
+        this.usersSignal.update(data => data = newData);
+    }
+
+    /*
+    * Method to get the users signal
+    * @returns User[] | null
+    * */
+    getDatUsers(){
+        return this.usersSignal();
+    }
 
     /*
     * Method to get all the users
@@ -34,7 +71,7 @@ export class UsersServiceService {
     * @returns Observable<UsersResponse>
     * */
 
-    saveUser(user: NewUser) {
+    saveUser(user: NewUser[]) {
         return this.umUsersServicesService.saveUser(user);
     }
     
@@ -47,4 +84,24 @@ export class UsersServiceService {
     updateUsers(idUsuario:number,user: NewUser) {
         return this.umUsersServicesService.updateUsers(idUsuario, user);
     }
+
+
+    /*
+    * Method to get all the users by params
+    * @param page:number
+    * @param totalPage:number
+    * @param faculty:string
+    * @param department:string
+    * @param category:string
+    * @param hiring:string
+    * @param dedication:string
+    * @param studies:string
+    * @param rol:string
+    * @param state:string
+    * @returns Observable<UsersResponse>
+    * */
+    getAllUsersByParams(page: number, totalPage: number, userId: string | null, userName: string | null ,faculty: string | null, department: string | null, category: string | null, hiring: string | null, dedication: string | null, studies: string | null, rol: string | null, state: string | null) {
+        return this.umUsersServicesService.getAllUsersByParams(page, totalPage, userId, userName, faculty, department, category, hiring, dedication, studies, rol, state);
+    }
+
 }

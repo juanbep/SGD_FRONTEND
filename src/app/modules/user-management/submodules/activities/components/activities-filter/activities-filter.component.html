@@ -1,48 +1,45 @@
 <div class="line-filter"></div>
 
-<div class="row">
-    <div class="col-1" style="width: 50px;">
-        <img src="assets/icons/tables/icon-filter.svg" alt="">
-    </div>
-    <div class="col">
-        <form [formGroup]="formFilter">
+<form [formGroup]="formFilter" (ngSubmit)="searchActivities()">
+    <div class="row">
+        <div class="col-1" style="width: 50px;">
+            <img src="assets/icons/tables/icon-filter.svg" alt="">
+        </div>
+        <div class="col">
             <div class="row row-cols-auto">
                 <!-- Tipo de actividad -->
                 <div class="col m-1">
-                    <select class="input-select-filter">
-                        <option *ngFor="let option of catalogDataResponse?.tipoActividades" value="{{option.nombre}}">
+                    <select class="input-select-filter" formControlName="activityType">
+                        <option [value]="null" selected>Tipo de actividad</option>
+                        <option *ngFor="let option of catalogDataResponse?.tipoActividades" value="{{option.codigo}}">
                             {{option.nombre | titlecase}}
                         </option>
                     </select>
                 </div>
 
-                <!-- Código de actividad -->
+
+                <!-- Nombre de la actividad -->
 
                 <div class="col m-1">
-                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Código de actividad">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre actividad"
+                        formControlName="activityName">
                 </div>
 
-                <!-- Acto administrativo -->
-
-                <div class="col m-1">
-                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Acto administrativo">
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="row row-cols-auto">
+                <div class="col">
+                    <button type="submit" class="button-normal">Buscar</button>
                 </div>
-
-                <!-- COD. VRI -->
-                <div class="col m-1">
-                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="COD. VRI">
-                </div>
-
-                <div class="col mt-1" >
-                    <button class="button-normal">Buscar</button>
-                </div>
-                <div class="col mt-1">
-                    <button class="button-normal">Limpiar</button>
+                <div class="col">
+                    <button class="button-normal" (click)="clearFilter()">Limpiar</button>
                 </div>
             </div>
-        </form>
+
+        </div>
     </div>
-</div>
+</form>
 
 
 

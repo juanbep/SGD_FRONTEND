@@ -14,26 +14,37 @@
         </thead>
         <tbody *ngFor="let responsabilties of responsabilitieByType">
             <tr>
-                <td class="text-body-heavy text-center" colspan="5">{{responsabilties.nombreType}}</td>
+                <td class="text-body-heavy text-center" colspan="6">{{responsabilties.nombreType}}</td>
             </tr>
             <tr *ngFor="let responsability of responsabilties.activities">
-                <td class="text-body-regular">{{responsability.nombre}}</td>
+                <td class="text-body-regular">{{responsability.nombreActividad}}</td>
+                <!-- <td class="text-body-regular">{{responsability.evaluado.nombres}} {{responsability.evaluado.apellidos }}</td>
+                <td class="text-body-regular">{{responsability.evaluado.roles[0].nombre}}</td>
+                <td class="text-body-regular">
+                    <button class="button-table"
+                        id="button-table" (click)="openModalUpload(responsability)">
+                        <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload">
+                    </button>
+                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
+                </td>
+                <td class="text-body-regular"></td>
+                <td></td> -->
                 <td class="text-body-regular">{{responsability.evaluado.nombres}}
                     {{responsability.evaluado.apellidos}}</td>
                 <td class="text-body-regular">{{responsability.evaluado.roles[0].nombre}}</td>
                 <td class="text-body-regular">{{responsability.fuentes[1].estadoFuente}}</td>
                 <td class="text-center">
-                    <button *ngIf="responsability.fuentes[1].estadoFuente==='Pendiente'" class="button-table"
+                    <button *ngIf="responsability.fuentes[1].estadoFuente==='PENDIENTE'" class="button-table"
                         id="button-table" (click)="openModalUpload(responsability)">
                         <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload">
                     </button>
-                    <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
+                    <button *ngIf="responsability.fuentes[1].estadoFuente=='DILIGENCIADO'" class="button-table">
                         <img src="assets/icons/tables/icon-view.svg" alt="icon-view" (click)="openModalView(responsability)">
                     </button>
-                    <button *ngIf="responsability.fuentes[1].estadoFuente=='Diligenciado'" class="button-table">
+                    <button *ngIf="responsability.fuentes[1].estadoFuente=='DILIGENCIADO'" class="button-table">
                         <img src="assets/icons/tables/icon-pen.svg" alt="icon-view" (click)="openModalEdit(responsability)">
                     </button>
-                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='Pendiente'" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
+                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='PENDIENTE'" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
                     <responsibilities-view-evaluation *ngIf="openModalViewSelected && resposabilitySelected === responsability" [source]="responsability.fuentes[1]" [responsability]="responsability" [openModalSelected]="true" (closeModalSelected)="closeModalView($event)"></responsibilities-view-evaluation>
                     <responsibilities-edit-evaluation *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [openModalSelected]="true" (closeModalEditSelected)="closeModalEdit($event)"></responsibilities-edit-evaluation>
                 </td>

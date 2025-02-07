@@ -13,7 +13,7 @@ export class CatalogDataService {
 
 
     getCatalogData(): Observable<CatalogDataResponse> {
-        return this.httpClient.get<CatalogDataResponse>(`${this.baseUrl}/catalogo/obtenerCatalogo`);
+        return this.httpClient.get<CatalogDataResponse>(`${this.baseUrl}/api/catalogo/obtenerCatalogo`);
     }
 
 }

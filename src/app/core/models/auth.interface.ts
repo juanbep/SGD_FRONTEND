@@ -1,4 +1,4 @@
-export interface Userinfo {
+export interface UserInfo {
     oidUsuario: number;
     usuarioDetalle: UsuarioDetalle;
     nombres: string;
@@ -30,7 +30,7 @@ export interface UsuarioDetalle {
 }
 
 
-export const mockUserinfo: Userinfo = {
+export const mockUserinfo: UserInfo = {
     oidUsuario: 1,
     usuarioDetalle: {
         oidUsuarioDetalle: 1,

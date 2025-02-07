@@ -21,44 +21,13 @@ export class UmUsersServicesService {
             page: page.toString(),
             size: totalPage.toString(),
         };
-        return this.httpClient.get<UsersResponse>(`${this.baseUrl}/usuario/all`,{params});
-    }
-    
-    /*
-    * Method to get a user by id
-    * @param id:number
-    * @returns Observable<User>
-    * */
-
-    getUserbyId(id: number): Observable<User> {
-        return this.httpClient.get<User>(`${this.baseUrl}/usuario/find/${id}`);
-    }
-
-
-    /*
-    * Method to save a user
-    * @param user:NewUser
-    * @returns Observable<UsersResponse>
-    * */
-    
-    saveUser(user: NewUser): Observable<UsersResponse> {
-        return this.httpClient.post<UsersResponse>(`${this.baseUrl}/usuario/save`, user);
+        return this.httpClient.get<UsersResponse>(`${this.baseUrl}/api/usuario`,{params});
     }
 
     /*
-    * Method to update a user
-    * @param idUsuario:number
-    * @param user:NewUser
-    * @returns Observable<User>
-    * */
-    updateUsers(idUsuario:number,user: NewUser): Observable<NewUser> {
-        return this.httpClient.put<NewUser>(`${this.baseUrl}/usuario/update/${idUsuario}`, user);
-    }
-
-    /*
-    * Method to get a user by params
+    * Method to get all the users by params
     * @param page:number
-    * @param size:number
+    * @param totalPage:number
     * @param faculty:string
     * @param department:string
     * @param category:string
@@ -69,12 +38,14 @@ export class UmUsersServicesService {
     * @param state:string
     * @returns Observable<UsersResponse>
     * */
-    getUserByParams(page:number, size:number, faculty:string | null, department:string | null, category:string | null, hiring: string | null, dedication:string | null, studies: string | null, rol: string | null, state: number | null ): Observable<UsersResponse>{
+    getAllUsersByParams(page: number, totalPage: number, userId: string | null, userName:string | null, faculty: string | null, department: string | null, category: string | null, hiring: string | null, dedication: string | null, studies: string | null, rol: string | null, state: string | null): Observable<UsersResponse> {
         const params: Params = {
             page: page.toString(),
-            size: size.toString(),
+            size: totalPage.toString(),
+            identificacion: userId || '',
+            nombre: userName || '',
             facultad: faculty || '',
-            departament: department || '',
+            departamento: department || '',
             categoria: category || '',
             contratiacion: hiring || '',
             dedicacion: dedication || '',
@@ -82,7 +53,39 @@ export class UmUsersServicesService {
             rol: rol || '',
             estado: state || ''
         };
-        return this.httpClient.get<UsersResponse>(`${this.baseUrl}/usuario/all`, {params});
+        return this.httpClient.get<UsersResponse>(`${this.baseUrl}/api/usuarios`,{params});
     }
+    
+    /*
+    * Method to get a user by id
+    * @param id:number
+    * @returns Observable<User>
+    * */
+
+    getUserbyId(id: number): Observable<User> {
+        return this.httpClient.get<User>(`${this.baseUrl}/api/usuarios/${id}`);
+    }
+
+
+    /*
+    * Method to save a user
+    * @param user:NewUser
+    * @returns Observable<UsersResponse>
+    * */
+    
+    saveUser(user: NewUser[]): Observable<UsersResponse> {
+        return this.httpClient.post<UsersResponse>(`${this.baseUrl}/api/usuarios`, user);
+    }
+
+    /*
+    * Method to update a user
+    * @param idUsuario:number
+    * @param user:NewUser
+    * @returns Observable<User>
+    * */
+    updateUsers(idUsuario:number,user: NewUser): Observable<NewUser> {
+        return this.httpClient.put<NewUser>(`${this.baseUrl}/api/usuarios/${idUsuario}`, user);
+    }
+
 
 }

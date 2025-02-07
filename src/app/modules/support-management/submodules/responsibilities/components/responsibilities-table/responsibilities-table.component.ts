@@ -1,4 +1,4 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, Input } from '@angular/core';
 import { ResponsabilityResponse, ResponsabilidadesPorTipoActividad, Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesUploadEvaluationComponent } from "../responsibilities-upload-evaluation/responsibilities-upload-evaluation.component";
@@ -7,6 +7,7 @@ import { ResponsibilitiesEditEvaluationComponent } from "../responsibilities-edi
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
+import { UserInfo } from '../../../../../../core/models/auth.interface';
 
 @Component({
   selector: 'responsibilities-table',
@@ -22,6 +23,9 @@ import { PaginatorComponent } from "../../../../../../shared/components/paginato
   styleUrl: './responsibilities-table.component.css'
 })
 export class ResponsibilitiesTableComponent {
+
+  @Input()
+  currentUser:UserInfo | null = null;
 
   public currentPage: number = 1;
   public headDataTable = ["Actividad", "Fuente 2", "Informe"];
@@ -51,14 +55,16 @@ export class ResponsibilitiesTableComponent {
   }
 
   recoverResponsabilities(page: number, totalPage: number) {
-    this.service.getResponsibilities('4', '', '', '', '',page-1, totalPage).subscribe({
-      next: data => {
-        this.service.setResponsibilitiesData(data);
-      },
-      error: error => {
-        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-      }
-    });
+    if(this.currentUser) {
+      this.service.getResponsibilities(this.currentUser.oidUsuario.toString(), '', '', '', '',page-1, totalPage).subscribe({
+        next: data => {
+          this.service.setResponsibilitiesData(data);
+        },
+        error: error => {
+          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        }
+      });
+    }
   }
 
 

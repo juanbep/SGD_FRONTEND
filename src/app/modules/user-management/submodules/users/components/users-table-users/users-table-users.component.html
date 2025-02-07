@@ -1,42 +1,51 @@
 <table class="table-bordered">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Identificación</th>
-            <th>Facultad</th>
-            <th>Programa</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th>Acciones</th>
+            <th class="text-body-heavy">Nombre</th>
+            <th class="text-body-heavy">Identificación</th>
+            <th class="text-body-heavy">Facultad</th>
+            <th class="text-body-heavy">Programa</th>
+            <th class="text-body-heavy">Rol</th>
+            <th class="text-body-heavy">Estado</th>
+            <th class="text-body-heavy">Acciones</th>
         </tr>
     </thead>
-    <tbody>
-        <tr *ngFor="let user of users?.content" >
-            <td>
-                {{ user.nombres }} {{ user.apellidos }}
-            </td>
-            <td>  
-                {{user.usuarioDetalle.identificacion }}
-            </td>
-            <td>
-                {{user.usuarioDetalle.facultad }}
-            </td>
-            <td>
-                {{user.usuarioDetalle.departamento }}
-            </td>
-            <td>
-                {{returnAllRoles(user.roles)}}
-            </td>
-            <td>
-                {{user.estado}}
-            </td>
-            <td>
-                <img src="/assets/icons/tables/icon-view.svg" alt="Detalles usuario" title="Detalles usuario" (click)="viewUserDetails(user)" style="cursor: pointer;">
-                <img src="/assets/icons/tables/icon-pen.svg" alt="Editar usuario" title="Editar usuario" style="cursor: pointer;" [routerLink]="['./editar-usuario/',user.oidUsuario]">
-                
-            </td>
-        </tr>
-    </tbody>
+    <ng-container *ngIf="users && users.content.length; else nullData">
+        <tbody>
+            <tr *ngFor="let user of users?.content" >
+                <td class="text-body-regular">
+                    {{ user.nombres }} {{ user.apellidos }}
+                </td>
+                <td class="text-body-regular">  
+                    {{user.identificacion}}
+                </td>
+                <td class="text-body-regular">
+                    {{user.usuarioDetalle.facultad | titlecase}}
+                </td>
+                <td class="text-body-regular">
+                    {{user.usuarioDetalle.departamento  | titlecase}} 
+                </td>
+                <td class="text-body-regular">
+                    {{returnAllRoles(user.roles) | titlecase}}
+                </td>
+                <td class="text-body-regular">
+                    {{user.estadoUsuario.nombre | titlecase}}
+                </td>
+                <td>
+                    <img src="/assets/icons/tables/icon-view.svg" alt="Detalles usuario" title="Detalles usuario" (click)="viewUserDetails(user)" style="cursor: pointer;">
+                    <img src="/assets/icons/tables/icon-pen.svg" alt="Editar usuario" title="Editar usuario" style="cursor: pointer;" [routerLink]="['./editar-usuario/',user.oidUsuario]">
+                    
+                </td>
+            </tr>
+        </tbody>
+    </ng-container>
+    <ng-template #nullData>
+        <tbody>
+            <tr class="text-center">
+                <td colspan="7" class="text-body-regular">No se encontraron docentes registrados en el sistema</td>
+            </tr>
+        </tbody>
+    </ng-template>
 </table>
 <div class="mb-3"></div>
 <section id="paginator-section-consolidated">

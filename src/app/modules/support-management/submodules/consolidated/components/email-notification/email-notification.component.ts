@@ -22,7 +22,6 @@ export class EmailNotificationComponent {
   observation(event: Event) {
     const observation = (event.target as HTMLInputElement).value;
     this.observationInput = observation.trim().toString();
-    console.log(this.observationInput );
   }
   
   selectCheckBox(event: Event){
@@ -36,7 +35,6 @@ export class EmailNotificationComponent {
         this.recipients.splice(index, 1);
       }
     }
-    console.log(this.recipients);
   }
 
   openModal(){

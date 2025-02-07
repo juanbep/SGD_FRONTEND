@@ -1,4 +1,4 @@
-import { Component, effect, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivitiesTableComponent } from "../../components/activities-table/activities-table.component";
 import { ActivitiesFilterComponent } from "../../components/activities-filter/activities-filter.component";
 import { ActivitiesUploadSelfAssessmentComponent } from "../../components/activities-upload-self-assessment/activities-upload-self-assessment.component";
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { ActivitiesEditEvaluationComponent } from '../../components/activities-edit-evaluation/activities-edit-evaluation.component';
 import { ActivityResponse } from '../../../../../../core/models/activities.interface';
+import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 
 @Component({
   selector: 'support-management-activities',
@@ -16,6 +17,8 @@ import { ActivityResponse } from '../../../../../../core/models/activities.inter
 })
 export class ActivitiesComponent implements OnInit{
 
+  private authServiceService = inject(AuthServiceService);
+
 
   @ViewChild(ActivitiesUploadSelfAssessmentComponent)
   uploadSelfAssessmentComponent!: ActivitiesUploadSelfAssessmentComponent;
@@ -25,29 +28,28 @@ export class ActivitiesComponent implements OnInit{
 
   public activityResponse: ActivityResponse | null = null;
 
-  public checkActivitiesPendingVar: boolean = false;
+  public checkActivitiesDiliegenciadoVar: boolean = false;
 
   public openModalOptionSelected: boolean = false;
+
+
+  public currentUser = this.authServiceService.currentUser;
 
   constructor(private activitiesServices: ActivitiesServicesService) { 
     effect(() => {
       this.activityResponse = this.activitiesServices.getDataActivities();
-      this.checkActivitiesPendingVar=this.checkActivitiesPending();
+      this.checkActivitiesDiliegenciadoVar=this.checkActivitiesComplete();
    });
   }
   
   ngOnInit(): void {
-   
   }
 
-  private checkActivitiesPending(){
+  private checkActivitiesComplete(){
     if (this.activityResponse?.content) {
-      for (let i = 0; i < this.activityResponse.content.length; i++) {
-        if (this.activityResponse.content[i].fuentes[0].estadoFuente === "Pendiente") {
-          return true;
-        }
-      }
-      return false;
+      return this.activityResponse.content.some(activity =>
+        activity.fuentes?.some(fuente => fuente.estadoFuente === 'DILIGENCIADO')
+      );
     }
     return false;
   }

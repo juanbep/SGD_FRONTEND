@@ -1,0 +1,100 @@
+<div class="view-container">
+    <header class="title-two">Periodo académico</header>
+    
+    <section class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher icon">
+        <span class="text-body-heavy">
+            A continuación encontrará el listado de periodos académicos vigentes y el historial de periodos académicos.
+        </span>
+    </section>
+
+    <div class="mb-3"></div>
+
+    <section>
+        <header class="title-three">Información periodo académico vigente</header>
+
+        <table class="table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-body-heavy">Id. Periodo académico</th>
+                    <th class="text-body-heavy">Fecha de inicio periodo académico</th>
+                    <th class="text-body-heavy">Fecha de fin periodo académico</th>
+                    <th class="text-body-heavy">Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <ng-container *ngIf="currentAcademicPeriod; else noData"> 
+                <tbody>
+                    <tr>
+                        <td class="text-body-regular">{{currentAcademicPeriod.idPeriodo}}</td>
+                        <td class="text-body-regular">{{currentAcademicPeriod.fechaInicio | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                        <td class="text-body-regular">{{currentAcademicPeriod.fechaFin | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                        <td class="text-body-regular">{{currentAcademicPeriod.estadoPeriodoAcademico.nombre | titlecase}}</td>
+                        <td>
+                            <img src="assets/icons/tables/icon-pen.svg" alt="edit icon" (click)="openModalEditAcademicPeriod(currentAcademicPeriod)" style="cursor: pointer;">
+                        </td>
+                    </tr>
+                </tbody>
+            </ng-container>
+            <ng-template #noData>
+                <tbody>
+                    <tr>
+                        <td colspan="5" class="text-center text-body-regular">No hay periodos académicos vigentes</td>
+                    </tr>
+                </tbody>
+            </ng-template>
+        </table>
+    </section>
+
+    <div class="mb-3"></div>
+
+    <div class="d-flex justify-content-center">
+        <button [ngClass]="{
+            'button-normal-large': !currentAcademicPeriod,
+            'button-normal-large-disabled': currentAcademicPeriod
+        }" class="button-normal-large" (click)="openModalCreateAcademicPeriod()">Crear periodo</button>
+    </div>
+
+    <div class="mb-3"></div>
+
+    <section>
+        <header class="title-three">Historial de periodos académicos</header>
+        
+        <table class="table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-body-heavy">Id. Periodo académico</th>
+                    <th class="text-body-heavy">Fecha de inicio periodo académico</th>
+                    <th class="text-body-heavy">Fecha de fin periodo académico</th>
+                    <th class="text-body-heavy">Estado</th>
+                </tr>
+            </thead>
+            <ng-container *ngIf="academicPeriodResponse && academicPeriodResponse.content.length > 0; else noPeriodsHistory">
+                <tbody>
+                    <tr *ngFor="let academicPeriod of academicPeriods">
+                        <td class="text-body-regular">{{academicPeriod.idPeriodo}}</td>
+                        <td class="text-body-regular">{{academicPeriod.fechaInicio | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                        <td class="text-body-regular">{{academicPeriod.fechaFin | date: 'dd/MM/yyyy': 'UTC'}}</td>
+                        <td class="text-body-regular">{{academicPeriod.estadoPeriodoAcademico.nombre | titlecase}}</td>
+                    </tr>
+                </tbody>
+            </ng-container>
+            <ng-template #noPeriodsHistory>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="text-center text-body-regular">No hay periodos académicos registrados</td>
+                    </tr>
+                </tbody>
+            </ng-template>
+        </table>
+    </section>
+
+    <div class="mb-3"></div>
+
+    <div class="d-flex justify-content-center">
+        <shared-paginator [currentPage]="currentPage" [totalPages]="academicPeriodResponse?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
+    </div>
+</div>
+
+<academic-period-management-modal-create-academic-period [currentPage]="currentPage" [size]="size"></academic-period-management-modal-create-academic-period>
+<academic-period-management-modal-edit-academic-period [currentPage]="currentPage" [size]="size"></academic-period-management-modal-edit-academic-period>

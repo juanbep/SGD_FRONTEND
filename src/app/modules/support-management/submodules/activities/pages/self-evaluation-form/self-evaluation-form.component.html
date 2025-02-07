@@ -1,0 +1,151 @@
+<div class="view-container">
+    <span class="title-two">Formulario de autoevaluación</span>
+
+    <div class="mb-3"></div>
+
+    <div class="title-three">Información docente</div>
+
+    <div class="mb-1"></div>
+
+    <table class="table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    <span class="text-body-regular">Nombres y apellidos</span>
+                    <br>
+                    <span class="text-body-small-sb">Pepito</span>
+                </th>
+                <th>
+                    <span class="text-body-regular">Num.Id</span>
+                    <br>
+                    <span class="text-body-small-sb">123456789</span>
+                </th>
+                <th>
+                    <span class="text-body-regular">Nombre de la actividad</span>
+                    <br>
+                    <span class="text-body-small-sb">Nombre de la actividad</span>
+                </th>
+                <th>
+                    <span class="text-body-regular">Tipo</span>
+                    <br>
+                    <span class="text-body-small-sb">Tipo</span>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <!-- Periodo -->
+                    <span class="text-body-regular">Periodo</span>
+                    <br>
+                    <span class="text-body-small-sb">2021-1</span>
+                </th>
+                <th>
+                    <!-- Horas totales -->
+                    <span class="text-body-regular">Horas totales</span>
+                    <br>
+                    <span class="text-body-small-sb">10</span>
+                </th>
+                <th>
+                    <!-- Fecha de inicio -->
+                    <span class="text-body-regular">Fecha de inicio</span>
+                    <br>
+                    <span class="text-body-small-sb">2021-01-01</span>
+                </th>
+                <th>
+                    <!-- Fecha de fin -->
+                    <span class="text-body-regular">Fecha de fin</span>
+                    <br>
+                    <span class="text-body-small-sb">2021-01-31</span>
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+    <form [formGroup]="newSelfEvaluationForm">
+
+        <div class="mb-3"></div>
+        <div class="row">
+            <span class="title-three">Descripción actividad</span>
+            <div class="form-floating">
+                <input type="text" class="form-control input-text" id="activityDescription">
+                <label class="label-custom text-body-small-sb" for="activityDescription">Descripción actividad</label>
+            </div>
+        </div>
+        <div class="mb-3"></div>
+        <div class="row">
+            <div class="col">
+                <span class="title-three">Resultado</span>
+                <div class="form-floating">
+                    <input type="text" class="form-control input-text" id="result">
+                    <label class="label-custom text-body-small-sb" for="result">Resultado</label>
+                </div>
+            </div>
+            <div class="col">
+                <span class="title-three">ODS</span>
+                <div class="form-floating">
+                    <input type="text" class="form-control input-text" id="ODS">
+                    <label class="label-custom text-body-small-sb" for="ODS">ODS</label>
+                </div>
+            </div>
+            <div class="col">
+                <span class="title-three">Evidencia</span>
+            </div>
+            <div class="mb-2"></div>
+            <div class="row">
+                <div class="col">
+                    <button class="button-normal-large">Nuevo resultado</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3"></div>
+        <div class="row">
+            <div class="col">
+                <span class="title-three">Lecciones aprendidas</span>
+                <div class="form-floating">
+                    <input type="text" class="form-control input-text" id="learnedLessons">
+                    <label class="label-custom text-body-small-sb" for="learnedLessons">Lecciones aprendidas</label>
+                </div>
+                <div class="mb-2"></div>
+                <button class="button-normal-large">Nueva lección aprendida</button>
+            </div>
+            <div class="col">
+                <span class="title-three">Oportunidad de mejora</span>
+                <div class="form-floating">
+                    <input type="text" class="form-control input-text" id="improvementOpportunity">
+                    <label class="label-custom text-body-small-sb" for="improvementOpportunity">Oportunidad de
+                        mejora</label>
+                </div>
+                <div class="mb-2"></div>
+                <button class="button-normal-large">Nueva oportunidad de mejora</button>
+            </div>
+        </div>
+
+        <div class="mb-3"></div>
+        <div class="row">
+            <div class="col-3">
+                <span class="title-three">Evaluación</span>
+                <div class="form-floating">
+                    <input type="text" class="form-control input-text" id="evaluation">
+                    <label class="label-custom text-body-small-sb" for="evaluation">Evaluación</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3"></div>
+        <div class="row">
+            <span class="title-three">Observaciones</span>
+            <input type="text" class="observation" placeholder="Ingrese sus observaciones">
+        </div>
+
+        <div class="mb-3"></div>
+        <div class="row row-cols-auto justify-content-center">
+            <div class="col d-flex justify-content-center">
+                <button class="button-normal">Cancelar</button>
+                <button type="submit" class="button-normal">Guardar</button>
+            </div>
+        </div>
+
+
+    </form>
+
+</div>

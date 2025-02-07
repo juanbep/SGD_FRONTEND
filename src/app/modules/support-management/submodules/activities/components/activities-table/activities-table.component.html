@@ -12,55 +12,47 @@
                 </th>
             </tr>
         </thead>
-        <tbody *ngFor="let type of activitiesByType">
+        <tbody *ngFor="let activity of activitiesByType">
             <tr class="text-body-heavy center-text">
                 <td colspan="7">
-                    {{type.nombreType}}
+                    {{activity.nombreType}}
                 </td>
             </tr>
-            <tr class="text-body-small-r" *ngFor="let activity of type.activities">
+            <tr *ngFor="let activity of activity.activities">
                 <td>
-                    {{activity.nombre}}
+                    <span class="text-body-regular">{{activity.nombreActividad}}</span>
+                </td>
+                <td>
+                    <span class="text-body-regular" *ngIf="!activity.fuentes[0]">Pendiente</span>
+                    <span class="text-body-regular"
+                        *ngIf="activity.fuentes[0]">{{activity.fuentes[0].estadoFuente}}</span>
                 </td>
 
-                <td>
-                    {{activity.fuentes[0].tipoFuente == '1' ? activity.fuentes[0].estadoFuente :
-                    activity.fuentes[1].estadoFuente}}
-                </td>
-                <td class="center-text">
-                    <button class="button-table" *ngIf="activity.fuentes[0].estadoFuente == 'Diligenciado'"
+                <td class="center-text text-body-regular">
+                    <button class="button-table"
+                        *ngIf="activity.fuentes[0] && activity.fuentes[0].estadoFuente == 'DILIGENCIADO'"
                         (click)="openModalView(activity,1)">
                         <img src="assets/icons/tables/icon-view.svg" alt="">
                     </button>
-
-
                     <activities-view-evaluation
                         *ngIf="openModalViewSelected && activitySelected === activity && sourceSelected==1"
-                        [source]="activity.fuentes[sourceSelected!-1]" [activity]="activity"
-                        [openModalSelected]="openModalViewSelected"
-                        (closeModalSelected)="closeModalView($event)"></activities-view-evaluation>
-
-                </td>
-                <td>
-                    {{activity.evaluador.nombres}} {{activity.evaluador.apellidos}}
-                </td>
-                <td>
-                    {{activity.evaluador.roles[0].nombre}}
-                </td>
-                <td>
-                    {{activity.fuentes[1].tipoFuente == '2' ? activity.fuentes[1].estadoFuente :
-                    activity.fuentes[0].estadoFuente}}
-                </td>
-                <td class="center-text">
-                    <button class="button-table" *ngIf=" activity.fuentes[1].estadoFuente == 'Diligenciado'"
-                        (click)="openModalView(activity,2)">
-                        <img src="assets/icons/tables/icon-view.svg" alt="">
-                    </button>
-                    <activities-view-evaluation
-                        *ngIf="openModalViewSelected && activitySelected === activity && sourceSelected==2"
                         [source]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="true"
                         (closeModalSelected)="closeModalView($event)"></activities-view-evaluation>
                 </td>
+                <td>
+                    <span class="text-body-regular">{{activity.evaluador.nombres}}
+                        {{activity.evaluador.apellidos}}</span>
+                </td>
+                <td>
+                    <span class="text-body-regular"
+                        *ngIf="activity.evaluador.roles[0]">{{activity.evaluador.roles[0].nombre}}</span>
+                </td>
+                <td>
+                    <span class="text-body-regular" *ngIf="!activity.fuentes[1]">Pendiente</span>
+                    <span class="text-body-regular"
+                        *ngIf="activity.fuentes[1]">{{activity.fuentes[1].estadoFuente}}</span>
+                </td>
+
             </tr>
         </tbody>
     </table>
@@ -92,6 +84,5 @@
 
 <div class="mb-3"></div>
 
-<section id="paginator-section-activities">
-    <shared-paginator [currentPage]="currentPage" [totalPages]="activities?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
-</section>
+<shared-paginator [currentPage]="currentPage" [totalPages]="activities?.totalPages || 1"
+    (pageChange)="pageChanged($event)"></shared-paginator>

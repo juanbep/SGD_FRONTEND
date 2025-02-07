@@ -33,7 +33,7 @@ export class SmResponsibilitiesServicesService {
             .set( 'roles', roles )
             .set( 'page', page? page.toString() : '' )
             .set( 'size', totalPage? totalPage.toString() : '' );
-        return this.httpClient.get<ResponsabilityResponse>(`${this.baseUrl}/actividad/buscarActividadesPorEvaluador`, { params });
+        return this.httpClient.get<ResponsabilityResponse>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluador`, { params });
     }
 
     /*
@@ -49,7 +49,7 @@ export class SmResponsibilitiesServicesService {
         formData.append('informeFuente', file);
         formData.append('observation', observation);
         formData.append('sources', JSON.stringify(source));
-        return this.httpClient.post(`${this.baseUrl}/fuente/save`, formData, { responseType: 'text' });
+        return this.httpClient.post(`${this.baseUrl}/api/fuente`, formData, { responseType: 'text' });
     }
 
     /*
@@ -59,7 +59,7 @@ export class SmResponsibilitiesServicesService {
         */
 
     downloadSourceFile(idSource: number): Observable<any> {
-        return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { responseType: 'blob' });
+        return this.httpClient.get(`${this.baseUrl}/api/fuente/download/${idSource}`, { responseType: 'blob' });
     }
 
     /*
@@ -71,7 +71,7 @@ export class SmResponsibilitiesServicesService {
 
     downloadReportFile(idSource: number, report:boolean ): Observable<any> {
         let params = new HttpParams().set('report', report);
-        return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { params, responseType: 'blob' });
+        return this.httpClient.get(`${this.baseUrl}/api/fuente/download/${idSource}`, { params, responseType: 'blob' });
       }
       
 

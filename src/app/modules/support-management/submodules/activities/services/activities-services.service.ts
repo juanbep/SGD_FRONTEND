@@ -9,6 +9,8 @@ export class ActivitiesServicesService {
 
     private smActivitiesServicesService = inject(SmActivitiesServicesService);
 
+    // private paramsActivitiesFilterSignal: WritableSignal<{ nameActivity: string | null, typeActivity: string | null, stateActivity: string  | null}> = signal(null);
+
 
     setDataActivities(newData: ActivityResponse)  {
         this.userActivities.update(data => data = newData); 

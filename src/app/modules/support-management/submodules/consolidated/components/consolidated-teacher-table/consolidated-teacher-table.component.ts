@@ -14,11 +14,11 @@ import { ViewDetailsSourceTwoComponent } from '../view-details-source-two/view-d
     CommonModule,
     ViewDetailsSourceOneComponent,
     ViewDetailsSourceTwoComponent
-],
+  ],
   templateUrl: './consolidated-teacher-table.component.html',
   styleUrl: './consolidated-teacher-table.component.css'
 })
-export class ConsolidatedTeacherTableComponent implements OnInit{
+export class ConsolidatedTeacherTableComponent implements OnInit {
 
 
   @ViewChild(EmailNotificationComponent)
@@ -34,10 +34,10 @@ export class ConsolidatedTeacherTableComponent implements OnInit{
 
   consolidatedTeacher: Consolidated | null = null;
 
-  constructor() { 
-    effect(()=>{
+  constructor() {
+    effect(() => {
       this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
-      
+
     });
   }
 
@@ -45,7 +45,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit{
     this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
   }
 
-  
+
 
   getObjectKeys(obj: Actividades): string[] {
     if (!obj) {
@@ -60,28 +60,35 @@ export class ConsolidatedTeacherTableComponent implements OnInit{
     this.emailNotificationComponent.openModal();
   }
 
-  public viewDetailsSourceModal(oidActividad:number) {
+  public viewDetailsSourceModal(oidActividad: number) {
     this.viewDetailsSourceOneComponent.open(oidActividad);
   }
 
-  public viewDetailsSourceTwoModal(oidActividad:number) {
+  public viewDetailsSourceTwoModal(oidActividad: number) {
     this.viewDetailsSourceTwoComponent.open(oidActividad);
-  } 
+  }
 
   getActivities(typeActivity: string): InfoActivities[] {
     switch (typeActivity) {
       case 'DOCENCIA':
         return this.consolidatedTeacher?.actividades['DOCENCIA'] || [];
-      case 'TRABAJOS DE INVESTIGACION':
-        return this.consolidatedTeacher?.actividades['TRABAJOS DE INVESTIGACION'] || [];
+      case 'TRABAJOS DE INVESTIGACIÓN':
+        return this.consolidatedTeacher?.actividades['TRABAJOS DE INVESTIGACIÓN'] || [];
+      case 'PROYECTO DE INVESTIGACIÓN':
+        return this.consolidatedTeacher?.actividades['PROYECTO DE INVESTIGACIÓN'] || [];
       case 'TRABAJOS DOCENCIA':
         return this.consolidatedTeacher?.actividades['TRABAJOS DOCENCIA'] || [];
-      case 'ADMINISTRACION':
-        return this.consolidatedTeacher?.actividades['ADMINISTRACION'] || [];
+      case 'ADMINISTRACIÓN':
+        return this.consolidatedTeacher?.actividades['ADMINISTRACIÓN'] || [];
       case 'ASESORIA':
-        return this.consolidatedTeacher?.actividades['ASESORIA'] || [];
+        return this.consolidatedTeacher?.actividades['ASESORÍA'] || [];
+      case 'EXTENSIÓN':
+        return this.consolidatedTeacher?.actividades['EXTENSIÓN'] || [];
+      case 'CAPACITACIÓN':
+        return this.consolidatedTeacher?.actividades['CAPACITACIÓN'] || [];
       case 'OTROS SERVICIOS':
         return this.consolidatedTeacher?.actividades['OTROS SERVICIOS'] || [];
+
       default:
         return [];
     }

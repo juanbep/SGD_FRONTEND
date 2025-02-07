@@ -1,0 +1,93 @@
+<div class="modal fade" id="modal-create-academic-period" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="title-three mx-3">Crear periodo académico</span>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="newAcademicPeriodForm">
+                    <legend class="text-body-heavy">Información periodo académico</legend>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="date" id="startDate" class="form-control input-date text-body-custom"
+                                    formControlName="startDate" [ngClass]="{
+                                        'error-input': hasFieldErrorsForm('startDate') || isInvaldField('startDate'),
+                                        'error-input-background': hasFieldErrorsForm('startDate') || isInvaldField('startDate')
+                                    }">
+                                <label for="startDate" class="label-custom text-body-small-sb" [ngClass]="{
+                                    'error-label': hasFieldErrorsForm('startDate') || isInvaldField('startDate'),
+                                }"><span
+                                        data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                                    Fecha de inicio</label>
+                            </div>
+                            <span *ngIf="hasFieldErrorsForm('startDate')" class="error-message text-body-small-r ms-1">
+                                {{getFormError('startDate')}}
+                            </span>
+                            <span *ngIf="isInvaldField('startDate')" class="error-message text-body-small-r ms-1">
+                                {{getFieldError('startDate')}}
+                            </span>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="date" id="endDate" class="form-control input-date text-body-custom"
+                                    formControlName="endDate" [ngClass]="{
+                                        'error-input': hasFieldErrorsForm('endDate') || isInvaldField('endDate'),
+                                        'error-input-background': hasFieldErrorsForm('endDate') || isInvaldField('endDate')
+                                    }">
+                                <label for="endDate" class="label-custom text-body-small-sb"
+                                    [ngClass]="{
+                                        'error-label': hasFieldErrorsForm('endDate') || isInvaldField('endDate'),
+                                    }"><span data-toggle="tooltip"
+                                        data-placement="top" title="Campo obligatorio">*</span> Fecha de fin</label>
+                            </div>
+                            <span *ngIf="hasFieldErrorsForm('endDate')" class="error-message text-body-small-r ms-1">
+                                {{getFormError('endDate')}}
+                            </span>
+                            <span *ngIf="isInvaldField('endDate')" class="error-message text-body-small-r ms-1">
+                                {{getFieldError('endDate')}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating">
+                                <input type="text" id="idAcademicPeriod" class="form-control input-text text-body-custom"
+                                    formControlName="idAcademicPeriod" [ngClass]="{
+                                        'error-input': isInvaldField('idAcademicPeriod'),
+                                        'error-input-background': isInvaldField('idAcademicPeriod')
+                                    }" placeholder="Ejemplo: 2021-1">
+                                <label for="idAcademicPeriod" class="label-custom text-body-small-sb"><span data-toggle="tooltip"
+                                    data-placement="top" title="Campo obligatorio">*</span> Id. Periodo académico</label>
+                            </div>
+                            <span *ngIf="isInvaldField('idAcademicPeriod')" class="error-message text-body-small-r">
+                                {{getFieldError('idAcademicPeriod')}}
+                            </span>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating">
+                                <select class="form-select input-select text-body-custom" id="status" formControlName="status" [ngClass]="{
+                                    'error-input': isInvaldField('status'),
+                                    'error-input-background': isInvaldField('status')
+                                }">
+                                    <option value="" selected>Seleccione una opción</option>
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                                <label for="status" class="label-custom text-body-small-sb"> <span data-toggle="tooltip"
+                                    data-placement="top" title="Campo obligatorio">*</span> Estado</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button-normal" data-bs-dismiss="modal" >Cancelar</button>
+                <button type="button" [ngClass]="{
+                    'button-normal-disabled': !newAcademicPeriodForm.valid,
+                    'button-normal': newAcademicPeriodForm.valid
+                }" data-bs-dismiss="modal" (click)="saveNewAcademicPeriod()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

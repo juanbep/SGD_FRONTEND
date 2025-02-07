@@ -1,106 +1,71 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
+import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
+import { CommonModule } from '@angular/common';
+import { ActivitiesManagementService } from '../../services/activities-management.service';
 
 @Component({
   selector: 'user-management-activities-users-filter',
   standalone: true,
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './users-filter.component.html',
   styleUrl: './users-filter.component.css'
 })
 export class UsersFilterComponent {
-    private formBuilder: FormBuilder = inject(FormBuilder);
-    public nameUserOptionSelected: string = '';
-    public idUserOptionSelected: string = '';
-    public facultyOptionSelected: string = 'default';
-    
-    formFilter: FormGroup = this.formBuilder.group({
-      nameUser: [''],
-      idUser: [''],
-      faculty: ['default']
-    })
-    
-    facultyOptions = [
-      {
-        value: 'default',
-        text: 'Facultad'
-      },
-      {
-        value: 'opcion1',
-        text: 'FIET'
-      },
-      {
-        value: 'opcion2',
-        text: 'Automática'
-      }
-    ]
-  
-    programOptions = [
-      {
-        value: 'default',
-        text: 'Programa'
-      },
-      {
-        value: 'opcion1',
-        text: 'Ingeniería de Sistemas'
-      },
-      {
-        value: 'opcion2',
-        text: 'Ingeniería electrónica'
-      }
-    ]
-  
-    roleOptions = [
-      {
-        value: 'default',
-        text: 'Rol'
-      },
-      {
-        value: 'opcion1',
-        text: 'Estudiante'
-      },
-      {
-        value: 'opcion2',
-        text: 'Docente'
-      }
-    ]
-  
-    stateOptions = [
-      {
-        value: 'default',
-        text: 'Estado'
-      },
-      {
-        value: 'opcion1',
-        text: 'Activo'
-      },
-      {
-        value: 'opcion2',
-        text: 'Inactivo'
-      }
-    ]
-    
-    ngOnInit(): void {
-      this.listenNameUserChanges();
+
+
+  private catalogDataService = inject(CatalogDataService);
+  private formBuilder: FormBuilder = inject(FormBuilder);
+  private activitiesServices = inject(ActivitiesManagementService);
+
+  public catalogData: CatalogDataResponse | null = null;
+
+  formFilter: FormGroup = this.formBuilder.group({
+    nameUser: [null],
+    identification: [null],
+    faculty: [null],
+    program: [null],
+    state: [null]
+  })
+
+  stateOptions = [
+    {
+      value: '1',
+      text: 'Activo'
+    },
+    {
+      value: '2',
+      text: 'Inactivo'
     }
-  
-    public listenNameUserChanges() {
-      this.formFilter.get('nameUser')?.valueChanges.subscribe((value) => {
-        this.nameUserOptionSelected = value;
-      })
-    }
-  
-    public listenIdUserChanges() {
-      this.formFilter.get('idUser')?.valueChanges.subscribe((value) => {
-        this.idUserOptionSelected = value;
-      })
-    }
-  
-    public listenFacultyChanges() {
-      this.formFilter.get('faculty')?.valueChanges.subscribe((value) => {
-        this.facultyOptionSelected = value;
-      })
-    }
+  ]
+
+  ngOnInit(): void {
+    this.recoverCatalogs();
+  }
+
+  public recoverCatalogs() {
+    this.catalogDataService.getCatalogData().subscribe((response) => {
+      this.catalogData = response;
+    });
+  }
+
+  searchUsers() {
+    const nameUser = this.formFilter.get('nameUser')?.value || '';
+    const identification = this.formFilter.get('identification')?.value || '';
+    const faculty = this.formFilter.get('faculty')?.value || '';
+    const program = this.formFilter.get('program')?.value || '';
+    const rol = 'DOCENTE';
+    const state = this.formFilter.get('state')?.value || '';
+
+    this.activitiesServices.setParamsUsersFilter({ nameUser, identification, faculty, program, rol, state });
+  }
+
+  clearFilter() {
+    this.formFilter.reset();
+    this.activitiesServices.setParamsUsersFilter({ nameUser: '', identification: '', faculty: '', program: '', rol: 'DOCENTE', state: '' });
+  }
 }

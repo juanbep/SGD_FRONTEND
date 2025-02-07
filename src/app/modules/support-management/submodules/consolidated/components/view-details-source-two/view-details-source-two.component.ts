@@ -24,7 +24,6 @@ export class ViewDetailsSourceTwoComponent {
   public sourceFile: Blob | null = null;
 
   open(oidActividad:number): void {
-    console.log('open source two');
     const myModal = document.getElementById('view-details-source-two-modal');
     if (myModal) {
       var bootstrapModal = new bootstrap.Modal(myModal);

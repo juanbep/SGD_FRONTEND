@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <!--Sección mensaje informativo -->
                 <section id="information-message">
-                    <div class="message-container row">
+                    <div class="messages-container row">
                         <div class="col-1">
                             <img class="img-container" src="assets/icons/messages/icon-info.svg" alt="">
                         </div>
@@ -26,7 +26,7 @@
                 <!-- Sección diligenciamiento de la evaluación -->
                 <section id="assessment-fill-out">
                     <p class="title-three">Actividad y evaluación</p>
-                    <div class="message-container row">
+                    <div class="messages-container row">
                         <div class="col-1">
                             <img src="assets/icons/messages/icon-info.svg" alt="">
                         </div>
@@ -35,14 +35,13 @@
                                 encuentra en el soporte</p>
                         </div>
                     </div>
+                    <div class="mb-3"></div>
                     <div class="table-responsive table-responsive-custom">
                         <table class="upload-table table-bordered">
                             <thead>
                                 <tr>
                                     <th>
-                                        <span class="text-body-heavy ">
-                                            Actividad
-                                        </span>
+                                        <span class="text-body-heavy">Actividad</span>
                                     </th>
                                     <th>
                                         <span class="text-body-heavy">Calificación</span>
@@ -55,13 +54,12 @@
                             <tbody>
                                 <tr *ngFor="let activitie of userActivities; let i = index">
                                     <td>
-                                        <span class="text-body-small-r">{{activitie.codigoActividad}}</span>
+                                        <span class="text-body-small-r">{{activitie.nombreActividad}}</span>
                                     </td>
                                     <td>
                                         <input id="input-evaluation" [ngClass]="{'input-evaluation-error text-body-regular': errorCalificacion==true,
-                                                
                                                 }" class="input-evaluation text-body-regular" placeholder="0-100"
-                                            (input)="updateEvaluation($event,activitie)">
+                                            (input)="updateEvaluation($event,activitie)" value="{{activitie.fuentes[0].calificacion? activitie.fuentes[0].calificacion : ''}}">
                                         <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal">
                                     </td>
 
@@ -145,7 +143,7 @@
                         <button class="button-modal text-body-heavy" (click)="closeModal()"  data-bs-dismiss="modal">
                             Cerrar
                         </button>
-                        <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
+                        <button class="button-modal text-body-heavy" (click)="saveEvaluation()" data-bs-dismiss="modal">
                             Guardar
                         </button>
                     </div>

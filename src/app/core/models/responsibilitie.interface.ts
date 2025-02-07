@@ -2,12 +2,16 @@
 * Interface que define la estructura de las actividades y sus fuentes asociadas un docente que se consumo en el servicio de responsabilidades
 */
 
+/*
+* Interface que define la estructura de las actividades y sus fuentes asociadas un docente que se consumo en el servicio de responsabilidades
+*/
+
 export interface ResponsabilityResponse {
     content:          Responsability[];
     pageable:         Pageable;
-    totalElements:    number;
     last:             boolean;
     totalPages:       number;
+    totalElements:    number;
     size:             number;
     number:           number;
     sort:             Sort;
@@ -18,15 +22,24 @@ export interface ResponsabilityResponse {
 
 export interface Responsability {
     oidActividad:       number;
-    codigoActividad:    string;
-    nombre:             string;
+    nombreActividad:    string;
     horas:              number;
+    semanas:            number;
+    estadoActividad:    EstadoActividad;
     informeEjecutivo:   boolean;
-    fechaCreacion:      Date;
-    fechaActualizacion: Date;
+    fechaCreacion:      string;
+    fechaActualizacion: string;
     tipoActividad:      TipoActividad;
-    fuentes:            Fuente[];
+    fuentes:            any[];
     evaluado:           Evaluado;
+    fuente:             Fuente[];
+}
+
+export interface EstadoActividad {
+    oidEstadoActividad: number;
+    nombre:             string;
+    fechaCreacion:      string;
+    fechaActualizacion: string;
 }
 
 export interface Evaluado {
@@ -39,25 +52,11 @@ export interface Evaluado {
 
 export interface Role {
     nombre: string;
-    estado: string;
-}
-
-export interface Fuente {
-    oidFuente:              number;
-    tipoFuente:             string;
-    calificacion:           number;
-    nombreDocumentoFuente:  string;
-    nombreDocumentoInforme: string;
-    observacion?:           string;
-    fechaCreacion:          Date;
-    fechaActualizacion:     Date;
-    estadoFuente:           string;
 }
 
 export interface TipoActividad {
     oidTipoActividad: number;
     nombre:           string;
-    horasTotales:     number;
     descripcion:      string;
 }
 
@@ -76,10 +75,25 @@ export interface Sort {
     unsorted: boolean;
 }
 
+export interface Fuente {
+    oidFuente:               number;
+    tipoFuente:              string;
+    calificacion:            number;
+    nombreDocumentoFuente?:  string;
+    observacion?:            string;
+    fechaCreacion:           string;
+    fechaActualizacion:      string;
+    estadoFuente:            String;
+    nombreDocumentoInforme?: string;
+    soporte:                 File | null;
+    informeEjecutivo:        File | null,
+}
+
 export interface ResponsabilidadesPorTipoActividad {
     nombreType: string;
     activities: Responsability[];
 }
+
 
 /*
 * Interface para guardar la evaluacion de una fuente

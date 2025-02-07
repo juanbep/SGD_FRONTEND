@@ -40,14 +40,12 @@
                             <tbody formArrayName="activities">
                                 <tr *ngFor="let item of activities.controls; let i = index" [formGroupName]="i">
                                     <td>
-                                        <span
-                                            class="text-body-regular">{{teacherActivities!.content[i].codigoActividad}}</span>
+                                        <span class="text-body-regular">{{teacherActivities!.content[i].nombreActividad}}</span>
                                     </td>
                                     <td>
                                         <input [ngClass]="{'text-error': isInvalidField(item)}"
                                             id="input-evaluation-edit" class="input-evaluation text-body-regular"
                                             formControlName="calificacion">
-                                        <!-- <span *ngIf="isInvalidField(item)" class="text-body-small-sb">{{getFieldError(item,'calificacion')}}</span>       -->
                                     </td>
                                     <td>
                                         <ng-container

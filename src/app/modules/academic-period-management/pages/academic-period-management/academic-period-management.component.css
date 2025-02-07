@@ -1,0 +1,14 @@
+/* Button styling for main actions */
+.button-main {
+    display: flex;
+    width: 254px;
+    height: 40px;
+    margin-top: 1px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border-radius: 100px;
+    border: none;
+    background: var(--blue);
+    color: var(--white);
+}

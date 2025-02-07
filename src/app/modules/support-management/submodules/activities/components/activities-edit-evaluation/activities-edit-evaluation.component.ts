@@ -57,7 +57,7 @@ export class ActivitiesEditEvaluationComponent  {
   *  Recupera las actividades
   */
   recoverActivities() {
-    this.service.getActivities('6', '', '', '', '',null,null).subscribe({
+    this.service.getActivities('92', '', '', '', '',null,null).subscribe({
       next: data => {
         this.teacherActivities = data;
         this.recoverReports();
@@ -100,14 +100,16 @@ export class ActivitiesEditEvaluationComponent  {
   *  Llena el formulario con la información de las actividades
   */
   populateForm(): void {
-    this.fileNameSelected = this.teacherActivities?.content[0].fuentes[0].nombreDocumentoFuente || '';
-    this.formSelfEvaluation.get('observation')?.setValue(this.teacherActivities?.content[0].fuentes[0].observacion);
-    this.teacherActivities?.content.forEach(activitie => {
-      this.activities.push(this.formBuilder.group({
-        codigoActividad: [activitie.codigoActividad],
-        calificacion: [activitie.fuentes[0].calificacion, [Validators.required, Validators.pattern(this.validatorService.numericPattern), Validators.min(0), Validators.max(100)]],
-      }));
-    });
+    if(this.teacherActivities?.content[0].fuentes[0]){
+      this.fileNameSelected = this.teacherActivities?.content[0].fuentes[0].nombreDocumentoFuente || '';
+      this.formSelfEvaluation.get('observation')?.setValue(this.teacherActivities?.content[0].fuentes[0].observacion);
+      this.teacherActivities?.content.forEach(activitie => {
+        this.activities.push(this.formBuilder.group({
+          nombreActividad: [activitie.nombreActividad],
+          calificacion: [activitie.fuentes[0].calificacion, [Validators.required, Validators.pattern(this.validatorService.numericPattern), Validators.min(0), Validators.max(100)]],
+        }));
+      });
+    }
   }
 
   /*
@@ -153,7 +155,7 @@ export class ActivitiesEditEvaluationComponent  {
   */
   recoverSource() {
     this.teacherActivities!.content.forEach((content, index) => {
-      if (content.fuentes[0].oidFuente) {
+      if (content.fuentes[0] && content.fuentes[0].oidFuente) {
         this.service.getdownloadSourceFile(content.fuentes[0].oidFuente).subscribe(
           {
             next: (response) => {

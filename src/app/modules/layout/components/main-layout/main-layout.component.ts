@@ -21,7 +21,6 @@ export class MainLayoutComponent implements OnInit {
   public authServiceService = inject(AuthServiceService);
 
   ngOnInit(): void {
-    console.log('MainLayoutComponent');
-    this.authServiceService.getUserInfo(6).subscribe();
+    this.authServiceService.getUserInfo().subscribe();
   }
 }

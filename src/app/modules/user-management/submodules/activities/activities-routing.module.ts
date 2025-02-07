@@ -4,6 +4,7 @@ import { ActivitiesComponent } from './pages/activities/activities.component';
 import { UsersComponent } from './pages/users/users.component';
 import { NewActivityComponent } from './pages/new-activity/new-activity.component';
 import { LayoutComponent } from './pages/layout/layout.component';
+import { EditActivityComponent } from './pages/edit-activity/edit-activity.component';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,10 @@ export const routes: Routes = [
             {
                 path: 'nueva-actividad/:id',
                 component: NewActivityComponent
+            },
+            {
+                path: 'editar-actividad/:id',
+                component: EditActivityComponent
             }
         ]
     },

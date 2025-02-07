@@ -7,8 +7,7 @@
     </div>
     <p class="title-three">Listado de actividades asignadas para el periodo 2024-2</p>
     <activities-filter></activities-filter>
-    <activities-table></activities-table>
-
+    <activities-table [currentUser]="currentUser()"></activities-table>
 
     <!-- Sección mensaje estado de la autoevaluación -->
     <section id="self-assessment-message-section">
@@ -32,11 +31,11 @@
         <div class="buttons-container" >
             <span class="title-three">Autoevaluación</span>
             <div class="buttons-actions">
-                <button [ngClass]="{'button-fill-out': checkActivitiesPendingVar,
-                ' button-fill-out-disabled': !checkActivitiesPendingVar
+                <button [ngClass]="{'button-fill-out': !checkActivitiesDiliegenciadoVar,
+                ' button-fill-out-disabled': checkActivitiesDiliegenciadoVar
                 }" class="button-actions" (click)="uploadSelfAssessment()"></button>
-                <button [ngClass]="{'button-edit': !checkActivitiesPendingVar,
-                'button-edit-disabled': checkActivitiesPendingVar
+                <button [ngClass]="{'button-edit': checkActivitiesDiliegenciadoVar,
+                'button-edit-disabled': !checkActivitiesDiliegenciadoVar
                 }"  id="activities-table-button-edit" class="button-actions" (click)="editSelfAssessment()"></button>
             </div>
         </div>

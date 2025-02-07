@@ -29,7 +29,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control input-text text-body-custom" id="userIdentification"
                                 placeholder="Digitar respuesta" formControlName="identification" disabled
-                                value="{{userDetails?.usuarioDetalle?.identificacion}}">
+                                value="{{userDetails?.identificacion}}">
                             <label for="userIdentification"
                                 class="label-custom text-body-small-sb">Identificación</label>
                         </div>
@@ -50,7 +50,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control input-text text-body-custom" id="userState"
                                 placeholder="Digitar respuesta" formControlName="state" disabled
-                                value="{{userDetails?.estado}}">
+                                value="{{userDetails?.estadoUsuario?.nombre | titlecase}}">
                             <label for="userState" class="label-custom text-body-small-sb">Estado</label>
                         </div>
                     </div>

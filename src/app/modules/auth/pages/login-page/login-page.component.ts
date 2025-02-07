@@ -32,9 +32,7 @@ export class LoginPageComponent {
    */
   onLogin() {
     this.service.login(this.authForm.value.email, this.authForm.value.password);
-    this.service.getUserInfo(6).subscribe((data) => {
-      console.log(data);
-    });
+    this.service.getUserInfo();
     this.router.navigate(['/app']);
   }
 
@@ -58,7 +56,6 @@ export class LoginPageComponent {
     const control = this.authForm.controls[field];
     const errors = control.errors || {};
     for (const key of Object.keys(errors)) {
-      console.log('key'+key);
       switch (key) {
         case 'required':
           return 'Campo requerido';

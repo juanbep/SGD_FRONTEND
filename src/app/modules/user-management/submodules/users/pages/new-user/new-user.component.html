@@ -3,24 +3,16 @@
 
     <form [formGroup]="newUserForm">
         <fieldset>
-            <legend class="text-body-heavy">Rol nuevo usuario</legend>
+            <legend class="text-body-heavy">Rol(s) nuevo usuario</legend>
             <div class="row row-cols-auto mb-3">
                 <div class="col-3">
-                    <div class="form-floating">
-                        <select class="form-select input-select text-body-custom" id="role" formControlName="role"
-                        [ngClass]="{
-                            'input-select-disabled': isDisabledField('role'),
-                            'error-input': isInvaldField('role'),
-                            'error-select-background': isInvaldField('role')
-                            }">
-                            <option [ngValue]="null" selected>Seleccione un rol</option>
-                            <option *ngFor="let role of roleOptions" [value]="role.value">{{role.text}}</option>
-                        </select>
-                        <label for="role" class="label-custom text-body-small-sb" [ngClass]="{
-                            'error-label': isInvaldField('role')
-                        }">Rol</label>
-                    </div>
-                    <span *ngIf="isInvaldField('role')" class="error-message text-body-small-r ms-1">
+                    <ul>
+                        <li *ngFor="let rol of catalogDataResponse?.roles">
+                            <input type="checkbox" value="{{rol.codigo}}"  (change)="onCheckboxChange($event)"class="form-check-input"> 
+                            <label for="{{rol.codigo}}" class="form-check-label text-body-small-sb">{{rol.nombre}}</label>
+                        </li>
+                    </ul>
+                    <span *ngIf="isInvalidRoleField()" class="error-message text-body-small-r ms-1">
                         {{getFieldError('role')}}
                     </span>
                 </div>
@@ -102,7 +94,8 @@
                                 'error-select-background': isInvaldField('faculty')
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let faculty of facultyOptions" [value]="faculty.value">{{faculty.text}}
+                            <option *ngFor="let faculty of catalogDataResponse?.facultades" [value]="faculty.codigo">
+                                {{faculty.nombre | titlecase}}
                             </option>
                         </select>
                         <label for="faculty" class="label-custom text-body-small-sb" [ngClass]="{
@@ -122,7 +115,8 @@
                                 'error-select-background': isInvaldField('program')
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let program of programOptions" [value]="program.value">{{program.text}}
+                            <option *ngFor="let program of catalogDataResponse?.departamentos" [value]="program.codigo">
+                                {{program.nombre | titlecase}}
                             </option>
                         </select>
                         <label for="program" class="label-custom text-body-small-sb" [ngClass]="{
@@ -143,8 +137,9 @@
 
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let typeContract of typeContractOptions" [value]="typeContract.value">
-                                {{typeContract.text}}</option>
+                            <option *ngFor="let typeContract of catalogDataResponse?.contrataciones"
+                                [value]="typeContract.codigo">
+                                {{typeContract.nombre | titlecase}}</option>
                         </select>
                         <label for="typeContract" class="label-custom text-body-small-sb" [ngClass]="{
                             'error-label': isInvaldField('typeContract')
@@ -163,7 +158,8 @@
                                 'error-select-background': isInvaldField('studies')
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let studies of studiesOptions" [value]="studies.value">{{studies.text}}
+                            <option *ngFor="let studies of catalogDataResponse?.estudios" [value]="studies.codigo">
+                                {{studies.nombre | titlecase}}
                             </option>
                         </select>
                         <label for="studies" class="label-custom text-body-small-sb" [ngClass]="{
@@ -185,7 +181,8 @@
                                 'error-select-background': isInvaldField('category')
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let category of categoryOptions" [value]="category.value">{{category.text}}
+                            <option *ngFor="let category of catalogDataResponse?.categorias" [value]="category.codigo">
+                                {{category.nombre | titlecase}}
                             </option>
                         </select>
                         <label for="category" class="label-custom text-body-small-sb" [ngClass]="{
@@ -205,8 +202,9 @@
                                 'error-select-background': isInvaldField('dedication')
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let dedication of dedicationOptions" [value]="dedication.value">
-                                {{dedication.text}}</option>
+                            <option *ngFor="let dedication of catalogDataResponse?.dedicaciones"
+                                [value]="dedication.codigo">
+                                {{dedication.nombre | titlecase}}</option>
                         </select>
                         <label for="dedication" class="label-custom text-body-small-sb" [ngClass]="{
                             'error-label': isInvaldField('dedication')
@@ -225,7 +223,8 @@
                                 'error-select-background': isInvaldField('state')
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let state of stateOptions" [value]="state.value">{{state.text}}</option>
+                            <option value="1">Activo</option>
+                            <option value="2">Inactivo</option>
                         </select>
                         <label for="state" class="label-custom text-body-small-sb" [ngClass]="{
                             'error-label': isInvaldField('state')

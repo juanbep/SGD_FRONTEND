@@ -78,23 +78,23 @@
                 <span>{{activity.porcentaje}}</span>
             </td>
             <td>
-                <span>{{activity.fuentes[0].estadoFuente}}</span>
+                <span *ngIf="activity.fuentes[0]">{{activity.fuentes[0].estadoFuente}}</span>
             </td>
             <td>
-                <span>{{activity.fuentes[0].calificacion}}</span>
+                <span  *ngIf=" activity.fuentes[0]">{{activity.fuentes[0].calificacion}}</span>
             </td>
             <td>
-                <img *ngIf="activity.fuentes[0].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
+                <img *ngIf="activity.fuentes[0] && activity.fuentes[0].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
                 <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
             </td>
             <td>
-                <span>{{activity.fuentes[1].estadoFuente}}</span>
+                <span *ngIf="activity.fuentes[1]">{{activity.fuentes[1].estadoFuente}}</span>
             </td>
             <td>
-                <span>{{activity.fuentes[1].calificacion}}</span>
+                <span *ngIf="activity.fuentes[1]">{{activity.fuentes[1].calificacion}}</span>
             </td>
             <td>
-                <img *ngIf="activity.fuentes[1].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceTwoModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
+                <img *ngIf="activity.fuentes[1]  && activity.fuentes[1].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceTwoModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
                 <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
             </td> 
         </tr>
