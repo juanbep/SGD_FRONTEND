@@ -1,10 +1,11 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { Activity, ActivityResponse, SourceEvaluation } from '../../../../../../core/models/activities.interface';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
+import { UserInfo } from '../../../../../../core/models/auth.interface';
 declare var bootstrap: any;
 
 @Component({
@@ -18,7 +19,10 @@ declare var bootstrap: any;
   templateUrl: './activities-edit-evaluation.component.html',
   styleUrls: ['./activities-edit-evaluation.component.css']
 })
-export class ActivitiesEditEvaluationComponent  {
+export class ActivitiesEditEvaluationComponent {
+
+  @Input()
+  currentUser: UserInfo | null = null;
 
   private activityFileReport: Activity | null = null;
   private myModal: HTMLElement | null = null;
@@ -40,7 +44,7 @@ export class ActivitiesEditEvaluationComponent  {
     activities: this.formBuilder.array([]),
     observation: [''],
   });
-  
+
   /*
   *  Abre el modal de edición de la evaluación
   */
@@ -57,17 +61,19 @@ export class ActivitiesEditEvaluationComponent  {
   *  Recupera las actividades
   */
   recoverActivities() {
-    this.service.getActivities('92', '', '', '', '',null,null).subscribe({
-      next: data => {
-        this.teacherActivities = data;
-        this.recoverReports();
-        this.recoverSource();
-        this.populateForm();
-      },
-      error: error => {
-        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-      }
-    });
+    if (this.currentUser) {
+      this.service.getActivities(this.currentUser?.oidUsuario, '', '', '', '', null, null).subscribe({
+        next: data => {
+          this.teacherActivities = data;
+          this.recoverReports();
+          this.recoverSource();
+          this.populateForm();
+        },
+        error: error => {
+          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        }
+      });
+    }
   }
 
 
@@ -100,7 +106,7 @@ export class ActivitiesEditEvaluationComponent  {
   *  Llena el formulario con la información de las actividades
   */
   populateForm(): void {
-    if(this.teacherActivities?.content[0].fuentes[0]){
+    if (this.teacherActivities?.content[0].fuentes[0]) {
       this.fileNameSelected = this.teacherActivities?.content[0].fuentes[0].nombreDocumentoFuente || '';
       this.formSelfEvaluation.get('observation')?.setValue(this.teacherActivities?.content[0].fuentes[0].observacion);
       this.teacherActivities?.content.forEach(activitie => {
@@ -315,7 +321,7 @@ export class ActivitiesEditEvaluationComponent  {
   *  Guarda la información de la evaluación
   */
   saveEvaluation(): void {
-    if (this.formSelfEvaluation.valid && !this.errorFileInput && this.selectedSourceFile) {
+    if (this.formSelfEvaluation.valid && !this.errorFileInput && this.selectedSourceFile && this.currentUser) {
       const formValues = this.formSelfEvaluation.value;
       this.teacherActivities?.content.forEach((activitie, index) => {
         activitie.fuentes[0].calificacion = formValues.activities[index].calificacion;
@@ -329,7 +335,7 @@ export class ActivitiesEditEvaluationComponent  {
       this.service.saveSelfAssessment(this.selectedSourceFile!, formValues.observation, this.sendSource, this.filesSelected).subscribe(
         {
           next: (response) => {
-            this.service.getActivities('6', '', '', '', '',0,10).subscribe({
+            this.service.getActivities(this.currentUser?.oidUsuario || 0, '', '', '', '', 0, 10).subscribe({
               next: data => {
                 this.service.setDataActivities(data);
                 this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');

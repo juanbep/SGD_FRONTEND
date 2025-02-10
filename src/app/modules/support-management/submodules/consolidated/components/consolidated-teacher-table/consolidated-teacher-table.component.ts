@@ -1,7 +1,7 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { EmailNotificationComponent } from '../email-notification/email-notification.component';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
-import { Actividades, Consolidated, Fuente, InfoActivities } from '../../../../../../core/models/consolidated.interface';
+import { Actividades, ConsolidatedActivitiesResponse, Fuente, InfoActivitie } from '../../../../../../core/models/consolidated.interface';
 import { CommonModule } from '@angular/common';
 import { ViewDetailsSourceOneComponent } from '../view-details-source-one/view-details-source-one.component';
 import { ViewDetailsSourceTwoComponent } from '../view-details-source-two/view-details-source-two.component';
@@ -32,7 +32,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
 
   consolidatedServicesService = inject(ConsolidatedServicesService);
 
-  consolidatedTeacher: Consolidated | null = null;
+  consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
 
   constructor() {
     effect(() => {
@@ -68,16 +68,16 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
     this.viewDetailsSourceTwoComponent.open(oidActividad);
   }
 
-  getActivities(typeActivity: string): InfoActivities[] {
+  getActivities(typeActivity: string): InfoActivitie[] {
     switch (typeActivity) {
       case 'DOCENCIA':
         return this.consolidatedTeacher?.actividades['DOCENCIA'] || [];
-      case 'TRABAJOS DE INVESTIGACIÓN':
-        return this.consolidatedTeacher?.actividades['TRABAJOS DE INVESTIGACIÓN'] || [];
+      case 'TRABAJO DE INVESTIGACIÓN':
+        return this.consolidatedTeacher?.actividades['TRABAJO DE INVESTIGACIÓN'] || [];
       case 'PROYECTO DE INVESTIGACIÓN':
         return this.consolidatedTeacher?.actividades['PROYECTO DE INVESTIGACIÓN'] || [];
-      case 'TRABAJOS DOCENCIA':
-        return this.consolidatedTeacher?.actividades['TRABAJOS DOCENCIA'] || [];
+      case 'TRABAJO DE DOCENCIA':
+        return this.consolidatedTeacher?.actividades['TRABAJO DE DOCENCIA'] || [];
       case 'ADMINISTRACIÓN':
         return this.consolidatedTeacher?.actividades['ADMINISTRACIÓN'] || [];
       case 'ASESORIA':

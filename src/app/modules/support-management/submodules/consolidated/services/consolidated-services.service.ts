@@ -1,12 +1,12 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { SmConsolidatedServicesService } from '../../../../../core/services/support-management/sm-consolidated-services.service';
-import { Consolidated, Teacher } from '../../../../../core/models/consolidated.interface';
+import { ConsolidatedActivitiesResponse, Teacher } from '../../../../../core/models/consolidated.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ConsolidatedServicesService {
 
     private teacherList: WritableSignal<Teacher[]> = signal([]);
-    private consolidatedTeacher: WritableSignal<Consolidated> = signal({} as Consolidated);
+    private consolidatedTeacher: WritableSignal<ConsolidatedActivitiesResponse> = signal({} as ConsolidatedActivitiesResponse);
 
     constructor(private service: SmConsolidatedServicesService) { }
 
@@ -20,7 +20,7 @@ export class ConsolidatedServicesService {
         return this.teacherList();
     }
 
-    setDataConsolidatedTeacher(newData: Consolidated) {
+    setDataConsolidatedTeacher(newData: ConsolidatedActivitiesResponse) {
         this.consolidatedTeacher.update(data => data = newData);
     }
     
@@ -38,11 +38,11 @@ export class ConsolidatedServicesService {
 
     /*
     * Get info teacher
-    * @param {number} teacherId
-    * @returns {any}
+    * @param {number} idEvaluated
+    * @returns Observable<TeacherInformationResponse> 
     * */
-    getInfoTeacher(teacherId: number): any {
-        return this.service.getInfoTeacher(teacherId);
+    getInfoTeacher(idEvaluated: number) {
+        return this.service.getInfoTeacher(idEvaluated);
     }
 
     /*
@@ -50,8 +50,8 @@ export class ConsolidatedServicesService {
     * @param {number} teacherId
     * @returns {any}
     * */
-    getConsolidatedByTeacher(teacherId: number, department: string){
-        return this.service.getConsolidatedByTeacher(teacherId, department);
+    getConsolidatedByTeacher(teacherId: number, page: number, size: number) {
+        return this.service.getConsolidatedByTeacher(teacherId, page, size);
     }
 
     /*
@@ -59,8 +59,8 @@ export class ConsolidatedServicesService {
     * @param {any} consolidated
     * @returns {any}
     * */
-    saveConsolidated(idEvaluado:number): any {
-        return this.service.saveConsolidated(idEvaluado);
+    saveConsolidated(idEvaluated:number, idEvaluator: number, observation: string): any {
+        return this.service.saveConsolidated(idEvaluated, idEvaluator, observation);
     }
 
 

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { UserInfo } from '../../../../../../core/models/auth.interface';
 declare var bootstrap: any;
 
 @Component({
@@ -17,6 +18,9 @@ declare var bootstrap: any;
   styleUrl: './activities-upload-self-assessment.component.css'
 })
 export class ActivitiesUploadSelfAssessmentComponent {
+
+  @Input()
+  currentUser: UserInfo | null = null;
 
   public openModalOptionSelected: boolean = false;
   
@@ -32,6 +36,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   public errorCalificacion: boolean = false;
   public filesSelected: File[] = [];
 
+
   public fileNameSelected: WritableSignal<string> = signal('');
 
   public activityFileReport: Activity | null = null;
@@ -40,16 +45,20 @@ export class ActivitiesUploadSelfAssessmentComponent {
   private toastr = inject(MessagesInfoService);
 
 
+
+
   recoverActivities(): void {
-    this.service.getActivities('92', '', '', '', '',null,null).subscribe({
-      next: data => {
-        this.userActivities = data.content;
-        this.activityResponse = this.service.getDataActivities();
-      },
-      error: error => {
-        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-      }
-    });
+    if(this.currentUser){
+      this.service.getActivities(this.currentUser.oidUsuario, '', '', '', '',null,null).subscribe({
+        next: data => {
+          this.userActivities = data.content;
+          this.activityResponse = this.service.getDataActivities();
+        },
+        error: error => {
+          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        }
+      });
+    }
   }
 
   /*
@@ -173,37 +182,37 @@ export class ActivitiesUploadSelfAssessmentComponent {
   */
 
   saveEvaluation(): void {
-    if (this.selectedFile) {
-      if (this.userActivities) {
+    if (this.selectedFile && this.currentUser) {
+      if (this.userActivities ) {
         this.sendSource = this.userActivities.map(activitie => ({
           tipoFuente: "1",
           calificacion: activitie.fuentes[0].calificacion,
           oidActividad: activitie.oidActividad,
           informeEjecutivo: activitie?.fuentes[0].nombreDocumentoInforme || ''
         }));
+        this.service.saveSelfAssessment(this.selectedFile, this.observacionSend, this.sendSource, this.filesSelected).subscribe({
+          next: data => {
+            this.service.getActivities(this.currentUser?.oidUsuario || 0 , '', '', '', '',0,10).subscribe({
+              next: data => {
+                this.service.setDataActivities(data);
+                this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');
+              },
+              error: error => {
+                this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+              }
+            });
+  
+          },
+          error: error => {
+            this.toastr.showErrorMessage('Error al guardar la información', 'Error');
+          }
+        });
+        this.evaluationPendingVar = false;
+        this.closeModal();
+      } else {
+        this.toastr.showWarningMessage('Asegurese que las evaluaciones y el soporte se encuentren diligenciados.', 'Advertencia');
       }
-      this.service.saveSelfAssessment(this.selectedFile, this.observacionSend, this.sendSource, this.filesSelected).subscribe({
-        next: data => {
-          this.service.getActivities('6', '', '', '', '',0,10).subscribe({
-            next: data => {
-              this.service.setDataActivities(data);
-              this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');
-            },
-            error: error => {
-              this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-            }
-          });
-
-        },
-        error: error => {
-          this.toastr.showErrorMessage('Error al guardar la información', 'Error');
-        }
-      });
-      this.evaluationPendingVar = false;
-      this.closeModal();
-    } else {
-      this.toastr.showWarningMessage('Asegurese que las evaluaciones y el soporte se encuentren diligenciados.', 'Advertencia');
     }
-  }
+      }
 
 }

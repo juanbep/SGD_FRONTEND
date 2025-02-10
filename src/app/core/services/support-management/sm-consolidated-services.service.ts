@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
-import { Actividad, Consolidated, ConsolidatedTeachersResponse, Teacher } from '../../models/consolidated.interface';
+import { Actividad, ConsolidatedActivitiesResponse, ConsolidatedTeachersResponse, TeacherInformationResponse } from '../../models/consolidated.interface';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -22,6 +22,7 @@ export class SmConsolidatedServicesService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', totalPage.toString());
+      
     return this.httpClient.get<ConsolidatedTeachersResponse>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', {params});
   }
 
@@ -31,8 +32,10 @@ export class SmConsolidatedServicesService {
   * @returns {any}
   * */
 
-  getInfoTeacher(teacherId: number):any{ 
-    return this.httpClient.get(this.baseUrl + '/teachers/' + teacherId);
+  getInfoTeacher(teacherId: number):Observable<TeacherInformationResponse>{ 
+    let params = new HttpParams()
+      .set('idEvaluado', teacherId.toString());
+    return this.httpClient.get<TeacherInformationResponse>(this.baseUrl + '/api/consolidado/informacion-general', {params});
   }
 
   /*
@@ -40,11 +43,12 @@ export class SmConsolidatedServicesService {
   * @param {number} teacherId
   * @returns {any}
   * */
-  getConsolidatedByTeacher(teacherId: number, department: string):Observable<Consolidated>{
+  getConsolidatedByTeacher(teacherId: number, page: number, size: number):Observable<ConsolidatedActivitiesResponse>{
     let params = new HttpParams()
-      .set('idEvaluado', teacherId.toString())
-     
-    return this.httpClient.get<Consolidated>(this.baseUrl + '/api/consolidado/generarConsolidado', {params});
+      .set('idEvaluado', teacherId)
+      .set('page', page)
+      .set('size', size);
+    return this.httpClient.get<ConsolidatedActivitiesResponse>(this.baseUrl + '/api/consolidado/actividades', {params});
   }
 
   /*
@@ -52,9 +56,11 @@ export class SmConsolidatedServicesService {
   * @param {any} consolidated
   * @returns {any}
   * */
-  saveConsolidated(idEvaluado:number):any{
-    let params = new HttpParams().set('idEvaluado', 15).set('idEvaluador',18).set('nota','nota');
-    return this.httpClient.post(this.baseUrl + '/api/consolidado/aprobarConsolidado', '', { params: params, responseType: 'text' });
+  saveConsolidated(idEvaluated:number, idEvaluator:number, observation: string):any{
+    let params = new HttpParams()
+    .set('idEvaluado',idEvaluated)
+    .set('nota',observation);
+    return this.httpClient.post(this.baseUrl + '/api/consolidado/aprobar', '', { params: params, responseType: 'text' });
   }
 
   /*

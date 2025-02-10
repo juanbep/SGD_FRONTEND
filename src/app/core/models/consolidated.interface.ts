@@ -13,6 +13,7 @@ export interface ConsolidatedTeachersResponse {
 }
 
 export interface Teacher {
+    oidUsuario: number;
     nombreDocente: string;
     identificacion: string;
     contratacion: string;
@@ -36,59 +37,77 @@ export interface Sort {
 }
 
 
+// Interfaz que representa la estructura de la información de un docente
+
+export interface TeacherInformationResponse {
+    nombreDocente:        string;
+    numeroIdentificacion: string;
+    periodoAcademico:     string;
+    facultad:             string;
+    departamento:         string;
+    categoria:            string;
+    tipoContratacion:     string;
+    dedicacion:           string;
+    horasTotales:         number;
+    totalPorcentaje:      number;
+    totalAcumulado:       number;
+    currentPage:          number;
+    pageSize:             number;
+    totalItems:           number;
+    totalPages:           number;
+}
+
+
 /*
 * Interfaz que representa la estructura de un consolidado
 * */
 
-export interface Consolidated {
-    nombreDocente: string;
-    numeroIdentificacion: string;
-    periodoAcademico: string;
-    facultad: string;
-    departamento: string;
-    categoria: string;
-    tipoContratacion: string;
-    dedicacion: string;
+
+export interface ConsolidatedActivitiesResponse {
     actividades: Actividades;
-    totalHorasSemanales: number;
-    totalPorcentaje: number;
-    totalAcumulado: number;
+    currentPage: number;
+    pageSize:    number;
+    totalItems:  number;
+    totalPages:  number;
 }
 
-export interface Actividades {
-    "DOCENCIA": InfoActivities[];
-    "TRABAJOS DE INVESTIGACIÓN": InfoActivities[];
-    "PROYECTO DE INVESTIGACIÓN": InfoActivities[];
-    "TRABAJOS DOCENCIA": InfoActivities[];
-    "ADMINISTRACIÓN": InfoActivities[];
-    "EXTENSIÓN": InfoActivities[];
-    "ASESORÍA": InfoActivities[];
-    "CAPACITACIÓN": InfoActivities[];
-    "OTROS SERVICIOS": InfoActivities[];
-}
-
-export interface InfoActivities {
-    promedio: number;
-    codigoActividad: string;
+export interface InfoActivitie {
+    totalFuentes: number;
+    promedio:     number;
     oidActividad: number;
-    porcentaje: number;
-    horas: number;
-    acumulado: number;
-    fuentes: Fuente[];
-    nombre: string;
+    porcentaje:   number;
+    horas:        number;
+    acumulado:    number;
+    fuentes:      Fuente[];
+    nombre:       string;
 }
 
 export interface Fuente {
-    oidFuente: number;
-    tipoFuente: string;
-    calificacion: number;
-    estadoFuente: EstadoFuente;
+    oidFuente:              number;
+    tipoFuente:             string;
+    calificacion:           null;
+    nombreDocumentoFuente:  null;
+    nombreDocumentoInforme: null;
+    observacion:            null;
+    fechaCreacion:          null;
+    fechaActualizacion:     null;
+    estadoFuente:           string;
 }
 
-export enum EstadoFuente {
-    Diligenciado = "Diligenciado",
-    Pendiente = "Pendiente",
+
+export interface Actividades {
+    "DOCENCIA": InfoActivitie[];
+    "TRABAJO DE INVESTIGACIÓN": InfoActivitie[];
+    "PROYECTO DE INVESTIGACIÓN": InfoActivitie[];
+    "TRABAJO DE DOCENCIA": InfoActivitie[];
+    "ADMINISTRACIÓN": InfoActivitie[];
+    "EXTENSIÓN": InfoActivitie[];
+    "ASESORÍA": InfoActivitie[];
+    "CAPACITACIÓN": InfoActivitie[];
+    "OTROS SERVICIOS": InfoActivitie[];
 }
+
+
 
 
 //Información actividad

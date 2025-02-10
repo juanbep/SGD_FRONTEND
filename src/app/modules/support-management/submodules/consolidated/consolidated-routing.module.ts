@@ -10,7 +10,7 @@ export const routes: Routes = [
         component: TeachersListComponent 
     },
     {
-      path: 'consolidado-docente',
+      path: 'consolidado-docente/:id',
       component: ConsolidatedTeacherComponent
     }
 ]

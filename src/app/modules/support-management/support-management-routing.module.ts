@@ -10,20 +10,21 @@ const routes: Routes = [
     children: [
       {
         path: 'actividades',
-        resolve: { data: DataResolverService},
+        resolve: { teacher: DataResolverService},
         canActivate: [RoleGuard],
         data: { roles: ['DOCENTE'] },
         loadChildren: () => import('./submodules/activities/activities-routing.module' ).then(m => m.ActivitiesRoutingModule),
       },
       {
         path: 'responsabilidades',
-        resolve: { data: DataResolverService},
+        resolve: { teacher: DataResolverService},
         canActivate: [RoleGuard],
         data: { roles: ['DOCENTE','JEFE DE DEPARTAMENTO','ESTUDIANTE'] },
         loadChildren: () => import('./submodules/responsibilities/responsibilities-routing.module').then(m => m.ResponsibilitiesRoutingModule)
       },
       {
         path: 'consolidado',
+        resolve: { teacher: DataResolverService},
         canActivate: [RoleGuard],
         data: { roles: ['JEFE DE DEPARTAMENTO'] },
         loadChildren: () => import('./submodules/consolidated/consolidated-routing.module').then(m => m.ConsolidatedRoutingModule)

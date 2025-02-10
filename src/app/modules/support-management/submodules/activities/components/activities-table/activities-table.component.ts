@@ -52,7 +52,7 @@ export class ActivitiesTableComponent implements OnInit {
 
   getAllActivities(page: number, totalPage: number) {
     if (this.currentUser) {
-      this.activitiesServices.getActivities(this.currentUser.oidUsuario.toString(), '', '', '', '', page - 1, totalPage).subscribe({
+      this.activitiesServices.getActivities(this.currentUser.oidUsuario, '', '', '', '', page - 1, totalPage).subscribe({
         next: data => {
           this.activities = data;
           this.getSource();

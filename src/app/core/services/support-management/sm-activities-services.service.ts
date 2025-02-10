@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessagesInfoService } from '../../../shared/services/messages-info.service';
 import { ActivityResponse, SourceEvaluation } from '../../models/activities.interface';
+import { TeacherInformationResponse } from '../../models/consolidated.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class SmActivitiesServicesService {
     * @param roles:string
     * @returns void
     */
-  getActivities(evaluatedId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage:number |null ): Observable<ActivityResponse> {
+  getActivities(evaluatedId: number, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage:number |null ): Observable<ActivityResponse> {
     let params = new HttpParams()
       .set('idEvaluado', evaluatedId)
       .set('codigoActividad', activityCode)
@@ -33,6 +34,15 @@ export class SmActivitiesServicesService {
       .set('page', page? page.toString() : '' )
       .set('size', totalPage? totalPage.toString() : '' );
     return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, { params });
+  }
+
+  /*
+    * Method to get the general information of the teacher
+    * @param idEvaluated:string
+    * @returns Observable<TeacherInformationResponse> 
+    */
+  getInfoTeacher(idEvaluated: string): Observable<TeacherInformationResponse> {
+    return this.httpClient.get<TeacherInformationResponse>(`${this.baseUrl}/api/consolidado/informacion-general/${idEvaluated}`);
   }
 
   /*

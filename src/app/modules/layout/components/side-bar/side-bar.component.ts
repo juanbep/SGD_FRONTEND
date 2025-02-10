@@ -16,6 +16,7 @@ export class SideBarComponent implements OnInit {
   public isSidebarActive: boolean = true;
   public sidebarItems = [
     {
+      role:['ADMINISTRADOR'],
       label: 'Periodo académico',
       icon: 'assets/icons/sidebar/icon-calendar.svg',
       sub:[
@@ -26,6 +27,7 @@ export class SideBarComponent implements OnInit {
       ]
     },
     {
+      role:['ADMINISTRADOR'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
@@ -40,6 +42,7 @@ export class SideBarComponent implements OnInit {
       ]
     },
     {
+      
       label: 'Evaluación Docente', 
       icon: 'assets/icons/sidebar/icon-evaluation.svg', 
       sub: [

@@ -20,7 +20,7 @@ export class ActivitiesServicesService {
         return this.userActivities();
     }
     
-    getActivities(evaluatedId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage:number | null) {
+    getActivities(evaluatedId: number, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage:number | null) {
         return this.smActivitiesServicesService.getActivities(evaluatedId, activityCode, activityType, evaluatorName, roles, page, totalPage);    
     }
 
