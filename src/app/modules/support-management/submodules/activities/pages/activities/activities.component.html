@@ -33,10 +33,10 @@
             <div class="buttons-actions">
                 <button [ngClass]="{'button-fill-out': !checkActivitiesDiliegenciadoVar,
                 ' button-fill-out-disabled': checkActivitiesDiliegenciadoVar
-                }" class="button-actions" (click)="uploadSelfAssessment()"></button>
+                }" class="button-actions" (click)="uploadSelfAssessment()" aria-label="Upload Self Assessment"></button>
                 <button [ngClass]="{'button-edit': checkActivitiesDiliegenciadoVar,
                 'button-edit-disabled': !checkActivitiesDiliegenciadoVar
-                }"  id="activities-table-button-edit" class="button-actions" (click)="editSelfAssessment()"></button>
+                }"  id="activities-table-button-edit" class="button-actions" (click)="editSelfAssessment()" aria-label="Edit Self Assessment"></button>
             </div>
         </div>
     </section>

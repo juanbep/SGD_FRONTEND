@@ -48,9 +48,7 @@ export class UsersFilterComponent {
   }
 
   public recoverCatalogs() {
-    this.catalogDataService.getCatalogData().subscribe((response) => {
-      this.catalogData = response;
-    });
+    this.catalogData = this.catalogDataService.catalogDataSignal;
   }
 
   searchUsers() {

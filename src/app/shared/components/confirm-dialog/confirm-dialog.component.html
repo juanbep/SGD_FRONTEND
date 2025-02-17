@@ -2,7 +2,14 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="title-three mx-3">{{this.title}}</span>
+                <div class="row row-cols-auto align-items-center">
+                    <div class="col" class="align-self-center">
+                        <img src="/assets/icons/messages/icon-info.svg" alt="">
+                    </div>
+                    <div class="col">
+                        <span class="title-three mx-3">{{this.title}}</span>
+                    </div>
+                </div>
             </div>
             <div class="modal-body">
                 <span class="text-body-regular">{{this.message}}</span>

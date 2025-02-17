@@ -41,6 +41,7 @@ export interface Sort {
 
 export interface TeacherInformationResponse {
     nombreDocente:        string;
+    correoElectronico:    string;
     numeroIdentificacion: string;
     periodoAcademico:     string;
     facultad:             string;

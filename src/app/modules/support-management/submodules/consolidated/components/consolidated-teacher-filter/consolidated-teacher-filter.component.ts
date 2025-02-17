@@ -1,40 +1,51 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
+import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
+import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 
 @Component({
   selector: 'consolidated-teacher-filter',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule,
+    ReactiveFormsModule
   ],
   templateUrl: './consolidated-teacher-filter.component.html',
   styleUrl: './consolidated-teacher-filter.component.css'
 })
-export class ConsolidatedTeacherFilterComponent {
+export class ConsolidatedTeacherFilterComponent implements OnInit {
 
+  private formBuilder: FormBuilder = inject(FormBuilder);
+  private router = inject(ActivatedRoute);
+  private ConsolidatedServicesService = inject(ConsolidatedServicesService);
 
-  typeActivity = [
-    { valor: 'default', texto: 'Tipo actividad' },
-    { valor: 'opcion1', texto: 'Docencia' },
-    { valor: 'opcion2', texto: 'Trabajos Docencia' },
-    { valor: 'opcion3', texto: 'Trabajos de Investigacion' },
-    { valor: 'opcion4', texto: 'Administracion' },
-    { valor: 'opcion5', texto: 'Otros servicios' }
-  ];
+  public catalogData: CatalogDataResponse | null = null;
 
-  public valuetypeActivity: string = this.typeActivity[0].texto;
+  formFilter: FormGroup = this.formBuilder.group({
+    activityName: [null],
+    activityType: [null],
+    sourceType: [null],
+    sourceState: [null],
+  });
 
-  seleccionarOpcionActivity(event:Event, opcion: { valor: string, texto: string }): void {
-    event.preventDefault();
-    this.valuetypeActivity = opcion.texto;
+  ngOnInit(): void {
+    this.catalogData = this.router.snapshot.data['catalog'];
   }
 
-  filterAction(){
-
+  filterAction() {
+    const activityType = this.formFilter.get('activityType')?.value || '';
+    const activityName = this.formFilter.get('activityName')?.value || '';
+    const sourceType = this.formFilter.get('sourceType')?.value || '';
+    const sourceState = this.formFilter.get('sourceState')?.value || '';
+    this.ConsolidatedServicesService.setFilterParams({activityType, activityName, sourceType, sourceState});
   }
 
-  clearAction(){
-    
+  clearAction() {
+    this.formFilter.reset();
+    this.ConsolidatedServicesService.setFilterParams({activityType: null, activityName: null , sourceType: null, sourceState: null});
   }
 
 

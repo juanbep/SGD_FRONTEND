@@ -101,9 +101,7 @@ export class EditUserComponent implements OnInit {
   * Method to recover the catalog data
   * */
   recoverCatalogData(): void {
-    this.catalogDataService.getCatalogData().subscribe((response) => {
-      this.catalogData = response;
-    });
+    this.catalogData = this.catalogDataService.catalogDataSignal;
   }
 
   /*

@@ -85,7 +85,7 @@
             </td>
             <td>
                 <img *ngIf="activity.fuentes[0] && activity.fuentes[0].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
-                <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
+                <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="activityToSendEmailSelected(activity,activity.fuentes[0])" style="cursor: pointer;">
             </td>
             <td>
                 <span *ngIf="activity.fuentes[1]">{{activity.fuentes[1].estadoFuente}}</span>
@@ -95,12 +95,16 @@
             </td>
             <td>
                 <img *ngIf="activity.fuentes[1]  && activity.fuentes[1].estadoFuente.includes('Diligenciado')" (click)="viewDetailsSourceTwoModal(activity.oidActividad)" src="/assets/icons/tables/icon-view.svg" alt="view-icon" style="cursor: pointer;">
-                <img src="/assets/icons/tables/icon-message.svg" alt="message-icon" (click)="emailNotificationModal()" style="cursor: pointer;">
+                <img src="/assets/icons/tables/icon-message.svg" alt="message-icon"  (click)="activityToSendEmailSelected(activity,activity.fuentes[1])" style="cursor: pointer;">
             </td> 
         </tr>
     </tbody>
 </table>
 
-<app-email-notification></app-email-notification>
+<div class="mb-3"></div>
+
+<shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="consolidatedTeacher?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
+
 <app-view-details-source-one></app-view-details-source-one>
 <app-view-details-source-two></app-view-details-source-two>
+<shared-email [remitente]="currentUser?.correo || ''" [destinatario]="teacherOfConsolidated?.correoElectronico || ''"></shared-email>

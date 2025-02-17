@@ -1,19 +1,30 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { environments } from '../../../environments/environments';
 import { Observable } from 'rxjs';
 import { CatalogDataResponse } from '../../core/models/catalogData.interface';
 import { HttpClient } from '@angular/common/http';
+import { CatalogServicesService } from '../../core/services/catalog-services.service';
 
 @Injectable({providedIn: 'root'})
 export class CatalogDataService {
 
-    private baseUrl: string = environments.baseUrl;
+    private catalogServicesService = inject(CatalogServicesService);
 
-    httpClient: HttpClient = inject(HttpClient);
+    private catalogData: WritableSignal<CatalogDataResponse | null> = signal(null);
 
+    get catalogDataSignal() {
+        return this.catalogData();
+    }
 
-    getCatalogData(): Observable<CatalogDataResponse> {
-        return this.httpClient.get<CatalogDataResponse>(`${this.baseUrl}/api/catalogo/obtenerCatalogo`);
+    
+    setCatalogData(newData: CatalogDataResponse) {
+        this.catalogData.update(data => data = newData);
+    }
+
+    getCatalogData() {
+        return this.catalogServicesService.getCatalog().subscribe(data => {
+            this.catalogData.set(data);
+        });
     }
 
 }

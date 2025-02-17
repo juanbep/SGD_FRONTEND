@@ -1,19 +1,23 @@
-import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
-import { EmailNotificationComponent } from '../email-notification/email-notification.component';
+import { Component, effect, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
-import { Actividades, ConsolidatedActivitiesResponse, Fuente, InfoActivitie } from '../../../../../../core/models/consolidated.interface';
+import { Actividades, ConsolidatedActivitiesResponse, Fuente, InfoActivitie, TeacherInformationResponse } from '../../../../../../core/models/consolidated.interface';
 import { CommonModule } from '@angular/common';
 import { ViewDetailsSourceOneComponent } from '../view-details-source-one/view-details-source-one.component';
 import { ViewDetailsSourceTwoComponent } from '../view-details-source-two/view-details-source-two.component';
+import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
+import { EmailComponent } from '../../../../../../shared/components/email/email.component';
+import { User } from '../../../../../../core/models/users.interfaces';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'consolidated-teacher-table',
   standalone: true,
   imports: [
-    EmailNotificationComponent,
     CommonModule,
     ViewDetailsSourceOneComponent,
-    ViewDetailsSourceTwoComponent
+    ViewDetailsSourceTwoComponent,
+    PaginatorComponent,
+    EmailComponent
   ],
   templateUrl: './consolidated-teacher-table.component.html',
   styleUrl: './consolidated-teacher-table.component.css'
@@ -21,18 +25,31 @@ import { ViewDetailsSourceTwoComponent } from '../view-details-source-two/view-d
 export class ConsolidatedTeacherTableComponent implements OnInit {
 
 
-  @ViewChild(EmailNotificationComponent)
-  emailNotificationComponent!: EmailNotificationComponent;
-
   @ViewChild(ViewDetailsSourceOneComponent)
   viewDetailsSourceOneComponent!: ViewDetailsSourceOneComponent;
 
   @ViewChild(ViewDetailsSourceTwoComponent)
   viewDetailsSourceTwoComponent!: ViewDetailsSourceTwoComponent;
 
-  consolidatedServicesService = inject(ConsolidatedServicesService);
+  @ViewChild(EmailComponent)
+  emailComponent: EmailComponent | null = null;
 
-  consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
+  @Output()
+  pageChange: EventEmitter<number> = new EventEmitter<number>();
+
+  @Input()
+  teacherOfConsolidated :TeacherInformationResponse | null = null;
+
+  @Input()
+  currentPage: number = 1;
+
+  private consolidatedServicesService = inject(ConsolidatedServicesService);
+  private router = inject(ActivatedRoute);
+
+  public consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
+  public messageEmail: string = '';
+  public subjectEmail: string = '';
+  public currentUser: User| null = null;
 
   constructor() {
     effect(() => {
@@ -42,7 +59,9 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentUser = this.router.snapshot.data['teacher'];
     this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
+    
   }
 
 
@@ -56,8 +75,14 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   }
 
 
-  public emailNotificationModal() {
-    this.emailNotificationComponent.openModal();
+  public emailNotificationModal(activity: InfoActivitie, sourceSelected: Fuente) {
+    if (this.emailComponent && activity) {
+      this.messageEmail = 
+        `Evaluado: ${this.teacherOfConsolidated?.nombreDocente}
+Actividad: ${activity.nombre}
+Estado fuente: ${sourceSelected.estadoFuente}`;
+      this.emailComponent.open(this.messageEmail);
+    }
   }
 
   public viewDetailsSourceModal(oidActividad: number) {
@@ -94,5 +119,29 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
     }
   }
 
+  pageChanged(event: number) {
+    this.currentPage = event;
+    this.pageChange.emit(this.currentPage);
+  }
+
+  activityToSendEmailSelected(activitySelected: InfoActivitie, sourceSelected: Fuente){
+    if(activitySelected && sourceSelected)  
+    {
+      this.emailNotificationModal(activitySelected, sourceSelected);
+    }
+  }
+
+  recoverUserInfo(idUser:number, userIn:User | null){
+    this.consolidatedServicesService.getUserInfo(idUser).subscribe(
+        {
+          next:User =>{
+            userIn = User;
+          },
+          error: error =>{
+            userIn = null;
+          }
+        }
+     );
+  }
 
 }

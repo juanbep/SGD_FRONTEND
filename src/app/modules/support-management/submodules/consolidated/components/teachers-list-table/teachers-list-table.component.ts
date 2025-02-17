@@ -19,14 +19,13 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 })
 export class TeacherListTableComponent implements OnInit {
 
-  public currentPage: number = 1;
-
+  
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private toastr = inject(MessagesInfoService);
-
-  //TODO Declarar variables
-  teacherServiceResponse: ConsolidatedTeachersResponse | null = null;
-  teacherList: Teacher[] = [];
+  
+  public currentPage: number = 1;
+  public teacherServiceResponse: ConsolidatedTeachersResponse | null = null;
+  public teacherList: Teacher[] = [];
 
   ngOnInit(): void {
     this.recoverTeachers(this.currentPage, 10);

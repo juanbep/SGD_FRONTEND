@@ -1,3 +1,4 @@
+/* Estilos concretos y claros; se recomienda probar en distintos dispositivos y revisar responsividad si aplica */
 section {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -23,8 +24,6 @@ section {
     border-radius: 100px;
     border: none;
     background: var(--blue);
-
-
 }
 
 #consolidate-teacher-button-main{

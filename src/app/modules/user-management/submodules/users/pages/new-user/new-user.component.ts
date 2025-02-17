@@ -101,9 +101,7 @@ export class NewUserComponent implements OnInit {
   * Method to get the catalog data
   */
   recoverCatalogData() {
-    this.catalogDataService.getCatalogData().subscribe((response) => {
-      this.catalogDataResponse = response;
-    });
+    this.catalogDataResponse = this.catalogDataService.catalogDataSignal;
   }
 
 

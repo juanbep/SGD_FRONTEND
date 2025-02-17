@@ -18,12 +18,12 @@ export class SmConsolidatedServicesService {
     * @returns {any}
     * */
 
-  getTeachers(page:number, totalPage:number):Observable<ConsolidatedTeachersResponse>{
+  getTeachers(page: number, totalPage: number): Observable<ConsolidatedTeachersResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', totalPage.toString());
-      
-    return this.httpClient.get<ConsolidatedTeachersResponse>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', {params});
+
+    return this.httpClient.get<ConsolidatedTeachersResponse>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', { params });
   }
 
   /*
@@ -32,10 +32,10 @@ export class SmConsolidatedServicesService {
   * @returns {any}
   * */
 
-  getInfoTeacher(teacherId: number):Observable<TeacherInformationResponse>{ 
+  getInfoTeacher(teacherId: number): Observable<TeacherInformationResponse> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId.toString());
-    return this.httpClient.get<TeacherInformationResponse>(this.baseUrl + '/api/consolidado/informacion-general', {params});
+    return this.httpClient.get<TeacherInformationResponse>(this.baseUrl + '/api/consolidado/informacion-general', { params });
   }
 
   /*
@@ -43,12 +43,24 @@ export class SmConsolidatedServicesService {
   * @param {number} teacherId
   * @returns {any}
   * */
-  getConsolidatedByTeacher(teacherId: number, page: number, size: number):Observable<ConsolidatedActivitiesResponse>{
+  getConsolidatedByTeacher(teacherId: number, page: number, size: number): Observable<ConsolidatedActivitiesResponse> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId)
       .set('page', page)
       .set('size', size);
-    return this.httpClient.get<ConsolidatedActivitiesResponse>(this.baseUrl + '/api/consolidado/actividades', {params});
+    return this.httpClient.get<ConsolidatedActivitiesResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
+  }
+
+  getConsolidatedActitiesTeacherByParams(teacherId: number, page: number, size: number, activityType: string, activityName: string, sourceType:string, sourceState:string): Observable<ConsolidatedActivitiesResponse> {
+    let params = new HttpParams()
+      .set('idEvaluado', teacherId)
+      .set('page', page)
+      .set('size', size)
+      .set('idTipoActividad', activityType)
+      .set('nombreActividad', activityName)
+      .set('idTipoFuente' , sourceType)
+      .set('idEstadoFuente', sourceState);
+    return this.httpClient.get<ConsolidatedActivitiesResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
   }
 
   /*
@@ -56,10 +68,11 @@ export class SmConsolidatedServicesService {
   * @param {any} consolidated
   * @returns {any}
   * */
-  saveConsolidated(idEvaluated:number, idEvaluator:number, observation: string):any{
+  saveConsolidated(idEvaluated: number, idEvaluator: number, observation: string): any {
     let params = new HttpParams()
-    .set('idEvaluado',idEvaluated)
-    .set('nota',observation);
+      .set('idEvaluado', idEvaluated)
+      .set('idEvaluador', idEvaluator)
+      .set('nota', observation);
     return this.httpClient.post(this.baseUrl + '/api/consolidado/aprobar', '', { params: params, responseType: 'text' });
   }
 
@@ -69,7 +82,7 @@ export class SmConsolidatedServicesService {
   * @param {any} email
   * @returns {any}
   * */
-  getConslidatedByTeacher(teacherId: number):any{
+  getConslidatedByTeacher(teacherId: number): any {
     return this.httpClient.get(this.baseUrl + '/consolidated/' + teacherId);
   }
 
@@ -78,14 +91,14 @@ export class SmConsolidatedServicesService {
   * @param {any} consolidated
   * @returns {any}
   * */
-  sendEmail(emails: string[], observation:string):any{
+  sendEmail(emails: string[], observation: string): any {
     let params = new HttpParams()
       .set('observation', observation)
       .set('emails', emails.toString());
-    return this.httpClient.post(`${this.baseUrl}/email`, {params});
+    return this.httpClient.post(`${this.baseUrl}/email`, { params });
   }
 
-  
+
   /*
     * Method to download the source file
     * @param idSource:number
@@ -102,7 +115,7 @@ export class SmConsolidatedServicesService {
     * @returns void
     * */
 
-  downloadReportFile(idSource: number, report:boolean ): Observable<any> {
+  downloadReportFile(idSource: number, report: boolean): Observable<any> {
     let params = new HttpParams().set('report', report);
     return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { params, responseType: 'blob' });
   }
@@ -112,7 +125,7 @@ export class SmConsolidatedServicesService {
   * @param evaluatedId: string
   * @returns observable<Actividad>
   * */
-  getActivityByOidActivity(oidActivity: number):Observable<Actividad>{
+  getActivityByOidActivity(oidActivity: number): Observable<Actividad> {
     return this.httpClient.get<Actividad>(`${this.baseUrl}/actividad/find/${oidActivity}`);
   }
 

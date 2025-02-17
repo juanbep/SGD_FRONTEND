@@ -1,0 +1,38 @@
+.subject{
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--blue);
+    background: var(--white);
+    outline: none;
+}
+
+.message {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--blue);
+    background: var(--white);
+    outline: none;
+}
+
+.cc {
+    width: 96%;
+    height: 30px;
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--blue);
+    background: var(--white);
+    outline: none;
+}

@@ -93,9 +93,7 @@ export class NewActivityComponent implements OnInit {
   }
 
   recoverCatalogData(): void {
-    this.catalogDataService.getCatalogData().subscribe((response) => {
-      this.catalogResponse = response;
-    });
+    this.catalogResponse = this.catalogDataService.catalogDataSignal;
   }
 
   recoverUserById(id: number | null): void {

@@ -33,9 +33,7 @@ export class ResponsibilitiesFilterComponent {
      }
    
      recoverCatalog(){
-      this.catalogDataService.getCatalogData().subscribe((response)=>{
-         this.catalogDataResponse = response;
-       })
+      this.catalogDataResponse = this.catalogDataService.catalogDataSignal;
      }
    
      searchActivities(){

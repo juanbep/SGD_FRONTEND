@@ -5,39 +5,58 @@
     </div>
 
     <div class="col">
-        <div class="row row-cols-auto">
-            <!-- Activitie filter -->
-            <div class="col" style="margin: 1px;">
-                <input type="text" id="activity" class="button-main" placeholder="Actividad">
-            </div>
-            <!-- Type Activitie filter -->
-            <div class="col" style="margin: 1px; padding-left: 6px; padding-right: 6px">
-                <div class="dropdown">
-                    <button class="dropbtn">
-                        <span>{{valuetypeActivity}}</span>
-                        <img src="assets\icons\tables\icon-down.svg" alt="">
-                    </button>
-                    <div class="dropdown-content">
-                        <div *ngFor="let opcion of typeActivity;">
-                            <a *ngIf="opcion.valor!='default'" href="#"
-                                (click)="seleccionarOpcionActivity($event, opcion)">
-                                <span class="text-body-small-r">{{opcion.texto}}</span>
-                            </a>
-                        </div>
+        <form [formGroup]="formFilter" (submit)="filterAction()">
+            <div class="row row-cols-auto">
+                <!-- Tipo de actividad -->
+                <div class="col m-1">
+                    <select class="input-select-filter" formControlName="activityType">
+                        <option [value]="null" selected>Tipo de actividad</option>
+                        <option *ngFor="let option of catalogData?.tipoActividades" value="{{option.codigo}}">
+                            {{option.nombre | titlecase}}
+                        </option>
+                    </select>
+                </div>
+                <!-- Nombre de la actividad -->
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre actividad"
+                        formControlName="activityName">
+                </div>
+                <!-- Tipo de fuente -->
+                <div class="col m-1">
+                    <select class="input-select-filter" formControlName="sourceType">
+                        <option [value]="null" selected>Tipo de fuente</option>
+                        <option value="1">
+                            Fuente 1
+                        </option>
+                        <option value="2">
+                            Fuente 2
+                        </option>
+                    </select>
+                </div>
+                <!-- Estado de la fuente -->
+                <div class="col m-1">
+                    <select class="input-select-filter" formControlName="sourceState">
+                        <option [value]="null" selected>Ordenar estado por</option>
+                        <option value="2">
+                            Diligenciado
+                        </option>
+                        <option value="1">
+                            Pendiente
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <button type="submit" class="clearButton col" (click)="filterAction()">
+                            <span style="color: var(--white);">Buscar</span>
+                        </button>
+                        <button class="clearButton col" (click)="clearAction()">
+                            <span style="color: var(--white);">Limpiar</span>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="row">
-                    <button class="clearButton col" (click)="filterAction()">
-                        <span style="color: var(--white);">Buscar</span>
-                    </button>
-                    <button class="clearButton col" (click)="clearAction()">
-                        <span style="color: var(--white);">Limpiar</span>
-                    </button>
-                </div>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 <div class="line">

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role.guard';
 import { DataResolverService } from '../../resolvers/data.resolver.service';
+import { CatalogResolverService } from '../../resolvers/catalog.resolver.service';
 
 const routes: Routes = [
   {
@@ -24,7 +25,7 @@ const routes: Routes = [
       },
       {
         path: 'consolidado',
-        resolve: { teacher: DataResolverService},
+        resolve: {catalog: CatalogResolverService, teacher: DataResolverService},
         canActivate: [RoleGuard],
         data: { roles: ['JEFE DE DEPARTAMENTO'] },
         loadChildren: () => import('./submodules/consolidated/consolidated-routing.module').then(m => m.ConsolidatedRoutingModule)

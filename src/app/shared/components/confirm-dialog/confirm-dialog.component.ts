@@ -17,7 +17,7 @@ export class ConfirmDialogComponent {
   message: string | null = null;
   
   @Output() 
-  confirm: EventEmitter<void | boolean> = new EventEmitter<void | boolean>();
+  confirm: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   open(){
     const modal = new bootstrap.Modal(document.getElementById('modal-confirm-dialog'));

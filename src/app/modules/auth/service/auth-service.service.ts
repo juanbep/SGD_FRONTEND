@@ -34,7 +34,7 @@ export class AuthServiceService {
    * @returns 
    */
   getUserInfo() {
-    return this.service.getUserInfo(137).pipe(
+    return this.service.getUserInfo(116).pipe(
       tap(user => {
         this._currentUser.set(user)
         localStorage.setItem('userRoles',JSON.stringify(user.roles.map(role => role.nombre)));

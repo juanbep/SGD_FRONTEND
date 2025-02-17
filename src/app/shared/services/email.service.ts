@@ -6,17 +6,17 @@ import { Params } from '@angular/router';
 @Injectable({providedIn: 'root'})
 export class EmailService {
     
-    private baseUrl: string = environments.baseUrl;
+    private baseUrl: string = 'http://localhost:8081';
     
     constructor(private httpClient: HttpClient) { }
 
     sendEmail(emails: string[], subject: string, message: string) {
         const params: Params = {
-            emails: emails.toString(),
-            subject: subject,
-            message: message
+            correos: emails,
+            asunto: subject,
+            mensaje: message
         };
-        return this.httpClient.post(`${this.baseUrl}/mensajeria/enviarEmail`, {params});
+        return this.httpClient.post(`${this.baseUrl}/mensajeria/enviarEmail`, {...params});
     }
     
 }

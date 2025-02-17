@@ -1,6 +1,7 @@
 /* 
     • Estilos específicos y concisos.
     • Confirmar que se cubren todos los estados interactivos necesarios para los botones.
+    • Buen estilo general; revisar estados interactivos adicionales si es necesario
 */
 #activities-table-button-edit {
     border-top-right-radius: 8px;

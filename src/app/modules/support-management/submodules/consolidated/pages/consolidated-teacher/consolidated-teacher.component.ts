@@ -1,51 +1,56 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { ConsolidatedTeacherFilterComponent } from "../../components/consolidated-teacher-filter/consolidated-teacher-filter.component";
 import { ConsolidatedTeacherTableComponent } from "../../components/consolidated-teacher-table/consolidated-teacher-table.component";
-import { ApproveConsolidatedConfirmDialogComponent } from '../../components/approve-consolidated-confirm-dialog/approve-consolidated-confirm-dialog.component';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { ConsolidatedActivitiesResponse, TeacherInformationResponse } from '../../../../../../core/models/consolidated.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ActivatedRoute } from '@angular/router';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 
 const SIZE_PAGE = 10
+const TITTLE_MESSAGE = 'Aprobar consolidado';
+const CONFIRM_MESSAGE = '¿Está seguro que desea aprobar el consolidado?';
 
 @Component({
   selector: 'app-consolidated-teacher',
   standalone: true,
-  imports: [ConsolidatedTeacherFilterComponent, ConsolidatedTeacherTableComponent, ApproveConsolidatedConfirmDialogComponent],
+  imports: [ConsolidatedTeacherFilterComponent, ConsolidatedTeacherTableComponent, ConfirmDialogComponent],
   templateUrl: './consolidated-teacher.component.html',
   styleUrl: './consolidated-teacher.component.css'
 })
 
 
 export class ConsolidatedTeacherComponent implements OnInit {
-  
-  @ViewChild(ApproveConsolidatedConfirmDialogComponent)
-  approveConsolidatedConfirmDialog!: ApproveConsolidatedConfirmDialogComponent;
 
+  @ViewChild(ConfirmDialogComponent)
+  confirmDialog: ConfirmDialogComponent | null = null;
 
+  private consolidatedServicesService = inject(ConsolidatedServicesService);
+  private route = inject(ActivatedRoute);
+  private toastr = inject(MessagesInfoService);
+
+  public consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
+  public currentPage: number = 1;
+  public idUser: number = 0;
   public infoCurrentUser: UserInfo | null = null;
   public infoDataTeacher: TeacherInformationResponse | null = null;
-  public idUser: number = 0;
-  public currentPage: number = 1;
-
-  responseConsolidatedConfirmDialog: string = '';
-
-  consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
-
-  consolidatedServicesService = inject(ConsolidatedServicesService);
-
-  private route = inject(ActivatedRoute);
-
-  toastr = inject(MessagesInfoService);
+  public responseConsolidatedConfirmDialog: string = '';
+  public tittleMessage: string = TITTLE_MESSAGE;
+  public confirmMessage: string = CONFIRM_MESSAGE;
+  public filterParmas: {activityType: string | null, activityName: string | null} | null = null;
   
+
+  userEffec = effect(() => {
+    this.consolidatedServicesService.getFilterParams();
+    this.currentPage = 1;
+    this.recoverConsolidatedTeacher(this.currentPage);
+  });
+
   ngOnInit(): void {
     this.infoCurrentUser = this.route.snapshot.data['teacher'];
     this.idUser = this.route.snapshot.params['id'];
-    this.recoverConsolidatedTeacher();
     this.recoverInfoTeacher();
-
   }
 
   recoverInfoTeacher(): void {
@@ -61,9 +66,10 @@ export class ConsolidatedTeacherComponent implements OnInit {
     }
   }
 
-  recoverConsolidatedTeacher(){
-    if(this.idUser){
-      this.consolidatedServicesService.getConsolidatedByTeacher(this.idUser, this.currentPage-1, SIZE_PAGE).subscribe({
+  recoverConsolidatedTeacher(page: number){
+    const paramsFilter = this.consolidatedServicesService.getFilterParams();
+    if (this.idUser) {
+      this.consolidatedServicesService.getConsolidatedActitiesTeacherByParams(this.idUser, page-1, SIZE_PAGE, paramsFilter.activityType || '', paramsFilter.activityName || '', paramsFilter.sourceType || '', paramsFilter.sourceState || '').subscribe({
         next: data => {
           this.consolidatedTeacher = data;
           this.consolidatedServicesService.setDataConsolidatedTeacher(data);
@@ -75,27 +81,27 @@ export class ConsolidatedTeacherComponent implements OnInit {
     }
   }
 
-  responseApproveConsolidated(response: string | void): void {
-    if (response === 'Si' && this.idUser && this.infoCurrentUser) {
+  responseApproveConsolidated(response: boolean): void {
+    if (response && this.idUser && this.infoCurrentUser) {
       this.consolidatedServicesService.saveConsolidated(this.idUser, this.infoCurrentUser.oidUsuario, '').subscribe({
         next: () => {
           this.toastr.showSuccessMessage('Consolidado aprobado  y generado correctamente', 'Éxito');
-          this.closeApproveConsolidatedDialog();
         },
-        error: (error:any) => {
+        error: (error: any) => {
           this.toastr.showErrorMessage('Error al aprobar el consolidado', 'Error');
         }
       });
     } else {
-      this.closeApproveConsolidatedDialog();
     }
   }
-  
-  createConsolidated(): void {
-    this.approveConsolidatedConfirmDialog.open();
+
+  pageChange(page: number): void {
+    this.currentPage = page;
+    this.recoverConsolidatedTeacher(page);
   }
 
-  closeApproveConsolidatedDialog(): void {
-    this.approveConsolidatedConfirmDialog.closeModal();
+  createConsolidated(): void {
+    if(this.confirmDialog) this.confirmDialog.open();
   }
+
 }
