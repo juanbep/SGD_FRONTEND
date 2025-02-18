@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Actividad, FuenteActividad } from '../../../../../../core/models/consolidated.interface';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
+import { Activity, Fuente } from '../../../../../../core/models/activities.interface';
+import { tap } from 'rxjs';
 declare var bootstrap: any;
 
 @Component({
@@ -18,10 +20,10 @@ export class ViewDetailsSourceOneComponent {
 
   private consolidatedServices = inject(ConsolidatedServicesService);
 
-  public activity: Actividad | null = null;
+  public activity: Activity | null = null;
   public sourceFile: Blob | null = null;
   public reportFile: Blob | null = null;
-  public sourceOne: FuenteActividad | undefined = undefined;
+  public sourceOne: Fuente | undefined = undefined;
 
 
 
@@ -36,12 +38,16 @@ export class ViewDetailsSourceOneComponent {
   }
 
   recoverActivity(oidActividad:number) {
-    this.consolidatedServices.getActivityByOidActivity(oidActividad).subscribe(
+    this.consolidatedServices.getActivityByOidActivity(oidActividad).pipe(
+      tap((actividad: Activity) => {
+        this.activity = actividad;
+        this.recoverSourceOne();
+      } )
+    ).subscribe(
       {
-        next: (actividad: Actividad) => {
+        next: (actividad: Activity) => {
           this.activity = actividad;
           this.recoverSourceOne();
-          
         }
       }
     )
@@ -49,7 +55,7 @@ export class ViewDetailsSourceOneComponent {
 
   recoverSourceOne() {
     if (this.activity) {
-      this.sourceOne = this.activity.fuentes.find(fuente => fuente.tipoFuente === '1');
+      this.sourceOne = this.activity.fuentes.find((fuente: Fuente) => fuente.tipoFuente === '1');
       this.recoverFileSourceOne(); 
       this.recoverReportFile();
     }
@@ -68,7 +74,7 @@ export class ViewDetailsSourceOneComponent {
       const url = window.URL.createObjectURL(this.sourceFile);
       const a = document.createElement('a');
       a.href = url;
-      a.download = this.sourceOne!.nombreDocumentoFuente ;
+      a.download = this.sourceOne!.nombreDocumentoFuente || '';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -89,7 +95,7 @@ export class ViewDetailsSourceOneComponent {
       const url = window.URL.createObjectURL(this.reportFile);
       const a = document.createElement('a');
       a.href = url;
-      a.download =  a.download = this.sourceOne!.nombreDocumentoInforme;
+      a.download =  a.download = this.sourceOne!.nombreDocumentoInforme || '';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

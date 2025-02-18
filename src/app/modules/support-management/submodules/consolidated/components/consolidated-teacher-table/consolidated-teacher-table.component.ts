@@ -50,6 +50,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   public messageEmail: string = '';
   public subjectEmail: string = '';
   public currentUser: User| null = null;
+  public teacherId: number = 0;
 
   constructor() {
     effect(() => {
@@ -60,6 +61,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.router.snapshot.data['teacher'];
+    this.teacherId = this.router.snapshot.params['id'];
     this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
     
   }
@@ -142,6 +144,27 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
           }
         }
      );
+  }
+
+  downloadAllSuppotFiles(){
+    this.consolidatedServicesService.downloadAllSupportFiles(this.teacherOfConsolidated?.periodoAcademico || '', this.teacherOfConsolidated?.departamento || '', this.teacherOfConsolidated?.tipoContratacion || '', this.teacherId || 0).subscribe
+    (
+      {
+        next: (response: any) => {
+          const blob = new Blob([response], { type: 'application/zip' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `documentos_${this.teacherOfConsolidated?.nombreDocente}_${this.teacherOfConsolidated?.periodoAcademico}.zip`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error: any) => {
+          console.log(error);
+        }
+      }
+    );
   }
 
 }

@@ -1,9 +1,23 @@
 <div class="view-container">
-    <span class="title-two">Docentes</span>
+    <span class="title-two">Docentes {{currentUser?.usuarioDetalle?.departamento | titlecase }}</span>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">Aquí podrás ver la información de los docentes que han sido consolidados.</span>
+        <span class="text-body-heavy">Aquí podrás ver la información de los docentes de su departamento y ver sus respectivos consolidados</span>
     </div>
     <consolidated-teachers-list-filter></consolidated-teachers-list-filter>
     <consolidated-teachers-list-table></consolidated-teachers-list-table>
+    <div class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+        <span class="text-body-heavy">Aquí podrás descargar todos los soportes cargados para los docentes de su departamento</span>
+    </div>
+    <section>
+        <span class="title-three">Descargar soportes</span>
+        <div class="buttons-container" style="width: 50% !important;">
+            <div>
+                <span class="text-body-small-r">Soportes</span>
+                <br>
+            </div>
+            <button (click)="downloadAllSuppotFiles()" class="button-actions button-download"></button>
+        </div>
+    </section>
 </div>

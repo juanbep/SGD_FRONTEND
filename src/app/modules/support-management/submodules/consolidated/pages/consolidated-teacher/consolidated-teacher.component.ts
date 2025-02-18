@@ -4,7 +4,7 @@ import { ConsolidatedTeacherTableComponent } from "../../components/consolidated
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { ConsolidatedActivitiesResponse, TeacherInformationResponse } from '../../../../../../core/models/consolidated.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 
@@ -27,12 +27,13 @@ export class ConsolidatedTeacherComponent implements OnInit {
   confirmDialog: ConfirmDialogComponent | null = null;
 
   private consolidatedServicesService = inject(ConsolidatedServicesService);
-  private route = inject(ActivatedRoute);
+  private activateRoute = inject(ActivatedRoute);
   private toastr = inject(MessagesInfoService);
+  private router = inject(Router);
 
   public consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
   public currentPage: number = 1;
-  public idUser: number = 0;
+  public idUserTeacher: number = 0;
   public infoCurrentUser: UserInfo | null = null;
   public infoDataTeacher: TeacherInformationResponse | null = null;
   public responseConsolidatedConfirmDialog: string = '';
@@ -48,14 +49,14 @@ export class ConsolidatedTeacherComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.infoCurrentUser = this.route.snapshot.data['teacher'];
-    this.idUser = this.route.snapshot.params['id'];
+    this.infoCurrentUser = this.activateRoute.snapshot.data['teacher'];
+    this.idUserTeacher = this.activateRoute.snapshot.params['id'];
     this.recoverInfoTeacher();
   }
 
   recoverInfoTeacher(): void {
-    if (this.idUser) {
-      this.consolidatedServicesService.getInfoTeacher(this.idUser).subscribe({
+    if (this.idUserTeacher) {
+      this.consolidatedServicesService.getInfoTeacher(this.idUserTeacher).subscribe({
         next: data => {
           this.infoDataTeacher = data;
         },
@@ -68,8 +69,8 @@ export class ConsolidatedTeacherComponent implements OnInit {
 
   recoverConsolidatedTeacher(page: number){
     const paramsFilter = this.consolidatedServicesService.getFilterParams();
-    if (this.idUser) {
-      this.consolidatedServicesService.getConsolidatedActitiesTeacherByParams(this.idUser, page-1, SIZE_PAGE, paramsFilter.activityType || '', paramsFilter.activityName || '', paramsFilter.sourceType || '', paramsFilter.sourceState || '').subscribe({
+    if (this.idUserTeacher) {
+      this.consolidatedServicesService.getConsolidatedActitiesTeacherByParams(this.idUserTeacher, page-1, SIZE_PAGE, paramsFilter.activityType || '', paramsFilter.activityName || '', paramsFilter.sourceType || '', paramsFilter.sourceState || '').subscribe({
         next: data => {
           this.consolidatedTeacher = data;
           this.consolidatedServicesService.setDataConsolidatedTeacher(data);
@@ -82,8 +83,8 @@ export class ConsolidatedTeacherComponent implements OnInit {
   }
 
   responseApproveConsolidated(response: boolean): void {
-    if (response && this.idUser && this.infoCurrentUser) {
-      this.consolidatedServicesService.saveConsolidated(this.idUser, this.infoCurrentUser.oidUsuario, '').subscribe({
+    if (response && this.idUserTeacher && this.infoCurrentUser) {
+      this.consolidatedServicesService.saveConsolidated(this.idUserTeacher, this.infoCurrentUser.oidUsuario, '').subscribe({
         next: () => {
           this.toastr.showSuccessMessage('Consolidado aprobado  y generado correctamente', 'Éxito');
         },
@@ -103,5 +104,32 @@ export class ConsolidatedTeacherComponent implements OnInit {
   createConsolidated(): void {
     if(this.confirmDialog) this.confirmDialog.open();
   }
+
+  goBack(){
+    window.history.back();
+    this.router.navigate(['./gestion-soportes/consolidado/lista-docentes']);
+  }
+
+  downloadAllSuppotFiles(){
+    this.consolidatedServicesService.downloadAllSupportFiles(this.infoDataTeacher?.periodoAcademico || '', this.infoDataTeacher?.departamento || '', this.infoDataTeacher?.tipoContratacion || '', this.idUserTeacher || 0).subscribe
+    (
+      {
+        next: (response: any) => {
+          const blob = new Blob([response], { type: 'application/zip' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `documentos_${this.infoDataTeacher?.nombreDocente}_${this.infoDataTeacher?.periodoAcademico}.zip`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error: any) => {
+          console.log(error);
+        }
+      }
+    );
+  }
+
 
 }

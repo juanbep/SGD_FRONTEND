@@ -2,6 +2,7 @@ import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { SmConsolidatedServicesService } from '../../../../../core/services/support-management/sm-consolidated-services.service';
 import { ConsolidatedActivitiesResponse, Teacher } from '../../../../../core/models/consolidated.interface';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
+import { SmActivitiesServicesService } from '../../../../../core/services/support-management/sm-activities-services.service';
 
 @Injectable({ providedIn: 'root' })
 export class ConsolidatedServicesService {
@@ -11,6 +12,7 @@ export class ConsolidatedServicesService {
   private filterParams: WritableSignal<{activityType: string | null, activityName: string | null, sourceType: string | null, sourceState: string | null}> = signal({activityType: null, activityName: null, sourceType: null, sourceState: null});
   
   private smConsolidatedServicesService = inject(SmConsolidatedServicesService);
+  private smActivitiesServicesService = inject(SmActivitiesServicesService);
   private umUsersServicesService = inject(UmUsersServicesService);
 
 
@@ -45,8 +47,8 @@ export class ConsolidatedServicesService {
   * Get teachers
   * @returns {any}
   * */
-  getTeachers(page: number, totalPage: number) {
-    return this.smConsolidatedServicesService.getTeachers(page, totalPage);
+  getTeachers(page: number, totalPage: number, department: string) {
+    return this.smConsolidatedServicesService.getTeachers(page, totalPage, department);
   }
 
   /*
@@ -119,7 +121,7 @@ export class ConsolidatedServicesService {
   * @returns observable<Actividad>
   * */
   getActivityByOidActivity(oidActivity: number) {
-    return this.smConsolidatedServicesService.getActivityByOidActivity(oidActivity);
+    return this.smActivitiesServicesService.getActivityById(oidActivity);
   }
 
   /*
@@ -129,6 +131,19 @@ export class ConsolidatedServicesService {
   * */
   getUserInfo(idUser:number){
     return this.umUsersServicesService.getUserbyId(idUser);
+  }
+
+ 
+  /*
+  * Method to download all support files
+  * @param period:string
+  * @param department:string
+  * @param contractType:string
+  * @param idUser:number
+  * @returns blob
+  * */
+  downloadAllSupportFiles(period: string, department:string , contractType:string | null, idUser:number | null) {
+    return this.smConsolidatedServicesService.downloadAllSupportFiles(period, department, contractType, idUser);
   }
 
 

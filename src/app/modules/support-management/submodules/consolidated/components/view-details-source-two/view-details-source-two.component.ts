@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { Actividad, FuenteActividad } from '../../../../../../core/models/consolidated.interface';
 import { Utilities } from '../../utils/utilities';
+import { Activity, Fuente } from '../../../../../../core/models/activities.interface';
 declare var bootstrap: any;
 
 @Component({
@@ -19,8 +20,8 @@ export class ViewDetailsSourceTwoComponent {
   private consolidatedServices = inject(ConsolidatedServicesService);
   private utilities = inject(Utilities);
 
-  public activity: Actividad | null = null;
-  public sourceTwo: FuenteActividad | undefined = undefined;
+  public activity: Activity | null = null;
+  public sourceTwo: Fuente | undefined = undefined;
   public sourceFile: Blob | null = null;
 
   open(oidActividad:number): void {
@@ -35,7 +36,7 @@ export class ViewDetailsSourceTwoComponent {
   recoverActivity(oidActividad:number) {
     this.consolidatedServices.getActivityByOidActivity(oidActividad).subscribe(
       {
-        next: (actividad: Actividad) => {
+        next: (actividad: Activity) => {
           this.activity = actividad;
           this.recoverSourceTwo();
          
@@ -62,7 +63,7 @@ export class ViewDetailsSourceTwoComponent {
       const url = window.URL.createObjectURL(this.sourceFile);
       const a = document.createElement('a');
       a.href = url;
-      a.download = this.sourceTwo!.nombreDocumentoFuente ;
+      a.download = this.sourceTwo!.nombreDocumentoFuente || 'Documento';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

@@ -18,8 +18,9 @@ export class SmConsolidatedServicesService {
     * @returns {any}
     * */
 
-  getTeachers(page: number, totalPage: number): Observable<ConsolidatedTeachersResponse> {
+  getTeachers(page: number, totalPage: number, department: string): Observable<ConsolidatedTeachersResponse> {
     let params = new HttpParams()
+      .set('departamento', department)
       .set('page', page.toString())
       .set('size', totalPage.toString());
 
@@ -105,7 +106,8 @@ export class SmConsolidatedServicesService {
     * @returns void
     */
   downloadSourceFile(idSource: number): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { responseType: 'blob' });
+    return this.httpClient.get(`${this.baseUrl}/api/fuente/download/${idSource}`, { responseType: 'blob' });
+
   }
 
   /*
@@ -117,7 +119,7 @@ export class SmConsolidatedServicesService {
 
   downloadReportFile(idSource: number, report: boolean): Observable<any> {
     let params = new HttpParams().set('report', report);
-    return this.httpClient.get(`${this.baseUrl}/fuente/download/${idSource}`, { params, responseType: 'blob' });
+    return this.httpClient.get(`${this.baseUrl}/api/fuente/download/${idSource}`, { params, responseType: 'blob' });
   }
 
   /*
@@ -126,12 +128,25 @@ export class SmConsolidatedServicesService {
   * @returns observable<Actividad>
   * */
   getActivityByOidActivity(oidActivity: number): Observable<Actividad> {
-    return this.httpClient.get<Actividad>(`${this.baseUrl}/actividad/find/${oidActivity}`);
+    return this.httpClient.get<Actividad>(`${this.baseUrl}/api/actividades/${oidActivity}`);
   }
 
-  //TODO: Downloads all support files
-  downloadAllSupportFiles(teacherId: number): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}/soporte/download/${teacherId}`, { responseType: 'blob' });
+
+  /*
+  * Method to download all support files
+  * @param period:string
+  * @param department:string
+  * @param contractType:string
+  * @param idUser:number
+  * @returns blob
+  * */
+  downloadAllSupportFiles(period: string, department:string, contractType:string | null, idUser:number | null): Observable<any> {
+    const params = new HttpParams()
+    .set('periodo', period)
+    .set('departamento', department)
+    .set('tipoContrato', contractType || '')
+    .set('oidUsuario', idUser || '');
+    return this.httpClient.get(`${this.baseUrl}/api/download/zip`, {params,responseType: 'blob' });
   }
 
 }

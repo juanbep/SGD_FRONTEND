@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
-import { Observable } from 'rxjs';
-import { Activity, ActivityResponse, NewActivity } from '../../models/activities.interface';
+import { map, Observable } from 'rxjs';
+import { Activity, ActivityByIdResponse, ActivityResponse, NewActivity } from '../../models/activities.interface';
 import { HttpClient } from '@angular/common/http';
 import { Params } from '@angular/router';
 
@@ -59,7 +59,9 @@ export class UmActivitiesServiceService {
     * @returns Observable<Activity>
     * */
     getActivityById(idActivity:number):Observable<Activity> {
-        return this.httpClient.get<Activity>(`${this.baseUrl}/api/actividades/${idActivity}`);
+        return this.httpClient.get<ActivityByIdResponse>(`${this.baseUrl}/api/actividades/${idActivity}`).pipe(
+            map((response:ActivityByIdResponse) => response.data)
+        );
     }
 
 

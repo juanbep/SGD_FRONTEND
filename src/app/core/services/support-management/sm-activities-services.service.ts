@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessagesInfoService } from '../../../shared/services/messages-info.service';
-import { ActivityResponse, SourceEvaluation } from '../../models/activities.interface';
+import { Activity, ActivityByIdResponse, ActivityResponse, SourceEvaluation } from '../../models/activities.interface';
 import { TeacherInformationResponse } from '../../models/consolidated.interface';
 
 @Injectable({
@@ -14,6 +14,13 @@ export class SmActivitiesServicesService {
   private baseUrl: string = environments.baseUrl;
   
   constructor(private httpClient: HttpClient) { }
+
+  getActivityById(id: number): Observable<Activity> {
+      return this.httpClient.get<ActivityByIdResponse>(`${this.baseUrl}/api/actividades/${id}`).pipe(
+        map(resp => resp.data)
+      )
+    
+  }
 
   /*
     * Method to get all the activities by user

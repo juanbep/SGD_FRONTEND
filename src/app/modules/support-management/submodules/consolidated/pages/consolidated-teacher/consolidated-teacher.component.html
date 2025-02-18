@@ -70,11 +70,12 @@
 
     <!-- Tabla de actividades -->
 
-    <consolidated-teacher-table (pageChange)="pageChange($event)" [teacherOfConsolidated]="infoDataTeacher" [currentPage]="currentPage"></consolidated-teacher-table>
+    <consolidated-teacher-table (pageChange)="pageChange($event)" [teacherOfConsolidated]="infoDataTeacher"
+        [currentPage]="currentPage"></consolidated-teacher-table>
 
     <!-- Resumen evaluación actividades -->
     <section>
-        <div class="row">
+        <div class="row" style="margin-right: 0% !important; margin-left: 0% !important;">
             <div class="col messages-container">
                 <span class="text-body-regular">Porcentaje de evaluación completado: </span> <span
                     class="text-body-heavy">{{infoDataTeacher?.totalPorcentaje}}%</span>
@@ -83,8 +84,22 @@
             <div class="col messages-container">
                 <span class="text-body-regular">Acumulado evaluación: </span> <span
                     class="text-body-heavy">{{infoDataTeacher?.totalAcumulado}}</span>
-
             </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="messages-container">
+            <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+            <span class="text-body-heavy">Aquí podrás descargar todos los soportes cargados al docente</span>
+        </div>
+        <span class="title-three">Descargar soportes</span>
+        <div class="buttons-container" style="width: 50% !important;">
+            <div>
+                <span class="text-body-small-r">Soportes</span>
+                <br>
+            </div>
+            <button class="button-actions button-download" (click)="downloadAllSuppotFiles()"></button>
         </div>
     </section>
 
@@ -98,7 +113,11 @@
         <button class="button-main text-body-heavy" style="color: var(--white) !important" role="button"
             aria-label="Aprobar consolidado" (click)="createConsolidated()">Aprobar consolidado</button>
     </section>
+    <div class="mb-1 d-flex justify-content-center">
+        <button (click)="goBack()" class="button-normal text-body-heavy">Volver</button>
+    </div>
 
 </div>
 
-<shared-confirm-dialog [message]="confirmMessage" [title]="tittleMessage" (confirm)="responseApproveConsolidated($event)"></shared-confirm-dialog>
+<shared-confirm-dialog [message]="confirmMessage" [title]="tittleMessage"
+    (confirm)="responseApproveConsolidated($event)"></shared-confirm-dialog>

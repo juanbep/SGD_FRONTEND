@@ -44,9 +44,9 @@
                     <button *ngIf="responsability.fuentes[1].estadoFuente=='DILIGENCIADO'" class="button-table">
                         <img src="assets/icons/tables/icon-pen.svg" alt="icon-view" (click)="openModalEdit(responsability)">
                     </button>
-                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='PENDIENTE'" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
+                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='PENDIENTE'" [currentUser]="currentUser" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
                     <responsibilities-view-evaluation *ngIf="openModalViewSelected && resposabilitySelected === responsability" [source]="responsability.fuentes[1]" [responsability]="responsability" [openModalSelected]="true" (closeModalSelected)="closeModalView($event)"></responsibilities-view-evaluation>
-                    <responsibilities-edit-evaluation *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [openModalSelected]="true" (closeModalEditSelected)="closeModalEdit($event)"></responsibilities-edit-evaluation>
+                    <responsibilities-edit-evaluation *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [currentUser]="currentUser" [openModalSelected]="true" (closeModalEditSelected)="closeModalEdit($event)"></responsibilities-edit-evaluation>
                 </td>
                 <td class="text-center">
                     <ng-container *ngIf="responsability.informeEjecutivo==true; else noReport">

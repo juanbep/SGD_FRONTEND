@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { UserInfo } from '../../../../../../core/models/auth.interface';
 
 @Component({
   selector: 'responsibilities-edit-evaluation',
@@ -27,6 +28,9 @@ export class ResponsibilitiesEditEvaluationComponent {
   @Input()
   public openModalSelected: boolean = false;
 
+  @Input()
+  currentUser: UserInfo | null = null;
+
   @Output()
   public closeModalEditSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -35,7 +39,6 @@ export class ResponsibilitiesEditEvaluationComponent {
   public errorEvaluation: boolean = false;
   public evaluation: string = '';
   public observation: string = '';
-  public fileName: string = '';
   public fileNameSelected: WritableSignal<string> = signal('');
   public selectedFile: File | null = null;
   public fileDeleted: boolean = false;
@@ -57,13 +60,26 @@ export class ResponsibilitiesEditEvaluationComponent {
       this.evaluation = this.source.calificacion.toFixed(1);
       this.observation = this.source.observacion? this.source.observacion : '';
       this.fileNameSelected.set(this.source.nombreDocumentoFuente || '');
+      this.recoverFile();
       this.getFilebyName();
     }
   }
 
+  public recoverFile(){
+    this.service.getdownloadSourceFile(this.source!.oidFuente).subscribe(
+      {
+        next: file => {
+          this.selectedFile = new File([file], this.source?.nombreDocumentoFuente || '', { type: file.type, lastModified: Date.now() })
+        },
+        error: error => {
+          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        }
+      });
+  }
+
   public updateSource() {
     let sendSource: SourceEvaluation[] = [];
-    if (this.responsability && this.selectedFile && this.evaluation) {
+    if (this.responsability && (this.selectedFile) && this.evaluation && this.currentUser) {
       sendSource = [{
         tipoFuente: "2",
         calificacion: parseFloat(this.evaluation),
@@ -75,7 +91,7 @@ export class ResponsibilitiesEditEvaluationComponent {
           next: () => {
             this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
             this.closeModalEditSelected.emit(true);
-            this.service.getResponsibilities('4', '', '', '', '',0,10).subscribe(
+            this.service.getResponsibilities(this.currentUser!.oidUsuario.toString(), '', '', '', '',0,10).subscribe(
               {
                 next: data => {
                   this.service.setResponsibilitiesData(data);
@@ -153,25 +169,25 @@ export class ResponsibilitiesEditEvaluationComponent {
   }
 
   downloadFile() {
-    // if (this.source) {
-    //   this.service.getdownloadSourceFile(this.source.oidFuente).subscribe(
-    //     {
-    //       next: blob => {
-    //         const url = window.URL.createObjectURL(blob);
-    //         const a = document.createElement('a');
-    //         a.href = url;
-    //         a.download = this.source!.nombreDocumentoFuente;
-    //         document.body.appendChild(a);
-    //         a.click();
-    //         document.body.removeChild(a);
-    //         window.URL.revokeObjectURL(url);
-    //       },
-    //       error: error => {
-    //         this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-    //       }
+    if (this.source) {
+      this.service.getdownloadSourceFile(this.source.oidFuente).subscribe(
+        {
+          next: blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = this.source!.nombreDocumentoFuente || '';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          },
+          error: error => {
+            this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+          }
 
-    //     });
-    // }
+        });
+    }
   }
 
   private getFilebyName() {

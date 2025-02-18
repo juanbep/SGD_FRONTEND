@@ -145,6 +145,7 @@ export class NewUserComponent implements OnInit {
   changesInRoleField() {
     for (const role of this.newUserForm.get('role')?.value) {
       switch (role) {
+        //Docente
         case '1':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
@@ -158,6 +159,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('dedication')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
+        //Estudiante
         case '2':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
@@ -167,6 +169,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('program')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
+        //Decano
         case '3':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
@@ -175,6 +178,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('faculty')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
+        //Jefe de departamento
         case '4':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
@@ -182,6 +186,35 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('faculty')?.enable();
           this.newUserForm.get('program')?.enable();
+          this.newUserForm.get('state')?.enable();
+          break;
+        //Secretaria/o facultad
+        case '5':
+          this.newUserForm.get('name')?.enable();
+          this.newUserForm.get('lastName')?.enable();
+          this.newUserForm.get('email')?.enable();
+          this.newUserForm.get('idUser')?.enable();
+          this.newUserForm.get('faculty')?.enable();
+          this.newUserForm.get('state')?.enable();
+          break;
+        //Coordianador
+        case '52':
+          this.newUserForm.get('name')?.enable();
+          this.newUserForm.get('lastName')?.enable();
+          this.newUserForm.get('email')?.enable();
+          this.newUserForm.get('idUser')?.enable();
+          this.newUserForm.get('faculty')?.enable();
+          this.newUserForm.get('program')?.enable();
+          this.newUserForm.get('state')?.enable();
+          break;
+        
+        //CPD
+        case '53':
+          this.newUserForm.get('name')?.enable();
+          this.newUserForm.get('lastName')?.enable();
+          this.newUserForm.get('email')?.enable();
+          this.newUserForm.get('idUser')?.enable();
+          this.newUserForm.get('faculty')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
         default:

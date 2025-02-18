@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { UserInfo } from '../../../../../../core/models/auth.interface';
 
 @Component({
   selector: 'responsibilities-upload-evaluation',
@@ -23,6 +24,9 @@ export class ResponsibilitiesUploadEvaluationComponent {
 
   @Input()
   openModalUploadSelected: boolean = false;
+
+  @Input()
+  currentUser: UserInfo | null = null;
 
   @Output()
   public closeModalUploadSelected:  EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -102,7 +106,7 @@ export class ResponsibilitiesUploadEvaluationComponent {
 
 
   saveEvaluation(): void {
-    if(this.responsability && this.evaluation && this.selectedFile){
+    if(this.responsability && this.evaluation && this.selectedFile && this.currentUser){
        this.sendSource = [{
         tipoFuente: "2",
         calificacion: this.evaluation,
@@ -112,7 +116,7 @@ export class ResponsibilitiesUploadEvaluationComponent {
       this.service.saveResponsibilityEvaluation(this.selectedFile, this.observacionSend, this.sendSource).subscribe({
         next: data => {
           this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
-          this.service.getResponsibilities('4', '', '', '', '',0,10).subscribe({
+          this.service.getResponsibilities(this.currentUser?.oidUsuario.toString()||'', '', '', '', '',0,10).subscribe({
             next: data => {
               this.service.setResponsibilitiesData(data);
             },

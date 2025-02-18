@@ -3,6 +3,11 @@
 * Interface que define la estructura de las actividades y sus fuentes asociadas un docente que se consumo en el servicio de actividades
 */
 
+export interface ActivityByIdResponse {
+    estado: string;
+    mensaje: string;
+    data: Activity;
+}
 
 export interface ActivityResponse {
     content:          Activity[];
