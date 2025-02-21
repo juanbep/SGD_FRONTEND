@@ -6,6 +6,7 @@ import { ConsolidatedTeachersResponse, Teacher } from '../../../../../../core/mo
 import { CommonModule } from '@angular/common';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 
 @Component({
   selector: 'consolidated-teachers-list-table',
@@ -24,6 +25,7 @@ export class TeacherListTableComponent implements OnInit {
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private toastr = inject(MessagesInfoService);
   private activatedRoute = inject(ActivatedRoute);
+  private authService = inject(AuthServiceService);
   
   public currentPage: number = 1;
   public teacherServiceResponse: ConsolidatedTeachersResponse | null = null;
@@ -31,7 +33,7 @@ export class TeacherListTableComponent implements OnInit {
   public currentUser : UserInfo | null = null;
 
   ngOnInit(): void {
-    this.currentUser = this.activatedRoute.snapshot.data['teacher'];
+    this.currentUser = this.authService.currentUserValue;
     this.recoverTeachers(this.currentPage, 10);
   }
 

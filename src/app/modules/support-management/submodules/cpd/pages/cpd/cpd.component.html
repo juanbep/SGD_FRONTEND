@@ -1,0 +1,61 @@
+<div class="view-container">
+    <div class="title-two">Comite de Personal Docente (CPD)</div>
+    <div class="mb-3"></div>
+    <div class="title-three">Docentes {{currentUser?.usuarioDetalle?.departamento | titlecase}}</div>
+    <div class="mb-2"></div>
+    <cpd-user-filter (filterParams)="filterAction($event)"></cpd-user-filter>
+    <table class="table-bordered">
+        <thead>
+            <tr>
+                <th class="text-body-regular">Nombre</th>
+                <th class="text-body-regular">Identificación</th>
+                <th class="text-body-regular">Facultad</th>
+                <th class="text-body-regular">Departamento</th>
+                <th class="text-body-regular">Categoría</th>
+                <th class="text-body-regular">Acciones</th>
+            </tr>
+        </thead>
+        <ng-container *ngIf="teacherByDepartment && teacherByDepartment.content.length>0 ; else nullData" >
+            <tbody>
+                <tr *ngFor="let teacher of teacherByDepartment.content">
+                    <td class="text-body-regular">{{teacher.nombres}} {{teacher.apellidos}}</td>
+                    <td class="text-body-regular">{{teacher.identificacion }}</td>
+                    <td class="text-body-regular">{{teacher.usuarioDetalle.facultad}}</td>
+                    <td class="text-body-regular">{{teacher.usuarioDetalle.departamento}}</td>
+                    <td class="text-body-regular">{{teacher.usuarioDetalle.categoria }}</td>
+                    <td>
+                        <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" ></button>
+                        <button class="button-table-email" (click)="openEmailModal()"></button>
+                        <!-- Download consolidated -->
+                        <!-- View activities -->
+                        <!-- Send email -->
+                        <!-- Approv y generate resolution -->
+
+                    </td>
+                </tr>
+            </tbody>
+        </ng-container>
+    </table>
+
+    <ng-template #nullData>
+        <tbody>
+            <tr class="text-center">
+                <td colspan="6" class="text-body-regular">No se encontraron docentes registrados en el sistema</td>
+            </tr>
+        </tbody>	
+    </ng-template>
+    <div class="mb-2"></div>
+    <shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="teacherByDepartment?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
+    <section>
+        <span class="title-three">Descargar soportes y consolidados</span>
+        <div class="buttons-container" style="width: 50% !important;">
+            <div>
+                <span class="text-body-regular">Soportes y consolidados</span>
+                <br>
+            </div>
+            <button  class="button-actions button-download" (click)="downloadFiles()"></button>
+        </div>
+    </section>
+</div>
+
+<shared-email></shared-email>

@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -14,7 +14,6 @@ export class LayoutComponent implements OnInit {
 
   constructor() { }
 
-  private router: Router = inject(Router);
 
   ngOnInit(): void {
   }

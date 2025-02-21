@@ -140,12 +140,13 @@ export class SmConsolidatedServicesService {
   * @param idUser:number
   * @returns blob
   * */
-  downloadAllSupportFiles(period: string, department:string, contractType:string | null, idUser:number | null): Observable<any> {
+  downloadAllSupportFiles(period: string, department:string, contractType:string | null, idUser:number | null, esConsolidado: boolean | null): Observable<any> {
     const params = new HttpParams()
     .set('periodo', period)
     .set('departamento', department)
     .set('tipoContrato', contractType || '')
-    .set('oidUsuario', idUser || '');
+    .set('oidUsuario', idUser || '')
+    .set('esConsolidado', esConsolidado || false);
     return this.httpClient.get(`${this.baseUrl}/api/download/zip`, {params,responseType: 'blob' });
   }
 

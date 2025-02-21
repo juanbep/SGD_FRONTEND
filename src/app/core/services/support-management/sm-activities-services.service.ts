@@ -31,13 +31,13 @@ export class SmActivitiesServicesService {
     * @param roles:string
     * @returns void
     */
-  getActivities(evaluatedId: number, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage:number |null ): Observable<ActivityResponse> {
+  getActivities(evaluatedId: number, activityCode: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page: number | null, totalPage:number |null ): Observable<ActivityResponse> {
     let params = new HttpParams()
       .set('idEvaluado', evaluatedId)
-      .set('codigoActividad', activityCode)
-      .set('tipoActividad', activityType)
-      .set('nombreEvaluador', evaluatorName)
-      .set('roles', roles)
+      .set('codigoActividad', activityCode ? activityCode : '')
+      .set('tipoActividad', activityType ? activityType : '')
+      .set('nombreEvaluador', evaluatorName ? evaluatorName : '')
+      .set('roles', roles ? roles : '')
       .set('page', page? page.toString() : '' )
       .set('size', totalPage? totalPage.toString() : '' );
     return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, { params });

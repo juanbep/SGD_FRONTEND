@@ -135,3 +135,29 @@
     pointer-events: none;
 
 }
+
+.button-table-email {
+    color: var(--white);
+    border: none;
+    margin: none;
+    width: 30px;
+    max-width: 100%;
+    height: 30px;
+    background-color: var(--white);
+    background-image: url(../assets/icons/tables/icon-message.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.button-table-form {
+    color: var(--white);
+    border: none;
+    margin: none;
+    width: 30px;
+    max-width: 100%;
+    height: 30px;
+    background-color: var(--white);
+    background-image: url(../assets/icons/tables/icon-form.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+}

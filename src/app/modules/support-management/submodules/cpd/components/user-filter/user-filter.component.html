@@ -1,0 +1,39 @@
+<div class="line-filter"></div>
+
+<div class="row">
+    <div class="col-1" style="width: 50px;">
+        <img src="assets/icons/tables/icon-filter.svg" alt="">
+    </div>
+    <div class="col">
+        <form [formGroup]="formFilter" (ngSubmit)="searchUsers()">
+            <div class="row row-cols-auto">
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre de usuario" formControlName="nameUser">
+                </div>
+                <div class="col m-1">
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Identificación" formControlName="identification">
+                </div>
+                <div class="col m-1">
+                    <select class="input-select-filter" formControlName="category">
+                        <option [value]="null" selected>Categoría</option>
+                        <option *ngFor="let category of catalogData?.categorias" value="{{category.codigo}}">
+                            {{category.nombre | titlecase}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col mt-1" >
+                    <button class="button-normal" type="submit">Buscar</button>
+                </div>
+                <div class="col mt-1">
+                    <button class="button-normal" (click)="clearFilter()">Limpiar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="line-filter"></div>

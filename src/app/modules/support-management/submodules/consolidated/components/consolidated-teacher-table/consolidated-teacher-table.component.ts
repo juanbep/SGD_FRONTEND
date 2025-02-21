@@ -60,7 +60,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUser = this.router.snapshot.data['teacher'];
+    this.currentUser = this.router.snapshot.data['currentUser'];
     this.teacherId = this.router.snapshot.params['id'];
     this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
     
@@ -147,7 +147,7 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
   }
 
   downloadAllSuppotFiles(){
-    this.consolidatedServicesService.downloadAllSupportFiles(this.teacherOfConsolidated?.periodoAcademico || '', this.teacherOfConsolidated?.departamento || '', this.teacherOfConsolidated?.tipoContratacion || '', this.teacherId || 0).subscribe
+    this.consolidatedServicesService.downloadAllSupportFiles(this.teacherOfConsolidated?.periodoAcademico || '', this.teacherOfConsolidated?.departamento || '', this.teacherOfConsolidated?.tipoContratacion || '', this.teacherId || 0, null).subscribe
     (
       {
         next: (response: any) => {

@@ -7,6 +7,7 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { ActivatedRoute } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
+import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 
 @Component({
   selector: 'support-management-consolidated',
@@ -19,16 +20,17 @@ export class TeachersListComponent implements OnInit {
 
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private activatedRoute = inject(ActivatedRoute);
+  private authService = inject(AuthServiceService);
 
   public currentUser: UserInfo | null = null;
   
   ngOnInit(): void {
-    this.currentUser = this.activatedRoute.snapshot.data['teacher'];
+    this.currentUser = this.authService.currentUserValue;
   }
   
 
   downloadAllSuppotFiles(){
-    this.consolidatedServicesService.downloadAllSupportFiles('2025-02', this.currentUser?.usuarioDetalle.departamento || '', '', null).subscribe
+    this.consolidatedServicesService.downloadAllSupportFiles('2025-02', this.currentUser?.usuarioDetalle.departamento || '', '', null, null).subscribe
     (
       {
         next: (response: any) => {

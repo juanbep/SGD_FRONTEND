@@ -58,14 +58,10 @@ export class SideBarComponent implements OnInit {
           label:'Consolidado',
           url:'/app/gestion-soportes/consolidado/lista-docentes'
         },
-        // {
-        //   label:'CPD',
-        //   url:''
-        // },
-        // {
-        //   label:'Resolución',
-        //   url:'',
-        // }
+        {
+          label:'CPD',
+          url:'/app/gestion-soportes/cpd/lista-docentes'
+        },
       ]
     },
 

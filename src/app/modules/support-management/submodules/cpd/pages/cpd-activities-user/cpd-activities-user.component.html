@@ -1,0 +1,69 @@
+<div class="view-container">
+    <div class="title-two">Actividades del docente {{userTeacherInfo?.nombres | titlecase}} {{userTeacherInfo?.apellidos | titlecase}}</div>
+    <cpd-activity-filter (filterParams)="filterAction($event)"></cpd-activity-filter>
+    <table class="table-bordered">
+        <thead>
+            <tr>
+                <th class="text-body-heavy text-center">Actividades</th>
+                <th class="text-body-heavy text-center" colspan="2">Autoevaluación</th>
+                <th class="text-body-heavy text-center" colspan="3">Fuente 2</th>
+            </tr>
+            <tr>
+                <th class="text-body-regular">Nombre actividad</th>
+                <th class="text-body-regular">Estado</th>
+                <th class="text-body-regular">Acciones</th>
+                <th class="text-body-regular">Evaluador</th>
+                <th class="text-body-regular">Estado</th>
+                <th class="text-body-regular">Acciones</th>
+            </tr>
+        </thead>
+        <ng-container *ngIf="teacherActivities && teacherActivities.content.length > 0; else noData">
+            <tbody>
+                <ng-container *ngFor="let activityType of activitiesByType">
+                    <tr>
+                        <td colspan="6" class="text-body-regular text-center">{{activityType.nombreType}}</td>
+                    </tr>
+                    <tr *ngFor="let activity of activityType.activities">
+                        <td>
+                            {{activity.nombreActividad}}
+                        </td>
+                        <td>
+                            <span class="text-body-regular" *ngIf="activity.fuentes[0].tipoFuente=='1'">{{activity.fuentes[0].estadoFuente}}</span>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            <span class="text-body-regular">{{activity.evaluador.nombres}} {{activity.evaluador.apellidos}}</span>
+                        </td>
+                        <td>
+                            <span class="text-body-regular" *ngIf="activity.fuentes[1].tipoFuente=='2'">{{activity.fuentes[1].estadoFuente}}</span>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </ng-container>
+        <ng-template #noData>
+            <tbody>
+                <tr>
+                    <td colspan="6" class="text-body-regular text-center">No hay actividades registradas</td>
+                </tr>
+            </tbody>
+        </ng-template>
+    </table>
+
+    <div class="mb-3"></div>
+
+    <shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="teacherActivities?.totalPages || 1" (pageChange)="pageChanged($event)" ></shared-paginator>
+    <section>
+        <span class="title-three">Descargar consolidado</span>
+        <div class="buttons-container" style="width: 50% !important;">
+            <div>
+                <span class="text-bod">Consolidado</span>
+                <br>
+            </div>
+            <button class="button-actions button-download" (click)="downloadFiles()"></button>
+        </div>
+    </section>
+    
+</div>

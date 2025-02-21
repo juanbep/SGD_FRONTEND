@@ -80,8 +80,8 @@ export class EditActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUserParam = this.activatedRoute.snapshot.params['id'];
+    this.catalogResponse = this.catalogDataService.catalogDataSignal;
     this.recoverInfoActivity();
-    this.recoverCatalogData();
     this.onChangeInfoEvaluator();
 
   }

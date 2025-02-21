@@ -84,8 +84,8 @@ export class NewActivityComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUserParam = this.activatedRoute.snapshot.params['id'];
+    this.catalogResponse = this.catalogDataService.catalogDataSignal;
     this.disableFields();
-    this.recoverCatalogData();
     this.enableFields();
     this.clearFilterParams();
     this.recoverUserById(this.idUserParam);

@@ -1,34 +1,23 @@
-<ng-container *ngIf="responsabilities?.content; else nullData">
-    <table class="table-bordered">
-        <thead>
-            <tr>
-                <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
-                <th colspan="4"> {{headDataTable[1]}}</th>
-                <th class="text-body-heavy center-text"> {{headDataTable[2]}}</th>
-            </tr>
-            <tr>
-                <th class="text-body-regular" *ngFor="let subHead of subHeadDataTableStudents">
-                    <span>{{subHead}}</span>
-                </th>
-            </tr>
-        </thead>
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
+            <th colspan="4"> {{headDataTable[1]}}</th>
+            <th class="text-body-heavy center-text"> {{headDataTable[2]}}</th>
+        </tr>
+        <tr>
+            <th class="text-body-regular" *ngFor="let subHead of subHeadDataTableStudents">
+                <span>{{subHead}}</span>
+            </th>
+        </tr>
+    </thead>
+    <ng-container *ngIf="responsabilitieByType.length>0; else nullData">
         <tbody *ngFor="let responsabilties of responsabilitieByType">
             <tr>
                 <td class="text-body-heavy text-center" colspan="6">{{responsabilties.nombreType}}</td>
             </tr>
             <tr *ngFor="let responsability of responsabilties.activities">
                 <td class="text-body-regular">{{responsability.nombreActividad}}</td>
-                <!-- <td class="text-body-regular">{{responsability.evaluado.nombres}} {{responsability.evaluado.apellidos }}</td>
-                <td class="text-body-regular">{{responsability.evaluado.roles[0].nombre}}</td>
-                <td class="text-body-regular">
-                    <button class="button-table"
-                        id="button-table" (click)="openModalUpload(responsability)">
-                        <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload">
-                    </button>
-                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
-                </td>
-                <td class="text-body-regular"></td>
-                <td></td> -->
                 <td class="text-body-regular">{{responsability.evaluado.nombres}}
                     {{responsability.evaluado.apellidos}}</td>
                 <td class="text-body-regular">{{responsability.evaluado.roles[0].nombre}}</td>
@@ -39,19 +28,33 @@
                         <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload">
                     </button>
                     <button *ngIf="responsability.fuentes[1].estadoFuente=='DILIGENCIADO'" class="button-table">
-                        <img src="assets/icons/tables/icon-view.svg" alt="icon-view" (click)="openModalView(responsability)">
+                        <img src="assets/icons/tables/icon-view.svg" alt="icon-view"
+                            (click)="openModalView(responsability)">
                     </button>
                     <button *ngIf="responsability.fuentes[1].estadoFuente=='DILIGENCIADO'" class="button-table">
-                        <img src="assets/icons/tables/icon-pen.svg" alt="icon-view" (click)="openModalEdit(responsability)">
+                        <img src="assets/icons/tables/icon-pen.svg" alt="icon-view"
+                            (click)="openModalEdit(responsability)">
                     </button>
-                    <responsibilities-upload-evaluation *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='PENDIENTE'" [currentUser]="currentUser" [responsability]="responsability" [openModalUploadSelected]="true"  (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
-                    <responsibilities-view-evaluation *ngIf="openModalViewSelected && resposabilitySelected === responsability" [source]="responsability.fuentes[1]" [responsability]="responsability" [openModalSelected]="true" (closeModalSelected)="closeModalView($event)"></responsibilities-view-evaluation>
-                    <responsibilities-edit-evaluation *ngIf="openModalEditSelected && resposabilitySelected === responsability" [responsability]="responsability" [source]="responsability.fuentes[1]" [currentUser]="currentUser" [openModalSelected]="true" (closeModalEditSelected)="closeModalEdit($event)"></responsibilities-edit-evaluation>
+                    <responsibilities-upload-evaluation
+                        *ngIf="openModalResposabilitySelected && resposabilitySelected === responsability && resposabilitySelected.fuentes[1].estadoFuente==='PENDIENTE'"
+                        [currentUser]="currentUser" [responsability]="responsability" [openModalUploadSelected]="true"
+                        (closeModalUploadSelected)="closeModalUpload($event)"></responsibilities-upload-evaluation>
+                    <responsibilities-view-evaluation
+                        *ngIf="openModalViewSelected && resposabilitySelected === responsability"
+                        [source]="responsability.fuentes[1]" [responsability]="responsability"
+                        [openModalSelected]="true"
+                        (closeModalSelected)="closeModalView($event)"></responsibilities-view-evaluation>
+                    <responsibilities-edit-evaluation
+                        *ngIf="openModalEditSelected && resposabilitySelected === responsability"
+                        [responsability]="responsability" [source]="responsability.fuentes[1]"
+                        [currentUser]="currentUser" [openModalSelected]="true"
+                        (closeModalEditSelected)="closeModalEdit($event)"></responsibilities-edit-evaluation>
                 </td>
                 <td class="text-center">
                     <ng-container *ngIf="responsability.informeEjecutivo==true; else noReport">
                         <button *ngIf="responsability.fuentes[0].nombreDocumentoInforme" class="button-table">
-                            <img src="assets/icons/tables/icon-download.svg" alt="icon-view" (click)="downloadReport(responsability)">
+                            <img src="assets/icons/tables/icon-download.svg" alt="icon-view"
+                                (click)="downloadReport(responsability)">
                         </button>
                         <span *ngIf="!responsability.fuentes[0].nombreDocumentoInforme"> Pendiente </span>
                     </ng-container>
@@ -61,23 +64,11 @@
                 </td>
             </tr>
         </tbody>
-    </table>
-</ng-container>
+    </ng-container>
+</table>
 
 
 <ng-template #nullData>
-    <table class="table-bordered">
-        <thead>
-            <tr>
-                <th class="text-body-heavy center-text"> {{headDataTable[0]}}</th>
-                <th class="text-body-heavy center-text" colspan="4"> {{headDataTable[1]}}</th>
-            </tr>
-            <tr>
-                <th class="text-body-regular" *ngFor="let subHead of subHeadDataTableStudents">
-                    <span>{{subHead}}</span>
-                </th>
-            </tr>
-        </thead>
         <tbody>
             <tr class="text-body-regular text-center">
                 <th colspan="7">
@@ -85,7 +76,6 @@
                 </th>
             </tr>
         </tbody>
-    </table>
 </ng-template>
 
 <div class="mb-3"></div>

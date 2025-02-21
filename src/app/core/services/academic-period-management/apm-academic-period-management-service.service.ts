@@ -23,10 +23,10 @@ export class ApmAcademicPeriodManagementService {
     * Method to get all the academic periods
     * @returns Observable<AcademicPeriodResponse>
     * */
-    getAllAcademicPeriods(page: number, size: number): Observable<AcademicPeriodResponse> {
+    getAllAcademicPeriods(page: number | null, size: number | null): Observable<AcademicPeriodResponse> {
         let params = new HttpParams()
-            .set('page', page.toString())
-            .set('size', size.toString());
+            .set('page', page? page.toString() : '')
+            .set('size', size? size.toString() :'');
         return this.httpClient.get<AcademicPeriodResponse>(`${this.baseUrl}/api/periodos-academicos`, { params });
     }
 
@@ -37,5 +37,13 @@ export class ApmAcademicPeriodManagementService {
    * */
     editAcademicPeriod(oidAcademicPeriod: number, academicPeriod: NewAcademicPeriod): Observable<string> {
         return this.httpClient.put<string>(`${this.baseUrl}/api/periodos-academicos/${oidAcademicPeriod}`, academicPeriod, { responseType: 'text' as 'json' });
+    }
+
+    /*
+    * Method to get the active academic period
+    * @returns Observable<AcademicPeriod>
+    * */
+    activeAcademicPeriod(): Observable<AcademicPeriod> {
+        return this.httpClient.get<AcademicPeriod>(`${this.baseUrl}/api/periodos-academicos/activo`);
     }
 }

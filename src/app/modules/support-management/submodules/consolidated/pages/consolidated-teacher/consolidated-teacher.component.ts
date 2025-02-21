@@ -7,6 +7,7 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 
 const SIZE_PAGE = 10
 const TITTLE_MESSAGE = 'Aprobar consolidado';
@@ -30,6 +31,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
   private activateRoute = inject(ActivatedRoute);
   private toastr = inject(MessagesInfoService);
   private router = inject(Router);
+  private authService = inject(AuthServiceService);
 
   public consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
   public currentPage: number = 1;
@@ -49,7 +51,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.infoCurrentUser = this.activateRoute.snapshot.data['teacher'];
+    this.infoCurrentUser = this.authService.currentUserValue;
     this.idUserTeacher = this.activateRoute.snapshot.params['id'];
     this.recoverInfoTeacher();
   }
@@ -111,7 +113,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
   }
 
   downloadAllSuppotFiles(){
-    this.consolidatedServicesService.downloadAllSupportFiles(this.infoDataTeacher?.periodoAcademico || '', this.infoDataTeacher?.departamento || '', this.infoDataTeacher?.tipoContratacion || '', this.idUserTeacher || 0).subscribe
+    this.consolidatedServicesService.downloadAllSupportFiles(this.infoDataTeacher?.periodoAcademico || '', this.infoDataTeacher?.departamento || '', this.infoDataTeacher?.tipoContratacion || '', this.idUserTeacher || 0, null).subscribe
     (
       {
         next: (response: any) => {

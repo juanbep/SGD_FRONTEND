@@ -4,7 +4,6 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { RouterOutlet } from '@angular/router';
 import { AuthServiceService } from '../../../auth/service/auth-service.service';
-import { CatalogDataService } from '../../../../shared/services/catalogData.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -20,10 +19,8 @@ import { CatalogDataService } from '../../../../shared/services/catalogData.serv
 })
 export class MainLayoutComponent implements OnInit {
   public authServiceService = inject(AuthServiceService);
-  public catalogService = inject(CatalogDataService);
 
   ngOnInit(): void {
     this.authServiceService.getUserInfo().subscribe();
-    this.catalogService.getCatalogData();
   }
 }

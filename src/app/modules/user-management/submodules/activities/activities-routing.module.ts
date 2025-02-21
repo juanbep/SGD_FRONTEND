@@ -5,6 +5,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { NewActivityComponent } from './pages/new-activity/new-activity.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { EditActivityComponent } from './pages/edit-activity/edit-activity.component';
+import { CatalogResolverService } from '../../../../resolvers/catalog.resolver.service';
 
 export const routes: Routes = [
     {

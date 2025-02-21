@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
@@ -15,13 +15,12 @@ import { ActivitiesManagementService } from '../../services/activities-managemen
   templateUrl: './users-filter.component.html',
   styleUrl: './users-filter.component.css'
 })
-export class UsersFilterComponent {
+export class UsersFilterComponent implements OnInit {
 
 
-  private catalogDataService = inject(CatalogDataService);
   private formBuilder: FormBuilder = inject(FormBuilder);
   private activitiesServices = inject(ActivitiesManagementService);
-
+  private catalogService = inject(CatalogDataService);  
   public catalogData: CatalogDataResponse | null = null;
 
   formFilter: FormGroup = this.formBuilder.group({
@@ -44,11 +43,7 @@ export class UsersFilterComponent {
   ]
 
   ngOnInit(): void {
-    this.recoverCatalogs();
-  }
-
-  public recoverCatalogs() {
-    this.catalogData = this.catalogDataService.catalogDataSignal;
+    this.catalogData = this.catalogService.catalogDataSignal;
   }
 
   searchUsers() {

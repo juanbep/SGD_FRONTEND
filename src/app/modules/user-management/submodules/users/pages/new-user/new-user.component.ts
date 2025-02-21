@@ -65,9 +65,7 @@ export class NewUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.disableField();
-    //this.changesInRoleField();
-    this.recoverCatalogData();
-    console.log(this.rolesFormArray)
+    this.catalogDataResponse = this.catalogDataService.catalogDataSignal;
   }
 
 
@@ -96,14 +94,6 @@ export class NewUserComponent implements OnInit {
       this.changesInRoleField();
     }
   }
-
-  /*
-  * Method to get the catalog data
-  */
-  recoverCatalogData() {
-    this.catalogDataResponse = this.catalogDataService.catalogDataSignal;
-  }
-
 
   /*
   * Method to disable the fields

@@ -142,8 +142,8 @@ export class ConsolidatedServicesService {
   * @param idUser:number
   * @returns blob
   * */
-  downloadAllSupportFiles(period: string, department:string , contractType:string | null, idUser:number | null) {
-    return this.smConsolidatedServicesService.downloadAllSupportFiles(period, department, contractType, idUser);
+  downloadAllSupportFiles(period: string, department:string , contractType:string | null, idUser:number | null, esConsolidado: boolean | null) {
+    return this.smConsolidatedServicesService.downloadAllSupportFiles(period, department, contractType, idUser, esConsolidado);
   }
 
 

@@ -29,9 +29,9 @@ export class EditUserComponent implements OnInit {
   private messageToast = inject(MessagesInfoService);
   private validatorsService = inject(ValidatorsService);
   private UserServices = inject(UsersServiceService);
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private catalogDataService = inject(CatalogDataService);
+  private activateRoute = inject(ActivatedRoute);
 
   public idUserParam: number | null = null;
   public userInformation: User | null = null;
@@ -67,8 +67,8 @@ export class EditUserComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-    this.idUserParam = this.route.snapshot.params['id']
-    this.recoverCatalogData();
+    this.idUserParam = this.activateRoute.snapshot.params['id']
+    this.catalogData = this.catalogDataService.catalogDataSignal;
     this.disableField();
     this.changesInRoleField();
     this.recoverData();
@@ -95,13 +95,6 @@ export class EditUserComponent implements OnInit {
         }
       )
     }
-  }
-
-  /*
-  * Method to recover the catalog data
-  * */
-  recoverCatalogData(): void {
-    this.catalogData = this.catalogDataService.catalogDataSignal;
   }
 
   /*

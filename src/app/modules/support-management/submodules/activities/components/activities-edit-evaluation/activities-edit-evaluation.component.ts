@@ -335,17 +335,13 @@ export class ActivitiesEditEvaluationComponent {
       this.service.saveSelfAssessment(this.selectedSourceFile!, formValues.observation, this.sendSource, this.filesSelected).subscribe(
         {
           next: (response) => {
-            this.service.getActivities(this.currentUser?.oidUsuario || 0, '', '', '', '', 0, 10).subscribe({
-              next: data => {
-                this.service.setDataActivities(data);
-                this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');
-                this.sourceFileDeleted = false;
-                this.closeModal();
-              },
-              error: error => {
-                this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-              }
-            });
+            this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');
+            this.recoverActivitiesSuccess();
+            const modalElement = document.getElementById('modal-edit-evaluation');
+            if (modalElement) {
+              const modalInstance = bootstrap.Modal.getInstance(modalElement);
+              modalInstance?.hide();
+            }
           },
           error: (error) => {
             this.toastr.showErrorMessage('Error al guardar la información', 'Error');
@@ -355,6 +351,19 @@ export class ActivitiesEditEvaluationComponent {
 
     } else {
       this.toastr.showWarningMessage('Por favor, asegúrese de llenar todos los campos correctamente', 'Alerta');
+    }
+  }
+
+  recoverActivitiesSuccess(){
+    if (this.currentUser) {
+      this.service.getActivities(this.currentUser?.oidUsuario, '', '', '', '', null, null).subscribe({
+        next: data => {
+          this.service.setDataActivities(data);
+        },
+        error: error => {
+          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        }
+      });
     }
   }
 }

@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { CommonModule } from '@angular/common';
 import { AcademicPeriodManagementComponent } from '../academic-period-management/pages/academic-period-management/academic-period-management.component';
+import { CatalogResolverService } from '../../resolvers/catalog.resolver.service';
+import { CurrentUserResolverService } from '../../resolvers/currentUser.resolver.service';
 
 const routes: Routes = [
     {
@@ -15,6 +17,7 @@ const routes: Routes = [
             },
             {
                 path: 'gestion-usuarios',
+                resolve: {currentUser: CurrentUserResolverService},
                 loadChildren: () => import('../user-management/user-management-routing.module').then(m => m.UserManagementRoutingModule),
                 
             },

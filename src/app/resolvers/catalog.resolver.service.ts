@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { CatalogDataService } from '../shared/services/catalogData.service';
 import { CatalogDataResponse } from '../core/models/catalogData.interface';
 import { CatalogServicesService } from '../core/services/catalog-services.service';
@@ -9,9 +9,12 @@ import { CatalogServicesService } from '../core/services/catalog-services.servic
 export class CatalogResolverService implements Resolve<any>{
 
     private catalogServiceService:CatalogServicesService = inject(CatalogServicesService);
+    private catalogService:CatalogDataService = inject(CatalogDataService);
 
     resolve():Observable<CatalogDataResponse>{ 
-        return this.catalogServiceService.getCatalog();
+        return this.catalogServiceService.getCatalog().pipe(
+            tap(data => this.catalogService.setCatalogData(data))
+        );
     }
     
 }

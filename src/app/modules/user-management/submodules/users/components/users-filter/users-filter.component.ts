@@ -17,9 +17,9 @@ import { UsersServiceService } from '../../services/users-service.service';
 })
 export class UsersFilterComponent implements OnInit {
 
-  private catalogDataService = inject(CatalogDataService);
   private formBuilder: FormBuilder = inject(FormBuilder);
   private userServices = inject(UsersServiceService);
+  private catalogDataService = inject(CatalogDataService);
 
   public catalogData:CatalogDataResponse | null = null;
   
@@ -44,12 +44,9 @@ export class UsersFilterComponent implements OnInit {
   ]
   
   ngOnInit(): void {
-    this.recoverCatalogs();
-  }
-  
-  public recoverCatalogs() {
     this.catalogData = this.catalogDataService.catalogDataSignal;
   }
+
 
 
   searchUsers() {

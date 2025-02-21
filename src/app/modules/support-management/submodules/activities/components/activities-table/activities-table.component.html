@@ -84,5 +84,5 @@
 
 <div class="mb-3"></div>
 
-<shared-paginator [currentPage]="currentPage" [totalPages]="activities?.totalPages || 1"
+<shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="activities?.totalPages || 1"
     (pageChange)="pageChanged($event)"></shared-paginator>
