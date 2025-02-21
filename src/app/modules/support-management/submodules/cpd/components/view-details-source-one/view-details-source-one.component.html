@@ -1,0 +1,95 @@
+<div class="modal fade" id="view-details-source-one-modal" data-bs-backdrop="static" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="title-three mx-3" id="exampleModalLabel">Detalles Autoevaluación</span>
+                <div class="header-container col-auto">
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- Sección información actividad -->
+                <section id="activity-information-source-one" *ngIf="activity">
+                    <div class="row">
+                        <div class="col">
+                            <span class="text-body-small-sb">Nombre actividad: </span> <span
+                                class="text-body-small-r">{{activity.nombreActividad}}</span>
+                        </div>
+                        <div class="col">
+                            <span class="text-body-small-sb">Horas: </span> <span
+                                class="text-body-small-r">{{activity.horas}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                     
+                        <div class="col">
+                            <span class="text-body-small-sb">Tipo Actividad: </span> <span
+                                class="text-body-small-r">{{activity.tipoActividad.nombre}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span class="text-body-small-sb">Fecha evaluación: </span><span
+                                class="text-body-small-r">{{adjustFormatDate(sourceOne!.fechaActualizacion)}}</span>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Sección descarga de soporte -->
+                <section>
+                    <span class="title-three">Soporte</span>
+                    <div class="download-file-container">
+                        <div class="download-file-label">
+                            <span class="text-body-small-r">Soporte</span>
+                            <br>
+                            <span class="text-body-small-sb">{{this.sourceOne?.nombreDocumentoFuente}}</span>
+                        </div>
+                        <button class="button-actions button-download" (click)="downloadSourceFile()"></button>
+                    </div>
+                </section>
+                <!-- Sección descarga informe -->
+                <section *ngIf="activity?.informeEjecutivo;">
+                    <span class="title-three">Informe ejecutivo</span>
+                    <ng-container *ngIf="this.sourceOne?.nombreDocumentoInforme; else noReport">
+                        <div class="download-file-container">
+                            <div class="download-file-label">
+                                <span class="text-body-small-r">Informe ejecutivo</span>
+                                <br>
+                                <span class="text-body-small-sb">{{this.sourceOne?.nombreDocumentoInforme}}</span>
+                            </div>
+                            <button class="button-actions button-download" (click)="downloadReportFile()"></button>
+                        </div>
+                    </ng-container>
+                    <ng-template #noReport>
+                        <div class="messages-container">
+                            <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
+                            <span class="text-body-regular">El informe no se ha diligenciado</span>
+                        </div>
+                    </ng-template>
+                </section>
+
+                <!-- Sección evaluación -->
+                <section *ngIf="activity">
+                    <span class="title-three">Evaluación</span>
+                    <div class="evaluation">
+                        {{this.sourceOne?.calificacion}}
+                    </div>
+                </section>
+
+                <!-- Sección de observaciones -->
+                <section>
+                    <span class="title-three">Observaciones</span>
+                    <div class="observation"><span class="text-body-small-r">
+                            {{this.sourceOne?.observacion}}
+                        </span>
+                    </div>
+                </section>
+
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="button-modal text-body-small-sb" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

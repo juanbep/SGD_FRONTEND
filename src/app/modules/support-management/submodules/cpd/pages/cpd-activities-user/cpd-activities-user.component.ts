@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ActividadesPorTipoActividad, ActivityResponse } from '../../../../../../core/models/activities.interface';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { ActividadesPorTipoActividad, Activity, ActivityResponse } from '../../../../../../core/models/activities.interface';
 import { CpdServicesService } from '../../services/cpd-services.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { CommonModule } from '@angular/common';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
@@ -9,6 +9,8 @@ import { User } from '../../../../../../core/models/users.interfaces';
 import { ActivityFilterComponent } from "../../components/activity-filter/activity-filter.component";
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { AcademicPeriod } from '../../../../../../core/models/academicPeriods';
+import { ViewDetailsSourceOneComponent } from '../../components/view-details-source-one/view-details-source-one.component';
+import { ViewDetailsSourceTwoComponent } from '../../components/view-details-source-two/view-details-source-two.component';
 
 const PAGE_SIZE = 10;
 
@@ -18,17 +20,23 @@ const PAGE_SIZE = 10;
   imports: [
     CommonModule,
     PaginatorComponent,
-    ActivityFilterComponent
+    ActivityFilterComponent,
+    ViewDetailsSourceOneComponent,
+    ViewDetailsSourceTwoComponent
 ],
   templateUrl: './cpd-activities-user.component.html',
   styleUrl: './cpd-activities-user.component.css'
 })
 export class CpdActivitiesUserComponent implements OnInit {
 
+  @ViewChild(ViewDetailsSourceOneComponent) viewDetailsSourceOneComponent!: ViewDetailsSourceOneComponent;
+  @ViewChild(ViewDetailsSourceTwoComponent) viewDetailsSourceTwoComponent!: ViewDetailsSourceTwoComponent;
+
   private academicPeriodManagementService = inject(AcademicPeriodManagementService);
   private activatedRoute = inject(ActivatedRoute);
   private cpdServicesService = inject(CpdServicesService);
   private messagesInfoService = inject(MessagesInfoService);
+  private router = inject(Router)
 
 
   public activitiesByType!: ActividadesPorTipoActividad[];
@@ -64,7 +72,7 @@ export class CpdActivitiesUserComponent implements OnInit {
     }
   }
 
-  recoverTeacherInfo(idUser: number | null) { 
+  public recoverTeacherInfo(idUser: number | null) { 
     if(idUser){
       this.cpdServicesService.getTeacherInfo(idUser).subscribe(
         {
@@ -109,6 +117,44 @@ export class CpdActivitiesUserComponent implements OnInit {
         }
       )
     }
+  }
+
+  public downloadConsolidatedFiles(){
+    if(this.activeAcademicPeriod && this.userTeacherInfo){
+      this.cpdServicesService.downloadFiles(this.activeAcademicPeriod.idPeriodo, this.userTeacherInfo.usuarioDetalle.departamento,this.userTeacherInfo.usuarioDetalle.contratacion, this.userTeacherInfo.oidUsuario, true).subscribe(
+        {
+          next: (blob) => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href  = url;
+            a.download = `documentos_${this.userTeacherInfo?.nombres}_${this.userTeacherInfo?.apellidos}_${this.activeAcademicPeriod?.idPeriodo}.xlsx`;
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          },
+          error: (error) => {
+            this.messagesInfoService.showErrorMessage('Error al descargar los archivos', 'Error');
+          }
+        }
+      )
+    }
+  }
+
+
+  public openSourceOne(activity: Activity) {
+    if(this.viewDetailsSourceOneComponent){
+      this.viewDetailsSourceOneComponent.open(activity);
+    }
+  } 
+
+  public openSourceTwo(activity: Activity) {
+    if(this.viewDetailsSourceTwoComponent){
+      this.viewDetailsSourceTwoComponent.open(activity);
+    }
+  }
+
+  public goBack(){
+    this.router.navigate(['./app/gestion-soportes/cpd/lista-docentes']);
   }
 
   public reloadActivities() {

@@ -1,5 +1,6 @@
 <div class="view-container">
-    <div class="title-two">Actividades del docente {{userTeacherInfo?.nombres | titlecase}} {{userTeacherInfo?.apellidos | titlecase}}</div>
+    <div class="title-two">Actividades del docente {{userTeacherInfo?.nombres | titlecase}} {{userTeacherInfo?.apellidos
+        | titlecase}}</div>
     <cpd-activity-filter (filterParams)="filterAction($event)"></cpd-activity-filter>
     <table class="table-bordered">
         <thead>
@@ -28,16 +29,28 @@
                             {{activity.nombreActividad}}
                         </td>
                         <td>
-                            <span class="text-body-regular" *ngIf="activity.fuentes[0].tipoFuente=='1'">{{activity.fuentes[0].estadoFuente}}</span>
-                        </td>
-                        <td>
+                            <span class="text-body-regular"
+                                *ngIf="activity.fuentes[0].tipoFuente=='1'">{{activity.fuentes[0].estadoFuente}}</span>
 
                         </td>
                         <td>
-                            <span class="text-body-regular">{{activity.evaluador.nombres}} {{activity.evaluador.apellidos}}</span>
+                            <button class="button-table-view"
+                                *ngIf="activity.fuentes[0].tipoFuente=='1' && activity.fuentes[0].estadoFuente==='DILIGENCIADO'"
+                                (click)="openSourceOne(activity)"></button>
                         </td>
                         <td>
-                            <span class="text-body-regular" *ngIf="activity.fuentes[1].tipoFuente=='2'">{{activity.fuentes[1].estadoFuente}}</span>
+                            <span class="text-body-regular">{{activity.evaluador.nombres}}
+                                {{activity.evaluador.apellidos}}</span>
+                        </td>
+                        <td>
+                            <span class="text-body-regular"
+                                *ngIf="activity.fuentes[1].tipoFuente=='2'">{{activity.fuentes[1].estadoFuente}}</span>
+                        </td>
+                        <td>
+                            <button class="button-table-view"
+                                *ngIf="activity.fuentes[1].tipoFuente=='2' && activity.fuentes[1].estadoFuente==='DILIGENCIADO'"
+                                (click)="openSourceTwo(activity)"></button>
+
                         </td>
                     </tr>
                 </ng-container>
@@ -54,16 +67,39 @@
 
     <div class="mb-3"></div>
 
-    <shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="teacherActivities?.totalPages || 1" (pageChange)="pageChanged($event)" ></shared-paginator>
+    <shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage"
+        [totalPages]="teacherActivities?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
     <section>
-        <span class="title-three">Descargar consolidado</span>
-        <div class="buttons-container" style="width: 50% !important;">
-            <div>
-                <span class="text-bod">Consolidado</span>
-                <br>
+        <div class="row">
+            <div class="col">
+                <span class="title-three">Descargar consolidado</span>
+                <div class="buttons-container">
+                    <div>
+                        <span class="text-bod">Consolidado</span>
+                        <br>
+                    </div>
+                    <button class="button-actions button-download" (click)="downloadConsolidatedFiles()"></button>
+                </div>
             </div>
-            <button class="button-actions button-download" (click)="downloadFiles()"></button>
+            <div class="col">
+                <span class="title-three">Descargar todos los soportes</span>
+                <div class="buttons-container">
+                    <div>
+                        <span class="text-bod">Soportes</span>
+                        <br>
+                    </div>
+                    <button class="button-actions button-download" (click)="downloadFiles()"></button>
+                </div>
+            </div>
         </div>
     </section>
-    
+
+    <div class="mb-3"></div>
+
+    <div class=" d-flex justify-content-center">
+        <button class="button-normal" (click)="goBack()">Volver</button>
+    </div>
+
 </div>
+<cpd-view-details-source-one></cpd-view-details-source-one>
+<cpd-view-details-source-two></cpd-view-details-source-two>

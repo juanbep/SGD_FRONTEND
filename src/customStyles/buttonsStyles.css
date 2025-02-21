@@ -161,3 +161,29 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.button-table-view {
+    color: var(--white);
+    border: none;
+    margin: none;
+    width: 30px;
+    max-width: 100%;
+    height: 30px;
+    background-color: var(--white);
+    background-image: url(../assets/icons/tables/icon-view.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.button-table-check {
+    color: var(--white);
+    border: none;
+    margin: none;
+    width: 30px;
+    max-width: 100%;
+    height: 30px;
+    background-color: var(--white);
+    background-image: url(../assets/icons/tables/icon-check.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+}

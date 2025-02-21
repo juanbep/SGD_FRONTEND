@@ -24,13 +24,9 @@
                     <td class="text-body-regular">{{teacher.usuarioDetalle.departamento}}</td>
                     <td class="text-body-regular">{{teacher.usuarioDetalle.categoria }}</td>
                     <td>
-                        <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" ></button>
-                        <button class="button-table-email" (click)="openEmailModal()"></button>
-                        <!-- Download consolidated -->
-                        <!-- View activities -->
-                        <!-- Send email -->
-                        <!-- Approv y generate resolution -->
-
+                        <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" title="Actividades"></button>
+                        <button class="button-table-email" (click)="openEmailModal()" title="Enviar email"></button>
+                        <button class="button-table-check" title="Aprobar consolidado"></button>
                     </td>
                 </tr>
             </tbody>

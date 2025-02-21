@@ -108,8 +108,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
   }
 
   goBack(){
-    window.history.back();
-    this.router.navigate(['./gestion-soportes/consolidado/lista-docentes']);
+    this.router.navigate(['./app/gestion-soportes/consolidado/lista-docentes']);
   }
 
   downloadAllSuppotFiles(){
