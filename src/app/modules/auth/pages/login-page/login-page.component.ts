@@ -32,7 +32,6 @@ export class LoginPageComponent {
    */
   onLogin() {
     this.service.login(this.authForm.value.email, this.authForm.value.password);
-    this.service.getUserInfo();
     this.router.navigate(['/app']);
   }
 

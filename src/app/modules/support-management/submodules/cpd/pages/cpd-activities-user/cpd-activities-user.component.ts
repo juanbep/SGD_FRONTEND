@@ -140,6 +140,8 @@ export class CpdActivitiesUserComponent implements OnInit {
     }
   }
 
+  
+
 
   public openSourceOne(activity: Activity) {
     if(this.viewDetailsSourceOneComponent){
