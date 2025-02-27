@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import {  Fuente, SourceEvaluation } from '../../../../../../core/models/responsibilitie.interface';
-import { Responsability } from '../../../../../../core/models/responsibilitie.interface';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
+import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 
 @Component({
   selector: 'responsibilities-edit-evaluation',
@@ -20,10 +21,10 @@ import { UserInfo } from '../../../../../../core/models/auth.interface';
 export class ResponsibilitiesEditEvaluationComponent {
 
   @Input()
-  source: Fuente | null = null;
+  public source: Fuente | null = null;
 
   @Input()
-  public responsability: Responsability | null = null;
+  public responsability: ResponsabilidadResponse | null = null;
 
   @Input()
   public openModalSelected: boolean = false;
@@ -57,7 +58,7 @@ export class ResponsibilitiesEditEvaluationComponent {
 
   ngOnInit(): void {
     if (this.source) {
-      this.evaluation = this.source.calificacion.toFixed(1);
+      this.evaluation = this.source.calificacion? this.source.calificacion.toFixed(1) : '';
       this.observation = this.source.observacion? this.source.observacion : '';
       this.fileNameSelected.set(this.source.nombreDocumentoFuente || '');
       this.recoverFile();
@@ -78,7 +79,7 @@ export class ResponsibilitiesEditEvaluationComponent {
   }
 
   public updateSource() {
-    let sendSource: SourceEvaluation[] = [];
+    let sendSource: FuenteCreate[] = [];
     if (this.responsability && (this.selectedFile) && this.evaluation && this.currentUser) {
       sendSource = [{
         tipoFuente: "2",
@@ -93,11 +94,11 @@ export class ResponsibilitiesEditEvaluationComponent {
             this.closeModalEditSelected.emit(true);
             this.service.getResponsibilities(this.currentUser!.oidUsuario.toString(), '', '', '', '',0,10).subscribe(
               {
-                next: data => {
-                  this.service.setResponsibilitiesData(data);
+                next: response => {
+                  this.service.setResponsibilitiesData(response.data);
                 },
                 error: error => {
-                  this.toastr.showErrorMessage('Error', 'Error');
+                  this.toastr.showErrorMessage(`Error al consultar la información: ${error.mensaje}`, 'Error');
                 }
               });
           },

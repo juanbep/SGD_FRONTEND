@@ -2,12 +2,13 @@ import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { ConsolidatedTeacherFilterComponent } from "../../components/consolidated-teacher-filter/consolidated-teacher-filter.component";
 import { ConsolidatedTeacherTableComponent } from "../../components/consolidated-teacher-table/consolidated-teacher-table.component";
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
-import { ConsolidatedActivitiesResponse, TeacherInformationResponse } from '../../../../../../core/models/consolidated.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
+import { ActividadConsolidadoResponse } from '../../../../../../core/models/response/actividad-consolidado-response.mode';
+import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 
 const SIZE_PAGE = 10
 const TITTLE_MESSAGE = 'Aprobar consolidado';
@@ -33,11 +34,11 @@ export class ConsolidatedTeacherComponent implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthServiceService);
 
-  public consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
+  public consolidatedTeacher: ActividadConsolidadoResponse | null = null;
   public currentPage: number = 1;
   public idUserTeacher: number = 0;
   public infoCurrentUser: UserInfo | null = null;
-  public infoDataTeacher: TeacherInformationResponse | null = null;
+  public infoDataTeacher: DetalleUsuarioConsolidadoResponse | null = null;
   public responseConsolidatedConfirmDialog: string = '';
   public tittleMessage: string = TITTLE_MESSAGE;
   public confirmMessage: string = CONFIRM_MESSAGE;

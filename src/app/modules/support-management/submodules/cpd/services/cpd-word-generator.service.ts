@@ -3,9 +3,9 @@ import { AlignmentType, Document, Header, ImageRun, Packer, Paragraph, TextRun }
 import { saveAs } from 'file-saver';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../../../../../core/models/users.interfaces';
-import { TeacherInformationResponse } from '../../../../../core/models/consolidated.interface';
-import { AcademicPeriod } from '../../../../../core/models/academicPeriods';
+import { UsuarioResponse } from '../../../../../core/models/response/usuario-response.model';
+import { PeriodoAcademicoResponse } from '../../../../../core/models/response/periodo-academico-response.model';
+import { DetalleUsuarioConsolidadoResponse } from '../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 
 
 @Injectable({
@@ -20,11 +20,11 @@ export class CpdWordGeneratorService {
     public currentDateYear: string | null = null;
     public startPeriodDate: string | null = null;
     public endPeriodDate: string | null = null;
-    public infoTeacher: User | null = null;
-    public currenAcademicPeriod: AcademicPeriod | null = null;
-    public teacherInformationConsolidatedResponse: TeacherInformationResponse | null = null;
+    public infoTeacher: UsuarioResponse | null = null;
+    public currenAcademicPeriod: PeriodoAcademicoResponse | null = null;
+    public teacherInformationConsolidatedResponse: DetalleUsuarioConsolidadoResponse | null = null;
 
-    async generateWordDocument(teacherConsolidated: TeacherInformationResponse, teacherInfo: User, currenAcademicPeriod: AcademicPeriod) {
+    async generateWordDocument(teacherConsolidated: DetalleUsuarioConsolidadoResponse, teacherInfo: UsuarioResponse, currenAcademicPeriod: PeriodoAcademicoResponse) {
 
         const imageData = await this.getImage('assets/images/logo-unicauca-2.png');
 

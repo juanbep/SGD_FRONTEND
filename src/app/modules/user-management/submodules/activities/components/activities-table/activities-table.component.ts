@@ -3,9 +3,10 @@ import { PaginatorComponent } from "../../../../../../shared/components/paginato
 import { CommonModule } from '@angular/common';
 import { ActivitiesManagementService } from '../../services/activities-management.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Activity, ActivityResponse } from '../../../../../../core/models/activities.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ModalActivitieDetailsComponent } from '../modal-activitie-details/modal-activitie-details.component';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 
 @Component({
   selector: 'user-management-activities-activities-table',
@@ -28,8 +29,8 @@ export class ActivitiesTableComponent implements OnInit {
   private messageToast = inject(MessagesInfoService);
 
   public idUserParam: number | null = null;
-  public activityResponse: ActivityResponse | null = null;
-  public activities: Activity[] = [];
+  public activityResponse: PagedResponse<ActividadResponse> | null = null;
+  public activities: ActividadResponse[] = [];
   public currentPage: number = 1;
   public sizePage: number = 10;
 
@@ -50,7 +51,7 @@ export class ActivitiesTableComponent implements OnInit {
     this.recoverActivitiesByUser(this.currentPage, this.sizePage);
   }
 
-  openActivitieDetails(activity: Activity){
+  openActivitieDetails(activity: ActividadResponse){
     if(this.modalActivitieDetails){
       this.modalActivitieDetails.open(activity);
     }
@@ -62,7 +63,7 @@ export class ActivitiesTableComponent implements OnInit {
       this.activitiesManagementService.getActivitiesByParams(page-1, size, this.idUserParam, nameActivity, typeActivity, activityCode, administrativeCode, vriCode).subscribe(
         {
           next: (response) => {
-            this.activityResponse = response;
+            this.activityResponse = response.data;
             if (this.activityResponse && this.activityResponse.content) {
               this.activities = this.activityResponse.content;
             }

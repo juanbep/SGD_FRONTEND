@@ -5,8 +5,9 @@ import { ActivitiesUploadSelfAssessmentComponent } from "../../components/activi
 import { CommonModule } from '@angular/common';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { ActivitiesEditEvaluationComponent } from '../../components/activities-edit-evaluation/activities-edit-evaluation.component';
-import { ActivityResponse } from '../../../../../../core/models/activities.interface';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 
 @Component({
   selector: 'support-management-activities',
@@ -26,7 +27,7 @@ export class ActivitiesComponent implements OnInit{
   @ViewChild(ActivitiesEditEvaluationComponent)
   editSelfAssessmentComponent!: ActivitiesEditEvaluationComponent;
 
-  public activityResponse: ActivityResponse | null = null;
+  public activityResponse: PagedResponse<ActividadResponse> | null = null;
 
   public checkActivitiesDiliegenciadoVar: boolean = false;
 

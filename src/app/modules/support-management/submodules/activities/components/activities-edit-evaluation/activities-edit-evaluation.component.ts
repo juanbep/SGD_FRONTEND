@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { Activity, ActivityResponse, SourceEvaluation } from '../../../../../../core/models/activities.interface';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 declare var bootstrap: any;
 
 @Component({
@@ -24,14 +26,14 @@ export class ActivitiesEditEvaluationComponent {
   @Input()
   currentUser: UserInfo | null = null;
 
-  private activityFileReport: Activity | null = null;
+  private activityFileReport: ActividadResponse | null = null;
   private myModal: HTMLElement | null = null;
-  public teacherActivities: ActivityResponse | null = null;
+  public teacherActivities: PagedResponse<ActividadResponse> | null = null;
   public errorFileInput: boolean = false;
   public fileNameSelected: string = '';
   public filesSelected: File[] = [];
   public selectedSourceFile: File | null = null;
-  public sendSource: SourceEvaluation[] = [];
+  public sendSource: FuenteCreate[] = [];
   public sourceFileDeleted: boolean = false;
 
   // Inyección de dependencias
@@ -63,14 +65,14 @@ export class ActivitiesEditEvaluationComponent {
   recoverActivities() {
     if (this.currentUser) {
       this.service.getActivities(this.currentUser?.oidUsuario, '', '', '', '', null, null).subscribe({
-        next: data => {
-          this.teacherActivities = data;
+        next: response => {
+          this.teacherActivities = response.data;
           this.recoverReports();
           this.recoverSource();
           this.populateForm();
         },
         error: error => {
-          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+          this.toastr.showErrorMessage(`Error al consultar la información. Error: ${error.mensaje}`, 'Error');
         }
       });
     }
@@ -162,7 +164,7 @@ export class ActivitiesEditEvaluationComponent {
   recoverSource() {
     this.teacherActivities!.content.forEach((content, index) => {
       if (content.fuentes[0] && content.fuentes[0].oidFuente) {
-        this.service.getdownloadSourceFile(content.fuentes[0].oidFuente).subscribe(
+        this.service.getDownloadSourceFile(content.fuentes[0].oidFuente).subscribe(
           {
             next: (response) => {
               const blob = new Blob([response], { type: 'application/pdf' });
@@ -209,7 +211,7 @@ export class ActivitiesEditEvaluationComponent {
   downloadSourceFile(): void {
     const oidFuente = this.teacherActivities?.content[0].fuentes[0].oidFuente;
     if (oidFuente !== undefined) {
-      this.service.getdownloadSourceFile(oidFuente).subscribe(
+      this.service.getDownloadSourceFile(oidFuente).subscribe(
         {
           next: (response) => {
             const blob = new Blob([response], { type: 'application/pdf' });
@@ -253,7 +255,7 @@ export class ActivitiesEditEvaluationComponent {
   /*
   *  Elimina el archivo de informe ejecutivo
   */
-  deleteReport(activitie: Activity): void {
+  deleteReport(activitie: ActividadResponse): void {
     if (activitie) {
       activitie.fuentes[0].nombreDocumentoInforme = '';
       activitie.fuentes[0].informeEjecutivo = null;
@@ -291,7 +293,7 @@ export class ActivitiesEditEvaluationComponent {
     }
   }
 
-  triggerReportFileUpload(actividad: Activity) {
+  triggerReportFileUpload(actividad: ActividadResponse) {
     const fileUpload = document.getElementById('uploadFileReportEdit') as HTMLInputElement;
     if (fileUpload) {
       this.activityFileReport = actividad;
@@ -327,10 +329,10 @@ export class ActivitiesEditEvaluationComponent {
         activitie.fuentes[0].calificacion = formValues.activities[index].calificacion;
       });
       this.sendSource = this.teacherActivities!.content.map(activitie => ({
-        tipoFuente: '1',
-        calificacion: activitie.fuentes[0].calificacion,
         oidActividad: activitie.oidActividad,
-        informeEjecutivo: activitie.fuentes[0].nombreDocumentoInforme || ''
+          tipoFuente: '1',
+          calificacion: activitie.fuentes[0].calificacion || 0,
+          informeEjecutivo: activitie.fuentes[0].nombreDocumentoInforme || ''
       }));
       this.service.saveSelfAssessment(this.selectedSourceFile!, formValues.observation, this.sendSource, this.filesSelected).subscribe(
         {
@@ -357,8 +359,8 @@ export class ActivitiesEditEvaluationComponent {
   recoverActivitiesSuccess(){
     if (this.currentUser) {
       this.service.getActivities(this.currentUser?.oidUsuario, '', '', '', '', null, null).subscribe({
-        next: data => {
-          this.service.setDataActivities(data);
+        next: response => {
+          this.service.setDataActivities(response.data);
         },
         error: error => {
           this.toastr.showErrorMessage('Error al consultar la información', 'Error');

@@ -1,5 +1,4 @@
 import { Component, effect, Input } from '@angular/core';
-import { ResponsabilityResponse, ResponsabilidadesPorTipoActividad, Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesUploadEvaluationComponent } from "../responsibilities-upload-evaluation/responsibilities-upload-evaluation.component";
 import { ResponsibilitiesViewEvaluationComponent } from "../responsibilities-view-evaluation/responsibilities-view-evaluation.component";
@@ -8,6 +7,8 @@ import { ResponsibilitiesServicesService } from '../../services/responsibilities
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
 
 @Component({
   selector: 'responsibilities-table',
@@ -34,10 +35,10 @@ export class ResponsibilitiesTableComponent {
   public subHeadDataTableStudents = ["Nombre actividad", "Evaluado", "Rol evaluado", "Estado soporte", "Acciones","Acciones"];
 
   public responsabilitieByType: ResponsabilidadesPorTipoActividad[] = [];
-  public responsabilities: ResponsabilityResponse | null = null;
+  public responsabilities: PagedResponse<ResponsabilidadResponse> | null = null;
 
   public openModalResposabilitySelected: boolean = false;
-  public resposabilitySelected: Responsability | undefined;
+  public resposabilitySelected: ResponsabilidadResponse | undefined;
 
   public openModalViewSelected: boolean = false;
 
@@ -57,18 +58,18 @@ export class ResponsibilitiesTableComponent {
   recoverResponsabilities(page: number, totalPage: number) {
     if(this.currentUser) {
       this.service.getResponsibilities(this.currentUser.oidUsuario.toString(), '', '', '', '',page-1, totalPage).subscribe({
-        next: data => {
-          this.service.setResponsibilitiesData(data);
+        next: response => {
+          this.service.setResponsibilitiesData(response.data);
         },
         error: error => {
-          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+          this.toastr.showErrorMessage(`Error al consulatar la información. Error: ${error.mensaje}`, 'Error');
         }
       });
     }
   }
 
 
-  public openModalUpload(responsability: Responsability) {
+  public openModalUpload(responsability: ResponsabilidadResponse) {
     this.openModalResposabilitySelected = !this.openModalResposabilitySelected;
     this.resposabilitySelected = responsability;
   }
@@ -77,12 +78,12 @@ export class ResponsibilitiesTableComponent {
     this.openModalResposabilitySelected = !event;
   }
 
-  public openModalView(responsability: Responsability) {
+  public openModalView(responsability: ResponsabilidadResponse) {
     this.openModalViewSelected = !this.openModalViewSelected;
     this.resposabilitySelected = responsability;
   }
 
-  public openModalEdit(responsability: Responsability) {
+  public openModalEdit(responsability: ResponsabilidadResponse) {
     this.openModalEditSelected = !this.openModalEditSelected;
     this.resposabilitySelected = responsability;
   }
@@ -95,14 +96,14 @@ export class ResponsibilitiesTableComponent {
     this.openModalEditSelected = !event
   }
 
-  public downloadReport(responsability: Responsability) {
+  public downloadReport(responsability: ResponsabilidadResponse) {
     this.service.getDownloadReportFile(responsability.fuentes[0].oidFuente, true).subscribe(
       {
         next: blob => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = responsability.fuentes[0].nombreDocumentoInforme;
+          a.download = responsability.fuentes[0].nombreDocumentoInforme? responsability.fuentes[0].nombreDocumentoInforme : '';
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -137,4 +138,9 @@ export class ResponsibilitiesTableComponent {
       );
     }
     }
+}
+
+export interface ResponsabilidadesPorTipoActividad {
+  nombreType: string;
+  activities: ResponsabilidadResponse[];
 }

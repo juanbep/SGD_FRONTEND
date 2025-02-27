@@ -1,8 +1,10 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { UmActivitiesServiceService } from '../../../../../core/services/users-management/um-activities-services.service';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
-import { UsersResponse } from '../../../../../core/models/users.interfaces';
-import { Activity, ActivityResponse, NewActivity } from '../../../../../core/models/activities.interface';
+import { PagedResponse } from '../../../../../core/models/response/paged-response.model';
+import { UsuarioResponse } from '../../../../../core/models/response/usuario-response.model';
+import { ActividadCreate } from '../../../../../core/models/modified/actividad-create.model';
+import { ActividadResponse } from '../../../../../core/models/response/actividad-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class ActivitiesManagementService {
@@ -10,8 +12,8 @@ export class ActivitiesManagementService {
     private umActivitiesServiceService = inject(UmActivitiesServiceService);
     private umUsersServicesService = inject(UmUsersServicesService);
 
-    private usersSignal: WritableSignal<UsersResponse | null> = signal(null);
-    private activitiesSignal: WritableSignal<ActivityResponse | null> = signal(null);
+    private usersSignal: WritableSignal<PagedResponse<UsuarioResponse> | null> = signal(null);
+    private activitiesSignal: WritableSignal<PagedResponse<ActividadResponse> | null> = signal(null);
 
     private paramsUsersFilterSignal: WritableSignal<{ nameUser: string | null, identification: string | null, faculty: string | null, program: string | null, rol: string | null, state: string | null } | null> = signal(null);
     private paramsActivitiesFilterSignal: WritableSignal<{ nameActivity: string | null, typeActivity: string | null, activityCode: string | null, administrativeCode: string | null, vriCode: string | null } | null> = signal(null);
@@ -52,7 +54,7 @@ export class ActivitiesManagementService {
     * Method to set the users signal
     * @param newData:UsersResponse
     * */
-    setUsers(newData: UsersResponse) {
+    setUsers(newData: PagedResponse<UsuarioResponse>) {
         this.usersSignal.update(data => data = newData);
     }
 
@@ -68,7 +70,7 @@ export class ActivitiesManagementService {
     * Method to set the activities signal
     * @param newData:ActivityResponse
     * */
-    setActivities(newData: ActivityResponse) {
+    setActivities(newData: PagedResponse<ActividadResponse>) {
         this.activitiesSignal.update(data => data = newData);
     }
 
@@ -162,7 +164,7 @@ export class ActivitiesManagementService {
     * @returns Observable<any>
     * */
 
-    updateActivity(idActivity:number,activity: NewActivity){
+    updateActivity(idActivity:number,activity: ActividadCreate){
         return this.umActivitiesServiceService.updateActivity(idActivity,activity);
     }
 

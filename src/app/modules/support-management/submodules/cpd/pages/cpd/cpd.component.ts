@@ -2,17 +2,18 @@ import { Component, inject, Inject, OnInit, ViewChild, viewChild } from '@angula
 import { CpdServicesService } from '../../services/cpd-services.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
-import { User, UsersResponse } from '../../../../../../core/models/users.interfaces';
 import { CommonModule } from '@angular/common';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
 import { UserFilterComponent } from "../../components/user-filter/user-filter.component";
 import { EmailComponent } from '../../../../../../shared/components/email/email.component';
 import { RouterModule } from '@angular/router';
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
-import { AcademicPeriod } from '../../../../../../core/models/academicPeriods';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { CpdWordGeneratorService } from '../../services/cpd-word-generator.service';
-import { TeacherInformationResponse } from '../../../../../../core/models/consolidated.interface';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
+import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 
 const TOTAL_PAGE = 10;
 const ID_ROL = '1';
@@ -40,12 +41,12 @@ export class CpdComponent implements OnInit {
   private messagesInfoService = inject(MessagesInfoService);
   private cpdWordGeneratorService = inject(CpdWordGeneratorService);
 
-  public academicPeriodActive: AcademicPeriod | null = null;
+  public academicPeriodActive: PeriodoAcademicoResponse | null = null;
   public currentPage: number = 1;
   public currentUser: UserInfo | null = null;
   public emailMessage: string = '';
   public filterParams: { nameUser: string | null, identification: string | null, category: string | null } = { nameUser: null, identification: null, category: null };
-  public teacherByDepartment: UsersResponse | null = null;
+  public teacherByDepartment: PagedResponse<UsuarioResponse> | null = null;
 
 
   ngOnInit(): void {
@@ -59,7 +60,7 @@ export class CpdComponent implements OnInit {
   recoverTeachers(page: number, totalPage: number, department: string, userId: string | null, userName: string | null, category: string | null, rol: string) {
     this.cpdServiceServices.getTeachersByDepartment(page - 1, totalPage, department, userId, userName, category, rol).subscribe(
       (response) => {
-        this.teacherByDepartment = response
+        this.teacherByDepartment = response.data
       }
     )
   }
@@ -106,8 +107,8 @@ export class CpdComponent implements OnInit {
     }
   }
 
-  wordGenerator(teacherId: number, teacherInfo: User) {
-    let infoTeacherConsolidated: TeacherInformationResponse | null = null;
+  wordGenerator(teacherId: number, teacherInfo: UsuarioResponse) {
+    let infoTeacherConsolidated: DetalleUsuarioConsolidadoResponse | null = null;
     this.cpdServiceServices.getInformationTeacherConsolidatedResponse(teacherId).subscribe(
       {
         next: (response) => {

@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { NewUser, User, UsersResponse } from '../../models/users.interfaces';
 import { Params } from '@angular/router';
+import { PagedResponse } from '../../models/response/paged-response.model';
+import { UsuarioResponse } from '../../models/response/usuario-response.model';
+import { UsuarioCreate } from '../../models/modified/usuario-create.model';
+import { SimpleResponse } from '../../models/response/simple-response.model';
 
 @Injectable({providedIn: 'root'})
 export class UmUsersServicesService {
@@ -16,12 +19,12 @@ export class UmUsersServicesService {
     * @param totalPage:number
     * @returns Observable<UsersResponse>
     * */
-    getAllUsers(page: number, totalPage: number): Observable<UsersResponse> {
+    getAllUsers(page: number, totalPage: number): Observable<SimpleResponse<PagedResponse<UsuarioResponse>>> {
         const params: Params = {
             page: page.toString(),
             size: totalPage.toString(),
         };
-        return this.httpClient.get<UsersResponse>(`${this.baseUrl}/api/usuario`,{params});
+        return this.httpClient.get<SimpleResponse<PagedResponse<UsuarioResponse>>>(`${this.baseUrl}/api/usuario`,{params});
     }
 
     /*
@@ -38,7 +41,7 @@ export class UmUsersServicesService {
     * @param state:string
     * @returns Observable<UsersResponse>
     * */
-    getAllUsersByParams(page: number, totalPage: number, userId: string | null, userName:string | null, faculty: string | null, department: string | null, category: string | null, hiring: string | null, dedication: string | null, studies: string | null, rol: string | null, state: string | null): Observable<UsersResponse> {
+    getAllUsersByParams(page: number, totalPage: number, userId: string | null, userName:string | null, faculty: string | null, department: string | null, category: string | null, hiring: string | null, dedication: string | null, studies: string | null, rol: string | null, state: string | null): Observable<SimpleResponse<PagedResponse<UsuarioResponse>>> {
         const params: Params = {
             page: page.toString(),
             size: totalPage.toString(),
@@ -53,7 +56,7 @@ export class UmUsersServicesService {
             rol: rol || '',
             estado: state || ''
         };
-        return this.httpClient.get<UsersResponse>(`${this.baseUrl}/api/usuarios`,{params});
+        return this.httpClient.get<SimpleResponse<PagedResponse<UsuarioResponse>>>(`${this.baseUrl}/api/usuarios`,{params});
     }
     
     /*
@@ -62,8 +65,8 @@ export class UmUsersServicesService {
     * @returns Observable<User>
     * */
 
-    getUserbyId(id: number): Observable<User> {
-        return this.httpClient.get<User>(`${this.baseUrl}/api/usuarios/${id}`);
+    getUserbyId(id: number): Observable<UsuarioResponse> {
+        return this.httpClient.get<UsuarioResponse>(`${this.baseUrl}/api/usuarios/${id}`);
     }
 
 
@@ -73,8 +76,8 @@ export class UmUsersServicesService {
     * @returns Observable<UsersResponse>
     * */
     
-    saveUser(user: NewUser[]): Observable<UsersResponse> {
-        return this.httpClient.post<UsersResponse>(`${this.baseUrl}/api/usuarios`, user);
+    saveUser(user: UsuarioCreate[]): Observable<UsuarioResponse> {
+        return this.httpClient.post<UsuarioResponse>(`${this.baseUrl}/api/usuarios`, user);
     }
 
     /*
@@ -83,8 +86,8 @@ export class UmUsersServicesService {
     * @param user:NewUser
     * @returns Observable<User>
     * */
-    updateUsers(idUsuario:number,user: NewUser): Observable<NewUser> {
-        return this.httpClient.put<NewUser>(`${this.baseUrl}/api/usuarios/${idUsuario}`, user);
+    updateUsers(idUsuario:number,user: UsuarioCreate): Observable<UsuarioCreate> {
+        return this.httpClient.put<UsuarioCreate>(`${this.baseUrl}/api/usuarios/${idUsuario}`, user);
     }
 
 

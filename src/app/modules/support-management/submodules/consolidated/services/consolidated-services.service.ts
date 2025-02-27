@@ -1,14 +1,16 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { SmConsolidatedServicesService } from '../../../../../core/services/support-management/sm-consolidated-services.service';
-import { ConsolidatedActivitiesResponse, Teacher } from '../../../../../core/models/consolidated.interface';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
 import { SmActivitiesServicesService } from '../../../../../core/services/support-management/sm-activities-services.service';
+import { PagedResponse } from '../../../../../core/models/response/paged-response.model';
+import { ActividadConsolidadoResponse } from '../../../../../core/models/response/actividad-consolidado-response.mode';
+import { UsuarioConsolidadoResponse } from '../../../../../core/models/response/usuario-consolidado-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class ConsolidatedServicesService {
 
-  private consolidatedTeacher: WritableSignal<ConsolidatedActivitiesResponse> = signal({} as ConsolidatedActivitiesResponse);
-  private teacherList: WritableSignal<Teacher[]> = signal([]);
+  private consolidatedTeacher: WritableSignal<ActividadConsolidadoResponse> = signal({} as ActividadConsolidadoResponse);
+  private teacherList: WritableSignal<UsuarioConsolidadoResponse[]> = signal([]);
   private filterParams: WritableSignal<{activityType: string | null, activityName: string | null, sourceType: string | null, sourceState: string | null}> = signal({activityType: null, activityName: null, sourceType: null, sourceState: null});
   
   private smConsolidatedServicesService = inject(SmConsolidatedServicesService);
@@ -16,7 +18,7 @@ export class ConsolidatedServicesService {
   private umUsersServicesService = inject(UmUsersServicesService);
 
 
-  setDataTeachersList(newData: Teacher[]) {
+  setDataTeachersList(newData: UsuarioConsolidadoResponse[]) {
     this.teacherList.update(data => data = newData);
   }
 
@@ -35,7 +37,7 @@ export class ConsolidatedServicesService {
     return this.filterParams();
   }
 
-  setDataConsolidatedTeacher(newData: ConsolidatedActivitiesResponse) {
+  setDataConsolidatedTeacher(newData: ActividadConsolidadoResponse) {
     this.consolidatedTeacher.update(data => data = newData);
   }
 

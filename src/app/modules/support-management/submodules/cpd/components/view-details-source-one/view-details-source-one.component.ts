@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { Activity, Fuente } from '../../../../../../core/models/activities.interface';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { CommonModule } from '@angular/common';
 import { ConsolidatedServicesService } from '../../../consolidated/services/consolidated-services.service';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 declare var bootstrap: any;
 
 @Component({
@@ -15,14 +16,14 @@ declare var bootstrap: any;
 })
 export class ViewDetailsSourceOneComponent {
 
-  public activity: Activity | null = null;
+  public activity: ActividadResponse | null = null;
   private consolidatedServices = inject(ConsolidatedServicesService);
   public sourceFile: Blob | null = null;
   public reportFile: Blob | null = null;
   public sourceOne: Fuente | undefined = undefined;
 
 
-  open(activity: Activity) {
+  open(activity: ActividadResponse) {
     const myModal = document.getElementById('view-details-source-one-modal');
     if (myModal) {
       var bootstrapModal = new bootstrap.Modal(myModal);

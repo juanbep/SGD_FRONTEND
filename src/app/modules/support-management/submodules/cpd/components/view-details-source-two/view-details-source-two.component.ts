@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { ConsolidatedServicesService } from '../../../consolidated/services/consolidated-services.service';
 import { Utilities } from '../../../consolidated/utils/utilities';
-import { Activity, Fuente } from '../../../../../../core/models/activities.interface';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { CommonModule } from '@angular/common';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 declare var bootstrap: any;
 
 @Component({
@@ -18,11 +19,11 @@ export class ViewDetailsSourceTwoComponent {
  private consolidatedServices = inject(ConsolidatedServicesService);
   private utilities = inject(Utilities);
 
-  public activity: Activity | null = null;
+  public activity: ActividadResponse | null = null;
   public sourceTwo: Fuente | undefined = undefined;
   public sourceFile: Blob | null = null;
 
-  open(activity: Activity) {
+  open(activity: ActividadResponse) {
     const myModal = document.getElementById('view-details-source-two-modal');
     if (myModal) {
       var bootstrapModal = new bootstrap.Modal(myModal);

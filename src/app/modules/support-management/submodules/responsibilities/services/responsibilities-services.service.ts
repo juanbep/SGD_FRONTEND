@@ -1,16 +1,17 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { SmResponsibilitiesServicesService } from '../../../../../core/services/support-management/sm-responsibilities-services.service';
-import { ResponsabilityResponse } from '../../../../../core/models/responsibilitie.interface';
-import { SourceEvaluation } from '../../../../../core/models/activities.interface';
+import { FuenteCreate } from '../../../../../core/models/modified/fuente-create.model';
+import { PagedResponse } from '../../../../../core/models/response/paged-response.model';
+import { ResponsabilidadResponse } from '../../../../../core/models/response/responsabilidad-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilitiesServicesService {
 
-    private userResponsibilities: WritableSignal<ResponsabilityResponse | null> = signal(null);
+    private userResponsibilities: WritableSignal<PagedResponse<ResponsabilidadResponse> | null> = signal(null);
 
     private smResponsibilitiesServicesService = inject(SmResponsibilitiesServicesService);
 
-    setResponsibilitiesData(newData: ResponsabilityResponse) {
+    setResponsibilitiesData(newData: PagedResponse<ResponsabilidadResponse>) {
         this.userResponsibilities.update(data => data = newData);
     }   
 
@@ -22,7 +23,7 @@ export class ResponsibilitiesServicesService {
         return this.smResponsibilitiesServicesService.getResponsibilities(evaluatorId, activityCode, activityType, evaluatorName, roles, page, totalPage);
     }
 
-    saveResponsibilityEvaluation(file: File, observation: string, source: SourceEvaluation[]) {
+    saveResponsibilityEvaluation(file: File, observation: string, source: FuenteCreate[]) {
         return this.smResponsibilitiesServicesService.saveResponsibilityEvaluation(file, observation, source)
     }
 

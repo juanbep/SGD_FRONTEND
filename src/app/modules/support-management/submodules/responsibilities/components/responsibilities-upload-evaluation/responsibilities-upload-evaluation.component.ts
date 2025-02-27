@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { Responsability } from '../../../../../../core/models/responsibilitie.interface';
-import { SourceEvaluation } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
+import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 
 @Component({
   selector: 'responsibilities-upload-evaluation',
@@ -20,7 +20,7 @@ import { UserInfo } from '../../../../../../core/models/auth.interface';
 export class ResponsibilitiesUploadEvaluationComponent {
 
   @Input()
-  responsability: Responsability | null = null;
+  responsability: ResponsabilidadResponse | null = null;
 
   @Input()
   openModalUploadSelected: boolean = false;
@@ -37,7 +37,7 @@ export class ResponsibilitiesUploadEvaluationComponent {
   public inputValue: string = '';
   public evaluation: number | null = null;
   public selectedFile: File | null = null;
-  public sendSource: SourceEvaluation[] | null = null;
+  public sendSource: FuenteCreate[] | null = null;
   public observacionSend: string = '';
   public fileNameSelected: WritableSignal<string> = signal('');
 
@@ -117,11 +117,11 @@ export class ResponsibilitiesUploadEvaluationComponent {
         next: data => {
           this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
           this.service.getResponsibilities(this.currentUser?.oidUsuario.toString()||'', '', '', '', '',0,10).subscribe({
-            next: data => {
-              this.service.setResponsibilitiesData(data);
+            next: response => {
+              this.service.setResponsibilitiesData(response.data);
             },
             error: error => {
-              this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+              this.toastr.showErrorMessage(`Error al consultar la información. Error: ${error.mensaje}`, 'Error');
             }
           });
         },

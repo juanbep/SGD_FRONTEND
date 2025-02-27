@@ -1,13 +1,16 @@
 import { Component, effect, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
-import { Actividades, ConsolidatedActivitiesResponse, Fuente, InfoActivitie, TeacherInformationResponse } from '../../../../../../core/models/consolidated.interface';
 import { CommonModule } from '@angular/common';
 import { ViewDetailsSourceOneComponent } from '../view-details-source-one/view-details-source-one.component';
 import { ViewDetailsSourceTwoComponent } from '../view-details-source-two/view-details-source-two.component';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
 import { EmailComponent } from '../../../../../../shared/components/email/email.component';
-import { User } from '../../../../../../core/models/users.interfaces';
 import { ActivatedRoute } from '@angular/router';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
+import { ActividadConsolidadoResponse, Actividades, InformacionActividad } from '../../../../../../core/models/response/actividad-consolidado-response.mode';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
 
 @Component({
   selector: 'consolidated-teacher-table',
@@ -38,7 +41,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
-  teacherOfConsolidated :TeacherInformationResponse | null = null;
+  teacherOfConsolidated : DetalleUsuarioConsolidadoResponse | null = null;
 
   @Input()
   currentPage: number = 1;
@@ -46,10 +49,10 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private router = inject(ActivatedRoute);
 
-  public consolidatedTeacher: ConsolidatedActivitiesResponse | null = null;
+  public consolidatedTeacher: ActividadConsolidadoResponse | null = null;
   public messageEmail: string = '';
   public subjectEmail: string = '';
-  public currentUser: User| null = null;
+  public currentUser: UsuarioResponse| null = null;
   public teacherId: number = 0;
 
   constructor() {
@@ -77,7 +80,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   }
 
 
-  public emailNotificationModal(activity: InfoActivitie, sourceSelected: Fuente) {
+  public emailNotificationModal(activity: InformacionActividad, sourceSelected: Fuente) {
     if (this.emailComponent && activity) {
       this.messageEmail = 
         `Evaluado: ${this.teacherOfConsolidated?.nombreDocente}
@@ -95,7 +98,7 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
     this.viewDetailsSourceTwoComponent.open(oidActividad);
   }
 
-  getActivities(typeActivity: string): InfoActivitie[] {
+  getActivities(typeActivity: string): InformacionActividad[] {
     switch (typeActivity) {
       case 'DOCENCIA':
         return this.consolidatedTeacher?.actividades['DOCENCIA'] || [];
@@ -126,14 +129,14 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
     this.pageChange.emit(this.currentPage);
   }
 
-  activityToSendEmailSelected(activitySelected: InfoActivitie, sourceSelected: Fuente){
+  activityToSendEmailSelected(activitySelected: InformacionActividad, sourceSelected: Fuente){
     if(activitySelected && sourceSelected)  
     {
       this.emailNotificationModal(activitySelected, sourceSelected);
     }
   }
 
-  recoverUserInfo(idUser:number, userIn:User | null){
+  recoverUserInfo(idUser:number, userIn:UsuarioResponse | null){
     this.consolidatedServicesService.getUserInfo(idUser).subscribe(
         {
           next:User =>{

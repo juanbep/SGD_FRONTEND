@@ -1,11 +1,13 @@
 import { Component, effect, inject, Input, OnInit } from '@angular/core';
-import { ActividadesPorTipoActividad, Activity, ActivityResponse, Fuente } from '../../../../../../core/models/activities.interface';
 import { CommonModule } from '@angular/common';
 import { ActivitiesViewEvaluationComponent } from "../activities-view-evaluation/activities-view-evaluation.component";
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
 
 @Component({
   selector: 'activities-table',
@@ -20,12 +22,12 @@ export class ActivitiesTableComponent implements OnInit {
   currentUser:UserInfo | null = null;
 
   public currentPage: number = 1;
-  public activities: ActivityResponse | null = null;
+  public activities: PagedResponse<ActividadResponse> | null = null;
   public activitiesByType!: ActividadesPorTipoActividad[];
   public headDataTable = ["Actividades", "Autoevaluación", "Fuente 2"]
   public subHeadDataTable = ["Nombre actividad", "Estado", "Acciones", "Evaluador", "Rol Evaluador", "Estado", "Acciones"]
   public openModalViewSelected: boolean = false;
-  public activitySelected: Activity | undefined;
+  public activitySelected: ActividadResponse | undefined;
   public sourceSelected: 1 | 2 | undefined;
   public sourceOne: Fuente | null = null;
   public sourceTwo: Fuente | null = null;
@@ -53,10 +55,9 @@ export class ActivitiesTableComponent implements OnInit {
   getAllActivities(page: number, totalPage: number) {
     if (this.currentUser) {
       this.activitiesServices.getActivities(this.currentUser.oidUsuario, '', '', '', '', page - 1, totalPage).subscribe({
-        next: data => {
-          this.activities = data;
-          this.getSource();
-          this.activitiesServices.setDataActivities(data);
+        next: response => {
+          this.activities = response.data;
+          this.activitiesServices.setDataActivities(response.data);
           this.reloadActivities();
         },
         error: error => {
@@ -66,24 +67,7 @@ export class ActivitiesTableComponent implements OnInit {
     }
   }
 
-  getSource() {
-    if (this.activities) {
-      this.activities.content.forEach(activity => {
-        if (activity.fuentes && activity.fuentes.length > 0) {
-          activity.fuentes.forEach((fuente) => {
-            if (fuente.tipoFuente === "1") {
-              this.sourceOne = fuente;
-            } else {
-              this.sourceTwo = fuente;
-            }
-          });
-        }
-      });
-    }
-  }
-
-
-  public openModalView(activity: Activity, source: 1 | 2) {
+  public openModalView(activity: ActividadResponse, source: 1 | 2) {
     this.openModalViewSelected = !this.openModalViewSelected;
     this.sourceSelected = source;
     this.activitySelected = activity;
@@ -114,4 +98,9 @@ export class ActivitiesTableComponent implements OnInit {
       );
     }
   }
+}
+
+export interface ActividadesPorTipoActividad {
+  nombreType: string;
+  activities: ActividadResponse[];
 }

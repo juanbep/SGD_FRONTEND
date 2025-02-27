@@ -1,10 +1,12 @@
 import { Component, effect, inject, Input, signal, WritableSignal } from '@angular/core';
-import { Activity, ActivityResponse, SourceEvaluation } from '../../../../../../core/models/activities.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
+import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 declare var bootstrap: any;
 
 @Component({
@@ -26,12 +28,12 @@ export class ActivitiesUploadSelfAssessmentComponent {
   
   private myModal: HTMLElement | null = null;
   public errorMessageFile: string = '';
-  public activityResponse: ActivityResponse | null = null;
-  public userActivities: Activity[] = [];
+  public activityResponse: PagedResponse<ActividadResponse> | null = null;
+  public userActivities: ActividadResponse[] = [];
   public observacionSend: string = '';
   public selectedFile: File | null = null;
   public selfEvaluation: number[] = [];
-  public sendSource: SourceEvaluation[] = [];
+  public sendSource: FuenteCreate[] = [];
   public evaluationPendingVar: boolean = false;
   public errorCalificacion: boolean = false;
   public filesSelected: File[] = [];
@@ -39,7 +41,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
 
   public fileNameSelected: WritableSignal<string> = signal('');
 
-  public activityFileReport: Activity | null = null;
+  public activityFileReport: ActividadResponse | null = null;
 
   private service = inject(ActivitiesServicesService);
   private toastr = inject(MessagesInfoService);
@@ -50,8 +52,8 @@ export class ActivitiesUploadSelfAssessmentComponent {
   recoverActivities(): void {
     if(this.currentUser){
       this.service.getActivities(this.currentUser.oidUsuario, '', '', '', '',null,null).subscribe({
-        next: data => {
-          this.userActivities = data.content;
+        next: response => {
+          this.userActivities = response.data.content;
           this.activityResponse = this.service.getDataActivities();
         },
         error: error => {
@@ -114,7 +116,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   /*
   * Method to trigger the report file upload
   */
-  triggerReportFileUpload(actividad: Activity) {
+  triggerReportFileUpload(actividad: ActividadResponse) {
     const fileUpload = document.getElementById('uploadFileReport') as HTMLInputElement;
     if (fileUpload) {
       this.activityFileReport = actividad;
@@ -144,7 +146,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   * Method to download the report file
   */
 
-  downloadReportFile(actividad: Activity): void {
+  downloadReportFile(actividad: ActividadResponse): void {
     let file: File[] = this.filesSelected.filter(file => file.name === actividad.fuentes[0].nombreDocumentoInforme);
     if (file) {
       var a = document.createElement("a");
@@ -154,7 +156,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
     }
   }
 
-  deleteReportFile(actividad: Activity): void {
+  deleteReportFile(actividad: ActividadResponse): void {
     this.filesSelected.splice(this.filesSelected.findIndex(file => file.name === actividad.fuentes[0].nombreDocumentoInforme), 1);
     actividad.fuentes[0].nombreDocumentoInforme = '';
   }
@@ -162,7 +164,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   /*
   * Method to update the evaluation of the activity
   */
-  updateEvaluation(event: Event, activitie: Activity): void {
+  updateEvaluation(event: Event, activitie: ActividadResponse): void {
     let evaluationInput = event.target as HTMLInputElement;
     const calificacion: number = parseFloat(evaluationInput.value);
     if (!isNaN(calificacion)) {
@@ -185,16 +187,16 @@ export class ActivitiesUploadSelfAssessmentComponent {
     if (this.selectedFile && this.currentUser) {
       if (this.userActivities ) {
         this.sendSource = this.userActivities.map(activitie => ({
-          tipoFuente: "1",
-          calificacion: activitie.fuentes[0].calificacion,
           oidActividad: activitie.oidActividad,
-          informeEjecutivo: activitie?.fuentes[0].nombreDocumentoInforme || ''
+          tipoFuente: '1',
+          calificacion: activitie.fuentes[0].calificacion || 0,
+          informeEjecutivo: activitie.fuentes[0].nombreDocumentoInforme || ''
         }));
         this.service.saveSelfAssessment(this.selectedFile, this.observacionSend, this.sendSource, this.filesSelected).subscribe({
           next: data => {
             this.service.getActivities(this.currentUser?.oidUsuario || 0 , '', '', '', '',0,10).subscribe({
-              next: data => {
-                this.service.setDataActivities(data);
+              next: response => {
+                this.service.setDataActivities(response.data);
                 this.toastr.showSuccessMessage('Información guardada correctamente', 'Éxito');
               },
               error: error => {

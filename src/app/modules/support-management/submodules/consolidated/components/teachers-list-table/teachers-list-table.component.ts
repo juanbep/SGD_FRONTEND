@@ -2,11 +2,12 @@ import { Component, effect, inject, OnInit } from '@angular/core';
 import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
-import { ConsolidatedTeachersResponse, Teacher } from '../../../../../../core/models/consolidated.interface';
 import { CommonModule } from '@angular/common';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { UsuarioConsolidadoResponse } from '../../../../../../core/models/response/usuario-consolidado-response.model';
 
 @Component({
   selector: 'consolidated-teachers-list-table',
@@ -28,8 +29,8 @@ export class TeacherListTableComponent implements OnInit {
   private authService = inject(AuthServiceService);
   
   public currentPage: number = 1;
-  public teacherServiceResponse: ConsolidatedTeachersResponse | null = null;
-  public teacherList: Teacher[] = [];
+  public teacherServiceResponse: PagedResponse<UsuarioConsolidadoResponse> | null = null;
+  public teacherList: UsuarioConsolidadoResponse[] = [];
   public currentUser : UserInfo | null = null;
 
   ngOnInit(): void {

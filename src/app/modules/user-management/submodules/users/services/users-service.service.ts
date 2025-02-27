@@ -1,13 +1,15 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
-import { NewUser, User, UsersResponse } from '../../../../../core/models/users.interfaces';
+import { UsuarioResponse } from '../../../../../core/models/response/usuario-response.model';
+import { PagedResponse } from '../../../../../core/models/response/paged-response.model';
+import { UsuarioCreate } from '../../../../../core/models/modified/usuario-create.model';
 
 @Injectable({providedIn: 'root'})
 export class UsersServiceService {
     
     private umUsersServicesService = inject(UmUsersServicesService);
     
-    private usersSignal: WritableSignal<UsersResponse | null> = signal(null);
+    private usersSignal: WritableSignal<PagedResponse<UsuarioResponse> | null> = signal(null);
 
     private paramsFilterSignal: WritableSignal< {nameUser:string | null, identification:string | null, faculty:string | null, program: string | null, rol: string | null, state: string | null   }  | null> = signal(null);
 
@@ -32,7 +34,7 @@ export class UsersServiceService {
     * Method to set the users signal
     * @param newData:User[]
     * */
-    setUsers(newData: UsersResponse){
+    setUsers(newData: PagedResponse<UsuarioResponse>){
         this.usersSignal.update(data => data = newData);
     }
 
@@ -71,7 +73,7 @@ export class UsersServiceService {
     * @returns Observable<UsersResponse>
     * */
 
-    saveUser(user: NewUser[]) {
+    saveUser(user: UsuarioCreate[]) {
         return this.umUsersServicesService.saveUser(user);
     }
     
@@ -81,7 +83,7 @@ export class UsersServiceService {
     * @param user:NewUser
     * @returns Observable<User>
     * */
-    updateUsers(idUsuario:number,user: NewUser) {
+    updateUsers(idUsuario:number,user: UsuarioCreate) {
         return this.umUsersServicesService.updateUsers(idUsuario, user);
     }
 

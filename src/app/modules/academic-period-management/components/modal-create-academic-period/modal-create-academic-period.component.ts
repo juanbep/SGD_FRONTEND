@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ValidatorsService } from '../../../../shared/services/validators.service';
 import { CommonModule } from '@angular/common';
 import { AcademicPeriodManagementService } from '../../services/academic-period-management-service.service';
-import { NewAcademicPeriod } from '../../../../core/models/academicPeriods';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
+import { PeriodoAcademicoCreate } from '../../../../core/models/modified/periodo-academico-create.model';
 declare var bootstrap: any;
 
 @Component({
@@ -121,7 +121,7 @@ export class ModalCreateAcademicPeriodComponent {
 
   saveNewAcademicPeriod(): void {
     if (this.newAcademicPeriodForm.valid) {
-      let newAcademiPeriod: NewAcademicPeriod = {
+      let newAcademiPeriod: PeriodoAcademicoCreate = {
         idPeriodo: this.newAcademicPeriodForm.get('idAcademicPeriod')?.value,
         fechaInicio: this.newAcademicPeriodForm.get('startDate')?.value,
         fechaFin: this.newAcademicPeriodForm.get('endDate')?.value,

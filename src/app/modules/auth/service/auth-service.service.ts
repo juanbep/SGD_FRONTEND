@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal, SimpleChange } from '@angular/core';
 import { AsAuthServiceService } from '../../../core/services/as-auth-service.service';
 import { UserInfo } from '../../../core/models/auth.interface';
 import { tap } from 'rxjs';
@@ -34,10 +34,10 @@ export class AuthServiceService {
    * @returns 
    */
   getUserInfo() {
-    return this.service.getUserInfo(137).pipe(
+    return this.service.getUserInfo(6).pipe(
       tap(user => {
-        this._currentUser.set(user)
-        localStorage.setItem('userRoles',JSON.stringify(user.roles.map(role => role.nombre)));
+        this._currentUser.set(user.data);
+        localStorage.setItem('userRoles',JSON.stringify(user.data.roles.map(role => role.nombre)));
       })
     );
   }

@@ -1,16 +1,17 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { ActividadesPorTipoActividad, Activity, ActivityResponse } from '../../../../../../core/models/activities.interface';
 import { CpdServicesService } from '../../services/cpd-services.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { CommonModule } from '@angular/common';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
-import { User } from '../../../../../../core/models/users.interfaces';
 import { ActivityFilterComponent } from "../../components/activity-filter/activity-filter.component";
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
-import { AcademicPeriod } from '../../../../../../core/models/academicPeriods';
 import { ViewDetailsSourceOneComponent } from '../../components/view-details-source-one/view-details-source-one.component';
 import { ViewDetailsSourceTwoComponent } from '../../components/view-details-source-two/view-details-source-two.component';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 
 const PAGE_SIZE = 10;
 
@@ -43,9 +44,9 @@ export class CpdActivitiesUserComponent implements OnInit {
   public currentPage: number = 1;
   public filterParams: {activityName:string | null, activityType: string | null} = {activityName: null, activityType: null};
   public idUserParam: number | null = null;
-  public teacherActivities: ActivityResponse | null = null;
-  public userTeacherInfo: User | null = null;
-  public activeAcademicPeriod: AcademicPeriod | null = null;
+  public teacherActivities: PagedResponse<ActividadResponse> | null = null;
+  public userTeacherInfo: UsuarioResponse | null = null;
+  public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
 
 
 
@@ -61,11 +62,11 @@ export class CpdActivitiesUserComponent implements OnInit {
       this.cpdServicesService.getActivities(page - 1, totalPage, idUser, activityName, activityType).subscribe(
         {
           next: (response) => {
-            this.teacherActivities = response;
+            this.teacherActivities = response.data;
             this.reloadActivities();
           },
           error: (error) => {
-            this.messagesInfoService.showErrorMessage('Error al recuperar las actividades del usuario', 'Error');
+            this.messagesInfoService.showErrorMessage('Error al recuperar las actividades del usuario', `Error: ${error.mensaje}`);
           }
         }
       )
@@ -100,7 +101,7 @@ export class CpdActivitiesUserComponent implements OnInit {
 
   public downloadFiles(){
     if(this.activeAcademicPeriod && this.userTeacherInfo){
-      this.cpdServicesService.downloadFiles(this.activeAcademicPeriod.idPeriodo, this.userTeacherInfo.usuarioDetalle.departamento,this.userTeacherInfo.usuarioDetalle.contratacion, this.userTeacherInfo.oidUsuario, null).subscribe(
+      this.cpdServicesService.downloadFiles(this.activeAcademicPeriod.idPeriodo, this.userTeacherInfo.usuarioDetalle.departamento? this.userTeacherInfo.usuarioDetalle.departamento : '',this.userTeacherInfo.usuarioDetalle.contratacion? this.userTeacherInfo.usuarioDetalle.contratacion : '', this.userTeacherInfo.oidUsuario, null).subscribe(
         {
           next: (blob) => {
             const url = window.URL.createObjectURL(blob);
@@ -121,7 +122,7 @@ export class CpdActivitiesUserComponent implements OnInit {
 
   public downloadConsolidatedFiles(){
     if(this.activeAcademicPeriod && this.userTeacherInfo){
-      this.cpdServicesService.downloadFiles(this.activeAcademicPeriod.idPeriodo, this.userTeacherInfo.usuarioDetalle.departamento,this.userTeacherInfo.usuarioDetalle.contratacion, this.userTeacherInfo.oidUsuario, true).subscribe(
+      this.cpdServicesService.downloadFiles(this.activeAcademicPeriod.idPeriodo, this.userTeacherInfo.usuarioDetalle.departamento? this.userTeacherInfo.usuarioDetalle.departamento : '' ,this.userTeacherInfo.usuarioDetalle.contratacion? this.userTeacherInfo.usuarioDetalle.contratacion:'', this.userTeacherInfo.oidUsuario, true).subscribe(
         {
           next: (blob) => {
             const url = window.URL.createObjectURL(blob);
@@ -143,13 +144,13 @@ export class CpdActivitiesUserComponent implements OnInit {
   
 
 
-  public openSourceOne(activity: Activity) {
+  public openSourceOne(activity: ActividadResponse) {
     if(this.viewDetailsSourceOneComponent){
       this.viewDetailsSourceOneComponent.open(activity);
     }
   } 
 
-  public openSourceTwo(activity: Activity) {
+  public openSourceTwo(activity: ActividadResponse) {
     if(this.viewDetailsSourceTwoComponent){
       this.viewDetailsSourceTwoComponent.open(activity);
     }
@@ -181,4 +182,9 @@ export class CpdActivitiesUserComponent implements OnInit {
     }
   }
 
+}
+
+export interface ActividadesPorTipoActividad {
+  nombreType: string;
+  activities: ActividadResponse[];
 }

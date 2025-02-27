@@ -1,24 +1,26 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { ApmAcademicPeriodManagementService } from '../../../core/services/academic-period-management/apm-academic-period-management-service.service';
-import { AcademicPeriod, AcademicPeriodResponse, NewAcademicPeriod } from '../../../core/models/academicPeriods';
 import { tap } from 'rxjs';
+import { PeriodoAcademicoResponse } from '../../../core/models/response/periodo-academico-response.model';
+import { PeriodoAcademicoCreate } from '../../../core/models/modified/periodo-academico-create.model';
+import { PagedResponse } from '../../../core/models/response/paged-response.model';
 
 @Injectable({providedIn: 'root'})
 export class AcademicPeriodManagementService {
 
-    private academicPeriods: WritableSignal<AcademicPeriodResponse | null> = signal(null);
+    private academicPeriods: WritableSignal<PagedResponse<PeriodoAcademicoResponse> | null> = signal(null);
 
 
     private apmAcademicPeriodManagementService = inject(ApmAcademicPeriodManagementService);
 
 
-    private _currentAcademicPeriod = signal<AcademicPeriod | null>(null);
+    private _currentAcademicPeriod = signal<PeriodoAcademicoResponse | null>(null);
 
-    get currentAcademicPeriodValue(): AcademicPeriod | null {
+    get currentAcademicPeriodValue(): PeriodoAcademicoResponse | null {
         return this._currentAcademicPeriod();
     }
 
-    setAcademicPeriods(newData: AcademicPeriodResponse){
+    setAcademicPeriods(newData: PagedResponse<PeriodoAcademicoResponse> ){
         console.log(newData);
         this.academicPeriods.update(data => data = newData);
     }
@@ -32,7 +34,7 @@ export class AcademicPeriodManagementService {
     * @param newAcademicPeriod: NewAcademicPeriod
     * @returns Observable<AcademicPeriod>
     * */
-    saveNewAcademicPeriod(newAcademicPeriod: NewAcademicPeriod){
+    saveNewAcademicPeriod(newAcademicPeriod: PeriodoAcademicoCreate){
         return this.apmAcademicPeriodManagementService.saveNewAcademicPeriod(newAcademicPeriod);
     }
 
@@ -51,7 +53,7 @@ export class AcademicPeriodManagementService {
     * @returns Observable<AcademicPeriod>
     * */
 
-    editAcademicPeriod(oidAcademicPeriod:number ,academicPeriod: NewAcademicPeriod){
+    editAcademicPeriod(oidAcademicPeriod:number ,academicPeriod: PeriodoAcademicoCreate){
         return this.apmAcademicPeriodManagementService.editAcademicPeriod(oidAcademicPeriod,academicPeriod);
     }
 

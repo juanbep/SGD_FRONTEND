@@ -1,11 +1,13 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { Role, User, UsersResponse } from '../../../../../../core/models/users.interfaces';
 import { ModalUserDetailslComponent } from '../../../users/components/modal-user-details/modal-user-details.component';
 import { ActivitiesManagementService } from '../../services/activities-management.service';
 import { CommonModule } from '@angular/common';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
 import { RouterModule } from '@angular/router';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { Rol } from '../../../../../../core/models/base/rol.model';
 
 @Component({
   selector: 'user-management-activities-users-table',
@@ -26,7 +28,7 @@ export class UsersTableComponent implements OnInit {
   private usersService = inject(ActivitiesManagementService);
   private toastService = inject(MessagesInfoService);
 
-  public usersResponse: UsersResponse | null = null;
+  public usersResponse: PagedResponse<UsuarioResponse> | null = null;
   public currentPage: number = 1;
   public sizePage: number = 10;
   
@@ -46,26 +48,26 @@ export class UsersTableComponent implements OnInit {
   getAllUsers(page: number, totalPage: number) {
     const paramsFilter = this.usersService.getParamsUsersFilter();
     this.usersService.getUserByParams(page-1, totalPage, paramsFilter?.identification|| '',paramsFilter?.nameUser || '',paramsFilter?.faculty || '', paramsFilter?.program || '','','','','','1', paramsFilter?.state || '' ).subscribe({
-      next: (data) => {
-        this.usersResponse = data;
-        this.usersService.setUsers(data);
+      next: (response) => {
+        this.usersResponse = response.data;
+        this.usersService.setUsers(response.data);
       },
       error: (error) => {
-        this.toastService.showErrorMessage('Error al obtener los usuarios', 'Error');
+        this.toastService.showErrorMessage('Error al obtener los usuarios', `Error ${error.mensaje}`);
       }
     })
   }
 
-  viewUserDetails(userDetails: User) {
+  viewUserDetails(userDetails: UsuarioResponse) {
     if (this.modalUserDetails) {
       this.modalUserDetails.open(userDetails);
     }
   }
 
 
-  returnAllRoles(roles: Role[]) {
+  returnAllRoles(roles: Rol[]) {
     let rolesString = '';
-    roles.forEach((role: Role) => {
+    roles.forEach((role: Rol) => {
       rolesString += role.nombre + ', ';
     })
     return rolesString.slice(0, -2);

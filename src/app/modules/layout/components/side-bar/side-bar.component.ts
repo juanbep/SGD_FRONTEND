@@ -29,29 +29,29 @@ export class SideBarComponent implements OnInit {
 
   public sidebarItems = [
     {
-      role:['JEFE DE DEPARTAMENTO'],
+      // role:['JEFE DE DEPARTAMENTO'],
       label: 'Periodo académico',
       icon: 'assets/icons/sidebar/icon-calendar.svg',
       sub:[
         {
-          role: ['JEFE DE DEPARTAMENTO'],
+          // role: ['JEFE DE DEPARTAMENTO'],
           label: 'Gestión periodo académico',
           url: '/app/gestion-periodo-academico'
         }
       ]
     },
     {
-      role:['JEFE DE DEPARTAMENTO'],
+      // role:['JEFE DE DEPARTAMENTO'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO'],
+          // role: ['JEFE DE DEPARTAMENTO'],
           label: 'Usuarios',
           url: '/app/gestion-usuarios/usuarios'
         },
         {
-          role: ['JEFE DE DEPARTAMENTO'],
+          // role: ['JEFE DE DEPARTAMENTO'],
           label: 'Actividades',
           url: '/app/gestion-usuarios/actividades/usuarios'
         }
@@ -59,27 +59,27 @@ export class SideBarComponent implements OnInit {
     },
     {
       
-      role:['JEFE DE DEPARTAMENTO', 'COORDINADOR','DOCENTE', 'ESTUDIANTE'],
+      // role:['JEFE DE DEPARTAMENTO', 'COORDINADOR','DOCENTE', 'ESTUDIANTE'],
       label: 'Evaluación Docente', 
       icon: 'assets/icons/sidebar/icon-evaluation.svg', 
       sub: [
         {
-          role:['DOCENTE'],
+          // role:['DOCENTE'],
           label:'Mis actividades',
           url: '/app/gestion-soportes/actividades'
         },
         {
-          role:['JEFE DE DEPARTAMENTO','ESTUDIANTE','COORDINADOR'],
+          // role:['JEFE DE DEPARTAMENTO','ESTUDIANTE','COORDINADOR'],
           label:'Mis responsabilidades',
           url: '/app/gestion-soportes/responsabilidades'
         },
         {
-          role:['JEFE DE DEPARTAMENTO'],
+          // role:['JEFE DE DEPARTAMENTO'],
           label:'Consolidado',
           url:'/app/gestion-soportes/consolidado/lista-docentes'
         },
         {
-          role:['CPD'],
+          // role:['CPD'],
           label:'CPD',
           url:'/app/gestion-soportes/cpd/lista-docentes'
         },

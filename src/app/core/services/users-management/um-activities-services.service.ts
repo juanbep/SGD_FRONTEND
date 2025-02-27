@@ -1,9 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
 import { map, Observable } from 'rxjs';
-import { Activity, ActivityByIdResponse, ActivityResponse, NewActivity } from '../../models/activities.interface';
 import { HttpClient } from '@angular/common/http';
 import { Params } from '@angular/router';
+import { PagedResponse } from '../../models/response/paged-response.model';
+import { ActividadResponse } from '../../models/response/actividad-response.model';
+import { SimpleResponse } from '../../models/response/simple-response.model';
+import { ActividadCreate } from '../../models/modified/actividad-create.model';
 
 @Injectable({providedIn: 'root'})
 export class UmActivitiesServiceService {
@@ -17,13 +20,13 @@ export class UmActivitiesServiceService {
     * @param idUser:number
     * @returns Observable<ActivityResponse>
     * */
-    getActivitiesByUser(page:number, size:number, idUser: number):Observable<ActivityResponse> {
+    getActivitiesByUser(page:number, size:number, idUser: number):Observable<SimpleResponse<PagedResponse<ActividadResponse>>> {
         let params:Params = {
             page: page.toString(),
             size: size.toString(),
             idEvaluado: idUser
         }
-        return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, {params});
+        return this.httpClient.get<SimpleResponse<PagedResponse<ActividadResponse>>>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, {params});
     }
 
     /*
@@ -38,7 +41,7 @@ export class UmActivitiesServiceService {
     * @param vriCode:string
     * @returns Observable<ActivityResponse>
     * */
-    getActivitiesByParams(page:number, size:number, idEvaluated:number, nameActivity:string | null, typeActivity:string | null, activityCode:string | null, administrativeCode: string| null, vriCode:string | null):Observable<ActivityResponse> {
+    getActivitiesByParams(page:number, size:number, idEvaluated:number, nameActivity:string | null, typeActivity:string | null, activityCode:string | null, administrativeCode: string| null, vriCode:string | null):Observable<SimpleResponse<PagedResponse<ActividadResponse>>> {
         let params:Params = {
             page: page.toString(),
             size: size.toString(),
@@ -49,7 +52,7 @@ export class UmActivitiesServiceService {
             actoAdministrativo: administrativeCode || '',
             codVRI: vriCode || ''
         }
-        return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, {params});
+        return this.httpClient.get<SimpleResponse<PagedResponse<ActividadResponse>>>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, {params});
     }
 
 
@@ -58,9 +61,9 @@ export class UmActivitiesServiceService {
     * @param idActivity:number
     * @returns Observable<Activity>
     * */
-    getActivityById(idActivity:number):Observable<Activity> {
-        return this.httpClient.get<ActivityByIdResponse>(`${this.baseUrl}/api/actividades/${idActivity}`).pipe(
-            map((response:ActivityByIdResponse) => response.data)
+    getActivityById(idActivity:number):Observable<ActividadResponse> {
+        return this.httpClient.get<SimpleResponse<ActividadResponse>>(`${this.baseUrl}/api/actividades/${idActivity}`).pipe(
+            map((response:SimpleResponse<ActividadResponse> ) => response.data)
         );
     }
 
@@ -71,7 +74,7 @@ export class UmActivitiesServiceService {
     * @param newActivity:NewActivity
     * @returns Observable<any>
     * */
-    saveNewActivity(newActivity: NewActivity): Observable<any> {
+    saveNewActivity(newActivity: ActividadCreate): Observable<any> {
         return this.httpClient.post(`${this.baseUrl}/api/actividades`, newActivity);
     }
 
@@ -82,7 +85,7 @@ export class UmActivitiesServiceService {
     * @param activity:Activity
     * @returns Observable<any>
     * */
-    updateActivity(idActivity: number,activity: NewActivity): Observable<any> {
+    updateActivity(idActivity: number,activity: ActividadCreate): Observable<any> {
         return this.httpClient.put(`${this.baseUrl}/api/actividades/${idActivity}`, activity);
     }
 

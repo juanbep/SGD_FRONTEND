@@ -2,8 +2,10 @@
 import { environments } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ResponsabilityResponse } from '../../models/responsibilitie.interface';
-import { SourceEvaluation } from '../../models/responsibilitie.interface';
+import { ResponsabilidadResponse } from '../../models/response/responsabilidad-response.model';
+import { PagedResponse } from '../../models/response/paged-response.model';
+import { FuenteCreate } from '../../models/modified/fuente-create.model';
+import { SimpleResponse } from '../../models/response/simple-response.model';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +26,7 @@ export class SmResponsibilitiesServicesService {
         * @returns Observable<Responsabilidad>
         */
 
-    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page:number|null, totalPage:number|null): Observable<ResponsabilityResponse> {
+    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page:number|null, totalPage:number|null): Observable<SimpleResponse<PagedResponse<ResponsabilidadResponse>>> {
         let params = new HttpParams()
             .set( 'idEvaluador', evaluatorId )
             .set( 'codigoActividad', activityCode )
@@ -33,7 +35,7 @@ export class SmResponsibilitiesServicesService {
             .set( 'roles', roles )
             .set( 'page', page? page.toString() : '' )
             .set( 'size', totalPage? totalPage.toString() : '' );
-        return this.httpClient.get<ResponsabilityResponse>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluador`, { params });
+        return this.httpClient.get<SimpleResponse<PagedResponse<ResponsabilidadResponse>>>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluador`, { params });
     }
 
     /*
@@ -44,7 +46,7 @@ export class SmResponsibilitiesServicesService {
         * @returns void
         */
 
-    saveResponsibilityEvaluation(file: File, observation: string, source: SourceEvaluation[]): Observable<any> {
+    saveResponsibilityEvaluation(file: File, observation: string, source: FuenteCreate[]): Observable<any> {
         const formData = new FormData();
         formData.append('informeFuente', file);
         formData.append('observation', observation);

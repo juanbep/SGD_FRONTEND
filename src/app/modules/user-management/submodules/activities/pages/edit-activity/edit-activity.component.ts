@@ -4,13 +4,15 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ActivitiesManagementService } from '../../services/activities-management.service';
-import { Activity, NewActivity } from '../../../../../../core/models/activities.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { CommonModule } from '@angular/common';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
-import { User, UsersResponse } from '../../../../../../core/models/users.interfaces';
 import { debounceTime } from 'rxjs';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
+import { ActividadCreate } from '../../../../../../core/models/modified/actividad-create.model';
 
 @Component({
   selector: 'app-edit-activity',
@@ -38,9 +40,9 @@ export class EditActivityComponent implements OnInit {
 
 
   public idUserParam: number | null = null;
-  public activity: Activity | null = null;
+  public activity: ActividadResponse | null = null;
   public catalogResponse: CatalogDataResponse | null = null;
-  public evaluator: User | null = null;
+  public evaluator: UsuarioResponse | null = null;
 
 
 
@@ -50,9 +52,9 @@ export class EditActivityComponent implements OnInit {
   public typeResulsSearchName: string = '';
 
 
-  public userResponse: UsersResponse | null = null;
-  public userResponseSeachById: UsersResponse | null = null;
-  public userResponseSeachByName: UsersResponse | null = null;
+  public userResponse: PagedResponse<UsuarioResponse> | null = null;
+  public userResponseSeachById: PagedResponse<UsuarioResponse> | null = null;
+  public userResponseSeachByName: PagedResponse<UsuarioResponse> | null = null;
 
 
   public messageConfirmDialog: string = '¿Está seguro de editar la actividad?';
@@ -111,18 +113,35 @@ export class EditActivityComponent implements OnInit {
     if (this.activity) {
       this.activityForm.get('typeActivity')?.setValue(this.activity.tipoActividad.oidTipoActividad);
       this.activityForm.get('nameActivity')?.setValue(this.activity.nombreActividad);
-      this.activityForm.get('codeActivity')?.setValue(this.activity.detalle.codigo);
-      this.activityForm.get('administrativeAct')?.setValue(this.activity.detalle.actoAdministrativo);
-      this.activityForm.get('VRI')?.setValue(this.activity.detalle.vri);
+      for(let atributo of this.activity.atributos){
+        if(atributo.codigoAtributo === 'CODIGO'){
+          this.activityForm.get('codeActivity')?.setValue(atributo.valor);
+        }
+        if(atributo.codigoAtributo === 'ACTO_ADMINISTRATIVO'){
+          this.activityForm.get('administrativeAct')?.setValue(atributo.valor);
+        }
+        if(atributo.codigoAtributo === 'VRI'){
+          this.activityForm.get('VRI')?.setValue(atributo.valor);
+        }
+        if(atributo.codigoAtributo === 'ACTIVIDAD'){
+          this.activityForm.get('activity')?.setValue(atributo.valor);
+        }
+        if(atributo.codigoAtributo === 'GRUPO'){
+          this.activityForm.get('group')?.setValue(atributo.valor);
+        }
+        if(atributo.codigoAtributo === 'MATERIA'){
+          this.activityForm.get('subject')?.setValue(atributo.valor);
+        }
+        if(atributo.codigoAtributo === 'NOMBRE_PROYECTO'){
+          this.activityForm.get('projectName')?.setValue(atributo.valor);
+        }
+        
+      }
       this.activityForm.get('weeklyHours')?.setValue(this.activity.horas.toString());
       this.activityForm.get('weeks')?.setValue(this.activity.semanas.toString());
-      this.activityForm.get('subject')?.setValue(this.activity.detalle.materia);
-      this.activityForm.get('projectName')?.setValue(this.activity.detalle.nombreProyecto);
-      this.activityForm.get('group')?.setValue(this.activity.detalle.grupo);
       if (this.activity.tipoActividad.oidTipoActividad === 2 || this.activity.tipoActividad.oidTipoActividad === 8) {
         this.activityForm.get('idStudent')?.setValue(this.activity.evaluador.identificacion);
       }
-      this.activityForm.get('activity')?.setValue(this.activity.detalle.detalle);
       this.activityForm.get('evaluatorName')?.setValue(this.activity.evaluador);
       this.activityForm.get('executiveReport')?.setValue(this.activity.informeEjecutivo ? 'TRUE' : 'FALSE');
       this.activityForm.get('activityState')?.setValue(this.activity.oidEstadoActividad);
@@ -340,21 +359,21 @@ export class EditActivityComponent implements OnInit {
     return true;
   }
 
-  validateUserExist(idUser: string, userName: string, rol: string): User | null {
+  validateUserExist(idUser: string, userName: string, rol: string): UsuarioResponse | null {
     if (idUser || rol || userName) {
       this.activitiesManagementService.getUserByParams(0, 3, idUser, userName, '', '', '', '', '', '', rol, '1').subscribe(
         {
           next: (response) => {
             if (idUser && !rol) {
-              this.userResponseSeachById = response;
+              this.userResponseSeachById = response.data;
               return;
             } else {
               if (userName) {
-                this.userResponseSeachByName = response;
+                this.userResponseSeachByName = response.data;
                 return;
               } else {
                 if (idUser && rol) {
-                  this.userResponse = response;
+                  this.userResponse = response.data;
                   if (this.userResponse) {
                     this.evaluator = this.userResponse.content[0];
                     this.activityForm.get('evaluatorName')?.setValue(this.userResponse.content[0].nombres + ' ' + this.userResponse.content[0].apellidos);
@@ -388,7 +407,7 @@ export class EditActivityComponent implements OnInit {
   }
 
 
-  selectUser(user: User | null): void {
+  selectUser(user: UsuarioResponse | null): void {
     if (user) {
       this.evaluator = user;
       this.activityForm.get('evaluatorName')?.setValue(user?.nombres + ' ' + user?.apellidos);
@@ -462,7 +481,7 @@ export class EditActivityComponent implements OnInit {
     if (event) {
       this.activityForm.markAllAsTouched();
       if (this.idUserParam && this.activityForm.valid) {
-        const newActivity: NewActivity = {
+        const newActivity: ActividadCreate = {
           tipoActividad: {
             oidTipoActividad: Number(this.activityForm.get('typeActivity')?.value)
           },
@@ -473,15 +492,16 @@ export class EditActivityComponent implements OnInit {
           horas: Number(this.activityForm.get('weeklyHours')?.value),
           semanas: Number(this.activityForm.get('weeks')?.value),
           informeEjecutivo: this.activityForm.get('executiveReport')?.value,
-          detalle: {
-            codigo: this.activityForm.get('codeActivity')?.value,
-            vri: this.activityForm.get('VRI')?.value,
-            actoAdministrativo: this.activityForm.get('administrativeAct')?.value,
-            nombreProyecto: this.activityForm.get('projectName')?.value,
-            materia: this.activityForm.get('subject')?.value,
-            actividad: this.activityForm.get('activity')?.value,
-            grupo: this.activityForm.get('group')?.value
-          },
+          atributos: [
+            { codigoAtributo: 'CODIGO', valor: this.activityForm.get('codeActivity')?.value },
+            { codigoAtributo: 'ACTO_ADMINISTRATIVO', valor: this.activityForm.get('administrativeAct')?.value },
+            { codigoAtributo: 'VRI', valor: this.activityForm.get('VRI')?.value },
+            { codigoAtributo: 'ACTIVIDAD', valor: this.activityForm.get('activity')?.value },
+            { codigoAtributo: 'GRUPO', valor: this.activityForm.get('group')?.value },
+            { codigoAtributo: 'MATERIA', valor: this.activityForm.get('subject')?.value },
+            { codigoAtributo: 'NOMBRE_PROYECTO', valor: this.activityForm.get('projectName')?.value }
+          ]
+          
         }
         this.activitiesManagementService.updateActivity(this.idUserParam, newActivity).subscribe(
           {

@@ -1,8 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
-import { Actividad, ConsolidatedActivitiesResponse, ConsolidatedTeachersResponse, TeacherInformationResponse } from '../../models/consolidated.interface';
 import { Observable } from 'rxjs';
+import { PagedResponse } from '../../models/response/paged-response.model';
+import { UsuarioConsolidadoResponse } from '../../models/response/usuario-consolidado-response.model';
+import { DetalleUsuarioConsolidadoResponse } from '../../models/response/detalle-usuario-cosolidado-response.model';
+import { ActividadConsolidadoResponse } from '../../models/response/actividad-consolidado-response.mode';
+import { ActividadResponse } from '../../models/response/actividad-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +22,13 @@ export class SmConsolidatedServicesService {
     * @returns {any}
     * */
 
-  getTeachers(page: number, totalPage: number, department: string): Observable<ConsolidatedTeachersResponse> {
+  getTeachers(page: number, totalPage: number, department: string): Observable<PagedResponse<UsuarioConsolidadoResponse>> {
     let params = new HttpParams()
       .set('departamento', department)
       .set('page', page.toString())
       .set('size', totalPage.toString());
 
-    return this.httpClient.get<ConsolidatedTeachersResponse>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', { params });
+    return this.httpClient.get<PagedResponse<UsuarioConsolidadoResponse>>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', { params });
   }
 
   /*
@@ -33,10 +37,10 @@ export class SmConsolidatedServicesService {
   * @returns {any}
   * */
 
-  getInfoTeacher(teacherId: number): Observable<TeacherInformationResponse> {
+  getInfoTeacher(teacherId: number): Observable<DetalleUsuarioConsolidadoResponse> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId.toString());
-    return this.httpClient.get<TeacherInformationResponse>(this.baseUrl + '/api/consolidado/informacion-general', { params });
+    return this.httpClient.get<DetalleUsuarioConsolidadoResponse>(this.baseUrl + '/api/consolidado/informacion-general', { params });
   }
 
   /*
@@ -44,15 +48,15 @@ export class SmConsolidatedServicesService {
   * @param {number} teacherId
   * @returns {any}
   * */
-  getConsolidatedByTeacher(teacherId: number, page: number, size: number): Observable<ConsolidatedActivitiesResponse> {
+  getConsolidatedByTeacher(teacherId: number, page: number, size: number): Observable<ActividadConsolidadoResponse> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId)
       .set('page', page)
       .set('size', size);
-    return this.httpClient.get<ConsolidatedActivitiesResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
+    return this.httpClient.get<ActividadConsolidadoResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
   }
 
-  getConsolidatedActitiesTeacherByParams(teacherId: number, page: number, size: number, activityType: string, activityName: string, sourceType:string, sourceState:string): Observable<ConsolidatedActivitiesResponse> {
+  getConsolidatedActitiesTeacherByParams(teacherId: number, page: number, size: number, activityType: string, activityName: string, sourceType:string, sourceState:string): Observable<ActividadConsolidadoResponse> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId)
       .set('page', page)
@@ -61,7 +65,7 @@ export class SmConsolidatedServicesService {
       .set('nombreActividad', activityName)
       .set('idTipoFuente' , sourceType)
       .set('idEstadoFuente', sourceState);
-    return this.httpClient.get<ConsolidatedActivitiesResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
+    return this.httpClient.get<ActividadConsolidadoResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
   }
 
   /*
@@ -127,8 +131,8 @@ export class SmConsolidatedServicesService {
   * @param evaluatedId: string
   * @returns observable<Actividad>
   * */
-  getActivityByOidActivity(oidActivity: number): Observable<Actividad> {
-    return this.httpClient.get<Actividad>(`${this.baseUrl}/api/actividades/${oidActivity}`);
+  getActivityByOidActivity(oidActivity: number): Observable<ActividadResponse> {
+    return this.httpClient.get<ActividadResponse>(`${this.baseUrl}/api/actividades/${oidActivity}`);
   }
 
 

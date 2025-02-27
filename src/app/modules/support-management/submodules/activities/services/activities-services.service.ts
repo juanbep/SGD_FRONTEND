@@ -1,18 +1,20 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { ActivityResponse, SourceEvaluation } from '../../../../../core/models/activities.interface';
 import { SmActivitiesServicesService } from '../../../../../core/services/support-management/sm-activities-services.service';
+import { PagedResponse } from '../../../../../core/models/response/paged-response.model';
+import { ActividadResponse } from '../../../../../core/models/response/actividad-response.model';
+import { FuenteCreate } from '../../../../../core/models/modified/fuente-create.model';
 
 @Injectable({providedIn: 'root'})
 export class ActivitiesServicesService {
 
-    private userActivities: WritableSignal<ActivityResponse| null> = signal(null);
+    private userActivities: WritableSignal<PagedResponse<ActividadResponse>| null> = signal(null);
 
     private smActivitiesServicesService = inject(SmActivitiesServicesService);
 
     // private paramsActivitiesFilterSignal: WritableSignal<{ nameActivity: string | null, typeActivity: string | null, stateActivity: string  | null}> = signal(null);
 
 
-    setDataActivities(newData: ActivityResponse)  {
+    setDataActivities(newData: PagedResponse<ActividadResponse>) {
         this.userActivities.update(data => data = newData); 
     }
 
@@ -24,11 +26,11 @@ export class ActivitiesServicesService {
         return this.smActivitiesServicesService.getActivities(evaluatedId, activityCode, activityType, evaluatorName, roles, page, totalPage);    
     }
 
-    saveSelfAssessment(file: File, observation: string, source: SourceEvaluation[], reports: File[]) {
+    saveSelfAssessment(file: File, observation: string, source: FuenteCreate[], reports: File[]) {
         return this.smActivitiesServicesService.saveSelfAssessment(file, observation, source, reports);
     }
 
-    getdownloadSourceFile(idSource: number) {
+    getDownloadSourceFile(idSource: number) {
         return this.smActivitiesServicesService.downloadSourceFile(idSource);
     }
     

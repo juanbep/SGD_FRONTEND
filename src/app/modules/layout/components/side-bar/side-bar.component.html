@@ -1,4 +1,4 @@
-<ng-container *ngIf="isSidebarActive; else noActive">
+<!-- <ng-container *ngIf="isSidebarActive; else noActive">
     <aside id="sidebar" [class.active]="isSidebarActive">
         <div class="sidebar-container text-light">
             <div class="image-container">
@@ -18,6 +18,35 @@
                 <ul class="sidebar-dropdown list-unstyled" *ngFor="let itemList of item.sub" [ngClass]="{'expanded': !isToggle(item.label)}">
                     <li class="sidebar-item">
                         <a routerLink="{{itemList.url}}" class="sidebar-link collapse text-body-item menu-two" *ngIf="hasRole(itemList.role? itemList.role : [])">
+                            {{itemList.label}}
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </aside>
+</ng-container> -->
+
+<ng-container *ngIf="isSidebarActive; else noActive">
+    <aside id="sidebar" [class.active]="isSidebarActive">
+        <div class="sidebar-container text-light">
+            <div class="image-container">
+                <img src="assets/images/logo-unicauca.svg" alt="Logo Unicauca">
+            </div>
+            <div class="container-line">
+                <div class="line"></div>
+            </div>
+        </div>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-item" *ngFor="let item of sidebarItems">
+                <a class="sidebar-link menu-one text-nowrap collapse" (click)="toggleAction(item.label)">
+                    <img src='{{item.icon}}' alt="icon-evaluation">
+                    <span class="text-body-heavy mx-3">{{item.label}}</span>
+                </a>
+                <ul class="sidebar-dropdown list-unstyled" *ngFor="let itemList of item.sub" [ngClass]="{'expanded': !isToggle(item.label)}">
+                    <li class="sidebar-item">
+                        <a routerLink="{{itemList.url}}" class="sidebar-link collapse text-body-item menu-two">
                             {{itemList.label}}
                         </a>
                     </li>

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environments } from '../../../environments/environments';
 import { Observable } from 'rxjs';
 import { UserInfo } from '../models/auth.interface';
+import { SimpleResponse } from '../models/response/simple-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,8 @@ export class AsAuthServiceService {
    * @param idUser
    * @returns Observable<UserInfo>
    */
-  getUserInfo(idUser: number): Observable<UserInfo> {
-    return this.http.get<UserInfo>(`${this.apiUrl}/api/usuarios/${idUser}`);
+  getUserInfo(idUser: number): Observable<SimpleResponse<UserInfo>> {
+    return this.http.get<SimpleResponse<UserInfo>>(`${this.apiUrl}/api/usuarios/${idUser}`);
   }
 
 

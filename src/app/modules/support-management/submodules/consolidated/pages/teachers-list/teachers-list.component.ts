@@ -2,10 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { TeachersListFilterComponent } from "../../components/teachers-list-filter/teachers-list-filter.component";
 import { TeacherListTableComponent } from "../../components/teachers-list-table/teachers-list-table.component";
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
-import { Teacher } from '../../../../../../core/models/consolidated.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UserInfo } from '../../../../../../core/models/auth.interface';
-import { ActivatedRoute } from '@angular/router';
 import { TitleCasePipe } from '@angular/common';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 
@@ -19,7 +17,6 @@ import { AuthServiceService } from '../../../../../auth/service/auth-service.ser
 export class TeachersListComponent implements OnInit {
 
   private consolidatedServicesService = inject(ConsolidatedServicesService);
-  private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthServiceService);
 
   public currentUser: UserInfo | null = null;

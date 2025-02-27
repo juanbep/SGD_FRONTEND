@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Activity } from '../../../../../../core/models/activities.interface';
 import { CommonModule } from '@angular/common';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 declare var bootstrap: any;
 
 @Component({
@@ -14,9 +14,9 @@ declare var bootstrap: any;
 })
 export class ModalActivitieDetailsComponent {
   
-  activitieDetails: Activity | null = null;
+  activitieDetails: ActividadResponse | null = null;
 
-  open(activitieDetails: Activity) {
+  open(activitieDetails: ActividadResponse) {
     const modal = new bootstrap.Modal(document.getElementById('modal-activitie-details'));
     if (modal) {
       modal.show();

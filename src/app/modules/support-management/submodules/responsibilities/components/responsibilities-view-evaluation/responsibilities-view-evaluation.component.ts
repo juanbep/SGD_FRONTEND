@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
-import { Fuente, Responsability } from '../../../../../../core/models/responsibilitie.interface';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
 
 @Component({
   selector: 'responsibilities-view-evaluation',
@@ -18,7 +19,7 @@ export class ResponsibilitiesViewEvaluationComponent {
   public source: Fuente | null = null;
 
   @Input()
-  public responsability: Responsability | null = null;
+  public responsability: ResponsabilidadResponse | null = null;
 
   @Input()
   public openModalSelected: boolean = false;
@@ -52,7 +53,7 @@ export class ResponsibilitiesViewEvaluationComponent {
   ngOnInit(): void {
     if (this.source) {
       this.documentName = this.source.nombreDocumentoFuente || '';
-      this.evaluation = this.source.calificacion.toFixed(1);
+      this.evaluation = this.source.calificacion? this.source.calificacion.toFixed(1) : '';
       this.observation = this.source.observacion ? this.source.observacion : '';
     }
   }

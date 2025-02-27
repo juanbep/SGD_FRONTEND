@@ -5,9 +5,9 @@ import { ConfirmDialogComponent } from '../../../../../../shared/components/conf
 import { UsersServiceService } from '../../services/users-service.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
-import { NewUser } from '../../../../../../core/models/users.interfaces';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
+import { UsuarioCreate } from '../../../../../../core/models/modified/usuario-create.model';
 
 @Component({
   selector: 'user-management-new-user',
@@ -245,7 +245,7 @@ export class NewUserComponent implements OnInit {
     if (event) {
       this.newUserForm.markAllAsTouched();
       if (this.newUserForm.valid) {
-        let newUser: NewUser[] = [{
+        let newUser: UsuarioCreate[] = [{
           nombres: this.newUserForm.get('name')?.value,
           apellidos: this.newUserForm.get('lastName')?.value,
           correo: this.newUserForm.get('email')?.value,

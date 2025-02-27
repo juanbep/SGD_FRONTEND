@@ -4,7 +4,8 @@ import { ValidatorsService } from '../../../../shared/services/validators.servic
 import { AcademicPeriodManagementService } from '../../services/academic-period-management-service.service';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
 import { CommonModule } from '@angular/common';
-import { AcademicPeriod, NewAcademicPeriod } from '../../../../core/models/academicPeriods';
+import { PeriodoAcademicoResponse } from '../../../../core/models/response/periodo-academico-response.model';
+import { PeriodoAcademicoCreate } from '../../../../core/models/modified/periodo-academico-create.model';
 declare var bootstrap: any;
 
 @Component({
@@ -42,7 +43,7 @@ export class ModalEditAcademicPeriodComponent {
     }
   );
 
-  open(academicPediod: AcademicPeriod): void {
+  open(academicPediod: PeriodoAcademicoResponse): void {
     const myModal = document.getElementById('modal-edit-academic-period');
     if (myModal) {
       var bootstrapModal = new bootstrap.Modal(myModal);
@@ -51,7 +52,7 @@ export class ModalEditAcademicPeriodComponent {
     }
   }
 
-  setDefaultValues(academicPeriod: AcademicPeriod): void {
+  setDefaultValues(academicPeriod: PeriodoAcademicoResponse): void {
     this.oidAcademicPeriod = academicPeriod.oidPeriodoAcademico;
     this.newAcademicPeriodForm.get('idAcademicPeriod')?.setValue(academicPeriod.idPeriodo);
     this.newAcademicPeriodForm.get('startDate')?.setValue(academicPeriod.fechaInicio.split('T')[0]);
@@ -134,7 +135,7 @@ export class ModalEditAcademicPeriodComponent {
 
   editAcademicPeriod(): void {
     if (this.newAcademicPeriodForm.valid) {
-      const academicPeriod: NewAcademicPeriod = {
+      const academicPeriod: PeriodoAcademicoCreate = {
         idPeriodo: this.newAcademicPeriodForm.get('idAcademicPeriod')?.value,
         fechaInicio: this.newAcademicPeriodForm.get('startDate')?.value,
         fechaFin: this.newAcademicPeriodForm.get('endDate')?.value,

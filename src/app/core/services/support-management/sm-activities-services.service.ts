@@ -3,8 +3,11 @@ import { environments } from '../../../../environments/environments';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { MessagesInfoService } from '../../../shared/services/messages-info.service';
-import { Activity, ActivityByIdResponse, ActivityResponse, SourceEvaluation } from '../../models/activities.interface';
-import { TeacherInformationResponse } from '../../models/consolidated.interface';
+import { ActividadResponse } from '../../models/response/actividad-response.model';
+import { SimpleResponse } from '../../models/response/simple-response.model';
+import { PagedResponse } from '../../models/response/paged-response.model';
+import { FuenteCreate } from '../../models/modified/fuente-create.model';
+import { UsuarioConsolidadoResponse } from '../../models/response/usuario-consolidado-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +18,8 @@ export class SmActivitiesServicesService {
   
   constructor(private httpClient: HttpClient) { }
 
-  getActivityById(id: number): Observable<Activity> {
-      return this.httpClient.get<ActivityByIdResponse>(`${this.baseUrl}/api/actividades/${id}`).pipe(
+  getActivityById(id: number): Observable<ActividadResponse> {
+      return this.httpClient.get<SimpleResponse<ActividadResponse>>(`${this.baseUrl}/api/actividades/${id}`).pipe(
         map(resp => resp.data)
       )
     
@@ -31,7 +34,7 @@ export class SmActivitiesServicesService {
     * @param roles:string
     * @returns void
     */
-  getActivities(evaluatedId: number, activityCode: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page: number | null, totalPage:number |null ): Observable<ActivityResponse> {
+  getActivities(evaluatedId: number, activityCode: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page: number | null, totalPage:number |null ): Observable<SimpleResponse<PagedResponse<ActividadResponse>>> {
     let params = new HttpParams()
       .set('idEvaluado', evaluatedId)
       .set('codigoActividad', activityCode ? activityCode : '')
@@ -40,7 +43,7 @@ export class SmActivitiesServicesService {
       .set('roles', roles ? roles : '')
       .set('page', page? page.toString() : '' )
       .set('size', totalPage? totalPage.toString() : '' );
-    return this.httpClient.get<ActivityResponse>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, { params });
+    return this.httpClient.get<SimpleResponse<PagedResponse<ActividadResponse>>>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluado`, { params });
   }
 
   /*
@@ -48,8 +51,8 @@ export class SmActivitiesServicesService {
     * @param idEvaluated:string
     * @returns Observable<TeacherInformationResponse> 
     */
-  getInfoTeacher(idEvaluated: string): Observable<TeacherInformationResponse> {
-    return this.httpClient.get<TeacherInformationResponse>(`${this.baseUrl}/api/consolidado/informacion-general/${idEvaluated}`);
+  getInfoTeacher(idEvaluated: string): Observable<UsuarioConsolidadoResponse> {
+    return this.httpClient.get<UsuarioConsolidadoResponse>(`${this.baseUrl}/api/consolidado/informacion-general/${idEvaluated}`);
   }
 
   /*
@@ -60,7 +63,7 @@ export class SmActivitiesServicesService {
     * @param source:SourceEvaluation[]
     * @returns void
     */
-  saveSelfAssessment(file: File, observation: string, source: SourceEvaluation[], reports:File[]): Observable<any> {
+  saveSelfAssessment(file: File, observation: string, source: FuenteCreate[], reports:File[]): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('informeFuente', file);
     formData.append('observation', observation);

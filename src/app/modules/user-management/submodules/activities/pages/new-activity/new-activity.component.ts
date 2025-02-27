@@ -6,12 +6,14 @@ import { CatalogDataResponse } from '../../../../../../core/models/catalogData.i
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
 import { ActivitiesTableComponent } from "../../components/activities-table/activities-table.component";
 import { ActivitiesManagementService } from '../../services/activities-management.service';
-import { User, UsersResponse } from '../../../../../../core/models/users.interfaces';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { NewActivity } from '../../../../../../core/models/activities.interface';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 import { debounceTime } from 'rxjs';
+import { ActividadCreate } from '../../../../../../core/models/modified/actividad-create.model';
+import { Atributo } from '../../../../../../core/models/base/atributo.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 
 @Component({
   selector: 'app-new-activity',
@@ -38,9 +40,9 @@ export class NewActivityComponent implements OnInit {
   private messagesInfoService = inject(MessagesInfoService);
 
   public catalogResponse: CatalogDataResponse | null = null;
-  public evaluator: User | null = null;
+  public evaluator: UsuarioResponse | null = null;
   public idUserParam: number | null = null;
-  public userByIdResponse: User | null = null;
+  public userByIdResponse: UsuarioResponse | null = null;
   public currentPage: number = 1;
   public sizePage: number = 10;
 
@@ -53,9 +55,9 @@ export class NewActivityComponent implements OnInit {
   public typeResulsSearchName: string = '';
 
 
-  public userResponse: UsersResponse | null = null;
-  public userResponseSeachById: UsersResponse | null = null;
-  public userResponseSeachByName: UsersResponse | null = null;
+  public userResponse: PagedResponse<UsuarioResponse> | null = null;
+  public userResponseSeachById: PagedResponse<UsuarioResponse>| null = null;
+  public userResponseSeachByName: PagedResponse<UsuarioResponse> | null = null;
 
 
 
@@ -291,7 +293,7 @@ export class NewActivityComponent implements OnInit {
     switch (typeActivity) {
       case 'DOCENCIA':
         if (this.userByIdResponse) {
-          this.validateUserExist('USERDEPARTMENTBOSS','', '', 'JEFE DE DEPARTAMENTO', this.userByIdResponse.usuarioDetalle.departamento);
+          this.validateUserExist('USERDEPARTMENTBOSS','', '', 'JEFE DE DEPARTAMENTO', this.userByIdResponse.usuarioDetalle.departamento? this.userByIdResponse.usuarioDetalle.departamento : '');
         }
         return false;
       case 'TRABAJOS DOCENCIA':
@@ -299,7 +301,7 @@ export class NewActivityComponent implements OnInit {
         return true
       case 'PROYECTOS DE INVESTIGACIÓN':
         if (this.userByIdResponse) {
-          this.validateUserExist('USERDEPARTMENTBOSS','', '', 'JEFE DE DEPARTAMENTO', this.userByIdResponse.usuarioDetalle.departamento);
+          this.validateUserExist('USERDEPARTMENTBOSS','', '', 'JEFE DE DEPARTAMENTO', this.userByIdResponse.usuarioDetalle.departamento? this.userByIdResponse.usuarioDetalle.departamento : '');
         }
         return true;
       case 'TRABAJOS DE INVESTIGACIÓN':
@@ -321,7 +323,51 @@ export class NewActivityComponent implements OnInit {
     if (event) {
       this.newActivityForm.markAllAsTouched();
       if (this.idUserParam && this.newActivityForm.valid) {
-        const newActivity: NewActivity = {
+        const atributos: Atributo[] = [];
+        if (this.newActivityForm.get('group')?.value) {
+          atributos.push({
+            codigoAtributo: 'GRUPO',
+            valor: this.newActivityForm.get('group')?.value
+          });
+
+        } 
+        if (this.newActivityForm.get('activity')?.value) {
+          atributos.push({
+            codigoAtributo: 'DETALLE',
+            valor: this.newActivityForm.get('activity')?.value
+          });
+        }
+        if (this.newActivityForm.get('codeActivity')?.value) {
+          atributos.push({
+            codigoAtributo: 'CODIGO',
+            valor: this.newActivityForm.get('codeActivity')?.value
+          });
+        }
+        if (this.newActivityForm.get('VRI')?.value) {
+          atributos.push({
+            codigoAtributo: 'VRI',
+            valor: this.newActivityForm.get('VRI')?.value
+          });
+        }
+        if (this.newActivityForm.get('administrativeAct')?.value) {
+          atributos.push({
+            codigoAtributo: 'ACTO_ADMINISTRATIVO',
+            valor: this.newActivityForm.get('administrativeAct')?.value
+          });
+        }
+        if (this.newActivityForm.get('projectName')?.value) {
+          atributos.push({
+            codigoAtributo: 'NOMBRE_PROYECTO',
+            valor: this.newActivityForm.get('projectName')?.value
+          });
+        }
+        if (this.newActivityForm.get('subject')?.value) {
+          atributos.push({
+            codigoAtributo: 'MATERIA',
+            valor: this.newActivityForm.get('subject')?.value
+          });
+        }
+        const newActivity: ActividadCreate = {
           tipoActividad: {
             oidTipoActividad: Number(this.newActivityForm.get('typeActivity')?.value)
           },
@@ -332,15 +378,7 @@ export class NewActivityComponent implements OnInit {
           horas: Number(this.newActivityForm.get('weeklyHours')?.value),
           semanas: Number(this.newActivityForm.get('weeks')?.value),
           informeEjecutivo: this.newActivityForm.get('executiveReport')?.value,
-          detalle: {
-            codigo: this.newActivityForm.get('codeActivity')?.value,
-            vri: this.newActivityForm.get('VRI')?.value,
-            actoAdministrativo: this.newActivityForm.get('administrativeAct')?.value,
-            nombreProyecto: this.newActivityForm.get('projectName')?.value,
-            materia: this.newActivityForm.get('subject')?.value,
-            actividad: this.newActivityForm.get('activity')?.value,
-            grupo: this.newActivityForm.get('group')?.value
-          },
+          atributos: atributos
         }
         this.activitiesManagementService.saveNewActivity(newActivity).subscribe(
           {
@@ -378,52 +416,14 @@ export class NewActivityComponent implements OnInit {
     });
   }
 
-  // validateUserExist(idUser: string, userName: string, rol: string, departmen: string): User | null {
-  //   if (idUser || rol || userName) {
-  //     this.activitiesManagementService.getUserByParams(0, 3, idUser, userName, '', departmen, '', '', '', '', rol, 'ACTIVO').subscribe(
-  //       {
-  //         next: (response) => {
-  //           if (idUser && !rol) {
-  //             this.userResponseSeachById = response;
-  //             return;
-  //           } else {
-  //             if (userName) {
-  //               this.userResponseSeachByName = response;
-  //               return;
-  //             } else {
-  //               if (idUser && rol) {
-  //                 this.userResponse = response;
-  //                 if (this.userResponse) {
-  //                   this.evaluator = this.userResponse.content[0];
-  //                   this.newActivityForm.get('evaluatorName')?.setValue(this.userResponse.content[0].nombres + ' ' + this.userResponse.content[0].apellidos);
-  //                   this.newActivityForm.get('evaluatorId')?.setValue(this.userResponse.content[0].identificacion);
-  //                 } else {
-  //                   this.evaluator = null
-  //                   this.newActivityForm.get('evaluatorName')?.setValue(null);
-  //                   this.newActivityForm.get('evaluatorId')?.setValue(null);
-  //                 }
-  //                 return;
-  //               }
-  //             }
-  //           }
-  //         },
-  //         error: (error) => {
-  //           return null;
-  //         }
-  //       }
-  //     );
-  //   }
-  //   return null;
-  // }
-
-  validateUserExist(typeValidation: string, idUser: string, userName: string, rol: string, department: string) {
+  validateUserExist(typeValidation: string, idUser: string, userName: string, rol: string, department: string | null): void {
     switch (typeValidation) {
       case 'USERSBYID':
         if (idUser) {
           this.activitiesManagementService.getUserByParams(0, 3, idUser, '', '', '', '', '', '', '', '', '1').subscribe(
             {
               next: (response) => {
-                this.userResponseSeachById = response;
+                this.userResponseSeachById = response.data;
               },
               error: (error) => {
                 this.userResponseSeachById = null;
@@ -437,7 +437,7 @@ export class NewActivityComponent implements OnInit {
           this.activitiesManagementService.getUserByParams(0, 3, '', userName, '', '', '', '', '', '', '', '1').subscribe(
             {
               next: (response) => {
-                this.userResponseSeachByName = response;
+                this.userResponseSeachByName = response.data;
               },
               error: (error) => {
                 this.userResponseSeachByName = null;
@@ -451,7 +451,7 @@ export class NewActivityComponent implements OnInit {
           this.activitiesManagementService.getUserByParams(0, 3, idUser, '', '', '', '', '', '', '', '2', '1').subscribe(
             {
               next: (response) => {
-                this.userResponse = response;
+                this.userResponse = response.data;
                 if (this.userResponse) {
                   this.evaluator = this.userResponse.content[0];
                   this.newActivityForm.get('evaluatorName')?.setValue(this.userResponse.content[0].nombres + ' ' + this.userResponse.content[0].apellidos);
@@ -474,7 +474,7 @@ export class NewActivityComponent implements OnInit {
           this.activitiesManagementService.getUserByParams(0, 3, '', '', '', department, '', '', '', '', rol, '1').subscribe(
             {
               next: (response) => {
-                this.userResponse = response;
+                this.userResponse = response.data;
                 if (this.userResponse) {
                   this.evaluator = this.userResponse.content[0];
                   this.newActivityForm.get('evaluatorName')?.setValue(this.userResponse.content[0].nombres + ' ' + this.userResponse.content[0].apellidos);
@@ -496,11 +496,14 @@ export class NewActivityComponent implements OnInit {
 
   }
 
-  selectUser(user: User | null): void {
+  selectUser(user: UsuarioResponse | null): void {
     if (user) {
       this.evaluator = user;
       this.newActivityForm.get('evaluatorName')?.setValue(user?.nombres + ' ' + user?.apellidos);
       this.newActivityForm.get('evaluatorId')?.setValue(user?.identificacion);
+      if(this.newActivityForm.get('typeActivity')?.value === '2' || this.newActivityForm.get('typeActivity')?.value === '8'){
+        this.newActivityForm.get('idStudent')?.setValue(user?.identificacion);
+      }
     }
   }
 

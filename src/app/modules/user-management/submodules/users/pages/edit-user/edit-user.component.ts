@@ -4,11 +4,12 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
 import { UsersServiceService } from '../../services/users-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NewUser, User } from '../../../../../../core/models/users.interfaces';
 import { CommonModule } from '@angular/common';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { UsuarioCreate } from '../../../../../../core/models/modified/usuario-create.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 @Component({
   selector: 'app-edit-user',
@@ -34,7 +35,7 @@ export class EditUserComponent implements OnInit {
   private activateRoute = inject(ActivatedRoute);
 
   public idUserParam: number | null = null;
-  public userInformation: User | null = null;
+  public userInformation: UsuarioResponse | null = null;
   public catalogData: CatalogDataResponse | null = null;
 
   public messageConfirmDialog: string = '¿Está seguro de actualizar el usuario?';
@@ -84,7 +85,7 @@ export class EditUserComponent implements OnInit {
           next: (response) => {
             this.userInformation = response;
             response.roles.forEach((role) => {
-              this.rolesFormArray.push(this.formBuilder.control(role.oid));
+              this.rolesFormArray.push(this.formBuilder.control(role.oidRol));
             });
             this.setValuesForm(response);
             this.changesInRoleField();
@@ -108,7 +109,7 @@ export class EditUserComponent implements OnInit {
   * Method to set the values of the form
   * @param userInfoResponse:User
   * */
-  setValuesForm(userInfoResponse: User): void {
+  setValuesForm(userInfoResponse: UsuarioResponse): void {
     this.editUserForm.get('name')?.setValue(userInfoResponse.nombres);
     this.editUserForm.get('lastName')?.setValue(userInfoResponse.apellidos);
     this.editUserForm.get('email')?.setValue(userInfoResponse.correo);
@@ -129,7 +130,7 @@ export class EditUserComponent implements OnInit {
   * */
   isChekedRol(roleId: string): boolean {
     const id = parseFloat(roleId);
-    return this.userInformation?.roles.some((role) => role.oid === id) || false;
+    return this.userInformation?.roles.some((role) => role.oidRol === id) || false;
   }
 
 
@@ -143,7 +144,7 @@ export class EditUserComponent implements OnInit {
     if (event.target.checked) {
       rolsFormArray.push(this.formBuilder.control(event.target.value));
       this.changesInRoleField();
-      this.setValuesForm(this.userInformation || {} as User);
+      this.setValuesForm(this.userInformation || {} as UsuarioResponse);
     } else {
       const index = this.rolesFormArray.controls.findIndex(
         (control) => control.value.toString() === event.target.value
@@ -287,7 +288,7 @@ export class EditUserComponent implements OnInit {
     if (!event) return;
     this.editUserForm.markAllAsTouched();
     if (this.editUserForm.valid) {
-      let userUpdate: NewUser = {
+      let userUpdate: UsuarioCreate = {
         nombres: this.editUserForm.get('name')?.value,
         apellidos: this.editUserForm.get('lastName')?.value,
         correo: this.editUserForm.get('email')?.value,

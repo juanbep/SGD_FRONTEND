@@ -1,10 +1,11 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { ModalCreateAcademicPeriodComponent } from '../../components/modal-create-academic-period/modal-create-academic-period.component';
 import { ModalEditAcademicPeriodComponent } from '../../components/modal-edit-academic-period/modal-edit-academic-period.component';
-import { AcademicPeriod, AcademicPeriodResponse } from '../../../../core/models/academicPeriods';
 import { AcademicPeriodManagementService } from '../../services/academic-period-management-service.service';
 import { CommonModule } from '@angular/common';
 import { PaginatorComponent } from "../../../../shared/components/paginator/paginator.component";
+import { PagedResponse } from '../../../../core/models/response/paged-response.model';
+import { PeriodoAcademicoResponse } from '../../../../core/models/response/periodo-academico-response.model';
 
 const ACTIVE_PERIOD_STATUS_ID = 1;
 
@@ -24,9 +25,9 @@ export class AcademicPeriodManagementComponent implements OnInit {
   
   private academicPeriodManagementService = inject(AcademicPeriodManagementService);
   
-  public academicPeriodResponse: AcademicPeriodResponse | null = null;
-  public academicPeriods: AcademicPeriod[] = [];
-  public currentAcademicPeriod: AcademicPeriod | null = null;
+  public academicPeriodResponse: PagedResponse<PeriodoAcademicoResponse> | null = null;
+  public academicPeriods: PeriodoAcademicoResponse[] = [];
+  public currentAcademicPeriod: PeriodoAcademicoResponse | null = null;
   public currentPage: number = 1;
   public size: number = 10;
   
@@ -52,7 +53,7 @@ export class AcademicPeriodManagementComponent implements OnInit {
     this.modalCreateAcademicPeriod.open();
   }
 
-  openModalEditAcademicPeriod(academicPeriod: AcademicPeriod): void {
+  openModalEditAcademicPeriod(academicPeriod: PeriodoAcademicoResponse): void {
     this.modalEditAcademicPeriod.open(academicPeriod);
   }
 

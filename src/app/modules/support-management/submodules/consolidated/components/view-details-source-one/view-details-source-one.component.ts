@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Actividad, FuenteActividad } from '../../../../../../core/models/consolidated.interface';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
-import { Activity, Fuente } from '../../../../../../core/models/activities.interface';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { tap } from 'rxjs';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 declare var bootstrap: any;
 
 @Component({
@@ -20,7 +20,7 @@ export class ViewDetailsSourceOneComponent {
 
   private consolidatedServices = inject(ConsolidatedServicesService);
 
-  public activity: Activity | null = null;
+  public activity: ActividadResponse | null = null;
   public sourceFile: Blob | null = null;
   public reportFile: Blob | null = null;
   public sourceOne: Fuente | undefined = undefined;
@@ -39,13 +39,13 @@ export class ViewDetailsSourceOneComponent {
 
   recoverActivity(oidActividad:number) {
     this.consolidatedServices.getActivityByOidActivity(oidActividad).pipe(
-      tap((actividad: Activity) => {
+      tap((actividad: ActividadResponse) => {
         this.activity = actividad;
         this.recoverSourceOne();
       } )
     ).subscribe(
       {
-        next: (actividad: Activity) => {
+        next: (actividad: ActividadResponse) => {
           this.activity = actividad;
           this.recoverSourceOne();
         }

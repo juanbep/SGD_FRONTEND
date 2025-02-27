@@ -1,7 +1,7 @@
-import { Component, Inject, Input } from '@angular/core';
-import { UsersServiceService } from '../../services/users-service.service';
-import { Role, User } from '../../../../../../core/models/users.interfaces';
+import { Component} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { Rol } from '../../../../../../core/models/base/rol.model';
 declare var bootstrap: any;
 
 @Component({
@@ -15,9 +15,9 @@ declare var bootstrap: any;
 })
 export class ModalUserDetailslComponent {
 
-  userDetails: User | null = null;
+  userDetails: UsuarioResponse | null = null;
 
-  open(userDetails: User) {
+  open(userDetails: UsuarioResponse) {
     const modal = new bootstrap.Modal(document.getElementById('modal-user-details'));
     if (modal) {
       modal.show();
@@ -26,10 +26,10 @@ export class ModalUserDetailslComponent {
   }
 
 
-  returnAllRoles(roles: Role[] | null) {
+  returnAllRoles(roles: Rol[] | null) {
     if(!roles) return '';
     let rolesString = '';
-    roles.forEach((role: Role) => {
+    roles.forEach((role: Rol) => {
       rolesString += role.nombre + ', ';
     })
     return rolesString.slice(0, -2);
