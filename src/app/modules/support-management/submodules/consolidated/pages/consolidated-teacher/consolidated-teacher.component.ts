@@ -60,8 +60,8 @@ export class ConsolidatedTeacherComponent implements OnInit {
   recoverInfoTeacher(): void {
     if (this.idUserTeacher) {
       this.consolidatedServicesService.getInfoTeacher(this.idUserTeacher).subscribe({
-        next: data => {
-          this.infoDataTeacher = data;
+        next: response => {
+          this.infoDataTeacher = response.data;
         },
         error: error => {
           this.toastr.showErrorMessage('Error al consultar la información', 'Error');
@@ -74,9 +74,9 @@ export class ConsolidatedTeacherComponent implements OnInit {
     const paramsFilter = this.consolidatedServicesService.getFilterParams();
     if (this.idUserTeacher) {
       this.consolidatedServicesService.getConsolidatedActitiesTeacherByParams(this.idUserTeacher, page-1, SIZE_PAGE, paramsFilter.activityType || '', paramsFilter.activityName || '', paramsFilter.sourceType || '', paramsFilter.sourceState || '').subscribe({
-        next: data => {
-          this.consolidatedTeacher = data;
-          this.consolidatedServicesService.setDataConsolidatedTeacher(data);
+        next: response => {
+          this.consolidatedTeacher = response.data;
+          this.consolidatedServicesService.setDataConsolidatedTeacher(response.data);
         },
         error: error => {
           this.toastr.showErrorMessage('Error al consultar la información', 'Error');

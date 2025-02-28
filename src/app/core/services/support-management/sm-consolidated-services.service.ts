@@ -38,10 +38,10 @@ export class SmConsolidatedServicesService {
   * @returns {any}
   * */
 
-  getInfoTeacher(teacherId: number): Observable<DetalleUsuarioConsolidadoResponse> {
+  getInfoTeacher(teacherId: number): Observable<SimpleResponse<DetalleUsuarioConsolidadoResponse>> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId.toString());
-    return this.httpClient.get<DetalleUsuarioConsolidadoResponse>(this.baseUrl + '/api/consolidado/informacion-general', { params });
+    return this.httpClient.get<SimpleResponse<DetalleUsuarioConsolidadoResponse>>(this.baseUrl + '/api/consolidado/informacion-general', { params });
   }
 
   /*
@@ -49,15 +49,15 @@ export class SmConsolidatedServicesService {
   * @param {number} teacherId
   * @returns {any}
   * */
-  getConsolidatedByTeacher(teacherId: number, page: number, size: number): Observable<ActividadConsolidadoResponse> {
+  getConsolidatedByTeacher(teacherId: number, page: number, size: number): Observable<SimpleResponse<ActividadConsolidadoResponse>> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId)
       .set('page', page)
       .set('size', size);
-    return this.httpClient.get<ActividadConsolidadoResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
+    return this.httpClient.get<SimpleResponse<ActividadConsolidadoResponse>>(this.baseUrl + '/api/consolidado/actividades', { params });
   }
 
-  getConsolidatedActitiesTeacherByParams(teacherId: number, page: number, size: number, activityType: string, activityName: string, sourceType:string, sourceState:string): Observable<ActividadConsolidadoResponse> {
+  getConsolidatedActitiesTeacherByParams(teacherId: number, page: number, size: number, activityType: string, activityName: string, sourceType:string, sourceState:string): Observable<SimpleResponse<ActividadConsolidadoResponse>> {
     let params = new HttpParams()
       .set('idEvaluado', teacherId)
       .set('page', page)
@@ -66,7 +66,7 @@ export class SmConsolidatedServicesService {
       .set('nombreActividad', activityName)
       .set('idTipoFuente' , sourceType)
       .set('idEstadoFuente', sourceState);
-    return this.httpClient.get<ActividadConsolidadoResponse>(this.baseUrl + '/api/consolidado/actividades', { params });
+    return this.httpClient.get<SimpleResponse<ActividadConsolidadoResponse>>(this.baseUrl + '/api/consolidado/actividades', { params });
   }
 
   /*

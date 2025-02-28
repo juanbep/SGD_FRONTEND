@@ -112,7 +112,7 @@ export class CpdComponent implements OnInit {
     this.cpdServiceServices.getInformationTeacherConsolidatedResponse(teacherId).subscribe(
       {
         next: (response) => {
-          infoTeacherConsolidated = response;
+          infoTeacherConsolidated = response.data;
           if(this.academicPeriodActive) this.cpdWordGeneratorService.generateWordDocument(infoTeacherConsolidated, teacherInfo, this.academicPeriodActive);
         },
         error: (error) => {
