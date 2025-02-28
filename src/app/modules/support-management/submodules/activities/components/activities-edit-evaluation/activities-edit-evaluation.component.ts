@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';

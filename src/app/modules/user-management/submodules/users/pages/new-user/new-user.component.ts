@@ -274,8 +274,8 @@ export class NewUserComponent implements OnInit {
               this.messageToast.showSuccessMessage('Usuario creado correctamente', 'Usuario creado');
               this.clearFormFields();
             },
-            error: () => {
-              this.messageToast.showErrorMessage('Error al crear el usuario', 'Error');
+            error: (error) => {
+              this.messageToast.showErrorMessage(error.error.mensaje, 'Error');
             }
           }
         );

@@ -8,10 +8,17 @@ import { FuenteCreate } from '../../../../../core/models/modified/fuente-create.
 export class ActivitiesServicesService {
 
     private userActivities: WritableSignal<PagedResponse<ActividadResponse>| null> = signal(null);
+    private paramsActivitiesFilterSignal: WritableSignal<{ nameActivity: string | null, typeActivity: string | null, evaluatorName: string  | null, evaluatorRole:string | null }> = signal({nameActivity: null, typeActivity: null, evaluatorName: null, evaluatorRole: null});
 
     private smActivitiesServicesService = inject(SmActivitiesServicesService);
 
-    // private paramsActivitiesFilterSignal: WritableSignal<{ nameActivity: string | null, typeActivity: string | null, stateActivity: string  | null}> = signal(null);
+    setParamsActivitiesFilterSignal(nameActivity: string | null, typeActivity: string | null, evaluatorName: string  | null, evaluatorRole:string | null) {
+        this.paramsActivitiesFilterSignal.update(data => data = {nameActivity, typeActivity, evaluatorName, evaluatorRole}); 
+    }
+
+    getParamsActivitiesFilterSignal() {
+        return this.paramsActivitiesFilterSignal();
+    }
 
 
     setDataActivities(newData: PagedResponse<ActividadResponse>) {

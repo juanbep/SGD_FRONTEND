@@ -23,7 +23,7 @@
                 </div>
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="program">
-                        <option [value]="null" selected>Programa</option>
+                        <option [value]="null" selected>Departamento</option>
                         <option *ngFor="let program of catalogData?.departamentos" value="{{program.codigo}}">
                             {{program.nombre | titlecase}}
                         </option>

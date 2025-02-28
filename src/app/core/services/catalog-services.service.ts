@@ -3,6 +3,7 @@ import { environments } from '../../../environments/environments';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CatalogDataResponse } from '../models/catalogData.interface';
+import { SimpleResponse } from '../models/response/simple-response.model';
 
 @Injectable({providedIn: 'root'})
 export class CatalogServicesService {
@@ -11,7 +12,7 @@ export class CatalogServicesService {
 
     private httpClient: HttpClient = inject(HttpClient);
 
-    getCatalog(): Observable<CatalogDataResponse> {
+    getCatalog(): Observable<SimpleResponse<CatalogDataResponse>> {
         return this.httpClient.get<any>(`${this.baseUrl}/api/catalogo/obtenerCatalogo`);
     }
     

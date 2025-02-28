@@ -65,8 +65,8 @@ export class UmUsersServicesService {
     * @returns Observable<User>
     * */
 
-    getUserbyId(id: number): Observable<UsuarioResponse> {
-        return this.httpClient.get<UsuarioResponse>(`${this.baseUrl}/api/usuarios/${id}`);
+    getUserbyId(id: number): Observable<SimpleResponse<UsuarioResponse>> {
+        return this.httpClient.get<SimpleResponse<UsuarioResponse>>(`${this.baseUrl}/api/usuarios/${id}`);
     }
 
 

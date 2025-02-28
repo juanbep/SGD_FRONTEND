@@ -42,9 +42,9 @@ export class TeacherListTableComponent implements OnInit {
 
   recoverTeachers(page: number, size: number): void {
     this.consolidatedServicesService.getTeachers(page-1, size, this.currentUser?.usuarioDetalle.departamento || '').subscribe({
-      next: data => {
-        this.teacherServiceResponse = data;
-        this.teacherList = data.content;
+      next: response => {
+        this.teacherServiceResponse = response.data;
+        this.teacherList = response.data.content;
       },
       error: error => {
         this.toastr.showErrorMessage('Error al consultar la información', 'Error');

@@ -78,7 +78,7 @@ export class CpdActivitiesUserComponent implements OnInit {
       this.cpdServicesService.getTeacherInfo(idUser).subscribe(
         {
           next: (response) => {
-            this.userTeacherInfo = response;
+            this.userTeacherInfo = response.data;
           },
           error: (error) => {
             this.messagesInfoService.showErrorMessage('Error al recuperar la información del usuario', 'Error');

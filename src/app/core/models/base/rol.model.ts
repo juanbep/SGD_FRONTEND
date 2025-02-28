@@ -1,4 +1,6 @@
 export interface Rol {
-    oidRol: number;
+    oid: number;
     nombre: string;
+    fechaCreacion: string;
+    fechaActualizacion: string;
 }

@@ -83,11 +83,11 @@ export class EditUserComponent implements OnInit {
       this.UserServices.getUserbyId(this.idUserParam).subscribe(
         {
           next: (response) => {
-            this.userInformation = response;
-            response.roles.forEach((role) => {
-              this.rolesFormArray.push(this.formBuilder.control(role.oidRol));
+            this.userInformation = response.data;
+            response.data.roles.forEach((role) => {
+              this.rolesFormArray.push(this.formBuilder.control(role.oid));
             });
-            this.setValuesForm(response);
+            this.setValuesForm(response.data);
             this.changesInRoleField();
           },
           error: (error) => {
@@ -130,7 +130,7 @@ export class EditUserComponent implements OnInit {
   * */
   isChekedRol(roleId: string): boolean {
     const id = parseFloat(roleId);
-    return this.userInformation?.roles.some((role) => role.oidRol === id) || false;
+    return this.userInformation?.roles.some((role) => role.oid === id) || false;
   }
 
 

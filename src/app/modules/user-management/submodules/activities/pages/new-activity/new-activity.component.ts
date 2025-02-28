@@ -101,7 +101,7 @@ export class NewActivityComponent implements OnInit {
   recoverUserById(id: number | null): void {
     if (id) {
       this.activitiesManagementService.getUserById(id).subscribe((response) => {
-        this.userByIdResponse = response;
+        this.userByIdResponse = response.data;
       });
     }
   }

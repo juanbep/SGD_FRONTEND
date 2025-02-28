@@ -359,6 +359,16 @@ export class EditActivityComponent implements OnInit {
     return true;
   }
 
+  listenerIdStudent(): void {
+    this.activityForm.get('idStudent')?.valueChanges.pipe(
+      debounceTime(500)
+    ).subscribe((value) => {
+      if (value) {
+        this.validateUserExist(value, '', '2');
+      }
+    });
+  }
+
   validateUserExist(idUser: string, userName: string, rol: string): UsuarioResponse | null {
     if (idUser || rol || userName) {
       this.activitiesManagementService.getUserByParams(0, 3, idUser, userName, '', '', '', '', '', '', rol, '1').subscribe(
@@ -396,15 +406,7 @@ export class EditActivityComponent implements OnInit {
     return null;
   }
 
-  listenerIdStudent(): void {
-    this.activityForm.get('idStudent')?.valueChanges.pipe(
-      debounceTime(500)
-    ).subscribe((value) => {
-      if (value) {
-        this.validateUserExist(value, '', '2');
-      }
-    });
-  }
+
 
 
   selectUser(user: UsuarioResponse | null): void {
@@ -453,28 +455,28 @@ export class EditActivityComponent implements OnInit {
   }
 
   onChangeInfoEvaluator() {
-    this.activityForm.get('evaluatorId')?.valueChanges.pipe(
-      debounceTime(500)
-    ).subscribe((value) => {
-      this.typeResulsSearchId = value;
-      if (value) {
-        this.validateUserExist(value, '', '');
-      } else {
-        this.userResponseSeachById = null;
-      }
-    });
+      this.activityForm.get('evaluatorId')?.valueChanges.pipe(
+        debounceTime(500)
+      ).subscribe((value) => {
+        this.typeResulsSearchId = value;
+        if (value) {
+          this.validateUserExist(value, '', '');
+        } else {
+          this.userResponseSeachById = null;
+        }
+      });
+      this.activityForm.get('evaluatorName')?.valueChanges.pipe(
+        debounceTime(500)
+      ).subscribe((value) => {
+        this.typeResulsSearchName = value;
+        if (value) {
+          this.validateUserExist('', value, '');
+        } else {
+          this.userResponseSeachByName = null;
+        }
+      });
 
 
-    this.activityForm.get('evaluatorName')?.valueChanges.pipe(
-      debounceTime(500)
-    ).subscribe((value) => {
-      this.typeResulsSearchName = value;
-      if (value) {
-        this.validateUserExist('', value, '');
-      } else {
-        this.userResponseSeachByName = null;
-      }
-    });
   }
 
   onConfirm(event: any): void {
@@ -507,13 +509,10 @@ export class EditActivityComponent implements OnInit {
           {
             next: (response) => {
               this.messagesInfoService.showSuccessMessage('Actividad editada correctamente', 'Éxito');
-              this.activityForm.reset();
-              this.userResponseSeachById = null;
-              this.userResponseSeachByName = null;
-              this.userResponse = null;
+              this.recoverInfoActivity();
             },
             error: (error) => {
-              this.messagesInfoService.showErrorMessage('Error al guardar la actividad', 'Error');
+              this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
             }
           }
         );

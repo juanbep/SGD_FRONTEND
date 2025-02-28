@@ -62,7 +62,7 @@ export class ResponsibilitiesTableComponent {
           this.service.setResponsibilitiesData(response.data);
         },
         error: error => {
-          this.toastr.showErrorMessage(`Error al consulatar la información. Error: ${error.mensaje}`, 'Error');
+          this.toastr.showErrorMessage(error.error.mensaje, 'Error');
         }
       });
     }

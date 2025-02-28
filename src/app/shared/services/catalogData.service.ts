@@ -22,8 +22,8 @@ export class CatalogDataService {
     }
 
     getCatalogData() {
-        this.catalogServicesService.getCatalog().subscribe(data => {
-            return this.catalogData.set(data);
+        this.catalogServicesService.getCatalog().subscribe(response => {
+            return this.catalogData.set(response.data);
         });
     }
 

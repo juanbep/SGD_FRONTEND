@@ -7,6 +7,7 @@ import { UsuarioConsolidadoResponse } from '../../models/response/usuario-consol
 import { DetalleUsuarioConsolidadoResponse } from '../../models/response/detalle-usuario-cosolidado-response.model';
 import { ActividadConsolidadoResponse } from '../../models/response/actividad-consolidado-response.mode';
 import { ActividadResponse } from '../../models/response/actividad-response.model';
+import { SimpleResponse } from '../../models/response/simple-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,13 +23,13 @@ export class SmConsolidatedServicesService {
     * @returns {any}
     * */
 
-  getTeachers(page: number, totalPage: number, department: string): Observable<PagedResponse<UsuarioConsolidadoResponse>> {
+  getTeachers(page: number, totalPage: number, department: string): Observable<SimpleResponse<PagedResponse<UsuarioConsolidadoResponse>>> {
     let params = new HttpParams()
       .set('departamento', department)
       .set('page', page.toString())
       .set('size', totalPage.toString());
 
-    return this.httpClient.get<PagedResponse<UsuarioConsolidadoResponse>>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', { params });
+    return this.httpClient.get<SimpleResponse<PagedResponse<UsuarioConsolidadoResponse>>>(this.baseUrl + '/api/usuarios/obtenerEvaluacionDocente', { params });
   }
 
   /*

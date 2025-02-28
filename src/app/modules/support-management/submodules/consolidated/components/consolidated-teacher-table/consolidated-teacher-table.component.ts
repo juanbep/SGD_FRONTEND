@@ -139,8 +139,8 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
   recoverUserInfo(idUser:number, userIn:UsuarioResponse | null){
     this.consolidatedServicesService.getUserInfo(idUser).subscribe(
         {
-          next:User =>{
-            userIn = User;
+          next: response =>{
+            userIn = response.data;
           },
           error: error =>{
             userIn = null;
