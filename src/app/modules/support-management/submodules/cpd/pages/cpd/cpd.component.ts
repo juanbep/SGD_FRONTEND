@@ -1,6 +1,5 @@
 import { Component, inject, Inject, OnInit, ViewChild, viewChild } from '@angular/core';
 import { CpdServicesService } from '../../services/cpd-services.service';
-import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 import { CommonModule } from '@angular/common';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
@@ -43,7 +42,7 @@ export class CpdComponent implements OnInit {
 
   public academicPeriodActive: PeriodoAcademicoResponse | null = null;
   public currentPage: number = 1;
-  public currentUser: UserInfo | null = null;
+  public currentUser: UsuarioResponse | null = null;
   public emailMessage: string = '';
   public filterParams: { nameUser: string | null, identification: string | null, category: string | null } = { nameUser: null, identification: null, category: null };
   public teacherByDepartment: PagedResponse<UsuarioResponse> | null = null;
@@ -52,7 +51,7 @@ export class CpdComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
     this.academicPeriodActive = this.academicPeriodManagementService.currentAcademicPeriodValue;
-    if (this.currentUser) {
+    if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
       this.recoverTeachers(this.currentPage, TOTAL_PAGE, this.currentUser.usuarioDetalle.departamento, null, null, null, ID_ROL);
     }
   }
@@ -67,13 +66,13 @@ export class CpdComponent implements OnInit {
 
   pageChanged(page: number) {
     this.currentPage = page;
-    if (this.currentUser) {
+    if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
       this.recoverTeachers(this.currentPage, TOTAL_PAGE, this.currentUser.usuarioDetalle.departamento, this.filterParams.nameUser, this.filterParams.identification, this.filterParams.category, ID_ROL);
     }
   }
 
   filterAction(event: { nameUser: string | null, identification: string | null, category: string | null }) {
-    if (this.currentUser) {
+    if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
       this.filterParams = event;
       this.currentPage = 1;
       this.recoverTeachers(this.currentPage, TOTAL_PAGE, this.currentUser.usuarioDetalle.departamento, this.filterParams.identification, this.filterParams.nameUser, this.filterParams.category, ID_ROL);
@@ -87,7 +86,7 @@ export class CpdComponent implements OnInit {
   }
 
   downloadFiles() {
-    if (this.academicPeriodActive && this.currentUser) {
+    if (this.academicPeriodActive && this.currentUser && this.currentUser.usuarioDetalle.departamento) {
       this.cpdServiceServices.downloadFiles(this.academicPeriodActive.idPeriodo, this.currentUser.usuarioDetalle.departamento, null, null, null).subscribe(
         {
           next: (blob) => {

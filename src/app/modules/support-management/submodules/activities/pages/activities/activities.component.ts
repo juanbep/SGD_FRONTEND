@@ -49,7 +49,7 @@ export class ActivitiesComponent implements OnInit{
   private checkActivitiesComplete(){
     if (this.activityResponse?.content) {
       return this.activityResponse.content.some(activity =>
-        activity.fuentes?.some(fuente => fuente.estadoFuente === 'DILIGENCIADO')
+        activity.fuentes.some(fuente => fuente.estadoFuente === 'DILIGENCIADO' && fuente.tipoFuente === '1')
       );
     }
     return false;

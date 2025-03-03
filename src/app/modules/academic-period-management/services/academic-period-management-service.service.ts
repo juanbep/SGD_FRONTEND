@@ -68,7 +68,7 @@ export class AcademicPeriodManagementService {
     getActiveAcademicPeriod(){
         return this.apmAcademicPeriodManagementService.activeAcademicPeriod().pipe(
             tap(academicPeriod => {
-                this._currentAcademicPeriod.set(academicPeriod);
+                this._currentAcademicPeriod.set(academicPeriod.data);
             })
         )
     }

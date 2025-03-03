@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal, SimpleChange } from '@angular/core';
 import { AsAuthServiceService } from '../../../core/services/as-auth-service.service';
-import { UserInfo } from '../../../core/models/auth.interface';
 import { tap } from 'rxjs';
+import { UsuarioResponse } from '../../../core/models/response/usuario-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,12 +10,12 @@ export class AuthServiceService {
 
   private service: AsAuthServiceService = inject(AsAuthServiceService);
 
-  private _currentUser = signal<UserInfo | null>(null);
+  private _currentUser = signal<UsuarioResponse | null>(null);
 
   public currentUser = computed(() => this._currentUser());
 
 
-  get currentUserValue(): UserInfo | null {
+  get currentUserValue(): UsuarioResponse | null {
     return this._currentUser();
   }
 

@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 @Component({
   selector: 'responsibilities-edit-evaluation',
@@ -30,7 +30,7 @@ export class ResponsibilitiesEditEvaluationComponent {
   public openModalSelected: boolean = false;
 
   @Input()
-  currentUser: UserInfo | null = null;
+  currentUser: UsuarioResponse | null = null;
 
   @Output()
   public closeModalEditSelected: EventEmitter<boolean> = new EventEmitter<boolean>();

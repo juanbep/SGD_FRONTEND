@@ -11,6 +11,7 @@ import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models
 import { ActividadConsolidadoResponse, Actividades, InformacionActividad } from '../../../../../../core/models/response/actividad-consolidado-response.mode';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
+import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 
 @Component({
   selector: 'consolidated-teacher-table',
@@ -47,6 +48,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   currentPage: number = 1;
 
   private consolidatedServicesService = inject(ConsolidatedServicesService);
+  private authService = inject(AuthServiceService);
   private router = inject(ActivatedRoute);
 
   public consolidatedTeacher: ActividadConsolidadoResponse | null = null;
@@ -63,7 +65,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUser = this.router.snapshot.data['currentUser'];
+    this.currentUser = this.authService.currentUserValue;
     this.teacherId = this.router.snapshot.params['id'];
     this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
     

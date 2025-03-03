@@ -8,7 +8,7 @@ export const routes: Routes = [
     {
         
         path:'app',
-        resolve: {catalog: CatalogResolverService, currentUser: CurrentUserResolverService, activePeriod: ActivePeriodResolvers },
+        resolve: {catalog: CatalogResolverService, currentUser: CurrentUserResolverService},
         canActivate: [AuthGuard],
         loadChildren: ()=> import('./modules/layout/layout-routing.module').then(m=>m.LayoutRoutingModule),
     },

@@ -4,11 +4,11 @@ import { ConsolidatedTeacherTableComponent } from "../../components/consolidated
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 import { ActividadConsolidadoResponse } from '../../../../../../core/models/response/actividad-consolidado-response.mode';
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 const SIZE_PAGE = 10
 const TITTLE_MESSAGE = 'Aprobar consolidado';
@@ -37,7 +37,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
   public consolidatedTeacher: ActividadConsolidadoResponse | null = null;
   public currentPage: number = 1;
   public idUserTeacher: number = 0;
-  public infoCurrentUser: UserInfo | null = null;
+  public infoCurrentUser: UsuarioResponse | null = null;
   public infoDataTeacher: DetalleUsuarioConsolidadoResponse | null = null;
   public responseConsolidatedConfirmDialog: string = '';
   public tittleMessage: string = TITTLE_MESSAGE;

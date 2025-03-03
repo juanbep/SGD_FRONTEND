@@ -40,7 +40,7 @@
                             <tbody formArrayName="activities">
                                 <tr *ngFor="let item of activities.controls; let i = index" [formGroupName]="i">
                                     <td>
-                                        <span class="text-body-regular">{{teacherActivities!.content[i].nombreActividad}}</span>
+                                        <span class="text-body-regular">{{userActivities[i].nombreActividad}}</span>
                                     </td>
                                     <td>
                                         <input [ngClass]="{'text-error': isInvalidField(item)}"
@@ -49,20 +49,20 @@
                                     </td>
                                     <td>
                                         <ng-container
-                                            *ngIf="teacherActivities!.content[i].informeEjecutivo; else noReport">
+                                            *ngIf="userActivities[i].informeEjecutivo; else noReport">
                                             <ng-container
-                                                *ngIf="teacherActivities!.content[i].fuentes[0].nombreDocumentoInforme; else missingReport">
+                                                *ngIf="userActivities[i].fuentes[0].nombreDocumentoInforme; else missingReport">
                                                 <img src="assets/icons/tables/icon-view.svg" alt=""
                                                     style="cursor: pointer;"
-                                                    (click)="downloadReport(teacherActivities!.content[i].fuentes[0].oidFuente)">
+                                                    (click)="downloadReport(userActivities[i].fuentes[0].oidFuente)">
                                                 <img src="assets/icons/tables/icon-trash.svg" alt=""
                                                     style="cursor: pointer;"
-                                                    (click)="deleteReport(teacherActivities!.content[i])">
+                                                    (click)="deleteReport(userActivities[i])">
                                             </ng-container>
                                             <ng-template #missingReport>
                                                 <img src="assets/icons/tables/icon-upload.svg" alt=""
                                                     style="cursor: pointer;"
-                                                    (click)="triggerReportFileUpload(teacherActivities!.content[i])">
+                                                    (click)="triggerReportFileUpload(userActivities[i])">
                                                 <input type="file" id="uploadFileReportEdit"
                                                     (change)="onRepportFileSelected($event)" hidden>
                                             </ng-template>

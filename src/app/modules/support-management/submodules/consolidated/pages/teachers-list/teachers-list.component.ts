@@ -3,9 +3,11 @@ import { TeachersListFilterComponent } from "../../components/teachers-list-filt
 import { TeacherListTableComponent } from "../../components/teachers-list-table/teachers-list-table.component";
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { TitleCasePipe } from '@angular/common';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
+import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
+import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 @Component({
   selector: 'support-management-consolidated',
@@ -18,33 +20,38 @@ export class TeachersListComponent implements OnInit {
 
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private authService = inject(AuthServiceService);
+  private academicPeriodMangementService = inject(AcademicPeriodManagementService);
 
-  public currentUser: UserInfo | null = null;
+  public currentUser: UsuarioResponse | null = null;
+  public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
   
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
+    this.activeAcademicPeriod = this.academicPeriodMangementService.currentAcademicPeriodValue;
   }
   
 
   downloadAllSuppotFiles(){
-    this.consolidatedServicesService.downloadAllSupportFiles('2025-02', this.currentUser?.usuarioDetalle.departamento || '', '', null, null).subscribe
-    (
-      {
-        next: (response: any) => {
-          const blob = new Blob([response], { type: 'application/zip' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `documentos_${'2025-02'}_${this.currentUser?.usuarioDetalle.departamento}.zip`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-        },
-        error: (error: any) => {
-          console.log(error);
+    if(this.activeAcademicPeriod && this.currentUser){
+      this.consolidatedServicesService.downloadAllSupportFiles(this.activeAcademicPeriod.idPeriodo, this.currentUser?.usuarioDetalle.departamento || '', '', null, null).subscribe
+      (
+        {
+          next: (response: any) => {
+            const blob = new Blob([response], { type: 'application/zip' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `documentos_${this.activeAcademicPeriod?.idPeriodo}_${this.currentUser?.usuarioDetalle.departamento}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+          },
+          error: (error: any) => {
+            console.log(error);
+          }
         }
-      }
-    );
+      );
+    }
   }
  
 }

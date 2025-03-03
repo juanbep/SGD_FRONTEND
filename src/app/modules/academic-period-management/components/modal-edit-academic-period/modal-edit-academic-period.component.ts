@@ -162,7 +162,7 @@ export class ModalEditAcademicPeriodComponent {
   
   recoverAcademicPeriods(): void {
     this.academicPeriodManagementService.getAllAcademicPeriods(this.currentPage-1, this.size).subscribe((response) => {
-      this.academicPeriodManagementService.setAcademicPeriods(response);
+      this.academicPeriodManagementService.setAcademicPeriods(response.data);
     })
   }
 

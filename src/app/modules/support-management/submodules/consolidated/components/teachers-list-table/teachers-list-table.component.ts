@@ -4,10 +4,10 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { CommonModule } from '@angular/common';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { UsuarioConsolidadoResponse } from '../../../../../../core/models/response/usuario-consolidado-response.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 @Component({
   selector: 'consolidated-teachers-list-table',
@@ -31,7 +31,7 @@ export class TeacherListTableComponent implements OnInit {
   public currentPage: number = 1;
   public teacherServiceResponse: PagedResponse<UsuarioConsolidadoResponse> | null = null;
   public teacherList: UsuarioConsolidadoResponse[] = [];
-  public currentUser : UserInfo | null = null;
+  public currentUser : UsuarioResponse | null = null;
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;

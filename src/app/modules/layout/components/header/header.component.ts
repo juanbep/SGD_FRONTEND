@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../auth/service/auth-service.service';
-import { UserInfo } from '../../../../core/models/auth.interface';
 import { CommonModule } from '@angular/common';
-import { Role } from '../../../../core/models/auth.interface';
+import { UsuarioResponse } from '../../../../core/models/response/usuario-response.model';
+import { Rol } from '../../../../core/models/base/rol.model';
 
 @Component({
   selector: 'layout-header',
@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit {
   private router: Router = inject(Router);
   private authServiceService = inject(AuthServiceService);
 
-  public currentUser: UserInfo | null = null;
+  public currentUser: UsuarioResponse | null = null;
 
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
@@ -30,9 +30,9 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/auth']);
   }
 
-  returnAllRoles(roles: Role[]) {
+  returnAllRoles(roles: Rol[]) {
     let rolesString = '';
-    roles.forEach((role: Role) => {
+    roles.forEach((role: Rol) => {
       rolesString += role.nombre + ', ';
     })
     return rolesString.slice(0, -2);

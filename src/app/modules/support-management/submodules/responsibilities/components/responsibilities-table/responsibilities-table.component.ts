@@ -6,9 +6,9 @@ import { ResponsibilitiesEditEvaluationComponent } from "../responsibilities-edi
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
-import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 @Component({
   selector: 'responsibilities-table',
@@ -26,7 +26,7 @@ import { ResponsabilidadResponse } from '../../../../../../core/models/response/
 export class ResponsibilitiesTableComponent {
 
   @Input()
-  currentUser:UserInfo | null = null;
+  currentUser:UsuarioResponse | null = null;
 
   public currentPage: number = 1;
   public headDataTable = ["Actividad", "Fuente 2", "Informe"];

@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { PeriodoAcademicoResponse } from '../../models/response/periodo-academico-response.model';
 import { PagedResponse } from '../../models/response/paged-response.model';
 import { PeriodoAcademicoCreate } from '../../models/modified/periodo-academico-create.model';
+import { SimpleResponse } from '../../models/response/simple-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApmAcademicPeriodManagementService {
@@ -17,19 +18,19 @@ export class ApmAcademicPeriodManagementService {
     * @param newAcademicPeriod: NewAcademicPeriod
     * @returns Observable<AcademicPeriod>
     * */
-    saveNewAcademicPeriod(newAcademicPeriod: PeriodoAcademicoCreate): Observable<PeriodoAcademicoResponse> {
-        return this.httpClient.post<PeriodoAcademicoResponse>(`${this.baseUrl}/api/periodos-academicos`, newAcademicPeriod);
+    saveNewAcademicPeriod(newAcademicPeriod: PeriodoAcademicoCreate): Observable<SimpleResponse<PeriodoAcademicoResponse>> {
+        return this.httpClient.post<SimpleResponse<PeriodoAcademicoResponse>>(`${this.baseUrl}/api/periodos-academicos`, newAcademicPeriod);
     }
 
     /*
     * Method to get all the academic periods
     * @returns Observable<PeriodoAcademicoResponse>
     * */
-    getAllAcademicPeriods(page: number | null, size: number | null): Observable<PagedResponse<PeriodoAcademicoResponse>> {
+    getAllAcademicPeriods(page: number | null, size: number | null): Observable<SimpleResponse<PagedResponse<PeriodoAcademicoResponse>>> {
         let params = new HttpParams()
             .set('page', page? page.toString() : '')
             .set('size', size? size.toString() :'');
-        return this.httpClient.get<PagedResponse<PeriodoAcademicoResponse>>(`${this.baseUrl}/api/periodos-academicos`, { params });
+        return this.httpClient.get<SimpleResponse<PagedResponse<PeriodoAcademicoResponse>>>(`${this.baseUrl}/api/periodos-academicos`, { params });
     }
 
     /*
@@ -45,7 +46,7 @@ export class ApmAcademicPeriodManagementService {
     * Method to get the active academic period
     * @returns Observable<AcademicPeriod>
     * */
-    activeAcademicPeriod(): Observable<PeriodoAcademicoResponse> {
-        return this.httpClient.get<PeriodoAcademicoResponse>(`${this.baseUrl}/api/periodos-academicos/activo`);
+    activeAcademicPeriod(): Observable<SimpleResponse<PeriodoAcademicoResponse>> {
+        return this.httpClient.get<SimpleResponse<PeriodoAcademicoResponse>>(`${this.baseUrl}/api/periodos-academicos/activo`);
     }
 }

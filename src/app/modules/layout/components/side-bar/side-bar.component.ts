@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { UserInfo } from '../../../../core/models/auth.interface';
 import { AuthServiceService } from '../../../auth/service/auth-service.service';
+import { UsuarioResponse } from '../../../../core/models/response/usuario-response.model';
 
 @Component({
   selector: 'layout-side-bar',
@@ -18,7 +18,7 @@ export class SideBarComponent implements OnInit {
 
   private authServicesService: AuthServiceService = inject(AuthServiceService);
 
-  public currentUser: UserInfo | null = null;
+  public currentUser: UsuarioResponse | null = null;
   public isSidebarActive: boolean = true;
   public isAcademicPerdiosCollapsed: boolean = true;
   public isUserManagementCollapsed: boolean = true;

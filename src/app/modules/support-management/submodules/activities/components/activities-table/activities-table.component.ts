@@ -4,10 +4,10 @@ import { ActivitiesViewEvaluationComponent } from "../activities-view-evaluation
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
-import { UserInfo } from '../../../../../../core/models/auth.interface';
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 @Component({
   selector: 'activities-table',
@@ -19,7 +19,7 @@ import { Fuente } from '../../../../../../core/models/base/fuente.model';
 export class ActivitiesTableComponent implements OnInit {
 
   @Input()
-  currentUser:UserInfo | null = null;
+  currentUser:UsuarioResponse | null = null;
 
   public currentPage: number = 1;
   public activities: PagedResponse<ActividadResponse> | null = null;

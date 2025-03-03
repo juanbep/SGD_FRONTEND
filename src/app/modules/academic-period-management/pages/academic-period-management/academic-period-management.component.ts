@@ -60,9 +60,9 @@ export class AcademicPeriodManagementComponent implements OnInit {
   recoverAcademicPeriods(page: number, size: number): void {
     this.academicPeriodManagementService.getAllAcademicPeriods(page - 1, size).subscribe({
       next: (response) => {
-        this.academicPeriodManagementService.setAcademicPeriods(response);
+        this.academicPeriodManagementService.setAcademicPeriods(response.data);
         this.academicPeriodResponse = this.academicPeriodManagementService.getDatAcademicPeriods();
-        this.academicPeriods = response.content;
+        this.academicPeriods = response.data.content;
         this.setCurrentAcademicPeriod();
       },
       error: (err) => {
