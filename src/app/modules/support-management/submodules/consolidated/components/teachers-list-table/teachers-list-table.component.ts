@@ -1,6 +1,6 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { CommonModule } from '@angular/common';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
@@ -25,7 +25,6 @@ export class TeacherListTableComponent implements OnInit {
   
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private toastr = inject(MessagesInfoService);
-  private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthServiceService);
   
   public currentPage: number = 1;
@@ -47,7 +46,7 @@ export class TeacherListTableComponent implements OnInit {
         this.teacherList = response.data.content;
       },
       error: error => {
-        this.toastr.showErrorMessage('Error al consultar la información', 'Error');
+        this.toastr.showErrorMessage(error.error.mensaje, 'Error');
       }
     });
   }

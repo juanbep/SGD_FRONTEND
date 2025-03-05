@@ -8,6 +8,7 @@ export interface UsuarioCreate {
         oidEstadoUsuario:number;
     };
     usuarioDetalle:{
+        oidUsuarioDetalle ? :number;
         facultad:string;
         departamento:string;
         categoria:string;

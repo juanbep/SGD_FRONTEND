@@ -113,13 +113,13 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
       case 'ADMINISTRACIÓN':
         return this.consolidatedTeacher?.actividades['ADMINISTRACIÓN'] || [];
       case 'ASESORIA':
-        return this.consolidatedTeacher?.actividades['ASESORÍA'] || [];
+        return this.consolidatedTeacher?.actividades['ASESORIA'] || [];
       case 'EXTENSIÓN':
         return this.consolidatedTeacher?.actividades['EXTENSIÓN'] || [];
       case 'CAPACITACIÓN':
         return this.consolidatedTeacher?.actividades['CAPACITACIÓN'] || [];
-      case 'OTROS SERVICIOS':
-        return this.consolidatedTeacher?.actividades['OTROS SERVICIOS'] || [];
+      case 'OTRO SERVICIO':
+        return this.consolidatedTeacher?.actividades['OTRO SERVICIO'] || [];
 
       default:
         return [];

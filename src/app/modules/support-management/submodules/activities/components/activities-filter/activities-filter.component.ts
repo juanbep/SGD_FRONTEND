@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
+import { ActivitiesServicesService } from '../../services/activities-services.service';
 
 @Component({
   selector: 'activities-filter',
@@ -18,6 +19,7 @@ export class ActivitiesFilterComponent {
 
     private formBuilder: FormBuilder = inject(FormBuilder);
     private catalogDataService = inject(CatalogDataService);
+    private activitiesServicesService = inject(ActivitiesServicesService);
   
     public catalogDataResponse: CatalogDataResponse | null = null; 
 
@@ -42,6 +44,7 @@ export class ActivitiesFilterComponent {
       const activityCode = this.formFilter.get('activityCode')?.value;
       const administrativeAct = this.formFilter.get('administrativeAct')?.value;
       const vriCode = this.formFilter.get('vriCode')?.value;
+
       
   
     }

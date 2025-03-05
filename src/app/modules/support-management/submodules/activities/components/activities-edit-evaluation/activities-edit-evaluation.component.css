@@ -80,6 +80,13 @@ section {
   border-radius: 0px 8px 8px 0px;
 }
 
+table{
+  border-style: none !important ;
+  box-shadow: none !important;
+  border-radius: 0px !important;
+  border-color: 1px var(--blue) !important;
+}
+
 .input-evaluation {
   width: 85%;
   height: 20px;
@@ -92,10 +99,8 @@ section {
 }
 
 .table-responsive-custom {
-  display: inline-table !important;
   width: 100% !important;
-  height: 100px !important;
-  overflow-y: scroll !important;
+  max-height: 380px !important;
 }
 
 #input-evaluation-edit {

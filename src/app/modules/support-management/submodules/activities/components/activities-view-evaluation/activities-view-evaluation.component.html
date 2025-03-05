@@ -21,7 +21,7 @@
                         class="text-body-small-r">{{activity.nombreActividad}}</span>
                 </div>
                 <div class="col">
-                    <span class="text-body-small-sb">Horas: </span> <span
+                    <span class="text-body-small-sb">Horas semanales: </span> <span
                         class="text-body-small-r">{{activity.horas}}</span>
                 </div>
             </div>
@@ -29,6 +29,10 @@
                 <div class="col">
                     <span class="text-body-small-sb">Tipo Actividad: </span> <span
                         class="text-body-small-r">{{activity.tipoActividad.nombre}}</span>
+                </div>
+                <div class="col">
+                    <span class="text-body-small-sb">Semanas: </span> <span
+                        class="text-body-small-r">{{activity.semanas}}</span>
                 </div>
             </div>
             <ng-container *ngIf="source?.tipoFuente==='2'; else infoFuente1">

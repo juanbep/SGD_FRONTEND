@@ -149,10 +149,18 @@ export class ModalEditAcademicPeriodComponent {
             this.messageInfoService.showSuccessMessage('El periodo académico ha sido editado correctamente', 'Exito');
             this.recoverAcademicPeriods();
             this.clearFields();
+            const modalElement = document.getElementById(
+              'modal-edit-academic-period'
+            );
+            if (modalElement) {
+              const modalInstance =
+                bootstrap.Modal.getInstance(modalElement);
+              modalInstance?.hide();
+            }
           },
           error: (error) => {
             console.error('Error editing academic period', error);
-            this.messageInfoService.showErrorMessage(`Ha ocurrido un error al editar el periodo académico. ${error.error}`, 'Error');
+            this.messageInfoService.showErrorMessage(error.error.mensaje, 'Error');
           }
         }
       )

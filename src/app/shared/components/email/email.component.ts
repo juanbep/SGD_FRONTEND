@@ -58,7 +58,7 @@ export class EmailComponent {
     let emails:string[] = [];
     emails.push(this.remitente);
     emails.push(this.destinatario);
-    emails.push(this.fomrEmail.get('cc')?.value);
+    if(this.fomrEmail.get('cc')?.value) emails.push(this.fomrEmail.get('cc')?.value)
     this.emailService.sendEmail(emails, this.fomrEmail.get('subject')?.value, this.fomrEmail.get('message')?.value).subscribe(
       {
         next: (response) => {

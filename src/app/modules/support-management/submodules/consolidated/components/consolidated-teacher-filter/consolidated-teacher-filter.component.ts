@@ -21,8 +21,10 @@ export class ConsolidatedTeacherFilterComponent implements OnInit {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private router = inject(ActivatedRoute);
   private ConsolidatedServicesService = inject(ConsolidatedServicesService);
+  private cataglogDataService = inject(CatalogDataService);
 
   public catalogData: CatalogDataResponse | null = null;
+  
 
   formFilter: FormGroup = this.formBuilder.group({
     activityName: [null],
@@ -32,7 +34,7 @@ export class ConsolidatedTeacherFilterComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.catalogData = this.router.snapshot.data['catalog'];
+    this.catalogData = this.cataglogDataService.catalogDataSignal;
   }
 
   filterAction() {

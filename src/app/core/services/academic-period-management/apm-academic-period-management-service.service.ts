@@ -38,8 +38,8 @@ export class ApmAcademicPeriodManagementService {
    * @param academicPeriod: AcademicPeriod
    * @returns Observable<AcademicPeriod>
    * */
-    editAcademicPeriod(oidAcademicPeriod: number, academicPeriod: PeriodoAcademicoCreate): Observable<string> {
-        return this.httpClient.put<string>(`${this.baseUrl}/api/periodos-academicos/${oidAcademicPeriod}`, academicPeriod, { responseType: 'text' as 'json' });
+    editAcademicPeriod(oidAcademicPeriod: number, academicPeriod: PeriodoAcademicoCreate): Observable<SimpleResponse<any>> {
+        return this.httpClient.put<SimpleResponse<any>>(`${this.baseUrl}/api/periodos-academicos/${oidAcademicPeriod}`, academicPeriod, { responseType: 'json' });
     }
 
     /*

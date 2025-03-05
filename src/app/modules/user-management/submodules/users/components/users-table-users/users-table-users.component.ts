@@ -53,7 +53,7 @@ export class UsersTableUsersComponent implements OnInit {
         this.usersService.setUsers(response.data);
       },
       error: (error) => {
-        this.toastService.showErrorMessage('Error al obtener los usuarios', `Error ${error.mensaje}`);
+        this.toastService.showErrorMessage(error.error.mensaje, `Error ${error.mensaje}`);
       }
     })
   }

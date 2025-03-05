@@ -73,7 +73,7 @@ export class ActivitiesViewEvaluationComponent {
       this.documentName = this.source.nombreDocumentoFuente
         ? this.source.nombreDocumentoFuente
         : '';
-      this.evaluation = this.source.calificacion
+      this.evaluation = this.source.calificacion || this.source.calificacion === 0
         ? this.source.calificacion.toFixed(1)
         : '';
       this.observation = this.source.observacion ? this.source.observacion : '';

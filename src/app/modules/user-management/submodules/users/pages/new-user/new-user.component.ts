@@ -188,7 +188,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('state')?.enable();
           break;
         //Coordianador
-        case '52':
+        case '6':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
           this.newUserForm.get('email')?.enable();
@@ -199,12 +199,13 @@ export class NewUserComponent implements OnInit {
           break;
         
         //CPD
-        case '53':
+        case '7':
           this.newUserForm.get('name')?.enable();
           this.newUserForm.get('lastName')?.enable();
           this.newUserForm.get('email')?.enable();
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('faculty')?.enable();
+          this.newUserForm.get('program')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
         default:

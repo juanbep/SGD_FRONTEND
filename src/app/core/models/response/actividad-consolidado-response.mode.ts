@@ -9,15 +9,15 @@ export interface ActividadConsolidadoResponse {
 }
 
 export interface Actividades {
-  DOCENCIA: InformacionActividad[];
+  'DOCENCIA': InformacionActividad[];
   'TRABAJO DE INVESTIGACIÓN': InformacionActividad[];
   'PROYECTO DE INVESTIGACIÓN': InformacionActividad[];
   'TRABAJO DE DOCENCIA': InformacionActividad[];
-  ADMINISTRACIÓN: InformacionActividad[];
-  EXTENSIÓN: InformacionActividad[];
-  ASESORÍA: InformacionActividad[];
-  CAPACITACIÓN: InformacionActividad[];
-  'OTROS SERVICIOS': InformacionActividad[];
+  'ADMINISTRACIÓN': InformacionActividad[];
+  'EXTENSIÓN': InformacionActividad[];
+  'ASESORIA': InformacionActividad[];
+  'CAPACITACIÓN': InformacionActividad[];
+  'OTRO SERVICIO': InformacionActividad[];
 }
 
 export interface InformacionActividad {

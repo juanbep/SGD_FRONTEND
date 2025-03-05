@@ -162,7 +162,8 @@ export class EditUserComponent implements OnInit {
     for (const role of this.editUserForm.get('role')?.value) {
       const rolString = role.toString();
       switch (rolString) {
-        case '1':
+         //Docente
+         case '1':
           this.editUserForm.get('name')?.enable();
           this.editUserForm.get('lastName')?.enable();
           this.editUserForm.get('email')?.enable();
@@ -175,6 +176,7 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('dedication')?.enable();
           this.editUserForm.get('state')?.enable();
           break;
+        //Estudiante
         case '2':
           this.editUserForm.get('name')?.enable();
           this.editUserForm.get('lastName')?.enable();
@@ -184,6 +186,7 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('program')?.enable();
           this.editUserForm.get('state')?.enable();
           break;
+        //Decano
         case '3':
           this.editUserForm.get('name')?.enable();
           this.editUserForm.get('lastName')?.enable();
@@ -192,7 +195,38 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('faculty')?.enable();
           this.editUserForm.get('state')?.enable();
           break;
+        //Jefe de departamento
         case '4':
+          this.editUserForm.get('name')?.enable();
+          this.editUserForm.get('lastName')?.enable();
+          this.editUserForm.get('email')?.enable();
+          this.editUserForm.get('idUser')?.enable();
+          this.editUserForm.get('faculty')?.enable();
+          this.editUserForm.get('program')?.enable();
+          this.editUserForm.get('state')?.enable();
+          break;
+        //Secretaria/o facultad
+        case '5':
+          this.editUserForm.get('name')?.enable();
+          this.editUserForm.get('lastName')?.enable();
+          this.editUserForm.get('email')?.enable();
+          this.editUserForm.get('idUser')?.enable();
+          this.editUserForm.get('faculty')?.enable();
+          this.editUserForm.get('state')?.enable();
+          break;
+        //Coordianador
+        case '6':
+          this.editUserForm.get('name')?.enable();
+          this.editUserForm.get('lastName')?.enable();
+          this.editUserForm.get('email')?.enable();
+          this.editUserForm.get('idUser')?.enable();
+          this.editUserForm.get('faculty')?.enable();
+          this.editUserForm.get('program')?.enable();
+          this.editUserForm.get('state')?.enable();
+          break;
+        
+        //CPD
+        case '7':
           this.editUserForm.get('name')?.enable();
           this.editUserForm.get('lastName')?.enable();
           this.editUserForm.get('email')?.enable();
@@ -298,6 +332,7 @@ export class EditUserComponent implements OnInit {
           oidEstadoUsuario: this.editUserForm.get('state')?.value,
         },
         usuarioDetalle: {
+          oidUsuarioDetalle: this.userInformation?.usuarioDetalle.oidUsuarioDetalle,
           facultad: this.editUserForm.get('faculty')?.value,
           departamento: this.editUserForm.get('program')?.value,
           categoria: this.editUserForm.get('category')?.value,
@@ -319,7 +354,7 @@ export class EditUserComponent implements OnInit {
             this.router.navigate(['/app/gestion-usuarios/usuarios']);
           },
           error: (error) => {
-            this.messageToast.showErrorMessage('Error al actualizar el usuario', 'Error');
+            this.messageToast.showErrorMessage(error.error.mensaje, 'Error');
           }
         })
       }

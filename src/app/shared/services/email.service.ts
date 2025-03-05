@@ -16,7 +16,7 @@ export class EmailService {
             asunto: subject,
             mensaje: message
         };
-        return this.httpClient.post(`${this.baseUrl}/mensajeria/enviarEmail`, {...params});
+        return this.httpClient.post(`${this.baseUrl}/api/mensajeria/enviar-email`, {...params});
     }
     
 }

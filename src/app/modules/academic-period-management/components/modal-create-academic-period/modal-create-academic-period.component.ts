@@ -136,7 +136,7 @@ export class ModalCreateAcademicPeriodComponent {
           this.clearFields();
         },
         error: error => {
-          this.messageInfoService.showErrorMessage('Error al crear el periodo académico', 'Error');
+          this.messageInfoService.showErrorMessage(error.error.mensaje, 'Error');
         }
       });
     }
