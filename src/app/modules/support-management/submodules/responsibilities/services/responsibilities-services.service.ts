@@ -8,8 +8,17 @@ import { ResponsabilidadResponse } from '../../../../../core/models/response/res
 export class ResponsibilitiesServicesService {
 
     private userResponsibilities: WritableSignal<PagedResponse<ResponsabilidadResponse> | null> = signal(null);
+    private paramsActivitiesFilterSignal: WritableSignal<{ activityName: string | null, activityType: string | null, evaluatorName: string | null, evaluatorRole: string | null }> = signal({ activityName: null, activityType: null, evaluatorName: null, evaluatorRole: null });
 
     private smResponsibilitiesServicesService = inject(SmResponsibilitiesServicesService);
+
+    setParamsActivitiesFilterSignal(activityName: string | null, activityType: string | null, evaluatorName: string | null, evaluatorRole: string | null) {
+        this.paramsActivitiesFilterSignal.update(data => data = { activityName, activityType, evaluatorName, evaluatorRole });
+    }
+
+    getParamsActivitiesFilterSignal() {
+        return this.paramsActivitiesFilterSignal();
+    }
 
     setResponsibilitiesData(newData: PagedResponse<ResponsabilidadResponse>) {
         this.userResponsibilities.update(data => data = newData);
@@ -19,8 +28,8 @@ export class ResponsibilitiesServicesService {
         return this.userResponsibilities();
     }
 
-    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page: number | null, totalPage: number | null) {
-        return this.smResponsibilitiesServicesService.getResponsibilities(evaluatorId, activityCode, activityType, evaluatorName, roles, page, totalPage);
+    getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page: number | null, totalPage: number | null) {
+        return this.smResponsibilitiesServicesService.getResponsibilities(evaluatorId, activityName, activityType, evaluatorName, roles, page, totalPage);
     }
 
     saveResponsibilityEvaluation(file: File, observation: string, source: FuenteCreate[]) {

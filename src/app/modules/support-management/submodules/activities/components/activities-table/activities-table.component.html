@@ -1,88 +1,141 @@
 <ng-container *ngIf="activities; else nullData">
-    <table class="table-bordered">
-        <thead>
-            <tr>
-                <th class="text-body-heavy center-text"> {{headDataTable[0]}} </th>
-                <th class="text-body-heavy center-text" colspan="2"> {{headDataTable[1]}} </th>
-                <th class="text-body-heavy center-text" colspan="4"> {{headDataTable[2]}} </th>
-            </tr>
-            <tr>
-                <th class="text-body-regular" *ngFor="let item of subHeadDataTable">
-                    <span>{{item}}</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody *ngFor="let activity of activitiesByType">
-            <tr class="text-body-heavy center-text">
-                <td colspan="7">
-                    {{activity.nombreType}}
-                </td>
-            </tr>
-            <tr *ngFor="let activity of activity.activities">
-                <td>
-                    <span class="text-body-regular">{{activity.nombreActividad}}</span>
-                </td>
-                <td>
-                    <span class="text-body-regular" *ngIf="!activity.fuentes[0]">Pendiente</span>
-                    <span class="text-body-regular"
-                        *ngIf="activity.fuentes[0]">{{activity.fuentes[0].estadoFuente}}</span>
-                </td>
+  <table class="table-bordered">
+    <thead>
+      <tr>
+        <th class="text-body-heavy center-text">{{ headDataTable[0] }}</th>
+        <th class="text-body-heavy center-text" colspan="2">
+          {{ headDataTable[1] }}
+        </th>
+        <th class="text-body-heavy center-text" colspan="4">
+          {{ headDataTable[2] }}
+        </th>
+      </tr>
+      <tr>
+        <th class="text-body-regular" *ngFor="let item of subHeadDataTable">
+          <span>{{ item }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let activity of activitiesByType">
+      <tr class="text-body-heavy center-text">
+        <td colspan="7">
+          {{ activity.nombreType }}
+        </td>
+      </tr>
+      <tr *ngFor="let activity of activity.activities">
+        <td>
+          <span class="text-body-regular">{{ activity.nombreActividad }}</span>
+        </td>
+        <td>
+          <span class="text-body-regular" *ngIf="!activity.fuentes[0]"
+            >Pendiente</span
+          >
+          <span class="text-body-regular" *ngIf="activity.fuentes[0]">{{
+            activity.fuentes[0].estadoFuente
+          }}</span>
+        </td>
 
-                <td class="center-text text-body-regular">
-                    <button class="button-table"
-                        *ngIf="activity.fuentes[0] && activity.fuentes[0].estadoFuente == 'DILIGENCIADO'"
-                        (click)="openModalView(activity,1)">
-                        <img src="assets/icons/tables/icon-view.svg" alt="Ver actividad">
-                    </button>
-                    <activities-view-evaluation
-                        *ngIf="openModalViewSelected && activitySelected === activity && sourceSelected==1"
-                        [source]="activity.fuentes[sourceSelected!-1]" [activity]="activity" [openModalSelected]="true"
-                        (closeModalSelected)="closeModalView($event)"></activities-view-evaluation>
-                </td>
-                <td>
-                    <span class="text-body-regular">{{activity.evaluador.nombres}}
-                        {{activity.evaluador.apellidos}}</span>
-                </td>
-                <td>
-                    <span class="text-body-regular"
-                        *ngIf="activity.evaluador.roles[0]">{{activity.evaluador.roles[0].nombre}}</span>
-                </td>
-                <td>
-                    <span class="text-body-regular" *ngIf="!activity.fuentes[1]">Pendiente</span>
-                    <span class="text-body-regular"
-                        *ngIf="activity.fuentes[1]">{{activity.fuentes[1].estadoFuente}}</span>
-                </td>
-
-            </tr>
-        </tbody>
-    </table>
+        <td class="center-text text-body-regular">
+          <button
+            class="button-table"
+            *ngIf="
+              activity.fuentes[0] &&
+              activity.fuentes[0].estadoFuente == 'DILIGENCIADO'
+            "
+            (click)="openModalView(activity, 1)"
+          >
+            <img src="assets/icons/tables/icon-view.svg" alt="Ver actividad" />
+          </button>
+          <activities-view-evaluation
+            *ngIf="
+              openModalViewSelected &&
+              activitySelected === activity &&
+              sourceSelected == 1
+            "
+            [source]="activity.fuentes[sourceSelected! - 1]"
+            [activity]="activity"
+            [openModalSelected]="true"
+            (closeModalSelected)="closeModalView($event)"
+          ></activities-view-evaluation>
+        </td>
+        <td>
+          <span class="text-body-regular"
+            >{{ activity.evaluador.nombres }}
+            {{ activity.evaluador.apellidos }}</span
+          >
+        </td>
+        <td>
+          <span class="text-body-regular" *ngIf="activity.evaluador.roles[0]">{{
+            activity.evaluador.roles[0].nombre
+          }}</span>
+        </td>
+        <td>
+          <span class="text-body-regular" *ngIf="!activity.fuentes[1]"
+            >Pendiente</span
+          >
+          <span class="text-body-regular" *ngIf="activity.fuentes[1]">{{
+            activity.fuentes[1].estadoFuente
+          }}</span>
+        </td>
+        <td class="center-text text-body-regular">
+          <button
+            class="button-table"
+            *ngIf="
+              activity.fuentes[1] &&
+              activity.fuentes[1].estadoFuente == 'DILIGENCIADO'
+            "
+            (click)="openModalView(activity, 2)"
+          >
+            <img src="assets/icons/tables/icon-view.svg" alt="Ver actividad" />
+          </button>
+          <activities-view-evaluation
+            *ngIf="
+              openModalViewSelected &&
+              activitySelected === activity &&
+              sourceSelected == 2
+            "
+            [source]="activity.fuentes[sourceSelected! - 1]"
+            [activity]="activity"
+            [openModalSelected]="true"
+            (closeModalSelected)="closeModalView($event)"
+          ></activities-view-evaluation>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </ng-container>
 
 <ng-template #nullData>
-    <table class="table-bordered">
-        <thead>
-            <tr>
-                <th class="text-body-heavy center-text"> {{headDataTable[0]}} </th>
-                <th class="text-body-heavy center-text" colspan="2"> {{headDataTable[1]}} </th>
-                <th class="text-body-heavy center-text" colspan="4"> {{headDataTable[2]}} </th>
-            </tr>
-            <tr>
-                <th class="text-body-regular" *ngFor="let item of subHeadDataTable">
-                    <span>{{item}}</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="text-body-regular center-text">
-                <th colspan="7">
-                    No cuenta con actividades registradas
-                </th>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table-bordered">
+    <thead>
+      <tr>
+        <th class="text-body-heavy center-text">{{ headDataTable[0] }}</th>
+        <th class="text-body-heavy center-text" colspan="2">
+          {{ headDataTable[1] }}
+        </th>
+        <th class="text-body-heavy center-text" colspan="4">
+          {{ headDataTable[2] }}
+        </th>
+      </tr>
+      <tr>
+        <th class="text-body-regular" *ngFor="let item of subHeadDataTable">
+          <span>{{ item }}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="text-body-regular center-text">
+        <th colspan="7">No cuenta con actividades registradas</th>
+      </tr>
+    </tbody>
+  </table>
 </ng-template>
 
 <div class="mb-3"></div>
 
-<shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="activities?.totalPages || 1"
-    (pageChange)="pageChanged($event)"></shared-paginator>
+<shared-paginator
+  class="d-flex justify-content-center"
+  [currentPage]="currentPage"
+  [totalPages]="activities?.totalPages || 1"
+  (pageChange)="pageChanged($event)"
+></shared-paginator>

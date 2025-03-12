@@ -1,7 +1,7 @@
-import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
-import { ActivitiesTableComponent } from "../../components/activities-table/activities-table.component";
-import { ActivitiesFilterComponent } from "../../components/activities-filter/activities-filter.component";
-import { ActivitiesUploadSelfAssessmentComponent } from "../../components/activities-upload-self-assessment/activities-upload-self-assessment.component";
+import { Component, effect, inject, ViewChild } from '@angular/core';
+import { ActivitiesTableComponent } from '../../components/activities-table/activities-table.component';
+import { ActivitiesFilterComponent } from '../../components/activities-filter/activities-filter.component';
+import { ActivitiesUploadSelfAssessmentComponent } from '../../components/activities-upload-self-assessment/activities-upload-self-assessment.component';
 import { CommonModule } from '@angular/common';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { ActivitiesEditEvaluationComponent } from '../../components/activities-edit-evaluation/activities-edit-evaluation.component';
@@ -12,44 +12,43 @@ import { ActividadResponse } from '../../../../../../core/models/response/activi
 @Component({
   selector: 'support-management-activities',
   standalone: true,
-  imports: [ActivitiesTableComponent, ActivitiesFilterComponent, ActivitiesUploadSelfAssessmentComponent, CommonModule, ActivitiesEditEvaluationComponent],
+  imports: [
+    ActivitiesEditEvaluationComponent,
+    ActivitiesFilterComponent,
+    ActivitiesTableComponent,
+    ActivitiesUploadSelfAssessmentComponent,
+    CommonModule,
+  ],
   templateUrl: './activities.component.html',
-  styleUrl: './activities.component.css'
+  styleUrl: './activities.component.css',
 })
-export class ActivitiesComponent implements OnInit{
-
-  private authServiceService = inject(AuthServiceService);
-
-
+export class ActivitiesComponent {
   @ViewChild(ActivitiesUploadSelfAssessmentComponent)
   uploadSelfAssessmentComponent!: ActivitiesUploadSelfAssessmentComponent;
 
   @ViewChild(ActivitiesEditEvaluationComponent)
   editSelfAssessmentComponent!: ActivitiesEditEvaluationComponent;
 
+  private authServiceService = inject(AuthServiceService);
+  private activitiesServices = inject(ActivitiesServicesService);
+
   public activityResponse: PagedResponse<ActividadResponse> | null = null;
-
   public checkActivitiesDiliegenciadoVar: boolean = false;
-
+  public currentUser = this.authServiceService.currentUser;
   public openModalOptionSelected: boolean = false;
 
+  activitiesEffect = effect(() => {
+    this.activityResponse = this.activitiesServices.getDataActivities();
+    this.checkActivitiesDiliegenciadoVar = this.checkActivitiesComplete();
+  });
 
-  public currentUser = this.authServiceService.currentUser;
-
-  constructor(private activitiesServices: ActivitiesServicesService) { 
-    effect(() => {
-      this.activityResponse = this.activitiesServices.getDataActivities();
-      this.checkActivitiesDiliegenciadoVar=this.checkActivitiesComplete();
-   });
-  }
-  
-  ngOnInit(): void {
-  }
-
-  private checkActivitiesComplete(){
+  private checkActivitiesComplete() {
     if (this.activityResponse?.content) {
-      return this.activityResponse.content.some(activity =>
-        activity.fuentes.some(fuente => fuente.estadoFuente === 'DILIGENCIADO' && fuente.tipoFuente === '1')
+      return this.activityResponse.content.some((activity) =>
+        activity.fuentes.some(
+          (fuente) =>
+            fuente.estadoFuente === 'DILIGENCIADO' && fuente.tipoFuente === '1'
+        )
       );
     }
     return false;
@@ -62,6 +61,4 @@ export class ActivitiesComponent implements OnInit{
   editSelfAssessment() {
     this.editSelfAssessmentComponent.openModal();
   }
-
-
 }

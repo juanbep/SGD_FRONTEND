@@ -1,14 +1,27 @@
-import { Component, effect, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { CommonModule } from '@angular/common';
 import { ViewDetailsSourceOneComponent } from '../view-details-source-one/view-details-source-one.component';
 import { ViewDetailsSourceTwoComponent } from '../view-details-source-two/view-details-source-two.component';
-import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
+import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
 import { EmailComponent } from '../../../../../../shared/components/email/email.component';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
-import { ActividadConsolidadoResponse, Actividades, InformacionActividad } from '../../../../../../core/models/response/actividad-consolidado-response.mode';
+import {
+  ActividadConsolidadoResponse,
+  Actividades,
+  InformacionActividad,
+} from '../../../../../../core/models/response/actividad-consolidado-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
@@ -21,14 +34,12 @@ import { AuthServiceService } from '../../../../../auth/service/auth-service.ser
     ViewDetailsSourceOneComponent,
     ViewDetailsSourceTwoComponent,
     PaginatorComponent,
-    EmailComponent
+    EmailComponent,
   ],
   templateUrl: './consolidated-teacher-table.component.html',
-  styleUrl: './consolidated-teacher-table.component.css'
+  styleUrl: './consolidated-teacher-table.component.css',
 })
 export class ConsolidatedTeacherTableComponent implements OnInit {
-
-
   @ViewChild(ViewDetailsSourceOneComponent)
   viewDetailsSourceOneComponent!: ViewDetailsSourceOneComponent;
 
@@ -42,7 +53,7 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   @Input()
-  teacherOfConsolidated : DetalleUsuarioConsolidadoResponse | null = null;
+  teacherOfConsolidated: DetalleUsuarioConsolidadoResponse | null = null;
 
   @Input()
   currentPage: number = 1;
@@ -54,38 +65,36 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
   public consolidatedTeacher: ActividadConsolidadoResponse | null = null;
   public messageEmail: string = '';
   public subjectEmail: string = '';
-  public currentUser: UsuarioResponse| null = null;
+  public currentUser: UsuarioResponse | null = null;
   public teacherId: number = 0;
 
   constructor() {
     effect(() => {
-      this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
-
+      this.consolidatedTeacher =
+        this.consolidatedServicesService.getDataConsolidatedTeacher();
     });
   }
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
     this.teacherId = this.router.snapshot.params['id'];
-    this.consolidatedTeacher = this.consolidatedServicesService.getDataConsolidatedTeacher();
-    
+    this.consolidatedTeacher =
+      this.consolidatedServicesService.getDataConsolidatedTeacher();
   }
-
-
 
   getObjectKeys(obj: Actividades): string[] {
     if (!obj) {
       return [];
     }
     return Object.keys(obj);
-
   }
 
-
-  public emailNotificationModal(activity: InformacionActividad, sourceSelected: Fuente) {
+  public emailNotificationModal(
+    activity: InformacionActividad,
+    sourceSelected: Fuente
+  ) {
     if (this.emailComponent && activity) {
-      this.messageEmail = 
-        `Evaluado: ${this.teacherOfConsolidated?.nombreDocente}
+      this.messageEmail = `Evaluado: ${this.teacherOfConsolidated?.nombreDocente}
 Actividad: ${activity.nombre}
 Estado fuente: ${sourceSelected.estadoFuente}`;
       this.emailComponent.open(this.messageEmail);
@@ -105,11 +114,19 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
       case 'DOCENCIA':
         return this.consolidatedTeacher?.actividades['DOCENCIA'] || [];
       case 'TRABAJO DE INVESTIGACIÓN':
-        return this.consolidatedTeacher?.actividades['TRABAJO DE INVESTIGACIÓN'] || [];
+        return (
+          this.consolidatedTeacher?.actividades['TRABAJO DE INVESTIGACIÓN'] ||
+          []
+        );
       case 'PROYECTO DE INVESTIGACIÓN':
-        return this.consolidatedTeacher?.actividades['PROYECTO DE INVESTIGACIÓN'] || [];
+        return (
+          this.consolidatedTeacher?.actividades['PROYECTO DE INVESTIGACIÓN'] ||
+          []
+        );
       case 'TRABAJO DE DOCENCIA':
-        return this.consolidatedTeacher?.actividades['TRABAJO DE DOCENCIA'] || [];
+        return (
+          this.consolidatedTeacher?.actividades['TRABAJO DE DOCENCIA'] || []
+        );
       case 'ADMINISTRACIÓN':
         return this.consolidatedTeacher?.actividades['ADMINISTRACIÓN'] || [];
       case 'ASESORIA':
@@ -131,30 +148,36 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
     this.pageChange.emit(this.currentPage);
   }
 
-  activityToSendEmailSelected(activitySelected: InformacionActividad, sourceSelected: Fuente){
-    if(activitySelected && sourceSelected)  
-    {
+  activityToSendEmailSelected(
+    activitySelected: InformacionActividad,
+    sourceSelected: Fuente
+  ) {
+    if (activitySelected && sourceSelected) {
       this.emailNotificationModal(activitySelected, sourceSelected);
     }
   }
 
-  recoverUserInfo(idUser:number, userIn:UsuarioResponse | null){
-    this.consolidatedServicesService.getUserInfo(idUser).subscribe(
-        {
-          next: response =>{
-            userIn = response.data;
-          },
-          error: error =>{
-            userIn = null;
-          }
-        }
-     );
+  recoverUserInfo(idUser: number, userIn: UsuarioResponse | null) {
+    this.consolidatedServicesService.getUserInfo(idUser).subscribe({
+      next: (response) => {
+        userIn = response.data;
+      },
+      error: (error) => {
+        userIn = null;
+      },
+    });
   }
 
-  downloadAllSuppotFiles(){
-    this.consolidatedServicesService.downloadAllSupportFiles(this.teacherOfConsolidated?.periodoAcademico || '', this.teacherOfConsolidated?.departamento || '', this.teacherOfConsolidated?.tipoContratacion || '', this.teacherId || 0, null).subscribe
-    (
-      {
+  downloadAllSuppotFiles() {
+    this.consolidatedServicesService
+      .downloadAllSupportFiles(
+        this.teacherOfConsolidated?.periodoAcademico || '',
+        this.teacherOfConsolidated?.departamento || '',
+        this.teacherOfConsolidated?.tipoContratacion || '',
+        this.teacherId || 0,
+        null
+      )
+      .subscribe({
         next: (response: any) => {
           const blob = new Blob([response], { type: 'application/zip' });
           const url = window.URL.createObjectURL(blob);
@@ -167,9 +190,7 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
         },
         error: (error: any) => {
           console.log(error);
-        }
-      }
-    );
+        },
+      });
   }
-
 }

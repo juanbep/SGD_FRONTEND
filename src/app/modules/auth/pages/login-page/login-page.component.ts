@@ -32,7 +32,7 @@ export class LoginPageComponent {
    */
   onLogin() {
     this.service.login(this.authForm.value.email, this.authForm.value.password);
-    this.router.navigate(['/app']);
+    this.router.navigate(['/app/home']);
   }
 
 

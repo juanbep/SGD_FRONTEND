@@ -1,14 +1,107 @@
 <div class="view-container">
-    <span class="title-two">Actividades</span>
-    <div class="mb-3"></div>
-    <user-management-activities-activities-filter></user-management-activities-activities-filter>
-    <user-management-activities-activities-table></user-management-activities-activities-table>
-    <div class="mb-3"></div>
-    <div class="d-flex justify-content-center">
-        <button class="button-main text-body-heavy" style="color: var(--white) !important" [routerLink]="['/app/gestion-usuarios/actividades/nueva-actividad/',idUserParam]" routerLinkActive="router-link-active" >Nueva actividad</button>
-    </div>
-    <div class="mb-3"></div>
-    <div class="d-flex justify-content-center">
-        <button class="button-normal text-body-heavy" style="color: var(--white) !important" (click)="goBack()">Volver</button>
-    </div>
+  <span class="title-two">Actividades</span>
+  <div class="messages-container" style="margin: 5px">
+    <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+    <span class="text-body-heavy"
+      >A continuación encontrará el listado de actividades resgistradas al
+      docente y podrá registrar o editar nuevas actividades.
+    </span>
+  </div>
+  <section>
+    <div class="title-three">Información docente</div>
+    <div class="mb-2"></div>
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th>
+            <span class="text-body-regular">Nombres y apellidos</span>
+            <br />
+            <span class="text-body-small-sb"
+              >{{ this.teacherInformation?.nombres }}
+              {{ teacherInformation?.apellidos }}</span
+            >
+          </th>
+          <th>
+            <span class="text-body-regular">Num.Id</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              teacherInformation?.identificacion
+            }}</span>
+          </th>
+          <th>
+            <span class="text-body-regular">Facultad</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              teacherInformation?.usuarioDetalle?.facultad
+            }}</span>
+          </th>
+          <th>
+            <span class="text-body-regular">Departamento</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              teacherInformation?.usuarioDetalle?.departamento
+            }}</span>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <span class="text-body-regular">Categoría</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              teacherInformation?.usuarioDetalle?.categoria
+            }}</span>
+          </th>
+          <th>
+            <span class="text-body-regular">Dedicación</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              teacherInformation?.usuarioDetalle?.dedicacion
+            }}</span>
+          </th>
+          <th>
+            <span class="text-body-regular">Contratación</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              teacherInformation?.usuarioDetalle?.contratacion
+            }}</span>
+          </th>
+          <th>
+            <span class="text-body-regular">Estudios</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              teacherInformation?.usuarioDetalle?.estudios
+            }}</span>
+          </th>
+        </tr>
+      </thead>
+    </table>
+  </section>
+  <div class="mb-3"></div>
+  <div class="title-three">Actividades</div>
+  <user-management-activities-activities-filter></user-management-activities-activities-filter>
+  <user-management-activities-activities-table></user-management-activities-activities-table>
+  <div class="mb-3"></div>
+  <div class="d-flex justify-content-center">
+    <button
+      class="button-main text-body-heavy"
+      style="color: var(--white) !important"
+      [routerLink]="[
+        '/app/gestion-usuarios/actividades/nueva-actividad/',
+        idUserParam
+      ]"
+      routerLinkActive="router-link-active"
+    >
+      Nueva actividad
+    </button>
+  </div>
+  <div class="mb-3"></div>
+  <div class="d-flex justify-content-center">
+    <button
+      class="button-normal text-body-heavy"
+      style="color: var(--white) !important"
+      (click)="goBack()"
+    >
+      Volver
+    </button>
+  </div>
 </div>

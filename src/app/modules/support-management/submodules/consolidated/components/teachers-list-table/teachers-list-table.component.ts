@@ -12,42 +12,43 @@ import { UsuarioResponse } from '../../../../../../core/models/response/usuario-
 @Component({
   selector: 'consolidated-teachers-list-table',
   standalone: true,
-  imports: [
-    PaginatorComponent,
-    RouterLink,
-    CommonModule
-  ],
+  imports: [PaginatorComponent, RouterLink, CommonModule],
   templateUrl: './teachers-list-table.component.html',
-  styleUrl: './teachers-list-table.component.css'
+  styleUrl: './teachers-list-table.component.css',
 })
 export class TeacherListTableComponent implements OnInit {
-
-  
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private toastr = inject(MessagesInfoService);
   private authService = inject(AuthServiceService);
-  
+
   public currentPage: number = 1;
-  public teacherServiceResponse: PagedResponse<UsuarioConsolidadoResponse> | null = null;
+  public teacherServiceResponse: PagedResponse<UsuarioConsolidadoResponse> | null =
+    null;
   public teacherList: UsuarioConsolidadoResponse[] = [];
-  public currentUser : UsuarioResponse | null = null;
+  public currentUser: UsuarioResponse | null = null;
+  public filterParams: {teacherType: string | null, contractType: string | null} | null = null;
+
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
     this.recoverTeachers(this.currentPage, 10);
   }
 
-
-
   recoverTeachers(page: number, size: number): void {
-    this.consolidatedServicesService.getTeachers(page-1, size, this.currentUser?.usuarioDetalle.departamento || '').subscribe({
-      next: response => {
-        this.teacherServiceResponse = response.data;
-        this.teacherList = response.data.content;
-      },
-      error: error => {
-        this.toastr.showErrorMessage(error.error.mensaje, 'Error');
-      }
-    });
+    this.consolidatedServicesService
+      .getTeachers(
+        page - 1,
+        size,
+        this.currentUser?.usuarioDetalle.departamento || ''
+      )
+      .subscribe({
+        next: (response) => {
+          this.teacherServiceResponse = response.data;
+          this.teacherList = response.data.content;
+        },
+        error: (error) => {
+          this.toastr.showErrorMessage(error.error.mensaje, 'Error');
+        },
+      });
   }
 }

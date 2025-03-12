@@ -92,15 +92,7 @@ export class ResponsibilitiesEditEvaluationComponent {
           next: () => {
             this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
             this.closeModalEditSelected.emit(true);
-            this.service.getResponsibilities(this.currentUser!.oidUsuario.toString(), '', '', '', '',0,10).subscribe(
-              {
-                next: response => {
-                  this.service.setResponsibilitiesData(response.data);
-                },
-                error: error => {
-                  this.toastr.showErrorMessage(`Error al consultar la información: ${error.mensaje}`, 'Error');
-                }
-              });
+            this.service.setParamsActivitiesFilterSignal(null, null, null, null);
           },
           error: error => {
             this.toastr.showErrorMessage('Error al guardar la evaluación', 'Error');

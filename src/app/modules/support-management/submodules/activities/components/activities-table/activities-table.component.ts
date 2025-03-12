@@ -1,69 +1,100 @@
 import { Component, effect, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivitiesViewEvaluationComponent } from "../activities-view-evaluation/activities-view-evaluation.component";
+import { ActivitiesViewEvaluationComponent } from '../activities-view-evaluation/activities-view-evaluation.component';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
+import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
+const PAGE_SIZE = 10;
+
 @Component({
   selector: 'activities-table',
   standalone: true,
-  imports: [CommonModule, ActivitiesViewEvaluationComponent, PaginatorComponent],
+  imports: [
+    CommonModule,
+    ActivitiesViewEvaluationComponent,
+    PaginatorComponent,
+  ],
   templateUrl: './activities-table.component.html',
-  styleUrl: './activities-table.component.css'
+  styleUrl: './activities-table.component.css',
 })
-export class ActivitiesTableComponent implements OnInit {
-
+export class ActivitiesTableComponent {
   @Input()
-  currentUser:UsuarioResponse | null = null;
+  currentUser: UsuarioResponse | null = null;
 
   public currentPage: number = 1;
   public activities: PagedResponse<ActividadResponse> | null = null;
   public activitiesByType!: ActividadesPorTipoActividad[];
-  public headDataTable = ["Actividades", "Autoevaluación", "Fuente 2"]
-  public subHeadDataTable = ["Nombre actividad", "Estado", "Acciones", "Evaluador", "Rol Evaluador", "Estado", "Acciones"]
+  public headDataTable = ['Actividades', 'Autoevaluación', 'Fuente 2'];
+  public subHeadDataTable = [
+    'Nombre actividad',
+    'Estado',
+    'Acciones',
+    'Evaluador',
+    'Rol Evaluador',
+    'Estado',
+    'Acciones',
+  ];
   public openModalViewSelected: boolean = false;
   public activitySelected: ActividadResponse | undefined;
   public sourceSelected: 1 | 2 | undefined;
   public sourceOne: Fuente | null = null;
   public sourceTwo: Fuente | null = null;
 
+  public filterParams: {
+    activityName: string | null;
+    activityType: string | null;
+    evaluatorName: string | null;
+    evaluatorRole: string | null;
+  } | null = null;
+
   private activitiesServices = inject(ActivitiesServicesService);
 
-  constructor(private toastr: MessagesInfoService) {
-    effect(() => {
-      this.activities = this.activitiesServices.getDataActivities();
-      this.reloadActivities();
-    }
-    );
-  }
-
-  ngOnInit(): void {
-    this.getAllActivities(this.currentPage, 10);
-  }
-
+  activitiesEffect = effect(() => {
+    this.filterParams =
+      this.activitiesServices.getParamsActivitiesFilterSignal();
+    this.currentPage = 1;
+    this.recoverActivities(this.currentPage, PAGE_SIZE);
+  });
 
   pageChanged(event: any) {
     this.currentPage = event;
-    this.getAllActivities(this.currentPage, 10);
+    this.recoverActivities(this.currentPage, PAGE_SIZE);
   }
 
-  getAllActivities(page: number, totalPage: number) {
+  recoverActivities(page: number, totalPage: number) {
+    const { activityName, activityType, evaluatorName, evaluatorRole } = this
+      .filterParams || {
+      activityName: null,
+      activityType: null,
+      evaluatorName: null,
+      evaluatorRole: null,
+    };
     if (this.currentUser) {
-      this.activitiesServices.getActivities(this.currentUser.oidUsuario, '', '', '', '', page - 1, totalPage).subscribe({
-        next: response => {
-          this.activities = response.data;
-          this.activitiesServices.setDataActivities(response.data);
-          this.reloadActivities();
-        },
-        error: error => {
-          console.error('Error al consultar la información', error);
-        }
-      });
+      this.activitiesServices
+        .getActivities(
+          this.currentUser.oidUsuario,
+          activityName,
+          activityType,
+          evaluatorName,
+          evaluatorRole,
+          page - 1,
+          totalPage
+        )
+        .subscribe({
+          next: (response) => {
+            this.activities = response.data;
+            this.activitiesServices.setDataActivities(response.data);
+            this.reloadActivities();
+          },
+          error: (error) => {
+            console.error('Error al consultar la información', error);
+          },
+        });
     }
   }
 
@@ -87,7 +118,7 @@ export class ActivitiesTableComponent implements OnInit {
           if (!acc[tipoNombre]) {
             acc[tipoNombre] = {
               nombreType: tipoNombre,
-              activities: []
+              activities: [],
             };
           }
 

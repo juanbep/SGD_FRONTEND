@@ -12,6 +12,10 @@ const routes: Routes = [
         component: MainLayoutComponent,
         children: [
             {
+                path: 'home',
+                loadComponent: () => import('./pages/main/main.component').then(m => m.MainComponent),
+            },
+            {
                 path: 'gestion-periodo-academico',
                 loadChildren: () => import('../academic-period-management/academic-period-management-routing.module').then(m => m.AcademicPeriodManagementRoutingModule),
             },

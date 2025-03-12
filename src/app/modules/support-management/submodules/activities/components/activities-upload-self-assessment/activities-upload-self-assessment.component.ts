@@ -274,36 +274,18 @@ export class ActivitiesUploadSelfAssessmentComponent {
           )
           .subscribe({
             next: (data) => {
-              this.service
-                .getActivities(
-                  this.currentUser?.oidUsuario || 0,
-                  '',
-                  '',
-                  '',
-                  '',
-                  0,
-                  10
-                )
-                .subscribe({
-                  next: (response) => {
-                    this.service.setDataActivities(response.data);
-                    this.toastr.showSuccessMessage(
-                      'Información guardada correctamente',
-                      'Éxito'
-                    );
-                    const modalElement = document.getElementById(
-                      'modal-upload-evaluation'
-                    );
-                    if (modalElement) {
-                      const modalInstance =
-                        bootstrap.Modal.getInstance(modalElement);
-                      modalInstance?.hide();
-                    }
-                  },
-                  error: (error) => {
-                    this.toastr.showErrorMessage(error.error.mensaje, 'Error');
-                  },
-                });
+              this.service.setParamsActivitiesFilterSignal('', '', '', '');
+              this.toastr.showSuccessMessage(
+                'Evaluación guardada correctamente',
+                'Éxito'
+              );
+              const modalElement = document.getElementById(
+                'modal-upload-evaluation'
+              );
+              if (modalElement) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                modalInstance?.hide();
+              }
             },
             error: (error) => {
               this.toastr.showErrorMessage(

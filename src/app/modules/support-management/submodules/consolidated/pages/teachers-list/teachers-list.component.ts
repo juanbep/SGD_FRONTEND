@@ -32,6 +32,7 @@ export class TeachersListComponent implements OnInit {
   
 
   downloadAllSuppotFiles(){
+  
     if(this.activeAcademicPeriod && this.currentUser){
       this.consolidatedServicesService.downloadAllSupportFiles(this.activeAcademicPeriod.idPeriodo, this.currentUser?.usuarioDetalle.departamento || '', '', null, null).subscribe
       (

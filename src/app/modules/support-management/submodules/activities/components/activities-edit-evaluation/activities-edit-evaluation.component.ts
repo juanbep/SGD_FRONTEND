@@ -443,20 +443,6 @@ export class ActivitiesEditEvaluationComponent {
   }
 
   recoverActivitiesSuccess() {
-    if (this.currentUser) {
-      this.service
-        .getActivities(this.currentUser?.oidUsuario, '', '', '', '', null, null)
-        .subscribe({
-          next: (response) => {
-            this.service.setDataActivities(response.data);
-          },
-          error: (error) => {
-            this.toastr.showErrorMessage(
-              'Error al consultar la información',
-              'Error'
-            );
-          },
-        });
-    }
+    this.service.setParamsActivitiesFilterSignal('', '', '', '');
   }
 }

@@ -50,18 +50,7 @@
     height: 100%;
 }
 
-.button-actions {
-    width: 54px;
-    height: 100%;
-    border: none;
-    padding: 0;
-    display: flex;
-    /* Añadir flexbox al botón */
-    justify-content: center;
-    /* Centrar horizontalmente */
-    align-items: center;
-    /* Centrar verticalmente */
-}
+/* Removed duplicate .button-actions */
 
 .button-upload {
     background-image: url('../assets/icons/buttons/upload-icon.svg');
@@ -215,16 +204,7 @@
     color: var(--red-light);
 }
 
-.input-nota-error {
-    height: 64px;
-    width: 128px;
-    border-radius: 16px;
-    border: 1px solid var(--red-light);
-    font-size: 25px;
-    margin: 0px;
-    text-align: center;
-}
-
+/* Removed duplicate definition of .input-nota-error */
 
 /* formularios CRUD */
 
@@ -283,7 +263,7 @@
 }
 
 .input-search-disabled {
-    color: var(--neutral-60) !important;
+    color: var (--neutral-60) !important;
     background-color: var(--neutral-95) !important;
     border-color: var(--neutral-95) !important;
     pointer-events: none;
@@ -329,7 +309,7 @@
 
 .error-input {
     border-color: var(--error-ligth) !important;
-    color: var(--error-ligth) !important;
+    color: var (--error-ligth) !important;
     ;
 }
 
@@ -344,10 +324,6 @@
 }
 
 /* ---------- */
-
-.obligatoryField {
-    color: var(--error-ligth);
-}
 
 .obligatoryField-disabled {
     color: var(--neutral-60);

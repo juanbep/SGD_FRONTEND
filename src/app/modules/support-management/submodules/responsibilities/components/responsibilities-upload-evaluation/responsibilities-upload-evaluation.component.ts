@@ -116,14 +116,8 @@ export class ResponsibilitiesUploadEvaluationComponent {
       this.service.saveResponsibilityEvaluation(this.selectedFile, this.observacionSend, this.sendSource).subscribe({
         next: data => {
           this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
-          this.service.getResponsibilities(this.currentUser?.oidUsuario.toString()||'', '', '', '', '',0,10).subscribe({
-            next: response => {
-              this.service.setResponsibilitiesData(response.data);
-            },
-            error: error => {
-              this.toastr.showErrorMessage(`Error al consultar la información. Error: ${error.mensaje}`, 'Error');
-            }
-          });
+          this.service.setParamsActivitiesFilterSignal(null,null,null,null);
+          this.closeModal();
         },
         error: error => {
           this.toastr.showErrorMessage('Error al guardad la información', 'Error');

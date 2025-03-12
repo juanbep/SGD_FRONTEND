@@ -9,22 +9,17 @@ import { ConsolidatedServicesService } from '../../services/consolidated-service
 @Component({
   selector: 'consolidated-teacher-filter',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './consolidated-teacher-filter.component.html',
-  styleUrl: './consolidated-teacher-filter.component.css'
+  styleUrl: './consolidated-teacher-filter.component.css',
 })
 export class ConsolidatedTeacherFilterComponent implements OnInit {
-
   private formBuilder: FormBuilder = inject(FormBuilder);
   private router = inject(ActivatedRoute);
   private ConsolidatedServicesService = inject(ConsolidatedServicesService);
   private cataglogDataService = inject(CatalogDataService);
 
   public catalogData: CatalogDataResponse | null = null;
-  
 
   formFilter: FormGroup = this.formBuilder.group({
     activityName: [null],
@@ -42,14 +37,21 @@ export class ConsolidatedTeacherFilterComponent implements OnInit {
     const activityName = this.formFilter.get('activityName')?.value || '';
     const sourceType = this.formFilter.get('sourceType')?.value || '';
     const sourceState = this.formFilter.get('sourceState')?.value || '';
-    this.ConsolidatedServicesService.setFilterParams({activityType, activityName, sourceType, sourceState});
+    this.ConsolidatedServicesService.setFilterActivitiesParams({
+      activityType,
+      activityName,
+      sourceType,
+      sourceState,
+    });
   }
 
   clearAction() {
     this.formFilter.reset();
-    this.ConsolidatedServicesService.setFilterParams({activityType: null, activityName: null , sourceType: null, sourceState: null});
+    this.ConsolidatedServicesService.setFilterActivitiesParams({
+      activityType: null,
+      activityName: null,
+      sourceType: null,
+      sourceState: null,
+    });
   }
-
-
-
 }

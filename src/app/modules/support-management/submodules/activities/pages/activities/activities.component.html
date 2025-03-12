@@ -1,45 +1,76 @@
 <div class="view-container">
-    <span class="title-two">Mis Actividades</span>
-    <div class="messages-container" style="margin: 5px;">
-        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">A continuación encontrará el listado de actividades asignadas para el perido
-            2024-2</span>
-    </div>
-    <p class="title-three">Listado de actividades asignadas para el periodo 2024-2</p>
+  <span class="title-two">Mis Actividades</span>
+  <div class="messages-container" style="margin: 5px">
+    <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+    <span class="text-body-heavy"
+      >A continuación encontrará el listado de actividades asignadas para el
+      perido 2024-2</span
+    >
+  </div>
+  <p class="title-three">
+    Listado de actividades asignadas para el periodo 2024-2
+  </p>
+
+  <!-- Sección filtro y tabla de actividades -->
+  <section>
     <activities-filter></activities-filter>
     <activities-table [currentUser]="currentUser()"></activities-table>
+  </section>
 
-    <!-- Sección mensaje estado de la autoevaluación -->
-    <section id="self-assessment-message-section">
-        <ng-container >
-            <div class="messages-container">
-                <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-                <span class="text-body-regular">Seleccione esta opción si desea cargar la autoevaluación utilizando un
-                    formato
-                    externo.</span>
-            </div>
-        </ng-container>
-        <ng-template>
-            <div class="messages-continter-green">
-                <img src="assets/icons/messages/icon-check.svg" alt="teacher-icon">
-                <span class="text-body-regular">Todas las autoevaluaciones han sido completadas.</span>
-            </div>
-        </ng-template>
-    </section>
+  <!-- Sección mensaje estado de la autoevaluación -->
+  <section id="self-assessment-message-section">
+    <ng-container>
+      <div class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+        <span class="text-body-regular"
+          >Seleccione esta opción si desea cargar la autoevaluación utilizando
+          un formato externo.</span
+        >
+      </div>
+    </ng-container>
+    <ng-template>
+      <div class="messages-continter-green">
+        <img src="assets/icons/messages/icon-check.svg" alt="teacher-icon" />
+        <span class="text-body-regular"
+          >Todas las autoevaluaciones han sido completadas.</span
+        >
+      </div>
+    </ng-template>
+  </section>
 
-    <section style="width: 40%;">
-        <div class="buttons-container" >
-            <span class="title-three">Autoevaluación</span>
-            <div class="buttons-actions">
-                <button [ngClass]="{'button-fill-out': !checkActivitiesDiliegenciadoVar,
-                ' button-fill-out-disabled': checkActivitiesDiliegenciadoVar
-                }" class="button-actions" (click)="uploadSelfAssessment()" aria-label="Upload Self Assessment"></button>
-                <button [ngClass]="{'button-edit': checkActivitiesDiliegenciadoVar,
-                'button-edit-disabled': !checkActivitiesDiliegenciadoVar
-                }"  id="activities-table-button-edit" class="button-actions" (click)="editSelfAssessment()" aria-label="Edit Self Assessment"></button>
-            </div>
-        </div>
-    </section>
+  <!-- Sección botones de autoevaluación -->
+  <section style="width: 40%">
+    <div class="buttons-container">
+      <span class="title-three">Autoevaluación</span>
+      <div class="buttons-actions">
+        <button
+          [ngClass]="{
+            'button-fill-out': !checkActivitiesDiliegenciadoVar,
+            ' button-fill-out-disabled': checkActivitiesDiliegenciadoVar
+          }"
+          class="button-actions"
+          (click)="uploadSelfAssessment()"
+          aria-label="Upload Self Assessment"
+        ></button>
+        <button
+          [ngClass]="{
+            'button-edit': checkActivitiesDiliegenciadoVar,
+            'button-edit-disabled': !checkActivitiesDiliegenciadoVar
+          }"
+          id="activities-table-button-edit"
+          class="button-actions"
+          (click)="editSelfAssessment()"
+          aria-label="Edit Self Assessment"
+        ></button>
+      </div>
+    </div>
+  </section>
 </div>
-<activities-upload-self-assessment [currentUser]="currentUser()"></activities-upload-self-assessment>
-<activities-edit-evaluation [currentUser]="currentUser()"></activities-edit-evaluation>
+<!-- Modal de carga de autoevaluación -->
+<activities-upload-self-assessment
+  [currentUser]="currentUser()"
+></activities-upload-self-assessment>
+<!-- Modal de edición de autoevaluación -->
+<activities-edit-evaluation
+  [currentUser]="currentUser()"
+></activities-edit-evaluation>

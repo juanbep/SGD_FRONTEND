@@ -26,13 +26,13 @@ export class SmResponsibilitiesServicesService {
         * @returns Observable<Responsabilidad>
         */
 
-    getResponsibilities(evaluatorId: string, activityCode: string, activityType: string, evaluatorName: string, roles: string, page:number|null, totalPage:number|null): Observable<SimpleResponse<PagedResponse<ResponsabilidadResponse>>> {
+    getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page:number|null, totalPage:number|null): Observable<SimpleResponse<PagedResponse<ResponsabilidadResponse>>> {
         let params = new HttpParams()
             .set( 'idEvaluador', evaluatorId )
-            .set( 'codigoActividad', activityCode )
-            .set( 'tipoActividad', activityType )
-            .set( 'nombreEvaluado', evaluatorName )
-            .set( 'roles', roles )
+            .set( 'codigoActividad', activityName ?  activityName : '' )
+            .set( 'tipoActividad', activityType ? activityType : '' )
+            .set( 'nombreEvaluado', evaluatorName ? evaluatorName : '' )
+            .set( 'roles', roles ? roles : '' )
             .set( 'page', page? page.toString() : '' )
             .set( 'size', totalPage? totalPage.toString() : '' );
         return this.httpClient.get<SimpleResponse<PagedResponse<ResponsabilidadResponse>>>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluador`, { params });

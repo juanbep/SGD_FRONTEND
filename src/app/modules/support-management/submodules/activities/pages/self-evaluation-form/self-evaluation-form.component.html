@@ -1,151 +1,351 @@
 <div class="view-container">
-    <span class="title-two">Formulario de autoevaluación</span>
+  <span class="title-two">Formulario de autoevaluación</span>
+
+  <div class="mb-3"></div>
+
+  <div class="title-three">Información docente</div>
+
+  <div class="mb-1"></div>
+
+  <table class="table-bordered">
+    <thead>
+      <tr>
+        <th>
+          <span class="text-body-regular">Nombres y apellidos</span>
+          <br />
+          <span class="text-body-small-sb">Pepito</span>
+        </th>
+        <th>
+          <span class="text-body-regular">Num.Id</span>
+          <br />
+          <span class="text-body-small-sb">123456789</span>
+        </th>
+        <th>
+          <span class="text-body-regular">Nombre de la actividad</span>
+          <br />
+          <span class="text-body-small-sb">Nombre de la actividad</span>
+        </th>
+        <th>
+          <span class="text-body-regular">Tipo</span>
+          <br />
+          <span class="text-body-small-sb">Tipo</span>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <!-- Periodo -->
+          <span class="text-body-regular">Periodo</span>
+          <br />
+          <span class="text-body-small-sb">2021-1</span>
+        </th>
+        <th>
+          <!-- Horas totales -->
+          <span class="text-body-regular">Horas totales</span>
+          <br />
+          <span class="text-body-small-sb">10</span>
+        </th>
+        <th>
+          <!-- Fecha de inicio -->
+          <span class="text-body-regular">Fecha de inicio</span>
+          <br />
+          <span class="text-body-small-sb">2021-01-01</span>
+        </th>
+        <th>
+          <!-- Fecha de fin -->
+          <span class="text-body-regular">Fecha de fin</span>
+          <br />
+          <span class="text-body-small-sb">2021-01-31</span>
+        </th>
+      </tr>
+    </thead>
+  </table>
+
+  <form [formGroup]="newSelfEvaluationForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3"></div>
+    <div class="row">
+      <span class="title-three">Descripción actividad</span>
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="activityDescription"
+        />
+        <label class="label-custom text-body-small-sb" for="activityDescription"
+          >Descripción actividad</label
+        >
+      </div>
+    </div>
+    <div class="mb-3"></div>
+    <div class="row">
+      <div class="col title-three">Resultado</div>
+      <div class="col title-three">ODS</div>
+      <div class="col title-three">Evidencia</div>
+    </div>
+    <div class="row">
+      <div formArrayName="results">
+        <div
+          *ngFor="let resultGroup of results.controls; let i = index"
+          [formGroupName]="i"
+          class="row"
+        >
+          <div *ngIf="i > 0" class="mb-2"></div>
+          <div class="col">
+            <textarea
+              formControlName="result"
+              class="form-control input-text"
+            ></textarea>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                formControlName="ODS"
+                class="form-select input-select text-body-customt"
+                id="ods-input-{{ i }}"
+              >
+                <option value="">ODS</option>
+                <option value="1">Fin del pobreza</option>
+                <option value="2">Hambre cero</option>
+                <option value="3">Salud y bienestar</option>
+                <option value="4">Educación de calidad</option>
+                <option value="5">Igualdad de género</option>
+                <option value="6">Agua limpia y saneamiento</option>
+                <option value="7">Energía asequible y no contaminante</option>
+                <option value="8">
+                  Trabajo decente y crecimiento económico
+                </option>
+                <option value="9">
+                  Industria, innovación e infraestructura
+                </option>
+                <option value="10">Reducción de las desigualdades</option>
+                <option value="11">Ciudades y comunidades sostenibles</option>
+                <option value="12">Producción y consumo responsables</option>
+                <option value="13">Acción por el clima</option>
+                <option value="14">Vida submarina</option>
+                <option value="15">Vida de ecosistemas terrestres</option>
+                <option value="16">
+                  Paz, justicia e instituciones sólidas
+                </option>
+                <option value="17">Alianzas para lograr los objetivos</option>
+              </select>
+              <label
+                for="ods-input-{{ i }}"
+                class="label-custom text-body-small-sb"
+                >ODS</label
+              >
+            </div>
+          </div>
+          <div class="col">
+            <ng-container
+              *ngIf="
+                !newSelfEvaluationForm.get('results')?.value[i].evidence;
+                else viewEvidenceFile
+              "
+            >
+              <div class="file-upload-container">
+                <label
+                  for="uploadFileAssessment{{ i }}"
+                  class="file-upload-label"
+                >
+                  <div class="file-details">
+                    <p class="file-title text-body-small-sb">Evidencia</p>
+                    <p class="file-name text-body-small-r"></p>
+                  </div>
+                  <input
+                    type="file"
+                    formControlName="evidence"
+                    id="uploadFileAssessment{{ i }}"
+                    hidden
+                  />
+                </label>
+                <div class="file-actions">
+                  <button
+                    class="button-upload button-actions button-border-radius"
+                  ></button>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #viewEvidenceFile> 
+              <div class="download-file-container">
+                <div class="download-file-label">
+                    <span class="text-body-small-r">Soporte</span>
+                    <br>
+                    <span class="text-body-small-sb">'Nombre'</span>
+                </div>
+                <button class="button-actions button-download"></button>
+            </div>
+            </ng-template>
+          </div>
+          <div class="col-auto d-flex align-items-center">
+            <img
+              src="assets/icons/forms/x-icon.svg"
+              alt="Eliminar resultado"
+              *ngIf="i > 0"
+              type="button"
+              (click)="removeResultEntry(i)"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-2"></div>
+      <div class="row">
+        <div class="col">
+          <button
+            type="button"
+            (click)="addResultEntry()"
+            [disabled]="results.length >= 10"
+            [ngClass]="[
+              results.length >= 10
+                ? 'button-normal-large-disabled'
+                : 'button-normal-large'
+            ]"
+          >
+            Nuevo resultado
+          </button>
+        </div>
+      </div>
+    </div>
 
     <div class="mb-3"></div>
+    <div class="row">
+      <div class="col">
+        <span class="title-three">Lecciones aprendidas</span>
+        <div formArrayName="lessonsLearned">
+          <div
+            *ngFor="
+              let lessonGroup of lessonsLearnedArray.controls;
+              let j = index
+            "
+            [formGroupName]="j"
+            class="row"
+          >
+            <div *ngIf="j > 0" class="mb-2"></div>
 
-    <div class="title-three">Información docente</div>
-
-    <div class="mb-1"></div>
-
-    <table class="table-bordered">
-        <thead>
-            <tr>
-                <th>
-                    <span class="text-body-regular">Nombres y apellidos</span>
-                    <br>
-                    <span class="text-body-small-sb">Pepito</span>
-                </th>
-                <th>
-                    <span class="text-body-regular">Num.Id</span>
-                    <br>
-                    <span class="text-body-small-sb">123456789</span>
-                </th>
-                <th>
-                    <span class="text-body-regular">Nombre de la actividad</span>
-                    <br>
-                    <span class="text-body-small-sb">Nombre de la actividad</span>
-                </th>
-                <th>
-                    <span class="text-body-regular">Tipo</span>
-                    <br>
-                    <span class="text-body-small-sb">Tipo</span>
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    <!-- Periodo -->
-                    <span class="text-body-regular">Periodo</span>
-                    <br>
-                    <span class="text-body-small-sb">2021-1</span>
-                </th>
-                <th>
-                    <!-- Horas totales -->
-                    <span class="text-body-regular">Horas totales</span>
-                    <br>
-                    <span class="text-body-small-sb">10</span>
-                </th>
-                <th>
-                    <!-- Fecha de inicio -->
-                    <span class="text-body-regular">Fecha de inicio</span>
-                    <br>
-                    <span class="text-body-small-sb">2021-01-01</span>
-                </th>
-                <th>
-                    <!-- Fecha de fin -->
-                    <span class="text-body-regular">Fecha de fin</span>
-                    <br>
-                    <span class="text-body-small-sb">2021-01-31</span>
-                </th>
-            </tr>
-        </thead>
-    </table>
-
-    <form [formGroup]="newSelfEvaluationForm">
-
-        <div class="mb-3"></div>
-        <div class="row">
-            <span class="title-three">Descripción actividad</span>
-            <div class="form-floating">
-                <input type="text" class="form-control input-text" id="activityDescription">
-                <label class="label-custom text-body-small-sb" for="activityDescription">Descripción actividad</label>
-            </div>
-        </div>
-        <div class="mb-3"></div>
-        <div class="row">
             <div class="col">
-                <span class="title-three">Resultado</span>
-                <div class="form-floating">
-                    <input type="text" class="form-control input-text" id="result">
-                    <label class="label-custom text-body-small-sb" for="result">Resultado</label>
-                </div>
+              <div class="form-floating">
+                <input
+                  type="text"
+                  formControlName="lesson"
+                  class="form-control input-text"
+                  id="learnedLesson{{ j }}"
+                />
+                <label
+                  for="learnedLesson{{ j }}"
+                  class="label-custom text-body-small-sb"
+                  >Lección aprendida</label
+                >
+              </div>
             </div>
+            <div class="col-auto d-flex align-items-center">
+              <img
+                src="assets/icons/forms/x-icon.svg"
+                alt="Eliminar resultado"
+                *ngIf="j > 0"
+                type="button"
+                (click)="removeLessonEntry(j)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="mb-2"></div>
+        <button
+          type="button"
+          (click)="addLessonEntry()"
+          [disabled]="lessonsLearnedArray.length >= 10"
+          [ngClass]="[
+            lessonsLearnedArray.length >= 10
+              ? 'button-normal-large-disabled'
+              : 'button-normal-large'
+          ]"
+        >
+          Nueva lección aprendida
+        </button>
+      </div>
+
+      <div class="col">
+        <span class="title-three">Oportunidad de mejora</span>
+        <div formArrayName="improvementOpportunities">
+          <div
+            *ngFor="
+              let oppGroup of improvementOpportunitiesArray.controls;
+              let k = index
+            "
+            [formGroupName]="k"
+            class="row"
+          >
+            <div *ngIf="k > 0" class="mb-2"></div>
+
             <div class="col">
-                <span class="title-three">ODS</span>
-                <div class="form-floating">
-                    <input type="text" class="form-control input-text" id="ODS">
-                    <label class="label-custom text-body-small-sb" for="ODS">ODS</label>
-                </div>
+              <div class="form-floating">
+                <input
+                  type="text"
+                  formControlName="opportunity"
+                  class="form-control input-text"
+                  id="improvementOpportunity{{ k }}"
+                />
+                <label
+                  for="improvementOpportunity{{ k }}"
+                  class="label-custom text-body-small-sb"
+                  >Oportunidad de mejora</label
+                >
+              </div>
             </div>
-            <div class="col">
-                <span class="title-three">Evidencia</span>
+            <div class="col-auto d-flex align-items-center">
+              <img
+                src="assets/icons/forms/x-icon.svg"
+                alt="Eliminar resultado"
+                *ngIf="k > 0"
+                type="button"
+                (click)="removeOpportunityEntry(k)"
+              />
             </div>
-            <div class="mb-2"></div>
-            <div class="row">
-                <div class="col">
-                    <button class="button-normal-large">Nuevo resultado</button>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="mb-2"></div>
+        <button
+          type="button"
+          (click)="addOpportunityEntry()"
+          [disabled]="improvementOpportunitiesArray.length >= 10"
+          [ngClass]="[
+            improvementOpportunitiesArray.length >= 10
+              ? 'button-normal-large-disabled'
+              : 'button-normal-large'
+          ]"
+        >
+          Nueva oportunidad de mejora
+        </button>
+      </div>
+    </div>
 
-        <div class="mb-3"></div>
-        <div class="row">
-            <div class="col">
-                <span class="title-three">Lecciones aprendidas</span>
-                <div class="form-floating">
-                    <input type="text" class="form-control input-text" id="learnedLessons">
-                    <label class="label-custom text-body-small-sb" for="learnedLessons">Lecciones aprendidas</label>
-                </div>
-                <div class="mb-2"></div>
-                <button class="button-normal-large">Nueva lección aprendida</button>
-            </div>
-            <div class="col">
-                <span class="title-three">Oportunidad de mejora</span>
-                <div class="form-floating">
-                    <input type="text" class="form-control input-text" id="improvementOpportunity">
-                    <label class="label-custom text-body-small-sb" for="improvementOpportunity">Oportunidad de
-                        mejora</label>
-                </div>
-                <div class="mb-2"></div>
-                <button class="button-normal-large">Nueva oportunidad de mejora</button>
-            </div>
+    <div class="mb-3"></div>
+    <div class="row">
+      <div class="col-3">
+        <span class="title-three">Evaluación</span>
+        <div class="form-floating">
+          <input type="text" class="form-control input-text" id="evaluation" />
+          <label class="label-custom text-body-small-sb" for="evaluation"
+            >Evaluación</label
+          >
         </div>
+      </div>
+    </div>
 
-        <div class="mb-3"></div>
-        <div class="row">
-            <div class="col-3">
-                <span class="title-three">Evaluación</span>
-                <div class="form-floating">
-                    <input type="text" class="form-control input-text" id="evaluation">
-                    <label class="label-custom text-body-small-sb" for="evaluation">Evaluación</label>
-                </div>
-            </div>
-        </div>
+    <div class="mb-3"></div>
+    <div class="row">
+      <span class="title-three">Observaciones</span>
+      <input
+        type="text"
+        class="observation"
+        placeholder="Ingrese sus observaciones"
+      />
+    </div>
 
-        <div class="mb-3"></div>
-        <div class="row">
-            <span class="title-three">Observaciones</span>
-            <input type="text" class="observation" placeholder="Ingrese sus observaciones">
-        </div>
-
-        <div class="mb-3"></div>
-        <div class="row row-cols-auto justify-content-center">
-            <div class="col d-flex justify-content-center">
-                <button class="button-normal">Cancelar</button>
-                <button type="submit" class="button-normal">Guardar</button>
-            </div>
-        </div>
-
-
-    </form>
-
+    <div class="mb-3"></div>
+    <div class="row row-cols-auto justify-content-center">
+      <div class="col d-flex justify-content-center">
+        <button class="button-normal">Cancelar</button>
+        <button type="submit" class="button-normal">Guardar</button>
+      </div>
+    </div>
+  </form>
 </div>

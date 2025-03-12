@@ -18,11 +18,11 @@
         <ng-container *ngIf="teacherByDepartment && teacherByDepartment.content.length>0 ; else nullData" >
             <tbody>
                 <tr *ngFor="let teacher of teacherByDepartment.content">
-                    <td class="text-body-regular">{{teacher.nombres}} {{teacher.apellidos}}</td>
-                    <td class="text-body-regular">{{teacher.identificacion }}</td>
-                    <td class="text-body-regular">{{teacher.usuarioDetalle.facultad}}</td>
-                    <td class="text-body-regular">{{teacher.usuarioDetalle.departamento}}</td>
-                    <td class="text-body-regular">{{teacher.usuarioDetalle.categoria }}</td>
+                    <td class="text-body-regular">{{teacher.nombreDocente}}</td>
+                    <td class="text-body-regular">{{teacher.numeroIdentificacion }}</td>
+                    <td class="text-body-regular">{{teacher.facultad}}</td>
+                    <td class="text-body-regular">{{teacher.departamento}}</td>
+                    <td class="text-body-regular">{{teacher.categoria }}</td>
                     <td>
                         <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" title="Actividades"></button>
                         <button class="button-table-email" (click)="openEmailModal()" title="Enviar email"></button>

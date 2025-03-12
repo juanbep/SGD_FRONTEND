@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { UsuarioResponse } from '../../../../../core/models/response/usuario-response.model';
 import { PeriodoAcademicoResponse } from '../../../../../core/models/response/periodo-academico-response.model';
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
+import { UsuarioConsolidadoCreadoResponse } from '../../../../../core/models/response/usuarios-consolidado-creado-response.model';
 
 
 @Injectable({
@@ -20,11 +21,10 @@ export class CpdWordGeneratorService {
     public currentDateYear: string | null = null;
     public startPeriodDate: string | null = null;
     public endPeriodDate: string | null = null;
-    public infoTeacher: UsuarioResponse | null = null;
     public currenAcademicPeriod: PeriodoAcademicoResponse | null = null;
     public teacherInformationConsolidatedResponse: DetalleUsuarioConsolidadoResponse | null = null;
 
-    async generateWordDocument(teacherConsolidated: DetalleUsuarioConsolidadoResponse, teacherInfo: UsuarioResponse, currenAcademicPeriod: PeriodoAcademicoResponse) {
+    async generateWordDocument(teacherConsolidated: DetalleUsuarioConsolidadoResponse, teacherInfo: UsuarioConsolidadoCreadoResponse, currenAcademicPeriod: PeriodoAcademicoResponse) {
 
         const imageData = await this.getImage('assets/images/logo-unicauca-2.png');
 
@@ -34,7 +34,6 @@ export class CpdWordGeneratorService {
         this.startPeriodDate = this.changeDateFormat(new Date(currenAcademicPeriod.fechaInicio));
         this.endPeriodDate = this.changeDateFormat(new Date(currenAcademicPeriod.fechaFin));
 
-        this.infoTeacher = teacherInfo;
         this.teacherInformationConsolidatedResponse = teacherConsolidated;
         
 
@@ -249,7 +248,7 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.JUSTIFIED,
                         children: [
                             new TextRun({
-                                text: `El profesor(a) ${teacherInfo.nombres} ${teacherInfo.apellidos}, identificado(a) con la cédula de ciudadanía No. ${teacherInfo.identificacion}, profesor(a) de tiempo completo adscrito(a) al ${teacherInfo.usuarioDetalle.departamento}, ha cumplido un año académico más de experiencia en la Universidad del Cauca y de conformidad con la reglamentación vigente, al completar un año de experiencia, el desempeño del docente debe ser evaluado y calificado.`,
+                                text: `El profesor(a) ${teacherInfo.nombreDocente}, identificado(a) con la cédula de ciudadanía No. ${teacherInfo.numeroIdentificacion}, profesor(a) de tiempo completo adscrito(a) al ${teacherInfo.departamento}, ha cumplido un año académico más de experiencia en la Universidad del Cauca y de conformidad con la reglamentación vigente, al completar un año de experiencia, el desempeño del docente debe ser evaluado y calificado.`,
                                 size: 24
                             }),
                         ],
@@ -259,7 +258,7 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.JUSTIFIED,
                         children: [
                             new TextRun({
-                                text: `El(la) profesor(a) ${teacherInfo.nombres}, obtuvo una evaluación ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, la cual fue calificada con ${teacherConsolidated.totalAcumulado} puntos.`,
+                                text: `El(la) profesor(a) ${teacherInfo.nombreDocente}, obtuvo una evaluación ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, la cual fue calificada con ${teacherConsolidated.totalAcumulado} puntos.`,
                                 size: 24
                             }),
                         ],
@@ -286,7 +285,7 @@ export class CpdWordGeneratorService {
                             },
                             ),
                             new TextRun({
-                                text: `Evaluar el desempeño del (la) profesor(a) ${teacherInfo.nombres} ${teacherInfo.apellidos} de ${teacherInfo.usuarioDetalle.dedicacion} en la categoría de ${teacherInfo.usuarioDetalle.categoria}, adscrito al ${teacherInfo.usuarioDetalle.departamento}, con una calificación cuantitativa de ${teacherConsolidated.totalAcumulado} puntos equivalentes a una calificación cualitativa ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, para el periodo comprendido entre el ${this.startPeriodDate} y el ${this.endPeriodDate}.`,
+                                text: `Evaluar el desempeño del (la) profesor(a) ${teacherInfo.nombreDocente} de ${teacherInfo.dedicacion} en la categoría de ${teacherInfo.categoria}, adscrito al ${teacherInfo.departamento}, con una calificación cuantitativa de ${teacherConsolidated.totalAcumulado} puntos equivalentes a una calificación cualitativa ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, para el periodo comprendido entre el ${this.startPeriodDate} y el ${this.endPeriodDate}.`,
                                 size: 24,
                             }),
                         ],
@@ -302,7 +301,7 @@ export class CpdWordGeneratorService {
                             },
                             ),
                             new TextRun({
-                                text: `Notificar personalmente o por aviso mediante correo electrónico al profesor(a) ${teacherInfo.nombres} ${teacherInfo.apellidos} del contenido de la presente resolución, advirtiéndole que contra el presente Acto Administrativo procede el recurso de reposición ante el Consejo de Facultad de Ingeniería Electrónica y Telecomunicaciones, el cual deberá ser interpuesto en la diligencia de notificación o dentro de los diez (10) días hábiles siguientes a la notificación personal o por aviso.`,
+                                text: `Notificar personalmente o por aviso mediante correo electrónico al profesor(a) ${teacherInfo.nombreDocente} del contenido de la presente resolución, advirtiéndole que contra el presente Acto Administrativo procede el recurso de reposición ante el Consejo de Facultad de Ingeniería Electrónica y Telecomunicaciones, el cual deberá ser interpuesto en la diligencia de notificación o dentro de los diez (10) días hábiles siguientes a la notificación personal o por aviso.`,
                                 size: 24,
                             }),
                         ],
@@ -399,7 +398,7 @@ export class CpdWordGeneratorService {
         });
 
         Packer.toBlob(document).then(blob => {
-            saveAs(blob, `Resolución_${teacherInfo.nombres}_${teacherInfo.apellidos}_${currenAcademicPeriod.idPeriodo}.docx`);
+            saveAs(blob, `Resolución_${teacherInfo.nombreDocente}_${currenAcademicPeriod.idPeriodo}.docx`);
         });
     }
 

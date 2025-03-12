@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
+import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
 
 @Component({
   selector: 'responsibilities-filter',
@@ -18,6 +19,7 @@ export class ResponsibilitiesFilterComponent {
  
      private formBuilder: FormBuilder = inject(FormBuilder);
      private catalogDataService = inject(CatalogDataService);
+     private responsabiltitiesServicesService = inject(ResponsibilitiesServicesService);
    
      public catalogDataResponse: CatalogDataResponse | null = null; 
  
@@ -37,16 +39,16 @@ export class ResponsibilitiesFilterComponent {
      }
    
      searchActivities(){
-       const activityType = this.formFilter.get('activityType')?.value;
-       const activityName = this.formFilter.get('activityName')?.value;
-       const activityCode = this.formFilter.get('activityCode')?.value;
-       const administrativeAct = this.formFilter.get('administrativeAct')?.value;
-       const vriCode = this.formFilter.get('vriCode')?.value;
-       
-   
+      const activityType = this.formFilter.get('activityType')?.value;
+      const activityName = this.formFilter.get('activityName')?.value;
+      const evaluatorName = this.formFilter.get('evaluatorName')?.value;
+      const evaluatorRole = this.formFilter.get('evaluatorRole')?.value;
+      
+      this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal(activityName, activityType, evaluatorName, evaluatorRole);
      }
    
      clearFilter(){
        this.formFilter.reset();
+       this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal(null, null, null, null);
      }
 }

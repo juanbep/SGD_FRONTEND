@@ -41,16 +41,16 @@ export class ActivitiesFilterComponent {
     searchActivities(){
       const activityType = this.formFilter.get('activityType')?.value;
       const activityName = this.formFilter.get('activityName')?.value;
-      const activityCode = this.formFilter.get('activityCode')?.value;
-      const administrativeAct = this.formFilter.get('administrativeAct')?.value;
-      const vriCode = this.formFilter.get('vriCode')?.value;
-
+      const evaluatorName = this.formFilter.get('evaluatorName')?.value;
+      const evaluatorRole = this.formFilter.get('evaluatorRole')?.value;
       
+      this.activitiesServicesService.setParamsActivitiesFilterSignal(activityName, activityType, evaluatorName, evaluatorRole);
   
     }
   
     clearFilter(){
       this.formFilter.reset();
+      this.activitiesServicesService.setParamsActivitiesFilterSignal(null, null, null, null);
     }
   
 }
