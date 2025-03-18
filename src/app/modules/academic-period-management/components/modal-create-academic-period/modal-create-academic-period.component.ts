@@ -7,6 +7,8 @@ import { MessagesInfoService } from '../../../../shared/services/messages-info.s
 import { PeriodoAcademicoCreate } from '../../../../core/models/modified/periodo-academico-create.model';
 declare var bootstrap: any;
 
+const PAGE_SIZE = 10;
+
 @Component({
   selector: 'academic-period-management-modal-create-academic-period',
   standalone: true,
@@ -20,7 +22,6 @@ declare var bootstrap: any;
 export class ModalCreateAcademicPeriodComponent {
 
   @Input() currentPage: number = 1;
-  @Input() size: number = 1;
 
   private formBuilder: FormBuilder = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
@@ -143,7 +144,7 @@ export class ModalCreateAcademicPeriodComponent {
   }
 
   recoverAcademicPeriods(): void {
-    this.academicPeriodManagementService.getAllAcademicPeriods(this.currentPage - 1, this.size).subscribe((response) => {
+    this.academicPeriodManagementService.getAllAcademicPeriods(this.currentPage - 1, PAGE_SIZE).subscribe((response) => {
       this.academicPeriodManagementService.setAcademicPeriods(response.data);
     });
   }

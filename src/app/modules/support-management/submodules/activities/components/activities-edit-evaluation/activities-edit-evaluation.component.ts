@@ -401,6 +401,7 @@ export class ActivitiesEditEvaluationComponent {
       });
       this.sendSource = this.userActivities.map((activitie) => ({
         oidActividad: activitie.oidActividad,
+        tipoCalificacion: 'DOCUMENTO',
         tipoFuente: '1',
         calificacion: activitie.fuentes[0].calificacion || 0,
         informeEjecutivo: activitie.fuentes[0].nombreDocumentoInforme || '',

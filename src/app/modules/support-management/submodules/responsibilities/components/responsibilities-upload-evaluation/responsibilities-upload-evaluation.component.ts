@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ResponsibilitiesServicesService } from '../../services/responsibilities-services.service';
@@ -10,15 +17,11 @@ import { UsuarioResponse } from '../../../../../../core/models/response/usuario-
 @Component({
   selector: 'responsibilities-upload-evaluation',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './responsibilities-upload-evaluation.component.html',
-  styleUrl: './responsibilities-upload-evaluation.component.css'
+  styleUrl: './responsibilities-upload-evaluation.component.css',
 })
 export class ResponsibilitiesUploadEvaluationComponent {
-
   @Input()
   responsability: ResponsabilidadResponse | null = null;
 
@@ -29,7 +32,8 @@ export class ResponsibilitiesUploadEvaluationComponent {
   currentUser: UsuarioResponse | null = null;
 
   @Output()
-  public closeModalUploadSelected:  EventEmitter<boolean> = new EventEmitter<boolean>();
+  public closeModalUploadSelected: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   private myModal: HTMLElement | null = null;
   public errorMessageFile: string = '';
@@ -41,32 +45,26 @@ export class ResponsibilitiesUploadEvaluationComponent {
   public observacionSend: string = '';
   public fileNameSelected: WritableSignal<string> = signal('');
 
-
-
-  constructor( private service: ResponsibilitiesServicesService, private toastr: MessagesInfoService) {
-  }
-
+  constructor(
+    private service: ResponsibilitiesServicesService,
+    private toastr: MessagesInfoService
+  ) {}
 
   ngOnInit(): void {
-    
-    if(this.openModalUploadSelected){
-      this.myModal = document.getElementById("myModal");
+    if (this.openModalUploadSelected) {
+      this.myModal = document.getElementById('myModal');
     }
-    if(this.myModal) {
-      this.myModal.style.display = "flex";
+    if (this.myModal) {
+      this.myModal.style.display = 'flex';
     }
-
   }
-
 
   openModal(): void {
-
     if (this.evaluation) {
-      (<HTMLInputElement>document.getElementById("input-note")).value = this.evaluation.toString();
-
+      (<HTMLInputElement>document.getElementById('input-note')).value =
+        this.evaluation.toString();
     }
   }
-
 
   getInputClass(): string {
     if (this.evaluation) {
@@ -75,11 +73,12 @@ export class ResponsibilitiesUploadEvaluationComponent {
       } else {
         this.errorMessageNote = '';
       }
-      return this.evaluation >= 0 && this.evaluation <= 100 ? 'input-nota' : 'input-nota-error';
+      return this.evaluation >= 0 && this.evaluation <= 100
+        ? 'input-nota'
+        : 'input-nota-error';
     } else {
       return '';
     }
-
   }
 
   onFileSelected(event: Event): void {
@@ -91,46 +90,75 @@ export class ResponsibilitiesUploadEvaluationComponent {
         this.selectedFile = null;
       } else {
         this.selectedFile = file;
-        this.fileNameSelected.set(this.selectedFile.name)
+        this.fileNameSelected.set(this.selectedFile.name);
         this.errorMessageFile = '';
       }
     }
   }
 
   triggerFileUpload() {
-    const fileUpload = document.getElementById('uploadFileAssessmentResponsability') as HTMLInputElement;
+    const fileUpload = document.getElementById(
+      'uploadFileAssessmentResponsability'
+    ) as HTMLInputElement;
     if (fileUpload) {
       fileUpload.click();
     }
   }
 
-
   saveEvaluation(): void {
-    if(this.responsability && this.evaluation && this.selectedFile && this.currentUser){
-       this.sendSource = [{
-        tipoFuente: "2",
-        calificacion: this.evaluation,
-        oidActividad: this.responsability.oidActividad,
-        informeEjecutivo: '',
-      }]
-      this.service.saveResponsibilityEvaluation(this.selectedFile, this.observacionSend, this.sendSource).subscribe({
-        next: data => {
-          this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
-          this.service.setParamsActivitiesFilterSignal(null,null,null,null);
-          this.closeModal();
+    if (
+      this.responsability &&
+      this.evaluation &&
+      this.selectedFile &&
+      this.currentUser
+    ) {
+      this.sendSource = [
+        {
+          tipoFuente: '2',
+          tipoCalificacion: 'DOCUMENTO',
+          calificacion: this.evaluation,
+          oidActividad: this.responsability.oidActividad,
+          informeEjecutivo: '',
         },
-        error: error => {
-          this.toastr.showErrorMessage('Error al guardad la información', 'Error');
-        }
-      });
-    }else{
-      this.toastr.showWarningMessage('Asegurese que las evaluaciones y el soporte se encuentren diligenciados.', 'Advertencia');
+      ];
+      this.service
+        .saveResponsibilityEvaluation(
+          this.selectedFile,
+          this.observacionSend,
+          this.sendSource
+        )
+        .subscribe({
+          next: (data) => {
+            this.toastr.showSuccessMessage(
+              'Evaluación guardada correctamente',
+              'Éxito'
+            );
+            this.service.setParamsActivitiesFilterSignal(
+              null,
+              null,
+              null,
+              null
+            );
+            this.closeModal();
+          },
+          error: (error) => {
+            this.toastr.showErrorMessage(
+              'Error al guardad la información',
+              'Error'
+            );
+          },
+        });
+    } else {
+      this.toastr.showWarningMessage(
+        'Asegurese que las evaluaciones y el soporte se encuentren diligenciados.',
+        'Advertencia'
+      );
     }
   }
 
   closeModal() {
     if (this.myModal) {
-      this.myModal.style.display = "none";
+      this.myModal.style.display = 'none';
       this.closeModalUploadSelected.emit(true);
     }
   }

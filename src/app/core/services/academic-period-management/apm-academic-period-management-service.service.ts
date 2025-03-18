@@ -16,7 +16,7 @@ export class ApmAcademicPeriodManagementService {
     /*
     * Method to save a new academic period
     * @param newAcademicPeriod: NewAcademicPeriod
-    * @returns Observable<AcademicPeriod>
+    * @returns Observable<SimpleResponse<PeriodoAcademicoResponse>>
     * */
     saveNewAcademicPeriod(newAcademicPeriod: PeriodoAcademicoCreate): Observable<SimpleResponse<PeriodoAcademicoResponse>> {
         return this.httpClient.post<SimpleResponse<PeriodoAcademicoResponse>>(`${this.baseUrl}/api/periodos-academicos`, newAcademicPeriod);
@@ -24,7 +24,10 @@ export class ApmAcademicPeriodManagementService {
 
     /*
     * Method to get all the academic periods
-    * @returns Observable<PeriodoAcademicoResponse>
+    * @param page: number
+    * @param size: number
+    * @returns Observable<SimpleResponse<PagedResponse<PeriodoAcademicoResponse>>>
+    * 
     * */
     getAllAcademicPeriods(page: number | null, size: number | null): Observable<SimpleResponse<PagedResponse<PeriodoAcademicoResponse>>> {
         let params = new HttpParams()
@@ -35,8 +38,9 @@ export class ApmAcademicPeriodManagementService {
 
     /*
    * Method to edit an academic period
+   * @param oidAcademicPeriod: number
    * @param academicPeriod: AcademicPeriod
-   * @returns Observable<AcademicPeriod>
+   * @returns Observable<SimpleResponse<any>>
    * */
     editAcademicPeriod(oidAcademicPeriod: number, academicPeriod: PeriodoAcademicoCreate): Observable<SimpleResponse<any>> {
         return this.httpClient.put<SimpleResponse<any>>(`${this.baseUrl}/api/periodos-academicos/${oidAcademicPeriod}`, academicPeriod, { responseType: 'json' });
@@ -44,7 +48,7 @@ export class ApmAcademicPeriodManagementService {
 
     /*
     * Method to get the active academic period
-    * @returns Observable<AcademicPeriod>
+    * @returns Observable<SimpleResponse<PeriodoAcademicoResponse>> 
     * */
     activeAcademicPeriod(): Observable<SimpleResponse<PeriodoAcademicoResponse>> {
         return this.httpClient.get<SimpleResponse<PeriodoAcademicoResponse>>(`${this.baseUrl}/api/periodos-academicos/activo`);

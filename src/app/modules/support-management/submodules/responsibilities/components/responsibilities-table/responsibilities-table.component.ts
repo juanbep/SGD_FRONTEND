@@ -9,6 +9,7 @@ import { PaginatorComponent } from '../../../../../../shared/components/paginato
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { Router } from '@angular/router';
 
 const PAGE_SIZE = 10;
 
@@ -51,6 +52,7 @@ export class ResponsibilitiesTableComponent {
 
   private responsabilitiesServices = inject(ResponsibilitiesServicesService);
   private toastr = inject(MessagesInfoService);
+  private router = inject(Router);
 
   public openModalEditSelected: boolean = false;
   public openModalResposabilitySelected: boolean = false;
@@ -58,7 +60,7 @@ export class ResponsibilitiesTableComponent {
   public responsabilitieByType: ResponsabilidadesPorTipoActividad[] = [];
   public responsabilities: PagedResponse<ResponsabilidadResponse> | null = null;
   public resposabilitySelected: ResponsabilidadResponse | undefined;
-  
+
   public filterParams: {
     activityName: string | null;
     activityType: string | null;
@@ -73,8 +75,9 @@ export class ResponsibilitiesTableComponent {
     this.recoverResponsabilities(this.currentPage, PAGE_SIZE);
   });
 
-  recoverResponsabilities(page: number, totalPage: number) {
-    const { activityName, activityType, evaluatorName, evaluatorRole } = this.filterParams || {
+  private recoverResponsabilities(page: number, totalPage: number) {
+    const { activityName, activityType, evaluatorName, evaluatorRole } = this
+      .filterParams || {
       activityName: null,
       activityType: null,
       evaluatorName: null,
@@ -94,7 +97,9 @@ export class ResponsibilitiesTableComponent {
         .subscribe({
           next: (response) => {
             this.responsabilities = response.data;
-            this.responsabilitiesServices.setResponsibilitiesData(response.data);
+            this.responsabilitiesServices.setResponsibilitiesData(
+              response.data
+            );
             this.reloadActivities();
           },
           error: (error) => {
@@ -102,6 +107,13 @@ export class ResponsibilitiesTableComponent {
           },
         });
     }
+  }
+
+  public openFormEvaluation(responsabilityId: number) {
+    this.router.navigate([
+      './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-estudiante',
+      responsabilityId,
+    ]);
   }
 
   public openModalUpload(responsability: ResponsabilidadResponse) {

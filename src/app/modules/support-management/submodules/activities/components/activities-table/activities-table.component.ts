@@ -92,7 +92,7 @@ export class ActivitiesTableComponent {
             this.reloadActivities();
           },
           error: (error) => {
-            console.error('Error al consultar la información', error);
+            console.error(error.error.mensaje, error);
           },
         });
     }

@@ -1,0 +1,179 @@
+<div class="view-container">
+  <div class="title-two">Editar Evaluación</div>
+  <div class="mb-3"></div>
+  <section>
+    <form [formGroup]="formEvaluation" (ngSubmit)="saveEdit()">
+      <!-- Campo: Título del trabajo de grado -->
+      <div class="row">
+        <div class="col">
+          <div class="form-floating">
+            <input 
+              type="text" 
+              id="degreeWorkTitle" 
+              class="form-control input-text" 
+              formControlName="degreeWorkTitle" 
+              placeholder="Título del trabajo de grado"
+              [ngClass]="{'error-input': formEvaluation.get('degreeWorkTitle')?.invalid && (formEvaluation.get('degreeWorkTitle')?.dirty || formEvaluation.get('degreeWorkTitle')?.touched)}" />
+            <label for="degreeWorkTitle" class="label-custom text-body-small-sb">
+              * Título del trabajo de grado
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3"></div>
+      <!-- Campo: Etapa de desarrollo -->
+      <div class="row" style="width: 50%">
+        <div class="col">
+          <div class="form-floating">
+            <select 
+              id="developmentStage" 
+              class="form-select input-select" 
+              formControlName="developmentStage"
+              [ngClass]="{'error-input': formEvaluation.get('developmentStage')?.invalid && (formEvaluation.get('developmentStage')?.dirty || formEvaluation.get('developmentStage')?.touched)}">
+              <option [ngValue]="null" selected>Seleccione una opción</option>
+              <option value="Formulación">Formulación</option>
+              <option value="Revisión">Revisión</option>
+              <option value="Ejecución">Ejecución</option>
+              <option value="Finalizado">Finalizado</option>
+            </select>
+            <label for="developmentStage" class="label-custom text-body-small-sb">
+              * Etapa de desarrollo
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3"></div>
+      <!-- Sección: Evaluaciones -->
+      <section>
+        <span class="title-three">Evaluación</span>
+        <div class="mb-3"></div>
+        <table class="table-bordered">
+          <thead>
+            <tr>
+              <th><span class="text-body-heavy">Importancia (%)</span></th>
+              <th><span class="text-body-heavy">Pregunta</span></th>
+              <th><span class="text-body-heavy">Evaluación</span></th>
+              <th><span class="text-body-heavy">Equivalente cualitativo</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let q of [1,2,3,4,5,6,7,8]">
+              <td class="text-body-regular">12.50%</td>
+              <td class="text-body-regular">
+                <!-- Se puede ajustar el texto según la pregunta real -->
+                Pregunta {{q}}
+              </td>
+              <td>
+                <input 
+                  type="text" 
+                  id="qualification_{{q}}"
+                  class="form-control input-text" 
+                  [formControlName]="'qualification_' + q" 
+                  placeholder="Ingresar nota"
+                  [ngClass]="{'error-input': formEvaluation.get('qualification_' + q)?.invalid && (formEvaluation.get('qualification_' + q)?.dirty || formEvaluation.get('qualification_' + q)?.touched)}" />
+              </td>
+              <td class="text-body-regular">
+                {{ qualitativeEquivalent(formEvaluation.get('qualification_' + q)?.value || '') }}
+              </td>
+            </tr>
+            <tr>
+              <td class="title-three">100%</td>
+              <td class="title-three">Total</td>
+              <td class="title-three">{{ totalAverage }}</td>
+              <td class="title-three">
+                {{ qualitativeEquivalent(totalAverage?.toString() || '') }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mb-3"></div>
+        <span *ngIf="errorCalification" class="text-body-regular text-error">
+          La evaluación no debe ser un valor menor a 0, superior a 100 o alfanumérico
+        </span>
+        <span *ngIf="!allCompleted" class="text-body-regular text-error">
+          Asegúrese de completar todas las evaluaciones
+        </span>
+      </section>
+      <div class="mb-3"></div>
+      <!-- Campo: Observaciones -->
+      <section>
+        <div class="row">
+          <div class="col">
+            <div class="form-floating">
+              <textarea 
+                id="observations" 
+                class="form-control input-text" 
+                formControlName="observations" 
+                placeholder="Ingrese sus observaciones"></textarea>
+              <label for="observations" class="label-custom text-body-small-sb">Observaciones</label>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="mb-3"></div>
+      <!-- Sección: Firma del estudiante -->
+      <section style="width: 50%">
+        <div class="row">
+          <div class="col">
+            <ng-container *ngIf="!formEvaluation.get('studentSignature')?.value; else fileProvided">
+              <div class="file-upload-container">
+                <label for="studentSignature" class="file-upload-label">
+                  <div class="file-details">
+                    <p class="file-title text-body-small-sb">Firma</p>
+                    <p class="file-name text-body-small-r">Cargar su firma en formato .png</p>
+                  </div>
+                  <input 
+                    type="file" 
+                    id="studentSignature" 
+                    formControlName="studentSignature" 
+                    hidden
+                    (change)="onSignatureFileSelected($event)" />
+                </label>
+                <div class="file-actions">
+                  <button 
+                    type="button" 
+                    class="button-upload button-actions button-border-radius"
+                    (click)="triggersSignatureFileUpload()"></button>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #fileProvided>
+              <div class="download-file-container">
+                <div class="file-details">
+                  <p class="file-title text-body-small-sb">Firma</p>
+                  <p class="file-name text-body-small-sb">
+                    {{ formEvaluation.get('studentSignature')?.value.name }}
+                  </p>
+                </div>
+                <div class="file-actions">
+                  <button 
+                    type="button" 
+                    class="button-actions button-delete button-radius-custom" 
+                    (click)="deleteFile()"></button>
+                  <button 
+                    type="button" 
+                    class="button-actions button-download" 
+                    (click)="downloadFile()"></button>
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </section>
+      <div class="mb-3"></div>
+      <!-- Botones: Guardar y Cancelar -->
+      <section>
+        <div class="row row-cols-auto justify-content-center">
+          <div class="col d-flex justify-content-center">
+            <button type="button" class="button-normal" (click)="cancelOption()">Cancelar</button>
+            <button type="button submit" class="button-normal" [disabled]="formEvaluation.invalid">
+              Guardar cambios
+            </button>
+          </div>
+        </div>
+      </section>
+    </form>
+  </section>
+</div>
+
+<shared-confirm-dialog (confirm)="onConfirmCancel($event)" [message]="messageConfirmCancel" [title]="messageTitle"></shared-confirm-dialog>

@@ -102,6 +102,21 @@
     border: 1px solid var(--blue);
 }
 
+.button-view {
+    border: none;
+    z-index: 1;
+    right: 0;
+    width: 54px;
+    height: 63px;
+    border-radius: 0px 8px 8px 0px;
+    background-color: var(--blue);
+    background-image: url(../assets/icons/buttons/view-icon.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
 .button-delete {
     background-image: url('../assets/icons/buttons/delete-icon.svg');
     background-size: 36px 36px !important;
@@ -218,6 +233,7 @@
 .input-text {
     padding-right: 30px !important;
 }
+
 
 .label-custom {
     transform: translateY(-50%) !important;

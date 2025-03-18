@@ -83,6 +83,7 @@ export class ResponsibilitiesEditEvaluationComponent {
     if (this.responsability && (this.selectedFile) && this.evaluation && this.currentUser) {
       sendSource = [{
         tipoFuente: "2",
+        tipoCalificacion: "DOCUMENTO",
         calificacion: parseFloat(this.evaluation),
         oidActividad: this.responsability.oidActividad,
         informeEjecutivo: ''

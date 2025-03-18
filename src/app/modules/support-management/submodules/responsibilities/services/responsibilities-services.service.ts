@@ -3,6 +3,8 @@ import { SmResponsibilitiesServicesService } from '../../../../../core/services/
 import { FuenteCreate } from '../../../../../core/models/modified/fuente-create.model';
 import { PagedResponse } from '../../../../../core/models/response/paged-response.model';
 import { ResponsabilidadResponse } from '../../../../../core/models/response/responsabilidad-response.model';
+import { SmActivitiesServicesService } from '../../../../../core/services/support-management/sm-activities-services.service';
+import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilitiesServicesService {
@@ -11,21 +13,33 @@ export class ResponsibilitiesServicesService {
     private paramsActivitiesFilterSignal: WritableSignal<{ activityName: string | null, activityType: string | null, evaluatorName: string | null, evaluatorRole: string | null }> = signal({ activityName: null, activityType: null, evaluatorName: null, evaluatorRole: null });
 
     private smResponsibilitiesServicesService = inject(SmResponsibilitiesServicesService);
+    
+    private smActivitiesServicesService = inject(SmActivitiesServicesService);
+
+    private umUsersServicesService = inject(UmUsersServicesService);
 
     setParamsActivitiesFilterSignal(activityName: string | null, activityType: string | null, evaluatorName: string | null, evaluatorRole: string | null) {
         this.paramsActivitiesFilterSignal.update(data => data = { activityName, activityType, evaluatorName, evaluatorRole });
     }
-
+    
     getParamsActivitiesFilterSignal() {
         return this.paramsActivitiesFilterSignal();
     }
-
+    
     setResponsibilitiesData(newData: PagedResponse<ResponsabilidadResponse>) {
         this.userResponsibilities.update(data => data = newData);
     }   
-
+    
     getResponsibilitiesData() {
         return this.userResponsibilities();
+    }
+
+    getUserById(userId: number){
+        return this.umUsersServicesService.getUserbyId(userId);
+    }
+    
+    getResponsibilitieById(responsibilitieId:number){
+        return this.smActivitiesServicesService.getActivityById(responsibilitieId);
     }
 
     getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page: number | null, totalPage: number | null) {
@@ -43,6 +57,8 @@ export class ResponsibilitiesServicesService {
     getDownloadReportFile(idSource: number, report:boolean) {
         return this.smResponsibilitiesServicesService.downloadReportFile(idSource, report);
     }
+
+    
 
 
 }

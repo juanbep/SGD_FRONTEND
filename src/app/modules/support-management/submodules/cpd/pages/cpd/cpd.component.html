@@ -26,7 +26,7 @@
                     <td>
                         <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" title="Actividades"></button>
                         <button class="button-table-email" (click)="openEmailModal()" title="Enviar email"></button>
-                        <button class="button-table-check" (click)="wordGenerator(teacher.oidUsuario,teacher)" title="Aprobar consolidado"></button>
+                        <button class="button-table-check" (click)="openAprobeConlidatedModalForm(teacher)" title="Aprobar consolidado"></button>
                     </td>
                 </tr>
             </tbody>
@@ -55,3 +55,4 @@
 </div>
 
 <shared-email></shared-email>
+<modal-cpd-info-form (infoCpd)="onOptionFormCpdInfo($event)"></modal-cpd-info-form>

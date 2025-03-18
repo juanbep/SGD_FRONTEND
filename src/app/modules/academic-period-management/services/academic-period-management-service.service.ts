@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { ApmAcademicPeriodManagementService } from '../../../core/services/academic-period-management/apm-academic-period-management-service.service';
-import { tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { PeriodoAcademicoResponse } from '../../../core/models/response/periodo-academico-response.model';
 import { PeriodoAcademicoCreate } from '../../../core/models/modified/periodo-academico-create.model';
 import { PagedResponse } from '../../../core/models/response/paged-response.model';
@@ -69,8 +69,13 @@ export class AcademicPeriodManagementService {
         return this.apmAcademicPeriodManagementService.activeAcademicPeriod().pipe(
             tap(academicPeriod => {
                 this._currentAcademicPeriod.set(academicPeriod.data);
-            })
+            }),
+            catchError(error => {
+                return of(error.error.mensaje)
+            }
+
+
         )
-    }
+    )}
 
 }

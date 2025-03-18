@@ -1,0 +1,111 @@
+<div
+  class="modal fade"
+  id="cpd-info-form"
+  data-bs-backdrop="static"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="header-container col">
+          <span class="title-three mx-3">Información de CPD</span>
+        </div>
+      </div>
+      <form [formGroup]="formCpd">
+        <div class="modal-body">
+          <section>
+            <div class="row">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom" 
+                  id="resolutionNumber"
+                  formControlName="resolutionNumber"
+                  placeholder="Numéro de resolución"
+                />
+                <label
+                  for="resolutionNumber"
+                  class="label-custom text-body-small-sb"
+                  >Número de resolución</label
+                >
+              </div>
+            </div>
+            <div class="mb-2"></div>
+            <div class="row">
+              <div class="col">
+                <div class="form-floating">
+                    <input
+                      type="text"
+                      class="form-control input-text text-body-custom"
+                      id="oficioNumber"
+                      formControlName="oficioNumber"
+                      placeholder="Número de oficio"
+                    />
+                    <label for="oficioNumber" class="label-custom text-body-small-sb">Número de oficio</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-floating">
+                    <input
+                      type="date"
+                      class="form-control input-date text-body-custom"
+                      id="oficioDate"
+                      formControlName="oficioDate"
+                      placeholder="Fecha de oficio"
+                    />
+                    <label for="oficioDate" class="label-custom text-body-small-sb" >Fecha de resolución</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2"></div>
+
+            <div class="row">
+                <div class="form-floating">
+                    <input
+                      type="date"
+                      class="form-control input-date text-body-custom"
+                      id="meetingCouncil"
+                      formControlName="meetingCouncil"
+                      placeholder="Reunión de sesión ordinaria del consejo"
+                    />
+                    <label for="meetingCouncil" class="label-custom text-body-small-sb">Fecha de resolución</label>
+                </div>
+            </div>
+            <div class="mb-2"></div>
+            <div class="row">
+                <div class="form-floating">
+                    <input
+                      type="text"
+                      class="form-control input-text text-body-custom"
+                      id="councilPresident"
+                      formControlName="councilPresident"
+                      placeholder="Presidente del consejo de facultad"
+                    />
+                    <label for="councilPresident" class="label-custom text-body-small-sb">Presidente del consejo de facultad</label>
+                </div>
+            </div>
+          </section>
+        </div>
+        <div class="modal-footer">
+          <div class="modal-buttons">
+            <button
+              type="button"
+              class="button-modal text-body-heavy"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button
+              type="submit"
+              class="button-modal text-body-heavy"
+              (click)="saveCpdInfo()"
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

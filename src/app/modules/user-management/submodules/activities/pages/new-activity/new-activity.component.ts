@@ -457,7 +457,7 @@ export class NewActivityComponent implements OnInit {
             },
             error: (error) => {
               this.messagesInfoService.showErrorMessage(
-                'Error al guardar la actividad',
+                error.error.mensaje,
                 'Error'
               );
             },

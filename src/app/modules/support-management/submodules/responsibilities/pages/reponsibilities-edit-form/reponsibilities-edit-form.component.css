@@ -1,0 +1,25 @@
+.edit-form-container {
+	/* ...existing styling similar a otros formularios... */
+	padding: 20px;
+	max-width: 600px;
+	margin: auto;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+.edit-form-container form div {
+	margin-bottom: 15px;
+}
+.buttons {
+	display: flex;
+	justify-content: space-between;
+}
+.button-normal {
+	/* ...existing button styles... */
+	padding: 8px 16px;
+	border: none;
+	background-color: var(--primary-color);
+	color: #fff;
+	cursor: pointer;
+	border-radius: 4px;
+}

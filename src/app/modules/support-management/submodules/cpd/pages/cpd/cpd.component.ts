@@ -1,10 +1,8 @@
 import {
   Component,
   inject,
-  Inject,
   OnInit,
   ViewChild,
-  viewChild,
 } from '@angular/core';
 import { CpdServicesService } from '../../services/cpd-services.service';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
@@ -21,6 +19,7 @@ import { PagedResponse } from '../../../../../../core/models/response/paged-resp
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 import { UsuarioConsolidadoCreadoResponse } from '../../../../../../core/models/response/usuarios-consolidado-creado-response.model';
+import { CpdInfoFormComponent } from '../../components/cpd-info-form/cpd-info-form.component';
 
 const TOTAL_PAGE = 10;
 const ID_ROL = '1';
@@ -34,12 +33,16 @@ const ID_ROL = '1';
     PaginatorComponent,
     RouterModule,
     UserFilterComponent,
-  ],
+    CpdInfoFormComponent
+],
   templateUrl: './cpd.component.html',
   styleUrl: './cpd.component.css',
 })
 export class CpdComponent implements OnInit {
+
   @ViewChild(EmailComponent) emailComponent: EmailComponent | null = null;
+
+  @ViewChild(CpdInfoFormComponent) cpdInfoFormComponent: CpdInfoFormComponent | null = null;
 
   private academicPeriodManagementService = inject(
     AcademicPeriodManagementService
@@ -60,6 +63,8 @@ export class CpdComponent implements OnInit {
   } = { nameUser: null, identification: null, category: null };
   public teacherByDepartment: PagedResponse<UsuarioConsolidadoCreadoResponse> | null =
     null;
+
+  public userSelectedToCreateRelution: UsuarioConsolidadoCreadoResponse | null = null;
 
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
@@ -179,22 +184,40 @@ export class CpdComponent implements OnInit {
     }
   }
 
+  openAprobeConlidatedModalForm(usuarioSelected: UsuarioConsolidadoCreadoResponse) {
+    if(this.cpdInfoFormComponent){
+      this.userSelectedToCreateRelution = usuarioSelected;
+      this.cpdInfoFormComponent.open();
+    }
+  }
+
+  onOptionFormCpdInfo(event: {resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string}){
+    if(this.userSelectedToCreateRelution){
+      this.wordGenerator(this.userSelectedToCreateRelution, event);
+    }
+  }
+
   wordGenerator(
-    teacherId: number,
-    teacherInfo: UsuarioConsolidadoCreadoResponse
+    teacherInfo: UsuarioConsolidadoCreadoResponse,
+    infoConsolidated: {resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string}
   ) {
     let infoTeacherConsolidated: DetalleUsuarioConsolidadoResponse | null =
       null;
     this.cpdServiceServices
-      .getInformationTeacherConsolidatedResponse(teacherId)
+      .getInformationTeacherConsolidatedResponse(teacherInfo.oidUsuario)
       .subscribe({
         next: (response) => {
           infoTeacherConsolidated = response.data;
+          this.cpdInfoFormComponent?.close();
           if (this.academicPeriodActive)
             this.cpdWordGeneratorService.generateWordDocument(
               infoTeacherConsolidated,
               teacherInfo,
-              this.academicPeriodActive
+              this.academicPeriodActive,
+              infoConsolidated
+            );
+            this.messagesInfoService.showSuccessMessage(
+              'Documento generado correctamente','Éxito'
             );
         },
         error: (error) => {

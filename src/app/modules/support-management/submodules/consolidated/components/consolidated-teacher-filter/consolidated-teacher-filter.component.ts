@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
-import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 
@@ -15,7 +14,6 @@ import { ConsolidatedServicesService } from '../../services/consolidated-service
 })
 export class ConsolidatedTeacherFilterComponent implements OnInit {
   private formBuilder: FormBuilder = inject(FormBuilder);
-  private router = inject(ActivatedRoute);
   private ConsolidatedServicesService = inject(ConsolidatedServicesService);
   private cataglogDataService = inject(CatalogDataService);
 

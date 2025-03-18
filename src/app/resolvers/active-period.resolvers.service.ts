@@ -10,8 +10,9 @@ export class ActivePeriodResolvers implements Resolve<any> {
 
     private activePeriodManagementService: AcademicPeriodManagementService = inject(AcademicPeriodManagementService);
 
-    resolve(): Observable<SimpleResponse<PeriodoAcademicoResponse>> {
+    resolve(): Observable<SimpleResponse<PeriodoAcademicoResponse>>  | null {
         return this.activePeriodManagementService.getActiveAcademicPeriod();
     }
+
 
 }

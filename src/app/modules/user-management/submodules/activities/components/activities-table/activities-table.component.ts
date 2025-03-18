@@ -69,7 +69,7 @@ export class ActivitiesTableComponent implements OnInit {
             }
           },
           error: (error) => {
-            this.messageToast.showErrorMessage('Error al recuperar las actividades del usuario', 'Error');
+            this.messageToast.showErrorMessage(error.error.mensaje, 'Error');
             this.filterParams = null;
           }
         }

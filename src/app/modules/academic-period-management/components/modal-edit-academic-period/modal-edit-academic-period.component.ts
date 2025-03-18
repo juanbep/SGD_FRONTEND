@@ -8,6 +8,8 @@ import { PeriodoAcademicoResponse } from '../../../../core/models/response/perio
 import { PeriodoAcademicoCreate } from '../../../../core/models/modified/periodo-academico-create.model';
 declare var bootstrap: any;
 
+const PAGE_SIZE = 10;
+
 @Component({
   selector: 'academic-period-management-modal-edit-academic-period',
   standalone: true,
@@ -21,7 +23,6 @@ declare var bootstrap: any;
 export class ModalEditAcademicPeriodComponent {
 
   @Input() currentPage: number = 1;
-  @Input() size: number = 1;
 
   private formBuilder: FormBuilder = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
@@ -166,10 +167,9 @@ export class ModalEditAcademicPeriodComponent {
       )
     }
   }
-
   
   recoverAcademicPeriods(): void {
-    this.academicPeriodManagementService.getAllAcademicPeriods(this.currentPage-1, this.size).subscribe((response) => {
+    this.academicPeriodManagementService.getAllAcademicPeriods(this.currentPage-1, PAGE_SIZE).subscribe((response) => {
       this.academicPeriodManagementService.setAcademicPeriods(response.data);
     })
   }

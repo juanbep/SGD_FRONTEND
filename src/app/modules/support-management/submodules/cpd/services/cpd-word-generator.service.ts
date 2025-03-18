@@ -21,10 +21,12 @@ export class CpdWordGeneratorService {
     public currentDateYear: string | null = null;
     public startPeriodDate: string | null = null;
     public endPeriodDate: string | null = null;
+    public oficioDate: string | null = null;
+    public meetingCouncil: string | null = null;
     public currenAcademicPeriod: PeriodoAcademicoResponse | null = null;
     public teacherInformationConsolidatedResponse: DetalleUsuarioConsolidadoResponse | null = null;
 
-    async generateWordDocument(teacherConsolidated: DetalleUsuarioConsolidadoResponse, teacherInfo: UsuarioConsolidadoCreadoResponse, currenAcademicPeriod: PeriodoAcademicoResponse) {
+    async generateWordDocument(teacherConsolidated: DetalleUsuarioConsolidadoResponse, teacherInfo: UsuarioConsolidadoCreadoResponse, currenAcademicPeriod: PeriodoAcademicoResponse, infoConsolidated:{resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string}) {
 
         const imageData = await this.getImage('assets/images/logo-unicauca-2.png');
 
@@ -33,6 +35,8 @@ export class CpdWordGeneratorService {
         this.currentDateYear = new Date().toLocaleDateString( 'es-ES', { year: 'numeric' });
         this.startPeriodDate = this.changeDateFormat(new Date(currenAcademicPeriod.fechaInicio));
         this.endPeriodDate = this.changeDateFormat(new Date(currenAcademicPeriod.fechaFin));
+        this.oficioDate = this.changeDateFormat(new Date(infoConsolidated.oficioDate));
+        this.meetingCouncil = this.changeDateFormat(new Date(infoConsolidated.meetingCouncil));
 
         this.teacherInformationConsolidatedResponse = teacherConsolidated;
         
@@ -78,7 +82,7 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.CENTER,
                         children: [
                             new TextRun({
-                                text: 'RESOLUCIÓN NUMERO 8.4.3-90.2/187 DE 2023',
+                                text: infoConsolidated.resolutionNumber,
                                 bold: true,
                                 size: 28
                             })
@@ -222,7 +226,7 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.JUSTIFIED,
                         children: [
                             new TextRun({
-                                text: `El Comité de Personal Docente de la Facultad de Ingeniería Electrónica y Telecomunicaciones, después de realizar el proceso de consulta y procesamiento de la información obtenida de las distintas fuentes de evaluación docente, mediante oficio No. 8.4.3-1.32/058 del 1° de junio de 2023, presentó ante el Consejo de Facultad la propuesta de calificación de cada uno de los profesores de planta adscritos a esta unidad académica, para el período comprendido entre el ${this.startPeriodDate} y el ${this.endPeriodDate}.`,
+                                text: `El Comité de Personal Docente de la Facultad de Ingeniería Electrónica y Telecomunicaciones, después de realizar el proceso de consulta y procesamiento de la información obtenida de las distintas fuentes de evaluación docente, mediante oficio No. ${infoConsolidated.oficioNumber} del ${this.oficioDate}, presentó ante el Consejo de Facultad la propuesta de calificación de cada uno de los profesores de planta adscritos a esta unidad académica, para el período comprendido entre el ${this.startPeriodDate} y el ${this.endPeriodDate}.`,
                                 size: 24
                             }),
                         ],
@@ -238,7 +242,7 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.JUSTIFIED,
                         children: [
                             new TextRun({
-                                text: 'El Consejo de Facultad reunido en sesión ordinaria el día 2 de junio de 2023 decidió aprobar la propuesta de calificación presentada por el Comité de Personal Docente de la Facultad de Ingeniería Electrónica y Telecomunicaciones, para cada uno de los profesores de planta adscritos a esta unidad académica, y expedir el respectivo acto administrativo de evaluación de experiencia docente calificada.',
+                                text: `El Consejo de Facultad reunido en sesión ordinaria el día ${this.meetingCouncil} decidió aprobar la propuesta de calificación presentada por el Comité de Personal Docente de la Facultad de Ingeniería Electrónica y Telecomunicaciones, para cada uno de los profesores de planta adscritos a esta unidad académica, y expedir el respectivo acto administrativo de evaluación de experiencia docente calificada.`,
                                 size: 26
                             }),
                         ],
@@ -348,7 +352,7 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.CENTER,
                         children: [
                             new TextRun({
-                                text: 'ALEJANDRO TOLEDO TOVAR',
+                                text: infoConsolidated.councilPresident,
                                 size: 24,
                             })
                         ]
