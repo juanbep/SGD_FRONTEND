@@ -17,10 +17,13 @@ import { ActividadResponse } from '../../../../../../core/models/response/activi
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { FuenteEstudianteFormulario } from '../../../../../../core/models/modified/fuente-estudiante-formulario.model';
+import { CatalogServicesService } from '../../../../../../core/services/catalog-services.service';
+import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
+import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
-
 
 @Component({
   selector: 'app-responsabilitie-student-form',
@@ -30,7 +33,6 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
   styleUrl: './responsabilitie-student-form.component.css',
 })
 export class ResponsabilitieStudentFormComponent implements OnInit {
-
   @ViewChild(ConfirmDialogComponent)
   confirmDialog: ConfirmDialogComponent | null = null;
 
@@ -47,6 +49,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
   private sanitizer: DomSanitizer = inject(DomSanitizer);
   private menssagesInfoService = inject(MessagesInfoService);
   private router = inject(Router);
+  private catalogDataService = inject(CatalogDataService);
 
   public totalAverage: number | null = null;
   public allCompleted: boolean = false;
@@ -56,10 +59,16 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
   public evaluado: UsuarioResponse | null = null;
   public evaluador: UsuarioResponse | null = null;
   public currentDate = new Date();
+  public selectedFiles: {
+    signature: File | null;
+    reportDocument: File | null;
+  }= { signature: null, reportDocument: null };
+
+  public formPdf: File | null = null;
+  public catalogDataResponse: CatalogDataResponse | null = null;
 
   public messageTitle: string = MESSAGE_TITLE;
-	public messageConfirmCancel: string = MESSAGE_CONFIRM_CANCEL;
-
+  public messageConfirmCancel: string = MESSAGE_CONFIRM_CANCEL;
 
   formEvaluation: FormGroup = this.formBuilder.group({
     degreeWorkTitle: [null, [Validators.required]],
@@ -141,6 +150,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.catalogDataResponse = this.catalogDataService.catalogDataSignal;
     this.isQuilificationChanged();
     const id = this.activatedRoute.snapshot.params['id'];
     this.recoverResponsibility(id);
@@ -326,11 +336,10 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       const reader = new FileReader();
+      this.selectedFiles.signature = file;
       reader.onload = () => {
         const base64String = reader.result?.toString() || '';
         this.formEvaluation.get('studentSignature')?.setValue(base64String);
-
-        console.log(base64String);
       };
       reader.readAsDataURL(file);
     }
@@ -367,7 +376,8 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
     );
   }
 
-  async generatePdfPreview() {
+ generatePdfPreview() {
+
     const studentInfo = {
       name: this.evaluador?.nombres + ' ' + this.evaluador?.apellidos,
       id: this.evaluado?.identificacion,
@@ -378,11 +388,14 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
     };
 
     const pdfBase64 =
-      await this.responsibilityPdfGeneratorService.generatePdfDocument(
+      this.responsibilityPdfGeneratorService.generatePdfDocument(
         this.formEvaluation.value,
         studentInfo
       );
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfBase64);
+    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfBase64.base64);
+    this.formPdf = pdfBase64.file;
+
+    this.selectedFiles.reportDocument = this.formPdf;
   }
 
   saveEvaluation() {
@@ -394,14 +407,82 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
       );
       return;
     }
+
+    this.generatePdfPreview();
+
+    const fuenteEstudianteFormulario: FuenteEstudianteFormulario = {
+      oidFuente: this.responsibility?.fuentes[1].oidFuente || 0,
+      tipoCalificacion: 'EN_LINEA',
+      observacion: this.formEvaluation.get('observations')?.value || '',
+      oidEstadoEtapaDesarrollo: this.formEvaluation.get('developmentStage')?.value,
+      encuesta: {
+        nombre: 'Encuesta',
+      },
+      preguntas: [
+        {
+          oidPregunta: 1,
+          respuesta: Number(this.formEvaluation.get('qualification_1')?.value)
+        },
+        {
+          oidPregunta: 2,
+          respuesta: Number(this.formEvaluation.get('qualification_2')?.value)
+        },
+        {
+          oidPregunta: 3,
+          respuesta: Number(this.formEvaluation.get('qualification_3')?.value)
+        },
+        {
+          oidPregunta: 4,
+          respuesta: Number(this.formEvaluation.get('qualification_4')?.value)
+        },
+        {
+          oidPregunta: 5,
+          respuesta: Number(this.formEvaluation.get('qualification_5')?.value)
+        },
+        {
+          oidPregunta: 6,
+          respuesta: Number(this.formEvaluation.get('qualification_6')?.value),
+        },
+        {
+          oidPregunta: 7,
+          respuesta: Number(this.formEvaluation.get('qualification_7')?.value),
+        },
+        {
+          oidPregunta: 8,
+          respuesta: Number(this.formEvaluation.get('qualification_8')?.value),
+        },
+      ],
+    };
+
+    this.responsibilitiesServicesService
+      .saveResponibilityFormStundent(
+        fuenteEstudianteFormulario,
+        this.selectedFiles.reportDocument || new File([], ''),
+        this.selectedFiles.signature || new File([], '')
+      )
+      .subscribe({
+        next: (response) => {
+          this.menssagesInfoService.showSuccessMessage(
+            'Evaluación guardada correctamente',
+            'Éxito'
+          );
+          this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
+        },
+        error: (error) => {
+          this.menssagesInfoService.showErrorMessage(
+            error.error.mensaje,
+            'Error'
+          );
+        },
+      });
   }
 
   goBack() {
-    if(this.confirmDialog) this.confirmDialog?.open();
+    if (this.confirmDialog) this.confirmDialog?.open();
   }
 
   onConfirmCancel(confirm: boolean) {
     if (confirm)
-    this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
+      this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
   }
 }

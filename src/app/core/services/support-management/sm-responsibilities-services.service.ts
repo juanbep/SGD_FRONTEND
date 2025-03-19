@@ -6,6 +6,7 @@ import { ResponsabilidadResponse } from '../../models/response/responsabilidad-r
 import { PagedResponse } from '../../models/response/paged-response.model';
 import { FuenteCreate } from '../../models/modified/fuente-create.model';
 import { SimpleResponse } from '../../models/response/simple-response.model';
+import { FuenteEstudianteFormulario } from '../../models/modified/fuente-estudiante-formulario.model';
 
 @Injectable({
     providedIn: 'root'
@@ -55,6 +56,20 @@ export class SmResponsibilitiesServicesService {
     }
 
     /*
+        * Method to get the responsibility by id
+        * @param id:number
+        * @returns Observable<Responsabilidad>
+        */
+
+    saveResponibilityFormStundent(fuenteEstudianteFormulario: FuenteEstudianteFormulario, reportDocument: File,  signature: File):Observable<any> {
+        const formData = new FormData();
+        formData.append('data', JSON.stringify(fuenteEstudianteFormulario));
+        formData.append('documentoFuente', reportDocument);
+        formData.append('firmaEstudiante', signature);
+        return this.httpClient.post(`${this.baseUrl}/api/evaluacion-estudiante`, formData, { responseType: 'text' });
+    }
+
+    /*
         * Method to download the file source
         * @param idSource:number
         * @returns Observable<Blob>
@@ -76,5 +91,6 @@ export class SmResponsibilitiesServicesService {
         return this.httpClient.get(`${this.baseUrl}/api/fuente/download/${idSource}`, { params, responseType: 'blob' });
       }
       
+
 
 }

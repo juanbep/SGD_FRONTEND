@@ -2,6 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
+import { CatalogDataResponse } from '../../../../../core/models/catalogData.interface';
+import { CatalogDataService } from '../../../../../shared/services/catalogData.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,8 +11,16 @@ import { autoTable } from 'jspdf-autotable';
 export class ResponsibilityPdfGeneratorService {
   private httpClient = inject(HttpClient);
 
-  async generatePdfDocument(formData: any, studentInfo: any): Promise<string> {
-    const logoBase64 = await this.getBase64ImageFromURL(
+  private catalogDataService = inject(CatalogDataService);
+
+  public cataloDataResponse: CatalogDataResponse | null =
+    this.catalogDataService.catalogDataSignal;
+
+  generatePdfDocument(
+    formData: any,
+    studentInfo: any
+  ): { base64: string; file: File } {
+    const logoBase64 = this.getBase64ImageFromURL(
       'assets/images/logo-unicauca-2.png'
     );
 
@@ -45,9 +55,24 @@ export class ResponsibilityPdfGeneratorService {
     autoTable(doc, {
       startY: y,
       body: [
-        ['Fecha de Evaluación:', studentInfo.evaluationDate || '', 'Etapa de desarrollo', formData.developmentStage || ''],
-        ['Nombre del director:', studentInfo.directorName || '', 'Departamento:', studentInfo.department || ''],
-        ['Nombre del estudiante:', studentInfo.name || '', 'Código:', studentInfo.id || ''],
+        [
+          'Fecha de Evaluación:',
+          studentInfo.evaluationDate || '',
+          'Etapa de desarrollo',
+          this.developmentStageName(formData.developmentStage) || '',
+        ],
+        [
+          'Nombre del director:',
+          studentInfo.directorName || '',
+          'Departamento:',
+          studentInfo.department || '',
+        ],
+        [
+          'Nombre del estudiante:',
+          studentInfo.name || '',
+          'Código:',
+          studentInfo.id || '',
+        ],
         ['Título del trabajo de grado:', formData.degreeWorkTitle || '', ''],
       ],
       theme: 'grid',
@@ -142,7 +167,7 @@ export class ResponsibilityPdfGeneratorService {
     doc.setFontSize(12);
     doc.text('Firma:', 10, y);
     if (formData.studentSignature) {
-      doc.addImage(formData.studentSignature, 'PNG', 30, y-10, 30, 30);
+      doc.addImage(formData.studentSignature, 'PNG', 30, y - 10, 30, 30);
       y += 50;
     } else {
       doc.line(10, y + 10, 80, y + 10);
@@ -151,8 +176,11 @@ export class ResponsibilityPdfGeneratorService {
       y += 30;
     }
 
-    // Convertir a base64
-    return doc.output('datauristring');
+    // Convertir a base64 y blob
+    const base64 = doc.output('datauristring');
+    const blob = doc.output('blob');
+    const file = new File([blob], 'document.pdf', { type: 'application/pdf' });
+    return { base64, file };
   }
 
   // Función auxiliar para obtener el equivalente cualitativo según la calificación
@@ -173,5 +201,14 @@ export class ResponsibilityPdfGeneratorService {
         reader.readAsDataURL(blob);
       });
     });
+  }
+
+  private developmentStageName(developmentStage: string): string {
+    const nameDevelopmentStage =
+      this.cataloDataResponse?.estadoEtapaDesarrollo.find(
+        (element) => element.oidEstadoEtapaDesarrollo.toString() === developmentStage
+      )?.nombre;
+
+    return nameDevelopmentStage || '';
   }
 }

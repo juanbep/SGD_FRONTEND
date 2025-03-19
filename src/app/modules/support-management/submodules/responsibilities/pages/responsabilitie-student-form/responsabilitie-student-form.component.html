@@ -79,9 +79,12 @@
                 >Título del trabajo de grado</label
               >
             </div>
-            <span *ngIf="isInvalidField('degreeWorkTitle')" class="error-message text-body-small-r ms-1">
-              {{getFieldError('degreeWorkTitle')}}
-          </span>
+            <span
+              *ngIf="isInvalidField('degreeWorkTitle')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("degreeWorkTitle") }}
+            </span>
           </div>
         </div>
       </section>
@@ -101,10 +104,14 @@
                 formControlName="developmentStage"
               >
                 <option [ngValue]="null" selected>Seleccione una opción</option>
-                <option value="Formulación">Formulación</option>
-                <option value="Revisión">Revisión</option>
-                <option value="Ejecución">Ejecución</option>
-                <option value="Finalizado">Finalizado</option>
+                <option
+                  *ngFor="
+                    let developmentStage of catalogDataResponse?.estadoEtapaDesarrollo
+                  "
+                  value="{{ developmentStage.oidEstadoEtapaDesarrollo }}"
+                >
+                  {{ developmentStage.nombre | titlecase }}
+                </option>
               </select>
               <label
                 class="label-custom text-body-small-sb"
@@ -122,9 +129,12 @@
                 Etapa de desarrollo</label
               >
             </div>
-            <span *ngIf="isInvalidField('developmentStage')" class="error-message text-body-small-r ms-1">
-              {{getFieldError('developmentStage')}}
-          </span>
+            <span
+              *ngIf="isInvalidField('developmentStage')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("developmentStage") }}
+            </span>
           </div>
         </div>
       </section>
@@ -522,6 +532,7 @@
                 </label>
                 <div class="file-actions">
                   <button
+                    type="button"
                     class="button-upload button-actions button-border-radius"
                     (click)="triggersSignatureFileUpload()"
                   ></button>
@@ -538,19 +549,24 @@
                 </div>
                 <div class="file-actions">
                   <button
+                    type="button"
                     class="button-actions button-delete button-radius-custom"
                     (click)="deleteFile()"
                   ></button>
                   <button
+                    type="button"
                     class="button-actions button-download"
                     (click)="downloadFile()"
                   ></button>
                 </div>
               </div>
             </ng-template>
-            <span *ngIf="isInvalidField('studentSignature')" class="error-message text-body-small-r ms-1">
-              {{getFieldError('studentSignature')}}
-          </span>
+            <span
+              *ngIf="isInvalidField('studentSignature')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("studentSignature") }}
+            </span>
           </div>
         </div>
       </section>
@@ -566,6 +582,7 @@
           </div>
           <div class="file-actions">
             <button
+              type="button"
               class="button-actions button-view"
               (click)="generatePdfPreview()"
             ></button>
@@ -576,7 +593,9 @@
       <section>
         <div class="row row-cols-auto justify-content-center">
           <div class="col d-flex justify-content-center">
-            <button type="button" class="button-normal" (click)="goBack()" >Cancelar</button>
+            <button type="button" class="button-normal" (click)="goBack()">
+              Cancelar
+            </button>
             <button type="button submit" class="button-normal">Guardar</button>
           </div>
         </div>
@@ -590,4 +609,7 @@
 </div>
 
 <shared-confirm-dialog
-(confirm)="onConfirmCancel($event)" [title]="messageTitle" [message]="messageConfirmCancel" ></shared-confirm-dialog>
+  (confirm)="onConfirmCancel($event)"
+  [title]="messageTitle"
+  [message]="messageConfirmCancel"
+></shared-confirm-dialog>

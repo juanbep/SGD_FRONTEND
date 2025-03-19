@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input } from '@angular/core';
+import { Component, effect, inject, Input, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesUploadEvaluationComponent } from '../responsibilities-upload-evaluation/responsibilities-upload-evaluation.component';
 import { ResponsibilitiesViewEvaluationComponent } from '../responsibilities-view-evaluation/responsibilities-view-evaluation.component';
@@ -10,6 +10,7 @@ import { PagedResponse } from '../../../../../../core/models/response/paged-resp
 import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { Router } from '@angular/router';
+import { ReponsibilitiesViewEvaluationFormComponent } from '../reponsibilities-view-evaluation-form/reponsibilities-view-evaluation-form.component';
 
 const PAGE_SIZE = 10;
 
@@ -22,11 +23,16 @@ const PAGE_SIZE = 10;
     ResponsibilitiesViewEvaluationComponent,
     ResponsibilitiesEditEvaluationComponent,
     PaginatorComponent,
-  ],
+    ReponsibilitiesViewEvaluationFormComponent
+],
   templateUrl: './responsibilities-table.component.html',
   styleUrl: './responsibilities-table.component.css',
 })
 export class ResponsibilitiesTableComponent {
+
+  @ViewChild(ReponsibilitiesViewEvaluationFormComponent)
+  public viewEvaluationFormComponent: ReponsibilitiesViewEvaluationFormComponent | null = null;
+
   @Input()
   currentUser: UsuarioResponse | null = null;
 
@@ -126,13 +132,24 @@ export class ResponsibilitiesTableComponent {
   }
 
   public openModalView(responsability: ResponsabilidadResponse) {
-    this.openModalViewSelected = !this.openModalViewSelected;
-    this.resposabilitySelected = responsability;
+    if(responsability.fuentes[1].tipoCalificacion === 'DOCUMENTO'){
+      this.openModalViewSelected = !this.openModalViewSelected;
+      this.resposabilitySelected = responsability;
+    }else{
+      this.viewEvaluationFormComponent? this.viewEvaluationFormComponent.open() : null;
+    }
   }
 
   public openModalEdit(responsability: ResponsabilidadResponse) {
-    this.openModalEditSelected = !this.openModalEditSelected;
-    this.resposabilitySelected = responsability;
+    if(responsability.fuentes[1].tipoCalificacion === 'DOCUMENTO'){
+      this.openModalEditSelected = !this.openModalEditSelected;
+      this.resposabilitySelected = responsability;
+    }else{
+      this.router.navigate([
+        './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-estudiante', 
+        responsability.oidActividad
+      ]);
+    }
   }
 
   public closeModalView(event: boolean) {

@@ -48,7 +48,7 @@
             id="button-table"
             (click)="openFormEvaluation(responsability.oidActividad)" 
           >
-          <img src="assets/icons/tables/icon-form.svg" alt="iconoformularion evaluación" title="Formulario de evalaución">
+          <img src="assets/icons/tables/icon-form.svg" alt="iconoformularion evaluación" title="Formulario de evalución">
         </button>
           <button
             *ngIf="responsability.fuentes[1].estadoFuente == 'DILIGENCIADO'"
@@ -144,3 +144,5 @@
     [totalPages]="responsabilities?.totalPages || 1"
   ></shared-paginator>
 </section>
+
+<modal-reponsibilities-view-evaluation-form></modal-reponsibilities-view-evaluation-form>

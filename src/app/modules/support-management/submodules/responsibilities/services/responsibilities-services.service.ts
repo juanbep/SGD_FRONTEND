@@ -5,6 +5,7 @@ import { PagedResponse } from '../../../../../core/models/response/paged-respons
 import { ResponsabilidadResponse } from '../../../../../core/models/response/responsabilidad-response.model';
 import { SmActivitiesServicesService } from '../../../../../core/services/support-management/sm-activities-services.service';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
+import { FuenteEstudianteFormulario } from '../../../../../core/models/modified/fuente-estudiante-formulario.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilitiesServicesService {
@@ -48,6 +49,10 @@ export class ResponsibilitiesServicesService {
 
     saveResponsibilityEvaluation(file: File, observation: string, source: FuenteCreate[]) {
         return this.smResponsibilitiesServicesService.saveResponsibilityEvaluation(file, observation, source)
+    }
+
+    saveResponibilityFormStundent(fuenteEstudianteFormulario: FuenteEstudianteFormulario, reportDocument: File,  signature: File) {
+        return this.smResponsibilitiesServicesService.saveResponibilityFormStundent(fuenteEstudianteFormulario, reportDocument, signature);
     }
 
     getdownloadSourceFile(idSource: number) {
