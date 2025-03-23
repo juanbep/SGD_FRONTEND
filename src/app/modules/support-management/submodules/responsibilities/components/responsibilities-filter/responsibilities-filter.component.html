@@ -1,11 +1,11 @@
 <div class="line-filter"></div>
 
-<form [formGroup]="formFilter" (ngSubmit)="searchActivities()">
+<form [formGroup]="formFilter" (ngSubmit)="searchActivities()" >
     <div class="row">
         <div class="col-1" style="width: 50px;">
             <img src="assets/icons/tables/icon-filter.svg" alt="">
         </div>
-        <div class="col">
+        <div class="col" >
             <div class="row row-cols-auto">
                 <!-- Tipo de actividad -->
                 <div class="col m-1">
@@ -21,9 +21,9 @@
                     <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre actividad"
                         formControlName="activityName">
                 </div>
-                <!-- Nombre evaluador -->
+                <!-- Nombre evaluado -->
                 <div class="col m-1">
-                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre evaluador" formControlName="evaluatorName">  
+                    <input type="text" id="nameUser" class="input-normal-filter" placeholder="Nombre evaluado" formControlName="evaluatorName">  
                 </div>
                 <!-- Rol evaluador -->
                 <div class="col m-1">
@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-5">
             <div class="row row-cols-auto">
                 <div class="col">
                     <button type="submit" class="button-normal">Buscar</button>

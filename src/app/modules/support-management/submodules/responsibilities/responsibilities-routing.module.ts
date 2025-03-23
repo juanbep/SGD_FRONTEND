@@ -15,7 +15,7 @@ export const routes: Routes = [
       component: ResponsabilitieStudentFormComponent
     },
     {
-      path: 'formulario-evaluacion-docente-estudiante-editar',
+      path: 'formulario-evaluacion-docente-estudiante-editar/:id',
       component: ReponsibilitiesEditFormComponent
     }
 ]

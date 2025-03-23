@@ -8,6 +8,7 @@ import { ActividadResponse } from '../../../../../../core/models/response/activi
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { Router } from '@angular/router';
 
 const PAGE_SIZE = 10;
 
@@ -53,6 +54,8 @@ export class ActivitiesTableComponent {
   } | null = null;
 
   private activitiesServices = inject(ActivitiesServicesService);
+
+  private router = inject(Router);
 
   activitiesEffect = effect(() => {
     this.filterParams =
@@ -106,6 +109,10 @@ export class ActivitiesTableComponent {
 
   public closeModalView(event: boolean) {
     this.openModalViewSelected = !event;
+  }
+
+  public openFormEvaluation(responsabiltyId: number){
+    this.router.navigate(['/app/gestion-soportes/actividades/formulario-autoevaluacion', responsabiltyId]);
   }
 
   public reloadActivities() {

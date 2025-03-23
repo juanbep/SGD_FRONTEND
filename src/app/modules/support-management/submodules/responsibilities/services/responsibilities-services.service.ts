@@ -26,6 +26,11 @@ export class ResponsibilitiesServicesService {
     getParamsActivitiesFilterSignal() {
         return this.paramsActivitiesFilterSignal();
     }
+
+    getInfoResponsibilityByForm(idSource: number){
+        return this.smResponsibilitiesServicesService.getInfoResponsibilityByForm(idSource);
+    }
+    
     
     setResponsibilitiesData(newData: PagedResponse<ResponsabilidadResponse>) {
         this.userResponsibilities.update(data => data = newData);

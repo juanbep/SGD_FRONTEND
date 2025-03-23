@@ -35,7 +35,7 @@
         </td>
         <td class="text-center">
           <button
-            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE'"
+            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' "
             class="button-table"
             id="button-table"
             (click)="openModalUpload(responsability)"
@@ -43,7 +43,7 @@
             <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload" title="Formulario carga de evaluación docente"/>
           </button>
           <button
-            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE'"
+            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.nombre === 'TRABAJO DE DOCENCIA' || responsability.tipoActividad.nombre === 'TRABAJO DE INVESTIGACIÓN')"
             class="button-table"
             id="button-table"
             (click)="openFormEvaluation(responsability.oidActividad)" 

@@ -11,7 +11,7 @@ export class CurrentUserResolverService implements Resolve<any>{
 
     constructor() { }
 
-   resolve():Observable<any> {
+   resolve():Observable<any> | null {
        return this.authServiceService.getUserInfo();
    }
     

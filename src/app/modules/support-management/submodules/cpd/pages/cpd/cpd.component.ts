@@ -20,7 +20,8 @@ import { PeriodoAcademicoResponse } from '../../../../../../core/models/response
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 import { UsuarioConsolidadoCreadoResponse } from '../../../../../../core/models/response/usuarios-consolidado-creado-response.model';
 import { CpdInfoFormComponent } from '../../components/cpd-info-form/cpd-info-form.component';
-
+import { UsersServiceService } from '../../../../../user-management/submodules/users/services/users-service.service';
+import { ROLES } from '../../../../../../core/enums/domain-enums';
 const TOTAL_PAGE = 10;
 const ID_ROL = '1';
 
@@ -51,6 +52,7 @@ export class CpdComponent implements OnInit {
   private cpdServiceServices = inject(CpdServicesService);
   private messagesInfoService = inject(MessagesInfoService);
   private cpdWordGeneratorService = inject(CpdWordGeneratorService);
+  private userService = inject(UsersServiceService);
 
   public academicPeriodActive: PeriodoAcademicoResponse | null = null;
   public currentPage: number = 1;
@@ -65,9 +67,11 @@ export class CpdComponent implements OnInit {
     null;
 
   public userSelectedToCreateRelution: UsuarioConsolidadoCreadoResponse | null = null;
+  public bossDepartment: UsuarioResponse | null = null;
 
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
+    this.recoverBossDepartment();
     this.academicPeriodActive =
       this.academicPeriodManagementService.currentAcademicPeriodValue;
     if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
@@ -142,6 +146,32 @@ export class CpdComponent implements OnInit {
         ID_ROL
       );
     }
+  }
+
+  recoverBossDepartment() {
+    this.userService.getAllUsersByParams(
+      0,
+      3,
+      '',
+      '',
+      '',
+      this.currentUser?.usuarioDetalle.departamento || '',
+      '',
+      '',
+      '',
+      '',
+      ROLES.JEFE_DE_DEPARTAMENTO.toString(),
+      '1'
+    )
+    .subscribe({
+      next: (response) => {
+        this.bossDepartment = response.data.content[0];
+       
+      },
+      error: (error) => {
+        this.bossDepartment = null;
+      },
+    });
   }
 
   openEmailModal() {

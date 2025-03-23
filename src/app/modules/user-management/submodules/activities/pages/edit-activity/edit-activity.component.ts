@@ -18,6 +18,7 @@ import { PagedResponse } from '../../../../../../core/models/response/paged-resp
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { ActividadCreate } from '../../../../../../core/models/modified/actividad-create.model';
+import { TIPO_ACTIVIDADES, ROLES } from '../../../../../../core/enums/domain-enums';
 
 @Component({
   selector: 'app-edit-activity',
@@ -42,10 +43,11 @@ export class EditActivityComponent implements OnInit {
   private messagesInfoService = inject(MessagesInfoService);
   private catalogDataService = inject(CatalogDataService);
 
-  public idUserParam: number | null = null;
+  public idActivityParam: number | null = null;
   public activity: ActividadResponse | null = null;
   public catalogResponse: CatalogDataResponse | null = null;
   public evaluator: UsuarioResponse | null = null;
+  public userByIdResponse: UsuarioResponse | null = null;
 
   public showEvaluatorIdDropdown: boolean = false;
   public showEvaluatorNameDropdown: boolean = false;
@@ -93,21 +95,31 @@ export class EditActivityComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.idUserParam = this.activatedRoute.snapshot.params['id'];
+    this.idActivityParam = this.activatedRoute.snapshot.params['id'];
     this.catalogResponse = this.catalogDataService.catalogDataSignal;
     this.recoverInfoActivity();
     this.onChangeInfoEvaluator();
+
+  }
+
+  recoverUserById(id: number | null): void {
+    if (id) {
+      this.activitiesManagementService.getUserById(id).subscribe((response) => {
+        this.userByIdResponse = response.data;
+      });
+    }
   }
 
   recoverInfoActivity() {
     this.enableFields();
-    if (this.idUserParam) {
+    if (this.idActivityParam) {
       this.activitiesManagementService
-        .getActivityById(this.idUserParam)
+        .getActivityById(this.idActivityParam)
         .subscribe({
           next: (response) => {
             this.activity = response;
             this.setDefaultValues();
+            this.recoverUserById(this.activity.oidEvaluado);
           },
           error: (error) => {
             this.messagesInfoService.showErrorMessage(
@@ -191,129 +203,120 @@ export class EditActivityComponent implements OnInit {
   enableFields(): void {
     this.activityForm.get('typeActivity')?.valueChanges.subscribe((value) => {
       this.disableFields();
-      value = value.toString();
-      switch (value) {
-       //ASESORÍA
-       case '1':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('administrativeAct')?.enable();
-        this.activityForm.get('activity')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        break;
-
-        //TRABAJOS DOCENCIA
-        case '2':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('administrativeAct')?.enable();
-        this.activityForm.get('idStudent')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        this.validateEvaluator('TRABAJOS DOCENCIA');
-        break;
-
-        //PROYECTOS DE INVESTIGACIÓN
-        case '3':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('VRI')?.enable();
-        this.activityForm.get('projectName')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        this.validateEvaluator('PROYECTOS DE INVESTIGACIÓN');
-        break;
-
-        //Capacitación
-        case '4':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('administrativeAct')?.enable();
-        this.activityForm.get('activity')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        break;
-
-        //ADMINISTRACIÓN
-        case '5':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('administrativeAct')?.enable();
-        this.activityForm.get('activity')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        break;
-
-        //OTROS SERVICIOS
-        case '6':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('administrativeAct')?.enable();
-        this.activityForm.get('activity')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        break;
-
-        //EXTENSIÓN
-        case '7':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('administrativeAct')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('projectName')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        break;
-
-        //TRABAJOS DE INVESTIGACIÓN
-        case '8':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('administrativeAct')?.enable();
-        this.activityForm.get('idStudent')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        this.validateEvaluator('TRABAJOS DE INVESTIGACIÓN');
-        break;
-
-        //DOCENCIA
-        case '9':
-        this.activityForm.get('nameActivity')?.enable();
-        this.activityForm.get('codeActivity')?.enable();
-        this.activityForm.get('subject')?.enable();
-        this.activityForm.get('group')?.enable();
-        this.activityForm.get('weeklyHours')?.enable();
-        this.activityForm.get('weeks')?.enable();
-        this.activityForm.get('evaluatorName')?.enable();
-        this.activityForm.get('evaluatorId')?.enable();
-        this.activityForm.get('executiveReport')?.enable();
-        this.activityForm.get('activityState')?.enable();
-        this.validateEvaluator('DOCENCIA');
-        break;
+      this.clearFields();
+      const typeActivity = Number(value);
+      switch (typeActivity) {
+        case TIPO_ACTIVIDADES.ASESORIA:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('activity')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.ASESORIA);
+          break;
+        case TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('idStudent')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA);
+          break;
+        case TIPO_ACTIVIDADES.PROYECTO_DE_INVESTIGACION:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('VRI')?.enable();
+          this.activityForm.get('projectName')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.PROYECTO_DE_INVESTIGACION);
+          break;
+        case TIPO_ACTIVIDADES.CAPACITACION:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('activity')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.CAPACITACION);
+          break;
+        case TIPO_ACTIVIDADES.ADMINISTRACION:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('activity')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.ADMINISTRACION);
+          break;
+        case TIPO_ACTIVIDADES.OTRO_SERVICIO:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('activity')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.OTRO_SERVICIO);
+          break;
+        case TIPO_ACTIVIDADES.EXTENSION:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('projectName')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.EXTENSION);
+          break;
+        case TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('idStudent')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION);
+          break;
+        case TIPO_ACTIVIDADES.DOCENCIA:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('codeActivity')?.enable();
+          this.activityForm.get('subject')?.enable();
+          this.activityForm.get('group')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
+          this.validateEvaluator(TIPO_ACTIVIDADES.DOCENCIA);
+          break;
+        default:
+          break;
       }
     });
   }
@@ -391,30 +394,101 @@ export class EditActivityComponent implements OnInit {
     return null;
   }
 
-  validateEvaluator(typeActivity: string): boolean {
+  validateEvaluator(typeActivity: TIPO_ACTIVIDADES) {
     switch (typeActivity) {
-      case 'DOCENCIA':
-        this.validateUserExist('', '', '4');
-        return false;
-      case 'TRABAJOS DOCENCIA':
+      case TIPO_ACTIVIDADES.CAPACITACION:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.DOCENCIA:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA:
         this.listenerIdStudent();
-        return true;
-      case 'PROYECTOS DE INVESTIGACIÓN':
-        this.validateUserExist('', '', '4');
-        return true;
-      case 'TRABAJOS DE INVESTIGACIÓN':
+        break;
+      case TIPO_ACTIVIDADES.PROYECTO_DE_INVESTIGACION:
+        break;
+      case TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION:
         this.listenerIdStudent();
-        return true;
-      case 'ADMINISTRACIÓN':
-        return true;
-      case 'ASESORÍA':
-        return true;
-      case 'EXTENSION':
-        return true;
-      case 'OTROS SERVICIOS':
-        return true;
+        break;
+      case TIPO_ACTIVIDADES.ADMINISTRACION:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'DECANO',
+            '',
+            '',
+            ROLES.DECANO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            'INGENIERÍA ELECTRÓNICA Y TELECOMUNICACIONES'
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.ASESORIA:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.EXTENSION:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.OTRO_SERVICIO:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
     }
-    return true;
   }
 
   listenerIdStudent(): void {
@@ -423,72 +497,188 @@ export class EditActivityComponent implements OnInit {
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe((value) => {
         if (value) {
-          this.validateUserExist(value, '', '2');
+          this.validateUserExist(
+            'USERSTUDENT',
+            value,
+            '',
+            ROLES.ESTUDIANTE,
+            '',
+            ''
+          );
         }
       });
   }
 
   validateUserExist(
+    typeValidation: string,
     idUser: string,
     userName: string,
-    rol: string
-  ): UsuarioResponse | null {
-    if (idUser || rol || userName) {
-      this.activitiesManagementService
-        .getUserByParams(
-          0,
-          3,
-          idUser,
-          userName,
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          rol,
-          '1'
-        )
-        .subscribe({
-          next: (response) => {
-            if (idUser && !rol) {
-              this.userResponseSeachById = response.data;
-              return;
-            } else {
-              if (userName) {
+    rol: number,
+    department: string | null,
+    faculty: string | null
+  ): void {
+    switch (typeValidation) {
+      case 'USERSBYID':
+        if (idUser) {
+          this.activitiesManagementService
+            .getUserByParams(0, 3, idUser, '', '', '', '', '', '', '', '', '1')
+            .subscribe({
+              next: (response) => {
+                this.userResponseSeachById = response.data;
+              },
+              error: (error) => {
+                this.userResponseSeachById = null;
+              },
+            });
+        }
+        break;
+      case 'USERSBYNAME':
+        if (userName) {
+          this.activitiesManagementService
+            .getUserByParams(
+              0,
+              3,
+              '',
+              userName,
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '1'
+            )
+            .subscribe({
+              next: (response) => {
                 this.userResponseSeachByName = response.data;
-                return;
-              } else {
-                if (idUser && rol) {
-                  this.userResponse = response.data;
-                  if (this.userResponse) {
-                    this.evaluator = this.userResponse.content[0];
-                    this.activityForm
-                      .get('evaluatorName')
-                      ?.setValue(
-                        this.userResponse.content[0].nombres +
-                          ' ' +
-                          this.userResponse.content[0].apellidos
-                      );
-                    this.activityForm
-                      .get('evaluatorId')
-                      ?.setValue(this.userResponse.content[0].identificacion);
-                  } else {
-                    this.evaluator = null;
-                    this.activityForm.get('evaluatorName')?.setValue(null);
-                    this.activityForm.get('evaluatorId')?.setValue(null);
-                  }
-                  return;
+              },
+              error: (error) => {
+                this.userResponseSeachByName = null;
+              },
+            });
+        }
+        break;
+      case 'USERSTUDENT':
+        if (idUser) {
+          this.activitiesManagementService
+            .getUserByParams(0, 3, idUser, '', '', '', '', '', '', '', '2', '1')
+            .subscribe({
+              next: (response) => {
+                this.userResponse = response.data;
+                if (this.userResponse) {
+                  this.evaluator = this.userResponse.content[0];
+                  this.activityForm
+                    .get('evaluatorName')
+                    ?.setValue(
+                      this.userResponse.content[0].nombres +
+                        ' ' +
+                        this.userResponse.content[0].apellidos
+                    );
+                  this.activityForm
+                    .get('evaluatorId')
+                    ?.setValue(this.userResponse.content[0].identificacion);
+                } else {
+                  this.evaluator = null;
+                  this.activityForm.get('evaluatorName')?.setValue(null);
+                  this.activityForm.get('evaluatorId')?.setValue(null);
                 }
-              }
-            }
-          },
-          error: (error) => {
-            return null;
-          },
-        });
+              },
+              error: (error) => {
+                this.userResponse = null;
+              },
+            });
+        }
+        break;
+      case 'USERDEPARTMENTBOSS':
+        if (rol && department) {
+          this.activitiesManagementService
+            .getUserByParams(
+              0,
+              3,
+              '',
+              '',
+              '',
+              department,
+              '',
+              '',
+              '',
+              '',
+              rol.toString(),
+              '1'
+            )
+            .subscribe({
+              next: (response) => {
+                this.userResponse = response.data;
+                if (this.userResponse) {
+                  this.evaluator = this.userResponse.content[0];
+                  this.activityForm
+                    .get('evaluatorName')
+                    ?.setValue(
+                      this.userResponse.content[0].nombres +
+                        ' ' +
+                        this.userResponse.content[0].apellidos
+                    );
+                  this.activityForm
+                    .get('evaluatorId')
+                    ?.setValue(this.userResponse.content[0].identificacion);
+                } else {
+                  this.evaluator = null;
+                  this.activityForm.get('evaluatorName')?.setValue(null);
+                  this.activityForm.get('evaluatorId')?.setValue(null);
+                }
+              },
+              error: (error) => {
+                this.userResponse = null;
+              },
+            });
+        }
+        break;
+      case 'DECANO':
+        if (rol && faculty) {
+          this.activitiesManagementService
+            .getUserByParams(
+              0,
+              3,
+              '',
+              '',
+              faculty,
+              '',
+              '',
+              '',
+              '',
+              '',
+              rol.toString(),
+              '1'
+            )
+            .subscribe({
+              next: (response) => {
+                this.userResponse = response.data;
+                if (this.userResponse) {
+                  this.evaluator = this.userResponse.content[0];
+                  this.activityForm
+                    .get('evaluatorName')
+                    ?.setValue(
+                      this.userResponse.content[0].nombres +
+                        ' ' +
+                        this.userResponse.content[0].apellidos
+                    );
+                  this.activityForm
+                    .get('evaluatorId')
+                    ?.setValue(this.userResponse.content[0].identificacion);
+                } else {
+                  this.evaluator = null;
+                  this.activityForm.get('evaluatorName')?.setValue(null);
+                  this.activityForm.get('evaluatorId')?.setValue(null);
+                }
+              },
+              error: (error) => {
+                this.userResponse = null;
+              },
+            });
+          break;
+        }
     }
-    return null;
   }
 
   selectUser(user: UsuarioResponse | null): void {
@@ -542,18 +732,19 @@ export class EditActivityComponent implements OnInit {
       .subscribe((value) => {
         this.typeResulsSearchId = value;
         if (value) {
-          this.validateUserExist(value, '', '');
+          this.validateUserExist('USERSBYID', value, '', 0, '', '');
         } else {
           this.userResponseSeachById = null;
         }
       });
+
     this.activityForm
       .get('evaluatorName')
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe((value) => {
         this.typeResulsSearchName = value;
         if (value) {
-          this.validateUserExist('', value, '');
+          this.validateUserExist('USERSBYNAME', '', value, 0, '', '');
         } else {
           this.userResponseSeachByName = null;
         }
@@ -563,14 +754,14 @@ export class EditActivityComponent implements OnInit {
   onConfirm(event: any): void {
     if (event) {
       this.activityForm.markAllAsTouched();
-      if (this.idUserParam && this.activityForm.valid) {
+      if (this.activity && this.activityForm.valid) {
         const newActivity: ActividadCreate = {
           tipoActividad: {
             oidTipoActividad: Number(
               this.activityForm.get('typeActivity')?.value
             ),
           },
-          oidEvaluado: Number(this.idUserParam),
+          oidEvaluado: Number(this.activity.oidEvaluado),
           oidEvaluador: Number(this.evaluator?.oidUsuario || 0),
           oidEstadoActividad: Number(
             this.activityForm.get('activityState')?.value
@@ -611,7 +802,7 @@ export class EditActivityComponent implements OnInit {
           ],
         };
         this.activitiesManagementService
-          .updateActivity(this.idUserParam, newActivity)
+          .updateActivity(this.activity.oidActividad, newActivity)
           .subscribe({
             next: (response) => {
               this.messagesInfoService.showSuccessMessage(

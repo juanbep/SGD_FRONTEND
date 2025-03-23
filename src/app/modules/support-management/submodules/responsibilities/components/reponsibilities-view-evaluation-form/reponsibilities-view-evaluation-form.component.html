@@ -49,7 +49,6 @@
         </section>
         <div class="mb-3"></div>
         <section>
-          <form action="">
             <div class="row">
               <div class="col">
                 <span class="title-three">Titlo del trabajo de grado</span>
@@ -58,12 +57,13 @@
                     class="form-control input-text"
                     type="text"
                     id="degreeWorkTitle"
-                    disabled
+                    value="{{this.formEvaluation.get('degreeWorkTitle')?.value}}"
+                    disabled 
                   />
                   <label
                     class="label-custom text-body-small-sb"
                     for="degreeWorkTitle"
-                    >Título del trabajo de gradoo</label
+                    >Título del trabajo de grado</label
                   >
                 </div>
               </div>
@@ -77,6 +77,7 @@
                     type="text"
                     id="developmentStage"
                     class="form-control input-text"
+                    value="{{this.formEvaluation.get('developmentStage')?.value}}"
                     disabled
                   />
                   <label
@@ -114,8 +115,8 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td class="text-body-regular">{{this.formEvaluation.get("qualification_1")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_1")?.value) }}</td>
                 </tr>
                 <tr>
                   <td class="text-body-regular">12.50%</td>
@@ -123,8 +124,9 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td>{{this.formEvaluation.get("qualification_2")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_2")?.value) }}</td>
+
                 </tr>
                 <tr>
                   <td class="text-body-regular">12.50%</td>
@@ -132,8 +134,8 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td >{{ qualitativeEquivalent("100") }}</td>
+                  <td>{{this.formEvaluation.get("qualification_3")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_3")?.value) }}</td>
                 </tr>
                 <tr>
                   <td class="text-body-regular">12.50%</td>
@@ -141,8 +143,9 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td>{{this.formEvaluation.get("qualification_4")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_4")?.value) }}</td>
+
                 </tr>
                 <tr>
                   <td class="text-body-regular">12.50%</td>
@@ -150,8 +153,8 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td>{{this.formEvaluation.get("qualification_5")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_5")?.value) }}</td>
                 </tr>
                 <tr>
                   <td class="text-body-regular">12.50%</td>
@@ -159,8 +162,8 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td>{{this.formEvaluation.get("qualification_6")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_6")?.value) }}</td>
                 </tr>
                 <tr>
                   <td class="text-body-regular">12.50%</td>
@@ -168,8 +171,8 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td>{{this.formEvaluation.get("qualification_7")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_7")?.value) }}</td>
                 </tr>
                 <tr>
                   <td class="text-body-regular">12.50%</td>
@@ -177,14 +180,14 @@
                     ¿El profesor ha definido unos horarios regulares de reunión
                     para control y seguimiento del trabajo?
                   </td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td>{{this.formEvaluation.get("qualification_8")?.value}}</td>
+                  <td>{{ qualitativeEquivalent(this.formEvaluation.get("qualification_8")?.value) }}</td>
                 </tr>
                 <tr>
                   <td class="title-three">100%</td>
                   <td class="title-three">Total</td>
-                  <td class="text-body-regular">100</td>
-                  <td>{{ qualitativeEquivalent("100") }}</td>
+                  <td class="text-body-regular">{{totalAverage}}</td>
+                  <td>{{ qualitativeEquivalent(totalAverage?.toString() || null) }}</td>
                 </tr>
               </tbody>
             </table>
@@ -197,15 +200,24 @@
               <div class="file-actions">
                 <button
                   type="button"
-                  class="button-actions button-delete button-radius-custom"
-                ></button>
-                <button
-                  type="button"
                   class="button-actions button-download"
+                  (click)="recoverSupportFile()"
                 ></button>
               </div>
             </div>
-          </form>
+            <section>
+              <div class="row">
+                <div class="col">
+                  <span class="title-three">Observaciones</span>
+                  <textarea
+                    class="form-control input-text"
+                    id="observations"
+                    disabled
+                  >
+                {{this.formEvaluation.get('observations')?.value}}</textarea>
+                </div>
+              </div>
+            </section>
         </section>
       </div>
       <div class="modal-footer">

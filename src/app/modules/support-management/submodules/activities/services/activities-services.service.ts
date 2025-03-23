@@ -4,6 +4,7 @@ import { PagedResponse } from '../../../../../core/models/response/paged-respons
 import { ActividadResponse } from '../../../../../core/models/response/actividad-response.model';
 import { FuenteCreate } from '../../../../../core/models/modified/fuente-create.model';
 import { AutoevaluacionFuente } from '../../../../../core/models/modified/autoevaluacion-fuente.model';
+import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
 
 @Injectable({ providedIn: 'root' })
 export class ActivitiesServicesService {
@@ -22,6 +23,9 @@ export class ActivitiesServicesService {
   });
 
   private smActivitiesServicesService = inject(SmActivitiesServicesService);
+
+  private umUsersServicesService = inject(UmUsersServicesService);
+  
 
   setParamsActivitiesFilterSignal(
     activityName: string | null,
@@ -67,6 +71,10 @@ export class ActivitiesServicesService {
     );
   }
 
+  getActivityById(activityId: number) {
+    return this.smActivitiesServicesService.getActivityById(activityId);
+  }
+
   saveSelfAssessment(
     file: File,
     observation: string,
@@ -92,7 +100,13 @@ export class ActivitiesServicesService {
     );
   }
 
-  saveSelfAssessmentByForm(autoevaluacionFuente: AutoevaluacionFuente){
-    return (this.smActivitiesServicesService.saveSelfAssessmentForm(autoevaluacionFuente));
+  saveSelfAssessmentByForm(autoevaluacionFuente: AutoevaluacionFuente) {
+    return this.smActivitiesServicesService.saveSelfAssessmentForm(
+      autoevaluacionFuente
+    );
   }
+
+  getUserById(userId: number){
+    return this.umUsersServicesService.getUserbyId(userId);
+}
 }

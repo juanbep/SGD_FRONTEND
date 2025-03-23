@@ -46,7 +46,7 @@
         <span class="title-three">Descargar soportes y consolidados</span>
         <div class="buttons-container" style="width: 50% !important;">
             <div>
-                <span class="text-body-regular">Soportes y consolidados</span>
+                <span class="text-body-regular">Soportes del {{currentUser?.usuarioDetalle?.departamento | titlecase}}</span>
                 <br>
             </div>
             <button  class="button-actions button-download" (click)="downloadFiles()"></button>
@@ -54,5 +54,5 @@
     </section>
 </div>
 
-<shared-email></shared-email>
+<shared-email [destinatario]="bossDepartment?.correo || ''" [remitente]="currentUser?.correo ||''"></shared-email>
 <modal-cpd-info-form (infoCpd)="onOptionFormCpdInfo($event)"></modal-cpd-info-form>

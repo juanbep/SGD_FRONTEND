@@ -136,7 +136,7 @@ export class ResponsibilitiesTableComponent {
       this.openModalViewSelected = !this.openModalViewSelected;
       this.resposabilitySelected = responsability;
     }else{
-      this.viewEvaluationFormComponent? this.viewEvaluationFormComponent.open() : null;
+      this.viewEvaluationFormComponent? this.viewEvaluationFormComponent.open(responsability.fuentes[1].oidFuente) : null;
     }
   }
 
@@ -146,8 +146,8 @@ export class ResponsibilitiesTableComponent {
       this.resposabilitySelected = responsability;
     }else{
       this.router.navigate([
-        './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-estudiante', 
-        responsability.oidActividad
+        './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-estudiante-editar', 
+        responsability.fuentes[1].oidFuente
       ]);
     }
   }

@@ -7,6 +7,7 @@ import { PagedResponse } from '../../models/response/paged-response.model';
 import { FuenteCreate } from '../../models/modified/fuente-create.model';
 import { SimpleResponse } from '../../models/response/simple-response.model';
 import { FuenteEstudianteFormulario } from '../../models/modified/fuente-estudiante-formulario.model';
+import { FuenteEstudianteFormularioResponse } from '../../models/response/fuente-estudiante-formulario-response.model';
 
 @Injectable({
     providedIn: 'root'
@@ -37,6 +38,17 @@ export class SmResponsibilitiesServicesService {
             .set( 'page', page? page.toString() : '' )
             .set( 'size', totalPage? totalPage.toString() : '' );
         return this.httpClient.get<SimpleResponse<PagedResponse<ResponsabilidadResponse>>>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluador`, { params });
+    }
+
+    /*
+        * Method to get the responsibilities by id
+        * @param id:number
+        * @returns Observable<SimpleResponse<FuenteEstudianteFormularioResponse>>
+        */
+
+
+    getInfoResponsibilityByForm(idSource: number): Observable<SimpleResponse<FuenteEstudianteFormularioResponse>> {
+        return this.httpClient.get<SimpleResponse<FuenteEstudianteFormularioResponse>>(`${this.baseUrl}/api/evaluacion-estudiante/fuente/${idSource}`);
     }
 
     /*

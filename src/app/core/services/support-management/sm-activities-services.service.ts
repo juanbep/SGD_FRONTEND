@@ -40,7 +40,7 @@ export class SmActivitiesServicesService {
   ): Observable<SimpleResponse<PagedResponse<ActividadResponse>>> {
     let params = new HttpParams()
       .set('idEvaluado', evaluatedId)
-      .set('codigoActividad', activityName ? activityName : '')
+      .set('nombreActividad', activityName ? activityName : '')
       .set('tipoActividad', activityType ? activityType : '')
       .set('nombreEvaluador', evaluatorName ? evaluatorName : '')
       .set('roles', roles ? roles : '')

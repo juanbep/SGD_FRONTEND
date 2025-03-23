@@ -10,7 +10,7 @@ export const routes: Routes = [
         component: ActivitiesComponent
     },
     {
-      path: 'formulario-autoevaluacion',
+      path: 'formulario-autoevaluacion/:id',
       component: SelfEvaluationFormComponent
     }
 ]

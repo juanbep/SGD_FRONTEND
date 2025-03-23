@@ -57,6 +57,14 @@
             [openModalSelected]="true"
             (closeModalSelected)="closeModalView($event)"
           ></activities-view-evaluation>
+          <button
+          *ngIf="activity.fuentes[0] && activity.fuentes[0].estadoFuente == 'PENDIENTE'"
+          class="button-table"
+          (click)="openFormEvaluation(activity.oidActividad)"
+          >
+          <img src="assets/icons/tables/icon-form.svg" alt="iconoformularion evaluación" title="Formulario de evalución">
+
+        </button>
         </td>
         <td>
           <span class="text-body-regular"

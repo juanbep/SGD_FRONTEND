@@ -13,48 +13,49 @@
         <th>
           <span class="text-body-regular">Nombres y apellidos</span>
           <br />
-          <span class="text-body-small-sb">Pepito</span>
+          <span class="text-body-small-sb">{{evaluado?.nombres}} {{evaluado?.apellidos}}</span>
         </th>
         <th>
           <span class="text-body-regular">Num.Id</span>
           <br />
-          <span class="text-body-small-sb">123456789</span>
+          <span class="text-body-small-sb">{{evaluado?.identificacion}}</span>
         </th>
         <th>
           <span class="text-body-regular">Nombre de la actividad</span>
           <br />
-          <span class="text-body-small-sb">Nombre de la actividad</span>
+          <span class="text-body-small-sb">{{activityResponse?.nombreActividad}}</span>
         </th>
         <th>
           <span class="text-body-regular">Tipo</span>
           <br />
-          <span class="text-body-small-sb">Tipo</span>
+          <span class="text-body-small-sb">{{activityResponse?.tipoActividad?.nombre}}</span>
         </th>
       </tr>
       <tr>
-        <th>
-          <!-- Periodo -->
-          <span class="text-body-regular">Periodo</span>
-          <br />
-          <span class="text-body-small-sb">2021-1</span>
-        </th>
+       
         <th>
           <!-- Horas totales -->
           <span class="text-body-regular">Horas totales</span>
           <br />
-          <span class="text-body-small-sb">10</span>
+          <span class="text-body-small-sb">{{ (activityResponse?.semanas || 0) * (activityResponse?.horas || 0)}}</span>
+        </th>
+        <th>
+          <!-- Periodo -->
+          <span class="text-body-regular">Periodo</span>
+          <br />
+          <span class="text-body-small-sb">{{activityPeriod?.idPeriodo}}</span>
         </th>
         <th>
           <!-- Fecha de inicio -->
           <span class="text-body-regular">Fecha de inicio</span>
           <br />
-          <span class="text-body-small-sb">2021-01-01</span>
+          <span class="text-body-small-sb">{{activityPeriod?.fechaFin | date: 'dd/MM/yyyy'}}</span>
         </th>
         <th>
           <!-- Fecha de fin -->
           <span class="text-body-regular">Fecha de fin</span>
           <br />
-          <span class="text-body-small-sb">2021-01-31</span>
+          <span class="text-body-small-sb">{{activityPeriod?.fechaInicio | date: 'dd/MM/yyyy'}}</span>
         </th>
       </tr>
     </thead>
@@ -69,10 +70,30 @@
           type="text"
           class="form-control input-text"
           id="activityDescription"
+          formControlName="activityDescription"
+          [ngClass]="{
+            'error-input': isInvalidField('activityDescription')
+          }"
         />
-        <label class="label-custom text-body-small-sb" for="activityDescription"
+        <label
+          class="label-custom text-body-small-sb"
+          for="activityDescription"
+          [ngClass]="{
+            'error-label': isInvalidField('activityDescription')
+          }"
+          ><span
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Campo obligatorio"
+            >* </span
           >Descripción actividad</label
         >
+        <span
+          *ngIf="isInvalidField('activityDescription')"
+          class="error-message text-body-small-r ms-1"
+        >
+          {{ getFieldError("activityDescription") }}
+        </span>
       </div>
     </div>
     <div class="mb-3"></div>
@@ -90,10 +111,35 @@
         >
           <div *ngIf="i > 0" class="mb-2"></div>
           <div class="col">
-            <textarea
-              formControlName="result"
-              class="form-control input-text"
-            ></textarea>
+            <div class="form-floating">
+              <input
+                type="text"
+                formControlName="result"
+                class="form-control input-text"
+                [ngClass]="{
+                  'error-input': isInvalidField('results.' + i + '.result')
+                }"
+              />
+              <label
+                class="label-custom text-body-small-sb"
+                for="result"
+                [ngClass]="{
+                  'error-label': isInvalidField('results.' + i + '.result')
+                }"
+                ><span
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Campo obligatorio"
+                  >* </span
+                >Descripción actividad</label
+              >
+            </div>
+            <span
+              *ngIf="isInvalidField('results.' + i + '.result')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("results." + i + ".result") }}
+            </span>
           </div>
           <div class="col">
             <div class="form-floating">
@@ -101,6 +147,9 @@
                 formControlName="ODS"
                 class="form-select input-select text-body-custom"
                 id="ods-input-{{ i }}"
+                [ngClass]="{
+                  'error-input': isInvalidField('results.' + i + '.ODS')
+                }"
               >
                 <option value="">ODS</option>
                 <option value="1">Fin del pobreza</option>
@@ -130,9 +179,23 @@
               <label
                 for="ods-input-{{ i }}"
                 class="label-custom text-body-small-sb"
+                [ngClass]="{
+                  'error-label': isInvalidField('results.' + i + '.ODS')
+                }"
+                ><span
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Campo obligatorio"
+                  >* </span
                 >ODS</label
               >
             </div>
+            <span
+              *ngIf="isInvalidField('results.' + i + '.ODS')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError('results.' + i + '.ODS') }}
+            </span>
           </div>
           <div class="col">
             <ng-container
@@ -164,15 +227,15 @@
                 </div>
               </div>
             </ng-container>
-            <ng-template #viewEvidenceFile> 
+            <ng-template #viewEvidenceFile>
               <div class="download-file-container">
                 <div class="download-file-label">
-                    <span class="text-body-small-r">Soporte</span>
-                    <br>
-                    <span class="text-body-small-sb">'Nombre'</span>
+                  <span class="text-body-small-r">Soporte</span>
+                  <br />
+                  <span class="text-body-small-sb">'Nombre'</span>
                 </div>
                 <button class="button-actions button-download"></button>
-            </div>
+              </div>
             </ng-template>
           </div>
           <div class="col-auto d-flex align-items-center">
@@ -322,11 +385,26 @@
       <div class="col-3">
         <span class="title-three">Evaluación</span>
         <div class="form-floating">
-          <input type="text" class="form-control input-text" id="evaluation" />
-          <label class="label-custom text-body-small-sb" for="evaluation"
-            >Evaluación</label
+          <input type="text" class="form-control input-text" id="evaluation" formControlName="evaluation" [ngClass]="{
+            'error-label': isInvalidField('evaluation')
+          }"/>
+          <label class="label-custom text-body-small-sb" for="evaluation"  [ngClass]="{
+            'error-label': isInvalidField('evaluation')
+          }"
+            ><span
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Campo obligatorio"
+            >* </span
+          >Evaluación</label
           >
         </div>
+        <span
+              *ngIf="isInvalidField('evaluation')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("evaluation") }}
+            </span>
       </div>
     </div>
 

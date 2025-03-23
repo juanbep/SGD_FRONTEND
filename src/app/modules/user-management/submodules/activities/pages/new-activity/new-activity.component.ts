@@ -19,6 +19,10 @@ import { ActividadCreate } from '../../../../../../core/models/modified/activida
 import { Atributo } from '../../../../../../core/models/base/atributo.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import {
+  TIPO_ACTIVIDADES,
+  ROLES,
+} from '../../../../../../core/enums/domain-enums';
 
 @Component({
   selector: 'app-new-activity',
@@ -163,9 +167,9 @@ export class NewActivityComponent implements OnInit {
       ?.valueChanges.subscribe((value) => {
         this.disableFields();
         this.clearFields();
-        switch (value) {
-            //ASESORÍA
-            case '1':
+        switch (Number(value)) {
+          //ASESORÍA
+          case TIPO_ACTIVIDADES.ASESORIA:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('administrativeAct')?.enable();
             this.newActivityForm.get('activity')?.enable();
@@ -175,10 +179,12 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorName')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
+            this.validateEvaluator(TIPO_ACTIVIDADES.ASESORIA);
+
             break;
 
-            //TRABAJOS DOCENCIA
-            case '2':
+          //TRABAJOS DOCENCIA
+          case TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('administrativeAct')?.enable();
             this.newActivityForm.get('idStudent')?.enable();
@@ -188,11 +194,11 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorId')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
-            this.validateEvaluator('TRABAJOS DOCENCIA');
+            this.validateEvaluator(TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA);
             break;
 
-            //PROYECTOS DE INVESTIGACIÓN
-            case '3':
+          //PROYECTOS DE INVESTIGACIÓN
+          case TIPO_ACTIVIDADES.PROYECTO_DE_INVESTIGACION:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('VRI')?.enable();
             this.newActivityForm.get('projectName')?.enable();
@@ -202,11 +208,11 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorId')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
-            this.validateEvaluator('PROYECTOS DE INVESTIGACIÓN');
+            this.validateEvaluator(TIPO_ACTIVIDADES.PROYECTO_DE_INVESTIGACION);
             break;
 
-            //Capacitación
-            case '4':
+          //Capacitación
+          case TIPO_ACTIVIDADES.CAPACITACION:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('administrativeAct')?.enable();
             this.newActivityForm.get('activity')?.enable();
@@ -216,10 +222,11 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorName')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
+            this.validateEvaluator(TIPO_ACTIVIDADES.CAPACITACION);
             break;
 
-            //ADMINISTRACIÓN
-            case '5':
+          //ADMINISTRACIÓN
+          case TIPO_ACTIVIDADES.ADMINISTRACION:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('administrativeAct')?.enable();
             this.newActivityForm.get('activity')?.enable();
@@ -229,10 +236,11 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorName')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
+            this.validateEvaluator(TIPO_ACTIVIDADES.ADMINISTRACION);
             break;
 
-            //OTROS SERVICIOS
-            case '6':
+          //OTROS SERVICIOS
+          case TIPO_ACTIVIDADES.OTRO_SERVICIO:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('administrativeAct')?.enable();
             this.newActivityForm.get('activity')?.enable();
@@ -242,10 +250,11 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorName')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
+            this.validateEvaluator(TIPO_ACTIVIDADES.OTRO_SERVICIO);
             break;
 
-            //EXTENSIÓN
-            case '7':
+          //EXTENSIÓN
+          case TIPO_ACTIVIDADES.EXTENSION:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('administrativeAct')?.enable();
             this.newActivityForm.get('weeks')?.enable();
@@ -255,10 +264,11 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorId')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
+            this.validateEvaluator(TIPO_ACTIVIDADES.EXTENSION);
             break;
 
-            //TRABAJOS DE INVESTIGACIÓN
-            case '8':
+          //TRABAJOS DE INVESTIGACIÓN
+          case TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('administrativeAct')?.enable();
             this.newActivityForm.get('idStudent')?.enable();
@@ -268,11 +278,11 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorName')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
-            this.validateEvaluator('TRABAJOS DE INVESTIGACIÓN');
+            this.validateEvaluator(TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION);
             break;
 
-            //DOCENCIA
-            case '9':
+          //DOCENCIA
+          case TIPO_ACTIVIDADES.DOCENCIA:
             this.newActivityForm.get('nameActivity')?.enable();
             this.newActivityForm.get('codeActivity')?.enable();
             this.newActivityForm.get('subject')?.enable();
@@ -283,7 +293,7 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('evaluatorId')?.enable();
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
-            this.validateEvaluator('DOCENCIA');
+            this.validateEvaluator(TIPO_ACTIVIDADES.DOCENCIA);
             break;
         }
       });
@@ -330,51 +340,101 @@ export class NewActivityComponent implements OnInit {
     return null;
   }
 
-  // TODO: Implementar método para validar evaluador
-  validateEvaluator(typeActivity: string): boolean {
+  validateEvaluator(typeActivity: TIPO_ACTIVIDADES) {
     switch (typeActivity) {
-      case 'DOCENCIA':
+      case TIPO_ACTIVIDADES.CAPACITACION:
         if (this.userByIdResponse) {
           this.validateUserExist(
             'USERDEPARTMENTBOSS',
             '',
             '',
-            'JEFE DE DEPARTAMENTO',
+            ROLES.JEFE_DE_DEPARTAMENTO,
             this.userByIdResponse.usuarioDetalle.departamento
               ? this.userByIdResponse.usuarioDetalle.departamento
-              : ''
+              : '',
+            ''
           );
         }
-        return false;
-      case 'TRABAJOS DOCENCIA':
-        this.listenerIdStudent();
-        return true;
-      case 'PROYECTOS DE INVESTIGACIÓN':
+        break;
+      case TIPO_ACTIVIDADES.DOCENCIA:
         if (this.userByIdResponse) {
           this.validateUserExist(
             'USERDEPARTMENTBOSS',
             '',
             '',
-            'JEFE DE DEPARTAMENTO',
+            ROLES.JEFE_DE_DEPARTAMENTO,
             this.userByIdResponse.usuarioDetalle.departamento
               ? this.userByIdResponse.usuarioDetalle.departamento
-              : ''
+              : '',
+            ''
           );
         }
-        return true;
-      case 'TRABAJOS DE INVESTIGACIÓN':
+        break;
+      case TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA:
         this.listenerIdStudent();
-        return true;
-      case 'ADMINISTRACIÓN':
-        return true;
-      case 'ASESORÍA':
-        return true;
-      case 'EXTENSION':
-        return true;
-      case 'OTROS SERVICIOS':
-        return true;
+        break;
+      case TIPO_ACTIVIDADES.PROYECTO_DE_INVESTIGACION:
+        break;
+      case TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION:
+        this.listenerIdStudent();
+        break;
+      case TIPO_ACTIVIDADES.ADMINISTRACION:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'DECANO',
+            '',
+            '',
+            ROLES.DECANO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            'INGENIERÍA ELECTRÓNICA Y TELECOMUNICACIONES'
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.ASESORIA:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.EXTENSION:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
+      case TIPO_ACTIVIDADES.OTRO_SERVICIO:
+        if (this.userByIdResponse) {
+          this.validateUserExist(
+            'USERDEPARTMENTBOSS',
+            '',
+            '',
+            ROLES.JEFE_DE_DEPARTAMENTO,
+            this.userByIdResponse.usuarioDetalle.departamento
+              ? this.userByIdResponse.usuarioDetalle.departamento
+              : '',
+            ''
+          );
+        }
+        break;
     }
-    return true;
   }
 
   onConfirm(event: any): void {
@@ -487,7 +547,14 @@ export class NewActivityComponent implements OnInit {
       ?.valueChanges.pipe(debounceTime(500))
       .subscribe((value) => {
         if (value) {
-          this.validateUserExist('USERSTUDENT', value, '', 'ESTUDIANTE', '');
+          this.validateUserExist(
+            'USERSTUDENT',
+            value,
+            '',
+            ROLES.ESTUDIANTE,
+            '',
+            ''
+          );
         }
       });
   }
@@ -496,8 +563,9 @@ export class NewActivityComponent implements OnInit {
     typeValidation: string,
     idUser: string,
     userName: string,
-    rol: string,
-    department: string | null
+    rol: number,
+    department: string | null,
+    faculty: string | null
   ): void {
     switch (typeValidation) {
       case 'USERSBYID':
@@ -586,7 +654,51 @@ export class NewActivityComponent implements OnInit {
               '',
               '',
               '',
-              rol,
+              rol.toString(),
+              '1'
+            )
+            .subscribe({
+              next: (response) => {
+                this.userResponse = response.data;
+                if (this.userResponse) {
+                  this.evaluator = this.userResponse.content[0];
+                  this.newActivityForm
+                    .get('evaluatorName')
+                    ?.setValue(
+                      this.userResponse.content[0].nombres +
+                        ' ' +
+                        this.userResponse.content[0].apellidos
+                    );
+                  this.newActivityForm
+                    .get('evaluatorId')
+                    ?.setValue(this.userResponse.content[0].identificacion);
+                } else {
+                  this.evaluator = null;
+                  this.newActivityForm.get('evaluatorName')?.setValue(null);
+                  this.newActivityForm.get('evaluatorId')?.setValue(null);
+                }
+              },
+              error: (error) => {
+                this.userResponse = null;
+              },
+            });
+        }
+        break;
+      case 'DECANO':
+        if (rol && faculty) {
+          this.activitiesManagementService
+            .getUserByParams(
+              0,
+              3,
+              '',
+              '',
+              faculty,
+              '',
+              '',
+              '',
+              '',
+              '',
+              rol.toString(),
               '1'
             )
             .subscribe({
@@ -692,7 +804,7 @@ export class NewActivityComponent implements OnInit {
       .subscribe((value) => {
         this.typeResulsSearchId = value;
         if (value) {
-          this.validateUserExist('USERSBYID', value, '', '', '');
+          this.validateUserExist('USERSBYID', value, '', 0, '', '');
         } else {
           this.userResponseSeachById = null;
         }
@@ -704,7 +816,7 @@ export class NewActivityComponent implements OnInit {
       .subscribe((value) => {
         this.typeResulsSearchName = value;
         if (value) {
-          this.validateUserExist('USERSBYNAME', '', value, '', '');
+          this.validateUserExist('USERSBYNAME', '', value, 0, '', '');
         } else {
           this.userResponseSeachByName = null;
         }

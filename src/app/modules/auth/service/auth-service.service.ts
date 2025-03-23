@@ -14,7 +14,9 @@ export class AuthServiceService {
 
   public currentUser = computed(() => this._currentUser());
 
+  public idCurrentUser: number | null = null;
 
+  
   get currentUserValue(): UsuarioResponse | null {
     return this._currentUser();
   }
@@ -25,7 +27,7 @@ export class AuthServiceService {
    * @param password 
    */
   login(username: string, password: string): void {
-    this.service.login(username, password);
+    this.idCurrentUser = this.service.login(username, password);
   }
 
   /**
@@ -34,12 +36,25 @@ export class AuthServiceService {
    * @returns 
    */
   getUserInfo() {
-    return this.service.getUserInfo(7).pipe(
+    if(this.idCurrentUser) {
+    return this.service.getUserInfo(this.idCurrentUser).pipe(
       tap(user => {
         this._currentUser.set(user.data);
         localStorage.setItem('userRoles',JSON.stringify(user.data.roles.map(role => role.nombre)));
       })
     );
+  }else{
+    if(sessionStorage.getItem('idUser')){
+      return this.service.getUserInfo(Number(sessionStorage.getItem('idUser'))).pipe(
+        tap(user => {
+          this._currentUser.set(user.data);
+          localStorage.setItem('userRoles',JSON.stringify(user.data.roles.map(role => role.nombre)));
+        })
+      );
+
+    }
+  }
+  return null;
   }
 }
 

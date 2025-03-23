@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
-import { of } from 'rxjs';
 import { ResponsibilityWordGeneratorService } from '../../services/responsibility-word-generator.service';
 import { ResponsibilityPdfGeneratorService } from '../../services/responsibility-pdf-generator.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -18,7 +17,6 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { FuenteEstudianteFormulario } from '../../../../../../core/models/modified/fuente-estudiante-formulario.model';
-import { CatalogServicesService } from '../../../../../../core/services/catalog-services.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
 
@@ -174,20 +172,6 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
           },
         });
     }
-  }
-
-  recoverUser(id: number, userRecovered: UsuarioResponse | null) {
-    this.responsibilitiesServicesService.getUserById(id).subscribe({
-      next: (user) => {
-        userRecovered = user.data;
-      },
-      error: (error) => {
-        this.menssagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
-      },
-    });
   }
 
   recoverEvaluated(id: number) {
@@ -416,7 +400,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
       observacion: this.formEvaluation.get('observations')?.value || '',
       oidEstadoEtapaDesarrollo: this.formEvaluation.get('developmentStage')?.value,
       encuesta: {
-        nombre: 'Encuesta',
+        nombre: this.formEvaluation.get('degreeWorkTitle')?.value,
       },
       preguntas: [
         {

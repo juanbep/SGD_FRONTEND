@@ -1,8 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { AutoevaluacionFuente } from '../../../../../../core/models/modified/autoevaluacion-fuente.model';
+import { ValidatorsService } from '../../../../../../shared/services/validators.service';
+import { ActivatedRoute } from '@angular/router';
+import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
+import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
+import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 
 @Component({
   selector: 'app-self-evaluation-form',
@@ -14,19 +21,68 @@ import { AutoevaluacionFuente } from '../../../../../../core/models/modified/aut
   templateUrl: './self-evaluation-form.component.html',
   styleUrl: './self-evaluation-form.component.css'
 })
-export class SelfEvaluationFormComponent {
+export class SelfEvaluationFormComponent implements OnInit {
+
 
   private formBuilder: FormBuilder = inject(FormBuilder);
   private activitiesServicesService = inject(ActivitiesServicesService);
+  private validatorsService = inject(ValidatorsService);
+  private activatedRoute = inject(ActivatedRoute);
+  private messagesInfoService = inject(MessagesInfoService);
+  private academicPeriodManagementService = inject(AcademicPeriodManagementService); 
+  
+
+  public activityResponse: ActividadResponse | null = null;
+  public evaluado: UsuarioResponse | null = null;
+  public activityPeriod: PeriodoAcademicoResponse | null = null;
 
   newSelfEvaluationForm: FormGroup = this.formBuilder.group({
     activityDescription: [null, [Validators.required]],
     results: this.formBuilder.array([ this.createResultEntry() ]),
     lessonsLearned: this.formBuilder.array([ this.createLessonEntry() ]),
     improvementOpportunities: this.formBuilder.array([ this.createOpportunityEntry() ]),
-    evaluation: [null, [Validators.required]],
+    evaluation: [null, [Validators.required, Validators.min(0), Validators.max(100), this.validatorsService.validateNumericFormat]],
     obseravations: [null, [Validators.required]],
   });
+
+
+  ngOnInit(): void {
+    const idActivity = this.activatedRoute.snapshot.params['id'];
+    this.activityPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue;
+    this.recoverActivity(idActivity);
+  }
+
+
+  recoverActivity(idActivity: number){
+     this.activitiesServicesService.getActivityById(idActivity).subscribe(
+      {
+        next: (activityResponse: ActividadResponse) => {
+          this.activityResponse = activityResponse;
+          this.recoverEvaluated(activityResponse.oidEvaluado);
+        },
+        error: (error: any) => {
+          this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
+        }
+      }
+     )
+  }
+
+  
+  recoverEvaluated(id: number) {
+    this.activitiesServicesService.getUserById(id).subscribe({
+      next: (user) => {
+        this.evaluado = user.data;
+      },
+      error: (error) => {
+        this.messagesInfoService.showErrorMessage(
+          error.error.mensaje,
+          'Error'
+        );
+      },
+    });
+  }
+
+
 
   // Métodos para resultados existentes...
   createResultEntry(): FormGroup {
@@ -91,6 +147,36 @@ export class SelfEvaluationFormComponent {
 
   removeOpportunityEntry(index: number) {
     this.improvementOpportunitiesArray.removeAt(index);
+  }
+
+  isInvalidField(field: string) {
+    const control = this.newSelfEvaluationForm.get(field);
+    return (
+      control &&
+      control.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    );
+  }
+
+  getFieldError(field: string): string | null {
+    const control = this.newSelfEvaluationForm.get(field);
+    const errors = control?.errors || {};
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'min':
+          return 'El valor mínimo es 0';
+        case 'max':
+          return 'El valor máximo es 100';
+        case 'invalidNumber':
+          return 'El valor debe ser numérico';
+        default:
+          return null;
+      }
+    }
+    return null;
   }
 
 

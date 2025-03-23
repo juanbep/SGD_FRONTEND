@@ -29,29 +29,29 @@ export class SideBarComponent implements OnInit {
 
   public sidebarItems = [
     {
-      // role:['JEFE DE DEPARTAMENTO'],
+      role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
       label: 'Periodo académico',
       icon: 'assets/icons/sidebar/icon-calendar.svg',
       sub:[
         {
-          // role: ['JEFE DE DEPARTAMENTO'],
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
           label: 'Gestión periodo académico',
           url: '/app/gestion-periodo-academico'
         }
       ]
     },
     {
-      // role:['JEFE DE DEPARTAMENTO'],
+      role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
         {
-          // role: ['JEFE DE DEPARTAMENTO'],
+          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
           label: 'Usuarios',
           url: '/app/gestion-usuarios/usuarios'
         },
         {
-          // role: ['JEFE DE DEPARTAMENTO'],
+          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
           label: 'Actividades',
           url: '/app/gestion-usuarios/actividades/usuarios'
         }
@@ -59,27 +59,27 @@ export class SideBarComponent implements OnInit {
     },
     {
       
-      // role:['JEFE DE DEPARTAMENTO', 'COORDINADOR','DOCENTE', 'ESTUDIANTE'],
+      role:['JEFE DE DEPARTAMENTO', 'COORDINADOR','DOCENTE', 'ESTUDIANTE','DECANO','SECRETARIA/O FACULTAD','CPD'],
       label: 'Evaluación Docente', 
       icon: 'assets/icons/sidebar/icon-evaluation.svg', 
       sub: [
         {
-          // role:['DOCENTE'],
+          role:['DOCENTE','SECRETARIA/O FACULTAD'],
           label:'Mis actividades',
           url: '/app/gestion-soportes/actividades'
         },
         {
-          // role:['JEFE DE DEPARTAMENTO','ESTUDIANTE','COORDINADOR'],
+          role:['JEFE DE DEPARTAMENTO','ESTUDIANTE','COORDINADOR','DECANO','DOCENTE','SECRETARIA/O FACULTAD'],
           label:'Mis responsabilidades',
           url: '/app/gestion-soportes/responsabilidades'
         },
         {
-          // role:['JEFE DE DEPARTAMENTO'],
+          role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
           label:'Consolidado',
           url:'/app/gestion-soportes/consolidado/lista-docentes'
         },
         {
-          // role:['CPD'],
+          role:['CPD','SECRETARIA/O FACULTAD'],
           label:'CPD',
           url:'/app/gestion-soportes/cpd/lista-docentes'
         },
