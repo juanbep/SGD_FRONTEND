@@ -5,6 +5,7 @@ import { ActividadResponse } from '../../../../../core/models/response/actividad
 import { FuenteCreate } from '../../../../../core/models/modified/fuente-create.model';
 import { AutoevaluacionFuente } from '../../../../../core/models/modified/autoevaluacion-fuente.model';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
+import { FuenteAutoevaluacion } from '../../../../../core/models/modified/fuente-autoevaluacion.model';
 
 @Injectable({ providedIn: 'root' })
 export class ActivitiesServicesService {
@@ -100,9 +101,12 @@ export class ActivitiesServicesService {
     );
   }
 
-  saveSelfAssessmentByForm(autoevaluacionFuente: AutoevaluacionFuente) {
+  saveSelfAssessmentByForm(autoevaluacionFuente: FuenteAutoevaluacion, evidences: File[], signature:File, support: File) {
     return this.smActivitiesServicesService.saveSelfAssessmentForm(
-      autoevaluacionFuente
+      autoevaluacionFuente,
+      evidences,
+      signature,
+      support
     );
   }
 

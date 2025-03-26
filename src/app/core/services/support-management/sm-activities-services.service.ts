@@ -8,16 +8,16 @@ import { PagedResponse } from '../../models/response/paged-response.model';
 import { FuenteCreate } from '../../models/modified/fuente-create.model';
 import { UsuarioConsolidadoResponse } from '../../models/response/usuario-consolidado-response.model';
 import { AutoevaluacionFuente } from '../../models/modified/autoevaluacion-fuente.model';
+import { FuenteAutoevaluacion } from '../../models/modified/fuente-autoevaluacion.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SmActivitiesServicesService {
+  private httpClient = inject(HttpClient);
 
-  private httpClient= inject(HttpClient);
-  
   private baseUrl: string = environments.baseUrl;
-  
+
   /*
    * Method to get the activities of the teacher
    * @param evaluatedId:number
@@ -65,7 +65,6 @@ export class SmActivitiesServicesService {
       .pipe(map((resp) => resp.data));
   }
 
-
   /*
    * Method to get the general information of the teacher
    * @param idEvaluated:string
@@ -103,10 +102,27 @@ export class SmActivitiesServicesService {
     });
   }
 
-  saveSelfAssessmentForm(autoevaluacionFuente: AutoevaluacionFuente): Observable<any> {
-    return this.httpClient.post(`${this.baseUrl}/api/fuente`, autoevaluacionFuente, {
-      responseType: 'text',
+  saveSelfAssessmentForm(
+    autoevaluacionFuente: FuenteAutoevaluacion,
+    evidences: File[],
+    signature: File,
+    support: File
+  ): Observable<any> {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(autoevaluacionFuente));
+    formData.append('documentoAutoevaluacion', support);
+    formData.append('firma', signature);
+    evidences.forEach((evidence, index) => {
+      formData.append('ods-' + (index + 1), evidence);
     });
+
+    return this.httpClient.post(
+      `${this.baseUrl}/api/autoevaluacion`,
+      formData,
+      {
+        responseType: 'text',
+      }
+    );
   }
 
   /*

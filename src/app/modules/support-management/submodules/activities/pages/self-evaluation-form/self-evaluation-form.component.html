@@ -217,12 +217,15 @@
                     type="file"
                     formControlName="evidence"
                     id="uploadFileAssessment{{ i }}"
+                    (change)="onEvidenceSelected($event, i)"
                     hidden
                   />
                 </label>
                 <div class="file-actions">
                   <button
                     class="button-upload button-actions button-border-radius"
+                    type="button"
+                    (click)="triggersEvidences('uploadFileAssessment'+i)"
                   ></button>
                 </div>
               </div>
@@ -412,6 +415,7 @@
     <div class="row">
       <span class="title-three">Observaciones</span>
       <input
+        formControlName="observation"
         type="text"
         class="observation"
         placeholder="Ingrese sus observaciones"
@@ -419,11 +423,72 @@
     </div>
 
     <div class="mb-3"></div>
+    <!-- Sección para firma -->
+    <div class="row" style="width: 50%;">
+      <div class="col">
+        <span class="title-three">Firma del evaluado</span>
+        <ng-container *ngIf="!newSelfEvaluationForm.get('signature')?.value; else signatureLoaded">
+          <div class="file-upload-container">
+            <label for="signature" class="file-upload-label">
+              <div class="file-details">
+                <p class="file-title text-body-small-sb">Firma</p>
+                <p class="file-name text-body-small-r">Cargar firma (.png)</p>
+              </div>
+              <input
+                type="file"
+                formControlName="signature"
+                id="signature"
+                (change)="onSignatureSelected($event)"
+                hidden
+              />
+            </label>
+            <div class="file-actions">
+              <button type="button" class="button-upload button-actions button-border-radius" (click)="triggersSignatureUpload()"></button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #signatureLoaded>
+          <div class="download-file-container">
+            <div class="file-details">
+              <p class="file-title text-body-small-sb">Firma cargada</p>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="mb-3"></div>
+    <div class="row" style="width: 50%">
+      <div class="col">
+        <div class="download-file-container">
+          <div class="file-details">
+            <p class="file-title text-body-small-sb">Previsualización</p>
+  
+            <p class="file-name text-body-small-sb">
+              Genere la previsualización de la evaluación en formato PDF
+            </p>
+          </div>
+          <div class="file-actions">
+            <button
+              type="button"
+              class="button-actions button-view"
+              (click)="generatePdfPreview()"
+            ></button>
+      </div>
+        </div>
+      </div>
+    </div>
+    <!-- ...botones de previsualización y guardar... -->
+    <div class="mb-3"></div>
     <div class="row row-cols-auto justify-content-center">
-      <div class="col d-flex justify-content-center">
-        <button class="button-normal">Cancelar</button>
-        <button type="submit" class="button-normal">Guardar</button>
+      <div class="col">
+        <button type="submit" class="button-normal">
+          Guardar
+        </button>
       </div>
     </div>
   </form>
+  <div class="mb-3"></div>
+  <section *ngIf="pdfUrl">
+    <iframe [src]="pdfUrl" width="100%" height="600px"></iframe>
+  </section>
 </div>

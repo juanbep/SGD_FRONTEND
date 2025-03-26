@@ -4,6 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../service/auth-service.service';
 import { ValidatorsService } from '../../../../shared/services/validators.service';
+import { AuthGoogleService } from '../../service/auth-google.service';
 
 @Component({
   selector: 'login-page',
@@ -21,6 +22,7 @@ export class LoginPageComponent {
   private router: Router = inject(Router);
   private service: AuthServiceService = inject(AuthServiceService);
   private validatorsServices: ValidatorsService = inject(ValidatorsService);
+  private authGoogleService: AuthGoogleService = inject(AuthGoogleService);
 
   authForm: FormGroup = this.formBuilder.group({
     email: [null, [Validators.required, Validators.pattern(this.validatorsServices.emailPattern)]],
@@ -32,6 +34,7 @@ export class LoginPageComponent {
    */
   onLogin() {
     this.service.login(this.authForm.value.email, this.authForm.value.password);
+    //this.authGoogleService.login(this.authForm.get('email')?.value, this.authForm.get('password')?.value);
     this.router.navigate(['/app/home']);
   }
 
