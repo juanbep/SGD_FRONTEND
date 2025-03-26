@@ -85,6 +85,11 @@ export class SideBarComponent implements OnInit {
         },
       ]
     },
+    {
+      role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
+      label: 'Estadísticas',
+      icon: 'assets/icons/sidebar/icon-statistics.svg',
+    }
   ]
 
   ngOnInit(): void {

@@ -74,7 +74,7 @@ export class UmActivitiesServiceService {
     * @param newActivity:NewActivity
     * @returns Observable<any>
     * */
-    saveNewActivity(newActivity: ActividadCreate): Observable<any> {
+    saveNewActivity(newActivity: ActividadCreate[]): Observable<any> {
         return this.httpClient.post(`${this.baseUrl}/api/actividades`, newActivity);
     }
 

@@ -152,7 +152,7 @@ export class ActivitiesManagementService {
     * @param newActivity:NewActivity
     * @returns Observable<any>
     * */
-    saveNewActivity(newActivity: any) {
+    saveNewActivity(newActivity: ActividadCreate[]) {
         return this.umActivitiesServiceService.saveNewActivity(newActivity);
     }
 

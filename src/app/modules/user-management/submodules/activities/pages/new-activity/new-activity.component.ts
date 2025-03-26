@@ -484,7 +484,7 @@ export class NewActivityComponent implements OnInit {
             valor: this.newActivityForm.get('subject')?.value,
           });
         }
-        const newActivity: ActividadCreate = {
+        const newActivity: ActividadCreate[] = [{
           tipoActividad: {
             oidTipoActividad: Number(
               this.newActivityForm.get('typeActivity')?.value
@@ -500,7 +500,7 @@ export class NewActivityComponent implements OnInit {
           semanas: Number(this.newActivityForm.get('weeks')?.value),
           informeEjecutivo: this.newActivityForm.get('executiveReport')?.value,
           atributos: atributos,
-        };
+        }];
         this.activitiesManagementService
           .saveNewActivity(newActivity)
           .subscribe({
