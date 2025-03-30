@@ -19,6 +19,7 @@ import { ConfirmDialogComponent } from '../../../../../../shared/components/conf
 import { FuenteEstudianteFormulario } from '../../../../../../core/models/modified/fuente-estudiante-formulario.model';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
+import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
@@ -26,7 +27,7 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 @Component({
   selector: 'app-responsabilitie-student-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, LoadingOverleyComponent],
   templateUrl: './responsabilitie-student-form.component.html',
   styleUrl: './responsabilitie-student-form.component.css',
 })
@@ -64,6 +65,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
 
   public formPdf: File | null = null;
   public catalogDataResponse: CatalogDataResponse | null = null;
+  public isLoading: boolean = false;
 
   public messageTitle: string = MESSAGE_TITLE;
   public messageConfirmCancel: string = MESSAGE_CONFIRM_CANCEL;
@@ -383,6 +385,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
   }
 
   saveEvaluation() {
+
     if (this.formEvaluation.invalid) {
       this.formEvaluation.markAllAsTouched();
       this.menssagesInfoService.showWarningMessage(
@@ -392,8 +395,9 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
       return;
     }
 
-    this.generatePdfPreview();
+    this.isLoading = true;
 
+    this.generatePdfPreview();
     const fuenteEstudianteFormulario: FuenteEstudianteFormulario = {
       oidFuente: this.responsibility?.fuentes[1].oidFuente || 0,
       tipoCalificacion: 'EN_LINEA',
@@ -446,6 +450,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
+          this.isLoading = false;
           this.menssagesInfoService.showSuccessMessage(
             'Evaluación guardada correctamente',
             'Éxito'

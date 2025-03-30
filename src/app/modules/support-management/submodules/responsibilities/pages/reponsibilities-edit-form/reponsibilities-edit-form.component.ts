@@ -17,6 +17,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { ResponsibilityPdfGeneratorService } from '../../services/responsibility-pdf-generator.service';
 import { FuenteEstudianteFormulario } from '../../../../../../core/models/modified/fuente-estudiante-formulario.model';
+import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
@@ -24,7 +25,7 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 @Component({
   selector: 'reponsibilities-edit-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, LoadingOverleyComponent],
   templateUrl: './reponsibilities-edit-form.component.html',
   styleUrls: ['./reponsibilities-edit-form.component.css'],
 })
@@ -52,6 +53,7 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
   public evaluador: UsuarioResponse | null = null;
   public currentDate = new Date();
   public formPdf: File | null = null;
+  public isLoading: boolean = false;
 
 
   public selectedFiles: {
@@ -155,8 +157,8 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
       this.responsibilitiesService.getInfoResponsibilityByForm(id).subscribe({
         next: (resp) => {
           this.responsibility = resp.data;
-          this.recoverEvaluated(this.responsibility.evaluado.oidUsuario);
-          this.recoverEvualator(this.responsibility.evaluador.oidUsuario);
+          //this.recoverEvaluated(this.responsibility.evaluado.oidUsuario);
+          //this.recoverEvualator(this.responsibility.evaluador.oidUsuario);
           this.patchForm();
         },
         error: (err) => {
@@ -210,7 +212,7 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
         this.responsibility?.preguntas[6]?.respuesta.toString() || '',
       qualification_8:
         this.responsibility?.preguntas[7]?.respuesta.toString() || '',
-      observations: this.responsibility?.observacion || '',
+      observations: this.responsibility?.Fuente.observacion || '',
     });
     this.computeAverage();
   }
@@ -369,11 +371,13 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
         );
         return;
       }
-  
+      
+      this.isLoading = true;
+
       this.generatePdfPreview();
   
       const fuenteEstudianteFormulario: FuenteEstudianteFormulario = {
-        oidFuente: this.responsibility?.oidFuente|| 0,
+        oidFuente: this.responsibility?.Fuente.oidFuente|| 0,
         tipoCalificacion: 'EN_LINEA',
         observacion: this.formEvaluation.get('observations')?.value || '',
         oidEstadoEtapaDesarrollo: this.formEvaluation.get('developmentStage')?.value,
@@ -424,6 +428,7 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
         )
         .subscribe({
           next: (response) => {
+            this.isLoading = false;
             this.messagesInfoService.showSuccessMessage(
               'Evaluación guardada correctamente',
               'Éxito'
@@ -431,6 +436,7 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
             this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
           },
           error: (error) => {
+            this.isLoading = false;
             this.messagesInfoService.showErrorMessage(
               error.error.mensaje,
               'Error'

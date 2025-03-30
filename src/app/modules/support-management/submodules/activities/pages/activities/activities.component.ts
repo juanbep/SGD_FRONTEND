@@ -47,7 +47,7 @@ export class ActivitiesComponent {
       return this.activityResponse.content.some((activity) =>
         activity.fuentes.some(
           (fuente) =>
-            fuente.estadoFuente === 'DILIGENCIADO' && fuente.tipoFuente === '1'
+            fuente.estadoFuente === 'DILIGENCIADO' && fuente.tipoFuente === '1' && fuente.tipoCalificacion !== 'EN_LINEA'
         )
       );
     }

@@ -9,6 +9,7 @@ import { AuthServiceService } from '../../../../../auth/service/auth-service.ser
 import { ActividadConsolidadoResponse } from '../../../../../../core/models/response/actividad-consolidado-response.model';
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 
 const SIZE_PAGE = 10;
 const TITTLE_MESSAGE = 'Aprobar consolidado';
@@ -21,7 +22,8 @@ const CONFIRM_MESSAGE = '¿Está seguro que desea aprobar el consolidado?';
     ConsolidatedTeacherFilterComponent,
     ConsolidatedTeacherTableComponent,
     ConfirmDialogComponent,
-  ],
+    LoadingOverleyComponent
+],
   templateUrl: './consolidated-teacher.component.html',
   styleUrl: './consolidated-teacher.component.css',
 })
@@ -41,6 +43,9 @@ export class ConsolidatedTeacherComponent implements OnInit {
   public infoCurrentUser: UsuarioResponse | null = null;
   public infoDataTeacher: DetalleUsuarioConsolidadoResponse | null = null;
   public responseConsolidatedConfirmDialog: string = '';
+
+  public isLoading: boolean = false;
+
   public tittleMessage: string = TITTLE_MESSAGE;
   public confirmMessage: string = CONFIRM_MESSAGE;
   public filterParmas: {
@@ -110,7 +115,9 @@ export class ConsolidatedTeacherComponent implements OnInit {
   }
 
   responseApproveConsolidated(response: boolean): void {
+
     if (response && this.idUserTeacher && this.infoCurrentUser) {
+      this.isLoading = true;
       this.consolidatedServicesService
         .saveConsolidated(
           this.idUserTeacher,
@@ -119,6 +126,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
         )
         .subscribe({
           next: (response) => {
+            this.isLoading = false;
             this.downloadApproveConsolidated(response.data.oidConsolidado, response.data.nombreArchivo);
             this.toastr.showSuccessMessage(
               'Consolidado aprobado  y generado correctamente',

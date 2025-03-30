@@ -7,14 +7,18 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 
 @Component({
   selector: 'responsibilities-edit-evaluation',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
-  ],
+    FormsModule,
+    ConfirmDialogComponent,
+    LoadingOverleyComponent
+],
   templateUrl: './responsibilities-edit-evaluation.component.html',
   styleUrl: './responsibilities-edit-evaluation.component.css'
 })
@@ -43,6 +47,7 @@ export class ResponsibilitiesEditEvaluationComponent {
   public fileNameSelected: WritableSignal<string> = signal('');
   public selectedFile: File | null = null;
   public fileDeleted: boolean = false;
+  public isLoading: boolean = false;
 
 
   constructor(private service: ResponsibilitiesServicesService, private toastr: MessagesInfoService) { }
@@ -81,6 +86,7 @@ export class ResponsibilitiesEditEvaluationComponent {
   public updateSource() {
     let sendSource: FuenteCreate[] = [];
     if (this.responsability && (this.selectedFile) && this.evaluation && this.currentUser) {
+      this.isLoading = true;
       sendSource = [{
         tipoFuente: "2",
         tipoCalificacion: "DOCUMENTO",
@@ -92,6 +98,7 @@ export class ResponsibilitiesEditEvaluationComponent {
         ({
           next: () => {
             this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
+            this.isLoading = false;
             this.closeModalEditSelected.emit(true);
             this.service.setParamsActivitiesFilterSignal(null, null, null, null);
           },

@@ -79,7 +79,10 @@
                     </td>
                     <td>
                       <input
-                        [ngClass]="{ 'text-error': isInvalidField(item) }"
+                        [ngClass]="{
+                           'text-error': isInvalidField(item),
+                           'input-evaluation-disabled': this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA'
+                           }"
                         id="input-evaluation-edit"
                         class="input-evaluation text-body-regular"
                         formControlName="calificacion"

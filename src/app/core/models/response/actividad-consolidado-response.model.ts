@@ -10,12 +10,12 @@ export interface ActividadConsolidadoResponse {
 
 export interface Actividades {
   'DOCENCIA': InformacionActividad[];
-  'TRABAJO DE INVESTIGACIÓN': InformacionActividad[];
-  'PROYECTO DE INVESTIGACIÓN': InformacionActividad[];
+  'TRABAJOS DE INVESTIGACION': InformacionActividad[];
+  'PROYECTOS INVESTIGACIÓN': InformacionActividad[];
   'TRABAJO DE DOCENCIA': InformacionActividad[];
   'ADMINISTRACIÓN': InformacionActividad[];
   'EXTENSIÓN': InformacionActividad[];
-  'ASESORIA': InformacionActividad[];
+  'ASESORÍA': InformacionActividad[];
   'CAPACITACIÓN': InformacionActividad[];
   'OTRO SERVICIO': InformacionActividad[];
 }

@@ -9,6 +9,7 @@ import { FuenteCreate } from '../../models/modified/fuente-create.model';
 import { UsuarioConsolidadoResponse } from '../../models/response/usuario-consolidado-response.model';
 import { AutoevaluacionFuente } from '../../models/modified/autoevaluacion-fuente.model';
 import { FuenteAutoevaluacion } from '../../models/modified/fuente-autoevaluacion.model';
+import { FuenteDocenteFormularioResponse } from '../../models/response/fuente-docente-formulario-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -65,6 +66,15 @@ export class SmActivitiesServicesService {
       .pipe(map((resp) => resp.data));
   }
 
+
+  /*
+   * Method to get the activities of the teacher
+   * @param id:number
+   * @returns Observable<SimpleResponse<FuenteDocenteFormularioResponse>>
+   */
+  getActivityByIdForm(idSource: number): Observable<SimpleResponse<FuenteDocenteFormularioResponse>> {
+    return this.httpClient.get<SimpleResponse<FuenteDocenteFormularioResponse>>(`${this.baseUrl}/api/autoevaluacion/${idSource}`);
+  }
   /*
    * Method to get the general information of the teacher
    * @param idEvaluated:string
@@ -151,4 +161,6 @@ export class SmActivitiesServicesService {
       { params, responseType: 'blob' }
     );
   }
+
+
 }

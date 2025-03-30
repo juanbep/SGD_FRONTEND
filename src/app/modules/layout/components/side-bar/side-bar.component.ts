@@ -7,15 +7,11 @@ import { UsuarioResponse } from '../../../../core/models/response/usuario-respon
 @Component({
   selector: 'layout-side-bar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './side-bar.component.html',
-  styleUrl: './side-bar.component.css'
+  styleUrl: './side-bar.component.css',
 })
 export class SideBarComponent implements OnInit {
-
   private authServicesService: AuthServiceService = inject(AuthServiceService);
 
   public currentUser: UsuarioResponse | null = null;
@@ -24,94 +20,107 @@ export class SideBarComponent implements OnInit {
   public isUserManagementCollapsed: boolean = true;
   public isEvaluationCollapsed: boolean = true;
 
-
   public userRoles: string[] = [];
 
   public sidebarItems = [
     {
-      role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
+      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
       label: 'Periodo académico',
       icon: 'assets/icons/sidebar/icon-calendar.svg',
-      sub:[
+      sub: [
         {
           role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
           label: 'Gestión periodo académico',
-          url: '/app/gestion-periodo-academico'
-        }
-      ]
+          url: '/app/gestion-periodo-academico',
+        },
+      ],
     },
     {
-      role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
+      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
           label: 'Usuarios',
-          url: '/app/gestion-usuarios/usuarios'
+          url: '/app/gestion-usuarios/usuarios',
         },
         {
-          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
           label: 'Actividades',
-          url: '/app/gestion-usuarios/actividades/usuarios'
-        }
-      ]
+          url: '/app/gestion-usuarios/actividades/usuarios',
+        },
+      ],
     },
     {
-      
-      role:['JEFE DE DEPARTAMENTO', 'COORDINADOR','DOCENTE', 'ESTUDIANTE','DECANO','SECRETARIA/O FACULTAD','CPD'],
-      label: 'Evaluación Docente', 
-      icon: 'assets/icons/sidebar/icon-evaluation.svg', 
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'COORDINADOR',
+        'DOCENTE',
+        'ESTUDIANTE',
+        'DECANO',
+        'SECRETARIA/O FACULTAD',
+        'CPD',
+      ],
+      label: 'Evaluación Docente',
+      icon: 'assets/icons/sidebar/icon-evaluation.svg',
       sub: [
         {
-          role:['DOCENTE','SECRETARIA/O FACULTAD'],
-          label:'Mis actividades',
-          url: '/app/gestion-soportes/actividades'
+          role: ['DOCENTE', 'SECRETARIA/O FACULTAD'],
+          label: 'Mis actividades',
+          url: '/app/gestion-soportes/actividades',
         },
         {
-          role:['JEFE DE DEPARTAMENTO','ESTUDIANTE','COORDINADOR','DECANO','DOCENTE','SECRETARIA/O FACULTAD'],
-          label:'Mis responsabilidades',
-          url: '/app/gestion-soportes/responsabilidades'
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'ESTUDIANTE',
+            'COORDINADOR',
+            'DECANO',
+            'DOCENTE',
+            'SECRETARIA/O FACULTAD',
+          ],
+          label: 'Mis responsabilidades',
+          url: '/app/gestion-soportes/responsabilidades',
         },
         {
-          role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
-          label:'Consolidado',
-          url:'/app/gestion-soportes/consolidado/lista-docentes'
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+          label: 'Consolidado',
+          url: '/app/gestion-soportes/consolidado/lista-docentes',
         },
         {
-          role:['CPD','SECRETARIA/O FACULTAD'],
-          label:'CPD',
-          url:'/app/gestion-soportes/cpd/lista-docentes'
+          role: ['CPD', 'SECRETARIA/O FACULTAD'],
+          label: 'CPD',
+          url: '/app/gestion-soportes/cpd/lista-docentes',
         },
-      ]
+      ],
     },
     {
-      role:['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
+      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
       label: 'Estadísticas',
       icon: 'assets/icons/sidebar/icon-statistics.svg',
-    }
-  ]
+    },
+  ];
 
   ngOnInit(): void {
     this.currentUser = this.authServicesService.currentUserValue;
-    this.userRoles = this.currentUser?.roles.map(role => role.nombre) || [];
+    this.userRoles = this.currentUser?.roles.map((role) => role.nombre) || [];
   }
+
+  //Resto del código...
 
   hasRole(roles: string[]): boolean {
     const roleSet = new Set(roles);
-    return this.userRoles.some(role => roleSet.has(role));
+    return this.userRoles.some((role) => roleSet.has(role));
   }
-  
+
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.checkScreenSize();
   }
-  
 
   toggleSidebar() {
     this.isSidebarActive = !this.isSidebarActive;
   }
-
 
   toggleAction(label: string) {
     switch (label) {
@@ -133,7 +142,7 @@ export class SideBarComponent implements OnInit {
     }
   }
 
-  isToggle(label:string){
+  isToggle(label: string) {
     switch (label) {
       case 'Periodo académico':
         return this.isAcademicPerdiosCollapsed;
@@ -144,7 +153,6 @@ export class SideBarComponent implements OnInit {
       default:
         return false;
     }
-
   }
 
   private checkScreenSize() {

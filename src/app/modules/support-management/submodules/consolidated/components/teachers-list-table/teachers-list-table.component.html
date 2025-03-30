@@ -50,5 +50,5 @@
     </table>
 </section>
 <section id="paginator-section-consolidated">
-    <shared-paginator [currentPage]="currentPage" [totalPages]="teacherServiceResponse?.totalPages || 1"></shared-paginator>
+    <shared-paginator [currentPage]="currentPage" [totalPages]="teacherServiceResponse?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
 </section>

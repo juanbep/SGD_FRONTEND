@@ -13,49 +13,62 @@
         <th>
           <span class="text-body-regular">Nombres y apellidos</span>
           <br />
-          <span class="text-body-small-sb">{{evaluado?.nombres}} {{evaluado?.apellidos}}</span>
+          <span class="text-body-small-sb"
+            >{{ evaluado?.nombres }} {{ evaluado?.apellidos }}</span
+          >
         </th>
         <th>
           <span class="text-body-regular">Num.Id</span>
           <br />
-          <span class="text-body-small-sb">{{evaluado?.identificacion}}</span>
+          <span class="text-body-small-sb">{{ evaluado?.identificacion }}</span>
         </th>
         <th>
           <span class="text-body-regular">Nombre de la actividad</span>
           <br />
-          <span class="text-body-small-sb">{{activityResponse?.nombreActividad}}</span>
+          <span class="text-body-small-sb">{{
+            activityResponse?.nombreActividad
+          }}</span>
         </th>
         <th>
           <span class="text-body-regular">Tipo</span>
           <br />
-          <span class="text-body-small-sb">{{activityResponse?.tipoActividad?.nombre}}</span>
+          <span class="text-body-small-sb">{{
+            activityResponse?.tipoActividad?.nombre
+          }}</span>
         </th>
       </tr>
       <tr>
-       
         <th>
           <!-- Horas totales -->
           <span class="text-body-regular">Horas totales</span>
           <br />
-          <span class="text-body-small-sb">{{ (activityResponse?.semanas || 0) * (activityResponse?.horas || 0)}}</span>
+          <span class="text-body-small-sb">{{
+            (activityResponse?.semanas || 0) * (activityResponse?.horas || 0)
+          }}</span>
         </th>
         <th>
           <!-- Periodo -->
           <span class="text-body-regular">Periodo</span>
           <br />
-          <span class="text-body-small-sb">{{activityPeriod?.idPeriodo}}</span>
+          <span class="text-body-small-sb">{{
+            activityPeriod?.idPeriodo
+          }}</span>
         </th>
         <th>
           <!-- Fecha de inicio -->
           <span class="text-body-regular">Fecha de inicio</span>
           <br />
-          <span class="text-body-small-sb">{{activityPeriod?.fechaFin | date: 'dd/MM/yyyy'}}</span>
+          <span class="text-body-small-sb">{{
+            activityPeriod?.fechaFin | date : "dd/MM/yyyy"
+          }}</span>
         </th>
         <th>
           <!-- Fecha de fin -->
-          <span class="text-body-regular">Fecha de fin</span>
+          <span class="text-body-regular">Fecha de finalización</span>
           <br />
-          <span class="text-body-small-sb">{{activityPeriod?.fechaInicio | date: 'dd/MM/yyyy'}}</span>
+          <span class="text-body-small-sb">{{
+            activityPeriod?.fechaInicio | date : "dd/MM/yyyy"
+          }}</span>
         </th>
       </tr>
     </thead>
@@ -131,7 +144,7 @@
                   data-placement="top"
                   title="Campo obligatorio"
                   >* </span
-                >Descripción actividad</label
+                >Resultado</label
               >
             </div>
             <span
@@ -194,7 +207,7 @@
               *ngIf="isInvalidField('results.' + i + '.ODS')"
               class="error-message text-body-small-r ms-1"
             >
-              {{ getFieldError('results.' + i + '.ODS') }}
+              {{ getFieldError("results." + i + ".ODS") }}
             </span>
           </div>
           <div class="col">
@@ -225,7 +238,7 @@
                   <button
                     class="button-upload button-actions button-border-radius"
                     type="button"
-                    (click)="triggersEvidences('uploadFileAssessment'+i)"
+                    (click)="triggersEvidences('uploadFileAssessment' + i)"
                   ></button>
                 </div>
               </div>
@@ -235,9 +248,18 @@
                 <div class="download-file-label">
                   <span class="text-body-small-r">Soporte</span>
                   <br />
-                  <span class="text-body-small-sb">'Nombre'</span>
+                  <span class="text-body-small-sb">{{
+                    this.evidences[i].name
+                  }}</span>
                 </div>
-                <button class="button-actions button-download"></button>
+                <div class="file-actions">
+                  <button
+                    class="button-actions button-delete"
+                    type="button"
+                    (click)="deleteEvidenceFile(i)"
+                  ></button>
+                  <button type="button" class="button-actions button-download" (click)="downloadEvidenceFile(i)"></button>
+                </div>
               </div>
             </ng-template>
           </div>
@@ -388,26 +410,35 @@
       <div class="col-3">
         <span class="title-three">Evaluación</span>
         <div class="form-floating">
-          <input type="text" class="form-control input-text" id="evaluation" formControlName="evaluation" [ngClass]="{
-            'error-label': isInvalidField('evaluation')
-          }"/>
-          <label class="label-custom text-body-small-sb" for="evaluation"  [ngClass]="{
-            'error-label': isInvalidField('evaluation')
-          }"
+          <input
+            type="text"
+            class="form-control input-text"
+            id="evaluation"
+            formControlName="evaluation"
+            [ngClass]="{
+              'error-label': isInvalidField('evaluation')
+            }"
+          />
+          <label
+            class="label-custom text-body-small-sb"
+            for="evaluation"
+            [ngClass]="{
+              'error-label': isInvalidField('evaluation')
+            }"
             ><span
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Campo obligatorio"
-            >* </span
-          >Evaluación</label
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Campo obligatorio"
+              >* </span
+            >Evaluación</label
           >
         </div>
         <span
-              *ngIf="isInvalidField('evaluation')"
-              class="error-message text-body-small-r ms-1"
-            >
-              {{ getFieldError("evaluation") }}
-            </span>
+          *ngIf="isInvalidField('evaluation')"
+          class="error-message text-body-small-r ms-1"
+        >
+          {{ getFieldError("evaluation") }}
+        </span>
       </div>
     </div>
 
@@ -424,10 +455,15 @@
 
     <div class="mb-3"></div>
     <!-- Sección para firma -->
-    <div class="row" style="width: 50%;">
+    <div class="row" style="width: 50%">
       <div class="col">
         <span class="title-three">Firma del evaluado</span>
-        <ng-container *ngIf="!newSelfEvaluationForm.get('signature')?.value; else signatureLoaded">
+        <ng-container
+          *ngIf="
+            !newSelfEvaluationForm.get('signature')?.value;
+            else signatureLoaded
+          "
+        >
           <div class="file-upload-container">
             <label for="signature" class="file-upload-label">
               <div class="file-details">
@@ -436,6 +472,9 @@
               </div>
               <input
                 type="file"
+                [ngClass]="{
+                  'error-input': isInvalidField('signature')
+                }"
                 formControlName="signature"
                 id="signature"
                 (change)="onSignatureSelected($event)"
@@ -443,17 +482,43 @@
               />
             </label>
             <div class="file-actions">
-              <button type="button" class="button-upload button-actions button-border-radius" (click)="triggersSignatureUpload()"></button>
+              <button
+                type="button"
+                class="button-upload button-actions button-border-radius"
+                (click)="triggersSignatureUpload()"
+              ></button>
+              
             </div>
           </div>
         </ng-container>
         <ng-template #signatureLoaded>
           <div class="download-file-container">
             <div class="file-details">
-              <p class="file-title text-body-small-sb">Firma cargada</p>
+              <p class="file-title text-body-small-sb">Firma</p>
+              <p class="file-name text-body-small-sb">
+                {{ signatureFile?.name }}
+              </p>
+            </div>
+            <div class="file-actions">
+              <button
+                type="button"
+                class="button-actions button-delete button-radius-custom"
+                (click)="deleteSignatureFile()"
+              ></button>
+              <button
+                type="button"
+                class="button-actions button-download"
+                (click)="downloadSignatureFile()"
+              ></button>
             </div>
           </div>
         </ng-template>
+        <span
+        *ngIf="isInvalidField('signature')"
+        class="error-message text-body-small-r ms-1"
+      >
+        {{ getFieldError("signature") }}
+      </span>
       </div>
     </div>
     <div class="mb-3"></div>
@@ -462,7 +527,7 @@
         <div class="download-file-container">
           <div class="file-details">
             <p class="file-title text-body-small-sb">Previsualización</p>
-  
+
             <p class="file-name text-body-small-sb">
               Genere la previsualización de la evaluación en formato PDF
             </p>
@@ -473,17 +538,20 @@
               class="button-actions button-view"
               (click)="generatePdfPreview()"
             ></button>
-      </div>
+          </div>
         </div>
       </div>
     </div>
     <!-- ...botones de previsualización y guardar... -->
-    <div class="mb-3"></div>
+    <div class="mb-4"></div>
     <div class="row row-cols-auto justify-content-center">
       <div class="col">
-        <button type="submit" class="button-normal">
-          Guardar
+        <button type="button" class="button-normal" (click)="goBack()">
+          cancelar
         </button>
+      </div>
+      <div class="col">
+        <button type="submit" class="button-normal">Guardar</button>
       </div>
     </div>
   </form>

@@ -468,13 +468,13 @@ export class NewActivityComponent implements OnInit {
         }
         if (this.newActivityForm.get('administrativeAct')?.value) {
           atributos.push({
-            codigoAtributo: 'ACTO_ADMINISTRATIVO',
+            codigoAtributo: 'ACTOADMINISTRATIVO',
             valor: this.newActivityForm.get('administrativeAct')?.value,
           });
         }
         if (this.newActivityForm.get('projectName')?.value) {
           atributos.push({
-            codigoAtributo: 'NOMBRE_PROYECTO',
+            codigoAtributo: 'NOMBREPROYECTO',
             valor: this.newActivityForm.get('projectName')?.value,
           });
         }

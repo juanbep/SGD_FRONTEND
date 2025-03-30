@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input, OnInit } from '@angular/core';
+import { Component, effect, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivitiesViewEvaluationComponent } from '../activities-view-evaluation/activities-view-evaluation.component';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
@@ -9,6 +9,8 @@ import { PagedResponse } from '../../../../../../core/models/response/paged-resp
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { Router } from '@angular/router';
+import { SelfEvaluationFormComponent } from '../../pages/self-evaluation-form/self-evaluation-form.component';
+import { SelfEvaluationReviewModalComponent } from '../self-evaluation-review-modal/self-evaluation-review-modal.component';
 
 const PAGE_SIZE = 10;
 
@@ -19,6 +21,7 @@ const PAGE_SIZE = 10;
     CommonModule,
     ActivitiesViewEvaluationComponent,
     PaginatorComponent,
+    SelfEvaluationReviewModalComponent
   ],
   templateUrl: './activities-table.component.html',
   styleUrl: './activities-table.component.css',
@@ -26,6 +29,9 @@ const PAGE_SIZE = 10;
 export class ActivitiesTableComponent {
   @Input()
   currentUser: UsuarioResponse | null = null;
+
+  @ViewChild(SelfEvaluationReviewModalComponent)
+  selfEvaluationReviewModalComponent : SelfEvaluationReviewModalComponent | null = null;
 
   public currentPage: number = 1;
   public activities: PagedResponse<ActividadResponse> | null = null;
@@ -115,6 +121,11 @@ export class ActivitiesTableComponent {
     this.router.navigate(['/app/gestion-soportes/actividades/formulario-autoevaluacion', responsabiltyId]);
   }
 
+  public openEditFormEvaluation(responsabiltyId: number){
+    this.router.navigate(['/app/gestion-soportes/actividades/formulario-editar-autoevaluacion', responsabiltyId]);
+  }
+  
+
   public reloadActivities() {
     if (this.activities && this.activities.content) {
       this.activitiesByType = Object.values(
@@ -136,9 +147,16 @@ export class ActivitiesTableComponent {
       );
     }
   }
+
+  public openSelfEvaluationReviewForm(idSource: number) {
+    if (this.selfEvaluationReviewModalComponent) {
+      this.selfEvaluationReviewModalComponent.openModal(idSource);
+    }
+  }
+
 }
 
-export interface ActividadesPorTipoActividad {
+interface ActividadesPorTipoActividad {
   nombreType: string;
   activities: ActividadResponse[];
 }

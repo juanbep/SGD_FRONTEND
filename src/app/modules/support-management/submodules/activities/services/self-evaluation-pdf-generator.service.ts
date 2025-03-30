@@ -76,7 +76,7 @@ export class SelfEvaluationPdfGeneratorService {
     // Evaluación y observaciones
     doc.text(`Evaluación: ${formData.evaluation || ''}`, 10, y);
     y += 7;
-    doc.text(`Observaciones: ${formData.obseravations || ''}`, 10, y);
+    doc.text(`Observaciones: ${formData.observation || ''}`, 10, y);
     y += 10;
     // NUEVO: Campo firma
     doc.setFont('helvetica', 'bold');

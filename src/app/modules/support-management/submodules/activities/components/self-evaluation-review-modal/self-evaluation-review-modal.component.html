@@ -1,0 +1,170 @@
+<div
+  class="modal fade"
+  id="self-evaluation-review-modal"
+  data-bs-backdrop="static"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="header-container col">
+          <span class="title-three mx-3">Revisión de Autoevaluación</span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <section>
+          <div>
+            <strong class="title-three">Información de Evaluación</strong>
+          </div>
+          <div class="mb-3"></div>
+          <!-- Descripción Actividad con input -->
+          <div class="row">
+            <div class="col">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text"
+                  id="activityDescription"
+                  [value]="evaluationForm.get('activityDescription')?.value"
+                  disabled
+                />
+                <label for="activityDescription" class="label-custom text-body-small-sb">Descripción Actividad</label>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3"></div>
+          <!-- Evaluación con input -->
+          <div class="row">
+            <div class="col">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text"
+                  id="evaluation"
+                  [value]="evaluationForm.get('evaluation')?.value"
+                  disabled
+                />
+                <label for="evaluation" class="label-custom text-body-small-sb">Evaluación</label>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3"></div>
+          <!-- Resultados y ODS en tabla -->
+          <div class="row">
+            <div class="col">
+              <strong class="title-three">Resultados y ODS</strong>
+              <div class="mb-3"></div>
+              <table class="table-bordered w-100">
+                <thead>
+                  <tr>
+                    <th class="text-body-heavy">Resultado</th>
+                    <th class="text-body-heavy">ODS</th>
+                    <th class="text-body-heavy">Evidencia</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let result of evaluationForm.get('results')?.value; let i = index">
+                    <td class="text-body-regular">{{ result.result }}</td>
+                    <td class="text-body-regular">{{ result.ODS }}</td>
+                    <td>
+                      
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mb-3"></div>
+          <!-- Lección aprendida en tabla -->
+          <div class="row">
+            <div class="col">
+              <strong class="title-three">Lección Aprendida</strong>
+              <div class="mb-3"></div>
+              <table class="table-bordered w-100">
+                <thead>
+                  <tr>
+                    <th class="text-body-heavy">#</th>
+                    <th class="text-body-heavy">Lección</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let learnedLesson of evaluationForm.get('lessonsLearned')?.value; let i = index">
+                    <td class="text-body-regular">{{ i + 1 }}</td>
+                    <td class="text-body-regular">{{ learnedLesson.lesson }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mb-3"></div>
+          <!-- Oportunidad de mejora en tabla -->
+          <div class="row">
+            <div class="col">
+              <strong class="title-three">Oportunidad de Mejora</strong>
+              <div class="mb-3"></div>
+              <table class="table-bordered w-100">
+                <thead>
+                  <tr>
+                    <th class="text-body-heavy">#</th>
+                    <th class="text-body-heavy">Oportunidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let improvementOpportunity of evaluationForm.get('improvementOpportunities')?.value; let i = index">
+                    <td class="text-body-regular">{{ i + 1 }}</td>
+                    <td class="text-body-regular">{{ improvementOpportunity.opportunity }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="mb-3"></div>
+          <!-- Observación con textarea -->
+          <div class="row">
+            <div class="col">
+              <div class="form-floating">
+                <textarea
+                  class="form-control input-text"
+                  id="observation"
+                  disabled
+                  style="height:100px;"
+                >{{ evaluationForm.get('observation')?.value }}</textarea>
+                <label for="observation" class="label-custom text-body-small-sb">Observación</label>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3"></div>
+          <!-- Soporte sin cambios -->
+          <div class="row">
+            <div class="col">
+              <p class="title-three">Soporte</p>
+              <div class="mb-3"></div>
+              <div class="download-file-container">
+                <div class="file-details">
+                  <p class="file-title text-body-small-sb">Soporte</p>
+                  <p class="file-name text-body-small-sb"></p>
+                </div>
+                <div class="file-actions">
+                  <button
+                    type="button"
+                    class="button-actions button-download"
+                    (click)="downloadSupportFile()"
+                  ></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="modal-footer">
+        <div class="row row-cols-auto justify-content-center">
+          <div class="col d-flex justify-content-center">
+            <button type="button" class="button-normal" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

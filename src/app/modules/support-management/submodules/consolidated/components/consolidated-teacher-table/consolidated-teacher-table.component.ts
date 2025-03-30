@@ -113,14 +113,14 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
     switch (typeActivity) {
       case 'DOCENCIA':
         return this.consolidatedTeacher?.actividades['DOCENCIA'] || [];
-      case 'TRABAJO DE INVESTIGACIÓN':
+      case 'TRABAJOS DE INVESTIGACION':
         return (
-          this.consolidatedTeacher?.actividades['TRABAJO DE INVESTIGACIÓN'] ||
+          this.consolidatedTeacher?.actividades['TRABAJOS DE INVESTIGACION'] ||
           []
         );
-      case 'PROYECTO DE INVESTIGACIÓN':
+      case 'PROYECTOS INVESTIGACIÓN':
         return (
-          this.consolidatedTeacher?.actividades['PROYECTO DE INVESTIGACIÓN'] ||
+          this.consolidatedTeacher?.actividades['PROYECTOS INVESTIGACIÓN'] ||
           []
         );
       case 'TRABAJO DE DOCENCIA':
@@ -129,8 +129,8 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
         );
       case 'ADMINISTRACIÓN':
         return this.consolidatedTeacher?.actividades['ADMINISTRACIÓN'] || [];
-      case 'ASESORIA':
-        return this.consolidatedTeacher?.actividades['ASESORIA'] || [];
+      case 'ASESORÍA':
+        return this.consolidatedTeacher?.actividades['ASESORÍA'] || [];
       case 'EXTENSIÓN':
         return this.consolidatedTeacher?.actividades['EXTENSIÓN'] || [];
       case 'CAPACITACIÓN':

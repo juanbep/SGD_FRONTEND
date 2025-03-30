@@ -9,6 +9,8 @@ import { PagedResponse } from '../../../../../../core/models/response/paged-resp
 import { UsuarioConsolidadoResponse } from '../../../../../../core/models/response/usuario-consolidado-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
+const PAGE_SIZE = 10;
+
 @Component({
   selector: 'consolidated-teachers-list-table',
   standalone: true,
@@ -26,12 +28,14 @@ export class TeacherListTableComponent implements OnInit {
     null;
   public teacherList: UsuarioConsolidadoResponse[] = [];
   public currentUser: UsuarioResponse | null = null;
-  public filterParams: {teacherType: string | null, contractType: string | null} | null = null;
-
+  public filterParams: {
+    teacherType: string | null;
+    contractType: string | null;
+  } | null = null;
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
-    this.recoverTeachers(this.currentPage, 10);
+    this.recoverTeachers(this.currentPage, PAGE_SIZE);
   }
 
   recoverTeachers(page: number, size: number): void {
@@ -50,5 +54,10 @@ export class TeacherListTableComponent implements OnInit {
           this.toastr.showErrorMessage(error.error.mensaje, 'Error');
         },
       });
+  }
+
+  pageChanged(event: number) {
+    this.currentPage = event;
+    this.recoverTeachers(this.currentPage, PAGE_SIZE);
   }
 }

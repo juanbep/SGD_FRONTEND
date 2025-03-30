@@ -31,7 +31,7 @@ export class SmResponsibilitiesServicesService {
     getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page:number|null, totalPage:number|null): Observable<SimpleResponse<PagedResponse<ResponsabilidadResponse>>> {
         let params = new HttpParams()
             .set( 'idEvaluador', evaluatorId )
-            .set( 'codigoActividad', activityName ?  activityName : '' )
+            .set( 'nombreActividad', activityName ?  activityName : '' )
             .set( 'tipoActividad', activityType ? activityType : '' )
             .set( 'nombreEvaluado', evaluatorName ? evaluatorName : '' )
             .set( 'roles', roles ? roles : '' )

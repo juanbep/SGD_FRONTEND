@@ -133,6 +133,13 @@
     font-size: 24px !important;
 }
 
+.input-evaluation-disabled{
+    color: var(--neutral-60) !important;
+    background-color: var(--neutral-95) !important;
+    border-color: var(--neutral-95) !important;
+    pointer-events: none;
+}
+
 .input-evaluation-error {
     width: 80%;
     height: 63px;

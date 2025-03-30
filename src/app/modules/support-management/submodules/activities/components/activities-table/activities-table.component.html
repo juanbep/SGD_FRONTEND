@@ -40,11 +40,42 @@
             class="button-table"
             *ngIf="
               activity.fuentes[0] &&
-              activity.fuentes[0].estadoFuente == 'DILIGENCIADO'
+              activity.fuentes[0].estadoFuente == 'DILIGENCIADO' &&
+              activity.fuentes[0].tipoCalificacion == 'DOCUMENTO'
             "
             (click)="openModalView(activity, 1)"
           >
             <img src="assets/icons/tables/icon-view.svg" alt="Ver actividad" />
+          </button>
+          <button
+            class="button-table"
+            *ngIf="
+              activity.fuentes[0] &&
+              activity.fuentes[0].estadoFuente == 'DILIGENCIADO' &&
+              activity.fuentes[0].tipoCalificacion == 'EN_LINEA'
+            "
+            (click)="openSelfEvaluationReviewForm(activity.fuentes[0].oidFuente)"
+          >
+            <img
+              src="assets/icons/tables/icon-view.svg"
+              alt="iconoformularion evaluación"
+              title="Formulario de evalución"
+            />
+          </button>
+          <button
+            class="button-table"
+            *ngIf="
+              activity.fuentes[0] &&
+              activity.fuentes[0].estadoFuente == 'DILIGENCIADO' &&
+              activity.fuentes[0].tipoCalificacion == 'EN_LINEA'
+            "
+            (click)="openEditFormEvaluation(activity.fuentes[0].oidFuente)"
+          >
+            <img
+              src="assets/icons/tables/icon-pen.svg"
+              alt="iconoformularion evaluación"
+              title="Formulario de evalución"
+            />
           </button>
           <activities-view-evaluation
             *ngIf="
@@ -58,13 +89,19 @@
             (closeModalSelected)="closeModalView($event)"
           ></activities-view-evaluation>
           <button
-          *ngIf="activity.fuentes[0] && activity.fuentes[0].estadoFuente == 'PENDIENTE'"
-          class="button-table"
-          (click)="openFormEvaluation(activity.oidActividad)"
+            *ngIf="
+              activity.fuentes[0] &&
+              activity.fuentes[0].estadoFuente == 'PENDIENTE'
+            "
+            class="button-table"
+            (click)="openFormEvaluation(activity.oidActividad)"
           >
-          <img src="assets/icons/tables/icon-form.svg" alt="iconoformularion evaluación" title="Formulario de evalución">
-
-        </button>
+            <img
+              src="assets/icons/tables/icon-form.svg"
+              alt="iconoformularion evaluación"
+              title="Formulario de evalución"
+            />
+          </button>
         </td>
         <td>
           <span class="text-body-regular"
@@ -147,3 +184,5 @@
   [totalPages]="activities?.totalPages || 1"
   (pageChange)="pageChanged($event)"
 ></shared-paginator>
+
+<self-evaluation-review-modal></self-evaluation-review-modal>

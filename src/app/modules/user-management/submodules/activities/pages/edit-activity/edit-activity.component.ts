@@ -147,7 +147,7 @@ export class EditActivityComponent implements OnInit {
         if (atributo.codigoAtributo === 'CODIGO') {
           this.activityForm.get('codeActivity')?.setValue(atributo.valor);
         }
-        if (atributo.codigoAtributo === 'ACTO_ADMINISTRATIVO') {
+        if (atributo.codigoAtributo === 'ACTOADMINISTRATIVO') {
           this.activityForm.get('administrativeAct')?.setValue(atributo.valor);
         }
         if (atributo.codigoAtributo === 'VRI') {
@@ -162,7 +162,7 @@ export class EditActivityComponent implements OnInit {
         if (atributo.codigoAtributo === 'MATERIA') {
           this.activityForm.get('subject')?.setValue(atributo.valor);
         }
-        if (atributo.codigoAtributo === 'NOMBRE_PROYECTO') {
+        if (atributo.codigoAtributo === 'NOMBREPROYECTO') {
           this.activityForm.get('projectName')?.setValue(atributo.valor);
         }
       }
@@ -776,7 +776,7 @@ export class EditActivityComponent implements OnInit {
               valor: this.activityForm.get('codeActivity')?.value,
             },
             {
-              codigoAtributo: 'ACTO_ADMINISTRATIVO',
+              codigoAtributo: 'ACTOADMINISTRATIVO',
               valor: this.activityForm.get('administrativeAct')?.value,
             },
             {
@@ -796,7 +796,7 @@ export class EditActivityComponent implements OnInit {
               valor: this.activityForm.get('subject')?.value,
             },
             {
-              codigoAtributo: 'NOMBRE_PROYECTO',
+              codigoAtributo: 'NOMBREPROYECTO',
               valor: this.activityForm.get('projectName')?.value,
             },
           ],

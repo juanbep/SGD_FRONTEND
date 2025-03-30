@@ -262,7 +262,7 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.JUSTIFIED,
                         children: [
                             new TextRun({
-                                text: `El(la) profesor(a) ${teacherInfo.nombreDocente}, obtuvo una evaluación ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, la cual fue calificada con ${teacherConsolidated.totalAcumulado} puntos.`,
+                                text: `El(la) profesor(a) ${teacherInfo.nombreDocente}, obtuvo una evaluación ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, la cual fue calificada con ${teacherConsolidated.totalAcumulado.toFixed(2)} puntos.`,
                                 size: 24
                             }),
                         ],

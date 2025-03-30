@@ -2,14 +2,18 @@ import { Component, inject, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmailService } from '../../services/email.service';
 import { MessagesInfoService } from '../../services/messages-info.service';
+import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
+import { LoadingOverleyComponent } from "../loading-overley/loading-overley.component";
 declare var bootstrap: any;
 
 @Component({
   selector: 'shared-email',
   standalone: true,
   imports: [
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    LoadingOverleyComponent
+],
   templateUrl: './email.component.html',
   styleUrl: './email.component.css'
 })
@@ -18,6 +22,7 @@ export class EmailComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private emailService: EmailService = inject(EmailService);
   private messageInfoService: MessagesInfoService = inject(MessagesInfoService);
+  public isLoading: boolean = false;
 
   public fomrEmail: FormGroup = this.formBuilder.group({
     sender: [,''],
@@ -55,6 +60,7 @@ export class EmailComponent {
   }
 
   sendEmail(){
+    this.isLoading = true;
     let emails:string[] = [];
     emails.push(this.remitente);
     emails.push(this.destinatario);
@@ -62,6 +68,7 @@ export class EmailComponent {
     this.emailService.sendEmail(emails, this.fomrEmail.get('subject')?.value, this.fomrEmail.get('message')?.value).subscribe(
       {
         next: (response) => {
+          this.isLoading = false;
           this.messageInfoService.showSuccessMessage('Email enviado correctamente', 'Email');
           const modalElement = document.getElementById('email-modal');
           if (modalElement) {

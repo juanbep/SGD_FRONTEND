@@ -26,7 +26,6 @@ export class ActivitiesServicesService {
   private smActivitiesServicesService = inject(SmActivitiesServicesService);
 
   private umUsersServicesService = inject(UmUsersServicesService);
-  
 
   setParamsActivitiesFilterSignal(
     activityName: string | null,
@@ -101,7 +100,12 @@ export class ActivitiesServicesService {
     );
   }
 
-  saveSelfAssessmentByForm(autoevaluacionFuente: FuenteAutoevaluacion, evidences: File[], signature:File, support: File) {
+  saveSelfAssessmentByForm(
+    autoevaluacionFuente: FuenteAutoevaluacion,
+    evidences: File[],
+    signature: File,
+    support: File
+  ) {
     return this.smActivitiesServicesService.saveSelfAssessmentForm(
       autoevaluacionFuente,
       evidences,
@@ -110,7 +114,11 @@ export class ActivitiesServicesService {
     );
   }
 
-  getUserById(userId: number){
+  getActivityByIdForm(idSource: number) {
+      return this.smActivitiesServicesService.getActivityByIdForm(idSource);
+    }
+
+  getUserById(userId: number) {
     return this.umUsersServicesService.getUserbyId(userId);
-}
+  }
 }

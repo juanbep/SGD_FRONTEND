@@ -8,9 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
-import { AutoevaluacionFuente } from '../../../../../../core/models/modified/autoevaluacion-fuente.model';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
@@ -61,6 +60,7 @@ export class SelfEvaluationFormComponent implements OnInit {
     SelfEvaluationPdfGeneratorService
   );
   private sanitizer: DomSanitizer = inject(DomSanitizer);
+  private router: Router = inject(Router);
 
   public activityResponse: ActividadResponse | null = null;
   public evaluado: UsuarioResponse | null = null;
@@ -155,7 +155,7 @@ export class SelfEvaluationFormComponent implements OnInit {
   // Nuevos métodos para lecciones aprendidas
   createLessonEntry(): FormGroup {
     return this.formBuilder.group({
-      lesson: [null, [Validators.required]],
+      lesson: [null],
     });
   }
 
@@ -175,7 +175,7 @@ export class SelfEvaluationFormComponent implements OnInit {
 
   createOpportunityEntry(): FormGroup {
     return this.formBuilder.group({
-      opportunity: [null, [Validators.required]],
+      opportunity: [null],
     });
   }
 
@@ -264,7 +264,9 @@ export class SelfEvaluationFormComponent implements OnInit {
   // Método para enviar la autoevaluación
   onSubmit() {
     if (this.newSelfEvaluationForm.invalid) {
-      // ...existing validación...
+      this.newSelfEvaluationForm.markAllAsTouched();
+      this.messagesInfoService.showWarningMessage(
+        'Por favor, complete todos los campos requeridos','Advertencia');
       return;
     }
 
@@ -274,6 +276,7 @@ export class SelfEvaluationFormComponent implements OnInit {
       oidFuente: this.activityResponse?.fuentes[0].oidFuente || 0,
       tipoCalificacion: 'EN_LINEA',
       calificacion: Number(this.newSelfEvaluationForm.get('evaluation')?.value) || 0,
+      descripcion: this.newSelfEvaluationForm.get('activityDescription')?.value || '',
       observacion: this.newSelfEvaluationForm.get('observation')?.value || '',
       odsSeleccionados: this.newSelfEvaluationForm.get('results')?.value.map((result: any) => {
         const odsSeleccionado: OdsSeleccionado = {
@@ -299,7 +302,12 @@ export class SelfEvaluationFormComponent implements OnInit {
     this.generatePdfPreview();
     this.activitiesServicesService.saveSelfAssessmentByForm(autoevaluacionFuente, this.evidences, this.signatureFile!, this.formPdf!).subscribe({
       next: (response) => {
-        this.messagesInfoService.showSuccessMessage(response.mensaje, 'Éxito');
+        this.messagesInfoService.showSuccessMessage('La autoevaluación se ha guardado con éxito', 'Éxito');
+        this.router.navigate(['./app/gestion-soportes/actividades/']);
+        
+      },
+      error: (error) => {
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
       }
     });
 
@@ -316,5 +324,47 @@ export class SelfEvaluationFormComponent implements OnInit {
       pdfResult.base64
     );
     this.formPdf = pdfResult.file;
+  }
+
+  deleteEvidenceFile(index: number) {
+    this.evidences.splice(index, 1);
+  this.newSelfEvaluationForm.get("results."+index+".evidence")? this.newSelfEvaluationForm.get("results."+index+".evidence")?.setValue(null) : null;
+  }
+
+  downloadEvidenceFile(index: number) {
+    const evidence = this.evidences[index];
+    if (evidence) {
+      const url = URL.createObjectURL(evidence);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.style.display = 'none';
+      a.href = url;
+      a.download = evidence.name;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  }
+
+  deleteSignatureFile() {
+    this.signatureFile = null;
+    this.newSelfEvaluationForm.get('signature')?.setValue(null);
+  }
+
+  downloadSignatureFile() {
+    const signature = this.signatureFile;
+    if (signature) {
+      const url = URL.createObjectURL(signature);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.style.display = 'none';
+      a.href = url;
+      a.download = signature.name;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  }
+
+  goBack() {
+    this.router.navigate(['./app/gestion-soportes/actividades/']);
   }
 }

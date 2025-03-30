@@ -185,6 +185,11 @@ export class ResponsibilitiesTableComponent {
       });
   }
 
+  pageChange(page: number) {
+    this.currentPage = page;
+    this.recoverResponsabilities(page, PAGE_SIZE);
+  }
+
   public reloadActivities() {
     if (this.responsabilities) {
       this.responsabilitieByType = Object.values(

@@ -13,11 +13,13 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
+
 
 @Component({
   selector: 'responsibilities-upload-evaluation',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingOverleyComponent],
   templateUrl: './responsibilities-upload-evaluation.component.html',
   styleUrl: './responsibilities-upload-evaluation.component.css',
 })
@@ -44,6 +46,7 @@ export class ResponsibilitiesUploadEvaluationComponent {
   public sendSource: FuenteCreate[] | null = null;
   public observacionSend: string = '';
   public fileNameSelected: WritableSignal<string> = signal('');
+  public isLoading: boolean = false;
 
   constructor(
     private service: ResponsibilitiesServicesService,
@@ -106,6 +109,7 @@ export class ResponsibilitiesUploadEvaluationComponent {
   }
 
   saveEvaluation(): void {
+    this.isLoading = true;
     if (
       this.responsability &&
       this.evaluation &&
@@ -129,6 +133,7 @@ export class ResponsibilitiesUploadEvaluationComponent {
         )
         .subscribe({
           next: (data) => {
+            this.isLoading = false;
             this.toastr.showSuccessMessage(
               'Evaluación guardada correctamente',
               'Éxito'

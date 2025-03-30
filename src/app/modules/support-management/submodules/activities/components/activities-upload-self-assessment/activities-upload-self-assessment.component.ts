@@ -114,7 +114,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
         this.formBuilder.group({
           nombreActividad: [activity.nombreActividad],
           calificacion: [
-              null,
+            activity.fuentes[0].calificacion,
             [
               Validators.required,
               Validators.pattern(this.validatorService.numericPattern),
@@ -126,6 +126,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
       );
     });
   }
+
 
   /*
    * Method to open the modal
@@ -259,13 +260,20 @@ export class ActivitiesUploadSelfAssessmentComponent {
           activitie.fuentes[0].calificacion =
             this.activities.controls[index].value.calificacion;
         });
-        this.sendSource = this.userActivities.map((activitie) => ({
-          oidActividad: activitie.oidActividad,
-          tipoCalificacion: 'DOCUMENTO',
-          tipoFuente: '1',
-          calificacion: activitie.fuentes[0].calificacion || 0,
-          informeEjecutivo: activitie.fuentes[0].nombreDocumentoInforme || '',
-        }));
+
+        this.userActivities.forEach((activitie, index) => {
+          if (activitie.fuentes[0].tipoCalificacion !== 'EN_LINEA') {
+            const fuente = {
+              oidActividad: activitie.oidActividad,
+              tipoCalificacion: 'DOCUMENTO',
+              tipoFuente: '1',
+              calificacion: activitie.fuentes[0].calificacion || 0,
+              informeEjecutivo:
+                activitie.fuentes[0].nombreDocumentoInforme || '',
+            };
+            this.sendSource.push(fuente);
+          }
+        });
         this.service
           .saveSelfAssessment(
             this.selectedFile,

@@ -38,24 +38,26 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody formArrayName="activities">
+                                <tbody formArrayName="activities" *ngIf="userActivities">
                                     <tr *ngFor="let item of activities.controls; let i = index" [formGroupName]="i">
                                         <td>
                                             <span class="text-body-regular">{{userActivities[i].nombreActividad}}</span>
                                         </td>
                                         <td>
-                                            <input [ngClass]="{'text-error': isInvalidField(item)}"
+                                            <input [ngClass]="{'text-error': isInvalidField(item),
+                                                'input-evaluation-disabled': this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA'
+                                            }"
                                                 id="input-evaluation-edit" class="input-evaluation text-body-regular"
                                                 formControlName="calificacion">
                                         </td>
                                         <td>
                                             <ng-container
-                                                *ngIf="userActivities[i].informeEjecutivo; else noReport">
+                                                *ngIf="userActivities[i].informeEjecutivo && !( this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA'); else noReport">
                                                 <ng-container
                                                     *ngIf="userActivities[i].fuentes[0].nombreDocumentoInforme; else missingReport">
                                                     <img src="assets/icons/tables/icon-view.svg" alt=""
                                                         style="cursor: pointer;"
-                                                        (click)="downloadReport(userActivities[i].fuentes[0].oidFuente)">
+                                                        (click)="downloadReport(userActivities[i].fuentes[0])">
                                                     <img src="assets/icons/tables/icon-trash.svg" alt=""
                                                         style="cursor: pointer;"
                                                         (click)="deleteReport(userActivities[i])">
@@ -108,7 +110,7 @@
                                                 Soporte
                                             </p>
                                             <p class="file-name text-body-small-r">
-                                                {{fileNameSelected? fileNameSelected : 'Seleccione un archivo'}}
+                                                {{fileNameSelected}}
                                             </p>
                                         </div>
                                         <input type="file" formControlName="uploadFileSource" id="uploadFileSource"

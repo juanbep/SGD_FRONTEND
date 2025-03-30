@@ -107,3 +107,10 @@ table{
   padding: 0px;
   margin: 0px;
 }
+
+.input-evaluation-disabled{
+  color: var(--neutral-60) !important;
+  background-color: var(--neutral-95) !important;
+  border-color: var(--neutral-95) !important;
+  pointer-events: none;
+}

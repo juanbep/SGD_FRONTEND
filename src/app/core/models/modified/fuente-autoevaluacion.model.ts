@@ -3,6 +3,7 @@ export interface FuenteAutoevaluacion {
   tipoCalificacion: 'EN_LINEA' | 'PRESENCIAL' | string;
   calificacion: number;
   observacion: string;
+  descripcion: string;
   odsSeleccionados: OdsSeleccionado[];
   leccionesAprendidas: LeccionAprendida[];
   oportunidadesMejora: OportunidadMejora[];

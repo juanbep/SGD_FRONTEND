@@ -15,6 +15,8 @@ import { ValidatorsService } from '../../../../../../shared/services/validators.
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { Fuente } from '../../../../../../core/models/base/fuente.model';
+import { send } from 'process';
 declare var bootstrap: any;
 
 const TOTAL_PAGE = 10;
@@ -132,29 +134,31 @@ export class ActivitiesEditEvaluationComponent {
    *  Llena el formulario con la información de las actividades
    */
   populateForm(): void {
-    if (this.userActivities[0]) {
-      this.fileNameSelected =
-        this.userActivities[0].fuentes[0].nombreDocumentoFuente || '';
-      this.formSelfEvaluation
-        .get('observation')
-        ?.setValue(this.userActivities[0].fuentes[0].observacion);
-      this.userActivities?.forEach((activitie) => {
-        this.activities.push(
-          this.formBuilder.group({
-            nombreActividad: [activitie.nombreActividad],
-            calificacion: [
-              activitie.fuentes[0].calificacion,
-              [
-                Validators.required,
-                Validators.pattern(this.validatorService.numericPattern),
-                Validators.min(0),
-                Validators.max(100),
-              ],
+    this.userActivities?.forEach((activitie) => {
+      if (
+        activitie.fuentes[0].tipoCalificacion !== 'EN_LINEA'
+      ) {
+        this.fileNameSelected =
+          activitie.fuentes[0].nombreDocumentoFuente || '';
+        this.formSelfEvaluation
+          .get('observation')
+          ?.setValue(activitie.fuentes[0].observacion);
+      }
+      this.activities.push(
+        this.formBuilder.group({
+          nombreActividad: [activitie.nombreActividad],
+          calificacion: [
+            activitie.fuentes[0].calificacion,
+            [
+              Validators.required,
+              Validators.pattern(this.validatorService.numericPattern),
+              Validators.min(0),
+              Validators.max(100),
             ],
-          })
-        );
-      });
-    }
+          ],
+        })
+      );
+    });
   }
 
   /*
@@ -199,7 +203,11 @@ export class ActivitiesEditEvaluationComponent {
    */
   recoverSource() {
     this.userActivities.forEach((content, index) => {
-      if (content.fuentes[0] && content.fuentes[0].oidFuente) {
+      if (
+        content.fuentes[0] &&
+        content.fuentes[0].oidFuente &&
+        content.fuentes[0].tipoCalificacion !== 'EN_LINEA'
+      ) {
         this.service
           .getDownloadSourceFile(content.fuentes[0].oidFuente)
           .subscribe({
@@ -268,39 +276,27 @@ export class ActivitiesEditEvaluationComponent {
    *  Descarga el archivo de fuente
    */
   downloadSourceFile(): void {
-    const oidFuente = this.userActivities[0].fuentes[0].oidFuente;
-    if (oidFuente !== undefined) {
-      this.service.getDownloadSourceFile(oidFuente).subscribe({
-        next: (response) => {
-          const blob = new Blob([response], { type: 'application/pdf' });
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-        },
-        error: (error) => {
-          this.toastr.showErrorMessage(
-            'Error',
-            'Error al descargar el archivo'
-          );
-        },
-      });
+    if (!this.selectedSourceFile) {
+      return;
     }
+    const blob = new Blob([this.selectedSourceFile], {
+      type: 'application/pdf',
+    });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
   }
 
   /*
    *  Descarga el archivo de informe ejecutivo
    */
-  downloadReport(sourceId: number): void {
-    this.userActivities?.forEach((content, index) => {
-      if (content.fuentes[0].oidFuente === sourceId) {
-        if (content.fuentes[0].informeEjecutivo) {
-          const blob = new Blob([content.fuentes[0].informeEjecutivo], {
-            type: 'application/pdf',
-          });
-          const url = window.URL.createObjectURL(blob);
-          window.open(url);
-        }
-      }
+  downloadReport(fuente: Fuente): void {
+    if (!fuente.informeEjecutivo) return;
+
+    const blob = new Blob([fuente.informeEjecutivo], {
+      type: 'application/pdf',
     });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
   }
 
   //Métodos para eliminar archivos de fuente e informe ejecutivo
@@ -399,13 +395,21 @@ export class ActivitiesEditEvaluationComponent {
         activitie.fuentes[0].calificacion =
           formValues.activities[index].calificacion;
       });
-      this.sendSource = this.userActivities.map((activitie) => ({
-        oidActividad: activitie.oidActividad,
-        tipoCalificacion: 'DOCUMENTO',
-        tipoFuente: '1',
-        calificacion: activitie.fuentes[0].calificacion || 0,
-        informeEjecutivo: activitie.fuentes[0].nombreDocumentoInforme || '',
-      }));
+
+      this.userActivities.forEach((activitie, index) => {
+        if (activitie.fuentes[0].tipoCalificacion !== 'EN_LINEA') {
+          const fuente = {
+            oidActividad: activitie.oidActividad,
+            tipoCalificacion: 'DOCUMENTO',
+            tipoFuente: '1',
+            calificacion: activitie.fuentes[0].calificacion || 0,
+            informeEjecutivo:
+              activitie.fuentes[0].nombreDocumentoInforme || '',
+          };
+          this.sendSource.push(fuente);
+        }
+      });
+
       this.service
         .saveSelfAssessment(
           this.selectedSourceFile!,

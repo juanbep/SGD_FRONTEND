@@ -158,7 +158,7 @@ export class ReponsibilitiesViewEvaluationFormComponent {
         this.responsibility?.preguntas[6]?.respuesta.toString() || '',
       qualification_8:
         this.responsibility?.preguntas[7]?.respuesta.toString() || '',
-      observations: this.responsibility?.observacion || '',
+      observations: this.responsibility?.Fuente.observacion || '',
     });
     this.computeAverage();
   }
@@ -200,15 +200,15 @@ export class ReponsibilitiesViewEvaluationFormComponent {
   }
 
   recoverSupportFile() {
-    if (this.responsibility?.oidFuente) {
+    if (this.responsibility?.Fuente.oidFuente) {
       this.responsibilitiesService
-        .getdownloadSourceFile(this.responsibility?.oidFuente)
+        .getdownloadSourceFile(this.responsibility?.Fuente.oidFuente)
         .subscribe({
           next: (blob) => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'fuente.pdf';
+            a.download = this.responsibility?.Fuente.nombreArchivo || 'fuente.pdf';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

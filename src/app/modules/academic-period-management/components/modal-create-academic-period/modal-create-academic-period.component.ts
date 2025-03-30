@@ -41,6 +41,31 @@ export class ModalCreateAcademicPeriodComponent {
     }
   );
 
+  saveNewAcademicPeriod(): void {
+    if (this.newAcademicPeriodForm.valid) {
+      let newAcademiPeriod: PeriodoAcademicoCreate = {
+        idPeriodo: this.newAcademicPeriodForm.get('idAcademicPeriod')?.value,
+        fechaInicio: this.newAcademicPeriodForm.get('startDate')?.value,
+        fechaFin: this.newAcademicPeriodForm.get('endDate')?.value,
+        estadoPeriodoAcademico: {
+          oidEstadoPeriodoAcademico: this.newAcademicPeriodForm.get('status')?.value == 'activo' ? 1 : 2
+        }
+      }
+      this.academicPeriodManagementService.saveNewAcademicPeriod(newAcademiPeriod).subscribe({
+        next: data => {
+          this.messageInfoService.showSuccessMessage('El periodo académico se ha creado correctamente', 'Exito');
+          this.recoverAcademicPeriods();
+          this.clearFields();
+        },
+        error: error => {
+          this.messageInfoService.showErrorMessage(error.error.mensaje, 'Error');
+        }
+      });
+    }
+  }
+
+  //Rest of the code
+
   open(): void {
     const myModal = document.getElementById('modal-create-academic-period');
     if (myModal) {
@@ -120,28 +145,7 @@ export class ModalCreateAcademicPeriodComponent {
     return null;
   }
 
-  saveNewAcademicPeriod(): void {
-    if (this.newAcademicPeriodForm.valid) {
-      let newAcademiPeriod: PeriodoAcademicoCreate = {
-        idPeriodo: this.newAcademicPeriodForm.get('idAcademicPeriod')?.value,
-        fechaInicio: this.newAcademicPeriodForm.get('startDate')?.value,
-        fechaFin: this.newAcademicPeriodForm.get('endDate')?.value,
-        estadoPeriodoAcademico: {
-          oidEstadoPeriodoAcademico: this.newAcademicPeriodForm.get('status')?.value == 'activo' ? 1 : 2
-        }
-      }
-      this.academicPeriodManagementService.saveNewAcademicPeriod(newAcademiPeriod).subscribe({
-        next: data => {
-          this.messageInfoService.showSuccessMessage('El periodo académico se ha creado correctamente', 'Exito');
-          this.recoverAcademicPeriods();
-          this.clearFields();
-        },
-        error: error => {
-          this.messageInfoService.showErrorMessage(error.error.mensaje, 'Error');
-        }
-      });
-    }
-  }
+
 
   recoverAcademicPeriods(): void {
     this.academicPeriodManagementService.getAllAcademicPeriods(this.currentPage - 1, PAGE_SIZE).subscribe((response) => {
