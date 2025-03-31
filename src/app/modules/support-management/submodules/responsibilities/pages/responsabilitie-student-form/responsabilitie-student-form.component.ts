@@ -19,7 +19,7 @@ import { ConfirmDialogComponent } from '../../../../../../shared/components/conf
 import { FuenteEstudianteFormulario } from '../../../../../../core/models/modified/fuente-estudiante-formulario.model';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
 import { CatalogDataService } from '../../../../../../shared/services/catalogData.service';
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
@@ -27,7 +27,12 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 @Component({
   selector: 'app-responsabilitie-student-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, LoadingOverleyComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    LoadingOverleyComponent,
+  ],
   templateUrl: './responsabilitie-student-form.component.html',
   styleUrl: './responsabilitie-student-form.component.css',
 })
@@ -61,7 +66,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
   public selectedFiles: {
     signature: File | null;
     reportDocument: File | null;
-  }= { signature: null, reportDocument: null };
+  } = { signature: null, reportDocument: null };
 
   public formPdf: File | null = null;
   public catalogDataResponse: CatalogDataResponse | null = null;
@@ -362,8 +367,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
     );
   }
 
- generatePdfPreview() {
-
+  generatePdfPreview() {
     const studentInfo = {
       name: this.evaluador?.nombres + ' ' + this.evaluador?.apellidos,
       id: this.evaluado?.identificacion,
@@ -378,14 +382,15 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
         this.formEvaluation.value,
         studentInfo
       );
-    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(pdfBase64.base64);
+    this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+      pdfBase64.base64
+    );
     this.formPdf = pdfBase64.file;
 
     this.selectedFiles.reportDocument = this.formPdf;
   }
 
   saveEvaluation() {
-
     if (this.formEvaluation.invalid) {
       this.formEvaluation.markAllAsTouched();
       this.menssagesInfoService.showWarningMessage(
@@ -402,30 +407,31 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
       oidFuente: this.responsibility?.fuentes[1].oidFuente || 0,
       tipoCalificacion: 'EN_LINEA',
       observacion: this.formEvaluation.get('observations')?.value || '',
-      oidEstadoEtapaDesarrollo: this.formEvaluation.get('developmentStage')?.value,
+      oidEstadoEtapaDesarrollo:
+        this.formEvaluation.get('developmentStage')?.value,
       encuesta: {
         nombre: this.formEvaluation.get('degreeWorkTitle')?.value,
       },
       preguntas: [
         {
           oidPregunta: 1,
-          respuesta: Number(this.formEvaluation.get('qualification_1')?.value)
+          respuesta: Number(this.formEvaluation.get('qualification_1')?.value),
         },
         {
           oidPregunta: 2,
-          respuesta: Number(this.formEvaluation.get('qualification_2')?.value)
+          respuesta: Number(this.formEvaluation.get('qualification_2')?.value),
         },
         {
           oidPregunta: 3,
-          respuesta: Number(this.formEvaluation.get('qualification_3')?.value)
+          respuesta: Number(this.formEvaluation.get('qualification_3')?.value),
         },
         {
           oidPregunta: 4,
-          respuesta: Number(this.formEvaluation.get('qualification_4')?.value)
+          respuesta: Number(this.formEvaluation.get('qualification_4')?.value),
         },
         {
           oidPregunta: 5,
-          respuesta: Number(this.formEvaluation.get('qualification_5')?.value)
+          respuesta: Number(this.formEvaluation.get('qualification_5')?.value),
         },
         {
           oidPregunta: 6,

@@ -19,6 +19,7 @@ export class SideBarComponent implements OnInit {
   public isAcademicPerdiosCollapsed: boolean = true;
   public isUserManagementCollapsed: boolean = true;
   public isEvaluationCollapsed: boolean = true;
+  public isStatisticsCollapsed: boolean = true;
 
   public userRoles: string[] = [];
 
@@ -98,6 +99,13 @@ export class SideBarComponent implements OnInit {
       role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
       label: 'Estadísticas',
       icon: 'assets/icons/sidebar/icon-statistics.svg',
+      sub: [
+        {
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+          label: 'Estadísticas',
+          url: '/app/gestion-estadisticas/estadisticas',
+        },
+      ],
     },
   ];
 
@@ -128,16 +136,26 @@ export class SideBarComponent implements OnInit {
         this.isAcademicPerdiosCollapsed = !this.isAcademicPerdiosCollapsed;
         this.isUserManagementCollapsed = true;
         this.isEvaluationCollapsed = true;
+        this.isStatisticsCollapsed = true;
         break;
       case 'Gestion usuarios':
         this.isUserManagementCollapsed = !this.isUserManagementCollapsed;
         this.isAcademicPerdiosCollapsed = true;
         this.isEvaluationCollapsed = true;
+        this.isStatisticsCollapsed = true;
         break;
       case 'Evaluación Docente':
         this.isEvaluationCollapsed = !this.isEvaluationCollapsed;
         this.isAcademicPerdiosCollapsed = true;
         this.isUserManagementCollapsed = true;
+        this.isStatisticsCollapsed = true;
+        break;
+      case 'Estadísticas':
+        this.isStatisticsCollapsed = !this.isStatisticsCollapsed;
+        this.isAcademicPerdiosCollapsed = true;
+        this.isUserManagementCollapsed = true;
+        this.isEvaluationCollapsed = true;
+
         break;
     }
   }
@@ -150,6 +168,8 @@ export class SideBarComponent implements OnInit {
         return this.isUserManagementCollapsed;
       case 'Evaluación Docente':
         return this.isEvaluationCollapsed;
+      case 'Estadísticas':
+        return this.isStatisticsCollapsed;
       default:
         return false;
     }

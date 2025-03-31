@@ -21,27 +21,22 @@
                 <th>
                   <span class="text-body-regular">Nombres y apellidos</span>
                   <br />
-                  <span class="text-body-small-sb">Nombre</span>
-                </th>
-                <th>
-                  <span class="text-body-regular">Num.Id</span>
-                  <br />
-                  <span class="text-body-small-sb">identificacion</span>
+                  <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluador?.nombreCompleto}}</span>
                 </th>
                 <th>
                   <span class="text-body-regular">Departamento</span>
                   <br />
-                  <span class="text-body-small-sb">Departamento</span>
+                  <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluado?.departamento}}</span>
                 </th>
                 <th>
                   <span class="text-body-regular">Nombre del director/a</span>
                   <br />
-                  <span class="text-body-small-sb">Nombre del director/a</span>
+                  <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluador?.nombreCompleto}}</span>
                 </th>
                 <th>
-                  <span class="text-body-regular">fecha de evaluación</span>
+                  <span class="text-body-regular">fecha de evaluación (última actualización)</span>
                   <br />
-                  <span class="text-body-small-sb">01/01/01</span>
+                  <span class="text-body-small-sb">{{responsibility?.Fuente?.fechaActualizacion| date : "dd/MM/yyyy"}}</span>
                 </th>
               </tr>
             </thead>

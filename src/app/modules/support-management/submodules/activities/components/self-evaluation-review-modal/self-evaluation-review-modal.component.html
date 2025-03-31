@@ -66,8 +66,10 @@
                   <tr *ngFor="let result of evaluationForm.get('results')?.value; let i = index">
                     <td class="text-body-regular">{{ result.result }}</td>
                     <td class="text-body-regular">{{ result.ODS }}</td>
-                    <td>
-                      
+                    <td class="text-center">
+                      <ng-container *ngIf="evaluationForm.get('results.'+i+'.evidence')?.value && selfEvaluation">
+                       <img src="assets/icons/tables/icon-download.svg" alt="descargar-evidencia" style="cursor: pointer;" (click)="downloadEvidenceFile(selfEvaluation.odsSeleccionados[i].oidAutoevaluacionOds || null,i)">
+                      </ng-container>
                     </td>
                   </tr>
                 </tbody>

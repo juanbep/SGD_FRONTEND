@@ -66,14 +66,17 @@ export class SmActivitiesServicesService {
       .pipe(map((resp) => resp.data));
   }
 
-
   /*
    * Method to get the activities of the teacher
    * @param id:number
    * @returns Observable<SimpleResponse<FuenteDocenteFormularioResponse>>
    */
-  getActivityByIdForm(idSource: number): Observable<SimpleResponse<FuenteDocenteFormularioResponse>> {
-    return this.httpClient.get<SimpleResponse<FuenteDocenteFormularioResponse>>(`${this.baseUrl}/api/autoevaluacion/${idSource}`);
+  getActivityByIdForm(
+    idSource: number
+  ): Observable<SimpleResponse<FuenteDocenteFormularioResponse>> {
+    return this.httpClient.get<SimpleResponse<FuenteDocenteFormularioResponse>>(
+      `${this.baseUrl}/api/autoevaluacion/${idSource}`
+    );
   }
   /*
    * Method to get the general information of the teacher
@@ -162,5 +165,18 @@ export class SmActivitiesServicesService {
     );
   }
 
-
+  /*
+   * Method to download the evidence file
+   * @param idResult:number
+   * @returns void
+   * */
+  getEvidenceResultOdsFile(idResult: number) {
+    let params = new HttpParams()
+      .set('idArchivo', idResult.toString())
+      .set('tipoArchivo', 'ODS');
+    return this.httpClient.get(
+      `${this.baseUrl}/api/documento/evidencia-ods`,
+      { params, responseType: 'blob' }
+    );
+  }
 }

@@ -11,33 +11,22 @@
           <th>
             <span class="text-body-regular">Nombres y apellidos</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{evaluador?.nombres}} {{evaluador?.apellidos}}</span
-            >
-          </th>
-          <th>
-            <span class="text-body-regular">Num.Id</span>
-            <br />
-            <span class="text-body-small-sb">{{evaluador?.identificacion}}</span>
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluador?.nombreCompleto}}</span>
           </th>
           <th>
             <span class="text-body-regular">Departamento</span>
             <br />
-            <span class="text-body-small-sb">{{evaluador?.usuarioDetalle?.departamento}}</span>
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluado?.departamento}}</span>
           </th>
           <th>
             <span class="text-body-regular">Nombre del director/a</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{evaluado?.nombres}} {{evaluado?.apellidos}}</span
-            >
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluador?.nombreCompleto}}</span>
           </th>
           <th>
-            <span class="text-body-regular">fecha de evaluación (última actulización)</span>
+            <span class="text-body-regular">fecha de evaluación (última actualización)</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{responsibility?.Fuente?.fechaActualizacion}}</span
-            >
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.fechaActualizacion| date : "dd/MM/yyyy"}}</span>
           </th>
         </tr>
       </thead>
@@ -608,3 +597,4 @@
   [title]="messageTitle"
   [message]="messageConfirmCancel"
 ></shared-confirm-dialog>
+

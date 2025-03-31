@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,37 +17,27 @@ import { PeriodoAcademicoResponse } from '../../../../../../core/models/response
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SelfEvaluationPdfGeneratorService } from '../../services/self-evaluation-pdf-generator.service';
-import { FuenteAutoevaluacion, OdsSeleccionado } from '../../../../../../core/models/modified/fuente-autoevaluacion.model';
+import {
+  FuenteAutoevaluacion,
+  OdsSeleccionado,
+} from '../../../../../../core/models/modified/fuente-autoevaluacion.model';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
-const ODS = [ 
-  { value: 1, label: 'in de la pobreza' },
-  { value: 2, label: 'Hambre cero' },
-  { value: 3, label: 'Salud y bienestar' },
-  { value: 4, label: 'Educación de calidad' },
-  { value: 5, label: 'Igualdad de género' },
-  { value: 6, label: 'Agua limpia y saneamiento' },
-  { value: 7, label: 'Energía asequible y no contaminante' },
-  { value: 8, label: 'Trabajo decente y crecimiento económico' },
-  { value: 9, label: 'Industria, innovación e infraestructura' },
-  { value: 10, label: 'Reducción de las desigualdades' },
-  { value: 11, label: 'Ciudades y comunidades sostenibles' },
-  { value: 12, label: 'Producción y consumo responsables' },
-  { value: 13, label: 'Acción por el clima' },
-  { value: 14, label: 'Vida submarina' },
-  { value: 15, label: 'Vida de ecosistemas terrestres' },
-  { value: 16, label: 'Paz, justicia e instituciones sólidas' },
-  { value: 17, label: 'Alianzas para lograr los objetivos' },
-];
+const MESSAGE_TITLE = 'Cancelar';
+const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 
 
 @Component({
   selector: 'app-self-evaluation-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ConfirmDialogComponent],
   templateUrl: './self-evaluation-form.component.html',
   styleUrl: './self-evaluation-form.component.css',
 })
 export class SelfEvaluationFormComponent implements OnInit {
+  @ViewChild(ConfirmDialogComponent)
+  confirmDialog: ConfirmDialogComponent | null = null;
+
   private formBuilder: FormBuilder = inject(FormBuilder);
   private activitiesServicesService = inject(ActivitiesServicesService);
   private validatorsService = inject(ValidatorsService);
@@ -71,6 +61,9 @@ export class SelfEvaluationFormComponent implements OnInit {
   public signatureFile: File | null = null;
 
   public newSelfEvaluation: FuenteAutoevaluacion | null = null;
+
+  public messageTitle: string = MESSAGE_TITLE;
+  public messageConfirmCancel: string = MESSAGE_CONFIRM_CANCEL;
 
   newSelfEvaluationForm: FormGroup = this.formBuilder.group({
     activityDescription: [null, [Validators.required]],
@@ -135,10 +128,11 @@ export class SelfEvaluationFormComponent implements OnInit {
     return this.newSelfEvaluationForm.get('results') as FormArray;
   }
 
-  onResultsChanged(){
+  onResultsChanged() {
     this.results.valueChanges.subscribe((value) => {
-      this.newSelfEvaluation? this.newSelfEvaluation.odsSeleccionados = value : ''
-
+      this.newSelfEvaluation
+        ? (this.newSelfEvaluation.odsSeleccionados = value)
+        : '';
     });
   }
 
@@ -236,7 +230,10 @@ export class SelfEvaluationFormComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.evidences[index] = input.files[0];
-      this.newSelfEvaluation? this.newSelfEvaluation.odsSeleccionados[index].documento = input.files[0].name : '';
+      this.newSelfEvaluation
+        ? (this.newSelfEvaluation.odsSeleccionados[index].documento =
+            input.files[0].name)
+        : '';
     }
   }
 
@@ -266,51 +263,76 @@ export class SelfEvaluationFormComponent implements OnInit {
     if (this.newSelfEvaluationForm.invalid) {
       this.newSelfEvaluationForm.markAllAsTouched();
       this.messagesInfoService.showWarningMessage(
-        'Por favor, complete todos los campos requeridos','Advertencia');
+        'Por favor, complete todos los campos requeridos',
+        'Advertencia'
+      );
       return;
     }
-
 
     // Lógica para enviar la autoevaluación
     const autoevaluacionFuente: FuenteAutoevaluacion = {
       oidFuente: this.activityResponse?.fuentes[0].oidFuente || 0,
       tipoCalificacion: 'EN_LINEA',
-      calificacion: Number(this.newSelfEvaluationForm.get('evaluation')?.value) || 0,
-      descripcion: this.newSelfEvaluationForm.get('activityDescription')?.value || '',
+      calificacion:
+        Number(this.newSelfEvaluationForm.get('evaluation')?.value) || 0,
+      descripcion:
+        this.newSelfEvaluationForm.get('activityDescription')?.value || '',
       observacion: this.newSelfEvaluationForm.get('observation')?.value || '',
-      odsSeleccionados: this.newSelfEvaluationForm.get('results')?.value.map((result: any) => {
-        const odsSeleccionado: OdsSeleccionado = {
-          oidAutoevaluacionOds: null,
-          oidOds: Number(result.ODS),
-          resultado: result.result,
-          documento: '',
-        };
-        return odsSeleccionado;
-      }),
-      leccionesAprendidas: this.newSelfEvaluationForm.get('lessonsLearned')?.value.map((lesson: any) => {
-        return { oidLeccionAprendida: null, descripcion: lesson.lesson };
-      }),
-      oportunidadesMejora: this.newSelfEvaluationForm.get('improvementOpportunities')?.value.map((opportunity: any) => {
-        return { oidOportunidadMejora: null, descripcion: opportunity.opportunity };
-      })
+      odsSeleccionados: this.newSelfEvaluationForm
+        .get('results')
+        ?.value.map((result: any) => {
+          const odsSeleccionado: OdsSeleccionado = {
+            oidAutoevaluacionOds: null,
+            oidOds: Number(result.ODS),
+            resultado: result.result,
+            documento: '',
+          };
+          return odsSeleccionado;
+        }),
+      leccionesAprendidas: this.newSelfEvaluationForm
+        .get('lessonsLearned')
+        ?.value.map((lesson: any) => {
+          return { oidLeccionAprendida: null, descripcion: lesson.lesson };
+        }),
+      oportunidadesMejora: this.newSelfEvaluationForm
+        .get('improvementOpportunities')
+        ?.value.map((opportunity: any) => {
+          return {
+            oidOportunidadMejora: null,
+            descripcion: opportunity.opportunity,
+          };
+        }),
     };
-    autoevaluacionFuente.odsSeleccionados.forEach((odsSeleccionado: OdsSeleccionado, index: number) => {
-      if (this.evidences[index]) {
-        odsSeleccionado.documento = this.evidences[index].name;
+    autoevaluacionFuente.odsSeleccionados.forEach(
+      (odsSeleccionado: OdsSeleccionado, index: number) => {
+        if (this.evidences[index]) {
+          odsSeleccionado.documento = this.evidences[index].name;
+        }
       }
-    });
+    );
     this.generatePdfPreview();
-    this.activitiesServicesService.saveSelfAssessmentByForm(autoevaluacionFuente, this.evidences, this.signatureFile!, this.formPdf!).subscribe({
-      next: (response) => {
-        this.messagesInfoService.showSuccessMessage('La autoevaluación se ha guardado con éxito', 'Éxito');
-        this.router.navigate(['./app/gestion-soportes/actividades/']);
-        
-      },
-      error: (error) => {
-        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
-      }
-    });
-
+    this.activitiesServicesService
+      .saveSelfAssessmentByForm(
+        autoevaluacionFuente,
+        this.evidences,
+        this.signatureFile!,
+        this.formPdf!
+      )
+      .subscribe({
+        next: (response) => {
+          this.messagesInfoService.showSuccessMessage(
+            'La autoevaluación se ha guardado con éxito',
+            'Éxito'
+          );
+          this.router.navigate(['./app/gestion-soportes/actividades/']);
+        },
+        error: (error) => {
+          this.messagesInfoService.showErrorMessage(
+            error.error.mensaje,
+            'Error'
+          );
+        },
+      });
   }
 
   generatePdfPreview() {
@@ -328,7 +350,11 @@ export class SelfEvaluationFormComponent implements OnInit {
 
   deleteEvidenceFile(index: number) {
     this.evidences.splice(index, 1);
-  this.newSelfEvaluationForm.get("results."+index+".evidence")? this.newSelfEvaluationForm.get("results."+index+".evidence")?.setValue(null) : null;
+    this.newSelfEvaluationForm.get('results.' + index + '.evidence')
+      ? this.newSelfEvaluationForm
+          .get('results.' + index + '.evidence')
+          ?.setValue(null)
+      : null;
   }
 
   downloadEvidenceFile(index: number) {
@@ -365,6 +391,10 @@ export class SelfEvaluationFormComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['./app/gestion-soportes/actividades/']);
+    if (this.confirmDialog) this.confirmDialog?.open();
+  }
+
+  onConfirmCancel(confirm: boolean) {
+    if (confirm) this.router.navigate(['./app/gestion-soportes/actividades/']);
   }
 }

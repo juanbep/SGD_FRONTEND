@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
 import { FuenteDocenteFormularioResponse } from '../../../../../../core/models/response/fuente-docente-formulario-response.model';
 import { CommonModule } from '@angular/common';
+import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 declare var bootstrap: any;
 
 @Component({
@@ -17,6 +18,8 @@ export class SelfEvaluationReviewModalComponent {
   private activitiesServices: ActivitiesServicesService = inject(
     ActivitiesServicesService
   );
+  private messagesInforService: MessagesInfoService =
+    inject(MessagesInfoService);
 
   public selfEvaluation: FuenteDocenteFormularioResponse | null = null;
 
@@ -69,7 +72,10 @@ export class SelfEvaluationReviewModalComponent {
         this.populateForm();
       },
       error: (error) => {
-        console.error('Error fetching source:', error);
+        this.messagesInforService.showErrorMessage(
+          error.errro.mensaje,
+          'Error'
+        );
       },
     });
   }
@@ -83,17 +89,43 @@ export class SelfEvaluationReviewModalComponent {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download =  this.selfEvaluation?.Fuente.nombreArchivo || 'fuente.pdf';
+            a.download =
+              this.selfEvaluation?.Fuente.nombreArchivo || 'fuente.pdf';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
           },
           error: (error) => {
-            console.error('Error fetching source:', error);
+            this.messagesInforService.showErrorMessage(
+              error.errro.mensaje,
+              'Error'
+            );
           },
         });
     }
+  }
+
+  downloadEvidenceFile(idResult: number | null, index: number) {
+    if(!idResult) return;
+    this.activitiesServices.getEvidenceResultOdsFile(idResult).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.selfEvaluation?.odsSeleccionados[index].documento|| 'evidencia';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        this.messagesInforService.showErrorMessage(
+          error.errro.mensaje,
+          'Error'
+        );
+      },
+    });
   }
 
   populateForm() {

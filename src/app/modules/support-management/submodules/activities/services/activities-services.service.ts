@@ -115,10 +115,15 @@ export class ActivitiesServicesService {
   }
 
   getActivityByIdForm(idSource: number) {
-      return this.smActivitiesServicesService.getActivityByIdForm(idSource);
-    }
+    return this.smActivitiesServicesService.getActivityByIdForm(idSource);
+  }
 
   getUserById(userId: number) {
     return this.umUsersServicesService.getUserbyId(userId);
+  }
+
+
+  getEvidenceResultOdsFile(idResult: number) {
+    return this.smActivitiesServicesService.getEvidenceResultOdsFile(idResult);
   }
 }

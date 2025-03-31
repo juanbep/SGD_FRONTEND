@@ -1,38 +1,48 @@
-
 export interface FuenteDocenteFormularioResponse {
     Fuente:              Fuente;
+    actividad:           Actividad;
     firma:               string;
+    Descripcion:         string;
     screenshotSimca:     null;
-    Descripcion:        string;
     odsSeleccionados:    OdsSeleccionado[];
     leccionesAprendidas: LeccionesAprendida[];
     oportunidadesMejora: OportunidadesMejora[];
 }
 
-interface Fuente {
+export interface Fuente {
     oidFuente:          number;
     evaluado:           Evaluado;
     evaluador:          Evaluado;
     observacion:        string;
-    calificacion:       Number;
     nombreArchivo:      string;
+    calificacion:       number;
     tipoCalificacion:   string;
     fechaCreacion:      Date;
     fechaActualizacion: Date;
 }
 
-interface Evaluado {
+export interface Evaluado {
     apellidos:      string;
+    oidUsuario:     number;
+    departamento:   string;
     nombreCompleto: string;
     nombres:        string;
 }
 
-interface LeccionesAprendida {
+export interface Actividad {
+    idActividad:      number;
+    nombreActividad:  string;
+    tipoActividad:    string;
+    horasTotales:     number;
+    periodoAcademico: string;
+}
+
+export interface LeccionesAprendida {
     oidLeccionAprendida: number;
     descripcion:         string;
 }
 
-interface OdsSeleccionado {
+export interface OdsSeleccionado {
     oidAutoevaluacionOds: number;
     oidOds:               number;
     nombre:               string;
@@ -40,7 +50,7 @@ interface OdsSeleccionado {
     documento:            null | string;
 }
 
-interface OportunidadesMejora {
+export interface OportunidadesMejora {
     oidOportunidadMejora: number;
     descripcion:          string;
 }

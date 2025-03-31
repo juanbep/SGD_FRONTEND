@@ -157,8 +157,6 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
       this.responsibilitiesService.getInfoResponsibilityByForm(id).subscribe({
         next: (resp) => {
           this.responsibility = resp.data;
-          //this.recoverEvaluated(this.responsibility.evaluado.oidUsuario);
-          //this.recoverEvualator(this.responsibility.evaluador.oidUsuario);
           this.patchForm();
         },
         error: (err) => {
@@ -167,29 +165,6 @@ export class ReponsibilitiesEditFormComponent implements OnInit {
       });
     }
   }
-
-  recoverEvaluated(id: number) {
-    this.responsibilitiesService.getUserById(id).subscribe({
-      next: (user) => {
-        this.evaluado = user.data;
-      },
-      error: (error) => {
-        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
-      },
-    });
-  }
-
-  recoverEvualator(id: number) {
-    this.responsibilitiesService.getUserById(id).subscribe({
-      next: (user) => {
-        this.evaluador = user.data;
-      },
-      error: (error) => {
-        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
-      },
-    });
-  }
-
   patchForm() {
     // Se asume que la fuente a editar es la segunda (índice 1) del arreglo 'fuentes'
     this.formEvaluation.patchValue({

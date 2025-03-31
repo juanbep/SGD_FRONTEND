@@ -56,7 +56,7 @@
         </th>
         <th>
           <!-- Fecha de inicio -->
-          <span class="text-body-regular">Fecha de inicio</span>
+          <span class="text-body-regular">Fecha inicio periodo de evaluación</span>
           <br />
           <span class="text-body-small-sb">{{
             activityPeriod?.fechaFin | date : "dd/MM/yyyy"
@@ -64,7 +64,7 @@
         </th>
         <th>
           <!-- Fecha de fin -->
-          <span class="text-body-regular">Fecha de finalización</span>
+          <span class="text-body-regular">Fecha fin periodo de evaluación</span>
           <br />
           <span class="text-body-small-sb">{{
             activityPeriod?.fechaInicio | date : "dd/MM/yyyy"
@@ -246,7 +246,7 @@
             <ng-template #viewEvidenceFile>
               <div class="download-file-container">
                 <div class="download-file-label">
-                  <span class="text-body-small-r">Soporte</span>
+                  <span class="text-body-small-r">Evidencia</span>
                   <br />
                   <span class="text-body-small-sb">{{
                     this.evidences[i].name
@@ -560,3 +560,9 @@
     <iframe [src]="pdfUrl" width="100%" height="600px"></iframe>
   </section>
 </div>
+
+<shared-confirm-dialog
+(confirm)="onConfirmCancel($event)"
+  [title]="messageTitle"
+  [message]="messageConfirmCancel"
+></shared-confirm-dialog>

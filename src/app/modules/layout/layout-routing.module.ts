@@ -29,6 +29,11 @@ const routes: Routes = [
                 path: 'gestion-soportes',
                 loadChildren: () => import('../support-management/support-management-routing.module').then(m => m.SupportManagementRoutingModule),
                 title: 'Gestión de Soportes'
+            },
+            {
+                path: 'gestion-estadisticas',
+                loadChildren: () => import('../statistics-management/statistics-management-routing.module').then(m => m.StatisticsManagementRoutingModule),
+                title: 'Gestión de Estadísticas'
             }
         ]
     }

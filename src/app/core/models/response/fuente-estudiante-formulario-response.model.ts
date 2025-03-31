@@ -5,33 +5,36 @@ export interface FuenteEstudianteFormularioResponse {
     preguntas:             Pregunta[];
 }
 
-export interface Fuente {
+interface Fuente {
     oidFuente:          number;
     evaluado:           Evaluado;
     evaluador:          Evaluado;
-    observacion:        string;
+    observacion:        null;
     nombreArchivo:      string;
+    calificacion:       number;
     tipoCalificacion:   string;
     fechaCreacion:      Date;
     fechaActualizacion: Date;
 }
 
-export interface Evaluado {
+interface Evaluado {
     apellidos:      string;
+    oidUsuario:     number;
+    departamento:   string;
     nombreCompleto: string;
     nombres:        string;
 }
 
-export interface Encuesta {
+interface Encuesta {
     nombre: string;
 }
 
-export interface EstadoEtapaDesarrollo {
+interface EstadoEtapaDesarrollo {
     oidEstadoEtapaDesarrollo: number;
     nombre:                   string;
 }
 
-export interface Pregunta {
+interface Pregunta {
     oidPregunta: number;
     respuesta:   number;
 }
