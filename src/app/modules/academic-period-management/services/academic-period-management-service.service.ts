@@ -78,4 +78,12 @@ export class AcademicPeriodManagementService {
         )
     )}
 
+    loadInfoTechersAndActivities(idPeriodo: string){
+        return this.apmAcademicPeriodManagementService.loadInfoTechersAndActivities(idPeriodo);
+    }
+
+    getAcademicPeriodsByKira(){
+        return this.apmAcademicPeriodManagementService.getAcademicPeriodsByKira();
+    }
+
 }

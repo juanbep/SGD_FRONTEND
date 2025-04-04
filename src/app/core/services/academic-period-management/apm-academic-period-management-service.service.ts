@@ -6,6 +6,7 @@ import { PeriodoAcademicoResponse } from '../../models/response/periodo-academic
 import { PagedResponse } from '../../models/response/paged-response.model';
 import { PeriodoAcademicoCreate } from '../../models/modified/periodo-academico-create.model';
 import { SimpleResponse } from '../../models/response/simple-response.model';
+import { PeriodoAcademicoKiraResponse } from '../../models/response/periodo-academico-kira-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApmAcademicPeriodManagementService {
@@ -53,4 +54,18 @@ export class ApmAcademicPeriodManagementService {
     activeAcademicPeriod(): Observable<SimpleResponse<PeriodoAcademicoResponse>> {
         return this.httpClient.get<SimpleResponse<PeriodoAcademicoResponse>>(`${this.baseUrl}/api/periodos-academicos/activo`);
     }
+
+    
+    loadInfoTechersAndActivities(idPeriodo: string){
+        let params = new HttpParams()
+            .set('idFacultad', 1)
+            .set('idPeriodo', idPeriodo);
+
+        return this.httpClient.post<SimpleResponse<any>>(`http://localhost:8085/api/labor-docente`, params, { responseType: 'json' });
+    }
+
+    getAcademicPeriodsByKira(): Observable<SimpleResponse<PeriodoAcademicoKiraResponse[]>> {
+        return this.httpClient.get<SimpleResponse<PeriodoAcademicoKiraResponse[]>>(`${this.baseUrl}/api/periodos-academicos/kira`, { responseType: 'json' });
+    }
+
 }

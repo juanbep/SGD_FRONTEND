@@ -7,6 +7,8 @@ import { PaginatorComponent } from '../../../../shared/components/paginator/pagi
 import { PagedResponse } from '../../../../core/models/response/paged-response.model';
 import { PeriodoAcademicoResponse } from '../../../../core/models/response/periodo-academico-response.model';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
+import { PeriodoAcademicoKiraResponse } from '../../../../core/models/response/periodo-academico-kira-response.model';
+import { LoadingOverleyComponent } from "../../../../shared/components/loading-overley/loading-overley.component";
 
 const ACTIVE_PERIOD_STATUS_ID = 1;
 const PAGE_SIZE = 10;
@@ -19,7 +21,8 @@ const PAGE_SIZE = 10;
     ModalEditAcademicPeriodComponent,
     CommonModule,
     PaginatorComponent,
-  ],
+    LoadingOverleyComponent
+],
   templateUrl: './academic-period-management.component.html',
   styleUrl: './academic-period-management.component.css',
 })
@@ -34,6 +37,7 @@ export class AcademicPeriodManagementComponent implements OnInit {
   public academicPeriods: PeriodoAcademicoResponse[] = [];
   public currentAcademicPeriod: PeriodoAcademicoResponse | null = null;
   public currentPage: number = 1;
+  public isLoading: boolean = false;
 
   @ViewChild(ModalCreateAcademicPeriodComponent)
   modalCreateAcademicPeriod!: ModalCreateAcademicPeriodComponent;
@@ -97,4 +101,28 @@ export class AcademicPeriodManagementComponent implements OnInit {
     this.currentPage = event;
     this.recoverAcademicPeriods(this.currentPage, PAGE_SIZE);
   }
+
+  
+  loadInfoTechersAndActivities() {
+    if (!this.currentAcademicPeriod) {
+      this.messagesInfoService.showErrorMessage(
+        'No hay un periodo académico activo',
+        'Error'
+      );
+      return;
+    }
+    let academicPeriodId = this.currentAcademicPeriod?.idPeriodoApi;
+    this.isLoading = true;
+    this.academicPeriodManagementService.loadInfoTechersAndActivities(academicPeriodId?.toString()).subscribe({
+      next: data => {
+        this.isLoading = false;
+        this.messagesInfoService.showSuccessMessage('Se ha cargado la información correctamente', 'Exito');
+      },
+      error: error => {
+        this.isLoading = false;
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
+      }
+    });
+  }
+
 }

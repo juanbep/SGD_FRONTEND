@@ -1,11 +1,18 @@
 import { Component, inject, Input } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ValidatorsService } from '../../../../shared/services/validators.service';
 import { AcademicPeriodManagementService } from '../../services/academic-period-management-service.service';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
 import { CommonModule } from '@angular/common';
 import { PeriodoAcademicoResponse } from '../../../../core/models/response/periodo-academico-response.model';
 import { PeriodoAcademicoCreate } from '../../../../core/models/modified/periodo-academico-create.model';
+import { PeriodoAcademicoKiraResponse } from '../../../../core/models/response/periodo-academico-kira-response.model';
+import { firstValueFrom } from 'rxjs';
 declare var bootstrap: any;
 
 const PAGE_SIZE = 10;
@@ -13,34 +20,44 @@ const PAGE_SIZE = 10;
 @Component({
   selector: 'academic-period-management-modal-edit-academic-period',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule
-  ],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './modal-edit-academic-period.component.html',
-  styleUrl: './modal-edit-academic-period.component.css'
+  styleUrl: './modal-edit-academic-period.component.css',
 })
 export class ModalEditAcademicPeriodComponent {
-
   @Input() currentPage: number = 1;
 
   private formBuilder: FormBuilder = inject(FormBuilder);
   private validatorsService = inject(ValidatorsService);
-  private academicPeriodManagementService = inject(AcademicPeriodManagementService);
+  private academicPeriodManagementService = inject(
+    AcademicPeriodManagementService
+  );
   private messageInfoService = inject(MessagesInfoService);
+  public peridoAcademicoKiraResponse: PeriodoAcademicoKiraResponse[] = [];
+  public academicPeriod: PeriodoAcademicoResponse |null = null;
 
   public oidAcademicPeriod: number = 0;
 
-  newAcademicPeriodForm: FormGroup = this.formBuilder.group({
-    idAcademicPeriod: [null, [Validators.required, this.validatorsService.validateAcademicPeriodFormat]],
-    startDate: [null, [Validators.required, this.validatorsService.validateDateRange]],
-    endDate: [null, [Validators.required, this.validatorsService.validateDateRange]],
-    status: ['activo', [Validators.required]],
-  },
+  newAcademicPeriodForm: FormGroup = this.formBuilder.group(
     {
-      validators: [
-        this.validatorsService.validateDateRange()
-      ]
+      idAcademicPeriod: [
+        null,
+        [
+          Validators.required
+        ],
+      ],
+      startDate: [
+        null,
+        [Validators.required, this.validatorsService.validateDateRange],
+      ],
+      endDate: [
+        null,
+        [Validators.required, this.validatorsService.validateDateRange],
+      ],
+      status: ['activo', [Validators.required]],
+    },
+    {
+      validators: [this.validatorsService.validateDateRange()],
     }
   );
 
@@ -48,6 +65,8 @@ export class ModalEditAcademicPeriodComponent {
     const myModal = document.getElementById('modal-edit-academic-period');
     if (myModal) {
       var bootstrapModal = new bootstrap.Modal(myModal);
+      this.loadAcademicPeriodsByKira();
+      this.academicPeriod = academicPediod;
       this.setDefaultValues(academicPediod);
       bootstrapModal.show();
     }
@@ -55,17 +74,33 @@ export class ModalEditAcademicPeriodComponent {
 
   setDefaultValues(academicPeriod: PeriodoAcademicoResponse): void {
     this.oidAcademicPeriod = academicPeriod.oidPeriodoAcademico;
-    this.newAcademicPeriodForm.get('idAcademicPeriod')?.setValue(academicPeriod.idPeriodo);
-    this.newAcademicPeriodForm.get('startDate')?.setValue(academicPeriod.fechaInicio.split('T')[0]);
-    this.newAcademicPeriodForm.get('endDate')?.setValue(academicPeriod.fechaFin.split('T')[0]);
-    this.newAcademicPeriodForm.get('status')?.setValue(academicPeriod.estadoPeriodoAcademico.oidEstadoPeriodoAcademico == 1? 'activo': 'inactivo');
+    this.newAcademicPeriodForm
+      .get('idAcademicPeriod')
+      ?.setValue(academicPeriod.idPeriodoApi.toString());
+    this.newAcademicPeriodForm
+      .get('startDate')
+      ?.setValue(academicPeriod.fechaInicio.split('T')[0]);
+    this.newAcademicPeriodForm
+      .get('endDate')
+      ?.setValue(academicPeriod.fechaFin.split('T')[0]);
+    this.newAcademicPeriodForm
+      .get('status')
+      ?.setValue(
+        academicPeriod.estadoPeriodoAcademico.oidEstadoPeriodoAcademico == 1
+          ? 'activo'
+          : 'inactivo'
+      );
     this.newAcademicPeriodForm.markAllAsTouched();
   }
 
-
   isInvalidField(field: string) {
     const control = this.newAcademicPeriodForm.get(field);
-    return control && control.errors && control.invalid && (control.dirty || control.touched);
+    return (
+      control &&
+      control.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    );
   }
 
   hasFieldErrorsForm(controlName: string): boolean {
@@ -80,11 +115,10 @@ export class ModalEditAcademicPeriodComponent {
     // Verificar errores en el FormGroup según el control
     switch (controlName) {
       case 'startDate':
-        return dateError.some(error => formErrors.hasOwnProperty(error));
+        return dateError.some((error) => formErrors.hasOwnProperty(error));
       default:
       case 'endDate':
-        return dateError.some(error => formErrors.hasOwnProperty(error));
-
+        return dateError.some((error) => formErrors.hasOwnProperty(error));
     }
   }
 
@@ -121,10 +155,8 @@ export class ModalEditAcademicPeriodComponent {
         case 'endDate':
           for (const error of dateError) {
             if (this.newAcademicPeriodForm.errors.hasOwnProperty(error)) {
-
               return 'La fecha de inicio no puede ser mayor a la fecha de fin';
             }
-
           }
           break;
         default:
@@ -137,46 +169,77 @@ export class ModalEditAcademicPeriodComponent {
   editAcademicPeriod(): void {
     if (this.newAcademicPeriodForm.valid) {
       const academicPeriod: PeriodoAcademicoCreate = {
-        idPeriodo: this.newAcademicPeriodForm.get('idAcademicPeriod')?.value,
+        idPeriodo:
+          this.peridoAcademicoKiraResponse.find((period) => {
+            return (
+              period.id ==
+              this.newAcademicPeriodForm.get('idAcademicPeriod')?.value
+            );
+          })?.label || this.academicPeriod?.idPeriodo || '',
+        idPeriodoApi:
+          this.peridoAcademicoKiraResponse.find((period) => {
+            return (
+              period.id ==
+              this.newAcademicPeriodForm.get('idAcademicPeriod')?.value
+            );
+          })?.id || this.academicPeriod?.idPeriodoApi || '',
         fechaInicio: this.newAcademicPeriodForm.get('startDate')?.value,
         fechaFin: this.newAcademicPeriodForm.get('endDate')?.value,
         estadoPeriodoAcademico: {
-          oidEstadoPeriodoAcademico: this.newAcademicPeriodForm.get('status')?.value == 'activo' ? 1 : 2
-        }
-      }
-      this.academicPeriodManagementService.editAcademicPeriod(this.oidAcademicPeriod, academicPeriod).subscribe(
-        {
+          oidEstadoPeriodoAcademico:
+            this.newAcademicPeriodForm.get('status')?.value == 'activo' ? 1 : 2,
+        },
+      };
+      this.academicPeriodManagementService
+        .editAcademicPeriod(this.oidAcademicPeriod, academicPeriod)
+        .subscribe({
           next: (response) => {
-            this.messageInfoService.showSuccessMessage('El periodo académico ha sido editado correctamente', 'Exito');
+            this.messageInfoService.showSuccessMessage(
+              'El periodo académico ha sido editado correctamente',
+              'Exito'
+            );
             this.recoverAcademicPeriods();
             this.clearFields();
             const modalElement = document.getElementById(
               'modal-edit-academic-period'
             );
             if (modalElement) {
-              const modalInstance =
-                bootstrap.Modal.getInstance(modalElement);
+              const modalInstance = bootstrap.Modal.getInstance(modalElement);
               modalInstance?.hide();
             }
           },
           error: (error) => {
             console.error('Error editing academic period', error);
-            this.messageInfoService.showErrorMessage(error.error.mensaje, 'Error');
-          }
-        }
-      )
+            this.messageInfoService.showErrorMessage(
+              error.error.mensaje,
+              'Error'
+            );
+          },
+        });
     }
   }
-  
-  recoverAcademicPeriods(): void {
-    this.academicPeriodManagementService.getAllAcademicPeriods(this.currentPage-1, PAGE_SIZE).subscribe((response) => {
-      this.academicPeriodManagementService.setAcademicPeriods(response.data);
-    })
+
+  async loadAcademicPeriodsByKira() {
+    try {
+      const response = await firstValueFrom(
+        this.academicPeriodManagementService.getAcademicPeriodsByKira()
+      );
+      this.peridoAcademicoKiraResponse = response.data;
+    } catch (error: any) {
+      this.messageInfoService.showErrorMessage(error.error.mensaje, 'Error');
+    }
+  }
+
+  recoverAcademicPeriods() {
+    this.academicPeriodManagementService
+      .getAllAcademicPeriods(this.currentPage - 1, PAGE_SIZE)
+      .subscribe((response) => {
+        this.academicPeriodManagementService.setAcademicPeriods(response.data);
+      });
   }
 
   clearFields(): void {
     this.newAcademicPeriodForm.reset();
     this.newAcademicPeriodForm.get('status')?.setValue('activo');
   }
-
 }

@@ -35,7 +35,7 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
     CommonModule,
     RouterModule,
     ConfirmDialogComponent,
-  ],
+],
   templateUrl: './self-evaluation-edit-form.component.html',
   styleUrls: [],
 })
@@ -57,6 +57,7 @@ export class SelfEvaluationEditFormComponent implements OnInit {
   private academicPeriodManagementService = inject(
     AcademicPeriodManagementService
   );
+
 
   // ====================== Propiedades Públicas ======================
   public activityPeriod: PeriodoAcademicoResponse | null = null;

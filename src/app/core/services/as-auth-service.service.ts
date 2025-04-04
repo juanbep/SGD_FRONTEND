@@ -10,6 +10,8 @@ import { UsuarioResponse } from '../models/response/usuario-response.model';
 })
 export class AsAuthServiceService {
 
+  
+
   public usersLogin: {email:string, pass:string, idUser:number} [] = [
     {email: 'atoledo@unicauca.edu.co', pass: 'admin', idUser: 17},
     {email: 'oscar.vivas@unicauca.edu.co', pass: 'admin', idUser: 1},

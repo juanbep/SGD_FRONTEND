@@ -26,8 +26,9 @@ export class AuthServiceService {
    * @param username 
    * @param password 
    */
-  login(username: string, password: string): void {
+  login(username: string, password: string): number | null {
     this.idCurrentUser = this.service.login(username, password);
+    return this.idCurrentUser;
   }
 
   /**

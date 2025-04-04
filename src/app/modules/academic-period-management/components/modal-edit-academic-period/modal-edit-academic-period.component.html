@@ -50,14 +50,16 @@
                         </div>
                     </div>
                     <div class="row">
+               
                         <div class="col">
                             <div class="form-floating">
-                                <input type="text" id="idAcademicPeriod" class="form-control input-text text-body-custom"
-                                    formControlName="idAcademicPeriod" [ngClass]="{
-                                        'error-input': isInvalidField('idAcademicPeriod'),
-                                        'error-input-background': isInvalidField('idAcademicPeriod')
-                                    }" placeholder="Ejemplo: 2021-1">
-                                <label for="idAcademicPeriod" class="label-custom text-body-small-sb"><span data-toggle="tooptip"
+                                <select class="form-select input-select text-body-custom" id="idAcademicPeriod" formControlName="idAcademicPeriod">
+                                    <option value="{{academicPeriod?.idPeriodoApi}}" selected>{{academicPeriod?.idPeriodo}}</option>
+                                    <option *ngFor="let period of peridoAcademicoKiraResponse" value="{{period.id.toString()}}">{{period.label}}</option>
+                                </select>
+                                <label for="idAcademicPeriod" class="label-custom text-body-small-sb" [ngClass]="{
+                                    'error-label': isInvalidField('idAcademicPeriod')
+                                }"><span data-toggle="tooltip"
                                     data-placement="top" title="Campo obligatorio">*</span> Id. Periodo académico</label>
                             </div>
                             <span *ngIf="isInvalidField('idAcademicPeriod')" class="error-message text-body-small-r">

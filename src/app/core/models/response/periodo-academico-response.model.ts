@@ -5,6 +5,7 @@ export interface PeriodoAcademicoResponse {
     oidPeriodoAcademico: number;
     oidEstadoPeriodoAcademico: number;
     idPeriodo: string;
+    idPeriodoApi: string;
     estadoPeriodoAcademico: EstadoPeriodoAcademico;
     fechaInicio: string;
     fechaFin: string;
