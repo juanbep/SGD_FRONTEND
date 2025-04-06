@@ -454,7 +454,7 @@ export class SelfEvaluationEditFormComponent implements OnInit {
   }
 
   deleteEvidenceFile(index: number) {
-    this.evidences.splice(index, 1);
+    this.evidences[index] = null as any;
     this.editSelfEvaluationForm.get('results.' + index + '.evidence')
       ? this.editSelfEvaluationForm
           .get('results.' + index + '.evidence')
