@@ -1,5 +1,12 @@
 <div class="view-container">
     <div class="title-two">Editar Actividad</div>
+    <div class="messages-container" style="margin: 5px">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+        <span class="text-body-heavy"
+          >A continuación, se presenta el formulario para la edición de la
+          actividad del docente. Por favor, verifique que la información antes de guardar.
+        </span>
+      </div>
     <form [formGroup]="activityForm" (ngSubmit)="openConfirmDialog()">
         <fieldset>
             <legend class="text-body-heavy">Tipo de actividad</legend>

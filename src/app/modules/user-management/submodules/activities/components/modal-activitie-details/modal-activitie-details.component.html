@@ -1,100 +1,313 @@
 <div class="modal fade" id="modal-activitie-details">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="title-three mx-3">Detalles de la actividad</span>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="title-three mx-3">Detalles de la actividad</span>
+      </div>
+      <div class="modal-body">
+        <div class="row row-cols-auto">
+          <!-- Nombre de la actividad -->
+          <div *ngIf="activitieDetails?.nombreActividad" class="col-4 mb-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control input-text text-body-custom"
+                id="activitieName"
+                placeholder=""
+                formControlName="name"
+                disabled
+                value="{{ activitieDetails?.nombreActividad }}"
+              />
+              <label for="activitieName" class="label-custom text-body-small-sb"
+                >Nombre de la actividad</label
+              >
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <!-- Nombre de la actividad -->
-                    <div *ngIf="activitieDetails?.nombreActividad" class="col-4 mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control input-text text-body-custom" id="activitieName"
-                                placeholder="" formControlName="name" disabled
-                                value="{{activitieDetails?.nombreActividad}}">
-                            <label for="activitieName" class="label-custom text-body-small-sb">Nombre de la
-                                actividad</label>
-                        </div>
-                    </div>
-                    <ng-container *ngFor="let attribute of activitieDetails?.atributos">
-                        <!-- Código de la actividad -->
-                        <div class="col-4 mb-3" *ngIf="attribute.valor && attribute.codigoAtributo === 'CODIGO'">
-                            <div class="form-floating">
-                                <input type="text" class="form-control input-text text-body-custom" id="activitieCode"
-                                    placeholder="" formControlName="activitieCode" disabled
-                                    value="{{attribute.valor}}">
-                                <label for="activitieCode" class="label-custom text-body-small-sb">Código</label>
-                            </div>
-                        </div>
-                        <!-- Acto administrativo-->
-                        <div class="col-4 mb-3" *ngIf="attribute.valor && attribute.codigoAtributo === 'ACTO_ADMINISTRATIVO'">
-                            <div class="form-floating">
-                                <input type="text" class="form-control input-text text-body-custom" id="administrativeAct"
-                                    placeholder="" formControlName="administrativeAct" disabled
-                                    value="{{attribute.valor}}">
-                                <label for="administrativeAct" class="label-custom text-body-small-sb">Acto
-                                    administrativo</label>
-                            </div>
-                        </div>
-                          <!-- COD. VRI -->
-                            <div class="col-4 mb-3" *ngIf="attribute.valor && attribute.codigoAtributo === 'VRI'">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control input-text text-body-custom" id="VRI"
-                                        placeholder="" formControlName="VRI" disabled
-                                        value="{{attribute.valor}}">
-                                    <label for="VRI" class="label-custom text-body-small-sb">COD. VRI</label>
-                                </div>
-                            </div>
-                    </ng-container>
+          </div>
+          <ng-container *ngFor="let attribute of activitieDetails?.atributos">
+            <!-- Código de la actividad -->
+            <div
+              class="col-4 mb-3"
+              *ngIf="attribute.valor && attribute.codigoAtributo === 'CODIGO'"
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="activitieCode"
+                  placeholder=""
+                  formControlName="activitieCode"
+                  disabled
+                  value="{{ attribute.valor }}"
+                />
+                <label
+                  for="activitieCode"
+                  class="label-custom text-body-small-sb"
+                  >Código</label
+                >
+              </div>
+            </div>
+            <!-- Acto administrativo-->
+            <div
+              class="col-4 mb-3"
+              *ngIf="
+                attribute.valor &&
+                attribute.codigoAtributo === 'ACTOADMINISTRATIVO'
+              "
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="administrativeAct"
+                  placeholder=""
+                  formControlName="administrativeAct"
+                  disabled
+                  value="{{ attribute.valor }}"
+                />
+                <label
+                  for="administrativeAct"
+                  class="label-custom text-body-small-sb"
+                  >Acto administrativo</label
+                >
+              </div>
+            </div>
+            <!-- COD. VRI -->
+            <div
+              class="col-4 mb-3"
+              *ngIf="attribute.valor && attribute.codigoAtributo === 'VRI'"
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="VRI"
+                  placeholder=""
+                  formControlName="VRI"
+                  disabled
+                  value="{{ attribute.valor }}"
+                />
+                <label for="VRI" class="label-custom text-body-small-sb"
+                  >COD. VRI</label
+                >
+              </div>
+            </div>
+            <!--Grupo-->
+            <div
+              class="col-4 mb-3"
+              *ngIf="attribute.valor && attribute.codigoAtributo === 'GRUPO'"
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="group"
+                  placeholder=""
+                  formControlName="group"
+                  disabled
+                  value="{{ attribute.valor }}"
+                />
+                <label for="group" class="label-custom text-body-small-sb"
+                  >Grupo</label
+                >
+              </div>
+            </div>
+            <!-- Actividad -->
+            <div
+              class="col-4 mb-3"
+              *ngIf="
+                attribute.valor && attribute.codigoAtributo === 'ACTIVIDAD'
+              "
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="activity"
+                  placeholder=""
+                  formControlName="activity"
+                  disabled
+                  value="{{ attribute.valor }}"
+                />
+                <label for="activity" class="label-custom text-body-small-sb"
+                  >Actividad</label
+                >
+              </div>
+            </div>
+            <!-- Nombre del proyecto -->
+            <div
+              class="col-4 mb-3"
+              *ngIf="
+                attribute.valor && attribute.codigoAtributo === 'NOMBREPROYECTO'
+              "
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="projectName"
+                  placeholder=""
+                  formControlName="projectName"
+                  disabled
+                  value="{{ attribute.valor }}"
+                />
+                <label for="projectName" class="label-custom text-body-small-sb"
+                  >Nombre del proyecto</label
+                >
+              </div>
+            </div>
+            <!-- Materia -->
+            <div
+              class="col-4 mb-3"
+              *ngIf="attribute.valor && attribute.codigoAtributo === 'MATERIA'"
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="subject"
+                  placeholder=""
+                  formControlName="subject"
+                  disabled
+                  value="{{ attribute.valor }}"
+                />
+                <label for="subject" class="label-custom text-body-small-sb"
+                  >Materia</label
+                >
+              </div>
+            </div>
+          </ng-container>
 
-
-                    <!-- Horas semanales -->
-                    <div class="col-4 mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control input-text text-body-custom" id="weeklyHours"
-                                placeholder="" formControlName="weeklyHours" disabled
-                                value="{{activitieDetails?.horas}}">
-                            <label for="weeklyHours" class="label-custom t<ext-body-small-sb">Horas semanales</label>
-                        </div>
-                    </div>
-                    <!--Semanas -->
-                    <div class="col-4 mb-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control input-text text-body-custom" id="weeks"
-                                placeholder="" formControlName="weeks" disabled value="{{activitieDetails?.semanas}}">
-                            <label for="weeks" class="label-custom text-body-small-sb">Total de semanas</label>
-                        </div>
-                    </div>
-                    <!-- Identificación del estudiante -->
-                    <div class="col-4 mb-3"
-                        *ngIf="activitieDetails?.tipoActividad?.oidTipoActividad==2 || activitieDetails?.tipoActividad?.oidTipoActividad == 3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control input-text text-body-custom"
-                                id="studentIdentification" placeholder="" formControlName="studentIdentification"
-                                disabled value="{{activitieDetails?.evaluador?.identificacion}}">
-                            <label for="studentIdentification" class="label-custom text-body-small-sb">Identificación
-                                estudiante</label>
-                        </div>
-                    </div>
-                    <!-- Nombre del estudiante -->
-                    <div class="col-4 mb-3"
-                        *ngIf="activitieDetails?.tipoActividad?.oidTipoActividad==2 || activitieDetails?.tipoActividad?.oidTipoActividad == 3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control input-text text-body-custom" id="studentName"
-                                placeholder="" formControlName="studentName" disabled
-                                value="{{activitieDetails?.evaluador?.nombres}} {{activitieDetails?.evaluador?.apellidos}}">
-                            <label for="studentName" class="label-custom text-body-small-sb">Nombre estudiante</label>
-                        </div>
-                    </div>
-                </div>
+          <!-- Horas semanales -->
+          <div class="col-4 mb-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control input-text text-body-custom"
+                id="weeklyHours"
+                placeholder=""
+                formControlName="weeklyHours"
+                disabled
+                value="{{ activitieDetails?.horas }}"
+              />
+              <label for="weeklyHours" class="label-custom t<ext-body-small-sb"
+                >Horas semanales</label
+              >
             </div>
-            <div class="modal-footer">
-                <div class="row row-cols-auto justify-content-end">
-                    <div class="col d-flex justify-content-end">
-                        <button class="button-normal" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
+          </div>
+          <!--Semanas -->
+          <div class="col-4 mb-3">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control input-text text-body-custom"
+                id="weeks"
+                placeholder=""
+                formControlName="weeks"
+                disabled
+                value="{{ activitieDetails?.semanas }}"
+              />
+              <label for="weeks" class="label-custom text-body-small-sb"
+                >Total de semanas</label
+              >
             </div>
+          </div>
+          <!-- Identificación del estudiante -->
+          <ng-container
+            class="col-4 mb-3"
+            *ngIf="
+              activitieDetails?.tipoActividad?.oidTipoActividad == 2 ||
+              activitieDetails?.tipoActividad?.oidTipoActividad == 3 ; else noStudent
+            "
+          >
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control input-text text-body-custom"
+                id="studentIdentification"
+                placeholder=""
+                formControlName="studentIdentification"
+                disabled
+                value="{{ activitieDetails?.evaluador?.identificacion }}"
+              />
+              <label
+                for="studentIdentification"
+                class="label-custom text-body-small-sb"
+                >Identificación estudiante</label
+              >
+            </div>
+            <!-- Nombre del estudiante -->
+            <div
+              class="col-4 mb-3"
+            >
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="studentName"
+                  placeholder=""
+                  formControlName="studentName"
+                  disabled
+                  value="{{ activitieDetails?.evaluador?.nombres }} {{
+                    activitieDetails?.evaluador?.apellidos
+                  }}"
+                />
+                <label for="studentName" class="label-custom text-body-small-sb"
+                  >Nombre estudiante</label
+                >
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noStudent>
+            <!-- Evaluador -->
+            <div class="col-4 mb-3">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="evaluator"
+                  placeholder=""
+                  formControlName="evaluator"
+                  disabled
+                  value="{{ activitieDetails?.evaluador?.nombres }} {{
+                    activitieDetails?.evaluador?.apellidos
+                  }}"
+                />
+                <label for="evaluator" class="label-custom text-body-small-sb"
+                  >Evaluador</label
+                >
+              </div>
+            </div>
+            <!-- Identificación del evaluador -->
+            <div class="col-4 mb-3">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  class="form-control input-text text-body-custom"
+                  id="evaluatorIdentification"
+                  placeholder=""
+                  formControlName="evaluatorIdentification"
+                  disabled
+                  value="{{ activitieDetails?.evaluador?.identificacion }}"
+                />
+                <label
+                  for="evaluatorIdentification"
+                  class="label-custom text-body-small-sb"
+                  >Identificación evaluador</label
+                >
+              </div>
+            </div>
+          </ng-template>
         </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row row-cols-auto justify-content-end">
+          <div class="col d-flex justify-content-end">
+            <button class="button-normal" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
