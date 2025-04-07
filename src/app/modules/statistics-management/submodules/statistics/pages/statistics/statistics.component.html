@@ -1,4 +1,180 @@
 <div class="view-container">
-    <strong class="title-two">Estadísiticas</strong>
-    <statistics-chart></statistics-chart>
+  <strong class="title-two">Estadísiticas</strong>
+  <form [formGroup]="formStatistics">
+    <fieldset>
+      <div class="form-floating">
+        <select
+          class="form-select input-select text-body-custom"
+          id="statistics-type"
+          formControlName="statisticsType"
+        >
+          <option value="">Seleccionar</option>
+          <option value="1">Comparación de evaluación por actividad</option>
+          <option value="2">Promedio de evaluación por departamento</option>
+          <option value="3">
+            Ranking de docentes por calificación promedio
+          </option>
+          <option value="4">
+            Evolución del promedio de evaluación por departamento
+          </option>
+          <option value="5">
+            Estadísticas por pregunta formulario estudiantes
+          </option>
+        </select>
+        <label for="statistics-type" class="label-custom text-body-small-sb"
+          >Tipo de estadística</label
+        >
+      </div>
+    </fieldset>
+    <div class="mb-3"></div>
+    <fieldset>
+      <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '1'">
+        <div class="row">
+          <div class="col">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control input-text text-body-custom"
+                id="teacher-name"
+                formControlName="teacherName"
+                placeholder="Nombre del docente"
+              />
+              <label for="teacher-name" class="label-custom text-body-small-sb"
+                >Nombre del docente</label
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                class="form-select input-select text-body-custom"
+                id="academicPeriod"
+                formControlName="academicPeriod"
+              >
+                <option value="">Seleccionar periodo</option>
+                <option value="1">2023-1</option>
+                <option value="2">2023-2</option>
+                <option value="3">2024-1</option>
+                <option value="4">2024-2</option>
+              </select>
+              <label
+                for="academicPeriod"
+                class="label-custom text-body-small-sb"
+                >Periodo académico</label
+              >
+            </div>
+          </div>
+          <div class="col">
+            <!-- Tipo de actividad -->
+            <div class="form-floating">
+              <select
+                class="form-select input-select text-body-custom"
+                id="activityType"
+                formControlName="activityType"
+              >
+                <option value="">Seleccionar tipo de actividad</option>
+                <option value="1">Examen</option>
+                <option value="2">Tarea</option>
+                <option value="3">Trabajo</option>
+              </select>
+              <label for="activityType" class="label-custom text-body-small-sb"
+                >Tipo de actividad</label
+              >
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '2'">
+        <div class="row">
+          <div class="col-4">
+            <div class="form-floating">
+              <select
+                class="form-select input-select text-body-custom"
+                id="academicPeriod"
+                formControlName="academicPeriod"
+              >
+                <option value="">Seleccionar periodo</option>
+                <option value="1">2023-1</option>
+                <option value="2">2023-2</option>
+                <option value="3">2024-1</option>
+                <option value="4">2024-2</option>
+              </select>
+              <label
+                for="academicPeriod"
+                class="label-custom text-body-small-sb"
+                >Periodo académico</label
+              >
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '3'">
+        <div class="row">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                class="form-select input-select text-body-custom"
+                id="academicPeriod"
+                formControlName="academicPeriod"
+              >
+                <option value="">Seleccionar periodo</option>
+                <option value="1">2023-1</option>
+                <option value="2">2023-2</option>
+                <option value="3">2024-1</option>
+                <option value="4">2024-2</option>
+              </select>
+              <label
+                for="academicPeriod"
+                class="label-custom text-body-small-sb"
+                >Periodo académico</label
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="program"
+                formControlName="program"
+                class="form-select input-text text-body-custom"
+              >
+                <option value="">Seleccionar programa</option>
+                <option value="1">Ingeniería de Sistemas</option>
+                <option value="2">Ingeniería Electrónica</option>
+                <option value="3">Ingeniería Industrial</option>
+                <option value="4">Ingeniería Ambiental</option>
+              </select>
+              <label for="program" class="label-custom text-body-small-sb"
+                >Programa</label
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                class="form-select input-select text-body-custom"
+                id="activityType"
+                formControlName="activityType"
+              >
+                <option value="">Seleccionar tipo de actividad</option>
+                <option value="1">Examen</option>
+                <option value="2">Tarea</option>
+                <option value="3">Trabajo</option>
+              </select>
+              <label for="activityType" class="label-custom text-body-small-sb"
+                >Tipo de actividad</label
+              >
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '4'">
+        <div class="row">
+          <div class="col">
+
+          </div>
+        </div>
+      </ng-container>
+    </fieldset>
+  </form>
+  <statistics-chart></statistics-chart>
 </div>

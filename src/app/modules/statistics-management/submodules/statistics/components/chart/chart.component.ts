@@ -19,6 +19,11 @@ export class ChartComponent {
         datasets: [
           {
             label: '# of Votes',
+            data: [10, 10, 2, 5, 2, 3],
+            borderWidth: 1,
+          },
+          {
+            label: '# of Votes',
             data: [12, 19, 3, 5, 2, 3],
             borderWidth: 1,
           },
