@@ -29,14 +29,16 @@ export class ActivitiesComponent implements OnInit {
   recoverTeacherInformation() {
     if (this.idUserParam) {
       this.activitiesMagementService.getUserById(this.idUserParam).subscribe(
-        (response) => {
-          this.teacherInformation = response.data;
-        },
-        (error) => {
-          this.messageInfoService.showErrorMessage(
-            error.error.mensaje,
-            'Error'
-          );
+        {
+          next: (response) => {
+            this.teacherInformation = response.data;
+          },
+          error: (error) => {
+            this.messageInfoService.showErrorMessage(
+              error.error.mensaje,
+              'Error'
+            );
+          },
         }
       );
     }

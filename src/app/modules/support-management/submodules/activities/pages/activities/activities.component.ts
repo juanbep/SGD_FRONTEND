@@ -8,6 +8,8 @@ import { ActivitiesEditEvaluationComponent } from '../../components/activities-e
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
+import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
+import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 
 @Component({
   selector: 'support-management-activities',
@@ -31,15 +33,19 @@ export class ActivitiesComponent {
 
   private authServiceService = inject(AuthServiceService);
   private activitiesServices = inject(ActivitiesServicesService);
+  private academicPeriodManagementService = inject(AcademicPeriodManagementService);
+
 
   public activityResponse: PagedResponse<ActividadResponse> | null = null;
   public checkActivitiesDiliegenciadoVar: boolean = false;
   public currentUser = this.authServiceService.currentUser;
   public openModalOptionSelected: boolean = false;
+  public academicPeriod: PeriodoAcademicoResponse | null = null;
 
   activitiesEffect = effect(() => {
     this.activityResponse = this.activitiesServices.getDataActivities();
     this.checkActivitiesDiliegenciadoVar = this.checkActivitiesComplete();
+    this.academicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue;
   });
 
   private checkActivitiesComplete() {

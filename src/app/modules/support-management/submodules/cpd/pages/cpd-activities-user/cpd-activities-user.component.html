@@ -1,7 +1,12 @@
 <div class="view-container">
+
   <div class="title-two">
     Actividades del docente {{ userTeacherInfo?.nombreDocente | titlecase }}
   </div>
+  <div class="messages-container">
+    <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+    <span class="text-body-heavy">A continuación, encontrará el listado de actividades del docente {{userTeacherInfo?.nombreDocente}} asginadas para el periodo {{userTeacherInfo?.periodoAcademico}}. En esta vista podrá ver el datalle de la evaluación de las fuentes de cada actvidad, el estado de cada fuente, descargar el consolidado y todos los archivos de soporte.</span>
+</div>
 
   <div class="mb-3"></div>
   <!-- Información del docente -->

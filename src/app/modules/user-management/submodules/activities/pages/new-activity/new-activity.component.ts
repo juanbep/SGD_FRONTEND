@@ -38,6 +38,7 @@ import {
   styleUrl: './new-activity.component.css',
 })
 export class NewActivityComponent implements OnInit {
+  
   @ViewChild(ConfirmDialogComponent)
   confirmDialogComponent: ConfirmDialogComponent | null = null;
 
@@ -484,23 +485,26 @@ export class NewActivityComponent implements OnInit {
             valor: this.newActivityForm.get('subject')?.value,
           });
         }
-        const newActivity: ActividadCreate[] = [{
-          tipoActividad: {
-            oidTipoActividad: Number(
-              this.newActivityForm.get('typeActivity')?.value
+        const newActivity: ActividadCreate[] = [
+          {
+            tipoActividad: {
+              oidTipoActividad: Number(
+                this.newActivityForm.get('typeActivity')?.value
+              ),
+            },
+            oidEvaluado: Number(this.idUserParam),
+            oidEvaluador: Number(this.evaluator?.oidUsuario || 0),
+            oidEstadoActividad: Number(
+              this.newActivityForm.get('activityState')?.value
             ),
+            nombreActividad: this.newActivityForm.get('nameActivity')?.value,
+            horas: Number(this.newActivityForm.get('weeklyHours')?.value),
+            semanas: Number(this.newActivityForm.get('weeks')?.value),
+            informeEjecutivo:
+              this.newActivityForm.get('executiveReport')?.value,
+            atributos: atributos,
           },
-          oidEvaluado: Number(this.idUserParam),
-          oidEvaluador: Number(this.evaluator?.oidUsuario || 0),
-          oidEstadoActividad: Number(
-            this.newActivityForm.get('activityState')?.value
-          ),
-          nombreActividad: this.newActivityForm.get('nameActivity')?.value,
-          horas: Number(this.newActivityForm.get('weeklyHours')?.value),
-          semanas: Number(this.newActivityForm.get('weeks')?.value),
-          informeEjecutivo: this.newActivityForm.get('executiveReport')?.value,
-          atributos: atributos,
-        }];
+        ];
         this.activitiesManagementService
           .saveNewActivity(newActivity)
           .subscribe({

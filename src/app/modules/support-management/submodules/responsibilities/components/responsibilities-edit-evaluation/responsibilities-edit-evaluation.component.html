@@ -5,10 +5,33 @@
         <div class="line"></div>
         <div class="messages-container">
             <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
-            <span class="text-body-regular">A continuación encontrará la información de la actividad seleccionada</span>
+            <p class="text-body-heavy">
+                Por favor, ingrese la evaluación de la actividad. Asegúrese de
+                que la evaluación coincida con la información del documento de
+                soporte que desea cargar.
+              </p>
         </div>
         <!--Sección carga de autoevaluación -->
-
+        <section>
+            <p class="title-three">
+                Información de la actividad
+            </p>
+            <table class="table-bordered">
+                <tr>
+                    <th>
+                        <span class="text-body-small-r">Actividad</span>
+                        <br/>  
+                        <span class="text-body-small-sb">{{responsability?.nombreActividad}}</span>
+                    </th>
+                    <th>
+                        <span class="text-body-small-r">Evaluado</span>
+                        <br>  
+                        <span class="text-body-small-sb">{{responsability?.evaluado?.nombres}} {{responsability?.evaluado?.apellidos}}</span>
+                    </th>
+                </tr>
+                
+            </table>
+        </section>
 
         <section id="dowload-support">
             <span class="title-three">Soporte</span>
@@ -48,11 +71,6 @@
         </section>
         <!-- Sección diligenciar evaluación -->
         <section id="assessment-fill-out-responsability">
-            <div class="messages-container">
-                <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
-                <span class="text-body-regular">Asegurese que la evaluación ingresada sea la misma que se encuentra en
-                    el soporte</span>
-            </div>
             <span class="title-three">Calificación</span><br>
             <input id="input-note" [(ngModel)]="evaluation" [ngClass]="getInputClass()"    
             class="evaluation text-body-heavy" type="text" placeholder="Nota"><br>

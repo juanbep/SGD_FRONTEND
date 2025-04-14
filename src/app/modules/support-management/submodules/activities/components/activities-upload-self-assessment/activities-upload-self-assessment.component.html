@@ -17,39 +17,23 @@
       </div>
       <div class="modal-body">
         <!--Sección mensaje informativo -->
-        <section id="information-message">
-          <div class="messages-container row">
-            <div class="col-1">
-              <img
-                class="img-container"
-                src="assets/icons/messages/icon-info.svg"
-                alt=""
-              />
-            </div>
-            <div class="col">
-              <p class="text-body-regular">
-                Por favor, ingrese la evaluación de sus actividades. Asegúrese
-                de que la evaluación coincida con la información del documento
-                de soporte que desea cargar.
-              </p>
-            </div>
+        <section>
+          <div class="messages-container" >
+            <img
+              src="assets/icons/messages/icon-info.svg"
+              alt=""
+            />
+            <p class="text-body-heavy">
+              Por favor, ingrese la evaluación de sus actividades. Asegúrese de
+              que la evaluación coincida con la información del documento de
+              soporte que desea cargar.
+            </p>
           </div>
         </section>
-
+        <div class="mb-3"></div>
         <!-- Sección diligenciamiento de la evaluación -->
         <section id="assessment-fill-out">
           <p class="title-three">Actividad y evaluación</p>
-          <div class="messages-container row">
-            <div class="col-1">
-              <img src="assets/icons/messages/icon-info.svg" alt="" />
-            </div>
-            <div class="col">
-              <p class="text-body-regular">
-                Asegurese que la evaluación ingresada sea la misma que se
-                encuentra en el soporte
-              </p>
-            </div>
-          </div>
           <div class="mb-3"></div>
           <form [formGroup]="formSelfAssessment" (ngSubmit)="saveEvaluation()">
             <div class="table-responsive table-responsive-custom">
@@ -80,14 +64,16 @@
                     <td>
                       <input
                         [ngClass]="{
-                           'text-error': isInvalidField(item),
-                           'input-evaluation-disabled': this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA'
-                           }"
+                          'text-error': isInvalidField(item),
+                          'input-evaluation-disabled':
+                            this.userActivities[i].fuentes[0].calificacion &&
+                            this.userActivities[i].fuentes[0]
+                              .tipoCalificacion === 'EN_LINEA'
+                        }"
                         id="input-evaluation-edit"
                         class="input-evaluation text-body-regular"
                         formControlName="calificacion"
                         placeholder="Ingresar nota"
-
                       />
                       <img
                         src="assets/icons/tables/icon-pen-modal.svg"
@@ -97,7 +83,7 @@
                     <td>
                       <ng-container
                         *ngIf="
-                          userActivities[i].informeEjecutivo;
+                          userActivities[i].informeEjecutivo && !( this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA') ;
                           else noReport
                         "
                       >
@@ -201,7 +187,8 @@
             </div>
             <span
               [ngClass]="{
-                'text-error text-body-text-body-small-r': errorMessageFile != '',
+                'text-error text-body-text-body-small-r':
+                  errorMessageFile != '',
                 text: errorMessageFile === ''
               }"
               >El formato no es permitido
@@ -218,7 +205,6 @@
             />
           </section>
         </section>
-
       </div>
       <div class="modal-footer">
         <!-- Sección de botonoes-->

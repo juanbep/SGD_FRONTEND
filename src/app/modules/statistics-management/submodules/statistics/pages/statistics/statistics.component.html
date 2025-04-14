@@ -1,5 +1,15 @@
 <div class="view-container">
   <strong class="title-two">Estadísiticas</strong>
+  <div class="mb-3"></div>
+  <div class="messages-container" style="margin: 5px">
+    <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+    <span class="text-body-heavy"
+      >A continuación, se presentan diferentes gráficos estadísticos. Seleccione
+      el tipo de estadísticas e ingrese los campos correspondientes para filtrar
+      la información.
+    </span>
+  </div>
+  <div class="mb-3"></div>
   <form [formGroup]="formStatistics">
     <fieldset>
       <div class="form-floating">
@@ -29,19 +39,84 @@
     <div class="mb-3"></div>
     <fieldset>
       <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '1'">
+        <span class="title-three">Comparación de evaluación por actividad</span>
+        <div class="mb-3"></div>
         <div class="row">
-          <div class="col">
-            <div class="form-floating">
-              <input
-                type="text"
-                class="form-control input-text text-body-custom"
-                id="teacher-name"
-                formControlName="teacherName"
-                placeholder="Nombre del docente"
-              />
-              <label for="teacher-name" class="label-custom text-body-small-sb"
-                >Nombre del docente</label
-              >
+          <div class="col-3">
+            <div class="search-container">
+              <div class="search-subcontainer">
+                <div class="input-search-wrapper">
+                  <div class="form-floating">
+                    <input
+                      type="text"
+                      class="form-control input-search text-body-custom"
+                      [ngClass]="{
+                        'error-input': isInvaldField('teacher')
+                      }"
+                      id="teacher"
+                      value="{{
+                        this.formStatistics.get('teacher')?.value.nombres
+                      }} {{
+                        this.formStatistics.get('teacher')?.value.apellidos
+                      }}"
+                      (focus)="showDropdownUserNameList()"
+                      (blur)="hideDropdownUserNameList()"
+                      formControlName="teacher"
+                    />
+                    <label
+                      for="teacherName"
+                      class="label-custom text-body-small-sb"
+                      [ngClass]="{
+                        'error-label': isInvaldField('teacher')
+                      }"
+                      ><span
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Campo obligatorio"
+                        >*</span
+                      >
+                      Nombre del docente</label
+                    >
+                  </div>
+                </div>
+                <div class="results" *ngIf="showUserNameDropdown">
+                  <table
+                    id="table-result-search"
+                    class="tableSearchUser table-hover table-borderless"
+                  >
+                    <tbody>
+                      <ng-container
+                        *ngIf="
+                          userResponseSearch?.content;
+                          else noResultsByEvaluatiorId
+                        "
+                      >
+                        <tr
+                          *ngFor="let user of userResponseSearch?.content"
+                          (pointerdown)="selectUser(user)"
+                          class="row-result-search"
+                        >
+                          <td>
+                            {{ user.nombres }} {{ user.apellidos }} -
+                            {{ user.identificacion }}
+                          </td>
+                        </tr>
+                      </ng-container>
+                      <ng-template #noResultsByEvaluatiorId>
+                        <tr>
+                          <td>No se encontraron resultados</td>
+                        </tr>
+                      </ng-template>
+                    </tbody>
+                  </table>
+                </div>
+                <span
+                    *ngIf="isInvaldField('teacher')"
+                    class="error-message text-body-small-r ms-1"
+                  >
+                    {{ getFieldError("teacher") }}
+                  </span>
+              </div>
             </div>
           </div>
           <div class="col">
@@ -52,10 +127,12 @@
                 formControlName="academicPeriod"
               >
                 <option value="">Seleccionar periodo</option>
-                <option value="1">2023-1</option>
-                <option value="2">2023-2</option>
-                <option value="3">2024-1</option>
-                <option value="4">2024-2</option>
+                <option
+                  *ngFor="let academicPeriod of academicPeriodResponse"
+                  value="{{ academicPeriod?.oidPeriodoAcademico }}"
+                >
+                  {{ academicPeriod?.idPeriodo }}
+                </option>
               </select>
               <label
                 for="academicPeriod"
@@ -73,9 +150,12 @@
                 formControlName="activityType"
               >
                 <option value="">Seleccionar tipo de actividad</option>
-                <option value="1">Examen</option>
-                <option value="2">Tarea</option>
-                <option value="3">Trabajo</option>
+                <option
+                  *ngFor="let activityType of catalogData?.tipoActividades"
+                  [value]="activityType.codigo"
+                >
+                  {{ activityType.nombre }}
+                </option>
               </select>
               <label for="activityType" class="label-custom text-body-small-sb"
                 >Tipo de actividad</label
@@ -133,18 +213,20 @@
           <div class="col">
             <div class="form-floating">
               <select
-                id="program"
-                formControlName="program"
+                id="department"
+                formControlName="department"
                 class="form-select input-text text-body-custom"
               >
-                <option value="">Seleccionar programa</option>
-                <option value="1">Ingeniería de Sistemas</option>
-                <option value="2">Ingeniería Electrónica</option>
-                <option value="3">Ingeniería Industrial</option>
-                <option value="4">Ingeniería Ambiental</option>
+                <option value="">Seleccionar departamento</option>
+                <option
+                  *ngFor="let department of catalogData?.departamentos"
+                  [value]="department.codigo"
+                >
+                  {{ department.nombre }}
+                </option>
               </select>
-              <label for="program" class="label-custom text-body-small-sb"
-                >Programa</label
+              <label for="department" class="label-custom text-body-small-sb"
+                >Departamento</label
               >
             </div>
           </div>
@@ -156,9 +238,12 @@
                 formControlName="activityType"
               >
                 <option value="">Seleccionar tipo de actividad</option>
-                <option value="1">Examen</option>
-                <option value="2">Tarea</option>
-                <option value="3">Trabajo</option>
+                <option
+                  *ngFor="let activityType of catalogData?.tipoActividades"
+                  [value]="activityType.codigo"
+                >
+                  {{ activityType.nombre }}
+                </option>
               </select>
               <label for="activityType" class="label-custom text-body-small-sb"
                 >Tipo de actividad</label
@@ -169,12 +254,140 @@
       </ng-container>
       <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '4'">
         <div class="row">
+          <div class="col-4">
+            <ng-multiselect-dropdown
+              formControlName="academicPeriod"
+              [placeholder]="'Peridos académicos'"
+              [settings]="dropdownSettings"
+              [data]="dropdownList"
+              [(ngModel)]="selectedItems"
+              (onSelect)="onItemSelect($event)"
+              (onSelectAll)="onSelectAll($event)"
+            >
+            </ng-multiselect-dropdown>
+          </div>
           <div class="col">
-
+            <ng-multiselect-dropdown
+              formControlName="department"
+              [placeholder]="'Departamentos'"
+              [settings]="dropdownSettings"
+              [data]="dropdownDepartmentList"
+              [(ngModel)]="selectDepartmentItems"
+              (onSelect)="onItemSelect($event)"
+              (onSelectAll)="onSelectAll($event)"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '5'">
+        <div class="row">
+          <div class="col">
+            <div class="form-floating">
+              <select
+                class="form-select input-select text-body-custom"
+                id="academicPeriod"
+                formControlName="academicPeriod"
+              >
+                <option value="">Seleccionar periodo</option>
+                <option value="1">2023-1</option>
+                <option value="2">2023-2</option>
+                <option value="3">2024-1</option>
+                <option value="4">2024-2</option>
+              </select>
+              <label
+                for="academicPeriod"
+                class="label-custom text-body-small-sb"
+                >Periodo académico</label
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                id="department"
+                formControlName="department"
+                class="form-select input-text text-body-custom"
+              >
+                <option value="">Seleccionar departamento</option>
+                <option
+                  *ngFor="let department of catalogData?.departamentos"
+                  [value]="department.codigo"
+                >
+                  {{ department.nombre }}
+                </option>
+              </select>
+              <label for="department" class="label-custom text-body-small-sb"
+                >Departamento</label
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-floating">
+              <select
+                class="form-select input-select text-body-custom"
+                id="activityType"
+                formControlName="activityType"
+              >
+                <option value="">Seleccionar tipo de actividad</option>
+                <option
+                  *ngFor="let activityType of catalogData?.tipoActividades"
+                  [value]="activityType.codigo"
+                >
+                  {{ activityType.nombre }}
+                </option>
+              </select>
+              <label for="activityType" class="label-custom text-body-small-sb"
+                >Tipo de actividad</label
+              >
+            </div>
           </div>
         </div>
       </ng-container>
     </fieldset>
+    <div class="mb-3"></div>
+    <ng-container *ngIf="formStatistics.get('statisticsType')?.value">
+      <div class="d-flex justify-content-center">
+        <button
+          class="button-normal-large"
+          (click)="generateChart(formStatistics.get('statisticsType')?.value)"
+        >
+          Generar gráfico
+        </button>
+      </div>
+    </ng-container>
   </form>
-  <statistics-chart></statistics-chart>
+  <div class="mb-3"></div>
+  <ng-container
+    *ngIf="
+      formStatistics.get('statisticsType')?.value == '1' ||
+      formStatistics.get('statisticsType')?.value == '2' ||
+      formStatistics.get('statisticsType')?.value == 3 ||
+      formStatistics.get('statisticsType')?.value == 5
+    "
+  >
+    <statistics-chart
+      [labels]="labels"
+      [dataSets]="dataSets"
+    ></statistics-chart>
+  </ng-container>
+
+  <ng-container *ngIf="formStatistics.get('statisticsType')?.value == 4">
+    <statistics-line-chart
+      [labels]="labels"
+      [dataSets]="dataSets"
+    ></statistics-line-chart>
+  </ng-container>
+
+  <ng-container *ngIf="formStatistics.get('statisticsType')?.value == 5">
+    <span class="title-three"> Preguntas del formulario estudiantes: </span>
+    <div class="mb-3"></div>
+    <span
+      class="text-body-regular"
+      *ngFor="let question of catalogData?.preguntaEvaluacionDocente"
+    >
+      - {{ question.oidPregunta }} {{ question.pregunta }}
+      <br />
+    </span>
+  </ng-container>
 </div>

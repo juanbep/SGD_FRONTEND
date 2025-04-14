@@ -1,33 +1,50 @@
-import { Component } from '@angular/core';
-import {Chart} from 'chart.js/auto';
+import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Chart } from 'chart.js/auto';
 @Component({
   selector: 'statistics-chart',
   standalone: true,
-  imports: [
-    
-  ],
+  imports: [],
   templateUrl: './chart.component.html',
-  styleUrl: './chart.component.css'
+  styleUrl: './chart.component.css',
 })
-export class ChartComponent {
-  chart: any = [];
+export class ChartComponent implements OnInit, OnChanges {
+
+  @Input()
+  labels: string[] = [];
+
+  @Input()
+  dataSets: any[] = [];
+
+  chart: Chart | undefined;
+
   ngOnInit() {
-    this.chart = new Chart('canvas', {
+    this.drawChart(this.labels, this.dataSets);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+   if (changes['labels'] || changes['dataSets']) {
+      this.labels = changes['labels'].currentValue;
+      this.dataSets = changes['dataSets'].currentValue;
+      if(this.chart){
+        this.chart.destroy();
+        this.drawChart(this.labels, this.dataSets);
+      }
+    }
+  }
+
+  downloadChart() {
+    const link = document.createElement('a');
+    link.href = this.chart?.toBase64Image() || '';
+    link.download = 'chart.png';
+    link.click();
+  }
+
+  drawChart(labels: string[], dataSets: any[]) {
+    this.chart = new Chart('canvas-chart', {
       type: 'bar',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-          {
-            label: '# of Votes',
-            data: [10, 10, 2, 5, 2, 3],
-            borderWidth: 1,
-          },
-          {
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1,
-          },
-        ],
+        labels: labels,
+        datasets: dataSets,
       },
       options: {
         scales: {
@@ -38,4 +55,5 @@ export class ChartComponent {
       },
     });
   }
+
 }

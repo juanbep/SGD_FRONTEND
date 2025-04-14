@@ -2,13 +2,13 @@
     <span class="title-two">Docentes {{currentUser?.usuarioDetalle?.departamento | titlecase }}</span>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">Aquí podrás ver la información de los docentes de su departamento y ver sus respectivos consolidados</span>
+        <span class="text-body-heavy">A continuación, se presenta el listado de docente asignado al {{currentUser?.usuarioDetalle?.departamento | titlecase}} junto con los consolidados correspondientes para el periodo académico {{activeAcademicPeriod?.idPeriodo}}.</span>
     </div>
     <consolidated-teachers-list-filter></consolidated-teachers-list-filter>
     <consolidated-teachers-list-table></consolidated-teachers-list-table>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">Aquí podrás descargar todos los soportes cargados para los docentes de su departamento</span>
+        <span class="text-body-heavy">Aquí puede descargar los soportes de los docente del {{currentUser?.usuarioDetalle?.departamento | titlecase}}.</span>
     </div>
     <section>
         <span class="title-three">Descargar soportes</span>

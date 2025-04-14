@@ -1,14 +1,37 @@
 <shared-loading-overley [isLoading]="isLoading"></shared-loading-overley>
 <div id="myModal" class="modal">
     <div class="modal-content">
-        <span class="title-three">Carga de soporte</span>
+        <span class="title-two">Carga de soporte</span>
         <div class="line"></div>
         <div class="messages-container">
             <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
             <span class="text-body-regular">Por favor, ingrese el soporte y la nota de la actividad que desea evaluar</span>
         </div>
+        <section>
+            <p class="title-three">
+                Información de la actividad
+            </p>
+            <table class="table-bordered">
+                <tr>
+                    <th>
+                        <span class="text-body-small-r">Actividad</span>
+                        <br/>  
+                        <span class="text-body-small-sb">{{responsability?.nombreActividad}}</span>
+                    </th>
+                    <th>
+                        <span class="text-body-small-r">Evaluado</span>
+                        <br>  
+                        <span class="text-body-small-sb">{{responsability?.evaluado?.nombres}} {{responsability?.evaluado?.apellidos}}</span>
+                    </th>
+                </tr>
+                
+            </table>
+        </section>
         <!--Sección carga de autoevaluación -->
         <section id="upload-file-asessment">
+            <span class="title-three">
+                Soporte
+            </span>
             <div class="file-upload-container">
                 <label for="uploadFileAssessment" class="file-upload-label">
                     <div class="file-details">
@@ -32,10 +55,6 @@
         </section>
         <!-- Sección diligenciar evaluación -->
         <section id="assessment-fill-out-responsability">
-            <div class="messages-container">
-                <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
-                <span class="text-body-regular">Asegurese que la evaluación ingresada sea la misma que se encuentra en el soporte</span>
-            </div>
             <span class="title-three">Calificación</span><br>
             <input id="input-note" [(ngModel)]="evaluation" [ngClass]="getInputClass()"  class="input-nota text-body-heavy" type="text" placeholder="Nota"><br>
             <span [ngClass]="{
