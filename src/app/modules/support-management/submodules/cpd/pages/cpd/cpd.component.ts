@@ -53,6 +53,8 @@ export class CpdComponent implements OnInit {
   private messagesInfoService = inject(MessagesInfoService);
   private cpdWordGeneratorService = inject(CpdWordGeneratorService);
   private userService = inject(UsersServiceService);
+  private academicPeriodMangementService = inject(AcademicPeriodManagementService);
+
 
   public academicPeriodActive: PeriodoAcademicoResponse | null = null;
   public currentPage: number = 1;
@@ -68,9 +70,12 @@ export class CpdComponent implements OnInit {
 
   public userSelectedToCreateRelution: UsuarioConsolidadoCreadoResponse | null = null;
   public bossDepartment: UsuarioResponse | null = null;
+  public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
+
 
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
+    this.activeAcademicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue
     this.recoverBossDepartment();
     this.academicPeriodActive =
       this.academicPeriodManagementService.currentAcademicPeriodValue;

@@ -20,3 +20,4 @@ export interface ActividadResponse {
   oidEvaluado: number;
   oidEvaluador: number;
 }
+

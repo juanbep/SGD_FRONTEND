@@ -62,26 +62,37 @@ export class AuthGoogleService {
         });
     }
 
-    login(email: string, password: string): void {
+    // login(email: string, password: string): void {
+    //     const provider = new firebase.auth.GoogleAuthProvider();
+    //     provider.setCustomParameters({
+    //         prompt: 'select_account', // Forzar el selector de cuenta
+    //     });
+
+    //     this.afAuth
+    //         .signInWithEmailAndPassword(email, password)
+    //         .then((result) => {
+    //                 if (result.user) {
+    //                 result.user.getIdToken().then((firebaseToken) => {
+    //                      console.log(firebaseToken);
+    //                     // this.sendTokenToBackend(authToken);
+    //                 });
+    //             }
+                
+    //         })
+    //         .catch((error) => {});
+    // }
+
+   async login(email: string, password: string) {
         const provider = new firebase.auth.GoogleAuthProvider();
         provider.setCustomParameters({
             prompt: 'select_account', // Forzar el selector de cuenta
         });
 
-        this.afAuth
-            .signInWithEmailAndPassword(email, password)
-            .then((result) => {
-                    if (result.user) {
-                    result.user.getIdToken().then((firebaseToken) => {
-                         console.log(firebaseToken);
-                        // this.sendTokenToBackend(authToken);
-                    });
-                }
-                
-            })
-            .catch((error) => {});
+        const creds = await this.afAuth.signInWithPopup(
+            provider
+          );
     }
-
+    
     /*
     private sendTokenToBackend(authToken: AuthToken): void {
         this.http

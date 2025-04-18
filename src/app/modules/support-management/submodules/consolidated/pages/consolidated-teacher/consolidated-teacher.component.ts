@@ -10,6 +10,8 @@ import { ActividadConsolidadoResponse } from '../../../../../../core/models/resp
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
+import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 
 const SIZE_PAGE = 10;
 const TITTLE_MESSAGE = 'Aprobar consolidado';
@@ -36,6 +38,8 @@ export class ConsolidatedTeacherComponent implements OnInit {
   private toastr = inject(MessagesInfoService);
   private router = inject(Router);
   private authService = inject(AuthServiceService);
+  private academicPeriodMangementService = inject(AcademicPeriodManagementService);
+  
 
   public consolidatedTeacher: ActividadConsolidadoResponse | null = null;
   public currentPage: number = 1;
@@ -45,6 +49,8 @@ export class ConsolidatedTeacherComponent implements OnInit {
   public responseConsolidatedConfirmDialog: string = '';
 
   public isLoading: boolean = false;
+  public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
+  
 
   public tittleMessage: string = TITTLE_MESSAGE;
   public confirmMessage: string = CONFIRM_MESSAGE;
@@ -62,6 +68,7 @@ export class ConsolidatedTeacherComponent implements OnInit {
   ngOnInit(): void {
     this.infoCurrentUser = this.authService.currentUserValue;
     this.idUserTeacher = this.activateRoute.snapshot.params['id'];
+    this.activeAcademicPeriod = this.academicPeriodMangementService.currentAcademicPeriodValue;
     this.recoverInfoTeacher();
   }
 

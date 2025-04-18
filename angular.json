@@ -34,8 +34,10 @@
               "src/customStyles/buttonsStyles.css",
               "src/customStyles/filterStyles.css",
               "src/customStyles/modalStyles.css",
+              "src/customStyles/ng-multiselect-dropdown-them.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css"
+
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.min.js",

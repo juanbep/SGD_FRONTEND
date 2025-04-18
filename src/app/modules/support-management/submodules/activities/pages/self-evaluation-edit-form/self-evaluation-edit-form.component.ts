@@ -310,12 +310,16 @@ export class SelfEvaluationEditFormComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.evidences[index] = input.files[0];
+      this.editSelfEvaluationForm.get('results.' + index + '.evidence')?.setValue(
+        input.files[0].name
+      );
     }
   }
 
   optionDownloadEvidenceFile(index: number) {
     if (
       this.editSelfEvaluationForm.get('results.' + index + '.evidence')?.value
+
     ) {
       this.downloadEvidenceFileById(index);
     } else {
@@ -397,7 +401,7 @@ export class SelfEvaluationEditFormComponent implements OnInit {
             oidAutoevaluacionOds: result.oidResult,
             oidOds: Number(result.ODS),
             resultado: result.result,
-            documento: '',
+            documento: result.evidence,
           } as OdsSeleccionado;
         }),
       leccionesAprendidas: this.editSelfEvaluationForm
