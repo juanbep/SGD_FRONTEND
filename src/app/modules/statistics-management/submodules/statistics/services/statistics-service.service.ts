@@ -22,13 +22,18 @@ export class StatisticsService {
         return this.umUserManagementService.getAllUsersByParams(page, totalPage, userId, userName, faculty, department, category, hiring, dedication, studies, rol, state);
     }
     
-    getEvolutionAverageEvaluationDepartment(academicPeriodsId:string[], departmentId: string) {
-        return this.statisticsManagementServicesService.getEvolutionAvarageEvaluationDepartment(academicPeriodsId, departmentId);
+    getEvolutionAverageEvaluationDepartment(academicPeriodsId:string[], departmentsId: string[] | null) {
+        return this.statisticsManagementServicesService.getEvolutionAvarageEvaluationDepartment(academicPeriodsId, departmentsId);
     }
 
-    getStatisticsQuestions(academicPeriodId: Number, departmentId: Number, activityTypeId: Number) {
-        return this.statisticsManagementServicesService.getStatisticsQuestions(academicPeriodId, departmentId, activityTypeId);
+    getStatisticsQuestions(academicPeriodsId: string, departmentsId: string, activitiesTypeId: string) {
+        return this.statisticsManagementServicesService.getStatisticsQuestions(academicPeriodsId, departmentsId, activitiesTypeId);
     }
+
+    getRankingTeacher(academicPeriodId: string, departmentId: string) {
+        return this.statisticsManagementServicesService.rankingTeacher(academicPeriodId, departmentId);
+    }
+
 
     getAllAcademicPeriods(page: number, size: number) {
         return this.apmAcademicPeriodManagementService.getAllAcademicPeriods(page, size);

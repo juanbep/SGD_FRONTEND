@@ -111,11 +111,11 @@
                   </table>
                 </div>
                 <span
-                    *ngIf="isInvaldField('teacher')"
-                    class="error-message text-body-small-r ms-1"
-                  >
-                    {{ getFieldError("teacher") }}
-                  </span>
+                  *ngIf="isInvaldField('teacher')"
+                  class="error-message text-body-small-r ms-1"
+                >
+                  {{ getFieldError("teacher") }}
+                </span>
               </div>
             </div>
           </div>
@@ -174,10 +174,7 @@
                 formControlName="academicPeriod"
               >
                 <option value="">Seleccionar periodo</option>
-                <option value="1">2023-1</option>
-                <option value="2">2023-2</option>
-                <option value="3">2024-1</option>
-                <option value="4">2024-2</option>
+                <option *ngFor="let academicPeriod of academicPeriodResponse" [value]="academicPeriod.oidPeriodoAcademico">{{academicPeriod.idPeriodo}}</option>
               </select>
               <label
                 for="academicPeriod"
@@ -198,10 +195,8 @@
                 formControlName="academicPeriod"
               >
                 <option value="">Seleccionar periodo</option>
-                <option value="1">2023-1</option>
-                <option value="2">2023-2</option>
-                <option value="3">2024-1</option>
-                <option value="4">2024-2</option>
+                <option *ngFor="let academicPeriod of academicPeriodResponse" [value]="academicPeriod.oidPeriodoAcademico">{{academicPeriod.idPeriodo}}</option>
+
               </select>
               <label
                 for="academicPeriod"
@@ -229,27 +224,7 @@
                 >Departamento</label
               >
             </div>
-          </div>
-          <div class="col">
-            <div class="form-floating">
-              <select
-                class="form-select input-select text-body-custom"
-                id="activityType"
-                formControlName="activityType"
-              >
-                <option value="">Seleccionar tipo de actividad</option>
-                <option
-                  *ngFor="let activityType of catalogData?.tipoActividades"
-                  [value]="activityType.codigo"
-                >
-                  {{ activityType.nombre }}
-                </option>
-              </select>
-              <label for="activityType" class="label-custom text-body-small-sb"
-                >Tipo de actividad</label
-              >
-            </div>
-          </div>
+          </div>      
         </div>
       </ng-container>
       <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '4'">
@@ -257,14 +232,17 @@
           <div class="col-4">
             <ng-multiselect-dropdown
               formControlName="academicPeriod"
-              [placeholder]="'Peridos académicos'"
+              [placeholder]="'* Peridos académicos'"
               [settings]="dropdownSettings"
-              [data]="dropdownList"
-              [(ngModel)]="selectedItems"
-              (onSelect)="onItemSelect($event)"
-              (onSelectAll)="onSelectAll($event)"
+              [data]="dropdownAcademicPeriodsList"
             >
             </ng-multiselect-dropdown>
+            <span
+              *ngIf="isInvaldField('academicPeriod')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("academicPeriod") }}
+            </span>
           </div>
           <div class="col">
             <ng-multiselect-dropdown
@@ -272,9 +250,7 @@
               [placeholder]="'Departamentos'"
               [settings]="dropdownSettings"
               [data]="dropdownDepartmentList"
-              [(ngModel)]="selectDepartmentItems"
-              (onSelect)="onItemSelect($event)"
-              (onSelectAll)="onSelectAll($event)"
+             
             >
             </ng-multiselect-dropdown>
           </div>
@@ -290,10 +266,7 @@
                 formControlName="academicPeriod"
               >
                 <option value="">Seleccionar periodo</option>
-                <option value="1">2023-1</option>
-                <option value="2">2023-2</option>
-                <option value="3">2024-1</option>
-                <option value="4">2024-2</option>
+                <option *ngFor="let period of academicPeriodResponse" [value]="period.oidPeriodoAcademico" >{{period.idPeriodo}}</option>
               </select>
               <label
                 for="academicPeriod"

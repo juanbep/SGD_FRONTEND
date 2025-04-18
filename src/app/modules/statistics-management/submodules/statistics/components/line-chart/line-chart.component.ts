@@ -19,7 +19,11 @@ export class LineChartComponent implements OnInit, OnChanges {
   labels: string[] = [];
 
   @Input()
-  dataSets: any[] = [];
+  public dataSets: {
+    label: string;
+    data: Number[];
+    borderWidth: number;
+  }[] = [];
 
   chart: Chart | undefined;
 
@@ -37,7 +41,6 @@ export class LineChartComponent implements OnInit, OnChanges {
       }
     }
   }
-
 
   drawLineChart(labels: string[], dataSets: any[]) {
     this.chart = new Chart('canvas', {
@@ -65,3 +68,5 @@ export class LineChartComponent implements OnInit, OnChanges {
     link.click();
   }
 }
+
+

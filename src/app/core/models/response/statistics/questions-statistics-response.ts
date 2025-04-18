@@ -1,20 +1,22 @@
 export interface QuestionStatisticsResponse {
-    periodo:               Periodo;
-    tipoActividad:         TipoActividad;
-    evaluacionPorPregunta: EvaluacionPorPregunta[];
+    oidPeriodo:    number;
+    nombre:        string;
+    departamentos: Departamento[];
 }
 
-export interface EvaluacionPorPregunta {
-    pregunta:             string;
-    promedioCalificacion: number;
+export interface Departamento {
+    departamento:   string;
+    tiposActividad: TiposActividad[];
 }
 
-export interface Periodo {
-    oidPeriodo: number;
-    nombre:     string;
-}
-
-export interface TipoActividad {
+export interface TiposActividad {
     oidTipoActividad: number;
     nombre:           string;
+    preguntas:        Pregunta[];
+}
+
+export interface Pregunta {
+    oidPregunta: number;
+    texto:       string;
+    promedio:    number;
 }
