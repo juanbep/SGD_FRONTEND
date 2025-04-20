@@ -34,7 +34,7 @@ export class AsAuthServiceService {
     {email: 'vsandres@unicauca.edu.co', pass: 'admin', idUser: 45},
   ];
 
-  private apiUrl = environments.baseUrl;
+  private apiUrl = environments.baseUrlAuth;
 
   constructor(private http: HttpClient) { }
 
@@ -61,5 +61,8 @@ export class AsAuthServiceService {
     return this.http.get<SimpleResponse<UsuarioResponse>>(`${this.apiUrl}/api/usuarios/${idUser}`);
   }
 
+  loginGoogle(token: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/api/auth/google`, { token });
+  }
 
 }

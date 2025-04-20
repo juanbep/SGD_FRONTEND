@@ -57,5 +57,9 @@ export class AuthServiceService {
   }
   return null;
   }
+
+  loginWithGoogle(token: string) {
+    return this.service.loginGoogle(token);
+  }
 }
 

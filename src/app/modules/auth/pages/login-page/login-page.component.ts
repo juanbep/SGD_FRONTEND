@@ -6,14 +6,16 @@ import { AuthServiceService } from '../../service/auth-service.service';
 import { ValidatorsService } from '../../../../shared/services/validators.service';
 import { AuthGoogleService } from '../../service/auth-google.service';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
+import { ButtonProvidersComponent } from "../../component/button-providers/button-providers.component";
 
 @Component({
   selector: 'login-page',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CommonModule
-  ],
+    CommonModule,
+    ButtonProvidersComponent,
+],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
@@ -43,8 +45,23 @@ export class LoginPageComponent {
     else {
       this.messagesInfoService.showErrorMessage('Usuario o contraseña incorrectos', 'Error');
     }
-    //this.authGoogleService.login(this.authForm.get('email')?.value, this.authForm.get('password')?.value);
   }
+
+  onLoginGoogle(login: boolean) {
+    if (!login) return;
+    this.authGoogleService.loginWithGoogle();
+    this.authGoogleService.loginSuccess$.subscribe(
+      () => {
+        this.router.navigate(['/app/home']);
+        this.messagesInfoService.showSuccessMessage('Bienvenido', 'Éxito');
+      },
+      (error) => {
+        this.messagesInfoService.showErrorMessage(error, 'Error');
+      }
+    )
+
+  }
+    
 
 
   /**
