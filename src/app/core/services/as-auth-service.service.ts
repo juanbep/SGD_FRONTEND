@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environments } from '../../../environments/environments';
 import { Observable } from 'rxjs';
@@ -35,6 +35,7 @@ export class AsAuthServiceService {
   ];
 
   private apiUrl = environments.baseUrlAuth;
+  private baseUrl = environments.baseUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -57,8 +58,8 @@ export class AsAuthServiceService {
    * @param idUser
    * @returns Observable<UserInfo>
    */
-  getUserInfo(idUser: number): Observable<SimpleResponse<UsuarioResponse>> {
-    return this.http.get<SimpleResponse<UsuarioResponse>>(`${this.apiUrl}/api/usuarios/${idUser}`);
+  getUserInfo(token: string): Observable<SimpleResponse<UsuarioResponse>> {
+    return this.http.get<SimpleResponse<UsuarioResponse>>(`${this.baseUrl}/api/usuarios/logueado`);
   }
 
   loginGoogle(token: string): Observable<any> {

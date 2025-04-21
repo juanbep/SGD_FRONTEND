@@ -8,7 +8,6 @@ const CHECK_TOKEN = new HttpContextToken<boolean>(() => true);
 export class TokenInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         const token = localStorage.getItem('token');
-        console.log('TokenInterceptor', token);
         if (token) {
             const cloneRequest = request.clone({
                 setHeaders: {

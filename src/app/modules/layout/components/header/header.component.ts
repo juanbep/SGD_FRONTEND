@@ -26,8 +26,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logOut() {
-    sessionStorage.removeItem('token');
-    this.router.navigate(['/auth']);
+    this.authServiceService.logout();
   }
 
   returnAllRoles(roles: Rol[]) {
