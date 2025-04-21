@@ -3,8 +3,11 @@ import {
   EventEmitter,
   inject,
   Injectable,
+  OnDestroy,
+  OnInit,
   signal,
   SimpleChange,
+  WritableSignal,
 } from '@angular/core';
 import { AsAuthServiceService } from '../../../core/services/as-auth-service.service';
 import { of, tap } from 'rxjs';
@@ -12,27 +15,38 @@ import { UsuarioResponse } from '../../../core/models/response/usuario-response.
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import * as jwt_decode from 'jwt-decode';
 import firebase from 'firebase/compat/app';
+import { Router } from '@angular/router';
+import { MessagesInfoService } from '../../../shared/services/messages-info.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthServiceService {
+export class AuthServiceService implements OnInit {
   private asAuthService: AsAuthServiceService = inject(AsAuthServiceService);
+  private messagesInfoService = inject(MessagesInfoService);
+  private router = inject(Router);
   private afAuth = inject(AngularFireAuth);
 
   private _currentUser = signal<UsuarioResponse | null>(null);
 
-  private loggedInUser: Usuario | null = null;
-
-  loginSuccess$: EventEmitter<void> = new EventEmitter<void>();
-  logoutSuccess$: EventEmitter<void> = new EventEmitter<void>();
+  public loginSuccess$: WritableSignal<boolean | null> = signal(null);
 
   public currentUser = computed(() => this._currentUser());
 
   public idCurrentUser: number | null = null;
 
+  get loginSuccess() {
+    return this.loginSuccess$();
+  }
+
   get currentUserValue(): UsuarioResponse | null {
     return this._currentUser();
+  }
+
+  ngOnInit(): void {
+    //Verificar si el usuario ya está autenticado
+    const token = localStorage.getItem('originalToken');
+    this.sendTokenToBackend(token as string);
   }
 
   async loginWithGooglePopPup() {
@@ -50,31 +64,14 @@ export class AuthServiceService {
     this.sendTokenToBackend(idToken as string);
   }
 
-  private sendTokenToBackend(authToken: string): void {
+   sendTokenToBackend(authToken: string): void {
     this.asAuthService.loginGoogle(authToken).subscribe({
       next: (response) => {
         const jwtToken = response.data.token;
         localStorage.setItem('token', jwtToken);
+        localStorage.setItem('originalToken', authToken);
 
-        // Decodificar el token y extraer la información del usuario
-        const decodedToken: any = jwt_decode.jwtDecode(jwtToken);
-
-        this.asAuthService.getUserInfo(jwtToken).subscribe({
-          next: (user) => {
-            this._currentUser.set(user.data);
-            this.idCurrentUser = user.data.oidUsuario;
-            const roles = user.data.roles.map((role) => role.nombre);
-            localStorage.setItem('userRoles', JSON.stringify(roles));
-          },
-          error: (error) => {
-            console.error(
-              'Error al obtener la información del usuario:',
-              error
-            );
-          },
-        });
-
-        this.loginSuccess$.emit();
+        this.getUserInfoByToken(jwtToken);
       },
       error: (error) => {
         this.logout();
@@ -82,20 +79,40 @@ export class AuthServiceService {
     });
   }
 
+  async getUserInfoByToken(token: string) {
+    await this.asAuthService.getUserInfo(token).subscribe({
+      next: (user) => {
+        this._currentUser.set(user.data);
+        this.idCurrentUser = user.data.oidUsuario;
+        const roles = user.data.roles.map((role) => role.nombre);
+        localStorage.setItem('userRoles', JSON.stringify(roles));
+        this.loginSuccess$.update(() => true);
+      },
+      error: (error) => {
+        this.messagesInfoService.showErrorMessage(
+          error.error.mensaje,
+          'Error'
+        );
+      },
+    });
+  }
+
   logout(): void {
     this.afAuth.signOut().then(() => {
-      this.loggedInUser = null;
       // Limpiar el localStorage de los datos requeridos
       localStorage.removeItem('loggedInUser');
       localStorage.removeItem('token');
-
-      // Emitir evento de logout
-      this.logoutSuccess$.emit();
+      localStorage.removeItem('userRoles');
+      localStorage.removeItem('originalToken');
+      this._currentUser.set(null);
+      this.loginSuccess$.update(() => false);
+      this.router.navigate(['/auth/login']);
     });
   }
 
   getUserInfo() {
-    return of(this._currentUser());
+    const token = localStorage.getItem('originalToken');
+    return of(this.getUserInfoByToken(token as string));
   }
 }
 

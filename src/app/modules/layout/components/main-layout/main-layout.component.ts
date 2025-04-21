@@ -21,5 +21,10 @@ export class MainLayoutComponent implements OnInit {
   public authServiceService = inject(AuthServiceService);
 
   ngOnInit(): void {
+    // Check if the user is logged in
+    const isLogged = localStorage.getItem('originalToken');
+    if(isLogged){
+      this.authServiceService.sendTokenToBackend(isLogged);
+    }
   }
 }

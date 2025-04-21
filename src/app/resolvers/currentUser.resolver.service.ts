@@ -12,6 +12,7 @@ export class CurrentUserResolverService implements Resolve<any>{
     constructor() { }
 
    resolve():Observable<any> | null {
+    console.log(this.authServiceService.currentUserValue);
        return this.authServiceService.getUserInfo();
    }
     

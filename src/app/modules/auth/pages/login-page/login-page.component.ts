@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../service/auth-service.service';
 import { ValidatorsService } from '../../../../shared/services/validators.service';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
 import { ButtonProvidersComponent } from "../../component/button-providers/button-providers.component";
-import { take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'login-page',
@@ -19,7 +19,7 @@ import { take } from 'rxjs';
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css'
 })
-export class LoginPageComponent implements OnInit{
+export class LoginPageComponent implements OnInit {
   
 
   private formBuilder: FormBuilder = inject(FormBuilder);
@@ -27,6 +27,8 @@ export class LoginPageComponent implements OnInit{
   private authServicesService: AuthServiceService = inject(AuthServiceService);
   private validatorsServices: ValidatorsService = inject(ValidatorsService);
   private messagesInfoService: MessagesInfoService = inject(MessagesInfoService);
+  private isLogged: boolean | null = null;
+
 
   authForm: FormGroup = this.formBuilder.group({
     email: [null, [Validators.required, Validators.pattern(this.validatorsServices.emailPattern)]],
@@ -47,26 +49,26 @@ export class LoginPageComponent implements OnInit{
     // }
   }
 
-  ngOnInit(): void {
-    this.authServicesService.loginSuccess$.pipe(take(1)).subscribe(() => {
-      this.messagesInfoService.showSuccessMessage('Bienvenido', 'Éxito');
+  loginEffect = effect(() => {
+    this.isLogged = this.authServicesService.loginSuccess$();
+    if (this.isLogged) {
       this.router.navigate(['/app/home']);
-    });
+      this.messagesInfoService.showSuccessMessage('Bienvenido', 'Éxito');
+    }
+  })
 
-    this.authServicesService.logoutSuccess$.pipe(take(1)).subscribe(() => {
-      this.messagesInfoService.showSuccessMessage('Hasta luego', 'Éxito');
-      this.router.navigate(['/auth/login']);
-    });
-
+  
+  ngOnInit(): void {
+    
   }
+
+
 
   async onLoginGoogle(login: boolean) {
     if (!login) return;
     await this.authServicesService.loginWithGooglePopPup();
     
   }
-
-
 
   /**
    * Check if the field is valid
@@ -99,11 +101,6 @@ export class LoginPageComponent implements OnInit{
     }
     return null;
   }
-
-
-
-
-
 
 
 
