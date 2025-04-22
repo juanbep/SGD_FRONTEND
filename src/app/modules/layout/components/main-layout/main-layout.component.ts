@@ -20,11 +20,19 @@ import { AuthServiceService } from '../../../auth/service/auth-service.service';
 export class MainLayoutComponent implements OnInit {
   public authServiceService = inject(AuthServiceService);
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Check if the user is logged in
     const isLogged = localStorage.getItem('originalToken');
     if(isLogged){
-      this.authServiceService.sendTokenToBackend(isLogged);
+      (await this.authServiceService.getUserInfoFromBackend()).subscribe({
+        next: (response) => {
+          this.authServiceService.currentUserValue = response.data;
+          this.authServiceService.updateLoginSuccess = true;
+        },
+        error: (error) => {
+          this.authServiceService.logout()
+        },
+      });
     }
   }
 }

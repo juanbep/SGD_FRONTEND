@@ -19,7 +19,7 @@
 
 #sidebar {
   width: 250px;
-  height: 100vh;
+  height: 100%;
   background-color: var(--blue);
   flex-direction: column;
   transition: left 0.3s ease;
@@ -29,7 +29,7 @@
 #sidebar-toggle {
   display: none;
   width: 50px;
-  height: 100vh;
+  height: 100%;
   background-color: var(--blue);
   flex-direction: column;
 }
@@ -81,6 +81,9 @@
   text-decoration: none;
   padding-top: 32px;
   padding-left: 0px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .text-body-heavy {
@@ -189,4 +192,8 @@ a {
 
   }
   
+}
+
+.sidebar-nav .bottom-link {
+  margin-top: auto;
 }

@@ -1,35 +1,21 @@
-import {
-  computed,
-  EventEmitter,
-  inject,
-  Injectable,
-  OnDestroy,
-  OnInit,
-  signal,
-  SimpleChange,
-  WritableSignal,
-} from '@angular/core';
+import { computed, inject, Injectable, OnInit, signal } from '@angular/core';
 import { AsAuthServiceService } from '../../../core/services/as-auth-service.service';
-import { of, tap } from 'rxjs';
 import { UsuarioResponse } from '../../../core/models/response/usuario-response.model';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import * as jwt_decode from 'jwt-decode';
 import firebase from 'firebase/compat/app';
 import { Router } from '@angular/router';
-import { MessagesInfoService } from '../../../shared/services/messages-info.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthServiceService implements OnInit {
   private asAuthService: AsAuthServiceService = inject(AsAuthServiceService);
-  private messagesInfoService = inject(MessagesInfoService);
   private router = inject(Router);
   private afAuth = inject(AngularFireAuth);
 
   private _currentUser = signal<UsuarioResponse | null>(null);
 
-  public loginSuccess$: WritableSignal<boolean | null> = signal(null);
+  public loginSuccess$ = signal<boolean>(false);
 
   public currentUser = computed(() => this._currentUser());
 
@@ -43,13 +29,21 @@ export class AuthServiceService implements OnInit {
     return this._currentUser();
   }
 
+  set currentUserValue(user: UsuarioResponse | null) {
+    this._currentUser.set(user);
+  }
+
+  set updateLoginSuccess(value: boolean) {
+    this.loginSuccess$.update(() => value);
+  }
+
   ngOnInit(): void {
     //Verificar si el usuario ya está autenticado
     const token = localStorage.getItem('originalToken');
     this.sendTokenToBackend(token as string);
   }
 
-  async loginWithGooglePopPup() {
+  async loginWithGooglePopPup(): Promise<string | void> {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
       prompt: 'select_account', // Forzar el selector de cuenta
@@ -61,40 +55,15 @@ export class AuthServiceService implements OnInit {
       creds.credential &&
       (creds.credential as firebase.auth.OAuthCredential).idToken;
 
-    this.sendTokenToBackend(idToken as string);
+    return idToken as string;
   }
 
-   sendTokenToBackend(authToken: string): void {
-    this.asAuthService.loginGoogle(authToken).subscribe({
-      next: (response) => {
-        const jwtToken = response.data.token;
-        localStorage.setItem('token', jwtToken);
-        localStorage.setItem('originalToken', authToken);
-
-        this.getUserInfoByToken(jwtToken);
-      },
-      error: (error) => {
-        this.logout();
-      },
-    });
+  async sendTokenToBackend(authToken: string) {
+    return await this.asAuthService.loginGoogle(authToken);
   }
 
-  async getUserInfoByToken(token: string) {
-    await this.asAuthService.getUserInfo(token).subscribe({
-      next: (user) => {
-        this._currentUser.set(user.data);
-        this.idCurrentUser = user.data.oidUsuario;
-        const roles = user.data.roles.map((role) => role.nombre);
-        localStorage.setItem('userRoles', JSON.stringify(roles));
-        this.loginSuccess$.update(() => true);
-      },
-      error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
-      },
-    });
+  async getUserInfoFromBackend() {
+    return await this.asAuthService.getUserInfo();
   }
 
   logout(): void {
@@ -111,19 +80,6 @@ export class AuthServiceService implements OnInit {
   }
 
   getUserInfo() {
-    const token = localStorage.getItem('originalToken');
-    return of(this.getUserInfoByToken(token as string));
+    return this.asAuthService.getUserInfo();
   }
-}
-
-interface Usuario {
-  username: string;
-  email: string;
-  role: string[];
-  phoneNumber: string;
-  academicCode: string;
-  firstName: string;
-  lastName: string;
-  idType: string;
-  idNumber: string;
 }

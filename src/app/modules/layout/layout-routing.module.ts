@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { CommonModule } from '@angular/common';
-import { AcademicPeriodManagementComponent } from '../academic-period-management/pages/academic-period-management/academic-period-management.component';
-import { CatalogResolverService } from '../../resolvers/catalog.resolver.service';
 import { CurrentUserResolverService } from '../../resolvers/currentUser.resolver.service';
 
 const routes: Routes = [
@@ -14,6 +12,10 @@ const routes: Routes = [
             {
                 path: 'home',
                 loadComponent: () => import('./pages/main/main.component').then(m => m.MainComponent),
+            },
+            {
+                path: 'perfil-usuario',
+                loadComponent: () => import('./pages/user-info/user-info.component').then(m => m.UserInfoComponent),
             },
             {
                 path: 'gestion-periodo-academico',

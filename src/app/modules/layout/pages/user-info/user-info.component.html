@@ -1,0 +1,210 @@
+<div class="view-container">
+  <span class="title-two">Información del usuario</span>
+
+  <div class="mb-3"></div>
+
+  <div class="row">
+    <!-- Nombres -->
+    <div class="col">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="nombres"
+          value="{{ currentUser?.nombres }}"
+          disabled
+        />
+        <label for="nombres" class="label-custom text-body-small-sb"
+          >Nombres</label
+        >
+      </div>
+    </div>
+    <!-- Apellidos -->
+    <div class="col">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="apellidos"
+          value="{{ currentUser?.apellidos }}"
+          disabled
+        />
+        <label for="apellidos" class="label-custom text-body-small-sb"
+          >Apellidos</label
+        >
+      </div>
+    </div>
+    <!-- Identificación -->
+    <div class="col">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="identificacion"
+          value="{{ currentUser?.identificacion }}"
+          disabled
+        />
+        <label for="identificacion" class="label-custom text-body-small-sb"
+          >Identificación</label
+        >
+      </div>
+    </div>
+    <!-- Correo -->
+    <div class="col">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="correo"
+          value="{{ currentUser?.correo }}"
+          disabled
+        />
+        <label for="correo" class="label-custom text-body-small-sb"
+          >Correo</label
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3"></div>
+
+  <div class="row">
+    <!-- Roles -->
+    <div class="col">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="roles"
+          value="{{ returnAllRoles(currentUser?.roles || []) }}"
+          disabled
+        />
+        <label for="roles" class="label-custom text-body-small-sb"
+          >Rol(es)</label
+        >
+      </div>
+    </div>
+    <!-- Estado -->
+    <div class="col">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="estado"
+          value="{{ currentUser?.estadoUsuario?.nombre | titlecase }}"
+          disabled
+        />
+        <label for="estado" class="label-custom text-body-small-sb"
+          >Estado</label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="mb-3"></div>
+  <div class="row">
+    <!-- Facultad -->
+    <div class="col">
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control input-text"
+          id="facultad"
+          value="{{ currentUser?.usuarioDetalle?.facultad | titlecase }}"
+          disabled
+        />
+        <label for="facultad" class="label-custom text-body-small-sb"
+          >Facultad</label
+        >
+      </div>
+    </div>
+    <!-- departamento -->
+    <div class="col">
+      <ng-container *ngIf="currentUser?.usuarioDetalle?.departamento">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control input-text"
+            id="departamento"
+            value="{{ currentUser?.usuarioDetalle?.departamento | titlecase }}"
+            disabled
+          />
+          <label for="departamento" class="label-custom text-body-small-sb"
+            >Departamento</label
+          >
+        </div>
+      </ng-container>
+    </div>
+    <!-- Categoría -->
+    
+  </div>
+  <div class="mb-3"></div>
+  <div class="row">
+    <div class="col">
+        <ng-container *ngIf="currentUser?.usuarioDetalle?.categoria">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control input-text"
+              id="categoria"
+              value="{{ currentUser?.usuarioDetalle?.categoria }}"
+              disabled
+            />
+            <label for="categoria" class="label-custom text-body-small-sb"
+              >Categoría</label
+            >
+          </div>
+        </ng-container>
+      </div>
+      <!-- Contratación -->
+      <div class="col">
+        <ng-container *ngIf="currentUser?.usuarioDetalle?.contratacion">
+          <div class="form-floating">
+            <input
+              type="text"
+              class="form-control input-text"
+              id="contratacion"
+              value="{{ currentUser?.usuarioDetalle?.contratacion }}"
+              disabled
+            />
+            <label for="contratacion" class="label-custom text-body-small-sb"
+              >Contratación</label
+            >
+          </div>
+        </ng-container>
+      </div>
+    <!-- Dedicación -->
+    <div class="col">
+      <ng-container *ngIf="currentUser?.usuarioDetalle?.dedicacion">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control input-text"
+            id="dedicacion"
+            value="{{ currentUser?.usuarioDetalle?.dedicacion }}"
+            disabled
+          />
+          <label for="dedicacion" class="label-custom text-body-small-sb"
+            >Dedicación</label
+          >
+        </div>
+      </ng-container>
+    </div>
+    <!-- Estudios -->
+    <div class="col">
+      <ng-container *ngIf="currentUser?.usuarioDetalle?.estudios">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control input-text"
+            id="estudios"
+            value="{{ currentUser?.usuarioDetalle?.estudios }}"
+            disabled
+          />
+          <label for="estudios" class="label-custom text-body-small-sb"
+            >Estudios</label
+          >
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

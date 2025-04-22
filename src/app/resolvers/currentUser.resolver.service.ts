@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { AuthServiceService } from '../modules/auth/service/auth-service.service';
 import { CatalogDataService } from '../shared/services/catalogData.service';
 
@@ -12,8 +12,9 @@ export class CurrentUserResolverService implements Resolve<any>{
     constructor() { }
 
    resolve():Observable<any> | null {
-    console.log(this.authServiceService.currentUserValue);
-       return this.authServiceService.getUserInfo();
+        return this.authServiceService.getUserInfo().pipe(
+            tap(response => this.authServiceService.currentUserValue = response.data)
+        )
    }
     
 }

@@ -58,7 +58,7 @@ export class AsAuthServiceService {
    * @param idUser
    * @returns Observable<UserInfo>
    */
-  getUserInfo(token: string): Observable<SimpleResponse<UsuarioResponse>> {
+  getUserInfo(): Observable<SimpleResponse<UsuarioResponse>> {
     return this.http.get<SimpleResponse<UsuarioResponse>>(`${this.baseUrl}/api/usuarios/logueado`);
   }
 
