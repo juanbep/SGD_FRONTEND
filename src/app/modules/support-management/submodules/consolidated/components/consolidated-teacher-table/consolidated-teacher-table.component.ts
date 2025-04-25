@@ -22,7 +22,6 @@ import {
   Actividades,
   InformacionActividad,
 } from '../../../../../../core/models/response/actividad-consolidado-response.model';
-import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 
@@ -193,4 +192,9 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
         },
       });
   }
+
+  findRoleCurrentUserById(rol:string): boolean {
+    const role = this.currentUser?.roles.find((role) => role.nombre === rol);
+    return !!role;
+ }
 }

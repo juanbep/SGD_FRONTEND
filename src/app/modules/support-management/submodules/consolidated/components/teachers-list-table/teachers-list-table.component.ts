@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
 import { RouterLink } from '@angular/router';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
@@ -32,6 +32,14 @@ export class TeacherListTableComponent implements OnInit {
     teacherType: string | null;
     contractType: string | null;
   } | null = null;
+
+
+  filterEffect = effect(() => {
+    this.filterParams = this.consolidatedServicesService.getFilterTeacherParams();
+    if (this.filterParams) {
+      this.recoverTeachers(this.currentPage, PAGE_SIZE);
+    }
+  });
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;

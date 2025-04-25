@@ -197,6 +197,7 @@ export class EditActivityComponent implements OnInit {
             ' ' +
             this.activity.evaluador.apellidos
         );
+      this.evaluator = this.activity.evaluador;
     }
   }
 

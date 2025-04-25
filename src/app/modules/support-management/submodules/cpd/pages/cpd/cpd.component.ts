@@ -53,8 +53,6 @@ export class CpdComponent implements OnInit {
   private messagesInfoService = inject(MessagesInfoService);
   private cpdWordGeneratorService = inject(CpdWordGeneratorService);
   private userService = inject(UsersServiceService);
-  private academicPeriodMangementService = inject(AcademicPeriodManagementService);
-
 
   public academicPeriodActive: PeriodoAcademicoResponse | null = null;
   public currentPage: number = 1;

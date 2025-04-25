@@ -1,86 +1,117 @@
 <shared-loading-overley [isLoading]="isLoading"></shared-loading-overley>
 <div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="title-two">Carga de soporte</span>
-        <div class="line"></div>
-        <div class="messages-container">
-            <img src="assets/icons/messages/icon-info.svg" alt="icon-info">
-            <span class="text-body-regular">Por favor, ingrese el soporte y la nota de la actividad que desea evaluar</span>
-        </div>
-        <section>
-            <p class="title-three">
-                Información de la actividad
-            </p>
-            <table class="table-bordered">
-                <tr>
-                    <th>
-                        <span class="text-body-small-r">Actividad</span>
-                        <br/>  
-                        <span class="text-body-small-sb">{{responsability?.nombreActividad}}</span>
-                    </th>
-                    <th>
-                        <span class="text-body-small-r">Evaluado</span>
-                        <br>  
-                        <span class="text-body-small-sb">{{responsability?.evaluado?.nombres}} {{responsability?.evaluado?.apellidos}}</span>
-                    </th>
-                </tr>
-                
-            </table>
-        </section>
-        <!--Sección carga de autoevaluación -->
-        <section id="upload-file-asessment">
-            <span class="title-three">
-                Soporte
-            </span>
-            <div class="file-upload-container">
-                <label for="uploadFileAssessment" class="file-upload-label">
-                    <div class="file-details">
-                        <p class="file-title text-body-small-sb">
-                            Soporte
-                        </p>
-                        <p class="file-name text-body-small-r">
-                            {{fileNameSelected()? fileNameSelected() : 'Seleccione un archivo'}}
-                        </p>
-                    </div>
-                    <input type="file" id="uploadFileAssessmentResponsability" (change)="onFileSelected($event)" hidden>
-                </label>
-                <div class="file-actions">
-                        <button class="button-upload button-actions button-border-radius" (click)="triggerFileUpload()"></button>
-                </div>
-            </div>
-            <span [ngClass]="{
-                'text-error text-body-text-body-small-r' : errorMessageFile!='',
-                'text' : errorMessageFile===''
-            }">El formato no es permitido </span>
-        </section>
-        <!-- Sección diligenciar evaluación -->
-        <section id="assessment-fill-out-responsability">
-            <span class="title-three">Calificación</span><br>
-            <input id="input-note" [(ngModel)]="evaluation" [ngClass]="getInputClass()"  class="input-nota text-body-heavy" type="text" placeholder="Nota"><br>
-            <span [ngClass]="{
-                'text' : errorMessageNote!='',
-                'text-display text-body-regular-small-r': errorMessageNote===''
-            }">Valores permitidos 0-100</span>
-            <span [ngClass]="{
-                'text-error text-body-text-body-small-r' : errorMessageNote!='',
-                'text' : errorMessageNote===''
-            }">La nota debe estar entre 0 y 100</span>
-        </section >
-        <!-- Observation section -->
-        <section id="observation-responsability" >
-            <span class="title-three">Observaciones</span>
-            <input class="input-text-observation text-body-regular" type="text" placeholder="Ingrese sus observaciones" [(ngModel)]="observacionSend">
-        </section>
-        <!-- Buttons section -->
-         <section id="buttons-responsability">
-             <div class="modal-buttons">
-                 <button class="button-modal text-body-heavy" (click)="closeModal()" >
-                     Cerrar
-                 </button>
-                 <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
-                     Guardar
-                 </button>
-             </div>
-         </section>
+  <div class="modal-content">
+    <span class="title-two">Carga de soporte</span>
+    <div class="line"></div>
+    <div class="messages-container">
+      <img src="assets/icons/messages/icon-info.svg" alt="icon-info" />
+      <span class="text-body-regular"
+        >Por favor, ingrese el soporte y la nota de la actividad que desea
+        evaluar</span
+      >
     </div>
+    <section>
+      <p class="title-three">Información de la actividad</p>
+      <table class="table-bordered">
+        <tr>
+          <th>
+            <span class="text-body-small-r">Actividad</span>
+            <br />
+            <span class="text-body-small-sb">{{
+              responsability?.nombreActividad
+            }}</span>
+          </th>
+          <th>
+            <span class="text-body-small-r">Evaluado</span>
+            <br />
+            <span class="text-body-small-sb"
+              >{{ responsability?.evaluado?.nombres }}
+              {{ responsability?.evaluado?.apellidos }}</span
+            >
+          </th>
+        </tr>
+      </table>
+    </section>
+    <!--Sección carga de autoevaluación -->
+
+    <span class="title-three"> Soporte </span>
+    <div class="file-upload-container">
+      <label for="uploadFileAssessment" class="file-upload-label">
+        <div class="file-details">
+          <p class="file-title text-body-small-sb">Soporte</p>
+          <p class="file-name text-body-small-r">
+            {{
+              fileNameSelected() ? fileNameSelected() : "Seleccione un archivo"
+            }}
+          </p>
+        </div>
+        <input
+          type="file"
+          id="uploadFileAssessmentResponsability"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+      </label>
+      <div class="file-actions">
+        <button
+          class="button-upload button-actions button-border-radius"
+          (click)="triggerFileUpload()"
+        ></button>
+      </div>
+    </div>
+    <span
+      [ngClass]="{
+        'text-error text-body-text-body-small-r': errorMessageFile != '',
+        text: errorMessageFile === ''
+      }"
+      >El formato no es permitido
+    </span>
+    <!-- Sección diligenciar evaluación -->
+    <section id="assessment-fill-out-responsability">
+      <span class="title-three">Calificación</span><br />
+      <input
+        id="input-note"
+        [(ngModel)]="evaluation"
+        [ngClass]="getInputClass()"
+        class="input-nota text-body-heavy"
+        type="text"
+        placeholder="Nota"
+      /><br />
+      <span
+        [ngClass]="{
+          text: errorMessageNote != '',
+          'text-display text-body-regular-small-r': errorMessageNote === ''
+        }"
+        >Valores permitidos 0-100</span
+      >
+      <span
+        [ngClass]="{
+          'text-error text-body-text-body-small-r': errorMessageNote != '',
+          text: errorMessageNote === ''
+        }"
+        >La nota debe estar entre 0 y 100</span
+      >
+    </section>
+    <!-- Observation section -->
+    <section id="observation-responsability">
+      <span class="title-three">Observaciones</span>
+      <input
+        class="input-text-observation text-body-regular"
+        type="text"
+        placeholder="Ingrese sus observaciones"
+        [(ngModel)]="observacionSend"
+      />
+    </section>
+    <!-- Buttons section -->
+    <section id="buttons-responsability">
+      <div class="modal-buttons">
+        <button class="button-modal text-body-heavy" (click)="closeModal()">
+          Cerrar
+        </button>
+        <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
+          Guardar
+        </button>
+      </div>
+    </section>
+  </div>
 </div>

@@ -16,7 +16,6 @@ import { ActividadResponse } from '../../../../../../core/models/response/activi
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
-import { send } from 'process';
 declare var bootstrap: any;
 
 const TOTAL_PAGE = 10;

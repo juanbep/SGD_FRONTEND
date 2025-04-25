@@ -13,6 +13,7 @@ export class ApmAcademicPeriodManagementService {
 
     private httpClient = inject(HttpClient);
     private baseUrl: string = environments.baseUrl;
+    private baseUrlLaborDocente: string = environments.baseUrlLaborDocente;
 
     /*
     * Method to save a new academic period
@@ -61,7 +62,7 @@ export class ApmAcademicPeriodManagementService {
             .set('idFacultad', 1)
             .set('idPeriodo', idPeriodo);
 
-        return this.httpClient.post<SimpleResponse<any>>(`http://localhost:8085/api/labor-docente`, params, { responseType: 'json' });
+        return this.httpClient.post<SimpleResponse<any>>(`${this.baseUrlLaborDocente}/api/labor-docente`, params, { responseType: 'json' });
     }
 
     getAcademicPeriodsByKira(): Observable<SimpleResponse<PeriodoAcademicoKiraResponse[]>> {

@@ -18,6 +18,8 @@ export class TeachersListFilterComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private consolidatedServicesService = inject(ConsolidatedServicesService);
 
+  
+
   public catalogDataResponse: CatalogDataResponse | null = null;
 
   states = [

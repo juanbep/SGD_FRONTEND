@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthServiceService implements OnInit {
+export class AuthServiceService {
   private asAuthService: AsAuthServiceService = inject(AsAuthServiceService);
   private router = inject(Router);
   private afAuth = inject(AngularFireAuth);
@@ -37,12 +37,6 @@ export class AuthServiceService implements OnInit {
     this.loginSuccess$.update(() => value);
   }
 
-  ngOnInit(): void {
-    //Verificar si el usuario ya está autenticado
-    const token = localStorage.getItem('originalToken');
-    this.sendTokenToBackend(token as string);
-  }
-
   async loginWithGooglePopPup(): Promise<string | void> {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({
@@ -68,7 +62,6 @@ export class AuthServiceService implements OnInit {
 
   logout(): void {
     this.afAuth.signOut().then(() => {
-      // Limpiar el localStorage de los datos requeridos
       localStorage.removeItem('loggedInUser');
       localStorage.removeItem('token');
       localStorage.removeItem('userRoles');

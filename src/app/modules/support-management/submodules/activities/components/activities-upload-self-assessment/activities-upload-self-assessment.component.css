@@ -1,49 +1,7 @@
-.modal .modal-dialog {
-    max-width: 800px;
-}
-
-.modal .modal-content {
-    border-radius: 13px;
-}
-
-.modal-content {
-    border: none;
-    box-shadow: 8px 8px 8px 0px rgba(0, 0, 0, 0.25);
-}
-
-.modal-header {
-    height: 82px;
-    padding-left: 40px;
-    justify-content: left;
-}
-
-.modal-body {
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 30px;
-    padding-bottom: 50px;
-    border-top: 1px solid rgba(134, 135, 143, 0.70);
-}
-
-.modal-footer {
-    padding-bottom: 30px;
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-.text-body {
-    color: var(--blue) !important;
-}
-
 .btn-custom-normal {
     height: 35px;
     width: 100px;
 
-}
-
-.fade {
-    backdrop-filter: blur(5px) saturate(1.6);
-    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .button-radius {
@@ -62,65 +20,6 @@
     justify-content: space-between;
 }
 
-
-.button {
-    display: flex;
-    width: 54px;
-    height: 62px;
-    flex-shrink: 0;
-    border: none;
-    border-radius: 8px;
-    fill: var(--blue);
-    stroke-width: 1px;
-    stroke: var(--blue);
-    background-color: var(--blue);
-    justify-content: center;
-    align-items: center;
-}
-
-.button-disabled {
-    display: flex;
-    width: 54px;
-    height: 62px;
-    flex-shrink: 0;
-    border: none;
-    border-radius: 8px;
-    fill: var(--blue);
-    stroke-width: 1px;
-    stroke: var(--blue);
-    background-color: var(--Gray-background);
-    justify-content: center;
-    align-items: center;
-}
-
-.messages {
-    display: flex;
-    width: 100%;
-    height: 54px;
-    margin: 10px;
-    margin-left: 0px;
-    padding: 8.5px 8.5px;
-    align-items: center;
-    gap: 8px;
-    border-radius: 8px;
-    background: var(--Colores-secundarios-Azl-tertiary-95, #ECF0FF);
-}
-
-.line {
-    position: absolute;
-    left: -0.02px;
-    top: 56.031px;
-    width: 725.031px;
-    height: 0px;
-    stroke-width: 1px;
-    border: 1px solid rgba(134, 135, 143, 0.70);
-}
-
-
-.img-container {
-    padding-top: 20px;
-    margin: 0px;
-}
 
 .input-evaluation {
     width: 85%;

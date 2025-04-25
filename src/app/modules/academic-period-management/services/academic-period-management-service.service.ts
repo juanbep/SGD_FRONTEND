@@ -57,6 +57,11 @@ export class AcademicPeriodManagementService {
         return this.apmAcademicPeriodManagementService.editAcademicPeriod(oidAcademicPeriod,academicPeriod);
     }
 
+    /*
+    * Method to get academic period active
+    * @returns Observable<AcademicPeriodResponse>
+    * */
+
     activeAcademicPeriod(){
         return this.apmAcademicPeriodManagementService.getAllAcademicPeriods(null,null);
     }
@@ -78,10 +83,19 @@ export class AcademicPeriodManagementService {
         )
     )}
 
+    /*
+    * Method to get information of teachers and activities from KIRA
+    * @param idPeriodo: string
+    * */
+
     loadInfoTechersAndActivities(idPeriodo: string){
         return this.apmAcademicPeriodManagementService.loadInfoTechersAndActivities(idPeriodo);
     }
 
+    /*
+    * Method to get the academic periods from KIRA
+    * @returns Observable<AcademicPeriodResponse>
+    * */
     getAcademicPeriodsByKira(){
         return this.apmAcademicPeriodManagementService.getAcademicPeriodsByKira();
     }

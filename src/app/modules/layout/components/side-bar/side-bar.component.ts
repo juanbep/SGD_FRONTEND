@@ -84,7 +84,7 @@ export class SideBarComponent implements OnInit {
           url: '/app/gestion-soportes/responsabilidades',
         },
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD','COORDINADOR'],
           label: 'Consolidado',
           url: '/app/gestion-soportes/consolidado/lista-docentes',
         },

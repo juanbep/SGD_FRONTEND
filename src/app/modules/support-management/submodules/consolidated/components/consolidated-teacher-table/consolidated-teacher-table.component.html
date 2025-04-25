@@ -78,13 +78,14 @@
           alt="view-icon"
           style="cursor: pointer"
         />
-        <img
-          src="/assets/icons/tables/icon-message.svg"
-          alt="message-icon"
-          (click)="activityToSendEmailSelected(activity, activity.fuentes[0])"
-          style="cursor: pointer"
-        />
-      </td>
+        <ng-container *ngIf="!findRoleCurrentUserById('COORDINADOR')">
+          <img
+            src="/assets/icons/tables/icon-message.svg"
+            alt="message-icon"
+            (click)="activityToSendEmailSelected(activity, activity.fuentes[0])"
+            style="cursor: pointer"
+          />
+        </ng-container>
       <td>
         <span *ngIf="activity.fuentes[1]" class="text-body-regular">{{
           activity.fuentes[1].estadoFuente
@@ -106,12 +107,14 @@
           alt="view-icon"
           style="cursor: pointer"
         />
-        <img
-          src="/assets/icons/tables/icon-message.svg"
-          alt="message-icon"
-          (click)="activityToSendEmailSelected(activity, activity.fuentes[1])"
-          style="cursor: pointer"
-        />
+        <ng-container *ngIf="!findRoleCurrentUserById('COORDINADOR')">
+          <img
+            src="/assets/icons/tables/icon-message.svg"
+            alt="message-icon"
+            (click)="activityToSendEmailSelected(activity, activity.fuentes[1])"
+            style="cursor: pointer"
+          />
+        </ng-container>
       </td>
     </tr>
   </tbody>

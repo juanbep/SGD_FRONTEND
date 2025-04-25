@@ -12,6 +12,7 @@ import { UsuarioResponse } from '../../../../../../core/models/response/usuario-
 import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
+import { CommonModule } from '@angular/common';
 
 const SIZE_PAGE = 10;
 const TITTLE_MESSAGE = 'Aprobar consolidado';
@@ -24,7 +25,8 @@ const CONFIRM_MESSAGE = '¿Está seguro que desea aprobar el consolidado?';
     ConsolidatedTeacherFilterComponent,
     ConsolidatedTeacherTableComponent,
     ConfirmDialogComponent,
-    LoadingOverleyComponent
+    LoadingOverleyComponent,
+    CommonModule
 ],
   templateUrl: './consolidated-teacher.component.html',
   styleUrl: './consolidated-teacher.component.css',
@@ -203,4 +205,9 @@ export class ConsolidatedTeacherComponent implements OnInit {
         },
       });
   }
+
+ findRoleCurrentUserById(rol:string): boolean {
+    const role = this.infoCurrentUser?.roles.find((role) => role.nombre === rol);
+    return !!role;
+ }
 }

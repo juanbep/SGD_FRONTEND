@@ -110,10 +110,13 @@
             aprobarse.</span>
     </div>
     <!-- Botones de acción -->
-    <section id="consolidate-teacher-button-main">
-        <button class="button-main text-body-heavy" style="color: var(--white) !important" role="button"
-            aria-label="Aprobar consolidado" (click)="createConsolidated()">Aprobar y generar consolidado</button>
-    </section>
+     <ng-container *ngIf="!findRoleCurrentUserById('COORDINADOR')">
+        <section id="consolidate-teacher-button-main">
+            <button class="button-main text-body-heavy" style="color: var(--white) !important" role="button"
+                aria-label="Aprobar consolidado" (click)="createConsolidated()">Aprobar y generar consolidado</button>
+        </section>
+     </ng-container>
+   
     <div class="mb-1 d-flex justify-content-center">
         <button (click)="goBack()" class="button-normal text-body-heavy">Volver</button>
     </div>

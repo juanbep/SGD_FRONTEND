@@ -45,11 +45,8 @@ export class LoginPageComponent {
         this.getLoggedUser();
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
-        this.authServicesService.logout()
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
+        this.authServicesService.logout();
       },
     });
   }
@@ -59,21 +56,16 @@ export class LoginPageComponent {
       next: (response) => {
         this.authServicesService.currentUserValue = response.data;
         this.authServicesService.updateLoginSuccess = true;
-      
+
         const roles = response.data.roles.map((role) => role.nombre);
         localStorage.setItem('userRoles', JSON.stringify(roles));
 
         this.router.navigate(['/app/home']);
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
-        this.authServicesService.logout()
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
+        this.authServicesService.logout();
       },
     });
   }
-
-  
 }

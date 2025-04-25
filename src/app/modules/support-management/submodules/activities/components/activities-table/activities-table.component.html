@@ -1,12 +1,12 @@
-<ng-container *ngIf="activities; else nullData">
+<ng-container *ngIf="!activities?.empty; else nullData">
   <table class="table-bordered">
     <thead>
       <tr>
-        <th class="text-body-heavy center-text">{{ headDataTable[0] }}</th>
-        <th class="text-body-heavy center-text" colspan="2">
+        <th class="text-body-heavy text-center">{{ headDataTable[0] }}</th>
+        <th class="text-body-heavy text-center" colspan="2">
           {{ headDataTable[1] }}
         </th>
-        <th class="text-body-heavy center-text" colspan="4">
+        <th class="text-body-heavy text-center" colspan="4">
           {{ headDataTable[2] }}
         </th>
       </tr>
@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody *ngFor="let activity of activitiesByType">
-      <tr class="text-body-heavy center-text">
+      <tr class="text-body-heavy text-center">
         <td colspan="7">
           {{ activity.nombreType }}
         </td>
@@ -35,7 +35,7 @@
           }}</span>
         </td>
 
-        <td class="center-text text-body-regular">
+        <td class="text-center text-body-regular">
           <button
             class="button-table"
             *ngIf="
@@ -122,7 +122,7 @@
             activity.fuentes[1].estadoFuente
           }}</span>
         </td>
-        <td class="center-text text-body-regular">
+        <td class="text-center text-body-regular">
           <button
             class="button-table"
             *ngIf="
@@ -154,11 +154,11 @@
   <table class="table-bordered">
     <thead>
       <tr>
-        <th class="text-body-heavy center-text">{{ headDataTable[0] }}</th>
-        <th class="text-body-heavy center-text" colspan="2">
+        <th class="text-body-heavy text-center">{{ headDataTable[0] }}</th>
+        <th class="text-body-heavy text-center" colspan="2">
           {{ headDataTable[1] }}
         </th>
-        <th class="text-body-heavy center-text" colspan="4">
+        <th class="text-body-heavy text-center" colspan="4">
           {{ headDataTable[2] }}
         </th>
       </tr>
@@ -169,7 +169,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="text-body-regular center-text">
+      <tr class="text-body-regular text-center">
         <th colspan="7">No cuenta con actividades registradas</th>
       </tr>
     </tbody>

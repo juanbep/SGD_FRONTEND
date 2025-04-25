@@ -55,8 +55,20 @@ export class ModalCreateAcademicPeriodComponent {
   saveNewAcademicPeriod(): void {
     if (this.newAcademicPeriodForm.valid) {
       let newAcademiPeriod: PeriodoAcademicoCreate = {
-        idPeriodo: this.peridoAcademicoKiraResponse.find((period) => {return period.id == this.newAcademicPeriodForm.get('idAcademicPeriod')?.value})?.label || '',
-        idPeriodoApi: this.peridoAcademicoKiraResponse.find((period) => {return period.id == this.newAcademicPeriodForm.get('idAcademicPeriod')?.value})?.id || '',
+        idPeriodo:
+          this.peridoAcademicoKiraResponse.find((period) => {
+            return (
+              period.id ==
+              this.newAcademicPeriodForm.get('idAcademicPeriod')?.value
+            );
+          })?.label || '',
+        idPeriodoApi:
+          this.peridoAcademicoKiraResponse.find((period) => {
+            return (
+              period.id ==
+              this.newAcademicPeriodForm.get('idAcademicPeriod')?.value
+            );
+          })?.id || '',
         fechaInicio: this.newAcademicPeriodForm.get('startDate')?.value,
         fechaFin: this.newAcademicPeriodForm.get('endDate')?.value,
         estadoPeriodoAcademico: {
@@ -84,8 +96,6 @@ export class ModalCreateAcademicPeriodComponent {
         });
     }
   }
-
-  //Rest of the code
 
   open(): void {
     const myModal = document.getElementById('modal-create-academic-period');
@@ -115,7 +125,6 @@ export class ModalCreateAcademicPeriodComponent {
 
     const dateError = ['invalidDateRange'];
 
-    // Verificar errores en el FormGroup según el control
     switch (controlName) {
       case 'startDate':
         return dateError.some((error) => formErrors.hasOwnProperty(error));

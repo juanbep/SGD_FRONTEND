@@ -26,7 +26,7 @@ const routes: Routes = [
         path: 'consolidado',
         canActivate: [RoleGuard],
         resolve: { activePeriod: ActivePeriodResolvers},
-        data: { roles: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'] },
+        data: { roles: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD','COORDINADOR'] },
         loadChildren: () => import('./submodules/consolidated/consolidated-routing.module').then(m => m.ConsolidatedRoutingModule)
       },
       {

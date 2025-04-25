@@ -17,11 +17,9 @@ import { CatalogDataService } from '../../../../../../shared/services/catalogDat
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
-import { QuestionStatisticsResponse } from '../../../../../../core/models/response/statistics/questions-statistics-response';
 import { SimpleResponse } from '../../../../../../core/models/response/simple-response.model';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { error } from 'console';
 
 @Component({
   selector: 'app-statistics',
