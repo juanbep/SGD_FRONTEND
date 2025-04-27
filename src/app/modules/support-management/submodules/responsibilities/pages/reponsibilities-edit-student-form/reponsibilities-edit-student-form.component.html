@@ -1,6 +1,6 @@
 <shared-loading-overley [isLoading]="isLoading"></shared-loading-overley>
 <div class="view-container">
-  <div class="title-two">Formularios evaluación docente</div>
+  <div class="title-two">Formulario de edición evaluación docente</div>
   <div class="mb-3"></div>
   <span class="title-three">Información del estudiante</span>
   <div class="mb-1"></div>
@@ -11,39 +11,22 @@
           <th>
             <span class="text-body-regular">Nombres y apellidos</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{ evaluador?.nombres }} {{ evaluador?.apellidos }}</span
-            >
-          </th>
-          <th>
-            <span class="text-body-regular">Num.Id</span>
-            <br />
-            <span class="text-body-small-sb">{{
-              evaluador?.identificacion
-            }}</span>
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluador?.nombreCompleto}}</span>
           </th>
           <th>
             <span class="text-body-regular">Departamento</span>
             <br />
-            <span class="text-body-small-sb">{{
-              evaluador?.usuarioDetalle?.departamento
-            }}</span>
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluado?.departamento}}</span>
           </th>
           <th>
             <span class="text-body-regular">Nombre del director/a</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{ evaluado?.nombres }} {{ evaluado?.apellidos }}</span
-            >
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluador?.nombreCompleto}}</span>
           </th>
           <th>
-            <span class="text-body-regular">Fecha de evaluación</span>
+            <span class="text-body-regular">fecha de evaluación (última actualización)</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{ currentDate.getDate() }}/{{ currentDate.getMonth() + 1 }}/{{
-                currentDate.getFullYear()
-              }}</span
-            >
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.fechaActualizacion| date : "dd/MM/yyyy"}}</span>
           </th>
         </tr>
       </thead>
@@ -55,7 +38,7 @@
       <section>
         <div class="row">
           <div class="col">
-            <span class="title-three">Titulo del trabajo de grado</span>
+            <span class="title-three">Titlo del trabajo de grado</span>
             <div class="form-floating">
               <input
                 type="text"
@@ -614,3 +597,4 @@
   [title]="messageTitle"
   [message]="messageConfirmCancel"
 ></shared-confirm-dialog>
+

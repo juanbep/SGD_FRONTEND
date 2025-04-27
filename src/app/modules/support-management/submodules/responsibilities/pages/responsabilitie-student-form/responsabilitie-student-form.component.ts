@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
-import { ResponsibilityWordGeneratorService } from '../../services/responsibility-word-generator.service';
 import { ResponsibilityPdfGeneratorService } from '../../services/responsibility-pdf-generator.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -45,8 +44,6 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
   private responsibilitiesServicesService = inject(
     ResponsibilitiesServicesService
   );
-  private responsibilityWordGeneratorService: ResponsibilityWordGeneratorService =
-    inject(ResponsibilityWordGeneratorService);
   private responsibilityPdfGeneratorService: ResponsibilityPdfGeneratorService =
     inject(ResponsibilityPdfGeneratorService);
   private activatedRoute = inject(ActivatedRoute);
@@ -349,22 +346,6 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
       a.download = file.name;
       a.click();
     }
-  }
-
-  downloadWordDocument() {
-    const studentInfo = {
-      name: 'Pepito',
-      id: '123456789',
-      department: 'Departamento',
-      directorName: 'Fulanita',
-      evaluationDate: '01/02/2023',
-      totalAverage: this.totalAverage,
-    };
-
-    this.responsibilityWordGeneratorService.generateWordDocument(
-      this.formEvaluation.value,
-      studentInfo
-    );
   }
 
   generatePdfPreview() {

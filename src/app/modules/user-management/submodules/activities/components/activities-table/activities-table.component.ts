@@ -44,6 +44,15 @@ export class ActivitiesTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUserParam = this.activitieRouter.snapshot.params['id'];
+    this.activitiesManagementService.setParamsActivitiesFilter(
+      {
+        nameActivity: null,
+        typeActivity: null,
+        activityCode: null,
+        administrativeCode: null,
+        vriCode: null
+      }
+    );
   }
 
   pageChanged(event: number) {

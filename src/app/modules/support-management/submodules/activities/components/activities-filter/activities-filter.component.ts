@@ -43,9 +43,7 @@ export class ActivitiesFilterComponent {
       const activityName = this.formFilter.get('activityName')?.value;
       const evaluatorName = this.formFilter.get('evaluatorName')?.value;
       const evaluatorRole = this.formFilter.get('evaluatorRole')?.value;
-      
       this.activitiesServicesService.setParamsActivitiesFilterSignal(activityName, activityType, evaluatorName, evaluatorRole);
-  
     }
   
     clearFilter(){

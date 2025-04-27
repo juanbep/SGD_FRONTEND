@@ -79,6 +79,12 @@ export class ConsolidatedTeacherTableComponent implements OnInit {
     this.teacherId = this.router.snapshot.params['id'];
     this.consolidatedTeacher =
       this.consolidatedServicesService.getDataConsolidatedTeacher();
+    this.consolidatedServicesService.setFilterActivitiesParams({
+      activityType: null,
+      activityName: null,
+      sourceType: null,
+      sourceState: null,
+    });
   }
 
   getObjectKeys(obj: Actividades): string[] {

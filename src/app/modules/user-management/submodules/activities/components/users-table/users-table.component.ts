@@ -42,6 +42,7 @@ export class UsersTableComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.usersService.setParamsUsersFilter({nameUser: null, identification: null, faculty: null, program: null, rol: null, state: null});
   }
 
 

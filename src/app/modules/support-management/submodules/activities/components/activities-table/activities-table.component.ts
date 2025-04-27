@@ -26,7 +26,8 @@ const PAGE_SIZE = 10;
   templateUrl: './activities-table.component.html',
   styleUrl: './activities-table.component.css',
 })
-export class ActivitiesTableComponent {
+export class ActivitiesTableComponent implements OnInit {
+
   @Input()
   currentUser: UsuarioResponse | null = null;
 
@@ -69,6 +70,12 @@ export class ActivitiesTableComponent {
     this.currentPage = 1;
     this.recoverActivities(this.currentPage, PAGE_SIZE);
   });
+
+  ngOnInit(): void {
+    this.activitiesServices.setParamsActivitiesFilterSignal(
+      null, null, null, null
+    );
+  }
 
   pageChanged(event: any) {
     this.currentPage = event;

@@ -18,7 +18,7 @@ export class UsersServiceService {
     * Method to set the params filter signal
     * @param newData:{nameUser:string, identification:string, faculty:string, program: string, rol: string, state: string}
     * */
-    setParamsFilter(newData: {nameUser:string, identification:string, faculty:string, program: string, rol: string, state: string   }){
+    setParamsFilter(newData: {nameUser:string | null, identification:string | null, faculty:string | null, program: string | null, rol: string | null, state: string | null   }){
         this.paramsFilterSignal.update(data => data = newData);
     }
 

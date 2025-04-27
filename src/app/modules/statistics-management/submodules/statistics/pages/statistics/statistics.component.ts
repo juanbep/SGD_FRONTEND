@@ -112,6 +112,9 @@ export class StatisticsComponent implements OnInit {
       .get('statisticsType')
       ?.valueChanges.subscribe((value) => {
         this.clearFormLabels();
+        this.dropdownAcademicPeriodsList = [];
+        this.dropdownDepartmentList = [];
+        this.dropdownActivityTypeList = [];
         switch (value) {
           case '1':
             this.formStatistics

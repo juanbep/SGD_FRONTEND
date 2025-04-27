@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input, ViewChild } from '@angular/core';
+import { Component, effect, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResponsibilitiesUploadEvaluationComponent } from '../responsibilities-upload-evaluation/responsibilities-upload-evaluation.component';
 import { ResponsibilitiesViewEvaluationComponent } from '../responsibilities-view-evaluation/responsibilities-view-evaluation.component';
@@ -28,7 +28,8 @@ const PAGE_SIZE = 10;
   templateUrl: './responsibilities-table.component.html',
   styleUrl: './responsibilities-table.component.css',
 })
-export class ResponsibilitiesTableComponent {
+export class ResponsibilitiesTableComponent implements OnInit {
+  
 
   @ViewChild(ReponsibilitiesViewEvaluationFormComponent)
   public viewEvaluationFormComponent: ReponsibilitiesViewEvaluationFormComponent | null = null;
@@ -80,6 +81,16 @@ export class ResponsibilitiesTableComponent {
     this.currentPage = 1;
     this.recoverResponsabilities(this.currentPage, PAGE_SIZE);
   });
+
+  ngOnInit(): void {
+    this.responsabilitiesServices.setParamsActivitiesFilterSignal(
+      null,
+      null,
+      null,
+      null
+    );
+
+  }
 
   private recoverResponsabilities(page: number, totalPage: number) {
     const { activityName, activityType, evaluatorName, evaluatorRole } = this
