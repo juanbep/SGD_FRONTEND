@@ -492,7 +492,7 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
     return '';
   }
 
-  saveEvaluation() {
+  async saveEvaluation() {
     if (this.formEvaluation.invalid) {
       this.formEvaluation.markAllAsTouched();
       this.messagesInfoService.showWarningMessage(
@@ -504,7 +504,8 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.generatePdfPreview();
+  (await this.generatePdfPreview());
+
     const fuenteCoordinadorFormulario: FuenteCoordinadorFormulario = {
       oidFuente: this.responsibility?.fuentes[1].oidFuente || 0,
       tipoCalificacion: 'EN_LINEA',
