@@ -37,19 +37,24 @@ export class SideBarComponent implements OnInit {
       ],
     },
     {
-      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+      role: ['JEFE DE DEPARTAMENTO'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+          role: ['JEFE DE DEPARTAMENTO'],
           label: 'Usuarios',
           url: '/app/gestion-usuarios/usuarios',
         },
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+          role: ['JEFE DE DEPARTAMENTO'],
           label: 'Actividades',
           url: '/app/gestion-usuarios/actividades/usuarios',
+        },
+        {
+          role: ['JEFE DE DEPARTAMENTO'],
+          label: 'Actividades pendiente de asignar evaluador',
+          url: '/app/gestion-usuarios/actividades-pendientes-asignar-evaluador',
         },
       ],
     },
@@ -67,7 +72,7 @@ export class SideBarComponent implements OnInit {
       icon: 'assets/icons/sidebar/icon-evaluation.svg',
       sub: [
         {
-          role: ['DOCENTE', 'SECRETARIA/O FACULTAD'],
+          role: ['DOCENTE'],
           label: 'Mis actividades',
           url: '/app/gestion-soportes/actividades',
         },
@@ -78,13 +83,13 @@ export class SideBarComponent implements OnInit {
             'COORDINADOR',
             'DECANO',
             'DOCENTE',
-            'SECRETARIA/O FACULTAD',
+        
           ],
           label: 'Mis responsabilidades',
           url: '/app/gestion-soportes/responsabilidades',
         },
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD','COORDINADOR'],
+          role: ['JEFE DE DEPARTAMENTO','COORDINADOR'],
           label: 'Consolidado',
           url: '/app/gestion-soportes/consolidado/lista-docentes',
         },

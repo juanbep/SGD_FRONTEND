@@ -25,9 +25,10 @@ export class ConsolidatedServicesService {
     sourceState: null,
   });
   private filterTeacherParams: WritableSignal<{
-    teacherType: string | null;
+    evaluatedName: string | null;
+    evaluatedId: string | null;
     contractType: string | null;
-  }> = signal({ teacherType: null, contractType: null });
+  }> = signal({ evaluatedName: null, evaluatedId: null, contractType: null });
 
   private smConsolidatedServicesService = inject(SmConsolidatedServicesService);
   private smActivitiesServicesService = inject(SmActivitiesServicesService);
@@ -42,7 +43,8 @@ export class ConsolidatedServicesService {
   }
 
   setFilterTeacherParams(newData: {
-    teacherType: string | null;
+    evaluatedName: string | null;
+    evaluatedId: string | null;
     contractType: string | null;
   }) {
     this.filterTeacherParams.update((data) => (data = newData));
@@ -79,11 +81,16 @@ export class ConsolidatedServicesService {
    * Get teachers
    * @returns {any}
    * */
-  getTeachers(page: number, totalPage: number, department: string) {
+  getTeachers(page: number, totalPage: number, department: string, evaluatedName: string | null,
+    contractType: string | null,
+    evaluatedId: string | null,) {
     return this.smConsolidatedServicesService.getTeachers(
       page,
       totalPage,
-      department
+      department,
+      evaluatedName,
+      contractType,
+      evaluatedId
     );
   }
 

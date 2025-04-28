@@ -399,7 +399,6 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
         .saveResponibilityFormStundent(
           fuenteEstudianteFormulario,
           this.selectedFiles.reportDocument || new File([], ''),
-          this.selectedFiles.signature || new File([], '')
         )
         .subscribe({
           next: (response) => {

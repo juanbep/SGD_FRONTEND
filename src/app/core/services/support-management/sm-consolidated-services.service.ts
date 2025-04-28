@@ -29,7 +29,7 @@ export class SmConsolidatedServicesService {
   getUsersWithConsolidatedCreated(
     page: number,
     totalPage: number,
-    department: string,
+    department: string | null,
     userId: string | null,
     userName: string | null,
     category: string | null,
@@ -40,7 +40,7 @@ export class SmConsolidatedServicesService {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', totalPage.toString())
-      .set('departamento', department)
+      .set('departamento', department || '')
       .set('identificacion', userId || '')
       .set('nombre', userName || '')
       .set('categoria', category || '')
@@ -58,10 +58,16 @@ export class SmConsolidatedServicesService {
   getTeachers(
     page: number,
     totalPage: number,
-    department: string
+    department: string,
+    evaluatedName: string | null,
+    contractType: string | null,
+    evaluatedId: string | null,
   ): Observable<SimpleResponse<PagedResponse<UsuarioConsolidadoResponse>>> {
     let params = new HttpParams()
       .set('departamento', department)
+      .set('nombre', evaluatedName || '')
+      .set('tipoContrato', contractType || '')
+      .set('identificacion', evaluatedId || '')
       .set('page', page.toString())
       .set('size', totalPage.toString());
 

@@ -118,13 +118,11 @@ export class SmActivitiesServicesService {
   saveSelfAssessmentForm(
     autoevaluacionFuente: FuenteAutoevaluacion,
     evidences: File[],
-    signature: File,
     support: File
   ): Observable<any> {
     const formData = new FormData();
     formData.append('data', JSON.stringify(autoevaluacionFuente));
     formData.append('documentoAutoevaluacion', support);
-    formData.append('firma', signature);
     evidences.forEach((evidence, index) => {
       formData.append('ods-' + (index + 1), evidence);
     });

@@ -48,16 +48,24 @@ export class ResponsibilitiesServicesService {
         return this.smActivitiesServicesService.getActivityById(responsibilitieId);
     }
 
-    getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page: number | null, totalPage: number | null) {
-        return this.smResponsibilitiesServicesService.getResponsibilities(evaluatorId, activityName, activityType, evaluatorName, roles, page, totalPage);
+    getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, asignacionDefault:boolean ,page: number | null, totalPage: number | null) {
+        return this.smResponsibilitiesServicesService.getResponsibilities(evaluatorId, activityName, activityType, evaluatorName, roles, asignacionDefault, page, totalPage);
     }
 
     saveResponsibilityEvaluation(file: File, observation: string, source: FuenteCreate[]) {
         return this.smResponsibilitiesServicesService.saveResponsibilityEvaluation(file, observation, source)
     }
 
-    saveResponibilityFormStundent(fuenteEstudianteFormulario: FuenteEstudianteFormulario, reportDocument: File,  signature: File) {
-        return this.smResponsibilitiesServicesService.saveResponibilityFormStundent(fuenteEstudianteFormulario, reportDocument, signature);
+    saveResponibilityFormStundent(fuenteEstudianteFormulario: FuenteEstudianteFormulario, reportDocument: File) {
+        return this.smResponsibilitiesServicesService.saveResponibilityFormStundent(fuenteEstudianteFormulario, reportDocument);
+    }
+
+    getInforResponsibilityByFormCoordinator(idSource: number) {
+        return this.smResponsibilitiesServicesService.getInforResponsibilityByFormCoordinator(idSource);
+    }
+
+    saveResponibilityFormCoordinador(fuenteCoordinadorFormulario: any, reportDocument: File) {
+        return this.smResponsibilitiesServicesService.saveResponsibilityFormCoordinator(fuenteCoordinadorFormulario, reportDocument);
     }
 
     getdownloadSourceFile(idSource: number) {
@@ -67,8 +75,5 @@ export class ResponsibilitiesServicesService {
     getDownloadReportFile(idSource: number, report:boolean) {
         return this.smResponsibilitiesServicesService.downloadReportFile(idSource, report);
     }
-
-    
-
 
 }

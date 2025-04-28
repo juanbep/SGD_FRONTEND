@@ -77,11 +77,11 @@ export class CpdComponent implements OnInit {
     this.recoverBossDepartment();
     this.academicPeriodActive =
       this.academicPeriodManagementService.currentAcademicPeriodValue;
-    if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
+    if (this.currentUser && (this.currentUser.usuarioDetalle.departamento || this.currentUser.roles.find((rol) => rol.oid === ROLES.SECRETARIA_O_FACULTAD))) {
       this.recoverTeachers(
         this.currentPage,
         TOTAL_PAGE,
-        this.currentUser.usuarioDetalle.departamento,
+        this.currentUser.usuarioDetalle.departamento ? this.currentUser.usuarioDetalle.departamento : null,
         null,
         null,
         null,
@@ -93,7 +93,7 @@ export class CpdComponent implements OnInit {
   recoverTeachers(
     page: number,
     totalPage: number,
-    department: string,
+    department: string | null,
     userId: string | null,
     userName: string | null,
     category: string | null,

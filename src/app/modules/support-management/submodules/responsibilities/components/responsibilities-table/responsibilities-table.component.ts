@@ -11,6 +11,7 @@ import { ResponsabilidadResponse } from '../../../../../../core/models/response/
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { Router } from '@angular/router';
 import { ReponsibilitiesViewEvaluationFormComponent } from '../reponsibilities-view-evaluation-form/reponsibilities-view-evaluation-form.component';
+import { TIPO_ACTIVIDADES } from '../../../../../../core/enums/domain-enums';
 
 const PAGE_SIZE = 10;
 
@@ -108,6 +109,7 @@ export class ResponsibilitiesTableComponent implements OnInit {
           activityType,
           evaluatorName,
           evaluatorRole,
+          false,
           page - 1,
           totalPage
         )
@@ -133,6 +135,13 @@ export class ResponsibilitiesTableComponent implements OnInit {
     ]);
   }
 
+  public openCoordinatorFormEvaluation(responsabilityId: number) {
+    this.router.navigate([
+      './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-coordinador',
+      responsabilityId,
+    ]);
+  }
+
   public openModalUpload(responsability: ResponsabilidadResponse) {
     this.openModalResposabilitySelected = !this.openModalResposabilitySelected;
     this.resposabilitySelected = responsability;
@@ -143,7 +152,7 @@ export class ResponsibilitiesTableComponent implements OnInit {
   }
 
   public openModalView(responsability: ResponsabilidadResponse) {
-    if(responsability.fuentes[1].tipoCalificacion === 'DOCUMENTO'){
+    if(responsability.fuentes[1].tipoCalificacion === 'DOCUMENTO' || (responsability.fuentes[1].tipoCalificacion === 'EN_LINEA' && responsability.tipoActividad.oidTipoActividad !== TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA && responsability.tipoActividad.oidTipoActividad !== TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION ) ){
       this.openModalViewSelected = !this.openModalViewSelected;
       this.resposabilitySelected = responsability;
     }else{
@@ -156,10 +165,18 @@ export class ResponsibilitiesTableComponent implements OnInit {
       this.openModalEditSelected = !this.openModalEditSelected;
       this.resposabilitySelected = responsability;
     }else{
-      this.router.navigate([
-        './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-estudiante-editar', 
-        responsability.fuentes[1].oidFuente
-      ]);
+      if(responsability.tipoActividad.oidTipoActividad !== TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA && responsability.tipoActividad.oidTipoActividad !== TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION ){
+        this.router.navigate([
+          './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-coordinador-editar', 
+          responsability.fuentes[1].oidFuente
+        ]);
+      }else{
+        this.router.navigate([
+          './app/gestion-soportes/responsabilidades/formulario-evaluacion-docente-estudiante-editar', 
+          responsability.fuentes[1].oidFuente
+        ]);
+      }
+      
     }
   }
 

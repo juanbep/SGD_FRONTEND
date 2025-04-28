@@ -29,7 +29,8 @@ export class TeacherListTableComponent implements OnInit {
   public teacherList: UsuarioConsolidadoResponse[] = [];
   public currentUser: UsuarioResponse | null = null;
   public filterParams: {
-    teacherType: string | null;
+    evaluatedName: string | null;
+    evaluatedId: string | null;
     contractType: string | null;
   } | null = null;
 
@@ -43,9 +44,9 @@ export class TeacherListTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
-    this.recoverTeachers(this.currentPage, PAGE_SIZE);
     this.consolidatedServicesService.setFilterTeacherParams({
-      teacherType: null,
+      evaluatedName: null,
+      evaluatedId: null,
       contractType: null,
     });
   }
@@ -55,7 +56,10 @@ export class TeacherListTableComponent implements OnInit {
       .getTeachers(
         page - 1,
         size,
-        this.currentUser?.usuarioDetalle.departamento || ''
+        this.currentUser?.usuarioDetalle.departamento || '',
+        this.filterParams?.evaluatedName || null,
+        this.filterParams?.contractType || null,
+        this.filterParams?.evaluatedId || null
       )
       .subscribe({
         next: (response) => {

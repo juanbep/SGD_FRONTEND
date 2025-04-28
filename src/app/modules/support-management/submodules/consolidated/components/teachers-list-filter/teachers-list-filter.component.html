@@ -1,38 +1,46 @@
 <div class="line"></div>
 
-<div class="row">
-    <div class="col-5" style="width: 50px">
-        <img src="assets/icons/tables/icon-filter.svg" alt="filters">
-    </div>
-
-    <div class="col">
-        <div class="row row-cols-auto">
-            <!-- Activitie filter -->
-            <div class="col" style="margin: 1px;">
-                <input type="text" id="activity" class="button-main" placeholder="Nombre docente">
-            </div>
-            <!-- Type Contract filter -->
-            <div class="col" style="margin: 1px">
-                <select class="input-select-filter" formControlName="faculty">
-                    <option [value]='null' selected>Tipo contrato</option>
-
-                    <option *ngFor="let contractor of catalogDataResponse?.contrataciones" value="{{contractor.codigo}}">
-                        {{contractor.nombre | titlecase}}
-                    </option>
-                </select>
-            </div>
-            <div class="col">
-                <div class="row">
-                    <button class="clearButton col" (click)="searchTeachers()">
-                        <span style="color: var(--white);">Buscar</span>
-                    </button>
-                    <button class="clearButton col" (click)="clearFilter()">
-                        <span style="color: var(--white);">Limpiar</span>
-                    </button>
+<form [formGroup]="formFilter" (ngSubmit)="searchTeachers()">
+    <div class="row">
+        <div class="col-5" style="width: 50px">
+            <img src="assets/icons/tables/icon-filter.svg" alt="filters">
+        </div>
+        <div class="col">
+            <div class="row row-cols-auto">
+                <!-- Nombre del docente -->
+                <div class="col" style="margin: 1px;">
+                    <input type="text" id="activity" formControlName="evaluatedName" class="button-main"
+                        placeholder="Nombre docente">
                 </div>
+                <!-- Identificación del docente -->
+                <div class="col" style="margin: 1px;">
+                    <input type="text" id="activity" formControlName="evaluatedId" class="button-main"
+                        placeholder="Identificación docente">
+                </div>
+                <!-- Type Contract filter -->
+                <div class="col" style="margin: 1px">
+                    <select class="input-select-filter" formControlName="contractType">
+                        <option [value]='null' selected>Tipo contrato</option>
 
+                        <option *ngFor="let contractor of catalogDataResponse?.contrataciones"
+                            value="{{contractor.codigo}}">
+                            {{contractor.nombre | titlecase}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <button type="submit"  class="clearButton col">
+                            <span style="color: var(--white);">Buscar</span>
+                        </button>
+                        <button type="button" class="clearButton col" (click)="clearFilter()">
+                            <span style="color: var(--white);">Limpiar</span>
+                        </button>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 <div class="line"></div>

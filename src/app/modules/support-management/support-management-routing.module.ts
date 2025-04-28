@@ -12,21 +12,21 @@ const routes: Routes = [
         path: 'actividades',
         canActivate: [RoleGuard],
         resolve: { activePeriod: ActivePeriodResolvers},
-        data: { roles:['DOCENTE','SECRETARIA/O FACULTAD'] },
+        data: { roles:['DOCENTE'] },
         loadChildren: () => import('./submodules/activities/activities-routing.module' ).then(m => m.ActivitiesRoutingModule),
       },
       {
         path: 'responsabilidades',
         canActivate: [RoleGuard],
         resolve: { activePeriod: ActivePeriodResolvers},
-        data: { roles: ['JEFE DE DEPARTAMENTO','ESTUDIANTE','COORDINADOR','DECANO','DOCENTE','SECRETARIA/O FACULTAD'] },
+        data: { roles: ['JEFE DE DEPARTAMENTO','ESTUDIANTE','COORDINADOR','DECANO','DOCENTE'] },
         loadChildren: () => import('./submodules/responsibilities/responsibilities-routing.module').then(m => m.ResponsibilitiesRoutingModule)
       },
       {
         path: 'consolidado',
         canActivate: [RoleGuard],
         resolve: { activePeriod: ActivePeriodResolvers},
-        data: { roles: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD','COORDINADOR'] },
+        data: { roles: ['JEFE DE DEPARTAMENTO','COORDINADOR'] },
         loadChildren: () => import('./submodules/consolidated/consolidated-routing.module').then(m => m.ConsolidatedRoutingModule)
       },
       {

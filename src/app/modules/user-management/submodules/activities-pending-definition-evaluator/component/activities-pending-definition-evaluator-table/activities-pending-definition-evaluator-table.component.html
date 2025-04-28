@@ -1,0 +1,30 @@
+<span class="title-three">Actividades</span>
+<div class="mb-2"></div>
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th class="text-body-heavy">Tipo de actividad</th>
+            <th class="text-body-heavy">Nombre actividad</th>
+            <th class="text-body-heavy">Docente</th>
+            <th class="text-body-heavy">Identificación</th>
+            <th class="text-body-heavy">Acciones</th>
+        </tr>
+    </thead>
+    <ng-container>
+        <tbody>
+            <tr *ngFor="let responsabilitie of responsabilities?.content">
+                <td class="text-body-regular">{{responsabilitie.tipoActividad.nombre}}</td>
+                <td class="text-body-regular">{{responsabilitie.nombreActividad}}</td>
+                <td class="text-body-regular">{{responsabilitie.evaluado.nombres}} {{responsabilitie.evaluado.apellidos}}
+                </td>
+                <td class="text-body-regular">{{responsabilitie.evaluado.identificacion}}</td>
+                <td>
+                    <img src="/assets/icons/tables/icon-pen.svg" [routerLink]="['/app/gestion-usuarios/actividades/editar-actividad/', responsabilitie.oidActividad]" routerLinkActive="router-link-active" alt="Editar" title="Editar" style="cursor: pointer;" aria-label="Editar">
+                </td>
+            </tr>
+        </tbody>
+    </ng-container>
+</table>
+<div class="d-flex justify-content-center mt-3">
+    <shared-paginator [currentPage]="currentPage" [totalPages]="responsabilities?.totalPages || 1" (pageChange)="pageChange($event)"></shared-paginator>
+</div>

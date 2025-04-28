@@ -25,6 +25,11 @@
   top: 0px;
 }
 
+.toast-warning {
+  background-color: var(--yellow-one) !important;
+  border-left: 15px solid var(--yellow-color-two) !important;
+}
+
 .toast-success {
   background-color: var(--green-one) !important;
   border-left: 15px solid var(--green-color-three) !important;
@@ -58,5 +63,13 @@
 }
 
 .toast-error > .toast-message {
+  color: var(--neutral-35) !important;
+}
+
+.toast-warning > .toast-title {
+  color: var(--yellow-color-two) !important;
+}
+
+.toast-warning > .toast-message {
   color: var(--neutral-35) !important;
 }

@@ -743,8 +743,8 @@ export class NewActivityComponent implements OnInit {
         ?.setValue(user?.nombres + ' ' + user?.apellidos);
       this.newActivityForm.get('evaluatorId')?.setValue(user?.identificacion);
       if (
-        this.newActivityForm.get('typeActivity')?.value === '2' ||
-        this.newActivityForm.get('typeActivity')?.value === '8'
+        this.newActivityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA.toString() ||
+        this.newActivityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION.toString()
       ) {
         this.newActivityForm.get('idStudent')?.setValue(user?.identificacion);
       }

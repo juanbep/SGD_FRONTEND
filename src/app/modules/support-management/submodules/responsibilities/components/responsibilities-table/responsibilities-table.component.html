@@ -50,6 +50,14 @@
           >
           <img src="assets/icons/tables/icon-form.svg" alt="iconoformularion evaluación" title="Formulario de evalución">
         </button>
+        <button
+            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.nombre !== 'TRABAJO DE DOCENCIA' && responsability.tipoActividad.nombre !== 'TRABAJOS DE INVESTIGACION')"
+            class="button-table"
+            id="button-table"
+            (click)="openCoordinatorFormEvaluation(responsability.oidActividad)" 
+          >
+          <img src="assets/icons/tables/icon-form.svg" alt="iconoformularion evaluación" title="Formulario de evalución">
+        </button>
           <button
             *ngIf="responsability.fuentes[1].estadoFuente == 'DILIGENCIADO'"
             class="button-table"

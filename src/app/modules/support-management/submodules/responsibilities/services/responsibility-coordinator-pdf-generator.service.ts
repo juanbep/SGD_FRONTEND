@@ -16,10 +16,10 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
   public cataloDataResponse: CatalogDataResponse | null =
     this.catalogDataService.catalogDataSignal;
 
-  generatePdfDocument(
+  async generatePdfDocument(
     formData: any,
-    coordinatorInfo: any
-  ): { base64: string; file: File } {
+    userInfo: any
+  ): Promise<{ base64: string; file: File; }> {
     const doc: jsPDF = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -44,31 +44,31 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
 
     y += 10;
 
-    // Información del coordinador usando campos del formulario y coordinatorInfo
+    // Información del coordinador usando campos del formulario y userInfo
     autoTable(doc, {
       startY: y,
       body: [
         [
           'Nombre del evaluado:',
-          coordinatorInfo.coordinatorName || '',
+          userInfo.teacherName || '',
           'Num.Id:',
-          coordinatorInfo.coordinatorId || '',
+          userInfo.id || '',
         ],
         [
           'Departamento:',
-          coordinatorInfo.department || '',
+          userInfo.department || '',
           'Nombre del evaluador:',
-          coordinatorInfo.evaluatorName || '',
+          userInfo.nameEvaluator || '',
         ],
         [
           'Fecha de evaluación:',
-          coordinatorInfo.evaluationDate || '',
+          userInfo.evaluationDate || '',
           'Periodo evaluado:',
-          formData.period || '',
+          userInfo.period || '',
         ],
         [
           'Nombre de actividad:',
-          formData.activityName || '',
+          userInfo.activityName || '',
           '',
           '',
         ],
@@ -182,8 +182,8 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
         [
           { content: '100%' },
           'Promedio Total',
-          coordinatorInfo.totalAverage,
-          this.getQualitativeEquivalent(Number(coordinatorInfo.totalAverage)),
+          userInfo.totalAverage,
+          this.getQualitativeEquivalent(Number(userInfo.totalAverage)),
         ],
       ],
       theme: 'grid',
@@ -221,12 +221,12 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
     doc.setFontSize(12);
     doc.text('Firma:', 10, y);
     if (formData.userSignature) {
-      doc.addImage(formData.userSignature, 'PNG', 30, y - 10, 30, 30);
+      doc.addImage((await this.convertFileToBase64(formData.userSignature)), 'PNG', 30, y - 10, 30, 30);
       y += 50;
     } else {
       doc.line(10, y + 10, 80, y + 10);
       const signatureText =
-        coordinatorInfo.coordinatorName || '';
+        userInfo.coordinatorName || '';
       doc.text(signatureText, 10, y + 20);
       y += 30;
     }
@@ -246,6 +246,17 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
     if (evaluation < 90) return 'Bueno';
     return 'Sobresaliente';
   }
+
+    // Función auxiliar para convertir una imagen de un dato tipo file a base64
+  
+    convertFileToBase64(file: File): Promise<string> {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
 
   private developmentStageName(developmentStage: string): string {
     const nameDevelopmentStage =

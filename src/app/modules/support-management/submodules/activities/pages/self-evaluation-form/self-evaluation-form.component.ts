@@ -315,7 +315,6 @@ export class SelfEvaluationFormComponent implements OnInit {
       .saveSelfAssessmentByForm(
         autoevaluacionFuente,
         this.evidences,
-        this.signatureFile!,
         this.formPdf!
       )
       .subscribe({

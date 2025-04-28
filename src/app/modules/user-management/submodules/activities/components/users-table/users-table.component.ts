@@ -8,6 +8,8 @@ import { RouterModule } from '@angular/router';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { Rol } from '../../../../../../core/models/base/rol.model';
+import { ROLES } from '../../../../../../core/enums/domain-enums';
+
 
 @Component({
   selector: 'user-management-activities-users-table',
@@ -38,6 +40,7 @@ export class UsersTableComponent implements OnInit {
     this.filterParams=this.usersService.getParamsUsersFilter();
     this.currentPage = 1;
     this.getAllUsers(this.currentPage, this.sizePage);
+    
   })
 
 
@@ -48,9 +51,19 @@ export class UsersTableComponent implements OnInit {
 
   getAllUsers(page: number, totalPage: number) {
     const paramsFilter = this.usersService.getParamsUsersFilter();
-    this.usersService.getUserByParams(page-1, totalPage, paramsFilter?.identification|| '',paramsFilter?.nameUser || '',paramsFilter?.faculty || '', paramsFilter?.program || '','','','','','1', paramsFilter?.state || '' ).subscribe({
+    this.usersService.getUserByParams(page-1, totalPage, paramsFilter?.identification|| '',paramsFilter?.nameUser || '',paramsFilter?.faculty || '', paramsFilter?.program || '','','','','',ROLES.DOCENTE.toString(), paramsFilter?.state || '' ).subscribe({
       next: (response) => {
         this.usersResponse = response.data;
+        this.usersService.setUsers(response.data);
+      },
+      error: (error) => {
+        this.toastService.showErrorMessage('Error al obtener los usuarios', `Error ${error.mensaje}`);
+      }
+    })
+    this.usersService.getUserByParams(page-1, totalPage, paramsFilter?.identification|| '',paramsFilter?.nameUser || '',paramsFilter?.faculty || '', paramsFilter?.program || '','','','','',ROLES.JEFE_DE_DEPARTAMENTO.toString(), paramsFilter?.state || '' ).subscribe({
+      next: (response) => {
+        this.usersResponse?.content.push(...response.data.content);   
+        
         this.usersService.setUsers(response.data);
       },
       error: (error) => {

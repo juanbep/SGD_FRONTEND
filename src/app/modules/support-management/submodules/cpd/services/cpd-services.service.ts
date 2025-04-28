@@ -21,7 +21,7 @@ export class CpdServicesService {
   getUsersWithConsolidatedCreated(
     page: number,
     totalPage: number,
-    department: string,
+    department: string | null,
     userId: string | null,
     userName: string | null,
     category: string | null,

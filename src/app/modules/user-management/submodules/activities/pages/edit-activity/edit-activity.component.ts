@@ -173,8 +173,8 @@ export class EditActivityComponent implements OnInit {
         .get('weeks')
         ?.setValue(this.activity.semanas.toString());
       if (
-        this.activity.tipoActividad.oidTipoActividad === 2 ||
-        this.activity.tipoActividad.oidTipoActividad === 8
+        this.activity.tipoActividad.oidTipoActividad === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA ||
+        this.activity.tipoActividad.oidTipoActividad === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION
       ) {
         this.activityForm
           .get('idStudent')
@@ -689,6 +689,12 @@ export class EditActivityComponent implements OnInit {
         .get('evaluatorName')
         ?.setValue(user?.nombres + ' ' + user?.apellidos);
       this.activityForm.get('evaluatorId')?.setValue(user?.identificacion);
+      if (
+        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA.toString() ||
+        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION.toString()
+      ) {
+        this.activityForm.get('idStudent')?.setValue(user?.identificacion);
+      }
     }
   }
 

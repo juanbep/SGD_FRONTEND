@@ -1,4 +1,4 @@
- import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environments } from '../../../../environments/environments';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -8,6 +8,8 @@ import { FuenteCreate } from '../../models/modified/fuente-create.model';
 import { SimpleResponse } from '../../models/response/simple-response.model';
 import { FuenteEstudianteFormulario } from '../../models/modified/fuente-estudiante-formulario.model';
 import { FuenteEstudianteFormularioResponse } from '../../models/response/fuente-estudiante-formulario-response.model';
+import { FuenteCoordinadorFormulario } from '../../models/modified/fuente-coordinador-formulario.model';
+import { FuenteCoordinadorFormularioResponse } from '../../models/response/fuente-coordinador-formulario-response.model';
 
 @Injectable({
     providedIn: 'root'
@@ -28,15 +30,16 @@ export class SmResponsibilitiesServicesService {
         * @returns Observable<Responsabilidad>
         */
 
-    getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, page:number|null, totalPage:number|null): Observable<SimpleResponse<PagedResponse<ResponsabilidadResponse>>> {
+    getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, asignacionDefault: boolean , page: number | null, totalPage: number | null): Observable<SimpleResponse<PagedResponse<ResponsabilidadResponse>>> {
         let params = new HttpParams()
-            .set( 'idEvaluador', evaluatorId )
-            .set( 'nombreActividad', activityName ?  activityName : '' )
-            .set( 'tipoActividad', activityType ? activityType : '' )
-            .set( 'nombreEvaluado', evaluatorName ? evaluatorName : '' )
-            .set( 'roles', roles ? roles : '' )
-            .set( 'page', page? page.toString() : '' )
-            .set( 'size', totalPage? totalPage.toString() : '' );
+            .set('idEvaluador', evaluatorId)
+            .set('nombreActividad', activityName ? activityName : '')
+            .set('tipoActividad', activityType ? activityType : '')
+            .set('nombreEvaluado', evaluatorName ? evaluatorName : '')
+            .set('roles', roles ? roles : '')
+            .set('asignacionDefault', asignacionDefault)
+            .set('page', page ? page.toString() : '')
+            .set('size', totalPage ? totalPage.toString() : '');
         return this.httpClient.get<SimpleResponse<PagedResponse<ResponsabilidadResponse>>>(`${this.baseUrl}/api/actividades/buscarActividadesPorEvaluador`, { params });
     }
 
@@ -49,6 +52,15 @@ export class SmResponsibilitiesServicesService {
 
     getInfoResponsibilityByForm(idSource: number): Observable<SimpleResponse<FuenteEstudianteFormularioResponse>> {
         return this.httpClient.get<SimpleResponse<FuenteEstudianteFormularioResponse>>(`${this.baseUrl}/api/evaluacion-estudiante/fuente/${idSource}`);
+    }
+
+    /*
+        * Method to get the responsibilities by id
+        * @param id:number
+        * @returns Observable<SimpleResponse<FuenteCoordinadorFormulario>>
+        */
+    getInforResponsibilityByFormCoordinator(idSource: number): Observable<SimpleResponse<FuenteCoordinadorFormularioResponse>> {
+        return this.httpClient.get<SimpleResponse<FuenteCoordinadorFormularioResponse>>(`${this.baseUrl}/api/informes-administracion/fuente/${idSource}`);
     }
 
     /*
@@ -68,17 +80,31 @@ export class SmResponsibilitiesServicesService {
     }
 
     /*
-        * Method to get the responsibility by id
-        * @param id:number
-        * @returns Observable<Responsabilidad>
+        * Method to save the responsibility by form student
+        * @param fuenteEstudianteFormulario:FuenteEstudianteFormulario 
+        * @param reportDocument:File
+        * @returns Observable<any>
         */
 
-    saveResponibilityFormStundent(fuenteEstudianteFormulario: FuenteEstudianteFormulario, reportDocument: File,  signature: File):Observable<any> {
+    saveResponibilityFormStundent(fuenteEstudianteFormulario: FuenteEstudianteFormulario, reportDocument: File): Observable<any> {
         const formData = new FormData();
         formData.append('data', JSON.stringify(fuenteEstudianteFormulario));
         formData.append('documentoFuente', reportDocument);
-        formData.append('firmaEstudiante', signature);
         return this.httpClient.post(`${this.baseUrl}/api/evaluacion-estudiante`, formData, { responseType: 'text' });
+    }
+
+    /*
+        * Method to save the responsibility by form coordinator 
+        * @param fuenteCoordinadorFormulario:FuenteCoordinadorFormulario
+        * @param reportDocument:File
+        * @param signature:File
+        * @returns Observable<any>W
+        */
+    saveResponsibilityFormCoordinator(fuenteCoordinadorFormulario: FuenteCoordinadorFormulario, reportDocument: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('data', JSON.stringify(fuenteCoordinadorFormulario));
+        formData.append('documentoAdministracion', reportDocument);
+        return this.httpClient.post(`${this.baseUrl}/api/informes-administracion`, formData, { responseType: 'text' });
     }
 
     /*
@@ -98,11 +124,13 @@ export class SmResponsibilitiesServicesService {
         * @returns Observable<any>
         */
 
-    downloadReportFile(idSource: number, report:boolean ): Observable<any> {
+    downloadReportFile(idSource: number, report: boolean): Observable<any> {
         let params = new HttpParams().set('report', report);
         return this.httpClient.get(`${this.baseUrl}/api/fuente/download/${idSource}`, { params, responseType: 'blob' });
-      }
-      
+    }
+
+
+
 
 
 }

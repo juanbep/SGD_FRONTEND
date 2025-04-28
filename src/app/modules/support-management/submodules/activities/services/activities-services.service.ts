@@ -103,13 +103,11 @@ export class ActivitiesServicesService {
   saveSelfAssessmentByForm(
     autoevaluacionFuente: FuenteAutoevaluacion,
     evidences: File[],
-    signature: File,
     support: File
   ) {
     return this.smActivitiesServicesService.saveSelfAssessmentForm(
       autoevaluacionFuente,
       evidences,
-      signature,
       support
     );
   }
