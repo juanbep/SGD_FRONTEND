@@ -499,8 +499,11 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
     if (evaluationNumber >= 80 && evaluationNumber < 90) {
       return 'Bueno';
     }
-    if (evaluationNumber >= 90 && evaluationNumber <= 100) {
+    if (evaluationNumber >= 90 && evaluationNumber <= 94) {
       return 'Sobresaliente';
+    }
+    if (evaluationNumber >= 95 && evaluationNumber <= 100) {
+      return 'Excelente';
     }
     return '';
   }
