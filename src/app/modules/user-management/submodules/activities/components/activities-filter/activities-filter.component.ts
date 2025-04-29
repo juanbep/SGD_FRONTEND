@@ -24,11 +24,11 @@ export class ActivitiesFilterComponent implements OnInit {
   public catalogDataResponse: CatalogDataResponse | null = null;
   
   formFilter: FormGroup = this.formBuilder.group({
-    activityType: [null],
-    activityName : [null],
-    activityCode: [null],
-    administrativeAct: [null],
-    vriCode: [null],
+    activityType: [''],
+    activityName : [''],
+    activityCode: [''],
+    administrativeAct: [''],
+    vriCode: [''],
   });
   
   ngOnInit(): void {
@@ -51,7 +51,11 @@ export class ActivitiesFilterComponent implements OnInit {
   }
 
   clearFilter(){
-    this.formFilter.reset();
+    this.formFilter.get('activityType')?.setValue('');
+    this.formFilter.get('activityName')?.setValue('');
+    this.formFilter.get('activityCode')?.setValue('');
+    this.formFilter.get('administrativeAct')?.setValue('');
+    this.formFilter.get('vriCode')?.setValue('');
     this.activityManagementService.setParamsActivitiesFilter({nameActivity: '', typeActivity: '', activityCode: '', administrativeCode: '', vriCode: ''});
   }
 

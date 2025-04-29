@@ -14,12 +14,12 @@ import { ResponsabilidadResponse } from '../../../../../../core/models/response/
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
-
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'responsibilities-upload-evaluation',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingOverleyComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LoadingOverleyComponent],
   templateUrl: './responsibilities-upload-evaluation.component.html',
   styleUrl: './responsibilities-upload-evaluation.component.css',
 })
@@ -41,17 +41,22 @@ export class ResponsibilitiesUploadEvaluationComponent {
   public errorMessageFile: string = '';
   public errorMessageNote: string = '';
   public inputValue: string = '';
-  public evaluation: number | null = null;
-  public selectedFile: File | null = null;
   public sendSource: FuenteCreate[] | null = null;
-  public observacionSend: string = '';
   public fileNameSelected: WritableSignal<string> = signal('');
   public isLoading: boolean = false;
+  public form: FormGroup;
 
   constructor(
     private service: ResponsibilitiesServicesService,
-    private toastr: MessagesInfoService
-  ) {}
+    private toastr: MessagesInfoService,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      evaluation: [null, [Validators.required, Validators.min(0), Validators.max(100)]],
+      selectedFile: [null, Validators.required],
+      observacionSend: ['']
+    });
+  }
 
   ngOnInit(): void {
     if (this.openModalUploadSelected) {
@@ -63,20 +68,21 @@ export class ResponsibilitiesUploadEvaluationComponent {
   }
 
   openModal(): void {
-    if (this.evaluation) {
+    if (this.form.get('evaluation')?.value) {
       (<HTMLInputElement>document.getElementById('input-note')).value =
-        this.evaluation.toString();
+        this.form.get('evaluation')?.value.toString();
     }
   }
 
   getInputClass(): string {
-    if (this.evaluation) {
-      if (this.evaluation < 0 || this.evaluation > 100) {
+    const evaluation = this.form.get('evaluation')?.value;
+    if (evaluation) {
+      if (evaluation < 0 || evaluation > 100) {
         this.errorMessageNote = 'La nota debe estar entre 0 y 100';
       } else {
         this.errorMessageNote = '';
       }
-      return this.evaluation >= 0 && this.evaluation <= 100
+      return evaluation >= 0 && evaluation <= 100
         ? 'input-nota'
         : 'input-nota-error';
     } else {
@@ -84,16 +90,50 @@ export class ResponsibilitiesUploadEvaluationComponent {
     }
   }
 
+  isInvalidField(field: string) {
+    const control = this.form.get(field);
+    return (
+      control &&
+      control.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    );
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.form.controls[field]) return null;
+    const control = this.form.controls[field];
+    const errors = control.errors || {};
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'min':
+          return 'El valor mínimo es 0';
+        case 'max':
+          return 'El valor máximo es 100';
+        case 'invalidNumber':
+          return 'El valor debe ser numérico';
+        case 'invalidFileType':
+          return 'El archivo debe ser de tipo .png';
+        default:
+          return null;
+      }
+    }
+    return null;
+  }
+
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       if (file.type !== 'application/pdf') {
         this.errorMessageFile = 'El archivo seleccionado no es un PDF';
-        this.selectedFile = null;
+        this.form.get('selectedFile')?.setValue(null);
       } else {
-        this.selectedFile = file;
-        this.fileNameSelected.set(this.selectedFile.name);
+        this.form.get('selectedFile')?.setValue(file);
+        this.fileNameSelected.set(file.name);
         this.errorMessageFile = '';
       }
     }
@@ -110,27 +150,19 @@ export class ResponsibilitiesUploadEvaluationComponent {
 
   saveEvaluation(): void {
     this.isLoading = true;
-    if (
-      this.responsability &&
-      this.evaluation &&
-      this.selectedFile &&
-      this.currentUser
-    ) {
+    if (this.form.valid && this.responsability && this.currentUser) {
+      const { evaluation, selectedFile, observacionSend } = this.form.value;
       this.sendSource = [
         {
           tipoFuente: '2',
           tipoCalificacion: 'DOCUMENTO',
-          calificacion: this.evaluation,
+          calificacion: evaluation,
           oidActividad: this.responsability.oidActividad,
           informeEjecutivo: '',
         },
       ];
       this.service
-        .saveResponsibilityEvaluation(
-          this.selectedFile,
-          this.observacionSend,
-          this.sendSource
-        )
+        .saveResponsibilityEvaluation(selectedFile, observacionSend, this.sendSource)
         .subscribe({
           next: (data) => {
             this.isLoading = false;
@@ -138,24 +170,18 @@ export class ResponsibilitiesUploadEvaluationComponent {
               'Evaluación guardada correctamente',
               'Éxito'
             );
-            this.service.setParamsActivitiesFilterSignal(
-              null,
-              null,
-              null,
-              null
-            );
+            this.service.setParamsActivitiesFilterSignal(null, null, null, null);
             this.closeModal();
           },
           error: (error) => {
-            this.toastr.showErrorMessage(
-              'Error al guardad la información',
-              'Error'
-            );
+            this.toastr.showErrorMessage('Error al guardar la información', 'Error');
           },
         });
     } else {
+      this.isLoading = false;
+      this.form.markAllAsTouched();
       this.toastr.showWarningMessage(
-        'Asegurese que las evaluaciones y el soporte se encuentren diligenciados.',
+        'Asegúrese de que las evaluaciones y el soporte se encuentren diligenciados.',
         'Advertencia'
       );
     }

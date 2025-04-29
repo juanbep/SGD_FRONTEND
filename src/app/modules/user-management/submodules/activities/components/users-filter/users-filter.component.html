@@ -15,7 +15,7 @@
                 </div>
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="faculty">
-                        <option [value]='null' selected>Facultad</option>
+                        <option [value]="''" selected>Facultad</option>
 
                         <option *ngFor="let faculty of catalogData?.facultades" value="{{faculty.codigo}}">
                             {{faculty.nombre | titlecase}}
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="program">
-                        <option [value]='null' selected>Programa</option>
+                        <option [value]="''" selected>Departamento</option>
                         <option *ngFor="let department of catalogData?.departamentos" value="{{department.codigo}}">
                             {{department.nombre | titlecase}}
                         </option>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="state">
-                        <option [value]='null' selected>Estado</option>
+                        <option [value]="''" selected>Estado</option>
                         <option *ngFor="let option of stateOptions" value="{{option.value}}">
                             {{option.text}}
                         </option>

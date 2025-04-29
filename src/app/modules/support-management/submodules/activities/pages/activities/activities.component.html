@@ -6,6 +6,21 @@
       >A continuación, se presenta el listado de actividades asignadas para el periodo {{academicPeriod?.idPeriodo}}. Desde esta vista, podrá completar la información de la fuente 1 (Autoevaluación) y realizar el seguimiento del estado de la fuente 2.</span
     >
   </div>
+  <div class="messages-container" style="margin: 5px">
+    <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+    <span class="text-body-heavy"
+      >Tenga en cuenta que puede diligenciar la autoevaluación a través formulario 
+      <img
+      src="assets/icons/tables/icon-form.svg"
+      alt="iconoformularion evaluación"
+    /> 
+    o, de manera masiva, subiendo el archivo de soporte de autoevaluación con la opción ubicada al final de la página <img
+    src="assets/icons/buttons/go-icon-blue.svg"
+    alt="iconoformularion evaluación"
+    style="color: blue"
+  />. </span
+    >
+  </div>
   <p class="title-three">
     Listado de actividades asignadas para el periodo {{academicPeriod?.idPeriodo}}
   </p>
@@ -17,26 +32,9 @@
   </section>
 
   <!-- Sección mensaje estado de la autoevaluación -->
-  <section id="self-assessment-message-section">
-    <ng-container>
-      <div class="messages-container">
-        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
-        <span class="text-body-regular"
-          >Seleccione esta opción si desea cargar la autoevaluación utilizando
-          un formato externo.</span
-        >
-      </div>
-    </ng-container>
-    <ng-template>
-      <div class="messages-continter-green">
-        <img src="assets/icons/messages/icon-check.svg" alt="teacher-icon" />
-        <span class="text-body-regular"
-          >Todas las autoevaluaciones han sido completadas.</span
-        >
-      </div>
-    </ng-template>
-  </section>
+  <span class="title-three">Cargar autoevaluación al sistema de manera masiva mediante archivo externo</span>
 
+  <div class="mb-3"></div>
   <!-- Sección botones de autoevaluación -->
   <section style="width: 40%">
     <div class="buttons-container">

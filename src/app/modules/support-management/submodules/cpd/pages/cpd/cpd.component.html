@@ -2,7 +2,7 @@
     <div class="title-two">Comite de Personal Docente (CPD)</div>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">A continuación, encontrará el listado de docentes del {{currentUser?.usuarioDetalle?.departamento | titlecase}} asignados para el periodo académico {{activeAcademicPeriod?.idPeriodo}} y cuyo consolidado ha sido generado por el respectivo Jefe de Departamento. En esta vista, podrá visualizar los detalles de la evaluación de las fuentes, enviar notificaciones por correo electrónico, descargar los soportes del docente, además de aprobar el consolidado y generar la resolución.</span>
+        <span class="text-body-heavy">A continuación, encontrará el listado de docentes asignados para el periodo académico {{activeAcademicPeriod?.idPeriodo}} y cuyo consolidado ha sido generado por el respectivo Jefe de Departamento. En esta vista, podrá visualizar los detalles de la evaluación de las fuentes, enviar notificaciones por correo electrónico, descargar los soportes del docente, además de aprobar el consolidado y generar la resolución.</span>
     </div>
     <div class="mb-3"></div>
     <div class="title-three">Docentes {{currentUser?.usuarioDetalle?.departamento | titlecase}}</div>
@@ -29,7 +29,7 @@
                     <td class="text-body-regular">{{teacher.categoria }}</td>
                     <td>
                         <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" title="Actividades"></button>
-                        <button class="button-table-email" (click)="openEmailModal()" title="Enviar email"></button>
+                        <button class="button-table-email" (click)="openEmailModal(teacher.departamento)" title="Enviar email"></button>
                         <button class="button-table-check" (click)="openAprobeConlidatedModalForm(teacher)" title="Aprobar consolidado y generar resolución"></button>
                     </td>
                 </tr>
@@ -50,7 +50,7 @@
         <span class="title-three">Descargar soportes y consolidados</span>
         <div class="buttons-container" style="width: 50% !important;">
             <div>
-                <span class="text-body-regular">Soportes del {{currentUser?.usuarioDetalle?.departamento | titlecase}}</span>
+                <span class="text-body-regular">Descargar todos los soportes</span>
                 <br>
             </div>
             <button  class="button-actions button-download" (click)="downloadFiles()"></button>

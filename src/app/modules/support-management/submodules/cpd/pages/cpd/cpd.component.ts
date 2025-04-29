@@ -35,7 +35,7 @@ const ID_ROL = '1';
     RouterModule,
     UserFilterComponent,
     CpdInfoFormComponent
-],
+  ],
   templateUrl: './cpd.component.html',
   styleUrl: './cpd.component.css',
 })
@@ -62,7 +62,8 @@ export class CpdComponent implements OnInit {
     nameUser: string | null;
     identification: string | null;
     category: string | null;
-  } = { nameUser: null, identification: null, category: null };
+    department: string | null;
+  } = { nameUser: null, identification: null, category: null, department: null };
   public teacherByDepartment: PagedResponse<UsuarioConsolidadoCreadoResponse> | null =
     null;
 
@@ -74,14 +75,13 @@ export class CpdComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
     this.activeAcademicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue
-    this.recoverBossDepartment();
     this.academicPeriodActive =
       this.academicPeriodManagementService.currentAcademicPeriodValue;
     if (this.currentUser && (this.currentUser.usuarioDetalle.departamento || this.currentUser.roles.find((rol) => rol.oid === ROLES.SECRETARIA_O_FACULTAD))) {
       this.recoverTeachers(
         this.currentPage,
         TOTAL_PAGE,
-        this.currentUser.usuarioDetalle.departamento ? this.currentUser.usuarioDetalle.departamento : null,
+        null,
         null,
         null,
         null,
@@ -122,7 +122,7 @@ export class CpdComponent implements OnInit {
       this.recoverTeachers(
         this.currentPage,
         TOTAL_PAGE,
-        this.currentUser.usuarioDetalle.departamento,
+        null,
         this.filterParams.nameUser,
         this.filterParams.identification,
         this.filterParams.category,
@@ -135,6 +135,7 @@ export class CpdComponent implements OnInit {
     nameUser: string | null;
     identification: string | null;
     category: string | null;
+    department: string | null;
   }) {
     if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
       this.filterParams = event;
@@ -142,7 +143,7 @@ export class CpdComponent implements OnInit {
       this.recoverTeachers(
         this.currentPage,
         TOTAL_PAGE,
-        this.currentUser.usuarioDetalle.departamento,
+        this.filterParams.department,
         this.filterParams.identification,
         this.filterParams.nameUser,
         this.filterParams.category,
@@ -151,14 +152,14 @@ export class CpdComponent implements OnInit {
     }
   }
 
-  recoverBossDepartment() {
+  recoverBossDepartment(teacherDepartment: string = '') {
     this.userService.getAllUsersByParams(
       0,
       3,
       '',
       '',
       '',
-      this.currentUser?.usuarioDetalle.departamento || '',
+      teacherDepartment,
       '',
       '',
       '',
@@ -166,19 +167,20 @@ export class CpdComponent implements OnInit {
       ROLES.JEFE_DE_DEPARTAMENTO.toString(),
       '1'
     )
-    .subscribe({
-      next: (response) => {
-        this.bossDepartment = response.data.content[0];
-       
-      },
-      error: (error) => {
-        this.bossDepartment = null;
-      },
-    });
+      .subscribe({
+        next: (response) => {
+          this.bossDepartment = response.data.content[0];
+
+        },
+        error: (error) => {
+          this.bossDepartment = null;
+        },
+      });
   }
 
-  openEmailModal() {
+  openEmailModal(teacherDepartment: string) {
     if (this.emailComponent) {
+      this.recoverBossDepartment(teacherDepartment);
       this.emailComponent.open(this.emailMessage);
     }
   }
@@ -186,13 +188,12 @@ export class CpdComponent implements OnInit {
   downloadFiles() {
     if (
       this.academicPeriodActive &&
-      this.currentUser &&
-      this.currentUser.usuarioDetalle.departamento
+      this.currentUser
     ) {
       this.cpdServiceServices
         .downloadFiles(
           this.academicPeriodActive.idPeriodo,
-          this.currentUser.usuarioDetalle.departamento,
+          null,
           null,
           null,
           null
@@ -202,7 +203,7 @@ export class CpdComponent implements OnInit {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `documentos_${this.currentUser?.usuarioDetalle.departamento}_${this.academicPeriodActive?.idPeriodo}.zip`;
+            a.download = `documentos_soportes_${this.academicPeriodActive?.idPeriodo}.zip`;
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
@@ -218,21 +219,21 @@ export class CpdComponent implements OnInit {
   }
 
   openAprobeConlidatedModalForm(usuarioSelected: UsuarioConsolidadoCreadoResponse) {
-    if(this.cpdInfoFormComponent){
+    if (this.cpdInfoFormComponent) {
       this.userSelectedToCreateRelution = usuarioSelected;
       this.cpdInfoFormComponent.open();
     }
   }
 
-  onOptionFormCpdInfo(event: {resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string}){
-    if(this.userSelectedToCreateRelution){
+  onOptionFormCpdInfo(event: { resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string }) {
+    if (this.userSelectedToCreateRelution) {
       this.wordGenerator(this.userSelectedToCreateRelution, event);
     }
   }
 
   wordGenerator(
     teacherInfo: UsuarioConsolidadoCreadoResponse,
-    infoConsolidated: {resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string}
+    infoConsolidated: { resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string }
   ) {
     let infoTeacherConsolidated: DetalleUsuarioConsolidadoResponse | null =
       null;
@@ -249,9 +250,9 @@ export class CpdComponent implements OnInit {
               this.academicPeriodActive,
               infoConsolidated
             );
-            this.messagesInfoService.showSuccessMessage(
-              'Documento generado correctamente','Éxito'
-            );
+          this.messagesInfoService.showSuccessMessage(
+            'Documento generado correctamente', 'Éxito'
+          );
         },
         error: (error) => {
           this.messagesInfoService.showErrorMessage(

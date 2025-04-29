@@ -225,14 +225,14 @@ export class SmConsolidatedServicesService {
    * */
   downloadAllSupportFiles(
     period: string,
-    department: string,
+    department: string | null,
     contractType: string | null,
     idUser: number | null,
     esConsolidado: boolean | null
   ): Observable<any> {
     const params = new HttpParams()
       .set('periodo', period)
-      .set('departamento', department)
+      .set('departamento', department || '')
       .set('tipoContrato', contractType || '')
       .set('oidUsuario', idUser || '')
       .set('esConsolidado', esConsolidado || false);

@@ -46,7 +46,12 @@
             </ng-template>
         </table>
     </section>
-
+    <section class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher icon">
+        <span class="text-body-heavy">
+            Para cargar las labores y usuarios de KIRA, asegúrese de que los jefes de departamento y el decano hayan sido creados en el sistema y se encuentren en estado activo. De lo contrario, las actividades sin un evaluador definido se asignarán por defecto al Secretario/a de Facultad.
+        </span>
+    </section>
     <div class="mb-3"></div>
     <div class="row row-cols-auto d-flex justify-content-center">
         <div class="col">
@@ -62,7 +67,7 @@
                 <button [ngClass]="{
                     'button-normal-large': currentAcademicPeriod,
                     'button-normal-large-disabled': !currentAcademicPeriod
-                }" class="button-normal-large" (click)="loadInfoTechersAndActivities()">Cargar docentes y labor {{currentAcademicPeriod?.idPeriodo}}</button>
+                }" class="button-normal-large" (click)="loadInfoTechersAndActivities()">Cargar docentes y labor de KIRA {{currentAcademicPeriod?.idPeriodo}}</button>
             </div>
         </div>
     </div>

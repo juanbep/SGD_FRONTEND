@@ -20,7 +20,7 @@
                 <!-- Type Contract filter -->
                 <div class="col" style="margin: 1px">
                     <select class="input-select-filter" formControlName="contractType">
-                        <option [value]='null' selected>Tipo contrato</option>
+                        <option [value]="''" selected>Tipo contrato</option>
 
                         <option *ngFor="let contractor of catalogDataResponse?.contrataciones"
                             value="{{contractor.codigo}}">

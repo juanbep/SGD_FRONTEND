@@ -23,10 +23,10 @@ export class ActivitiesPendingDefinitionEvaluatorFilterComponent {
   public catalogDataResponse: CatalogDataResponse | null = null;
 
   formFilter: FormGroup = this.formBuilder.group({
-    activityType: [null],
-    activityName: [null],
-    evaluatorName: [null],
-    evaluatorRole: [null],
+    activityType: [''],
+    activityName: [''],
+    evaluatorName: [''],
+    evaluatorRole: [''],
   });
 
   ngOnInit(): void {
@@ -47,7 +47,10 @@ export class ActivitiesPendingDefinitionEvaluatorFilterComponent {
   }
 
   clearFilter() {
-    this.formFilter.reset();
-    this.activitiesPendingDefinitionEvaluatorServicesService.setParamsActivitiesFilterSignal({ activityName: null, activityType: null, evaluatedName: null, evaluatedRole: null });
+    this.formFilter.get('activityType')?.setValue('');
+    this.formFilter.get('activityName')?.setValue('');
+    this.formFilter.get('evaluatorName')?.setValue('');
+    this.formFilter.get('evaluatorRole')?.setValue('');
+    this.activitiesPendingDefinitionEvaluatorServicesService.setParamsActivitiesFilterSignal({ activityName: '', activityType: '', evaluatedName: '', evaluatedRole: '' });
   }
 }

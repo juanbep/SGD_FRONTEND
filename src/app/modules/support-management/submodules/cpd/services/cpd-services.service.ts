@@ -87,7 +87,7 @@ export class CpdServicesService {
 
   downloadFiles(
     period: string,
-    department: string,
+    department: string | null,
     contractType: string | null,
     idUser: number | null,
     esConsolidado: boolean | null

@@ -59,8 +59,11 @@ export enum TIPO_ACTIVIDADES {
     OTRO_SERVICIO = 5,
     EXTENSION = 6,
     TRABAJO_DE_INVESTIGACION = 7,
-    DOCENCIA = 8,
-    ASESORIA = 9
+    ASESORIA = 8,
+    DOCENCIA = 9,
+    SERVICIO = 10,
+    SEMILLERO_INVESTIGACION = 11,
+
 }
 
 // PreguntaEvaluacionDocente enum

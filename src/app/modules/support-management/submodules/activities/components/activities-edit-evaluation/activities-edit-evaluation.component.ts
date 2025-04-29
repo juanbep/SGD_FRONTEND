@@ -52,6 +52,7 @@ export class ActivitiesEditEvaluationComponent {
 
   formSelfEvaluation: FormGroup = this.formBuilder.group({
     activities: this.formBuilder.array([]),
+    uploadFileSource: [null, [Validators.required]],
     observation: [''],
   });
 
@@ -164,32 +165,42 @@ export class ActivitiesEditEvaluationComponent {
    *  Retorna si un campo es inválido
    */
 
-  isInvalidField(control: AbstractControl) {
+  isInvalidFormEvaluation(control: AbstractControl) {
     if (control.invalid && (control.dirty || control.touched)) {
       return true;
     }
     return false;
   }
 
-  /*
-   *  Retorna el mensaje de error de un campo
-   */
-  getFieldError(control: AbstractControl, field: string) {
-    const errors = control.get(field)?.errors || {};
-    if (control.get(field)?.errors) {
-      for (const key of Object.keys(errors)) {
-        switch (key) {
-          case 'required':
-            return 'Campo requerido';
-          case 'min':
-            return 'Valor mínimo es 0';
-          case 'max':
-            return 'Valor máximo es 100';
-          case 'pattern':
-            return 'Solo se permiten números';
-          default:
-            return key;
-        }
+  isInvalidField(field: string) {
+    const control = this.formSelfEvaluation.get(field);
+    return (
+      control &&
+      control.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    );
+  }
+
+
+  getFieldError(field: string): string | null {
+    if (!this.formSelfEvaluation.controls[field]) return null;
+    const control = this.formSelfEvaluation.controls[field];
+    const errors = control.errors || {};
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'min':
+          return 'El valor mínimo es 0';
+        case 'max':
+          return 'El valor máximo es 100';
+        case 'invalidNumber':
+          return 'El valor debe ser numérico';
+        case 'invalidFileType':
+          return 'El archivo debe ser de tipo .png';
+        default:
+          return null;
       }
     }
     return null;
@@ -218,6 +229,9 @@ export class ActivitiesEditEvaluationComponent {
                 { type: 'application/pdf' }
               );
               this.selectedSourceFile = content.fuentes[0].soporte;
+              this.formSelfEvaluation.get('uploadFileSource')?.setValue(
+                content.fuentes[0].soporte
+              );
             },
             error: (error) => {
               this.toastr.showErrorMessage(
@@ -307,6 +321,7 @@ export class ActivitiesEditEvaluationComponent {
     this.sourceFileDeleted = true;
     this.fileNameSelected = '';
     this.selectedSourceFile = null;
+    this.formSelfEvaluation.get('uploadFileSource')?.setValue(null);
   }
 
   /*
@@ -347,8 +362,10 @@ export class ActivitiesEditEvaluationComponent {
         this.selectedSourceFile = file;
         this.errorFileInput = false;
         this.fileNameSelected = file.name;
+        this.sourceFileDeleted = false;
         this.userActivities.forEach((content, index) => {
           content.fuentes[0].soporte = file;
+          this.formSelfEvaluation.get('uploadFileSource')?.setValue(file);
         });
       }
     }
@@ -439,6 +456,7 @@ export class ActivitiesEditEvaluationComponent {
           },
         });
     } else {
+      this.formSelfEvaluation.markAllAsTouched();
       this.toastr.showWarningMessage(
         'Por favor, asegúrese de llenar todos los campos correctamente',
         'Alerta'

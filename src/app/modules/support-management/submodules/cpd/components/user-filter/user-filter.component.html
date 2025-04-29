@@ -15,9 +15,17 @@
                 </div>
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="category">
-                        <option [value]="null" selected>Categoría</option>
+                        <option [value]="''" selected>Categoría</option>
                         <option *ngFor="let category of catalogData?.categorias" value="{{category.codigo}}">
                             {{category.nombre | titlecase}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col m-1">
+                    <select class="input-select-filter" formControlName="department">
+                        <option [value]="''" selected>Departamento</option>
+                        <option *ngFor="let department of catalogData?.departamentos" value="{{department.codigo}}">
+                            {{department.nombre | titlecase}}
                         </option>
                     </select>
                 </div>

@@ -96,6 +96,7 @@ export class NewActivityComponent implements OnInit {
     ],
     projectName: [null, Validators.required],
     administrativeAct: [null, Validators.required],
+    researchSeed : [null, Validators.required],
     idStudent: [null, Validators.required],
     activity: [null, Validators.required],
     evaluatorName: [null, Validators.required],
@@ -142,6 +143,7 @@ export class NewActivityComponent implements OnInit {
     this.newActivityForm.get('evaluatorId')?.disable();
     this.newActivityForm.get('executiveReport')?.disable();
     this.newActivityForm.get('activityState')?.disable();
+    this.newActivityForm.get('researchSeed')?.disable();
   }
 
   clearFields(): void {
@@ -160,6 +162,7 @@ export class NewActivityComponent implements OnInit {
     this.newActivityForm.get('evaluatorId')?.reset();
     this.newActivityForm.get('executiveReport')?.disable();
     this.newActivityForm.get('activityState')?.disable();
+    this.newActivityForm.get('researchSeed')?.reset();
   }
 
   enableFields(): void {
@@ -295,6 +298,30 @@ export class NewActivityComponent implements OnInit {
             this.newActivityForm.get('executiveReport')?.enable();
             this.newActivityForm.get('activityState')?.enable();
             this.validateEvaluator(TIPO_ACTIVIDADES.DOCENCIA);
+            break;
+          //SERVICIO
+          case TIPO_ACTIVIDADES.SERVICIO:
+            this.newActivityForm.get('nameActivity')?.enable();
+            this.newActivityForm.get('administrativeAct')?.enable();
+            this.newActivityForm.get('activity')?.enable();
+            this.newActivityForm.get('weeklyHours')?.enable();
+            this.newActivityForm.get('weeks')?.enable();
+            this.newActivityForm.get('evaluatorId')?.enable();
+            this.newActivityForm.get('evaluatorName')?.enable();
+            this.newActivityForm.get('executiveReport')?.enable();
+            this.newActivityForm.get('activityState')?.enable();
+            break;
+          //SEMILLERO DE INVESTIGACIÓN
+          case TIPO_ACTIVIDADES.SEMILLERO_INVESTIGACION:
+            this.newActivityForm.get('nameActivity')?.enable();
+            this.newActivityForm.get('administrativeAct')?.enable();
+            this.newActivityForm.get('researchSeed')?.enable();
+            this.newActivityForm.get('weeklyHours')?.enable();
+            this.newActivityForm.get('weeks')?.enable();
+            this.newActivityForm.get('evaluatorId')?.enable();
+            this.newActivityForm.get('evaluatorName')?.enable();
+            this.newActivityForm.get('executiveReport')?.enable();
+            this.newActivityForm.get('activityState')?.enable();
             break;
         }
       });
@@ -483,6 +510,12 @@ export class NewActivityComponent implements OnInit {
           atributos.push({
             codigoAtributo: 'MATERIA',
             valor: this.newActivityForm.get('subject')?.value,
+          });
+        }
+        if (this.newActivityForm.get('researchSeed')?.value) {
+          atributos.push({
+            codigoAtributo: 'SEMILLERO',
+            valor: this.newActivityForm.get('researchSeed')?.value,
           });
         }
         const newActivity: ActividadCreate[] = [

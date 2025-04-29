@@ -65,7 +65,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   formSelfAssessment: FormGroup = this.formBuilder.group({
     activities: this.formBuilder.array([]),
     observation: [null],
-    support: [null],
+    support: [null, [Validators.required]],
   });
 
   recoverActivities(page: number): void {
@@ -97,11 +97,44 @@ export class ActivitiesUploadSelfAssessmentComponent {
     }
   }
 
-  isInvalidField(control: AbstractControl) {
+  isInvalidFormEvaluation(control: AbstractControl) {
     if (control.invalid && (control.dirty || control.touched)) {
       return true;
     }
     return false;
+  }
+
+  isInvalidField(field: string) {
+    const control = this.formSelfAssessment.get(field);
+    return (
+      control &&
+      control.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    );
+  }
+
+  getFieldError(field: string): string | null {
+    if (!this.formSelfAssessment.controls[field]) return null;
+    const control = this.formSelfAssessment.controls[field];
+    const errors = control.errors || {};
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'min':
+          return 'El valor mínimo es 0';
+        case 'max':
+          return 'El valor máximo es 100';
+        case 'invalidNumber':
+          return 'El valor debe ser numérico';
+        case 'invalidFileType':
+          return 'El archivo debe ser de tipo .png';
+        default:
+          return null;
+      }
+    }
+    return null;
   }
 
   get activities(): FormArray {
@@ -163,6 +196,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
   onSupportFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
+      this.formSelfAssessment.get('support')?.setValue(input.files[0]);
       const file = input.files[0];
       if (file.type !== 'application/pdf') {
         this.errorMessageFile = 'El archivo seleccionado no es un PDF';
@@ -254,6 +288,14 @@ export class ActivitiesUploadSelfAssessmentComponent {
    */
 
   saveEvaluation(): void {
+    if(this.formSelfAssessment.invalid) {
+      this.formSelfAssessment.markAllAsTouched();
+      this.toastr.showWarningMessage(
+        'Asegurese que las evaluaciones y el soporte se encuentren diligenciados.',
+        'Advertencia'
+      );
+      return;
+    }
     if (this.selectedFile && this.currentUser) {
       if (this.formSelfAssessment.valid) {
         this.userActivities.forEach((activitie, index) => {

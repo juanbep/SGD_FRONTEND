@@ -24,10 +24,10 @@ export class ActivitiesFilterComponent {
     public catalogDataResponse: CatalogDataResponse | null = null; 
 
     formFilter: FormGroup = this.formBuilder.group({
-      activityType: [null],
-      activityName : [null],
-      evaluatorName: [null],
-      evaluatorRole  : [null],
+      activityType: [''],
+      activityName : [''],
+      evaluatorName: [''],
+      evaluatorRole  : [''],
     });
     
     ngOnInit(): void {
@@ -39,16 +39,19 @@ export class ActivitiesFilterComponent {
     }
   
     searchActivities(){
-      const activityType = this.formFilter.get('activityType')?.value;
-      const activityName = this.formFilter.get('activityName')?.value;
-      const evaluatorName = this.formFilter.get('evaluatorName')?.value;
-      const evaluatorRole = this.formFilter.get('evaluatorRole')?.value;
+      const activityType = this.formFilter.get('activityType')?.value || '';
+      const activityName = this.formFilter.get('activityName')?.value || '';
+      const evaluatorName = this.formFilter.get('evaluatorName')?.value || '';
+      const evaluatorRole = this.formFilter.get('evaluatorRole')?.value   || '';
       this.activitiesServicesService.setParamsActivitiesFilterSignal(activityName, activityType, evaluatorName, evaluatorRole);
     }
   
     clearFilter(){
-      this.formFilter.reset();
-      this.activitiesServicesService.setParamsActivitiesFilterSignal(null, null, null, null);
+      this.formFilter.get('activityType')?.setValue('');
+      this.formFilter.get('activityName')?.setValue('');
+      this.formFilter.get('evaluatorName')?.setValue('');
+      this.formFilter.get('evaluatorRole')?.setValue('');
+      this.activitiesServicesService.setParamsActivitiesFilterSignal('', '', '', '');
     }
   
 }

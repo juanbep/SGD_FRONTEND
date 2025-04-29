@@ -31,9 +31,9 @@ export class TeachersListFilterComponent {
   public valueState: string = this.states[0].texto;
 
   formFilter = this.formBuilder.group({
-    evaluatedName: [null],
-    contractType: [null],
-    evaluatedId: [null],
+    evaluatedName: [''],
+    contractType: [''],
+    evaluatedId: [''],
   });
 
   ngOnInit(): void {
@@ -41,9 +41,9 @@ export class TeachersListFilterComponent {
   }
 
   searchTeachers() {
-    const evaluatedName = this.formFilter.get('evaluatedName')?.value || null;
-    const contractType = this.formFilter.get('contractType')?.value || null;
-    const evaluatedId = this.formFilter.get('evaluatedId')?.value || null;
+    const evaluatedName = this.formFilter.get('evaluatedName')?.value || '';
+    const contractType = this.formFilter.get('contractType')?.value || '';
+    const evaluatedId = this.formFilter.get('evaluatedId')?.value || '';
     this.consolidatedServicesService.setFilterTeacherParams({
       evaluatedName: evaluatedName,
       contractType: contractType,
@@ -52,11 +52,13 @@ export class TeachersListFilterComponent {
   }
 
   clearFilter() {
-    this.formFilter.reset();
+    this.formFilter.get('evaluatedName')?.setValue('');
+    this.formFilter.get('contractType')?.setValue('');
+    this.formFilter.get('evaluatedId')?.setValue('');
     this.consolidatedServicesService.setFilterTeacherParams({
-      evaluatedName: null,
-      contractType: null,
-      evaluatedId: null,
+      evaluatedName: '',
+      contractType: '',
+      evaluatedId: '',
     });
   }
 }

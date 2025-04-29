@@ -10,7 +10,7 @@
             <th class="text-body-heavy">Acciones</th>
         </tr>
     </thead>
-    <ng-container>
+    <ng-container *ngIf="responsabilities?.content?.length; else noData">
         <tbody>
             <tr *ngFor="let responsabilitie of responsabilities?.content">
                 <td class="text-body-regular">{{responsabilitie.tipoActividad.nombre}}</td>
@@ -24,6 +24,13 @@
             </tr>
         </tbody>
     </ng-container>
+    <ng-template #noData>
+        <tbody>
+            <tr>
+                <td colspan="5" class="text-center text-body-regular">No hay actividades pendientes de asignación de evaluador</td>
+            </tr>
+        </tbody>
+    </ng-template>
 </table>
 <div class="d-flex justify-content-center mt-3">
     <shared-paginator [currentPage]="currentPage" [totalPages]="responsabilities?.totalPages || 1" (pageChange)="pageChange($event)"></shared-paginator>

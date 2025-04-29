@@ -15,32 +15,33 @@ import { CommonModule } from '@angular/common';
   styleUrl: './activity-filter.component.css'
 })
 export class ActivityFilterComponent {
-  private formBuilder= inject(FormBuilder);
-    private catalogService = inject(CatalogDataService);
-  
-    @Output()
-    public filterParams:EventEmitter<{activityName:string | null, activityType:string | null}> = new EventEmitter<{activityName: string | null, activityType:string | null}>();
-  
-    public catalogData: CatalogDataResponse | null = null;
-    
-    public formFilter = this.formBuilder.group({
-      activityName: [null],
-      activityType: [null],
-    });
-    
-    ngOnInit(): void {
-      this.catalogData = this.catalogService.catalogDataSignal;
-    }
-  
-    public searchActivities(){
-        const activityName = this.formFilter.get('activityName')?.value || null;
-        const activityType = this.formFilter.get('activityType')?.value || null;
-        this.filterParams.emit({activityName, activityType});
-    }
-  
-    public clearFilter(){
-      this.formFilter.reset();
-      this.filterParams.emit({activityName: null, activityType: null});
-    }
-  
+  private formBuilder = inject(FormBuilder);
+  private catalogService = inject(CatalogDataService);
+
+  @Output()
+  public filterParams: EventEmitter<{ activityName: string | null, activityType: string | null }> = new EventEmitter<{ activityName: string | null, activityType: string | null }>();
+
+  public catalogData: CatalogDataResponse | null = null;
+
+  public formFilter = this.formBuilder.group({
+    activityName: [''],
+    activityType: [''],
+  });
+
+  ngOnInit(): void {
+    this.catalogData = this.catalogService.catalogDataSignal;
+  }
+
+  public searchActivities() {
+    const activityName = this.formFilter.get('activityName')?.value || '';
+    const activityType = this.formFilter.get('activityType')?.value || '';
+    this.filterParams.emit({ activityName, activityType });
+  }
+
+  public clearFilter() {
+    this.formFilter.get('activityName')?.setValue('');
+    this.formFilter.get('activityType')?.setValue('');
+    this.filterParams.emit({ activityName: '', activityType: '' });
+  }
+
 }

@@ -2,11 +2,10 @@
     <div class="title-two">Editar Actividad</div>
     <div class="messages-container" style="margin: 5px">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
-        <span class="text-body-heavy"
-          >A continuación, se presenta el formulario para la edición de la
-          actividad del docente. Por favor, verifique que la información antes de guardar.
+        <span class="text-body-heavy">A continuación, se presenta el formulario para la edición de la
+            actividad del docente. Por favor, verifique que la información antes de guardar.
         </span>
-      </div>
+    </div>
     <form [formGroup]="activityForm" (ngSubmit)="openConfirmDialog()">
         <fieldset>
             <legend class="text-body-heavy">Tipo de actividad</legend>
@@ -221,8 +220,11 @@
                     <span *ngIf="isInvaldField('idStudent')" class="error-message text-body-small-r ms-1">
                         {{getFieldError('idStudent')}}
                     </span>
-                    <span class="error-message text-body-small-r ms-1" *ngIf="!evaluator && activityForm.get('idStudent')?.value">
-                        No existe un estudiante asociado a esa identificación. <a [routerLink]="['/app/gestion-usuarios/usuarios/nuevo-usuario']" routerLinkActive="router-link-active">Crear usuario</a>
+                    <span class="error-message text-body-small-r ms-1"
+                        *ngIf="!evaluator && activityForm.get('idStudent')?.value">
+                        No existe un estudiante asociado a esa identificación. <a
+                            [routerLink]="['/app/gestion-usuarios/usuarios/nuevo-usuario']"
+                            routerLinkActive="router-link-active">Crear usuario</a>
                     </span>
                 </div>
                 <!-- Actividad -->
@@ -241,6 +243,24 @@
                     </div>
                     <span *ngIf="isInvaldField('activity')" class="error-message text-body-small-r ms-1">
                         {{getFieldError('activity')}}
+                    </span>
+                </div>
+                <!-- Semillero de investigación -->
+                <div class="col-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control input-text text-body-custom"
+                            placeholder="Digitar respuesta" id="researchSeed" formControlName="researchSeed" [ngClass]="{
+                  'input-text-disabled': isDisabledField('researchSeed'),
+                  'error-input': isInvaldField('researchSeed'),
+                  'error-input-background': isInvaldField('researchSeed')
+                }" />
+                        <label for="researchSeed" class="label-custom text-body-small-sb" [ngClass]="{
+                  'error-label': isInvaldField('researchSeed')
+                }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*</span>
+                            Semillero de investigación</label>
+                    </div>
+                    <span *ngIf="isInvaldField('researchSeed')" class="error-message text-body-small-r ms-1">
+                        {{ getFieldError("researchSeed") }}
                     </span>
                 </div>
                 <!-- Informe ejecutivo (Sí o No) -->
@@ -297,7 +317,9 @@
             <legend class="text-body-heavy">Evaluador</legend>
             <div class="messages-container">
                 <img src="/assets/icons/messages/teacher.svg" alt="">
-               <span class="text-body-regular">En caso de que no exista un usuario evaluador registrado en el sistema, por favor crearlo <a [routerLink]="['/app/gestion-usuarios/usuarios/nuevo-usuario']" routerLinkActive="router-link-active">Crear usuario</a> </span>
+                <span class="text-body-regular">En caso de que no exista un usuario evaluador registrado en el sistema,
+                    por favor crearlo <a [routerLink]="['/app/gestion-usuarios/usuarios/nuevo-usuario']"
+                        routerLinkActive="router-link-active">Crear usuario</a> </span>
             </div>
             <div class="mb-2"></div>
             <div class="row">
@@ -319,7 +341,8 @@
                                     {{getFieldError('evaluatorId')}}
                                 </span>
                             </div>
-                            <div class="results" *ngIf="showEvaluatorIdDropdown && typeResulsSearchId && typeResulsSearchId.length>0">
+                            <div class="results"
+                                *ngIf="showEvaluatorIdDropdown && typeResulsSearchId && typeResulsSearchId.length>0">
                                 <table id="table-result-search" class="tableSearchUser table-hover table-borderless">
                                     <tbody>
                                         <ng-container
@@ -360,7 +383,8 @@
                                     {{getFieldError('evaluatorName')}}
                                 </span>
                             </div>
-                            <ng-container class="results" *ngIf="showEvaluatorNameDropdown && typeResulsSearchName.length>0">
+                            <ng-container class="results"
+                                *ngIf="showEvaluatorNameDropdown && typeResulsSearchName.length>0">
                                 <table id="table-result-search" class="tableSearchUser table-hover table-borderless">
                                     <tbody>
                                         <ng-container

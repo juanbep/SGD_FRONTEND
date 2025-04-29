@@ -24,12 +24,12 @@ export class UsersFilterComponent implements OnInit {
   public catalogData:CatalogDataResponse | null = null;
   
   formFilter: FormGroup = this.formBuilder.group({
-    nameUser: [null],
-    identification: [null],
-    faculty: [null],
-    program: [null],
-    rol:  [null],
-    state: [null]
+    nameUser: [''],
+    identification: [''],
+    faculty: [''],
+    program: [''],
+    rol:  [''],
+    state: ['']
   })
   
   stateOptions = [
@@ -61,7 +61,13 @@ export class UsersFilterComponent implements OnInit {
   }
 
   clearFilter() {
-    this.formFilter.reset();
+    this.formFilter.get('nameUser')?.setValue('');
+    this.formFilter.get('identification')?.setValue('');
+    this.formFilter.get('faculty')?.setValue('');
+    this.formFilter.get('program')?.setValue('');
+    this.formFilter.get('state')?.setValue('');
+    this.formFilter.get('rol')?.setValue('');
+    
     this.userServices.setParamsFilter({nameUser: '', identification: '', faculty: '', program: '', rol: '', state: ''});
   }
 

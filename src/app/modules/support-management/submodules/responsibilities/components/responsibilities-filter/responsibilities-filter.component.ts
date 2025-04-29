@@ -24,10 +24,10 @@ export class ResponsibilitiesFilterComponent {
      public catalogDataResponse: CatalogDataResponse | null = null; 
  
      formFilter: FormGroup = this.formBuilder.group({
-       activityType: [null],
-       activityName : [null],
-       evaluatorName: [null],
-       evaluatorRole  : [null],
+       activityType: [''],
+       activityName : [''],
+       evaluatorName: [''],
+       evaluatorRole  : [''],
      });
      
      ngOnInit(): void {
@@ -49,6 +49,6 @@ export class ResponsibilitiesFilterComponent {
    
      clearFilter(){
        this.formFilter.reset();
-       this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal(null, null, null, null);
+       this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal('', '', '', '');
      }
 }

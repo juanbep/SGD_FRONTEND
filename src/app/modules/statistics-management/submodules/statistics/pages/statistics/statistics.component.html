@@ -268,12 +268,19 @@
                 <option value="">Seleccionar periodo</option>
                 <option *ngFor="let period of academicPeriodResponse" [value]="period.oidPeriodoAcademico" >{{period.idPeriodo}}</option>
               </select>
+              
               <label
                 for="academicPeriod"
                 class="label-custom text-body-small-sb"
-                >Periodo académico</label
+                >*Periodo académico</label
               >
             </div>
+            <span
+              *ngIf="isInvaldField('academicPeriod')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("academicPeriod") }}
+            </span>
           </div>
           <div class="col">
             <div class="form-floating">
@@ -291,9 +298,16 @@
                 </option>
               </select>
               <label for="department" class="label-custom text-body-small-sb"
-                >Departamento</label
+                >*Departamento</label
               >
+              
             </div>
+            <span
+              *ngIf="isInvaldField('department')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("department") }}
+            </span>
           </div>
           <div class="col">
             <div class="form-floating">

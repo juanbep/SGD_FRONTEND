@@ -1,7 +1,7 @@
 <div class="line-filter"></div>
 
 <form [formGroup]="formFilter" (ngSubmit)="searchActivities()">
-    <div class="row row-cols-auto" >
+    <div class="row row-cols-auto">
         <div class="col-1" style="width: 50px;">
             <img src="assets/icons/tables/icon-filter.svg" alt="">
         </div>
@@ -10,7 +10,7 @@
                 <!-- Tipo de actividad -->
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="activityType">
-                        <option [value]="null" selected>Tipo de actividad</option>
+                        <option [value]="''" selected>Tipo de actividad</option>
                         <option *ngFor="let option of catalogDataResponse?.tipoActividades" value="{{option.codigo}}">
                             {{option.nombre | titlecase}}
                         </option>

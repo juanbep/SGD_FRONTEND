@@ -37,12 +37,12 @@ export class SideBarComponent implements OnInit {
       ],
     },
     {
-      role: ['JEFE DE DEPARTAMENTO'],
+      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO'],
+          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
           label: 'Usuarios',
           url: '/app/gestion-usuarios/usuarios',
         },

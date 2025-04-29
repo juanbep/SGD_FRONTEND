@@ -20,10 +20,10 @@ export class ConsolidatedTeacherFilterComponent implements OnInit {
   public catalogData: CatalogDataResponse | null = null;
 
   formFilter: FormGroup = this.formBuilder.group({
-    activityName: [null],
-    activityType: [null],
-    sourceType: [null],
-    sourceState: [null],
+    activityName: [''],
+    activityType: [''],
+    sourceType: [''],
+    sourceState: [''],
   });
 
   ngOnInit(): void {
@@ -44,12 +44,15 @@ export class ConsolidatedTeacherFilterComponent implements OnInit {
   }
 
   clearAction() {
-    this.formFilter.reset();
+    this.formFilter.get('activityType')?.setValue('');
+    this.formFilter.get('activityName')?.setValue('');
+    this.formFilter.get('sourceType')?.setValue('');
+    this.formFilter.get('sourceState')?.setValue('');
     this.ConsolidatedServicesService.setFilterActivitiesParams({
-      activityType: null,
-      activityName: null,
-      sourceType: null,
-      sourceState: null,
+      activityType: '',
+      activityName: '',
+      sourceType: '',
+      sourceState: '',
     });
   }
 }

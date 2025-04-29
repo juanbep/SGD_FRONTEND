@@ -12,7 +12,7 @@
                 </div>
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="activityType">
-                        <option [value]="null" selected>Tipo de actividad</option>
+                        <option [value]="''" selected>Tipo de actividad</option>
                         <option *ngFor="let activityType of catalogData?.tipoActividades" value="{{activityType.codigo}}">
                             {{activityType.nombre | titlecase}}
                         </option>

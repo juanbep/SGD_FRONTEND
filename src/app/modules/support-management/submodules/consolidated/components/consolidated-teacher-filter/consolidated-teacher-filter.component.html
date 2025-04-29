@@ -10,7 +10,7 @@
                 <!-- Tipo de actividad -->
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="activityType">
-                        <option [value]="null" selected>Tipo de actividad</option>
+                        <option [value]="''" selected>Tipo de actividad</option>
                         <option *ngFor="let option of catalogData?.tipoActividades" value="{{option.codigo}}">
                             {{option.nombre | titlecase}}
                         </option>
@@ -24,7 +24,7 @@
                 <!-- Tipo de fuente -->
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="sourceType">
-                        <option [value]="null" selected>Tipo de fuente</option>
+                        <option [value]="''" selected>Tipo de fuente</option>
                         <option value="1">
                             Fuente 1
                         </option>
@@ -36,7 +36,7 @@
                 <!-- Estado de la fuente -->
                 <div class="col m-1">
                     <select class="input-select-filter" formControlName="sourceState">
-                        <option [value]="null" selected>Ordenar estado por</option>
+                        <option [value]="''" selected>Ordenar estado por</option>
                         <option value="2">
                             Diligenciado
                         </option>

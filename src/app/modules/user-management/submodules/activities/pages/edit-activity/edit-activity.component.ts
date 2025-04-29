@@ -86,6 +86,7 @@ export class EditActivityComponent implements OnInit {
     ],
     projectName: [null, Validators.required],
     administrativeAct: [null, Validators.required],
+    researchSeed : [null, Validators.required],
     idStudent: [null, Validators.required],
     activity: [null, Validators.required],
     evaluatorName: [null, Validators.required],
@@ -338,6 +339,7 @@ export class EditActivityComponent implements OnInit {
     this.activityForm.get('evaluatorId')?.reset();
     this.activityForm.get('executiveReport')?.disable();
     this.activityForm.get('activityState')?.disable();
+    this.activityForm.get('researchSeed')?.reset();
   }
 
   disableFields(): void {
@@ -356,6 +358,7 @@ export class EditActivityComponent implements OnInit {
     this.activityForm.get('evaluatorId')?.disable();
     this.activityForm.get('executiveReport')?.disable();
     this.activityForm.get('activityState')?.disable();
+    this.activityForm.get('researchSeed')?.disable();
   }
 
   isDisabledField(field: string) {

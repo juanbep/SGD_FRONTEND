@@ -44,7 +44,7 @@
                                             <span class="text-body-regular">{{userActivities[i].nombreActividad}}</span>
                                         </td>
                                         <td>
-                                            <input [ngClass]="{'text-error': isInvalidField(item),
+                                            <input [ngClass]="{'error-message': isInvalidFormEvaluation(item),
                                                 'input-evaluation-disabled': this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA'
                                             }"
                                                 id="input-evaluation-edit" class="input-evaluation text-body-regular"
@@ -78,7 +78,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <span *ngIf="isInvalidField(activities)" class="text-body-regular text-error">La evaluación no
+                        <span *ngIf="isInvalidFormEvaluation(activities)" class="text-body-regular error-message">La evaluación no
                             debe ser un valor menor a 0, superior a 100 o alfanumérico</span>
                         <!--Sección carga de autoevaluación -->
 
@@ -126,6 +126,9 @@
                                 <span *ngIf="errorFileInput" class="text-body-regular text-error">Únicamente se permiten
                                     archivos en formato PDF</span>
                             </ng-template>
+                            <span *ngIf="isInvalidField('uploadFileSource')" class="error-message text-body-small-r ms-1">
+                                {{ getFieldError("uploadFileSource") }}
+                              </span>
                         </section>
                         <section id="comments-self-assessment">
                             <span class="title-three">Observaciones</span>

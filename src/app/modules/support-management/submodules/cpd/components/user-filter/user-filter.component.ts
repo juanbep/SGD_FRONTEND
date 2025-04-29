@@ -15,37 +15,43 @@ import { CatalogDataService } from '../../../../../../shared/services/catalogDat
   styleUrl: './user-filter.component.css'
 })
 export class UserFilterComponent implements OnInit {
-  
-  private formBuilder= inject(FormBuilder);
+
+  private formBuilder = inject(FormBuilder);
   private catalogService = inject(CatalogDataService);
 
   @Output()
-  public filterParams:EventEmitter<{nameUser:string | null, identification: string | null, category: string | null}> = new EventEmitter<{nameUser:string | null, identification: string | null, category: string | null}>();
+  public filterParams: EventEmitter<{ nameUser: string | null, identification: string | null, category: string | null, department:string | null }> = new EventEmitter<{ nameUser: string | null, identification: string | null, category: string | null, department:string | null  }>();
 
   public catalogData: CatalogDataResponse | null = null;
-  
+
   public formFilter = this.formBuilder.group({
-    nameUser: [null, [Validators.required]],
-    identification: [null, [Validators.required]],
-    category: [null, [Validators.required]],
+    nameUser: [''],
+    identification: [''],
+    category: [''],
+    department: [''],
   });
-  
+
   ngOnInit(): void {
     this.catalogData = this.catalogService.catalogDataSignal;
   }
 
-  public searchUsers(){
-    
-      const nameUser = this.formFilter.get('nameUser')?.value || null;
-      const identification = this.formFilter.get('identification')?.value || null;
-      const category = this.formFilter.get('category')?.value || null;
-      this.filterParams.emit({nameUser, identification, category});
-    
+  public searchUsers() {
+
+    const nameUser = this.formFilter.get('nameUser')?.value || '';
+    const identification = this.formFilter.get('identification')?.value || '';
+    const category = this.formFilter.get('category')?.value || '';
+    const department = this.formFilter.get('department')?.value || '';
+    this.filterParams.emit({ nameUser, identification, category, department });
+
   }
 
-  public clearFilter(){
-    this.formFilter.reset();
-    this.filterParams.emit({nameUser: null, identification: null, category: null});
+  public clearFilter() {
+    this.formFilter.get('nameUser')?.setValue('');
+    this.formFilter.get('identification')?.setValue('');
+    this.formFilter.get('category')?.setValue('');
+    this.formFilter.get('department')?.setValue('');
+
+    this.filterParams.emit({ nameUser: '', identification: '', category: '', department: '' });
   }
 
 

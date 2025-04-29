@@ -289,7 +289,7 @@ export class CpdWordGeneratorService {
                             },
                             ),
                             new TextRun({
-                                text: `Evaluar el desempeño del (la) profesor(a) ${teacherInfo.nombreDocente} de ${teacherInfo.dedicacion} en la categoría de ${teacherInfo.categoria}, adscrito al ${teacherInfo.departamento}, con una calificación cuantitativa de ${teacherConsolidated.totalAcumulado} puntos equivalentes a una calificación cualitativa ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, para el periodo comprendido entre el ${this.startPeriodDate} y el ${this.endPeriodDate}.`,
+                                text: `Evaluar el desempeño del (la) profesor(a) ${teacherInfo.nombreDocente} de ${teacherInfo.dedicacion} en la categoría de ${teacherInfo.categoria}, adscrito al ${teacherInfo.departamento}, con una calificación cuantitativa de ${teacherConsolidated.totalAcumulado.toFixed(2)} puntos equivalentes a una calificación cualitativa ${this.getDescritionQualification(teacherConsolidated.totalAcumulado)}, para el periodo comprendido entre el ${this.startPeriodDate} y el ${this.endPeriodDate}.`,
                                 size: 24,
                             }),
                         ],
@@ -422,9 +422,9 @@ export class CpdWordGeneratorService {
     getDescritionQualification(qualification: number): string {
         if (qualification >= 91 && qualification <= 100) {
             return 'EXCELENTE';
-        } else if (qualification >= 81 && qualification <= 90) {
+        } else if (qualification >= 81 && qualification < 91) {
             return 'BUENO';
-        } else if (qualification >= 70 && qualification <= 80) {
+        } else if (qualification >= 70 && qualification < 81) {
             return 'ACEPTABLE';
         } else {
             return 'Deficiente';
