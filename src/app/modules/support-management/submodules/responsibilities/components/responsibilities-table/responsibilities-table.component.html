@@ -43,7 +43,7 @@
             <img src="assets/icons/tables/icon-upload.svg" alt="icon-upload" title="Formulario carga de evaluación docente"/>
           </button>
           <button
-            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.nombre === 'TRABAJO DE DOCENCIA' || responsability.tipoActividad.nombre === 'TRABAJOS DE INVESTIGACION')"
+            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.oidTipoActividad === 1  || responsability.tipoActividad.oidTipoActividad === 7)"
             class="button-table"
             id="button-table"
             (click)="openFormEvaluation(responsability.oidActividad)" 
@@ -51,7 +51,7 @@
           <img src="assets/icons/tables/icon-form.svg" alt="iconoformularion evaluación" title="Formulario de evalución">
         </button>
         <button
-            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.nombre !== 'TRABAJO DE DOCENCIA' && responsability.tipoActividad.nombre !== 'TRABAJOS DE INVESTIGACION')"
+            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.oidTipoActividad !== 1 && responsability.tipoActividad.oidTipoActividad !== 7 && responsability.tipoActividad.oidTipoActividad !==9) "
             class="button-table"
             id="button-table"
             (click)="openCoordinatorFormEvaluation(responsability.oidActividad)" 
