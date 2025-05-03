@@ -21,7 +21,7 @@
           <th>
             <span class="text-body-regular">Nombre del director/a</span>
             <br />
-            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluador?.nombreCompleto}}</span>
+            <span class="text-body-small-sb">{{responsibility?.Fuente?.evaluado?.nombreCompleto}}</span>
           </th>
           <th>
             <span class="text-body-regular">fecha de evaluación (última actualización)</span>
@@ -528,7 +528,7 @@
                 <div class="file-details">
                   <p class="file-title text-body-small-sb">Firma</p>
                   <p class="file-name text-body-small-sb">
-                    {{ formEvaluation.get("studentSignature")?.value.name }}
+                    {{this.selectedFiles.signature?.name || ''}}
                   </p>
                 </div>
                 <div class="file-actions">

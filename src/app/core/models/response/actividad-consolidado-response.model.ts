@@ -17,7 +17,7 @@ export interface Actividades {
   'EXTENSIÓN': InformacionActividad[];
   'ASESORÍA': InformacionActividad[];
   'CAPACITACIÓN': InformacionActividad[];
-  'OTRO SERVICIO': InformacionActividad[];
+  'OTROS SERVICIOS': InformacionActividad[];
 }
 
 export interface InformacionActividad {

@@ -545,7 +545,7 @@
                 <div class="file-details">
                   <p class="file-title text-body-small-sb">Firma</p>
                   <p class="file-name text-body-small-sb">
-                    {{ formEvaluation.get("studentSignature")?.value.name }}
+                    {{this.selectedFiles.signature?.name || ''}}
                   </p>
                 </div>
                 <div class="file-actions">

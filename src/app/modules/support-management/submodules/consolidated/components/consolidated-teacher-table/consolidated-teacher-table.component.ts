@@ -140,8 +140,8 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
         return this.consolidatedTeacher?.actividades['EXTENSIÓN'] || [];
       case 'CAPACITACIÓN':
         return this.consolidatedTeacher?.actividades['CAPACITACIÓN'] || [];
-      case 'OTRO SERVICIO':
-        return this.consolidatedTeacher?.actividades['OTRO SERVICIO'] || [];
+      case 'OTROS SERVICIOS':
+        return this.consolidatedTeacher?.actividades['OTROS SERVICIOS'] || [];
 
       default:
         return [];
