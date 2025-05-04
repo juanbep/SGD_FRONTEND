@@ -9,6 +9,7 @@ import { PeriodoAcademicoResponse } from '../../../../core/models/response/perio
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
 import { PeriodoAcademicoKiraResponse } from '../../../../core/models/response/periodo-academico-kira-response.model';
 import { LoadingOverleyComponent } from "../../../../shared/components/loading-overley/loading-overley.component";
+import { ModalConfirmGetInfoKiraComponent } from '../../components/modal-confirm-get-info-kira/modal-confirm-get-info-kira.component';
 
 const ACTIVE_PERIOD_STATUS_ID = 1;
 const PAGE_SIZE = 10;
@@ -21,7 +22,8 @@ const PAGE_SIZE = 10;
     ModalEditAcademicPeriodComponent,
     CommonModule,
     PaginatorComponent,
-    LoadingOverleyComponent
+    LoadingOverleyComponent,
+    ModalConfirmGetInfoKiraComponent
 ],
   templateUrl: './academic-period-management.component.html',
   styleUrl: './academic-period-management.component.css',
@@ -44,6 +46,9 @@ export class AcademicPeriodManagementComponent implements OnInit {
 
   @ViewChild(ModalEditAcademicPeriodComponent)
   modalEditAcademicPeriod!: ModalEditAcademicPeriodComponent;
+
+  @ViewChild(ModalConfirmGetInfoKiraComponent)
+  modalConfirmGetInfoKira!: ModalConfirmGetInfoKiraComponent;
 
   constructor() {
     effect(() => {
@@ -104,6 +109,10 @@ export class AcademicPeriodManagementComponent implements OnInit {
 
   
   loadInfoTechersAndActivities() {
+    this.modalConfirmGetInfoKira.open();
+  }
+
+  confirmLoadInfoTechersAndActivities() {
     if (!this.currentAcademicPeriod) {
       this.messagesInfoService.showErrorMessage(
         'No hay un periodo académico activo',

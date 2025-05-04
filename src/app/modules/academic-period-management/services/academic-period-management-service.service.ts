@@ -4,6 +4,7 @@ import { catchError, of, tap } from 'rxjs';
 import { PeriodoAcademicoResponse } from '../../../core/models/response/periodo-academico-response.model';
 import { PeriodoAcademicoCreate } from '../../../core/models/modified/periodo-academico-create.model';
 import { PagedResponse } from '../../../core/models/response/paged-response.model';
+import { UmUsersServicesService } from '../../../core/services/users-management/um-users-services.service';
 
 @Injectable({providedIn: 'root'})
 export class AcademicPeriodManagementService {
@@ -13,6 +14,7 @@ export class AcademicPeriodManagementService {
 
     private apmAcademicPeriodManagementService = inject(ApmAcademicPeriodManagementService);
 
+    private umUsersServicesService = inject(UmUsersServicesService);
 
     private _currentAcademicPeriod = signal<PeriodoAcademicoResponse | null>(null);
 
@@ -98,6 +100,26 @@ export class AcademicPeriodManagementService {
     * */
     getAcademicPeriodsByKira(){
         return this.apmAcademicPeriodManagementService.getAcademicPeriodsByKira();
+    }
+
+    /*
+    * Method to get users by params
+    * @param page: number
+    * @param size: number
+    * @param userId: string | null
+    * @param userName: string | null
+    *  @param faculty: string | null
+    * @param department: string | null
+    * @param category: string | null
+    * @param hiring: string | null
+    * @param dedication: string | null
+    * @param studies: string | null
+    * @param rol: string | null
+    * @param state: string | null
+    * @returns Observable<UsersResponse>
+    * */
+    getUsersByParams(page: number, size: number, userId: string | null, userName:string | null, faculty: string | null, department: string | null, category: string | null, hiring: string | null, dedication: string | null, studies: string | null, rol: string | null, state: string | null){
+        return this.umUsersServicesService.getAllUsersByParams(page,size,userId,userName,faculty,department,category,hiring,dedication,studies,rol,state);
     }
 
 }

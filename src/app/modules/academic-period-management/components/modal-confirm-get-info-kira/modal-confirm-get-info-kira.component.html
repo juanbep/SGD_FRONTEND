@@ -1,0 +1,90 @@
+<div class="modal fade" id="modal-confirm-dialog-kira" data-bs-backdrop="static" tabindex="1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row row-cols-auto align-items-center">
+                    <div class="col" class="align-self-center">
+                        <img src="/assets/icons/messages/icon-info.svg" alt="">
+                    </div>
+                    <div class="col" class="title-three mx-3">
+                        Confirmar carga de información
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="form">
+                <div class="modal-body">
+                    <span class="text-body-heavy">Confirmar que los departamento de la facultad cuentan con sus respectivos Jefes de Departamento y existe un Decano para la facultad</span>
+                    <div class="mb-3"></div>
+                    <div class="row row-cols-auto mb-3">
+                        <div>
+                            <ul>
+                                <span class="text-body-small-sb"> Jefes de departamentos</span>
+                                <li *ngFor="let boss of bossDepartament">
+                                    <ng-container
+                                        *ngIf="boss.usuarioDetalle.departamento === 'DEPARTAMENTO DE ELECTRONICA INSTRUMENTACION Y CONTROL'">
+                                        <input type="checkbox" id="departamento-electronica" class="form-check-input" formControlName="checkbox1">
+                                        <label for="departamento-electronica"
+                                            class="form-check-label text-body-small-r"> Electrónica, Intrumentación y
+                                            Control:
+                                            {{boss.nombres | titlecase}} {{boss.apellidos | titlecase}} -
+                                            {{boss.identificacion}}
+                                        </label>
+                                    </ng-container>
+
+                                    <ng-container
+                                        *ngIf="boss.usuarioDetalle.departamento === 'DEPARTAMENTO DE TELECOMUNICACIONES'" >
+                                        <input type="checkbox" id="departamento-telecomunicaciones"
+                                            class="form-check-input" formControlName="checkbox2">
+                                        <label for="departamento-telecomunicaciones"
+                                            class="form-check-label text-body-small-r"> Telecomunicaciones:
+                                            {{boss.nombres | titlecase}} {{boss.apellidos | titlecase }} -
+                                            {{boss.identificacion}}
+                                        </label>
+                                    </ng-container>
+
+                                    <ng-container
+                                        *ngIf="boss.usuarioDetalle.departamento === 'DEPARTAMENTO DE TELEMATICA'">
+                                        <input type="checkbox" id="departamento-telematica" class="form-check-input" formControlName="checkbox3">
+                                        <label for="departamento-telematica"
+                                            class="form-check-label text-body-small-r" > Telemática:
+                                            {{boss.nombres | titlecase}} {{boss.apellidos | titlecase }} -
+                                            {{boss.identificacion}}
+                                        </label>
+                                    </ng-container>
+
+                                    <ng-container
+                                        *ngIf="boss.usuarioDetalle.departamento === 'DEPARTAMENTO DE SISTEMAS'">
+                                        <input type="checkbox" id="departamento-sistemas" class="form-check-input" formControlName="checkbox4">
+                                        <label for="departamento-sistemas"
+                                            class="form-check-label text-body-small-r"> Sistemas:
+                                            {{boss.nombres | titlecase}} {{boss.apellidos | titlecase }} -
+                                            {{boss.identificacion}}
+                                        </label>
+                                    </ng-container>
+                                </li>
+                                <span class="text-body-small-sb">Decano</span>
+                                <li *ngIf="decano.length > 0">
+                                    <input type="checkbox" id="decano" class="form-check-input" formControlName="checkbox5">
+                                    <label for="decano" class="form-check-label text-body-small-r">Facultad de
+                                        Ingeniería Electrónica y Telecomunicaciones
+                                        {{decano[0].nombres | titlecase}} {{decano[0].apellidos | titlecase }} -
+                                        {{decano[0].identificacion}}
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="error-message" *ngIf="departmentWithoutBoss.length>0">Actualmente, los siguientes departamentos no tienen un jefe asignado: <span class="text-body-heavy" style="color: var(--error-ligth)">{{departmentWithoutBoss.join(', ') | titlecase }}</span>. Para asignar los roles correspondientes a los usuarios o crear nuevos, ingrese al siguiente enlace  <a data-bs-dismiss="modal" [routerLink]="['/app/gestion-usuarios/usuarios']" routerLinkActive="router-link-active">Usuarios</a></p>
+                    <p class="error-message" *ngIf="!decano.length">Actualmente, la facultad no tiene un decano asignado. Para asignar los roles correspondientes a los usuarios o crear nuevos, ingrese al siguiente enlace  <a data-bs-dismiss="modal" [routerLink]="['/app/gestion-usuarios/usuarios']" routerLinkActive="router-link-active">Usuarios</a></p>
+                    <p class="text-body-small-sb" *ngIf="!departmentWithoutBoss.length && decano.length>0">Si desea asignar nuevos roles a los usuarios, ingrese al siguiente enlace <a data-bs-dismiss="modal" [routerLink]="['/app/gestion-usuarios/usuarios']" routerLinkActive="router-link-active">Usuarios</a></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button-normal text-body-heavy" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="button-normal text-body-heavy" [ngClass]="{
+                        'button-normal-disabled': form.invalid,
+                    }" data-bs-dismiss="modal" [disabled]="form.invalid" (click)="onConfirm()">Aceptar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
