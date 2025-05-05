@@ -23,6 +23,14 @@ export class ActivitiesFilterComponent {
   
     public catalogDataResponse: CatalogDataResponse | null = null; 
 
+    
+  public filterParams: {
+    activityName: string | null;
+    activityType: string | null;
+    evaluatorName: string | null;
+    evaluatorRole: string | null;
+  } | null = null;
+
     formFilter: FormGroup = this.formBuilder.group({
       activityType: [''],
       activityName : [''],
@@ -32,6 +40,11 @@ export class ActivitiesFilterComponent {
     
     ngOnInit(): void {
       this.recoverCatalog();
+      const filterParams = this.activitiesServicesService.getParamsActivitiesFilterSignal();
+      this.formFilter.get('activityType')?.setValue(filterParams.activityType || '');
+      this.formFilter.get('activityName')?.setValue(filterParams.activityName || '');
+      this.formFilter.get('evaluatorName')?.setValue(filterParams.evaluatorName || '');
+      this.formFilter.get('evaluatorRole')?.setValue(filterParams.evaluatorRole || '');
     }
   
     recoverCatalog(){

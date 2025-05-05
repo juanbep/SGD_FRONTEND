@@ -13,7 +13,8 @@ import { ButtonProvidersComponent } from '../../component/button-providers/butto
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css',
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit {
+
   private router: Router = inject(Router);
   private authServicesService: AuthServiceService = inject(AuthServiceService);
   private messagesInfoService: MessagesInfoService =
@@ -27,6 +28,16 @@ export class LoginPageComponent {
       this.messagesInfoService.showSuccessMessage('Bienvenido', 'Éxito');
     }
   });
+
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    const originalToken = localStorage.getItem('originalToken');
+    if (token && originalToken) {
+      this.router.navigate(['/app/home']);
+    } else {
+      this.authServicesService.logout();
+    }
+  }
 
   onLoginGoogle(login: boolean) {
     if (!login) return;

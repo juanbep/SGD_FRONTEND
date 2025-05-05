@@ -22,6 +22,9 @@ export class ActivitiesFilterComponent implements OnInit {
 
   private activityManagementService = inject(ActivitiesManagementService);
   public catalogDataResponse: CatalogDataResponse | null = null;
+
+  public filterParams: {nameActivity: string | null, typeActivity: string | null, activityCode: string | null, administrativeCode: string | null, vriCode: string | null} | null = null;
+
   
   formFilter: FormGroup = this.formBuilder.group({
     activityType: [''],
@@ -33,6 +36,10 @@ export class ActivitiesFilterComponent implements OnInit {
   
   ngOnInit(): void {
     this.recoverCatalog();
+    
+    const paramsFilter = this.activityManagementService.getParamsActivitiesFilter();
+    this.formFilter.get('activityType')?.setValue(paramsFilter?.typeActivity || '');
+    this.formFilter.get('activityName')?.setValue(paramsFilter?.nameActivity || '');
   }
 
   recoverCatalog(){

@@ -1,5 +1,6 @@
 import {
   Component,
+  effect,
   inject,
   OnInit,
   ViewChild,
@@ -59,55 +60,42 @@ export class CpdComponent implements OnInit {
   public currentUser: UsuarioResponse | null = null;
   public emailMessage: string = '';
   public filterParams: {
-    nameUser: string | null;
-    identification: string | null;
+    evaluatedName: string | null;
+    evaluatedId: string | null;
     category: string | null;
     department: string | null;
-  } = { nameUser: null, identification: null, category: null, department: null };
+  } = { evaluatedName: null, evaluatedId: null, category: null, department: null };
   public teacherByDepartment: PagedResponse<UsuarioConsolidadoCreadoResponse> | null =
     null;
 
   public userSelectedToCreateRelution: UsuarioConsolidadoCreadoResponse | null = null;
   public bossDepartment: UsuarioResponse | null = null;
-  public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
 
+  filterEffect = effect(() => {
+    this.filterParams = this.cpdServiceServices.getFilterTeacherParams();
+    this.recoverTeachers(
+      this.currentPage,
+      TOTAL_PAGE,)
+  });
 
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
-    this.activeAcademicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue
-    this.academicPeriodActive =
-      this.academicPeriodManagementService.currentAcademicPeriodValue;
-    if (this.currentUser && (this.currentUser.usuarioDetalle.departamento || this.currentUser.roles.find((rol) => rol.oid === ROLES.SECRETARIA_O_FACULTAD))) {
-      this.recoverTeachers(
-        this.currentPage,
-        TOTAL_PAGE,
-        null,
-        null,
-        null,
-        null,
-        ID_ROL
-      );
-    }
+    this.academicPeriodActive = this.academicPeriodManagementService.currentAcademicPeriodValue;
   }
 
   recoverTeachers(
     page: number,
     totalPage: number,
-    department: string | null,
-    userId: string | null,
-    userName: string | null,
-    category: string | null,
-    rol: string
   ) {
     this.cpdServiceServices
       .getUsersWithConsolidatedCreated(
         page - 1,
         totalPage,
-        department,
-        userId,
-        userName,
-        category,
-        rol
+        this.filterParams.department,
+        this.filterParams.evaluatedId,
+        this.filterParams.evaluatedName,
+        this.filterParams.category,
+        ID_ROL
       )
       .subscribe((response) => {
         response
@@ -118,38 +106,10 @@ export class CpdComponent implements OnInit {
 
   pageChanged(page: number) {
     this.currentPage = page;
-    if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
-      this.recoverTeachers(
-        this.currentPage,
-        TOTAL_PAGE,
-        null,
-        this.filterParams.nameUser,
-        this.filterParams.identification,
-        this.filterParams.category,
-        ID_ROL
-      );
-    }
-  }
-
-  filterAction(event: {
-    nameUser: string | null;
-    identification: string | null;
-    category: string | null;
-    department: string | null;
-  }) {
-    if (this.currentUser && this.currentUser.usuarioDetalle.departamento) {
-      this.filterParams = event;
-      this.currentPage = 1;
-      this.recoverTeachers(
-        this.currentPage,
-        TOTAL_PAGE,
-        this.filterParams.department,
-        this.filterParams.identification,
-        this.filterParams.nameUser,
-        this.filterParams.category,
-        ID_ROL
-      );
-    }
+    this.recoverTeachers(
+      this.currentPage,   
+      TOTAL_PAGE);
+    
   }
 
   recoverBossDepartment(teacherDepartment: string = '') {

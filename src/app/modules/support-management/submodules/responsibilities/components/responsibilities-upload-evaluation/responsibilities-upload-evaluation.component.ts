@@ -46,6 +46,14 @@ export class ResponsibilitiesUploadEvaluationComponent {
   public isLoading: boolean = false;
   public form: FormGroup;
 
+  public filterParams: {
+    activityName: string | null;
+    activityType: string | null;
+    evaluatorName: string | null;
+    evaluatorRole: string | null;
+  } | null = null;
+
+
   constructor(
     private service: ResponsibilitiesServicesService,
     private toastr: MessagesInfoService,
@@ -170,8 +178,14 @@ export class ResponsibilitiesUploadEvaluationComponent {
               'Evaluación guardada correctamente',
               'Éxito'
             );
-            this.service.setParamsActivitiesFilterSignal(null, null, null, null);
             this.closeModal();
+            const filterParams = this.service.getParamsActivitiesFilterSignal();
+            this.service.setParamsActivitiesFilterSignal(
+              filterParams.activityName,
+              filterParams.activityType,
+              filterParams.evaluatorName,
+              filterParams.evaluatorRole
+            );
           },
           error: (error) => {
             this.toastr.showErrorMessage('Error al guardar la información', 'Error');

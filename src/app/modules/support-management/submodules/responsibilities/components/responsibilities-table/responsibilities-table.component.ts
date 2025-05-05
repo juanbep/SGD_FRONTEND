@@ -84,13 +84,6 @@ export class ResponsibilitiesTableComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.responsabilitiesServices.setParamsActivitiesFilterSignal(
-      null,
-      null,
-      null,
-      null
-    );
-
   }
 
   private recoverResponsabilities(page: number, totalPage: number) {

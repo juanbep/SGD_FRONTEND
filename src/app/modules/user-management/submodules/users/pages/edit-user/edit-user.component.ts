@@ -49,6 +49,7 @@ export class EditUserComponent implements OnInit {
     idUser: [null, [Validators.required, Validators.pattern(this.validatorsService.numericPattern)]],
     faculty: [null, Validators.required],
     program: [null, Validators.required],
+    department: [null, Validators.required],
     typeContract: [null, Validators.required],
     studies: [null, Validators.required],
     category: [null, Validators.required],
@@ -71,8 +72,8 @@ export class EditUserComponent implements OnInit {
     this.idUserParam = this.activateRoute.snapshot.params['id']
     this.catalogData = this.catalogDataService.catalogDataSignal;
     this.disableField();
-    this.changesInRoleField();
     this.recoverData();
+    this.changesInRoleField();
   }
 
   /*
@@ -115,7 +116,8 @@ export class EditUserComponent implements OnInit {
     this.editUserForm.get('email')?.setValue(userInfoResponse.correo);
     this.editUserForm.get('idUser')?.setValue(userInfoResponse.identificacion);
     this.editUserForm.get('faculty')?.setValue(userInfoResponse.usuarioDetalle.facultad);
-    this.editUserForm.get('program')?.setValue(userInfoResponse.usuarioDetalle.departamento);
+    this.editUserForm.get('department')?.setValue(userInfoResponse.usuarioDetalle.departamento);
+    this.editUserForm.get('program')?.setValue(userInfoResponse.usuarioDetalle.programa);
     this.editUserForm.get('typeContract')?.setValue(userInfoResponse.usuarioDetalle.contratacion);
     this.editUserForm.get('studies')?.setValue(userInfoResponse.usuarioDetalle.estudios);
     this.editUserForm.get('category')?.setValue(userInfoResponse.usuarioDetalle.categoria);
@@ -169,7 +171,7 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('email')?.enable();
           this.editUserForm.get('idUser')?.enable();
           this.editUserForm.get('faculty')?.enable();
-          this.editUserForm.get('program')?.enable();
+          this.editUserForm.get('department')?.enable();
           this.editUserForm.get('typeContract')?.enable();
           this.editUserForm.get('studies')?.enable();
           this.editUserForm.get('category')?.enable();
@@ -202,7 +204,7 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('email')?.enable();
           this.editUserForm.get('idUser')?.enable();
           this.editUserForm.get('faculty')?.enable();
-          this.editUserForm.get('program')?.enable();
+          this.editUserForm.get('department')?.enable();
           this.editUserForm.get('state')?.enable();
           break;
         //Secretaria/o facultad
@@ -221,7 +223,7 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('email')?.enable();
           this.editUserForm.get('idUser')?.enable();
           this.editUserForm.get('faculty')?.enable();
-          this.editUserForm.get('program')?.enable();
+          this.editUserForm.get('department')?.enable();
           this.editUserForm.get('state')?.enable();
           break;
         
@@ -232,7 +234,7 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('email')?.enable();
           this.editUserForm.get('idUser')?.enable();
           this.editUserForm.get('faculty')?.enable();
-          this.editUserForm.get('program')?.enable();
+          this.editUserForm.get('department')?.enable();
           this.editUserForm.get('state')?.enable();
           break;
         default:
@@ -307,6 +309,7 @@ export class EditUserComponent implements OnInit {
     this.editUserForm.get('email')?.disable();
     this.editUserForm.get('idUser')?.disable();
     this.editUserForm.get('faculty')?.disable();
+    this.editUserForm.get('department')?.disable();
     this.editUserForm.get('program')?.disable();
     this.editUserForm.get('typeContract')?.disable();
     this.editUserForm.get('studies')?.disable();
@@ -334,7 +337,8 @@ export class EditUserComponent implements OnInit {
         usuarioDetalle: {
           oidUsuarioDetalle: this.userInformation?.usuarioDetalle.oidUsuarioDetalle,
           facultad: this.editUserForm.get('faculty')?.value,
-          departamento: this.editUserForm.get('program')?.value,
+          departamento: this.editUserForm.get('department')?.value,
+          programa: this.editUserForm.get('program')?.value,
           categoria: this.editUserForm.get('category')?.value,
           contratacion: this.editUserForm.get('typeContract')?.value,
           dedicacion: this.editUserForm.get('dedication')?.value,
@@ -372,6 +376,7 @@ export class EditUserComponent implements OnInit {
     this.editUserForm.get('email')?.status === 'DISABLED' ? this.editUserForm.get('email')?.reset() : null;
     this.editUserForm.get('idUser')?.status === 'DISABLED' ? this.editUserForm.get('idUser')?.reset() : null;
     this.editUserForm.get('faculty')?.status === 'DISABLED' ? this.editUserForm.get('faculty')?.reset() : null;
+    this.editUserForm.get('department')?.status === 'DISABLED' ? this.editUserForm.get('department')?.reset() : null;
     this.editUserForm.get('program')?.status === 'DISABLED' ? this.editUserForm.get('program')?.reset() : null;
     this.editUserForm.get('typeContract')?.status === 'DISABLED' ? this.editUserForm.get('typeContract')?.reset() : null;
     this.editUserForm.get('studies')?.status === 'DISABLED' ? this.editUserForm.get('studies')?.reset() : null;
@@ -400,6 +405,6 @@ export class EditUserComponent implements OnInit {
   * Method to go back
   * */
   goBack() {
-    this.router.navigate(['/app/gestion-usuarios/usuarios']);
+    this.router.navigate(['/app/gestion-usuarios/usuarios']); 
   }
 }

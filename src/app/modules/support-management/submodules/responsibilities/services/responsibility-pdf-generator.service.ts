@@ -64,8 +64,8 @@ export class ResponsibilityPdfGeneratorService {
         [
           'Nombre del director:',
           studentInfo.directorName || '',
-          'Departamento:',
-          studentInfo.department || '',
+          'Programa:',
+          studentInfo.program || '',
         ],
         [
           'Nombre del estudiante:',

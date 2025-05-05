@@ -18,7 +18,12 @@ export class TeachersListFilterComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private consolidatedServicesService = inject(ConsolidatedServicesService);
 
-  
+  public filterParams: {
+    evaluatedName: string | null;
+    evaluatedId: string | null;
+    contractType: string | null;
+  } | null = null;
+
 
   public catalogDataResponse: CatalogDataResponse | null = null;
 
@@ -38,6 +43,10 @@ export class TeachersListFilterComponent {
 
   ngOnInit(): void {
     this.catalogDataResponse = this.catalogServicesService.catalogDataSignal;
+    const filterParams = this.consolidatedServicesService.getFilterTeacherParams();
+    this.formFilter.get('evaluatedName')?.setValue(filterParams?.evaluatedName || '');
+    this.formFilter.get('contractType')?.setValue(filterParams?.contractType || '');
+    this.formFilter.get('evaluatedId')?.setValue(filterParams?.evaluatedId || '');
   }
 
   searchTeachers() {

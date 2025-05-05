@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { SmCpdServicesService } from '../../../../../core/services/support-management/sm-cpd-services.service';
 import { SmActivitiesServicesService } from '../../../../../core/services/support-management/sm-activities-services.service';
 import { UmUsersServicesService } from '../../../../../core/services/users-management/um-users-services.service';
@@ -10,6 +10,27 @@ export class CpdServicesService {
   smActivitiesServicesService = inject(SmActivitiesServicesService);
   smConsolidatedServicesService = inject(SmConsolidatedServicesService);
   umUsersServicesService = inject(UmUsersServicesService);
+
+  private filterTeacherParams: WritableSignal<{
+    evaluatedName: string | null;
+    evaluatedId: string | null;
+    category: string | null;
+    department: string | null;
+  }> = signal({ evaluatedName: null, evaluatedId: null, category: null, department: null });
+
+
+  setFilterTeacherParams(newData: {
+    evaluatedName: string | null;
+    evaluatedId: string | null;
+    category: string | null;
+    department: string | null;
+  }) {
+    this.filterTeacherParams.update((data) => (data = newData));
+  }
+
+  getFilterTeacherParams() {
+    return this.filterTeacherParams();
+  }
 
   /*
    * Get users with consolidated created

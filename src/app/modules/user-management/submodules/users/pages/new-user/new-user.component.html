@@ -112,6 +112,27 @@
                 </div>
                 <div class="col-3">
                     <div class="form-floating">
+                        <select class="form-select input-select text-body-custom" id="department" formControlName="department"
+                            [ngClass]="{
+                                'input-select-disabled': isDisabledField('department'),
+                                'error-input': isInvaldField('department'),
+                                'error-select-background': isInvaldField('department')
+                                }">
+                            <option [ngValue]="null" selected>Seleccione respuesta</option>
+                            <option *ngFor="let department of catalogDataResponse?.departamentos" [value]="department.codigo">
+                                {{department.nombre | titlecase}}
+                            </option>
+                        </select>
+                        <label for="department" class="label-custom text-body-small-sb" [ngClass]="{
+                            'error-label': isInvaldField('department')
+                        }">Departamento</label>
+                    </div>
+                    <span *ngIf="isInvaldField('department')" class="error-message text-body-small-r ms-1">
+                        {{getFieldError('department')}}
+                    </span>
+                </div>
+                <div class="col-3">
+                    <div class="form-floating">
                         <select class="form-select input-select text-body-custom" id="program" formControlName="program"
                             [ngClass]="{
                                 'input-select-disabled': isDisabledField('program'),
@@ -119,13 +140,13 @@
                                 'error-select-background': isInvaldField('program')
                                 }">
                             <option [ngValue]="null" selected>Seleccione respuesta</option>
-                            <option *ngFor="let program of catalogDataResponse?.departamentos" [value]="program.codigo">
+                            <option *ngFor="let program of catalogDataResponse?.programas" [value]="program.codigo">
                                 {{program.nombre | titlecase}}
                             </option>
                         </select>
                         <label for="program" class="label-custom text-body-small-sb" [ngClass]="{
                             'error-label': isInvaldField('program')
-                        }">Departamento</label>
+                        }">Programa</label>
                     </div>
                     <span *ngIf="isInvaldField('program')" class="error-message text-body-small-r ms-1">
                         {{getFieldError('program')}}
@@ -153,6 +174,9 @@
                         {{getFieldError('typeContract')}}
                     </span>
                 </div>
+                
+            </div>
+            <div class="row mb-3">
                 <div class="col-3">
                     <div class="form-floating">
                         <select class="form-select input-select text-body-custom" id="studies" formControlName="studies"
@@ -174,8 +198,6 @@
                         {{getFieldError('studies')}}
                     </span>
                 </div>
-            </div>
-            <div class="row mb-3">
                 <div class="col-3">
                     <div class="form-floating">
                         <select class="form-select input-select text-body-custom" id="category"
@@ -243,7 +265,7 @@
 
         <div class="row row-cols-auto justify-content-center">
             <div class="col d-flex justify-content-center">
-                <button type="" class="button-normal" (click)="goBack()">Volver</button>
+                <button type="button" class="button-normal" (click)="goBack()">Volver</button>
                 <button type="submit" class="button-normal" (click)="openConfirmDialog()">Guardar</button>
             </div>
 

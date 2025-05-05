@@ -348,7 +348,7 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
     const studentInfo = {
       name: this.evaluador?.nombres + ' ' + this.evaluador?.apellidos,
       id: this.evaluado?.identificacion,
-      department: this.evaluado?.usuarioDetalle.departamento,
+      program: this.evaluador?.usuarioDetalle.programa,
       directorName: this.evaluado?.nombres + ' ' + this.evaluado?.apellidos,
       evaluationDate: this.currentDate.toLocaleDateString(),
       totalAverage: this.totalAverage,

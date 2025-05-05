@@ -43,7 +43,8 @@ export class NewUserComponent implements OnInit {
     email: [null, [Validators.required, Validators.email]],
     idUser: [null, [Validators.required, Validators.pattern(this.validatorsService.numericPattern)]],
     faculty: [null, Validators.required],
-    program: [null, Validators.required],
+    department: [null, Validators.required],
+    program : [null, Validators.required],
     typeContract: [null, Validators.required],
     studies: [null, Validators.required],
     category: [null, Validators.required],
@@ -104,12 +105,13 @@ export class NewUserComponent implements OnInit {
     this.newUserForm.get('email')?.disable();
     this.newUserForm.get('idUser')?.disable();
     this.newUserForm.get('faculty')?.disable();
-    this.newUserForm.get('program')?.disable();
+    this.newUserForm.get('department')?.disable();
     this.newUserForm.get('typeContract')?.disable();
     this.newUserForm.get('studies')?.disable();
     this.newUserForm.get('category')?.disable();
     this.newUserForm.get('dedication')?.disable();
     this.newUserForm.get('state')?.disable();
+    this.newUserForm.get('program')?.disable();
   }
 
   /*
@@ -142,7 +144,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('email')?.enable();
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('faculty')?.enable();
-          this.newUserForm.get('program')?.enable();
+          this.newUserForm.get('department')?.enable();
           this.newUserForm.get('typeContract')?.enable();
           this.newUserForm.get('studies')?.enable();
           this.newUserForm.get('category')?.enable();
@@ -156,8 +158,8 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('email')?.enable();
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('faculty')?.enable();
-          this.newUserForm.get('program')?.enable();
           this.newUserForm.get('state')?.enable();
+          this.newUserForm.get('program')?.enable();
           break;
         //Decano
         case '3':
@@ -175,7 +177,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('email')?.enable();
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('faculty')?.enable();
-          this.newUserForm.get('program')?.enable();
+          this.newUserForm.get('department')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
         //Secretaria/o facultad
@@ -194,7 +196,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('email')?.enable();
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('faculty')?.enable();
-          this.newUserForm.get('program')?.enable();
+          this.newUserForm.get('department')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
         
@@ -205,7 +207,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('email')?.enable();
           this.newUserForm.get('idUser')?.enable();
           this.newUserForm.get('faculty')?.enable();
-          this.newUserForm.get('program')?.enable();
+          this.newUserForm.get('department')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
         default:
@@ -257,7 +259,8 @@ export class NewUserComponent implements OnInit {
           },
           usuarioDetalle: {
             facultad: this.newUserForm.get('faculty')?.value,
-            departamento: this.newUserForm.get('program')?.value,
+            departamento: this.newUserForm.get('department')?.value,
+            programa: this.newUserForm.get('program')?.value,
             categoria: this.newUserForm.get('category')?.value,
             contratacion: this.newUserForm.get('typeContract')?.value,
             dedicacion: this.newUserForm.get('dedication')?.value,
@@ -315,7 +318,7 @@ export class NewUserComponent implements OnInit {
     this.newUserForm.get('email')?.status === 'DISABLED' ? this.newUserForm.get('email')?.reset() : null;
     this.newUserForm.get('idUser')?.status === 'DISABLED' ? this.newUserForm.get('idUser')?.reset() : null;
     this.newUserForm.get('faculty')?.status === 'DISABLED' ? this.newUserForm.get('faculty')?.reset() : null;
-    this.newUserForm.get('program')?.status === 'DISABLED' ? this.newUserForm.get('program')?.reset() : null;
+    this.newUserForm.get('department')?.status === 'DISABLED' ? this.newUserForm.get('department')?.reset() : null;
     this.newUserForm.get('typeContract')?.status === 'DISABLED' ? this.newUserForm.get('typeContract')?.reset() : null;
     this.newUserForm.get('studies')?.status === 'DISABLED' ? this.newUserForm.get('studies')?.reset() : null;
     this.newUserForm.get('category')?.status === 'DISABLED' ? this.newUserForm.get('category')?.reset() : null;

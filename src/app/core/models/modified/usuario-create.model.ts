@@ -11,6 +11,7 @@ export interface UsuarioCreate {
         oidUsuarioDetalle ? :number;
         facultad:string;
         departamento:string;
+        programa:string;
         categoria:string;
         contratacion:string;
         dedicacion:string;

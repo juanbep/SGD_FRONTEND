@@ -2,12 +2,12 @@
     <div class="title-two">Comite de Personal Docente (CPD)</div>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">A continuación, encontrará el listado de docentes asignados para el periodo académico {{activeAcademicPeriod?.idPeriodo}} y cuyo consolidado ha sido generado por el respectivo Jefe de Departamento. En esta vista, podrá visualizar los detalles de la evaluación de las fuentes, enviar notificaciones por correo electrónico, descargar los soportes del docente, además de aprobar el consolidado y generar la resolución.</span>
+        <span class="text-body-heavy">A continuación, encontrará el listado de docentes asignados para el periodo académico {{academicPeriodActive?.idPeriodo}} y cuyo consolidado ha sido generado por el respectivo Jefe de Departamento. En esta vista, podrá visualizar los detalles de la evaluación de las fuentes, enviar notificaciones por correo electrónico, descargar los soportes del docente, además de aprobar el consolidado y generar la resolución.</span>
     </div>
     <div class="mb-3"></div>
     <div class="title-three">Docentes {{currentUser?.usuarioDetalle?.departamento | titlecase}}</div>
     <div class="mb-2"></div>
-    <cpd-user-filter (filterParams)="filterAction($event)"></cpd-user-filter>
+    <cpd-user-filter></cpd-user-filter>
     <table class="table-bordered">
         <thead>
             <tr>

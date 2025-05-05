@@ -3,6 +3,7 @@
 export interface CatalogDataResponse {
     facultades:      Type[];
     departamentos:   Type[];
+    programas:       Type[];
     categorias:      Type[];
     contrataciones:  Type[];
     dedicaciones:    Type[];

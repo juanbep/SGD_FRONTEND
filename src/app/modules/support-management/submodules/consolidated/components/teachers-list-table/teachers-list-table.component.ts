@@ -44,11 +44,6 @@ export class TeacherListTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
-    this.consolidatedServicesService.setFilterTeacherParams({
-      evaluatedName: null,
-      evaluatedId: null,
-      contractType: null,
-    });
   }
 
   recoverTeachers(page: number, size: number): void {

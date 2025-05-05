@@ -32,7 +32,7 @@ export class ActivitiesTableComponent implements OnInit {
   currentUser: UsuarioResponse | null = null;
 
   @ViewChild(SelfEvaluationReviewModalComponent)
-  selfEvaluationReviewModalComponent : SelfEvaluationReviewModalComponent | null = null;
+  selfEvaluationReviewModalComponent: SelfEvaluationReviewModalComponent | null = null;
 
   public currentPage: number = 1;
   public activities: PagedResponse<ActividadResponse> | null = null;
@@ -72,9 +72,7 @@ export class ActivitiesTableComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.activitiesServices.setParamsActivitiesFilterSignal(
-      null, null, null, null
-    );
+
   }
 
   pageChanged(event: any) {
@@ -124,14 +122,14 @@ export class ActivitiesTableComponent implements OnInit {
     this.openModalViewSelected = !event;
   }
 
-  public openFormEvaluation(responsabiltyId: number){
+  public openFormEvaluation(responsabiltyId: number) {
     this.router.navigate(['/app/gestion-soportes/actividades/formulario-autoevaluacion', responsabiltyId]);
   }
 
-  public openEditFormEvaluation(responsabiltyId: number){
+  public openEditFormEvaluation(responsabiltyId: number) {
     this.router.navigate(['/app/gestion-soportes/actividades/formulario-editar-autoevaluacion', responsabiltyId]);
   }
-  
+
 
   public reloadActivities() {
     if (this.activities && this.activities.content) {
