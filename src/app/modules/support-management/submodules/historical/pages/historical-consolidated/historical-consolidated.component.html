@@ -1,0 +1,29 @@
+<div class="view-container">
+
+    <span class="title-two">Histórico de consolidados</span>
+    <div class="mb-2"></div>
+    <section style="width: 50%;">
+        <span class="title-three">Periodos academicos</span>
+        <form [formGroup]="formHistoricalConsolidated" (ngSubmit)="searchHistoricalConsolidated()">
+            <div class="row">
+                <div class="col">
+                    <ng-container *ngIf="academicPeriodResponse.length > 0">
+                        <ng-multiselect-dropdown formControlName="academicPeriod" [placeholder]="'* Peridos académicos'"
+                            [settings]="dropdownSettings" [data]="dropdownAcademicPeriodsList">
+                        </ng-multiselect-dropdown>
+                        <span *ngIf="isInvaldField('academicPeriod')" class="error-message text-body-small-r ms-1">
+                            {{ getFieldError("academicPeriod") }}
+                        </span>
+                    </ng-container>
+                </div>
+                <div class="col">
+                    <button class="button-normal" type="submit">Generar</button>
+                </div>
+            </div>
+        </form>
+    </section>
+    <historical-user-filter></historical-user-filter>
+    <ng-container *ngIf="consolidadoHistoricoResponse.length>0">
+        <historical-user-table [consolidadoHistoricoResponse]="consolidadoHistoricoResponse" [AcademicPeriods]="formHistoricalConsolidated.get('academicPeriod')?.value"></historical-user-table>
+    </ng-container>
+</div>

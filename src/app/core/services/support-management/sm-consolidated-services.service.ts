@@ -10,6 +10,7 @@ import { ActividadResponse } from '../../models/response/actividad-response.mode
 import { SimpleResponse } from '../../models/response/simple-response.model';
 import { ConsolidadoCrearResponse } from '../../models/response/consolidado-crear-response-model';
 import { UsuarioConsolidadoCreadoResponse } from '../../models/response/usuarios-consolidado-creado-response.model';
+import { ConsolidadoHistoricoResponse } from '../../models/response/consolidado-historico-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -253,5 +254,13 @@ export class SmConsolidatedServicesService {
       `${this.baseUrl}/api/consolidado/descargar-consolidado`,
       { params, responseType: 'blob' }
     );
+  }
+
+  historicalConsolidated(page: number, totalPage:number, academicPeriodsId: number[]): Observable<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', totalPage.toString())
+      .set('periodos', academicPeriodsId.toString());
+    return this.httpClient.get<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>>(`${this.baseUrl}/api/consolidado/historico-calificaciones`, { params });
   }
 }

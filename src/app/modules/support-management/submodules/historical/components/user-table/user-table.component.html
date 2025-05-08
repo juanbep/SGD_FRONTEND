@@ -1,0 +1,27 @@
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th class="text-body-regular">Nombre</th>
+            <th class="text-body-regular">Identificación</th>
+            <th class="text-body-regular">Departamento</th>
+            <th class="text-body-regular">Categoría</th>
+            <th *ngFor="let academicPeriod of AcademicPeriods" class="text-body-regular">
+                Evaluación Acumulada periodo: {{academicPeriod.item_text}}
+            </th>
+            <th class="text-body-regular">Acciones</th>
+        </tr>
+    </thead>
+    <ng-container>
+        <tbody>
+            <tr *ngFor="let teacher of consolidadoHistoricoResponse">
+                <td class="text-body-regular">{{teacher.nombreDocente}}</td>
+                <td class="text-body-regular">{{teacher.numeroIdentificacion}}</td>
+                <td class="text-body-regular">{{teacher.departamento}}</td>
+                <td class="text-body-regular">{{teacher.categoria}}</td>
+                <td class="text-body-regular" *ngFor="let academicPeriod of AcademicPeriods">
+                    {{findEvaluationByAcademicPeriod( academicPeriod.item_id, teacher)}}
+                </td>
+            </tr>
+        </tbody>
+    </ng-container>
+</table>

@@ -35,6 +35,13 @@ const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: ['CPD','SECRETARIA/O FACULTAD','DECANO'] },
         loadChildren: () => import('./submodules/cpd/cpd-routing.module').then(m => m.CpdRoutingModule)
+      },
+      {
+        path: 'historico-consolidados',
+        canActivate: [RoleGuard],
+        resolve: { activePeriod: ActivePeriodResolvers},
+        data: { roles: ['JEFE DE DEPARTAMENTO','COORDINADOR','CPD'] },
+        loadChildren: () => import('./submodules/historical/histotical-routing.module').then(m => m.HistoricalRoutingModule)
       }
     ]
   },

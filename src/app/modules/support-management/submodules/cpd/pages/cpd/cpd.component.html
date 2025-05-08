@@ -16,6 +16,7 @@
                 <th class="text-body-regular">Facultad</th>
                 <th class="text-body-regular">Departamento</th>
                 <th class="text-body-regular">Categoría</th>
+                <th class="text-body-regular">Evaluación acumulada</th>
                 <th class="text-body-regular">Acciones</th>
             </tr>
         </thead>
@@ -27,6 +28,7 @@
                     <td class="text-body-regular">{{teacher.facultad}}</td>
                     <td class="text-body-regular">{{teacher.departamento}}</td>
                     <td class="text-body-regular">{{teacher.categoria }}</td>
+                    <td class="text-body-regular">{{teacher.calificacion}}</td>
                     <td>
                         <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" title="Actividades"></button>
                         <button class="button-table-email" (click)="openEmailModal(teacher.departamento)" title="Enviar email"></button>
