@@ -98,7 +98,7 @@ export class SelfEvaluationReviewModalComponent {
           },
           error: (error) => {
             this.messagesInforService.showErrorMessage(
-              error.errro.mensaje,
+              error.error.mensaje,
               'Error'
             );
           },
@@ -121,7 +121,7 @@ export class SelfEvaluationReviewModalComponent {
       },
       error: (error) => {
         this.messagesInforService.showErrorMessage(
-          error.errro.mensaje,
+          error.error.mensaje,
           'Error'
         );
       },

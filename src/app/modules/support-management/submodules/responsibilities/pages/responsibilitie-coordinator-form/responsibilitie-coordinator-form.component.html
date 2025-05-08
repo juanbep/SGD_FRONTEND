@@ -666,6 +666,7 @@
                   <input
                     type="file"
                     formControlName="userSignature"
+                    accept=".png"
                     id="userSignature"
                     (change)="onSignatureFileSelected($event)"
                     hidden
@@ -718,7 +719,7 @@
             </p>
           </div>
           <div class="file-actions">
-            <button type="button" class="button-actions button-view" (click)="generatePdfPreview()"></button>
+            <button type="button" class="button-actions button-view" accept="application/pdf" (click)="generatePdfPreview()"></button>
           </div>
         </div>
       </section>

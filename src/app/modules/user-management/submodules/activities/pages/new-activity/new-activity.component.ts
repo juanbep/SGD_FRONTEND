@@ -23,6 +23,7 @@ import {
   TIPO_ACTIVIDADES,
   ROLES,
 } from '../../../../../../core/enums/domain-enums';
+import { RldManagementComponent } from "../../components/rld-management/rld-management.component";
 
 @Component({
   selector: 'app-new-activity',
@@ -33,7 +34,8 @@ import {
     ActivitiesTableComponent,
     ConfirmDialogComponent,
     RouterModule,
-  ],
+    RldManagementComponent
+],
   templateUrl: './new-activity.component.html',
   styleUrl: './new-activity.component.css',
 })

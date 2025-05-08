@@ -23,7 +23,6 @@ const routes: Routes = [
             },
             {
                 path: 'gestion-usuarios',
-                resolve: {currentUser: CurrentUserResolverService},
                 loadChildren: () => import('../user-management/user-management-routing.module').then(m => m.UserManagementRoutingModule),
                 
             },

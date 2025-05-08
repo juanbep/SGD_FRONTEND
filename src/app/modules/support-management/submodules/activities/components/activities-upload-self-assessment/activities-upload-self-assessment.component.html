@@ -1,28 +1,17 @@
 <!-- Sección modal de carga de soporte autoevaluación -->
-<div
-  class="modal fade"
-  id="modal-upload-evaluation"
-  data-bs-backdrop="static"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="modal-upload-evaluation" data-bs-backdrop="static" tabindex="-1"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <span class="title-three mx-3" id="exampleModalLabel"
-          >Carga de soporte autoevaluación</span
-        >
+        <span class="title-three mx-3" id="exampleModalLabel">Carga de soporte autoevaluación</span>
         <div class="header-container col-auto"></div>
       </div>
       <div class="modal-body">
         <!--Sección mensaje informativo -->
         <section>
-          <div class="messages-container" >
-            <img
-              src="assets/icons/messages/icon-info.svg"
-              alt=""
-            />
+          <div class="messages-container">
+            <img src="assets/icons/messages/icon-info.svg" alt="" />
             <p class="text-body-heavy">
               Por favor, ingrese la evaluación de sus actividades. Asegúrese de
               que la evaluación coincida con la información del documento de
@@ -52,87 +41,55 @@
                   </tr>
                 </thead>
                 <tbody formArrayName="activities">
-                  <tr
-                    *ngFor="let item of activities.controls; let i = index"
-                    [formGroupName]="i"
-                  >
+                  <tr *ngFor="let item of activities.controls; let i = index" [formGroupName]="i">
                     <td>
                       <span class="text-body-small-r">{{
                         userActivities[i].nombreActividad
-                      }}</span>
+                        }}</span>
                     </td>
                     <td>
-                      <input
-                        [ngClass]="{
+                      <input [ngClass]="{
                           'error-message': isInvalidFormEvaluation(item),
                           'input-evaluation-disabled':
                             this.userActivities[i].fuentes[0].calificacion &&
                             this.userActivities[i].fuentes[0]
                               .tipoCalificacion === 'EN_LINEA'
-                        }"
-                        id="input-evaluation-edit"
-                        class="input-evaluation text-body-regular"
-                        formControlName="calificacion"
-                        placeholder="Ingresar nota"
-                      />
-                      <img
-                        src="assets/icons/tables/icon-pen-modal.svg"
-                        alt="icon-pen-modal"
-                      />
+                        }" id="input-evaluation-edit" class="input-evaluation text-body-regular"
+                        formControlName="calificacion" placeholder="Ingresar nota" />
+                      <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
                     </td>
                     <td>
-                      <ng-container
-                        *ngIf="
+                      <ng-container *ngIf="
                           userActivities[i].informeEjecutivo && !( this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA') ;
                           else noReport
-                        "
-                      >
-                        <ng-container
-                          *ngIf="
+                        ">
+                        <ng-container *ngIf="
                             !userActivities[i].fuentes[0]
                               .nombreDocumentoInforme;
                             else viewReportUploaded
-                          "
-                        >
-                          <td class="center-text">
-                            <img
-                              src="assets/icons/tables/icon-upload.svg"
-                              alt=""
-                              (click)="
+                          ">
+                    <td class="center-text">
+                      <img src="assets/icons/tables/icon-upload.svg" alt="" (click)="
                                 triggerReportFileUpload(userActivities[i])
-                              "
-                              style="cursor: pointer"
-                            />
-                            <input
-                              type="file"
-                              id="uploadFileReport"
-                              (change)="onRepportFileSelected($event)"
-                              hidden
-                            />
-                          </td>
-                        </ng-container>
-                        <ng-template #viewReportUploaded>
-                          <td class="center-text">
-                            <img
-                              src="assets/icons/tables/icon-view.svg"
-                              alt=""
-                              (click)="downloadReportFile(userActivities[i])"
-                              style="cursor: pointer"
-                            />
-                            <img
-                              src="assets/icons/tables/icon-trash.svg"
-                              alt=""
-                              (click)="deleteReportFile(userActivities[i])"
-                            />
-                          </td>
-                        </ng-template>
-                      </ng-container>
+                              " style="cursor: pointer" />
+                      <input type="file" id="uploadFileReport" (change)="onRepportFileSelected($event)" hidden />
+                    </td>
+                    </ng-container>
+                    <ng-template #viewReportUploaded>
+                      <td class="center-text">
+                        <img src="assets/icons/tables/icon-view.svg" alt=""
+                          (click)="downloadReportFile(userActivities[i])" style="cursor: pointer" />
+                        <img src="assets/icons/tables/icon-trash.svg" alt=""
+                          (click)="deleteReportFile(userActivities[i])" />
+                      </td>
+                    </ng-template>
+                    </ng-container>
 
-                      <ng-template #noReport>
-                        <td class="center-text">
-                          <span>N/A</span>
-                        </td>
-                      </ng-template>
+                    <ng-template #noReport>
+                      <td class="center-text">
+                        <span>N/A</span>
+                      </td>
+                    </ng-template>
                     </td>
                   </tr>
                 </tbody>
@@ -140,9 +97,7 @@
                   <tbody>
                     <tr>
                       <td colspan="3" class="center-text">
-                        <span class="text-body-regular"
-                          >No hay actividades para evaluar</span
-                        >
+                        <span class="text-body-regular">No hay actividades para evaluar</span>
                       </td>
                     </tr>
                   </tbody>
@@ -150,80 +105,60 @@
               </table>
               <div class="mb-2"></div>
             </div>
-            <span
-              *ngIf="isInvalidFormEvaluation(activities)"
-              class="text-body-regular error-message"
-              >La evaluación no debe ser un valor menor a 0, superior a 100 o
-              alfanumérico</span
-            >
-          </form>
-          <!-- Sección de carga de archivos -->
-          <section id="upload-file-asessment">
-            <div class="file-upload-container">
-              <label for="uploadFileAssessment" class="file-upload-label">
-                <div class="file-details">
-                  <p class="file-title text-body-small-sb">Soporte</p>
-                  <p class="file-name text-body-small-r">
-                    {{
+            <span *ngIf="isInvalidFormEvaluation(activities)" class="text-body-regular error-message">La evaluación no
+              debe ser un valor menor a 0, superior a 100 o
+              alfanumérico</span>
+
+            <!-- Sección de carga de archivos -->
+            <section id="upload-file-asessment">
+              <div class="file-upload-container">
+                <label for="uploadFileAssessment" class="file-upload-label">
+                  <div class="file-details">
+                    <p class="file-title text-body-small-sb">Soporte</p>
+                    <p class="file-name text-body-small-r">
+                      {{
                       fileNameSelected()
-                        ? fileNameSelected()
-                        : "Seleccione un archivo"
-                    }}
-                  </p>
+                      ? fileNameSelected()
+                      : "Seleccione un archivo"
+                      }}
+                    </p>
+                  </div>
+                  <input type="file" id="uploadFileAssessment" formControlName="support"
+                    accept=".pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt" (change)="onSupportFileSelected($event)"
+                    hidden />
+                </label>
+                <div class="file-actions">
+                  <button class="button-upload button-actions button-border-radius"
+                    (click)="triggerSupportFileUpload()"></button>
                 </div>
-                <input
-                  type="file"
-                  id="uploadFileAssessment"
-                  formControlName="support"
-                  (change)="onSupportFileSelected($event)"
-                  hidden
-                />
-              </label>
-              <div class="file-actions">
-                <button
-                  class="button-upload button-actions button-border-radius"
-                  (click)="triggerSupportFileUpload()"
-                ></button>
               </div>
-            </div>
-            <span
-              [ngClass]="{
+              <span [ngClass]="{
                 'text-error text-body-text-body-small-r':
                   errorMessageFile != '',
                 text: errorMessageFile === ''
-              }"
-              >El formato no es permitido
-            </span>
-            <span *ngIf="isInvalidField('support')" class="error-message text-body-small-r ms-1">
-              {{ getFieldError("support") }}
-            </span>
-          </section>
-          <!-- Sección de observaciones-->
-          <section id="comments-self-assessment">
-            <span class="title-three">Observaciones</span>
-            <input
-              class="observation"
-              type="text"
-              placeholder="Ingrese sus observaciones"
-              [(ngModel)]="observacionSend"
-            />
-          </section>
+              }">El formato no es permitido
+              </span>
+              <span *ngIf="isInvalidField('support')" class="error-message text-body-small-r ms-1">
+                {{ getFieldError("support") }}
+              </span>
+            </section>
+            <!-- Sección de observaciones-->
+            <section id="comments-self-assessment">
+              <span class="title-three">Observaciones</span>
+              <input class="observation" type="text" placeholder="Ingrese sus observaciones"
+                formControlName="observation" />
+            </section>
+          </form>
         </section>
       </div>
       <div class="modal-footer">
         <!-- Sección de botonoes-->
         <section id="button-self-assessment">
           <div class="modal-buttons">
-            <button
-              class="button-modal text-body-heavy"
-              data-bs-dismiss="modal"
-            >
+            <button class="button-modal text-body-heavy" data-bs-dismiss="modal">
               Cerrar
             </button>
-            <button
-              class="button-modal text-body-heavy"
-              (click)="saveEvaluation()"
-            >
+            <button class="button-modal text-body-heavy" (click)="saveEvaluation()">
               Guardar
             </button>
           </div>

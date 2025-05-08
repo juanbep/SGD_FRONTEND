@@ -20,7 +20,6 @@ import { ActivitiesServicesService } from '../../services/activities-services.se
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
-import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 declare var bootstrap: any;
@@ -30,7 +29,7 @@ const TOTAL_PAGE = 10;
 @Component({
   selector: 'activities-upload-self-assessment',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginatorComponent, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './activities-upload-self-assessment.component.html',
   styleUrl: './activities-upload-self-assessment.component.css',
 })
@@ -196,9 +195,20 @@ export class ActivitiesUploadSelfAssessmentComponent {
   onSupportFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.formSelfAssessment.get('support')?.setValue(input.files[0]);
       const file = input.files[0];
-      if (file.type !== 'application/pdf') {
+
+      //Tipo de archivos permitidos .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt
+      const allowedTypes = [
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.ms-powerpoint',
+      ];
+      const isValidFileType = allowedTypes.includes(file.type);
+      if (!isValidFileType) { 
         this.errorMessageFile = 'El archivo seleccionado no es un PDF';
         this.selectedFile = null;
       } else {
@@ -302,7 +312,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
           activitie.fuentes[0].calificacion =
             this.activities.controls[index].value.calificacion;
         });
-
+        
         this.userActivities.forEach((activitie, index) => {
           if (activitie.fuentes[0].tipoCalificacion !== 'EN_LINEA') {
             const fuente = {
@@ -319,7 +329,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
         this.service
           .saveSelfAssessment(
             this.selectedFile,
-            this.observacionSend,
+            this.formSelfAssessment.get('observation')?.value,
             this.sendSource,
             this.filesSelected
           )

@@ -439,6 +439,9 @@
   </form>
 
   <div class="mb-3"></div>
+  <ng-container *ngIf="idUserParam">
+    <rld-management [idUser]="idUserParam"></rld-management>
+  </ng-container>
 
   <user-management-activities-activities-table></user-management-activities-activities-table>
 </div>

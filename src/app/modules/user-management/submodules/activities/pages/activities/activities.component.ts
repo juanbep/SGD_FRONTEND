@@ -5,18 +5,22 @@ import { ActivitiesFilterComponent } from '../../components/activities-filter/ac
 import { ActivitiesManagementService } from '../../services/activities-management.service';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { CommonModule } from '@angular/common';
+import { RldManagementComponent } from "../../components/rld-management/rld-management.component";
 
 @Component({
   selector: 'app-activities',
   standalone: true,
-  imports: [ActivitiesTableComponent, RouterModule, ActivitiesFilterComponent],
+  imports: [ActivitiesTableComponent, RouterModule, ActivitiesFilterComponent, CommonModule, RldManagementComponent],
   templateUrl: './activities.component.html',
   styleUrl: './activities.component.css',
 })
 export class ActivitiesComponent implements OnInit {
+
   private route = inject(ActivatedRoute);
   private activitiesMagementService = inject(ActivitiesManagementService);
   private messageInfoService = inject(MessagesInfoService);
+
 
   public teacherInformation: UsuarioResponse | null = null;
   public idUserParam: number | null = null;
@@ -25,6 +29,7 @@ export class ActivitiesComponent implements OnInit {
     this.idUserParam = this.route.snapshot.params['id'];
     this.recoverTeacherInformation();
   }
+
 
   recoverTeacherInformation() {
     if (this.idUserParam) {

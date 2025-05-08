@@ -59,7 +59,7 @@
                                     {{ fileNameSelected() ? fileNameSelected() : 'Seleccione un archivo' }}
                                 </p>
                             </div>
-                            <input type="file" id="uploadFileAssessment" formControlName="selectedFile"
+                            <input type="file" id="uploadFileAssessment" formControlName="selectedFile" accept=".pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt"
                                 (change)="onFileSelected($event)" hidden />
                         </label>
                         <div class="file-actions">
@@ -68,6 +68,14 @@
                         </div>
                     </div>
                 </ng-template>
+                <span
+        [ngClass]="{
+          'text-error text-body-text-body-small-r': errorFormatFile,
+          text: !errorFormatFile
+        }"
+        >Únicamente se permiten archivos en formato .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt </span
+      >
+
                 <span *ngIf="isInvalidField('selectedFile')" class="error-message text-body-small-r ms-1">
                     {{ getFieldError("selectedFile") }}
                 </span>
@@ -76,7 +84,8 @@
             <section id="assessment-fill-out-responsability">
                 <span class="title-three">Calificación</span>
                 <input id="input-note" formControlName="evaluation" [ngClass]="getInputClass()"
-                    class="evaluation text-body-heavy" type="text" placeholder="Nota" />                <span *ngIf="isInvalidField('evaluation')" class="error-message text-body-small-r ms-1">
+                    class="evaluation text-body-heavy" type="text" placeholder="Nota" /> <span
+                    *ngIf="isInvalidField('evaluation')" class="error-message text-body-small-r ms-1">
                     {{ getFieldError("evaluation") }}
                 </span>
                 <span [ngClass]="{

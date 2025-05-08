@@ -22,6 +22,7 @@ import { FuenteDocenteFormularioResponse } from '../../../../../../core/models/r
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
@@ -58,6 +59,8 @@ export class SelfEvaluationEditFormComponent implements OnInit {
     AcademicPeriodManagementService
   );
 
+  public evaluado: UsuarioResponse | null = null;
+  
 
   // ====================== Propiedades Públicas ======================
   public activityPeriod: PeriodoAcademicoResponse | null = null;
@@ -199,7 +202,9 @@ export class SelfEvaluationEditFormComponent implements OnInit {
             this.fuenteDocenteFormularioResponse.Fuente.calificacion
           ),
           observation: this.fuenteDocenteFormularioResponse.Fuente.observacion,
+        
         });
+        this.recoverEvaluated(this.fuenteDocenteFormularioResponse.Fuente.evaluado.oidUsuario);
         // Manejo del FormArray de resultados
         this.results.clear();
         this.fuenteDocenteFormularioResponse.odsSeleccionados.forEach((ods) => {
@@ -241,6 +246,17 @@ export class SelfEvaluationEditFormComponent implements OnInit {
             }
           );
         }
+      },
+      error: (error) => {
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
+      },
+    });
+  }
+
+  recoverEvaluated(id: number) {
+    this.activitiesService.getUserById(id).subscribe({
+      next: (user) => {
+        this.evaluado = user.data;
       },
       error: (error) => {
         this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
@@ -367,7 +383,12 @@ export class SelfEvaluationEditFormComponent implements OnInit {
     const pdfResult =
       this.selfEvaluationPdfGeneratorService.generatePdfDocument(
         this.editSelfEvaluationForm.value,
-        {}
+        {
+          nombres: this.evaluado?.nombres,
+          apellidos: this.evaluado?.apellidos,
+          identificacion: this.evaluado?.identificacion,
+          
+        }
       );
     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       pdfResult.base64

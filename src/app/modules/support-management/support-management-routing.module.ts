@@ -33,7 +33,7 @@ const routes: Routes = [
         path: 'cpd',
         resolve: { activePeriod: ActivePeriodResolvers},
         canActivate: [RoleGuard],
-        data: { roles: ['CPD','SECRETARIA/O FACULTAD'] },
+        data: { roles: ['CPD','SECRETARIA/O FACULTAD','DECANO'] },
         loadChildren: () => import('./submodules/cpd/cpd-routing.module').then(m => m.CpdRoutingModule)
       }
     ]

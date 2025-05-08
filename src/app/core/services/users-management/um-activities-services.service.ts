@@ -115,7 +115,22 @@ export class UmActivitiesServiceService {
     );
   }
 
-  //TODO: Eliminar actividad
+  uploadRLD(oidUser: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('documento', file);
+    formData.append('data', JSON.stringify({ oidUsuario: oidUser }));
+    return this.httpClient.post(
+      `${this.baseUrl}/api/labor-docente`, formData, {
+        responseType: 'text',
+      }
+    );
+  }
 
-  //TODO: Obtener actividades usuario via KIRA (servicio Universidad del Cauca)
+  getRLD(oidUser: number): Observable<any> {
+    const params: Params = { oidUsuario: oidUser.toString() };
+    return this.httpClient.get(
+      `${this.baseUrl}/api/labor-docente/descargar`,
+      { params, responseType: 'blob' }
+    );
+  }
 }

@@ -19,6 +19,7 @@ import { UsuarioResponse } from '../../../../../../core/models/response/usuario-
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { ActividadCreate } from '../../../../../../core/models/modified/actividad-create.model';
 import { TIPO_ACTIVIDADES, ROLES } from '../../../../../../core/enums/domain-enums';
+import { RldManagementComponent } from "../../components/rld-management/rld-management.component";
 
 @Component({
   selector: 'app-edit-activity',
@@ -28,11 +29,12 @@ import { TIPO_ACTIVIDADES, ROLES } from '../../../../../../core/enums/domain-enu
     CommonModule,
     RouterModule,
     ConfirmDialogComponent,
-  ],
+    RldManagementComponent
+],
   templateUrl: './edit-activity.component.html',
   styleUrl: './edit-activity.component.css',
 })
-export class EditActivityComponent implements OnInit {
+export class EditActivityComponent implements OnInit{
   @ViewChild(ConfirmDialogComponent)
   confirmDialogComponent: ConfirmDialogComponent | null = null;
 
@@ -86,7 +88,7 @@ export class EditActivityComponent implements OnInit {
     ],
     projectName: [null, Validators.required],
     administrativeAct: [null, Validators.required],
-    researchSeed : [null, Validators.required],
+    researchSeed: [null, Validators.required],
     idStudent: [null, Validators.required],
     activity: [null, Validators.required],
     evaluatorName: [null, Validators.required],
@@ -166,6 +168,9 @@ export class EditActivityComponent implements OnInit {
         if (atributo.codigoAtributo === 'NOMBREPROYECTO') {
           this.activityForm.get('projectName')?.setValue(atributo.valor);
         }
+        if (atributo.codigoAtributo === 'SEMILLERO') {
+          this.activityForm.get('researchSeed')?.setValue(atributo.valor);
+        }
       }
       this.activityForm
         .get('weeklyHours')
@@ -195,8 +200,8 @@ export class EditActivityComponent implements OnInit {
         .get('evaluatorName')
         ?.setValue(
           this.activity.evaluador.nombres +
-            ' ' +
-            this.activity.evaluador.apellidos
+          ' ' +
+          this.activity.evaluador.apellidos
         );
       this.evaluator = this.activity.evaluador;
     }
@@ -317,8 +322,27 @@ export class EditActivityComponent implements OnInit {
           this.activityForm.get('activityState')?.enable();
           this.validateEvaluator(TIPO_ACTIVIDADES.DOCENCIA);
           break;
-        default:
+        case TIPO_ACTIVIDADES.SERVICIO:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('activity')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
           break;
+        case TIPO_ACTIVIDADES.SEMILLERO_INVESTIGACION:
+          this.activityForm.get('nameActivity')?.enable();
+          this.activityForm.get('administrativeAct')?.enable();
+          this.activityForm.get('researchSeed')?.enable();
+          this.activityForm.get('weeklyHours')?.enable();
+          this.activityForm.get('weeks')?.enable();
+          this.activityForm.get('evaluatorId')?.enable();
+          this.activityForm.get('evaluatorName')?.enable();
+          this.activityForm.get('executiveReport')?.enable();
+          this.activityForm.get('activityState')?.enable();
       }
     });
   }
@@ -576,8 +600,8 @@ export class EditActivityComponent implements OnInit {
                     .get('evaluatorName')
                     ?.setValue(
                       this.userResponse.content[0].nombres +
-                        ' ' +
-                        this.userResponse.content[0].apellidos
+                      ' ' +
+                      this.userResponse.content[0].apellidos
                     );
                   this.activityForm
                     .get('evaluatorId')
@@ -620,8 +644,8 @@ export class EditActivityComponent implements OnInit {
                     .get('evaluatorName')
                     ?.setValue(
                       this.userResponse.content[0].nombres +
-                        ' ' +
-                        this.userResponse.content[0].apellidos
+                      ' ' +
+                      this.userResponse.content[0].apellidos
                     );
                   this.activityForm
                     .get('evaluatorId')
@@ -664,8 +688,8 @@ export class EditActivityComponent implements OnInit {
                     .get('evaluatorName')
                     ?.setValue(
                       this.userResponse.content[0].nombres +
-                        ' ' +
-                        this.userResponse.content[0].apellidos
+                      ' ' +
+                      this.userResponse.content[0].apellidos
                     );
                   this.activityForm
                     .get('evaluatorId')
@@ -693,8 +717,8 @@ export class EditActivityComponent implements OnInit {
         ?.setValue(user?.nombres + ' ' + user?.apellidos);
       this.activityForm.get('evaluatorId')?.setValue(user?.identificacion);
       if (
-        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA.toString() ||
-        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION.toString()
+        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA ||
+        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION
       ) {
         this.activityForm.get('idStudent')?.setValue(user?.identificacion);
       }
@@ -808,6 +832,10 @@ export class EditActivityComponent implements OnInit {
             {
               codigoAtributo: 'NOMBREPROYECTO',
               valor: this.activityForm.get('projectName')?.value,
+            },
+            {
+              codigoAtributo: 'SEMILLERO',
+              valor: this.activityForm.get('researchSeed')?.value,
             },
           ],
         };

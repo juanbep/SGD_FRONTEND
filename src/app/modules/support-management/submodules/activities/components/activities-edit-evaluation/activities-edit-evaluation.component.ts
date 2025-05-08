@@ -355,7 +355,19 @@ export class ActivitiesEditEvaluationComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      if (file.type !== 'application/pdf') {
+      //Tipo de archivos permitidos .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt
+      const allowedTypes = [
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.ms-powerpoint',
+      ];
+      const isValidFileType = allowedTypes.includes(file.type);
+
+      if (!isValidFileType) {
         this.errorFileInput = true;
         this.selectedSourceFile = null;
       } else {
@@ -365,7 +377,6 @@ export class ActivitiesEditEvaluationComponent {
         this.sourceFileDeleted = false;
         this.userActivities.forEach((content, index) => {
           content.fuentes[0].soporte = file;
-          this.formSelfEvaluation.get('uploadFileSource')?.setValue(file);
         });
       }
     }

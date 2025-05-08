@@ -50,6 +50,7 @@
           <input
             type="file"
             formGroupName="selectedFile"
+            accept=".pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt"
             id="uploadFileAssessmentResponsability"
             (change)="onFileSelected($event)"
             hidden
@@ -70,7 +71,7 @@
           'text-error text-body-text-body-small-r': errorMessageFile != '',
           text: errorMessageFile === ''
         }"
-        >El formato no es permitido</span
+        >Únicamente se permiten archivos en formato .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt </span
       >
 
       <!-- Evaluation Section -->

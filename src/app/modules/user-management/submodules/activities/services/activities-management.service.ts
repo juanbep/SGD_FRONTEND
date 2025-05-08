@@ -164,10 +164,17 @@ export class ActivitiesManagementService {
     * @returns Observable<any>
     * */
 
-    updateActivity(idActivity:number,activity: ActividadCreate){
-        return this.umActivitiesServiceService.updateActivity(idActivity,activity);
+    updateActivity(idActivity: number, activity: ActividadCreate) {
+        return this.umActivitiesServiceService.updateActivity(idActivity, activity);
     }
 
+    uploadRLD(oidUser: number, file: File) {
+        return this.umActivitiesServiceService.uploadRLD(oidUser, file);
+    }
+
+    getRLD(idUser: number) {
+        return this.umActivitiesServiceService.getRLD(idUser);
+    }
 
 
 }

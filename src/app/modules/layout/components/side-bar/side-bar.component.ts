@@ -25,29 +25,29 @@ export class SideBarComponent implements OnInit {
 
   public sidebarItems = [
     {
-      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+      role: ['SECRETARIA/O FACULTAD'],
       label: 'Periodo académico',
       icon: 'assets/icons/sidebar/icon-calendar.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+          role: ['SECRETARIA/O FACULTAD'],
           label: 'Gestión periodo académico',
           url: '/app/gestion-periodo-academico',
         },
       ],
     },
     {
-      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+    role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD'],
+          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD', 'DECANO'],
           label: 'Usuarios',
           url: '/app/gestion-usuarios/usuarios',
         },
         {
-          role: ['JEFE DE DEPARTAMENTO'],
+          role: ['JEFE DE DEPARTAMENTO', 'DECANO'],
           label: 'Actividades',
           url: '/app/gestion-usuarios/actividades/usuarios',
         },
@@ -94,19 +94,19 @@ export class SideBarComponent implements OnInit {
           url: '/app/gestion-soportes/consolidado/lista-docentes',
         },
         {
-          role: ['CPD', 'SECRETARIA/O FACULTAD'],
+          role: ['CPD', 'SECRETARIA/O FACULTAD', 'DECANO'],
           label: 'CPD',
           url: '/app/gestion-soportes/cpd/lista-docentes',
         },
       ],
     },
     {
-      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO', 'CPD','COORDINADOR'],
       label: 'Estadísticas',
       icon: 'assets/icons/sidebar/icon-statistics.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD'],
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO', 'CPD','COORDINADOR'],
           label: 'Estadísticas',
           url: '/app/gestion-estadisticas/estadisticas',
         },

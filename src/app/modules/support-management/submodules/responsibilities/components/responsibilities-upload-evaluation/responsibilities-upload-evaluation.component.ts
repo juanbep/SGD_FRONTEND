@@ -136,8 +136,18 @@ export class ResponsibilitiesUploadEvaluationComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      if (file.type !== 'application/pdf') {
-        this.errorMessageFile = 'El archivo seleccionado no es un PDF';
+      const allowedTypes = [
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.ms-powerpoint',
+      ];
+      const isValidFileType = allowedTypes.includes(file.type);
+      if (!isValidFileType) {
+        this.errorMessageFile = 'Únicamente se permiten archivos en formato .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt ';
         this.form.get('selectedFile')?.setValue(null);
       } else {
         this.form.get('selectedFile')?.setValue(file);

@@ -1,0 +1,45 @@
+<section style="width: 50%">
+    <div class="row">
+        <div class="col">
+
+            <span class="title-three">RLD </span>
+            <ng-container *ngIf="!RLDFile; else noRLDFile">
+                <div class="file-upload-container">
+                    <label for="userRLD" class="file-upload-label">
+                        <div class="file-details">
+                            <p class="file-title text-body-small-sb">RLD</p>
+                            <p class="file-name text-body-small-r">
+                                Cargar el documento RLD del docente para el periodo actual {{academicPeriod?.idPeriodo}}
+                            </p>
+                        </div>
+                        <input type="file" id="userRLD" accept="application/pdf" (change)="onRLDFileSelected($event)"
+                            hidden />
+                    </label>
+                    <div class="file-actions">
+                        <button type="button" class="button-upload button-actions button-border-radius"
+                            (click)="triggersRLDFileUpload()"></button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #noRLDFile>
+                <div class="download-file-container">
+                    <div class="file-details">
+                        <p class="file-title text-body-small-sb">RLD</p>
+                        <p class="file-name text-body-small-sb">{{RLDFile?.name}}</p>
+                    </div>
+                    <div class="file-actions">
+                        <button type="button" class="button-actions button-delete button-radius-custom"
+                            (click)="deleteRLDFile()"></button>
+                        <button type="button" class="button-actions button-view" (click)="previewFile()"></button>
+                    </div>
+                </div>
+            </ng-template>
+            <span class="error-message text-body-small-r ms-1">
+            </span>
+        </div>
+    </div>
+</section>
+
+<section *ngIf="fileRLDUrl">
+    <iframe [src]="fileRLDUrl" width="100%" height="600px"></iframe>
+</section>

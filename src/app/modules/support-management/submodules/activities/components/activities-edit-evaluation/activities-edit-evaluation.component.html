@@ -114,7 +114,7 @@
                                             </p>
                                         </div>
                                         <input type="file" formControlName="uploadFileSource" id="uploadFileSource"
-                                            (change)="onSourceFileSelected($event)" hidden>
+                                            (change)="onSourceFileSelected($event)" accept=".pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt" hidden>
                                     </label>
                                     <div class="file-actions">
                                         <button type="button"
@@ -124,7 +124,7 @@
                                     </div>
                                 </div>
                                 <span *ngIf="errorFileInput" class="text-body-regular text-error">Únicamente se permiten
-                                    archivos en formato PDF</span>
+                                    archivos en formato .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt </span>
                             </ng-template>
                             <span *ngIf="isInvalidField('uploadFileSource')" class="error-message text-body-small-r ms-1">
                                 {{ getFieldError("uploadFileSource") }}

@@ -506,7 +506,7 @@
                                             Cargar su firma en formato .png
                                         </p>
                                     </div>
-                                    <input type="file" formControlName="userSignature" id="userSignature"
+                                    <input type="file" accept=".png" formControlName="userSignature" id="userSignature"
                                         (change)="onSignatureFileSelected($event)" [ngClass]="{
                                             'error-input': isInvalidField('userSignature')
                                           }" hidden />

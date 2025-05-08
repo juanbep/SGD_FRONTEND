@@ -148,6 +148,16 @@ export class CpdWordGeneratorService {
                         alignment: AlignmentType.JUSTIFIED,
                         children: [
                             new TextRun({
+                                text: 'El objetivo de la evaluación profesoral es calificar y cualificar la labor docente desempeñada por el profesor, permitir el ingreso y promoción del personal docente en el escalafón universitario, posibilitar el acceso al otorgamiento de los estímulos contemplados en la ley y los estatutos de la Universidad, entre otros.',
+                                size: 24
+                            }),
+                        ],
+                    }),
+                    new Paragraph({
+                        spacing: { before: 200 },
+                        alignment: AlignmentType.JUSTIFIED,
+                        children: [
+                            new TextRun({
                                 text: 'El artículo 5 del Acuerdo Superior N° 090 de 2005 señala: ',
                                 size: 24
                             }),

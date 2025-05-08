@@ -136,7 +136,17 @@ export class ResponsibilitiesEditEvaluationComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      if (file.type !== 'application/pdf') {
+      const allowedTypes = [
+        'application/pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.ms-powerpoint',
+      ];
+      const isValidFileType = allowedTypes.includes(file.type);
+      if (!isValidFileType) {
         this.errorFormatFile = true;
         this.form.get('selectedFile')?.setValue(null);
       } else {

@@ -257,13 +257,4 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
         reader.readAsDataURL(file);
       });
     }
-
-  private developmentStageName(developmentStage: string): string {
-    const nameDevelopmentStage =
-      this.cataloDataResponse?.estadoEtapaDesarrollo.find(
-        (element) => element.oidEstadoEtapaDesarrollo.toString() === developmentStage
-      )?.nombre;
-
-    return nameDevelopmentStage || '';
-  }
 }

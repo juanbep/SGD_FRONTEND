@@ -263,11 +263,11 @@
                         {{ getFieldError("researchSeed") }}
                     </span>
                 </div>
-               
+
             </div>
             <div class="row">
-                 <!-- Informe ejecutivo (Sí o No) -->
-                 <div class="col-3">
+                <!-- Informe ejecutivo (Sí o No) -->
+                <div class="col-3">
                     <div class="form-floating">
                         <select class="form-select input-select text-body-custom" id="executiveReport"
                             formControlName="executiveReport" [ngClass]="{
@@ -416,6 +416,11 @@
             </div>
         </div>
     </form>
+
+    <ng-container *ngIf="activity">
+        <rld-management [idUser]="activity.oidEvaluado"></rld-management>
+    </ng-container>
+
 </div>
 
 <shared-confirm-dialog [message]="this.messageConfirmDialog" [title]="titleConfirmDialog"

@@ -116,6 +116,7 @@
           <div class="form-floating">
             <input
               type="text"
+              accept=".pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt"
               formControlName="result"
               class="form-control input-text"
               [ngClass]="{
@@ -432,6 +433,7 @@
               <input
                 type="file"
                 formControlName="signature"
+                accept=".png"
                 id="signature"
                 (change)="onSignatureSelected($event)"
                 hidden
