@@ -4,6 +4,7 @@ import { CatalogDataService } from '../../../../../../shared/services/catalogDat
 import { CpdServicesService } from '../../../cpd/services/cpd-services.service';
 import { CatalogDataResponse } from '../../../../../../core/models/catalogData.interface';
 import { CommonModule } from '@angular/common';
+import { HistoricalServices } from '../../services/historical-services.service';
 
 @Component({
   selector: 'historical-user-filter',
@@ -18,10 +19,8 @@ import { CommonModule } from '@angular/common';
 export class UserFilterComponent {
  private formBuilder = inject(FormBuilder);
   private catalogService = inject(CatalogDataService);
-  private cpdServiceService = inject(CpdServicesService);
-
-  public filterParams: EventEmitter<{ nameUser: string | null, identification: string | null, category: string | null, department:string | null }> = new EventEmitter<{ nameUser: string | null, identification: string | null, category: string | null, department:string | null  }>();
-
+  private historicalServices = inject(HistoricalServices);
+  
   public catalogData: CatalogDataResponse | null = null;
 
 
@@ -34,7 +33,7 @@ export class UserFilterComponent {
 
   ngOnInit(): void {
     this.catalogData = this.catalogService.catalogDataSignal;
-    const filterParams = this.cpdServiceService.getFilterTeacherParams();
+    const filterParams = this.historicalServices.getFilterTeacherParams();
     this.formFilter.get('nameUser')?.setValue(filterParams.evaluatedName || '');
     this.formFilter.get('identification')?.setValue(filterParams.evaluatedId || '');
     this.formFilter.get('category')?.setValue(filterParams.category || '');
@@ -48,7 +47,7 @@ export class UserFilterComponent {
     const category = this.formFilter.get('category')?.value || '';
     const department = this.formFilter.get('department')?.value || '';
 
-    this.cpdServiceService.setFilterTeacherParams({
+    this.historicalServices.setFilterTeacherParams({
       evaluatedName: nameUser,
       evaluatedId: identification,
       category: category,
@@ -62,7 +61,7 @@ export class UserFilterComponent {
     this.formFilter.get('category')?.setValue('');
     this.formFilter.get('department')?.setValue('');
 
-    this.cpdServiceService.setFilterTeacherParams({
+    this.historicalServices.setFilterTeacherParams({
       evaluatedName: null,
       evaluatedId: null,
       category: null,

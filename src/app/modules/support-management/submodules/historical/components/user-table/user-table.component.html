@@ -5,23 +5,36 @@
             <th class="text-body-regular">Identificación</th>
             <th class="text-body-regular">Departamento</th>
             <th class="text-body-regular">Categoría</th>
-            <th *ngFor="let academicPeriod of AcademicPeriods" class="text-body-regular">
+            <th *ngFor="let academicPeriod of academicPeriods" class="text-body-regular">
                 Evaluación Acumulada periodo: {{academicPeriod.item_text}}
             </th>
+            <th class="text-body-regular">Promedio</th>
             <th class="text-body-regular">Acciones</th>
         </tr>
     </thead>
     <ng-container>
         <tbody>
-            <tr *ngFor="let teacher of consolidadoHistoricoResponse">
+            <tr *ngFor="let teacher of consolidadoHistoricoResponse?.content">
                 <td class="text-body-regular">{{teacher.nombreDocente}}</td>
                 <td class="text-body-regular">{{teacher.numeroIdentificacion}}</td>
                 <td class="text-body-regular">{{teacher.departamento}}</td>
                 <td class="text-body-regular">{{teacher.categoria}}</td>
-                <td class="text-body-regular" *ngFor="let academicPeriod of AcademicPeriods">
+                <td class="text-body-regular" *ngFor="let academicPeriod of academicPeriods">
                     {{findEvaluationByAcademicPeriod( academicPeriod.item_id, teacher)}}
                 </td>
+                <td class="text-body-regular">{{getAverageEvaluation(teacher).toFixed(2)}}</td>
+                <td>
+                    <button class="button-table-check" (click)="openAprobeConlidatedModalForm(teacher)"
+                        title="Aprobar consolidado y generar resolución"></button>
+                </td>
+
             </tr>
         </tbody>
     </ng-container>
 </table>
+<div class="d-flex justify-content-center mt-3">
+    <shared-paginator (pageChange)="changePage($event)"
+        [totalPages]="consolidadoHistoricoResponse?.totalPages || 0"></shared-paginator>
+</div>
+
+<modal-cpd-info-form (infoCpd)="onOptionFormCpdInfo($event)"></modal-cpd-info-form>

@@ -8,11 +8,12 @@ import { AuthServiceService } from '../../../../../auth/service/auth-service.ser
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
+import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 
 @Component({
   selector: 'support-management-consolidated',
   standalone: true,
-  imports: [TeachersListFilterComponent, TeacherListTableComponent, TitleCasePipe],
+  imports: [TeachersListFilterComponent, TeacherListTableComponent, TitleCasePipe, LoadingOverleyComponent],
   templateUrl: './teachers-list.component.html',
   styleUrl: './teachers-list.component.css'
 })
@@ -21,9 +22,11 @@ export class TeachersListComponent implements OnInit {
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private authService = inject(AuthServiceService);
   private academicPeriodMangementService = inject(AcademicPeriodManagementService);
+  private messagesInfoService = inject(MessagesInfoService);
 
   public currentUser: UsuarioResponse | null = null;
   public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
+  public loading: boolean = false;
   
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
@@ -32,6 +35,7 @@ export class TeachersListComponent implements OnInit {
   
 
   downloadAllSuppotFiles(){
+    this.loading = true;
   
     if(this.activeAcademicPeriod && this.currentUser){
       this.consolidatedServicesService.downloadAllSupportFiles(this.activeAcademicPeriod.idPeriodo, this.currentUser?.usuarioDetalle.departamento || '', '', null, null).subscribe
@@ -46,9 +50,38 @@ export class TeachersListComponent implements OnInit {
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
+            this.loading = false;
           },
           error: (error: any) => {
-            console.log(error);
+            this.loading = false;
+            this.messagesInfoService.showErrorMessage('Error al descargar el archivo consolidado general','Error');
+
+          }
+        }
+      );
+    }
+  }
+
+  downloadConsolidatedGeneralFile(){
+    this.loading = true;
+    if(this.currentUser && this.currentUser?.usuarioDetalle.departamento){
+      this.consolidatedServicesService.downloadConsolidatedGeneralFile(this.currentUser.usuarioDetalle.departamento).subscribe
+      (
+        {
+          next: (response: any) => {
+            const blob = new Blob([response], { type: 'application/zip' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `consolidado_general_${this.currentUser?.usuarioDetalle.departamento}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            this.loading = false;
+          },
+          error: (error: any) => {
+            this.loading = false;
+            this.messagesInfoService.showErrorMessage('Error al descargar el archivo consolidado general','Error');
           }
         }
       );

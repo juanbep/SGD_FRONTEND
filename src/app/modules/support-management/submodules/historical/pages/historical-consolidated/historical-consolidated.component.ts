@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { UserFilterComponent } from "../../components/user-filter/user-filter.component";
 import { UserTableComponent } from "../../components/user-table/user-table.component";
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
@@ -7,6 +7,8 @@ import { PeriodoAcademicoResponse } from '../../../../../../core/models/response
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConsolidadoHistoricoResponse } from '../../../../../../core/models/response/consolidado-historico-response.model';
+import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
+import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 
 const PAGE_SIZE = 10;
 
@@ -19,23 +21,40 @@ const PAGE_SIZE = 10;
 })
 export class HistoricalConsolidatedComponent implements OnInit {
 
+
+
   private formBuilder: FormBuilder = inject(FormBuilder);
   private historicalServices = inject(HistoricalServices);
+  private messagesInfoService = inject(MessagesInfoService);
+
 
   public dropdownSettings = {};
   public academicPeriodResponse: PeriodoAcademicoResponse[] = [];
   public dropdownAcademicPeriodsList: { item_id: number; item_text: string }[] = [];
-  public consolidadoHistoricoResponse: ConsolidadoHistoricoResponse[] = [];
+  public consolidadoHistoricoResponse: PagedResponse<ConsolidadoHistoricoResponse> | null = null;
+
+
+  public filterParams: {
+    evaluatedName: string | null;
+    evaluatedId: string | null;
+    category: string | null;
+    department: string | null;
+  } = { evaluatedName: null, evaluatedId: null, category: null, department: null };
 
   public currentPage = 0;
 
+  filterEffec = effect(() => {
+    this.filterParams = this.historicalServices.getFilterTeacherParams();
+    this.searchHistoricalConsolidated();
+  });
 
   public formHistoricalConsolidated: FormGroup = this.formBuilder.group({
-    academicPeriod: ['',[Validators.required]],
+    academicPeriod: ['', [Validators.required]],
   });
 
   ngOnInit(): void {
     this.recoverAcademicPeriods();
+    this.onAcademicPeriodSelect();
     this.dropdownSettings = {
       singleSelection: false,
       maxHeight: 197,
@@ -50,6 +69,11 @@ export class HistoricalConsolidatedComponent implements OnInit {
     }
   }
 
+  onAcademicPeriodSelect() {
+    this.formHistoricalConsolidated.get('academicPeriod')?.valueChanges.subscribe((value) => {
+      this.searchHistoricalConsolidated();
+    });
+  }
 
   recoverAcademicPeriods() {
     this.historicalServices.getAllAcademicPeriods(0, 100).subscribe({
@@ -91,21 +115,40 @@ export class HistoricalConsolidatedComponent implements OnInit {
   }
 
   searchHistoricalConsolidated() {
-    if (this.formHistoricalConsolidated.invalid) {
+
+    if ((this.formHistoricalConsolidated.invalid && this.formHistoricalConsolidated.dirty && this.formHistoricalConsolidated.get('academicPeriod')?.value.length === 0) || this.formHistoricalConsolidated.get('academicPeriod')?.value.length === 0) {
       this.formHistoricalConsolidated.markAllAsTouched();
+      this.consolidadoHistoricoResponse = null;
       return;
     }
     const academicPeriodsId = this.formHistoricalConsolidated.get('academicPeriod')?.value.map((item: { item_id: number; }) => item.item_id);
-    console.log(academicPeriodsId);
-    this.historicalServices.historicalConsolidated(this.currentPage, PAGE_SIZE, academicPeriodsId).subscribe({
-      next: (response) => {
-        this.consolidadoHistoricoResponse = response.data.content;
-        console.log(this.consolidadoHistoricoResponse);
-      },
-      error: (error) => {
-        console.error(error);
-      },
-    });
+    this.historicalServices.historicalConsolidated
+      (this.currentPage,
+        PAGE_SIZE,
+        academicPeriodsId,
+        this.filterParams.evaluatedName,
+        this.filterParams.category,
+        this.filterParams.evaluatedId
+      ).subscribe({
+        next: (response) => {
+          if(!response || response.data.content.length === 0 ){ 
+            this.messagesInfoService.showWarningMessage('No se encontraron resultados','Advertencia');
+            this.consolidadoHistoricoResponse = null;
+          }else{
+            this.consolidadoHistoricoResponse = response.data;
+          }
+        },
+        error: (error) => {
+          this.consolidadoHistoricoResponse = null;
+          this.messagesInfoService.showErrorMessage('Error al cargar los datos', 'Error');
+        },
+      });
   }
+
+  pageChange(page: number) {
+    this.currentPage = page - 1;
+    this.searchHistoricalConsolidated();
+  }
+
 
 }

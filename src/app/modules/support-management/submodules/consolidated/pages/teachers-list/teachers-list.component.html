@@ -1,23 +1,46 @@
+<shared-loading-overley [isLoading]="loading"></shared-loading-overley>
 <div class="view-container">
     <span class="title-two">Docentes {{currentUser?.usuarioDetalle?.departamento | titlecase }}</span>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">A continuación, se presenta el listado de docente asignado al {{currentUser?.usuarioDetalle?.departamento | titlecase}} junto con los consolidados correspondientes para el periodo académico {{activeAcademicPeriod?.idPeriodo}}.  Tenga en cuenta que únicamente se mostrarán los docentes que tengan actividades asignadas para el periodo académico activo.</span>
+        <span class="text-body-heavy">A continuación, se presenta el listado de docente asignado al
+            {{currentUser?.usuarioDetalle?.departamento | titlecase}} junto con los consolidados correspondientes para
+            el periodo académico {{activeAcademicPeriod?.idPeriodo}}. Tenga en cuenta que únicamente se mostrarán los
+            docentes que tengan actividades asignadas para el periodo académico activo.</span>
     </div>
     <consolidated-teachers-list-filter></consolidated-teachers-list-filter>
     <consolidated-teachers-list-table></consolidated-teachers-list-table>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">Aquí puede descargar los soportes de los docente del {{currentUser?.usuarioDetalle?.departamento | titlecase}}.</span>
+        <span class="text-body-heavy">Aquí puede descargar los soportes y el consolidado general de los docente del
+            {{currentUser?.usuarioDetalle?.departamento | titlecase}}.</span>
     </div>
-    <section>
-        <span class="title-three">Descargar soportes</span>
-        <div class="buttons-container" style="width: 50% !important;">
-            <div>
-                <span class="text-body-small-r">Soportes</span>
-                <br>
-            </div>
-            <button (click)="downloadAllSuppotFiles()" class="button-actions button-download"></button>
+    <div class="row">
+        <div class="col">
+            <section>
+                <span class="title-three">Descargar soportes</span>
+                <div class="buttons-container">
+                    <div>
+                        <span class="text-body-small-r">Soportes</span>
+                        <br>
+                    </div>
+                    <button (click)="downloadAllSuppotFiles()" class="button-actions button-download"></button>
+                </div>
+            </section>
         </div>
-    </section>
+        <div class="col">
+            <section>
+                <span class="title-three">Descargar consolidado general</span>
+                <div class="buttons-container">
+                    <div>
+                        <span class="text-body-small-r">Consolidado general</span>
+                        <br>
+                    </div>
+                    <button (click)="downloadConsolidatedGeneralFile()" class="button-actions button-download"></button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+
 </div>

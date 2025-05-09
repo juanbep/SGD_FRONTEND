@@ -256,11 +256,23 @@ export class SmConsolidatedServicesService {
     );
   }
 
-  historicalConsolidated(page: number, totalPage:number, academicPeriodsId: number[]): Observable<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>> {
+  historicalConsolidated(page: number, totalPage:number, academicPeriodsId: number[], evaluatedName: string | null, contractType: string | null, evaluatedId: string | null): Observable<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', totalPage.toString())
-      .set('periodos', academicPeriodsId.toString());
+      .set('periodos', academicPeriodsId.toString())
+      .set('nombre', evaluatedName || '')
+      .set('categoria', contractType || '')
+      .set('identificacion', evaluatedId || '');
+
     return this.httpClient.get<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>>(`${this.baseUrl}/api/consolidado/historico-calificaciones`, { params });
+  }
+
+  downloadConsolidatedGeneralFile(departmentId: string){
+    const params = new HttpParams().set('departamento', departmentId);
+    return this.httpClient.get(
+      `${this.baseUrl}/api/usuarios/exportar-evaluacion-docente-excel`,
+      { params, responseType: 'blob' }
+    );
   }
 }

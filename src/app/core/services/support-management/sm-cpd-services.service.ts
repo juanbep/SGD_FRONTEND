@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { environments } from '../../../../environments/environments';
+import { HttpClient } from '@angular/common/http';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class SmCpdServicesService {
 
-    //TODO: Retornar docentes
-    //TODO: Retornar docente por id
-    //TODO: Retornar actividades
-    //TODO: Enviar check de actividades
-    //TODO: Descargar consolidado
-    //TODO: Descargar fuentes
-    
-    
+    private baseUrl = environments.baseUrl;
+
+    private httpCliente = inject(HttpClient);
+
+    downloadConsolidatedReportFile() {
+        return this.httpCliente.get(this.baseUrl + '/api/consolidado/exportar-informacion-general', { responseType: 'blob' });
+    }
+
+
 }

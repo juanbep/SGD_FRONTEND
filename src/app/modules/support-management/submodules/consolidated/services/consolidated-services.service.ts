@@ -248,4 +248,8 @@ export class ConsolidatedServicesService {
   getConsolidatedInfoTeacher(idUser: number) {
     return this.smConsolidatedServicesService.getInfoTeacher(idUser);
   }
+
+  downloadConsolidatedGeneralFile(departmentId: string) {
+    return this.smConsolidatedServicesService.downloadConsolidatedGeneralFile(departmentId);
+  }
 }

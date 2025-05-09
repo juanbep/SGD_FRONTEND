@@ -1,8 +1,13 @@
+<shared-loading-overley [isLoading]="loading"></shared-loading-overley>
 <div class="view-container">
     <div class="title-two">Comite de Personal Docente (CPD)</div>
     <div class="messages-container">
         <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">A continuación, encontrará el listado de docentes asignados para el periodo académico {{academicPeriodActive?.idPeriodo}} y cuyo consolidado ha sido generado por el respectivo Jefe de Departamento. En esta vista, podrá visualizar los detalles de la evaluación de las fuentes, enviar notificaciones por correo electrónico, descargar los soportes del docente, además de aprobar el consolidado y generar la resolución.</span>
+        <span class="text-body-heavy">A continuación, encontrará el listado de docentes asignados para el periodo
+            académico {{academicPeriodActive?.idPeriodo}} y cuyo consolidado ha sido generado por el respectivo Jefe de
+            Departamento. En esta vista, podrá visualizar los detalles de la evaluación de las fuentes, enviar
+            notificaciones por correo electrónico, descargar los soportes del docente, además de aprobar el consolidado
+            y generar la resolución.</span>
     </div>
     <div class="mb-3"></div>
     <div class="title-three">Docentes {{currentUser?.usuarioDetalle?.departamento | titlecase}}</div>
@@ -20,7 +25,7 @@
                 <th class="text-body-regular">Acciones</th>
             </tr>
         </thead>
-        <ng-container *ngIf="teacherByDepartment && teacherByDepartment.content.length>0 ; else nullData" >
+        <ng-container *ngIf="teacherByDepartment && teacherByDepartment.content.length>0 ; else nullData">
             <tbody>
                 <tr *ngFor="let teacher of teacherByDepartment.content">
                     <td class="text-body-regular">{{teacher.nombreDocente}}</td>
@@ -30,9 +35,10 @@
                     <td class="text-body-regular">{{teacher.categoria }}</td>
                     <td class="text-body-regular">{{teacher.calificacion}}</td>
                     <td>
-                        <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]" routerLinkActive="router-link-active" title="Actividades"></button>
-                        <button class="button-table-email" (click)="openEmailModal(teacher.departamento)" title="Enviar email"></button>
-                        <button class="button-table-check" (click)="openAprobeConlidatedModalForm(teacher)" title="Aprobar consolidado y generar resolución"></button>
+                        <button class="button-table-form" [routerLink]="['../actividades',teacher.oidUsuario]"
+                            routerLinkActive="router-link-active" title="Actividades"></button>
+                        <button class="button-table-email" (click)="openEmailModal(teacher.departamento)"
+                            title="Enviar email"></button>
                     </td>
                 </tr>
             </tbody>
@@ -44,21 +50,37 @@
             <tr class="text-center">
                 <td colspan="6" class="text-body-regular">No se encontraron docentes registrados en el sistema</td>
             </tr>
-        </tbody>	
+        </tbody>
     </ng-template>
     <div class="mb-2"></div>
-    <shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage" [totalPages]="teacherByDepartment?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
-    <section>
-        <span class="title-three">Descargar soportes y consolidados</span>
-        <div class="buttons-container" style="width: 50% !important;">
-            <div>
-                <span class="text-body-regular">Descargar todos los soportes</span>
-                <br>
-            </div>
-            <button  class="button-actions button-download" (click)="downloadFiles()"></button>
+    <shared-paginator class="d-flex justify-content-center" [currentPage]="currentPage"
+        [totalPages]="teacherByDepartment?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
+    <div class="row">
+        <div class="col">
+            <section>
+                <span class="title-three">Descargar soportes y consolidados</span>
+                <div class="buttons-container">
+                    <div>
+                        <span class="text-body-regular">Descargar todos los soportes</span>
+                        <br>
+                    </div>
+                    <button class="button-actions button-download" (click)="downloadFiles()"></button>
+                </div>
+            </section>
         </div>
-    </section>
+        <div class="col">
+            <section>
+                <span class="title-three">Descargar consolidado general</span>
+                <div class="buttons-container">
+                    <div>
+                        <span class="text-body-regular">Descargar consolidado general</span>
+                        <br>
+                    </div>
+                    <button class="button-actions button-download" (click)="downloadConsolidatedReportFile()"></button>
+                </div>
+            </section>
+        </div>
+    </div>
 </div>
 
 <shared-email [destinatario]="bossDepartment?.correo || ''" [remitente]="currentUser?.correo ||''"></shared-email>
-<modal-cpd-info-form (infoCpd)="onOptionFormCpdInfo($event)"></modal-cpd-info-form>

@@ -2,9 +2,13 @@
 
     <span class="title-two">Histórico de consolidados</span>
     <div class="mb-2"></div>
+    <div class="messages-container">
+        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
+        <span class="text-body-heavy">Por favor, seleccione uno o varios periodos académicos que le permitirán visualizar la evaluación final del docente o de los docentes, y así generar la resolución correspondiente.</span>
+    </div>
     <section style="width: 50%;">
         <span class="title-three">Periodos academicos</span>
-        <form [formGroup]="formHistoricalConsolidated" (ngSubmit)="searchHistoricalConsolidated()">
+        <form [formGroup]="formHistoricalConsolidated">
             <div class="row">
                 <div class="col">
                     <ng-container *ngIf="academicPeriodResponse.length > 0">
@@ -16,14 +20,14 @@
                         </span>
                     </ng-container>
                 </div>
-                <div class="col">
+                <!-- <div class="col">
                     <button class="button-normal" type="submit">Generar</button>
-                </div>
+                </div> -->
             </div>
         </form>
     </section>
-    <historical-user-filter></historical-user-filter>
-    <ng-container *ngIf="consolidadoHistoricoResponse.length>0">
-        <historical-user-table [consolidadoHistoricoResponse]="consolidadoHistoricoResponse" [AcademicPeriods]="formHistoricalConsolidated.get('academicPeriod')?.value"></historical-user-table>
+    <ng-container *ngIf="consolidadoHistoricoResponse?.content">
+        <historical-user-filter></historical-user-filter>
+        <historical-user-table [consolidadoHistoricoResponse]="consolidadoHistoricoResponse" [academicPeriods]="formHistoricalConsolidated.get('academicPeriod')?.value" (pageChange)="pageChange($event)"></historical-user-table>
     </ng-container>
 </div>
