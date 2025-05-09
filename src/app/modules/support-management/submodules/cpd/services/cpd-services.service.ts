@@ -125,4 +125,8 @@ export class CpdServicesService {
   getInformationTeacherConsolidatedResponse(idUser: number) {
     return this.smConsolidatedServicesService.getInfoTeacher(idUser);
   }
+
+  downloadConsolidatedReportFile() {
+    return this.smCpdServicesService.downloadConsolidatedReportFile();
+  }
 }

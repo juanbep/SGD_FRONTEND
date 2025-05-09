@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ChartComponent } from '../../components/chart/chart.component';
 import {
   FormBuilder,
@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { debounceTime, max } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import { LineChartComponent } from '../../components/line-chart/line-chart.component';
 import { StatisticsService } from '../../services/statistics-service.service';
 import { ComparacionEvaluacionActividad } from '../../../../../../core/models/response/statistics/comparacion-evaluacion-actividad-response.model';

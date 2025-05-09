@@ -6,6 +6,7 @@
                 <th class="text-body-heavy">Identificación</th>
                 <th class="text-body-heavy">Tipo contrato</th>
                 <th class="text-body-heavy">% Evaluación completado</th>
+                <th class="text-body-heavy">Evaluación acumulada</th>
                 <th class="text-body-heavy">Estado consolidado</th>
                 <th class="text-body-heavy">Acciones</th>
             </tr>
@@ -25,6 +26,9 @@
                     <td class="text-end">
                         <span class="text-body-regular">{{teacher.porcentajeEvaluacionCompletado}}%</span>
                     </td>
+                    <td class="text-end">
+                        <span class="text-body-regular">{{teacher.totalAcumulado}}</span>
+                    </td>
                     <td>
                        <span class="text-body-regular">{{teacher.estadoConsolidado}}</span>
                      </td>
@@ -41,7 +45,7 @@
         <ng-template #noData>
             <tbody>
                 <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="7" class="text-center">
                         <span class="text-body-regular">No hay docente registrados en el sistema</span>
                     </td>
                 </tr>

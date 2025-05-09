@@ -5,6 +5,7 @@ export interface UsuarioConsolidadoCreadoResponse {
   numeroIdentificacion: string;
   facultad: string;
   departamento: string;
+  calificacion: number;
   categoria: string;
   tipoContratacion: string;
   dedicacion: string;

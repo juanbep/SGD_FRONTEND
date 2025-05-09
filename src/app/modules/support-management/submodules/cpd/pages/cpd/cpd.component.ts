@@ -14,15 +14,14 @@ import { EmailComponent } from '../../../../../../shared/components/email/email.
 import { RouterModule } from '@angular/router';
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { CpdWordGeneratorService } from '../../services/cpd-word-generator.service';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
-import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 import { UsuarioConsolidadoCreadoResponse } from '../../../../../../core/models/response/usuarios-consolidado-creado-response.model';
 import { CpdInfoFormComponent } from '../../components/cpd-info-form/cpd-info-form.component';
 import { UsersServiceService } from '../../../../../user-management/submodules/users/services/users-service.service';
 import { ROLES } from '../../../../../../core/enums/domain-enums';
+import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 const TOTAL_PAGE = 10;
 const ID_ROL = '1';
 
@@ -35,7 +34,7 @@ const ID_ROL = '1';
     PaginatorComponent,
     RouterModule,
     UserFilterComponent,
-    CpdInfoFormComponent
+    LoadingOverleyComponent
   ],
   templateUrl: './cpd.component.html',
   styleUrl: './cpd.component.css',
@@ -44,15 +43,12 @@ export class CpdComponent implements OnInit {
 
   @ViewChild(EmailComponent) emailComponent: EmailComponent | null = null;
 
-  @ViewChild(CpdInfoFormComponent) cpdInfoFormComponent: CpdInfoFormComponent | null = null;
-
   private academicPeriodManagementService = inject(
     AcademicPeriodManagementService
   );
   private authServiceService = inject(AuthServiceService);
   private cpdServiceServices = inject(CpdServicesService);
   private messagesInfoService = inject(MessagesInfoService);
-  private cpdWordGeneratorService = inject(CpdWordGeneratorService);
   private userService = inject(UsersServiceService);
 
   public academicPeriodActive: PeriodoAcademicoResponse | null = null;
@@ -68,8 +64,8 @@ export class CpdComponent implements OnInit {
   public teacherByDepartment: PagedResponse<UsuarioConsolidadoCreadoResponse> | null =
     null;
 
-  public userSelectedToCreateRelution: UsuarioConsolidadoCreadoResponse | null = null;
   public bossDepartment: UsuarioResponse | null = null;
+  public loading: boolean = false;
 
   filterEffect = effect(() => {
     this.filterParams = this.cpdServiceServices.getFilterTeacherParams();
@@ -107,9 +103,9 @@ export class CpdComponent implements OnInit {
   pageChanged(page: number) {
     this.currentPage = page;
     this.recoverTeachers(
-      this.currentPage,   
+      this.currentPage,
       TOTAL_PAGE);
-    
+
   }
 
   recoverBossDepartment(teacherDepartment: string = '') {
@@ -150,6 +146,8 @@ export class CpdComponent implements OnInit {
       this.academicPeriodActive &&
       this.currentUser
     ) {
+      this.loading = true;
+
       this.cpdServiceServices
         .downloadFiles(
           this.academicPeriodActive.idPeriodo,
@@ -160,6 +158,7 @@ export class CpdComponent implements OnInit {
         )
         .subscribe({
           next: (blob) => {
+            this.loading = false;
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -169,6 +168,7 @@ export class CpdComponent implements OnInit {
             window.URL.revokeObjectURL(url);
           },
           error: (error) => {
+            this.loading = false;
             this.messagesInfoService.showErrorMessage(
               'Error al descargar los archivos',
               'Error'
@@ -178,48 +178,32 @@ export class CpdComponent implements OnInit {
     }
   }
 
-  openAprobeConlidatedModalForm(usuarioSelected: UsuarioConsolidadoCreadoResponse) {
-    if (this.cpdInfoFormComponent) {
-      this.userSelectedToCreateRelution = usuarioSelected;
-      this.cpdInfoFormComponent.open();
-    }
-  }
+  downloadConsolidatedReportFile() {
 
-  onOptionFormCpdInfo(event: { resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string }) {
-    if (this.userSelectedToCreateRelution) {
-      this.wordGenerator(this.userSelectedToCreateRelution, event);
-    }
-  }
-
-  wordGenerator(
-    teacherInfo: UsuarioConsolidadoCreadoResponse,
-    infoConsolidated: { resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string }
-  ) {
-    let infoTeacherConsolidated: DetalleUsuarioConsolidadoResponse | null =
-      null;
-    this.cpdServiceServices
-      .getInformationTeacherConsolidatedResponse(teacherInfo.oidUsuario)
-      .subscribe({
-        next: (response) => {
-          infoTeacherConsolidated = response.data;
-          this.cpdInfoFormComponent?.close();
-          if (this.academicPeriodActive)
-            this.cpdWordGeneratorService.generateWordDocument(
-              infoTeacherConsolidated,
-              teacherInfo,
-              this.academicPeriodActive,
-              infoConsolidated
+    if (this.academicPeriodActive) {
+      this.loading = true;
+      this.cpdServiceServices
+        .downloadConsolidatedReportFile()
+        .subscribe({
+          next: (blob) => {
+            this.loading = false;
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `consolidado_${this.academicPeriodActive?.idPeriodo}.xlsx`;
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          },
+          error: (error) => {
+            this.loading = false;
+            this.messagesInfoService.showErrorMessage(
+              'Error al descargar el archivo',
+              'Error'
             );
-          this.messagesInfoService.showSuccessMessage(
-            'Documento generado correctamente', 'Éxito'
-          );
-        },
-        error: (error) => {
-          this.messagesInfoService.showErrorMessage(
-            'Error al obtener la información del docente',
-            'Error'
-          );
-        },
-      });
+          },
+        });
+    }
   }
+
 }

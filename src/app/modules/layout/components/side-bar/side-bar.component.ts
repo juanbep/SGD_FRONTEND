@@ -98,6 +98,11 @@ export class SideBarComponent implements OnInit {
           label: 'CPD',
           url: '/app/gestion-soportes/cpd/lista-docentes',
         },
+        {
+          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR', 'CPD'],
+          label: 'Histórico consolidado',
+          url: '/app/gestion-soportes/historico-consolidados',
+        },
       ],
     },
     {

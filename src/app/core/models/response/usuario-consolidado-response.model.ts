@@ -4,5 +4,6 @@ export interface  UsuarioConsolidadoResponse {
     identificacion: string;
     contratacion: string;
     porcentajeEvaluacionCompletado: number;
+    totalAcumulado: number;
     estadoConsolidado: string;
 }
