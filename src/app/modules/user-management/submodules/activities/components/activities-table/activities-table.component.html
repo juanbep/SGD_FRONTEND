@@ -16,8 +16,8 @@
                 <td class="text-body-regular">{{activity.nombreActividad}}</td>
                 <td>{{(activity.horas*activity.semanas).toFixed()}}</td>
                 <td>
-                    <img src="assets/icons/tables/icon-view.svg" (click)="openActivitieDetails(activity)" alt="Ver detalles" title="Ver detalles" style="cursor: pointer;" aria-label="Ver detalles">
-                    <img src="/assets/icons/tables/icon-pen.svg" [routerLink]="['/app/gestion-usuarios/actividades/editar-actividad/', activity.oidActividad]" routerLinkActive="router-link-active" alt="Editar" title="Editar" style="cursor: pointer;" aria-label="Editar">
+                    <img src="'assets/icons/tables/icon-view.svg'" (click)="openActivitieDetails(activity)" alt="Ver detalles" title="Ver detalles" style="cursor: pointer;" aria-label="Ver detalles">
+                    <img src="'assets/icons/tables/icon-pen.svg'" [routerLink]="['/app/gestion-usuarios/actividades/editar-actividad/', activity.oidActividad]" routerLinkActive="router-link-active" alt="Editar" title="Editar" style="cursor: pointer;" aria-label="Editar">
                 </td>
             </tr>
         </tbody>

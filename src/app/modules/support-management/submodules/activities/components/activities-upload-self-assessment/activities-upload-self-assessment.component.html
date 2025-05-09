@@ -11,7 +11,7 @@
         <!--Sección mensaje informativo -->
         <section>
           <div class="messages-container">
-            <img src="assets/icons/messages/icon-info.svg" alt="" />
+            <img src="'assets/icons/messages/icon-info.svg'" alt="" />
             <p class="text-body-heavy">
               Por favor, ingrese la evaluación de sus actividades. Asegúrese de
               que la evaluación coincida con la información del documento de
@@ -56,7 +56,7 @@
                               .tipoCalificacion === 'EN_LINEA'
                         }" id="input-evaluation-edit" class="input-evaluation text-body-regular"
                         formControlName="calificacion" placeholder="Ingresar nota" />
-                      <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                      <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                     </td>
                     <td>
                       <ng-container *ngIf="
@@ -69,7 +69,7 @@
                             else viewReportUploaded
                           ">
                     <td class="center-text">
-                      <img src="assets/icons/tables/icon-upload.svg" alt="" (click)="
+                      <img src="'assets/icons/tables/icon-upload.svg'" alt="" (click)="
                                 triggerReportFileUpload(userActivities[i])
                               " style="cursor: pointer" />
                       <input type="file" id="uploadFileReport" (change)="onRepportFileSelected($event)" hidden />
@@ -77,9 +77,9 @@
                     </ng-container>
                     <ng-template #viewReportUploaded>
                       <td class="center-text">
-                        <img src="assets/icons/tables/icon-view.svg" alt=""
+                        <img src="'assets/icons/tables/icon-view.svg'" alt=""
                           (click)="downloadReportFile(userActivities[i])" style="cursor: pointer" />
-                        <img src="assets/icons/tables/icon-trash.svg" alt=""
+                        <img src="'assets/icons/tables/icon-trash.svg'" alt=""
                           (click)="deleteReportFile(userActivities[i])" />
                       </td>
                     </ng-template>

@@ -32,8 +32,8 @@
                     {{user.estadoUsuario.nombre| titlecase}}
                 </td>
                 <td>
-                    <img src="/assets/icons/tables/icon-view.svg" alt="Detalles usuario" title="Detalles usuario" (click)="viewUserDetails(user)" style="cursor: pointer;">
-                    <img src="/assets/icons/tables/icon-pen.svg" alt="Editar usuario" title="Editar usuario" style="cursor: pointer;" [routerLink]="['./editar-usuario/',user.oidUsuario]">
+                    <img src="'assets/icons/tables/icon-view.svg'" alt="Detalles usuario" title="Detalles usuario" (click)="viewUserDetails(user)" style="cursor: pointer;">
+                    <img src="'assets/icons/tables/icon-pen.svg'" alt="Editar usuario" title="Editar usuario" style="cursor: pointer;" [routerLink]="['./editar-usuario/',user.oidUsuario]">
                     
                 </td>
             </tr>

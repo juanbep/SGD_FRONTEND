@@ -3,7 +3,7 @@
     <header class="title-two">Periodo académico</header>
     
     <section class="messages-container">
-        <img src="assets/icons/messages/teacher.svg" alt="teacher icon">
+        <img src="'assets/icons/messages/teacher.svg'" alt="teacher icon">
         <span class="text-body-heavy">
             A continuación encontrará el listado de periodos académicos vigentes y el historial de periodos académicos.
         </span>
@@ -32,7 +32,7 @@
                         <td class="text-body-regular">{{currentAcademicPeriod.fechaFin | date: 'dd/MM/yyyy': 'UTC'}}</td>
                         <td class="text-body-regular">{{currentAcademicPeriod.estadoPeriodoAcademico.nombre | titlecase}}</td>
                         <td>
-                            <img src="assets/icons/tables/icon-pen.svg" alt="edit icon" (click)="openModalEditAcademicPeriod(currentAcademicPeriod)" style="cursor: pointer;">
+                            <img src="'assets/icons/tables/icon-pen.svg'" alt="edit icon" (click)="openModalEditAcademicPeriod(currentAcademicPeriod)" style="cursor: pointer;">
                         </td>
                     </tr>
                 </tbody>
@@ -47,7 +47,7 @@
         </table>
     </section>
     <section class="messages-container">
-        <img src="assets/icons/messages/teacher.svg" alt="teacher icon">
+        <img [src]="'assets/icons/messages/teacher.svg'" alt="teacher icon">
         <span class="text-body-heavy">
             Para cargar las labores y usuarios de KIRA, asegúrese de que los jefes de departamento y el decano hayan sido creados en el sistema y se encuentren en estado activo. Las actividades sin un evaluador definido se asignarán a los respectivos jefes de departamento.
         </span>

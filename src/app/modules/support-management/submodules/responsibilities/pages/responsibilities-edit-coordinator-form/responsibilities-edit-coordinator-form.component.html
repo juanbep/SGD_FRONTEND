@@ -54,7 +54,7 @@
         <form [formGroup]="formEvaluation" (ngSubmit)="saveEvaluation()">
             <span class="title-three">Evaluación</span>
             <div class="messages-container">
-                <img src="assets/icons/messages/teacher.svg" alt="" />
+                <img src="'assets/icons/messages/teacher.svg'" alt="" />
                 <span class="text-body-small-sb">Califique numéricamente la labor desempeñada por el docente, de acuerdo
                     a las siguientes preguntas en una
                     escala del 0 al 100 según considere: Excelente (95-100),
@@ -88,7 +88,7 @@
                                 formControlName="qualification_1" [ngClass]="{
                     'text-error': isInvalidField('qualification_1')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_1')?.value || '') === 'Deficiente',
@@ -113,7 +113,7 @@
                                 formControlName="qualification_2" [ngClass]="{
                     'text-error': isInvalidField('qualification_2')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_2')?.value || '') === 'Deficiente',
@@ -138,7 +138,7 @@
                                 formControlName="qualification_3" [ngClass]="{
                     'text-error': isInvalidField('qualification_3')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_3')?.value || '') === 'Deficiente',
@@ -166,7 +166,7 @@
                                 formControlName="qualification_4" [ngClass]="{
                     'text-error': isInvalidField('qualification_4')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_4')?.value || '') === 'Deficiente',
@@ -191,7 +191,7 @@
                                 formControlName="qualification_5" [ngClass]="{
                     'text-error': isInvalidField('qualification_5')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_5')?.value || '') === 'Deficiente',
@@ -216,7 +216,7 @@
                                 formControlName="qualification_6" [ngClass]="{
                     'text-error': isInvalidField('qualification_6')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_6')?.value || '') === 'Deficiente',
@@ -241,7 +241,7 @@
                                 formControlName="qualification_7" [ngClass]="{
                     'text-error': isInvalidField('qualification_7')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_7')?.value || '') === 'Deficiente',
@@ -267,7 +267,7 @@
                                 formControlName="qualification_8" [ngClass]="{
                     'text-error': isInvalidField('qualification_8')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_8')?.value || '') === 'Deficiente',
@@ -292,7 +292,7 @@
                                 formControlName="qualification_9" [ngClass]="{
                     'text-error': isInvalidField('qualification_9')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_9')?.value || '') === 'Deficiente',
@@ -317,7 +317,7 @@
                                 formControlName="qualification_10" [ngClass]="{
                     'text-error': isInvalidField('qualification_10')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_10')?.value || '') === 'Deficiente',
@@ -343,7 +343,7 @@
                                 formControlName="qualification_11" [ngClass]="{
                     'text-error': isInvalidField('qualification_11')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_11')?.value || '') === 'Deficiente',
@@ -368,7 +368,7 @@
                                 formControlName="qualification_12" [ngClass]="{
                     'text-error': isInvalidField('qualification_12')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_12')?.value || '') === 'Deficiente',
@@ -393,7 +393,7 @@
                                 formControlName="qualification_13" [ngClass]="{
                     'text-error': isInvalidField('qualification_13')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_13')?.value || '') === 'Deficiente',
@@ -418,7 +418,7 @@
                                 formControlName="qualification_14" [ngClass]="{
                     'text-error': isInvalidField('qualification_14')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_14')?.value || '') === 'Deficiente',
@@ -441,7 +441,7 @@
                                 formControlName="qualification_15" [ngClass]="{
                     'text-error': isInvalidField('qualification_15')
                   }" placeholder="Ingresar nota" />
-                            <img src="assets/icons/tables/icon-pen-modal.svg" alt="icon-pen-modal" />
+                            <img src="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
                         </td>
                         <td [ngClass]="{
                   'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_15')?.value || '') === 'Deficiente',

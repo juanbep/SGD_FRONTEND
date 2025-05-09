@@ -45,7 +45,7 @@
             "
             (click)="openModalView(activity, 1)"
           >
-            <img src="assets/icons/tables/icon-view.svg" alt="Ver actividad" />
+            <img src="'assets/icons/tables/icon-view.svg'" alt="Ver actividad" />
           </button>
           <button
             class="button-table"
@@ -57,7 +57,7 @@
             (click)="openSelfEvaluationReviewForm(activity.fuentes[0].oidFuente)"
           >
             <img
-              src="assets/icons/tables/icon-view.svg"
+              src="'assets/icons/tables/icon-view.svg'"
               alt="iconoformularion evaluación"
               title="Formulario de evalución"
             />
@@ -72,7 +72,7 @@
             (click)="openEditFormEvaluation(activity.fuentes[0].oidFuente)"
           >
             <img
-              src="assets/icons/tables/icon-pen.svg"
+              src="'assets/icons/tables/icon-pen.svg'"
               alt="iconoformularion evaluación"
               title="Formulario de evalución"
             />
@@ -97,7 +97,7 @@
             (click)="openFormEvaluation(activity.oidActividad)"
           >
             <img
-              src="assets/icons/tables/icon-form.svg"
+              src="'assets/icons/tables/icon-form.svg'"
               alt="iconoformularion evaluación"
               title="Formulario de evalución"
             />
@@ -131,7 +131,7 @@
             "
             (click)="openModalView(activity, 2)"
           >
-            <img src="assets/icons/tables/icon-view.svg" alt="Ver actividad" />
+            <img src="'assets/icons/tables/icon-view.svg'" alt="Ver actividad" />
           </button>
           <activities-view-evaluation
             *ngIf="

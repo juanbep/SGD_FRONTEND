@@ -12,7 +12,7 @@
                     <p class="title-three">Actividad y evaluación</p>
                     <div class="messages-container row">
                         <div class="col-auto">
-                            <img src="assets/icons/messages/icon-info.svg" alt="">
+                            <img src="'assets/icons/messages/icon-info.svg'" alt="">
 
                         </div>
                         <div class="col">
@@ -55,15 +55,15 @@
                                                 *ngIf="userActivities[i].informeEjecutivo && !( this.userActivities[i].fuentes[0].calificacion && this.userActivities[i].fuentes[0].tipoCalificacion === 'EN_LINEA'); else noReport">
                                                 <ng-container
                                                     *ngIf="userActivities[i].fuentes[0].nombreDocumentoInforme; else missingReport">
-                                                    <img src="assets/icons/tables/icon-view.svg" alt=""
+                                                    <img src="'assets/icons/tables/icon-view.svg'" alt=""
                                                         style="cursor: pointer;"
                                                         (click)="downloadReport(userActivities[i].fuentes[0])">
-                                                    <img src="assets/icons/tables/icon-trash.svg" alt=""
+                                                    <img src="'assets/icons/tables/icon-trash.svg'" alt=""
                                                         style="cursor: pointer;"
                                                         (click)="deleteReport(userActivities[i])">
                                                 </ng-container>
                                                 <ng-template #missingReport>
-                                                    <img src="assets/icons/tables/icon-upload.svg" alt=""
+                                                    <img src="'assets/icons/tables/icon-upload.svg'" alt=""
                                                         style="cursor: pointer;"
                                                         (click)="triggerReportFileUpload(userActivities[i])">
                                                     <input type="file" id="uploadFileReportEdit"

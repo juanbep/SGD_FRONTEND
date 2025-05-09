@@ -74,13 +74,13 @@
             activity.fuentes[0].estadoFuente.includes('DILIGENCIADO')
           "
           (click)="viewDetailsSourceModal(activity.oidActividad)"
-          src="/assets/icons/tables/icon-view.svg"
+          src="'assets/icons/tables/icon-view.svg'"
           alt="view-icon"
           style="cursor: pointer"
         />
         <ng-container *ngIf="!findRoleCurrentUserById('COORDINADOR')">
           <img
-            src="/assets/icons/tables/icon-message.svg"
+            src="'assets/icons/tables/icon-message.svg'"
             alt="message-icon"
             (click)="activityToSendEmailSelected(activity, activity.fuentes[0])"
             style="cursor: pointer"
@@ -103,13 +103,13 @@
             activity.fuentes[1].estadoFuente.includes('DILIGENCIADO')
           "
           (click)="viewDetailsSourceTwoModal(activity.oidActividad)"
-          src="/assets/icons/tables/icon-view.svg"
+          src="'assets/icons/tables/icon-view.svg'"
           alt="view-icon"
           style="cursor: pointer"
         />
         <ng-container *ngIf="!findRoleCurrentUserById('COORDINADOR')">
           <img
-            src="/assets/icons/tables/icon-message.svg"
+            src="'assets/icons/tables/icon-message.svg'"
             alt="message-icon"
             (click)="activityToSendEmailSelected(activity, activity.fuentes[1])"
             style="cursor: pointer"
