@@ -40,7 +40,7 @@
             id="button-table"
             (click)="openModalUpload(responsability)"
           >
-            <img src="'assets/icons/tables/icon-upload.svg'" alt="icon-upload" title="Formulario carga de evaluación docente"/>
+            <img [src]="'assets/icons/tables/icon-upload.svg'" alt="icon-upload" title="Formulario carga de evaluación docente"/>
           </button>
           <button
             *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.oidTipoActividad === 1  || responsability.tipoActividad.oidTipoActividad === 7)"
@@ -48,7 +48,7 @@
             id="button-table"
             (click)="openFormEvaluation(responsability.oidActividad)" 
           >
-          <img src="'assets/icons/tables/icon-form.svg'" alt="iconoformularion evaluación" title="Formulario de evalución">
+          <img [src]="'assets/icons/tables/icon-form.svg'" alt="iconoformularion evaluación" title="Formulario de evalución">
         </button>
         <button
             *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.oidTipoActividad !== 1 && responsability.tipoActividad.oidTipoActividad !== 7 && responsability.tipoActividad.oidTipoActividad !==9) "
@@ -56,14 +56,14 @@
             id="button-table"
             (click)="openCoordinatorFormEvaluation(responsability.oidActividad)" 
           >
-          <img src="'assets/icons/tables/icon-form.svg'" alt="iconoformularion evaluación" title="Formulario de evalución">
+          <img [src]="'assets/icons/tables/icon-form.svg'" alt="iconoformularion evaluación" title="Formulario de evalución">
         </button>
           <button
             *ngIf="responsability.fuentes[1].estadoFuente == 'DILIGENCIADO'"
             class="button-table"
           >
             <img
-              src="'assets/icons/tables/icon-view.svg'"
+              [src]="'assets/icons/tables/icon-view.svg'"
               alt="icon-view"
               (click)="openModalView(responsability)"
             />
@@ -73,7 +73,7 @@
             class="button-table"
           >
             <img
-              src="'assets/icons/tables/icon-pen.svg'"
+              [src]="'assets/icons/tables/icon-pen.svg'"
               alt="icon-view"
               (click)="openModalEdit(responsability)"
             />
@@ -118,7 +118,7 @@
               class="button-table"
             >
               <img
-                src="'assets/icons/tables/icon-download.svg'"
+                [src]="'assets/icons/tables/icon-download.svg'"
                 alt="icon-view"
                 (click)="downloadReport(responsability)"
               />

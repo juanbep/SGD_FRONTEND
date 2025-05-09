@@ -13,14 +13,14 @@
             <li class="sidebar-item ">
                 
                 <a class="sidebar-link menu-one" routerLink="/app/home">
-                    <img src="'assets/icons/sidebar/icon-home.svg'" alt="icon-evaluation">
+                    <img [src]="'assets/icons/sidebar/icon-home.svg'" alt="icon-evaluation">
                     <span class="text-body-heavy mx-3">inicio</span>
                 </a>
             </li>
             <ng-container  *ngFor="let item of sidebarItems">
             <li class="sidebar-item" *ngIf="hasRole(item.role? item.role : [])">
                 <a class="sidebar-link menu-one text-nowrap collapse" *ngIf="hasRole(item.role? item.role : [])" (click)="toggleAction(item.label)">
-                    <img src="'{{item.icon}}'" alt="icon-evaluation">
+                    <img [src]="item.icon" alt="icon-evaluation">
                     <span class="text-body-heavy mx-3">{{item.label}}</span>
                 </a>
                 <ul class="sidebar-dropdown list-unstyled" *ngFor="let itemList of item.sub" [ngClass]="{'expanded': !isToggle(item.label)}">
@@ -35,7 +35,7 @@
         <li class="sidebar-item  d-flex align-item-end bottom-link">
                 
             <a class="sidebar-link menu-one" routerLink="/app/perfil-usuario">
-                <img src="'assets/icons/sidebar/icon-user-simple.svg'" alt="icon-evaluation">
+                <img [src]="'assets/icons/sidebar/icon-user-simple.svg'" alt="icon-evaluation">
                 <span class="text-body-heavy mx-3">Perfil</span>
             </a>
         </li>

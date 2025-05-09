@@ -77,6 +77,7 @@ export class EmailComponent {
           }
         },
         error: (error) => {
+          this.isLoading = false;
           this.messageInfoService.showErrorMessage('Error al enviar el email', 'Email');
         }
       }

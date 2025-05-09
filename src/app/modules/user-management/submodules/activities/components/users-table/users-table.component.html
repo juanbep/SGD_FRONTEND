@@ -32,7 +32,7 @@
                     {{user.estadoUsuario.nombre | titlecase}}
                 </td>
                 <td>
-                    <img src="'assets/icons/tables/icon-form.svg'" alt="Actividades" title="Actividades"
+                    <img [src]="'assets/icons/tables/icon-form.svg'" alt="Actividades" title="Actividades"
                         style="cursor: pointer;" [routerLink]="['../actividades-usuario/',user.oidUsuario]">
                 </td>
             </tr>
