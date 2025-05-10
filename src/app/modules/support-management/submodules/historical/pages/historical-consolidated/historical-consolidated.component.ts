@@ -9,13 +9,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ConsolidadoHistoricoResponse } from '../../../../../../core/models/response/consolidado-historico-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
+import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
 
 const PAGE_SIZE = 10;
 
 @Component({
   selector: 'app-historical-consolidated',
   standalone: true,
-  imports: [UserFilterComponent, UserTableComponent, NgMultiSelectDropDownModule, CommonModule, ReactiveFormsModule],
+  imports: [UserFilterComponent, UserTableComponent, NgMultiSelectDropDownModule, CommonModule, ReactiveFormsModule, LoadingOverleyComponent],
   templateUrl: './historical-consolidated.component.html',
   styleUrl: './historical-consolidated.component.css'
 })
@@ -33,6 +34,7 @@ export class HistoricalConsolidatedComponent implements OnInit {
   public dropdownAcademicPeriodsList: { item_id: number; item_text: string }[] = [];
   public consolidadoHistoricoResponse: PagedResponse<ConsolidadoHistoricoResponse> | null = null;
 
+  public loading = false;
 
   public filterParams: {
     evaluatedName: string | null;
@@ -60,7 +62,7 @@ export class HistoricalConsolidatedComponent implements OnInit {
       maxHeight: 197,
       idField: 'item_id',
       textField: 'item_text',
-      limitSelection: 2,
+      limitSelection: -1,
       selectAllText: 'Seleccionar todo',
       unSelectAllText: 'Deseleccionar todo',
       itemsShowLimit: 5,
@@ -148,6 +150,27 @@ export class HistoricalConsolidatedComponent implements OnInit {
   pageChange(page: number) {
     this.currentPage = page - 1;
     this.searchHistoricalConsolidated();
+  }
+
+  downloadHistoricalConsolidated() {
+    this.loading = true;
+    const academicPeriodsId = this.formHistoricalConsolidated.get('academicPeriod')?.value.map((item: { item_id: number; }) => item.item_id);
+    this.historicalServices.downloadHistoricalConsolidated(academicPeriodsId).subscribe({
+      next: (response) => {
+        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'consolidados_historicos.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.loading = false;
+      },
+      error: (error) => {
+        this.loading = false;
+        this.messagesInfoService.showErrorMessage('Error al descargar el archivo', 'Error');
+      },
+    });
   }
 
 
