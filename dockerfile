@@ -30,3 +30,7 @@ COPY --from=build-step /app/dist/sed-frontend/browser  /usr/share/nginx/html
 
 # Exponemos el puerto 80 para que el contenedor pueda recibir tráfico HTTP.
 EXPOSE 80
+
+
+
+
