@@ -34,7 +34,11 @@ export class ActivitiesTableComponent implements OnInit {
   public currentPage: number = 1;
   public sizePage: number = 10;
 
-  public filterParams: {nameActivity: string | null, typeActivity: string | null, activityCode: string | null, administrativeCode: string | null, vriCode: string | null} | null = null;
+  public filterParams: {nameActivity: string | null, 
+    typeActivity: string | null, 
+    activityCode: string | null, 
+    administrativeCode: string | null, 
+    vriCode: string | null} | null = null;
 
   activitiesEffect = effect(()=>{
     this.filterParams=this.activitiesManagementService.getParamsActivitiesFilter();
@@ -44,7 +48,6 @@ export class ActivitiesTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.idUserParam = this.activitieRouter.snapshot.params['id'];
-    
   }
 
   pageChanged(event: number) {
@@ -61,7 +64,8 @@ export class ActivitiesTableComponent implements OnInit {
   recoverActivitiesByUser(page: number, size: number) {
     const { nameActivity = '', typeActivity = '', activityCode = '', administrativeCode = '', vriCode = '' } = this.filterParams || {};
     if (this.idUserParam) {
-      this.activitiesManagementService.getActivitiesByParams(page-1, size, this.idUserParam, nameActivity, typeActivity, activityCode, administrativeCode, vriCode).subscribe(
+      this.activitiesManagementService.getActivitiesByParams(page-1, size, this.idUserParam,
+         nameActivity, typeActivity, activityCode, administrativeCode, vriCode).subscribe(
         {
           next: (response) => {
             this.activityResponse = response.data;
@@ -77,6 +81,8 @@ export class ActivitiesTableComponent implements OnInit {
       );
     }
   }
+
+  
 
 
 
