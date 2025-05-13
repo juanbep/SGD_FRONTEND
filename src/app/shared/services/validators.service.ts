@@ -12,7 +12,6 @@ export class ValidatorsService {
     public validateNumericFormat(control: AbstractControl): ValidationErrors | null {
         if (control.value) {
             if(!control.value.match(/^\d+(\.\d+)?$/)) {
-                console.log('invalid');
                 return { invalidNumber: true };
             }
         }

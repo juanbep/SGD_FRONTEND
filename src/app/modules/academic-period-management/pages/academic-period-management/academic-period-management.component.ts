@@ -86,7 +86,6 @@ export class AcademicPeriodManagementComponent implements OnInit {
   }
 
   setCurrentAcademicPeriod(): void {
-    this.currentAcademicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue;
   }
 
   openModalCreateAcademicPeriod(): void {

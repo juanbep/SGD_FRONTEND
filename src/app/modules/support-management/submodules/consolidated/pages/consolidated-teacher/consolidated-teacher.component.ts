@@ -201,7 +201,6 @@ export class ConsolidatedTeacherComponent implements OnInit {
           window.URL.revokeObjectURL(url);
         },
         error: (error: any) => {
-          console.log(error);
         },
       });
   }
