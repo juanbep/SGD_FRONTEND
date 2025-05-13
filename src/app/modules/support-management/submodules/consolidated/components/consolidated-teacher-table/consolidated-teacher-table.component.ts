@@ -194,7 +194,6 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
           window.URL.revokeObjectURL(url);
         },
         error: (error: any) => {
-          console.log(error);
         },
       });
   }
