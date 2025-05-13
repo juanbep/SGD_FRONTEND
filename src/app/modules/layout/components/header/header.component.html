@@ -2,11 +2,24 @@
 
     <div class="row d-flex align-items-center h-100 mx-4">
 
-        <div class="col">
+        <div class="col-auto">
             <div class="row">
-                <span class="title-three p-0 ps-5">Sistema de Evaluación Docente</span>
+                <span class="title-two p-0 ps-5">Sistema para la Gestión de Evaluación Docente FIET</span>
             </div>
         </div>
+        <ng-container *ngIf="currentAcademicPeriod !== null">
+            <div class="col-auto">
+                <div class="row">
+                    <span class="title-two p-0 ps-5">|</span>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="row">
+                    <span class="title-two p-0 ps-5">Periodo académico {{currentAcademicPeriod.idPeriodo}}</span>
+                </div>
+            </div>
+        </ng-container>
+
 
         <div class="col d-flex justify-content-end ">
 

@@ -1,9 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../auth/service/auth-service.service';
 import { CommonModule } from '@angular/common';
 import { UsuarioResponse } from '../../../../core/models/response/usuario-response.model';
 import { Rol } from '../../../../core/models/base/rol.model';
+import { AcademicPeriodManagementService } from '../../../academic-period-management/services/academic-period-management-service.service';
+import { PeriodoAcademicoResponse } from '../../../../core/models/response/periodo-academico-response.model';
 
 @Component({
   selector: 'layout-header',
@@ -18,11 +20,31 @@ export class HeaderComponent implements OnInit {
 
   private router: Router = inject(Router);
   private authServiceService = inject(AuthServiceService);
+  private academicPeriodService = inject(AcademicPeriodManagementService)
 
   public currentUser: UsuarioResponse | null = null;
+  public currentAcademicPeriod: PeriodoAcademicoResponse | null = null;
 
+  currentPeriodEffect = effect(() => {
+    this.academicPeriodService.currentAcademicPeriodValue;
+    this.currentPeriodAcademic();
+  });
+  
+  
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
+
+  }
+
+  currentPeriodAcademic() {
+    this.academicPeriodService.getActiveAcademicPeriod().subscribe({
+      next: (periodo: PeriodoAcademicoResponse) => {
+        this.currentAcademicPeriod = this.academicPeriodService.currentAcademicPeriodValue;
+      },
+      error: (error) => {
+        this.currentAcademicPeriod = null;
+      }
+    });
   }
 
   logOut() {

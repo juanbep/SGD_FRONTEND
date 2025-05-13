@@ -271,7 +271,17 @@ export class SmConsolidatedServicesService {
   downloadConsolidatedGeneralFile(departmentId: string){
     const params = new HttpParams().set('departamento', departmentId);
     return this.httpClient.get(
-      `${this.baseUrl}/api/usuarios/exportar-evaluacion-docente-excel`,
+      `${this.baseUrl}/api/usuarios/exportar-evaluacion-docente`,
+      { params, responseType: 'blob' }
+    );
+  }
+
+  dowloadConsolidatedHistoricFile(
+    academicPeriodsId: number[],
+  ): Observable<any> {
+    const params = new HttpParams().set('periodos', academicPeriodsId.toString());
+    return this.httpClient.get(
+      `${this.baseUrl}/api/consolidado/exportar-historico`,
       { params, responseType: 'blob' }
     );
   }

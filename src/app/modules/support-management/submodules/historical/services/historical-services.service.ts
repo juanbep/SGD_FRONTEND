@@ -44,4 +44,9 @@ export class HistoricalServices {
         return this.umUsersServicesService.getUserbyId(id);
     }
 
+    downloadHistoricalConsolidated(
+        academicPeriodsId: number[],
+    ) {
+        return this.smConsolidatedServicesService.dowloadConsolidatedHistoricFile(academicPeriodsId);
+    }
 }

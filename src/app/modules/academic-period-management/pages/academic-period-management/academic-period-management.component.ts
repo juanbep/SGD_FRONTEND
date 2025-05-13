@@ -86,12 +86,7 @@ export class AcademicPeriodManagementComponent implements OnInit {
   }
 
   setCurrentAcademicPeriod(): void {
-    this.currentAcademicPeriod =
-      this.academicPeriods.find(
-        (ap) =>
-          ap.estadoPeriodoAcademico.oidEstadoPeriodoAcademico ===
-          ACTIVE_PERIOD_STATUS_ID
-      ) || null;
+    this.currentAcademicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue;
   }
 
   openModalCreateAcademicPeriod(): void {
