@@ -23,7 +23,6 @@ export class AcademicPeriodManagementService {
     }
 
     setAcademicPeriods(newData: PagedResponse<PeriodoAcademicoResponse> ){
-        console.log(newData);
         this.academicPeriods.update(data => data = newData);
     }
 

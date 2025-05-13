@@ -10,6 +10,7 @@ const routes: Routes = [
         component: MainLayoutComponent,
         children: [
             {
+                
                 path: 'home',
                 loadComponent: () => import('./pages/main/main.component').then(m => m.MainComponent),
             },
