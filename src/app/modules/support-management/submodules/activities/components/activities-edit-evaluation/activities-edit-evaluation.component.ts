@@ -206,7 +206,6 @@ export class ActivitiesEditEvaluationComponent {
     return null;
   }
 
-  //Métodos para recuperar los archivos de fuente e informe ejecutivo
 
   /*
    *  Recupera el archivo de fuente
@@ -216,7 +215,8 @@ export class ActivitiesEditEvaluationComponent {
       if (
         content.fuentes[0] &&
         content.fuentes[0].oidFuente &&
-        content.fuentes[0].tipoCalificacion !== 'EN_LINEA'
+        content.fuentes[0].tipoCalificacion !== 'EN_LINEA' &&
+        content.fuentes[0].nombreDocumentoFuente
       ) {
         this.service
           .getDownloadSourceFile(content.fuentes[0].oidFuente)

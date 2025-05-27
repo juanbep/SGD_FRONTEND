@@ -34,7 +34,7 @@ export class ModalEditAcademicPeriodComponent {
   );
   private messageInfoService = inject(MessagesInfoService);
   public peridoAcademicoKiraResponse: PeriodoAcademicoKiraResponse[] = [];
-  public academicPeriod: PeriodoAcademicoResponse |null = null;
+  public academicPeriod: PeriodoAcademicoResponse | null = null;
 
   public oidAcademicPeriod: number = 0;
 
@@ -235,7 +235,16 @@ export class ModalEditAcademicPeriodComponent {
       .getAllAcademicPeriods(this.currentPage - 1, PAGE_SIZE)
       .subscribe((response) => {
         this.academicPeriodManagementService.setAcademicPeriods(response.data);
-      });
+        this.academicPeriodManagementService.getActiveAcademicPeriod().subscribe({
+          next: (activeAcademicPeriod) => {
+            this.academicPeriodManagementService.currentAcademicPeriodValue = activeAcademicPeriod.data;
+          },
+          error: (error) => {
+            this.academicPeriodManagementService.currentAcademicPeriodValue = null;
+          }
+        });
+
+      })
   }
 
   clearFields(): void {

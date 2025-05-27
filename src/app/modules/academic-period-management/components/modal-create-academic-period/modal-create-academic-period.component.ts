@@ -194,7 +194,16 @@ export class ModalCreateAcademicPeriodComponent {
       .getAllAcademicPeriods(this.currentPage - 1, PAGE_SIZE)
       .subscribe((response) => {
         this.academicPeriodManagementService.setAcademicPeriods(response.data);
-      });
+        this.academicPeriodManagementService.getActiveAcademicPeriod().subscribe({
+          next: (activeAcademicPeriod) => {
+            this.academicPeriodManagementService.currentAcademicPeriodValue = activeAcademicPeriod.data;
+          },
+          error: (error) => {
+            this.academicPeriodManagementService.currentAcademicPeriodValue = null;
+          },
+        });
+
+      })
   }
 
   clearFields(): void {

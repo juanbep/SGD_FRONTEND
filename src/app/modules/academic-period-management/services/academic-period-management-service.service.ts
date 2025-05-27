@@ -11,7 +11,6 @@ export class AcademicPeriodManagementService {
 
     private academicPeriods: WritableSignal<PagedResponse<PeriodoAcademicoResponse> | null> = signal(null);
 
-
     private apmAcademicPeriodManagementService = inject(ApmAcademicPeriodManagementService);
 
     private umUsersServicesService = inject(UmUsersServicesService);
@@ -20,6 +19,10 @@ export class AcademicPeriodManagementService {
 
     get currentAcademicPeriodValue(): PeriodoAcademicoResponse | null {
         return this._currentAcademicPeriod();
+    }
+
+    set currentAcademicPeriodValue(academicPeriod: PeriodoAcademicoResponse | null) {
+        this._currentAcademicPeriod.set(academicPeriod);
     }
 
     setAcademicPeriods(newData: PagedResponse<PeriodoAcademicoResponse> ){
@@ -59,15 +62,6 @@ export class AcademicPeriodManagementService {
     }
 
     /*
-    * Method to get academic period active
-    * @returns Observable<AcademicPeriodResponse>
-    * */
-
-    activeAcademicPeriod(){
-        return this.apmAcademicPeriodManagementService.getAllAcademicPeriods(null,null);
-    }
-
-    /*
     * Method to get the active academic period
     * @returns Observable<AcademicPeriod>
     * */
@@ -79,7 +73,6 @@ export class AcademicPeriodManagementService {
             catchError(error => {
                 return of(error.error.mensaje)
             }
-
 
         )
     )}

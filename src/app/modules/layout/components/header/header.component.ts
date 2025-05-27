@@ -25,6 +25,12 @@ export class HeaderComponent implements OnInit {
   public currentUser: UsuarioResponse | null = null;
   public currentAcademicPeriod: PeriodoAcademicoResponse | null = null;
   
+  currentAcademicPeriodEffect = effect(() => {
+    this.currentAcademicPeriod = this.academicPeriodService.currentAcademicPeriodValue;
+    if (!this.currentAcademicPeriod) {
+      this.currentAcademicPeriod = null;
+    }
+  });
   
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;

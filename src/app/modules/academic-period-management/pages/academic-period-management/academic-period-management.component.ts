@@ -7,11 +7,9 @@ import { PaginatorComponent } from '../../../../shared/components/paginator/pagi
 import { PagedResponse } from '../../../../core/models/response/paged-response.model';
 import { PeriodoAcademicoResponse } from '../../../../core/models/response/periodo-academico-response.model';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
-import { PeriodoAcademicoKiraResponse } from '../../../../core/models/response/periodo-academico-kira-response.model';
 import { LoadingOverleyComponent } from "../../../../shared/components/loading-overley/loading-overley.component";
 import { ModalConfirmGetInfoKiraComponent } from '../../components/modal-confirm-get-info-kira/modal-confirm-get-info-kira.component';
 
-const ACTIVE_PERIOD_STATUS_ID = 1;
 const PAGE_SIZE = 10;
 
 @Component({
@@ -50,14 +48,15 @@ export class AcademicPeriodManagementComponent implements OnInit {
   @ViewChild(ModalConfirmGetInfoKiraComponent)
   modalConfirmGetInfoKira!: ModalConfirmGetInfoKiraComponent;
 
-  constructor() {
-    effect(() => {
-      this.academicPeriodResponse =
-        this.academicPeriodManagementService.getDatAcademicPeriods();
-      this.academicPeriods = this.academicPeriodResponse?.content || [];
-      this.setCurrentAcademicPeriod();
-    });
-  }
+  academicPeriodsEffect = effect(() => {
+    this.academicPeriodResponse = this.academicPeriodManagementService.getDatAcademicPeriods();
+    this.academicPeriods = this.academicPeriodResponse?.content || [];
+  });
+
+  activeAcademicPeriodEffect = effect(() => {
+    this.currentAcademicPeriod =
+      this.academicPeriodManagementService.currentAcademicPeriodValue;
+  });
 
   ngOnInit(): void {
     this.recoverAcademicPeriods(this.currentPage, PAGE_SIZE);

@@ -85,7 +85,5 @@ export enum ESTADO_ETAPA_DESARROLLO {
     EN_PROGRESO = 3
 }
 
-//Objetivo de Desarrollo Sostenible
-
 
 

@@ -11,11 +11,18 @@ import { RldManagementComponent } from "../../components/rld-management/rld-mana
 @Component({
   selector: 'app-activities',
   standalone: true,
-  imports: [ActivitiesTableComponent, RouterModule, ActivitiesFilterComponent, CommonModule, RldManagementComponent],
+  imports: [
+    ActivitiesFilterComponent, 
+    ActivitiesTableComponent, 
+    CommonModule, 
+    RouterModule, 
+    RldManagementComponent],
   templateUrl: './activities.component.html',
   styleUrl: './activities.component.css',
 })
 export class ActivitiesComponent implements OnInit {
+
+  // Rest of code
 
   private route = inject(ActivatedRoute);
   private activitiesMagementService = inject(ActivitiesManagementService);

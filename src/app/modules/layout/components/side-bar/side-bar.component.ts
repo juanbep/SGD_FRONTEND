@@ -124,8 +124,6 @@ export class SideBarComponent implements OnInit {
     this.userRoles = this.currentUser?.roles.map((role) => role.nombre) || [];
   }
 
-  //Resto del código...
-
   hasRole(roles: string[]): boolean {
     const roleSet = new Set(roles);
     return this.userRoles.some((role) => roleSet.has(role));
