@@ -31,6 +31,7 @@
   font-size: 24px !important;
 }
 
+
 .deficientQualification {
     background-color: #f8d7da;
     color: #721c24;
@@ -54,6 +55,14 @@
     color: #0c5460;
     border: 1px solid #bee5eb;
 }
+
+
+.extraordinaryQualification {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
 
 .text-error {
     display: block;

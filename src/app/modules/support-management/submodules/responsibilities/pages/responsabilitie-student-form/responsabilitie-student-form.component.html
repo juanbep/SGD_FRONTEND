@@ -11,39 +11,33 @@
           <th>
             <span class="text-body-regular">Nombres y apellidos</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{ evaluador?.nombres }} {{ evaluador?.apellidos }}</span
-            >
+            <span class="text-body-small-sb">{{ evaluador?.nombres }} {{ evaluador?.apellidos }}</span>
           </th>
           <th>
             <span class="text-body-regular">Num.Id</span>
             <br />
             <span class="text-body-small-sb">{{
               evaluador?.identificacion
-            }}</span>
+              }}</span>
           </th>
           <th>
             <span class="text-body-regular">Programa</span>
             <br />
             <span class="text-body-small-sb">{{
               evaluador?.usuarioDetalle?.programa
-            }}</span>
+              }}</span>
           </th>
           <th>
             <span class="text-body-regular">Nombre del director/a</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{ evaluado?.nombres }} {{ evaluado?.apellidos }}</span
-            >
+            <span class="text-body-small-sb">{{ evaluado?.nombres }} {{ evaluado?.apellidos }}</span>
           </th>
           <th>
             <span class="text-body-regular">Fecha de evaluación</span>
             <br />
-            <span class="text-body-small-sb"
-              >{{ currentDate.getDate() }}/{{ currentDate.getMonth() + 1 }}/{{
-                currentDate.getFullYear()
-              }}</span
-            >
+            <span class="text-body-small-sb">{{ currentDate.getDate() }}/{{ currentDate.getMonth() + 1 }}/{{
+              currentDate.getFullYear()
+              }}</span>
           </th>
         </tr>
       </thead>
@@ -57,33 +51,16 @@
           <div class="col">
             <span class="title-three">Titulo del trabajo de grado</span>
             <div class="form-floating">
-              <input
-                type="text"
-                class="form-control input-text"
-                id="degreeWorkTitle"
-                formControlName="degreeWorkTitle"
+              <input type="text" class="form-control input-text" id="degreeWorkTitle" formControlName="degreeWorkTitle"
                 [ngClass]="{
                   'error-input': isInvalidField('degreeWorkTitle')
-                }"
-              />
-              <label
-                class="label-custom text-body-small-sb"
-                [ngClass]="{
+                }" />
+              <label class="label-custom text-body-small-sb" [ngClass]="{
                   'error-label': isInvalidField('degreeWorkTitle')
-                }"
-                for="degreeWorkTitle"
-                ><span
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Campo obligatorio"
-                  >* </span
-                >Título del trabajo de grado</label
-              >
+                }" for="degreeWorkTitle"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*
+                </span>Título del trabajo de grado</label>
             </div>
-            <span
-              *ngIf="isInvalidField('degreeWorkTitle')"
-              class="error-message text-body-small-r ms-1"
-            >
+            <span *ngIf="isInvalidField('degreeWorkTitle')" class="error-message text-body-small-r ms-1">
               {{ getFieldError("degreeWorkTitle") }}
             </span>
           </div>
@@ -95,45 +72,24 @@
           <div class="col">
             <span class="title-three">Etapa de desarrollo</span>
             <div class="form-floating">
-              <select
-                class="form-select input-select"
-                name=""
-                id="developmentStage"
-                [ngClass]="{
+              <select class="form-select input-select" name="" id="developmentStage" [ngClass]="{
                   'error-input': isInvalidField('developmentStage')
-                }"
-                formControlName="developmentStage"
-              >
+                }" formControlName="developmentStage">
                 <option [ngValue]="null" selected>Seleccione una opción</option>
-                <option
-                  *ngFor="
+                <option *ngFor="
                     let developmentStage of catalogDataResponse?.estadoEtapaDesarrollo
-                  "
-                  value="{{ developmentStage.oidEstadoEtapaDesarrollo }}"
-                >
+                  " value="{{ developmentStage.oidEstadoEtapaDesarrollo }}">
                   {{ developmentStage.nombre | titlecase }}
                 </option>
               </select>
-              <label
-                class="label-custom text-body-small-sb"
-                for="developmentStage"
-                [ngClass]="{
+              <label class="label-custom text-body-small-sb" for="developmentStage" [ngClass]="{
                   'error-label': isInvalidField('developmentStage')
-                }"
-              >
-                <span
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Campo obligatorio"
-                  >*
+                }">
+                <span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*
                 </span>
-                Etapa de desarrollo</label
-              >
+                Etapa de desarrollo</label>
             </div>
-            <span
-              *ngIf="isInvalidField('developmentStage')"
-              class="error-message text-body-small-r ms-1"
-            >
+            <span *ngIf="isInvalidField('developmentStage')" class="error-message text-body-small-r ms-1">
               {{ getFieldError("developmentStage") }}
             </span>
           </div>
@@ -144,8 +100,7 @@
         <span class="title-three">Evaluación</span>
         <div class="messages-container">
           <img [src]="'assets/icons/messages/teacher.svg'" alt="" />
-          <span class="text-body-small-sb"
-            >Califique numéricamente la labor desempeñada por su director de
+          <span class="text-body-small-sb">Califique numéricamente la labor desempeñada por su director de
             Trabajo de Grado, de acuerdo a las siguientes preguntas en una
             escala del 0 al 100 según considere: Excelente (95-100),
             Sobresaliente(90-94), Bueno (80-89), Aceptable(70-79),
@@ -157,9 +112,7 @@
           <thead>
             <tr>
               <th>
-                <span class="text-body-heavy"
-                  >Porcentaje de importancia(%)</span
-                >
+                <span class="text-body-heavy">Porcentaje de importancia(%)</span>
               </th>
               <th>
                 <span class="text-body-heavy">Pregunta</span>
@@ -180,33 +133,24 @@
                 control y seguimiento del trabajo?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_1'),
                     'error-input': isInvalidField('qualification_1')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_1"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_1"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_1')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_1')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_1')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_1')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_1')?.value || '') === 'Excelente'
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_1")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_1")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -216,33 +160,25 @@
                 ¿El profesor asiste puntualmente a las reuniones programadas?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_2')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_2"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_2"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'error-input':isInvalidField('qualification_2'),
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_2')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_2')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_2')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_2')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_2')?.value || '') === 'Excelente'
+
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_2")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_2")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -253,32 +189,24 @@
                 asuntos relacionados con el desarrollo del trabajo de grado?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_3')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_3"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_3"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_3')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_3')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_3')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_3')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_3')?.value || '') === 'Excelente'
+
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_3")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_3")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -289,32 +217,24 @@
                 productos generados?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_4')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_4"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_4"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_4')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_4')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_4')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_4')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_4')?.value || '') === 'Excelente'
+
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_4")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_4")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -325,32 +245,24 @@
                 con el proyecto?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_5')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_5"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_5"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_5')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_5')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_5')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_5')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_5')?.value || '') === 'Excelente'
+
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_5")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_5")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -361,32 +273,24 @@
                 calidad del trabajo de grado y/o sus productos?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_6')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_6"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_6"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_6')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_6')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_6')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_6')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_6')?.value || '') === 'Excelente'
+
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_6")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_6")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -397,32 +301,24 @@
                 estudiante?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_7')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_7"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_7"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_7')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_7')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_7')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_7')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_7')?.value || '') === 'Excelente'
+
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_7")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_7")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -433,32 +329,24 @@
                 innovación en el trabajo de grado?
               </td>
               <td>
-                <input
-                  id="input-evaluation-edit"
-                  [ngClass]="{
+                <input id="input-evaluation-edit" [ngClass]="{
                     'text-error': isInvalidField('qualification_8')
-                  }"
-                  class="input-evaluation text-body-regular"
-                  formControlName="qualification_8"
-                  placeholder="Ingresar nota"
-                />
-                <img
-                  [src]="'assets/icons/tables/icon-pen-modal.svg'"
-                  alt="icon-pen-modal"
-                />
+                  }" class="input-evaluation text-body-regular" formControlName="qualification_8"
+                  placeholder="Ingresar nota" />
+                <img [src]="'assets/icons/tables/icon-pen-modal.svg'" alt="icon-pen-modal" />
               </td>
-              <td
-                [ngClass]="{
+              <td [ngClass]="{
                 'deficientQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_8')?.value || '') === 'Deficiente',
                 'regularQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_8')?.value || '') === 'Aceptable',
                 'goodQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_8')?.value || '') === 'Bueno',
                 'excellentQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_8')?.value || '') === 'Sobresaliente',
-              }"
-              >
+                'extraordinaryQualification': qualitativeEquivalent(this.formEvaluation.get('qualification_8')?.value || '') === 'Excelente'
+
+              }">
                 {{
-                  qualitativeEquivalent(
-                    this.formEvaluation.get("qualification_8")?.value || ""
-                  )
+                qualitativeEquivalent(
+                this.formEvaluation.get("qualification_8")?.value || ""
+                )
                 }}
               </td>
             </tr>
@@ -466,38 +354,31 @@
               <td class="title-three">100%</td>
               <td class="title-three">Total</td>
               <td class="title-three">{{ totalAverage }}</td>
-              <td
-                class="title-three"
-                [ngClass]="{
+              <td class="title-three" [ngClass]="{
                     'deficientQualification': qualitativeEquivalent(totalAverage?.toString() || '') === 'Deficiente',
                     'regularQualification': qualitativeEquivalent(totalAverage?.toString() || '') === 'Aceptable',
                     'goodQualification': qualitativeEquivalent(totalAverage?.toString() || '') === 'Bueno',
                     'excellentQualification': qualitativeEquivalent(totalAverage?.toString() || '') === 'Sobresaliente',
-                }"
-              >
+                    'extraordinaryQualification': qualitativeEquivalent(totalAverage?.toString() || '') === 'Excelente'
+
+                }">
                 {{ qualitativeEquivalent(totalAverage?.toString() || "") }}
               </td>
             </tr>
           </tbody>
         </table>
-        <span *ngIf="errorCalification" class="text-body-regular text-error"
-          >La evaluación no debe ser un valor menor a 0, superior a 100 o
-          alfanumérico</span
-        >
-        <span *ngIf="!allCompleted" class="text-body-regular text-error"
-          >Asegurese de completar todas la evaluaciones</span
-        >
+        <span *ngIf="errorCalification" class="text-body-regular text-error">La evaluación no debe ser un valor menor a
+          0, superior a 100 o
+          alfanumérico</span>
+        <span *ngIf="!allCompleted" class="text-body-regular text-error">Asegurese de completar todas la
+          evaluaciones</span>
       </section>
       <div class="mb-3"></div>
       <section>
         <div class="row">
           <div class="col">
             <span class="title-three">Observaciones</span>
-            <textarea
-              class="form-control input-text"
-              id="observations"
-              formControlName="observations"
-            ></textarea>
+            <textarea class="form-control input-text" id="observations" formControlName="observations"></textarea>
           </div>
         </div>
       </section>
@@ -506,12 +387,10 @@
         <div class="row">
           <div class="col">
             <span class="title-three">Firma del estudiante</span>
-            <ng-container
-              *ngIf="
+            <ng-container *ngIf="
                 !formEvaluation.get('studentSignature')?.value;
                 else noSignatureFile
-              "
-            >
+              ">
               <div class="file-upload-container">
                 <label for="studentSignature" class="file-upload-label">
                   <div class="file-details">
@@ -520,24 +399,14 @@
                       Cargar su firma en formato .png
                     </p>
                   </div>
-                  <input
-                    type="file"
-                    accept=".png"
-                    [ngClass]="{
+                  <input type="file" accept=".png" [ngClass]="{
                       'error-input': isInvalidField('studentSignature')
-                    }"
-                    formControlName="studentSignature"
-                    id="studentSignature"
-                    (change)="onSignatureFileSelected($event)"
-                    hidden
-                  />
+                    }" formControlName="studentSignature" id="studentSignature"
+                    (change)="onSignatureFileSelected($event)" hidden />
                 </label>
                 <div class="file-actions">
-                  <button
-                    type="button"
-                    class="button-upload button-actions button-border-radius"
-                    (click)="triggersSignatureFileUpload()"
-                  ></button>
+                  <button type="button" class="button-upload button-actions button-border-radius"
+                    (click)="triggersSignatureFileUpload()"></button>
                 </div>
               </div>
             </ng-container>
@@ -550,23 +419,13 @@
                   </p>
                 </div>
                 <div class="file-actions">
-                  <button
-                    type="button"
-                    class="button-actions button-delete button-radius-custom"
-                    (click)="deleteFile()"
-                  ></button>
-                  <button
-                    type="button"
-                    class="button-actions button-download"
-                    (click)="downloadFile()"
-                  ></button>
+                  <button type="button" class="button-actions button-delete button-radius-custom"
+                    (click)="deleteFile()"></button>
+                  <button type="button" class="button-actions button-download" (click)="downloadFile()"></button>
                 </div>
               </div>
             </ng-template>
-            <span
-              *ngIf="isInvalidField('studentSignature')"
-              class="error-message text-body-small-r ms-1"
-            >
+            <span *ngIf="isInvalidField('studentSignature')" class="error-message text-body-small-r ms-1">
               {{ getFieldError("studentSignature") }}
             </span>
           </div>
@@ -583,11 +442,7 @@
             </p>
           </div>
           <div class="file-actions">
-            <button
-              type="button"
-              class="button-actions button-view"
-              (click)="generatePdfPreview()"
-            ></button>
+            <button type="button" class="button-actions button-view" (click)="generatePdfPreview()"></button>
           </div>
         </div>
       </section>
@@ -610,8 +465,5 @@
   </section>
 </div>
 
-<shared-confirm-dialog
-  (confirm)="onConfirmCancel($event)"
-  [title]="messageTitle"
-  [message]="messageConfirmCancel"
-></shared-confirm-dialog>
+<shared-confirm-dialog (confirm)="onConfirmCancel($event)" [title]="messageTitle"
+  [message]="messageConfirmCancel"></shared-confirm-dialog>

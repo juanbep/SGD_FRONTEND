@@ -189,7 +189,8 @@ export class ResponsibilityPdfGeneratorService {
     if (evaluation < 70) return 'Deficiente';
     if (evaluation < 80) return 'Aceptable';
     if (evaluation < 90) return 'Bueno';
-    return 'Sobresaliente';
+    if (evaluation < 95) return 'Sobresaliente';
+    return 'Excelente';
   }
 
   async getBase64ImageFromURL(url: string): Promise<string> {

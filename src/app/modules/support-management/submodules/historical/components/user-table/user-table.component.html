@@ -13,7 +13,7 @@
             <th class="text-body-regular">Acciones</th>
         </tr>
     </thead>
-    <ng-container>
+    <ng-container *ngIf="consolidadoHistoricoResponse?.content; else noDataTemplate">
         <tbody>
             <tr *ngFor="let teacher of consolidadoHistoricoResponse?.content">
                 <td class="text-body-regular">{{teacher.nombreDocente}}</td>
@@ -33,6 +33,11 @@
             </tr>
         </tbody>
     </ng-container>
+    <ng-template #noDataTemplate>
+        <tr>
+            <td [colSpan]="7+academicPeriods.length" class="text-body-regular text-center">No hay datos disponibles</td>
+        </tr>
+    </ng-template>
 </table>
 <div class="d-flex justify-content-center mt-3">
     <shared-paginator (pageChange)="changePage($event)"
