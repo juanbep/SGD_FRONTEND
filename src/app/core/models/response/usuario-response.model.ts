@@ -13,6 +13,6 @@ export interface UsuarioResponse {
   fechaCreacion: string;
   ultimoIngreso: string;
   estadoUsuario: EstadoUsuario;
-  usuarioDetalle: UsuarioDetalle; // Relación con el detalle del usuario
-  roles: Rol[]; // Lista de roles asociados
+  usuarioDetalle: UsuarioDetalle;
+  roles: Rol[]; 
 }

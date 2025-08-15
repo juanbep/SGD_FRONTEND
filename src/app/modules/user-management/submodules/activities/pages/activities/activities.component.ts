@@ -22,8 +22,6 @@ import { RldManagementComponent } from "../../components/rld-management/rld-mana
 })
 export class ActivitiesComponent implements OnInit {
 
-  // Rest of code
-
   private route = inject(ActivatedRoute);
   private activitiesMagementService = inject(ActivitiesManagementService);
   private messageInfoService = inject(MessagesInfoService);

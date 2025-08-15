@@ -332,7 +332,7 @@
             <div class="search-subcontainer">
               <div class="input-search-wrapper">
                 <div class="form-floating">
-                  <input type="text" class="form-control input-search text-body-custom" [ngClass]="{
+                  <input type="text" autocomplete="off" class="form-control input-search text-body-custom" [ngClass]="{
                                     'input-search-disabled': isDisabledField('evaluatorId'),
                                     }" id="evaluator" (focus)="showDropdownEvaluatorIdList()"
                     (blur)="hideDropdownEvaluatorIdList()" formControlName="evaluatorId" />
@@ -381,7 +381,7 @@
             <div class="search-subcontainer">
               <div class="input-search-wrapper">
                 <div class="form-floating">
-                  <input type="text" class="form-control input-search text-body-custom" id="evaluatorName"
+                  <input type="text" autocomplete="off" class="form-control input-search text-body-custom" id="evaluatorName"
                     (focus)="showDropdownEvaluatorNameList()" (blur)="hideDropdownEvaluatorNameList()"
                     formControlName="evaluatorName" [ngClass]="{
                       'input-search-disabled': isDisabledField('evaluatorName')
