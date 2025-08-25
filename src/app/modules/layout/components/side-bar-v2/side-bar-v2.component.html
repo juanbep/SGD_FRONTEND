@@ -1,0 +1,57 @@
+<div class="sidebar" [ngClass]="{ 'sidebar-collapsed': isSidebarCollapsed }">
+  <div class="sidebar-header">
+    <a href="#" class="sidebar-logo">
+      <ng-container *ngIf="isSidebarCollapsed; else expandedLogo">
+        <img
+          src="assets/icons/logo_unicauca.svg"
+          alt="Logo reducido"
+          class="logo-collapsed"
+        />
+      </ng-container>
+      <ng-template #expandedLogo>
+        <span>Universidad del Cauca</span>
+      </ng-template>
+    </a>
+  </div>
+  <div class="sidebar-menu">
+    <ul>
+      <ng-container *ngFor="let item of menuItems">
+        <li class="sidebar-menu-item">
+          <a
+            href="#"
+            class="sidebar-item"
+            [ngClass]="{
+              'has-children': item.children,
+              'menu-item-active': item.isOpen
+            }"
+            (click)="toggleMenuItem(item); $event.preventDefault()"
+          >
+            <img [src]="item.icon" class="icon-svg" />
+            <span class="sidebar-item-text">{{ item.label }}</span>
+            <i
+              *ngIf="item.children && !isSidebarCollapsed"
+              class="fas fa-chevron-down sidebar-item-arrow"
+              [ngClass]="{ rotated: item.isOpen }"
+            ></i>
+          </a>
+
+          <ul
+            *ngIf="item.children && !isSidebarCollapsed && item.isOpen"
+            class="sidebar-submenu"
+          >
+            <li *ngFor="let child of item.children">
+              <!-- *ngIf="hasRole(child.role ? child.role : [])"  -->
+              <a
+                routerLink="{{ child.url }}"
+                class="sidebar-item sidebar-subitem"
+              >
+                <i [class]="child.icon"></i>
+                <span class="sidebar-item-text">{{ child.label }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>

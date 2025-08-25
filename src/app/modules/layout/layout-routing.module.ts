@@ -36,6 +36,11 @@ const routes: Routes = [
                 path: 'gestion-estadisticas',
                 loadChildren: () => import('../statistics-management/statistics-management-routing.module').then(m => m.StatisticsManagementRoutingModule),
                 title: 'Gestión de Estadísticas'
+            },
+            {
+                path: 'gestion-calendario-academico',
+                loadChildren: () => import('../academic-calendar-management/academic-calendar-management-routing.module').then(m => m.AcademicCalendarManagementRoutingModule),
+                title: 'Gestión de Estadísticas'
             }
         ]
     }

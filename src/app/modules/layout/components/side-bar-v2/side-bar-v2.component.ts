@@ -1,58 +1,76 @@
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  inject,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthServiceService } from '../../../auth/service/auth-service.service';
 import { UsuarioResponse } from '../../../../core/models/response/usuario-response.model';
 
+interface MenuItem {
+  role: string[];
+  icon: string;
+  label: string;
+  url?: string; // solo existe en subitems
+  children?: MenuItem[];
+  isOpen?: boolean;
+}
+
 @Component({
-  selector: 'layout-side-bar',
+  selector: 'app-side-bar-v2',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './side-bar.component.html',
-  styleUrl: './side-bar.component.css',
+  templateUrl: './side-bar-v2.component.html',
+  styleUrl: './side-bar-v2.component.scss',
 })
-export class SideBarComponent implements OnInit {
+export class SideBarV2Component implements OnInit {
   private authServicesService: AuthServiceService = inject(AuthServiceService);
-
   public currentUser: UsuarioResponse | null = null;
-  public isSidebarActive: boolean = true;
-  public isAcademicPerdiosCollapsed: boolean = true;
-  public isUserManagementCollapsed: boolean = true;
-  public isEvaluationCollapsed: boolean = true;
-  public isStatisticsCollapsed: boolean = true;
-
   public userRoles: string[] = [];
 
-  public sidebarItems = [
+  @Input() isSidebarCollapsed = false;
+  @Output() sidebarToggle = new EventEmitter<void>();
+
+  menuItems: MenuItem[] = [
     {
       role: ['SECRETARIA/O FACULTAD'],
-      label: 'Periodo académico',
       icon: 'assets/icons/sidebar/icon-calendar.svg',
-      sub: [
+      label: 'Periodo académico',
+      isOpen: false,
+      children: [
         {
           role: ['SECRETARIA/O FACULTAD'],
+          icon: 'fas fa-chart-pie',
           label: 'Gestión periodo académico',
           url: '/app/gestion-periodo-academico',
         },
       ],
     },
     {
-    role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
-      label: 'Gestion usuarios',
+      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
       icon: 'assets/icons/sidebar/icon-user.svg',
-      sub: [
+      label: 'Gestion usuarios',
+      isOpen: false,
+      children: [
         {
-          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD', 'DECANO'],
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
+          icon: 'fas fa-user',
           label: 'Usuarios',
           url: '/app/gestion-usuarios/usuarios',
         },
         {
           role: ['JEFE DE DEPARTAMENTO', 'DECANO'],
+          icon: 'fas fa-lock',
           label: 'Actividades',
           url: '/app/gestion-usuarios/actividades/usuarios',
         },
         {
           role: ['JEFE DE DEPARTAMENTO'],
+          icon: 'fas fa-lock',
           label: 'Actividades pendiente de asignar evaluador',
           url: '/app/gestion-usuarios/actividades-pendientes-asignar-evaluador',
         },
@@ -68,11 +86,13 @@ export class SideBarComponent implements OnInit {
         'SECRETARIA/O FACULTAD',
         'CPD',
       ],
+      icon: 'assets/icons/sidebar/icon-evaluation.svg',
       label: 'Evaluación Docente',
-      icon: 'fa fa-pencil-square-o',
-      sub: [
+      isOpen: false,
+      children: [
         {
           role: ['DOCENTE'],
+          icon: 'fas fa-user',
           label: 'Mis actividades',
           url: '/app/gestion-soportes/actividades',
         },
@@ -83,37 +103,68 @@ export class SideBarComponent implements OnInit {
             'COORDINADOR',
             'DECANO',
             'DOCENTE',
-        
           ],
+          icon: 'fas fa-lock',
           label: 'Mis responsabilidades',
           url: '/app/gestion-soportes/responsabilidades',
         },
         {
-          role: ['JEFE DE DEPARTAMENTO','COORDINADOR'],
+          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
+          icon: 'fas fa-lock',
           label: 'Consolidado',
           url: '/app/gestion-soportes/consolidado/lista-docentes',
         },
         {
           role: ['CPD', 'SECRETARIA/O FACULTAD', 'DECANO'],
+          icon: 'fas fa-lock',
           label: 'CPD',
           url: '/app/gestion-soportes/cpd/lista-docentes',
         },
         {
           role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR', 'CPD'],
+          icon: 'fas fa-lock',
           label: 'Histórico consolidado',
           url: '/app/gestion-soportes/historico-consolidados',
         },
       ],
     },
     {
-      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO', 'CPD','COORDINADOR'],
-      label: 'Estadísticas',
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'SECRETARIA/O FACULTAD',
+        'DECANO',
+        'CPD',
+        'COORDINADOR',
+      ],
       icon: 'assets/icons/sidebar/icon-statistics.svg',
-      sub: [
+      label: 'Estadísticas',
+      isOpen: false,
+      children: [
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO', 'CPD','COORDINADOR'],
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'SECRETARIA/O FACULTAD',
+            'DECANO',
+            'CPD',
+            'COORDINADOR',
+          ],
+          icon: 'fas fa-user',
           label: 'Estadísticas',
           url: '/app/gestion-estadisticas/estadisticas',
+        },
+      ],
+    },
+    {
+      role: ['SECRETARIA/O FACULTAD'],
+      icon: 'assets/icons/sidebar/icon-calendar-management.svg',
+      label: 'Gestión Calendario académico',
+      isOpen: false,
+      children: [
+        {
+          role: ['SECRETARIA/O FACULTAD'],
+          icon: 'fas fa-user',
+          label: 'Gestión de calendario académico',
+          url: '/app/gestion-calendario-academico',
         },
       ],
     },
@@ -129,66 +180,14 @@ export class SideBarComponent implements OnInit {
     return this.userRoles.some((role) => roleSet.has(role));
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
-    this.checkScreenSize();
-  }
-
   toggleSidebar() {
-    this.isSidebarActive = !this.isSidebarActive;
+    this.sidebarToggle.emit();
   }
 
-  toggleAction(label: string) {
-    switch (label) {
-      case 'Periodo académico':
-        this.isAcademicPerdiosCollapsed = !this.isAcademicPerdiosCollapsed;
-        this.isUserManagementCollapsed = true;
-        this.isEvaluationCollapsed = true;
-        this.isStatisticsCollapsed = true;
-        break;
-      case 'Gestion usuarios':
-        this.isUserManagementCollapsed = !this.isUserManagementCollapsed;
-        this.isAcademicPerdiosCollapsed = true;
-        this.isEvaluationCollapsed = true;
-        this.isStatisticsCollapsed = true;
-        break;
-      case 'Evaluación Docente':
-        this.isEvaluationCollapsed = !this.isEvaluationCollapsed;
-        this.isAcademicPerdiosCollapsed = true;
-        this.isUserManagementCollapsed = true;
-        this.isStatisticsCollapsed = true;
-        break;
-      case 'Estadísticas':
-        this.isStatisticsCollapsed = !this.isStatisticsCollapsed;
-        this.isAcademicPerdiosCollapsed = true;
-        this.isUserManagementCollapsed = true;
-        this.isEvaluationCollapsed = true;
-
-        break;
-    }
-  }
-
-  isToggle(label: string) {
-    switch (label) {
-      case 'Periodo académico':
-        return this.isAcademicPerdiosCollapsed;
-      case 'Gestion usuarios':
-        return this.isUserManagementCollapsed;
-      case 'Evaluación Docente':
-        return this.isEvaluationCollapsed;
-      case 'Estadísticas':
-        return this.isStatisticsCollapsed;
-      default:
-        return false;
-    }
-  }
-
-  private checkScreenSize() {
-    const screenWidth = window.innerWidth;
-    if (screenWidth <= 1280) {
-      this.isSidebarActive = false;
-    } else {
-      this.isSidebarActive = true;
+  toggleMenuItem(item: MenuItem) {
+    // Only toggle if sidebar is not collapsed and item has children
+    if (!this.isSidebarCollapsed && item.children) {
+      item.isOpen = !item.isOpen;
     }
   }
 }

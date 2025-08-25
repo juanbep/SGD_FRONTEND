@@ -1,14 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { SideBarComponent } from '../side-bar/side-bar.component';
+import { SideBarV2Component } from '../side-bar-v2/side-bar-v2.component';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
+import { AppComponent } from '../../../../app.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
   imports: [
-    SideBarComponent,
+    AppComponent,
     HeaderComponent,
     FooterComponent,
     RouterOutlet

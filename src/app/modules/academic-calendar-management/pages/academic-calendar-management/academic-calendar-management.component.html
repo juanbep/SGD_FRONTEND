@@ -1,0 +1,135 @@
+<!-- <shared-loading-overley [isLoading]="isLoading"></shared-loading-overley> -->
+<div class="view-container">
+  <header class="title-two">Calendario académico</header>
+
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="teacher icon" />
+    <span class="text-body-heavy">
+      A continuación encontrará el calendario académico vigente y el historial
+      de calendarios académicos.
+    </span>
+  </section>
+
+  <div class="mb-3"></div>
+
+  <section>
+    <header class="title-three">Calendario académico vigente</header>
+
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th class="text-body-heavy">Acuerdo académico</th>
+          <th class="text-body-heavy">Id. Calendario académico</th>
+          <th class="text-body-heavy">Año</th>
+          <th class="text-body-heavy">Periodo</th>
+          <th class="text-body-heavy">Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <ng-container>
+        <tbody>
+          <tr>
+            <td class="text-body-regular">
+              {{ calendarioVigente?.acuerdoAcademico }}
+            </td>
+            <td class="text-body-regular">{{ calendarioVigente?.id }}</td>
+            <td class="text-body-regular">{{ calendarioVigente?.anio }}</td>
+            <td class="text-body-regular">{{ calendarioVigente?.periodo }}</td>
+            <td class="text-body-regular">{{ calendarioVigente?.estado }}</td>
+            <td>
+              <img
+                [src]="'assets/icons/tables/icon-pen.svg'"
+                alt="edit icon"
+                style="cursor: pointer"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </ng-container>
+      <ng-template #noData>
+        <tbody>
+          <tr>
+            <td colspan="5" class="text-center text-body-regular">
+              No hay periodos académicos vigentes
+            </td>
+          </tr>
+        </tbody>
+      </ng-template>
+    </table>
+  </section>
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="teacher icon" />
+    <span class="text-body-heavy">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate
+      voluptatibus ea corporis perspiciatis dolorem nulla temporibus sit, itaque
+      labore eius error totam similique porro nesciunt, molestias sed vero
+      numquam soluta.
+    </span>
+  </section>
+  <div class="mb-3"></div>
+  <div class="row row-cols-auto d-flex justify-content-center">
+    <div class="col">
+      <div>
+        <button class="button-normal-large">Crear calendario</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3"></div>
+
+  <section>
+    <header class="title-three">Historial de calendarios académicos</header>
+
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th class="text-body-heavy">Acuerdo académico</th>
+          <th class="text-body-heavy">Id. Calendario académico</th>
+          <th class="text-body-heavy">Año</th>
+          <th class="text-body-heavy">Periodo</th>
+          <th class="text-body-heavy">Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <ng-container
+        *ngIf="historialCalendarios.length > 0; else noPeriodsHistory"
+      >
+        <tbody>
+          <tr *ngFor="let calendario of historialCalendarios">
+            <td class="text-body-regular">{{ calendario.acuerdoAcademico }}</td>
+            <td class="text-body-regular">{{ calendario.id }}</td>
+            <td class="text-body-regular">{{ calendario.anio }}</td>
+            <td class="text-body-regular">{{ calendario.periodo }}</td>
+            <td class="text-body-regular">{{ calendario.estado }}</td>
+            <td>
+              <img
+                [src]="'assets/icons/tables/icon-eye.svg'"
+                alt="ver"
+                style="cursor: pointer"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </ng-container>
+      <ng-template #noPeriodsHistory>
+        <tbody>
+          <tr>
+            <td colspan="4" class="text-center text-body-regular">
+              No hay calendarios académicos registrados
+            </td>
+          </tr>
+        </tbody>
+      </ng-template>
+    </table>
+  </section>
+
+  <div class="mb-3"></div>
+
+  <div class="d-flex justify-content-center">
+    <!-- <shared-paginator [currentPage]="currentPage" [totalPages]="academicPeriodResponse?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator> -->
+  </div>
+</div>
+
+<!-- <academic-period-management-modal-create-academic-period [currentPage]="currentPage"></academic-period-management-modal-create-academic-period>
+<academic-period-management-modal-edit-academic-period [currentPage]="currentPage" ></academic-period-management-modal-edit-academic-period>
+<modal-confirm-get-info-kira (confirm)="confirmLoadInfoTechersAndActivities()"></modal-confirm-get-info-kira> -->
