@@ -26,30 +26,47 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <ng-container>
-        <tbody>
-          <tr>
-            <td class="text-body-regular">
-              {{ calendarioVigente?.acuerdoAcademico }}
-            </td>
-            <td class="text-body-regular">{{ calendarioVigente?.id }}</td>
-            <td class="text-body-regular">{{ calendarioVigente?.anio }}</td>
-            <td class="text-body-regular">{{ calendarioVigente?.periodo }}</td>
-            <td class="text-body-regular">{{ calendarioVigente?.estado }}</td>
-            <td>
-              <img
-                [src]="'assets/icons/tables/icon-pen.svg'"
-                alt="edit icon"
-                style="cursor: pointer"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </ng-container>
+      <tbody *ngIf="calendarioVigente; else noData">
+        <tr>
+          <td>{{ calendarioVigente.acuerdoAcademico }}</td>
+          <td>{{ calendarioVigente.id }}</td>
+          <td>{{ calendarioVigente.anio }}</td>
+          <td>{{ calendarioVigente.periodo }}</td>
+          <td>{{ calendarioVigente.estado }}</td>
+          <td class="text-center">
+            <!-- Editar -->
+            <a
+              [routerLink]="['/app/calendarios/editar', calendarioVigente.id]"
+              class="mx-1"
+              title="Editar calendario"
+            >
+              <i class="fas fa-pen text-primary" style="cursor: pointer"></i>
+            </a>
+
+            <!-- Ver -->
+            <a
+              [routerLink]="['/app/calendarios/ver', calendarioVigente.id]"
+              class="mx-1"
+              title="Ver calendario"
+            >
+              <i class="fas fa-eye text-success" style="cursor: pointer"></i>
+            </a>
+
+            <!-- Eliminar -->
+            <a
+              [routerLink]="['/app/calendarios/eliminar', calendarioVigente.id]"
+              class="mx-1"
+              title="Eliminar calendario"
+            >
+              <i class="fas fa-trash text-danger" style="cursor: pointer"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
       <ng-template #noData>
         <tbody>
           <tr>
-            <td colspan="5" class="text-center text-body-regular">
+            <td colspan="6" class="text-center text-body-regular">
               No hay periodos académicos vigentes
             </td>
           </tr>
@@ -70,7 +87,9 @@
   <div class="row row-cols-auto d-flex justify-content-center">
     <div class="col">
       <div>
-        <button class="button-normal-large">Crear calendario</button>
+        <a [routerLink]="['crear']" class="button-normal-large">
+          Crear calendario
+        </a>
       </div>
     </div>
   </div>
@@ -96,25 +115,67 @@
       >
         <tbody>
           <tr *ngFor="let calendario of historialCalendarios">
-            <td class="text-body-regular">{{ calendario.acuerdoAcademico }}</td>
-            <td class="text-body-regular">{{ calendario.id }}</td>
-            <td class="text-body-regular">{{ calendario.anio }}</td>
-            <td class="text-body-regular">{{ calendario.periodo }}</td>
-            <td class="text-body-regular">{{ calendario.estado }}</td>
-            <td>
-              <img
-                [src]="'assets/icons/tables/icon-eye.svg'"
-                alt="ver"
-                style="cursor: pointer"
-              />
+            <td>{{ calendario.acuerdoAcademico }}</td>
+            <td>{{ calendario.id }}</td>
+            <td>{{ calendario.anio }}</td>
+            <td>{{ calendario.periodo }}</td>
+            <td>{{ calendario.estado }}</td>
+            <td class="text-center">
+              <!-- Ver -->
+              <a
+                [routerLink]="['/app/calendarios/ver', calendario.id]"
+                class="mx-1"
+                title="Ver calendario"
+              >
+                <i class="fas fa-eye text-success" style="cursor: pointer"></i>
+              </a>
+
+              <!-- Eliminar -->
+              <a
+                [routerLink]="['/app/calendarios/eliminar', calendario.id]"
+                class="mx-1"
+                title="Eliminar calendario"
+              >
+                <i class="fas fa-trash text-danger" style="cursor: pointer"></i>
+              </a>
+
+              <!-- Restaurar -->
+              <a
+                [routerLink]="['/app/calendarios/restaurar', calendario.id]"
+                class="mx-1"
+                title="Restaurar calendario"
+              >
+                <i class="fas fa-undo text-warning" style="cursor: pointer"></i>
+              </a>
+
+              <!-- Descargar -->
+              <a
+                [routerLink]="['/app/calendarios/descargar', calendario.id]"
+                class="mx-1"
+                title="Descargar calendario"
+              >
+                <i
+                  class="fas fa-download text-primary"
+                  style="cursor: pointer"
+                ></i>
+              </a>
             </td>
           </tr>
         </tbody>
+        <ng-template #noPeriodsHistory>
+          <tbody>
+            <tr>
+              <td colspan="6" class="text-center text-body-regular">
+                No hay calendarios académicos registrados
+              </td>
+            </tr>
+          </tbody>
+        </ng-template>
       </ng-container>
       <ng-template #noPeriodsHistory>
         <tbody>
           <tr>
-            <td colspan="4" class="text-center text-body-regular">
+            <td colspan="6" class="text-center text-body-regular">
               No hay calendarios académicos registrados
             </td>
           </tr>
