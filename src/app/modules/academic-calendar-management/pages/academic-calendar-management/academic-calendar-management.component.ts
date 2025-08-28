@@ -28,7 +28,7 @@ export class AcademicCalendarManagementComponent {
       id: 165448786542,
       anio: 2025,
       periodo: '2025-1',
-      estado: 'Activo',
+      estado: 'ACTIVO',
       eventos: [],
     };
 
@@ -39,7 +39,7 @@ export class AcademicCalendarManagementComponent {
         id: 365498798131,
         anio: 2024,
         periodo: '2024-2',
-        estado: 'Finalizado',
+        estado: 'DESHABILITADO',
         eventos: [],
       },
       {
@@ -47,7 +47,7 @@ export class AcademicCalendarManagementComponent {
         id: 987541236584,
         anio: 2024,
         periodo: '2024-1',
-        estado: 'Finalizado',
+        estado: 'DESHABILITADO',
         eventos: [],
       },
     ];
