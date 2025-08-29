@@ -1,6 +1,4 @@
-<!-- ======= FORM PRINCIPAL ======= -->
 <form [formGroup]="calendarForm" (ngSubmit)="onSubmit()">
-  <!-- ... aquí tus campos generales ... -->
 
   <!-- ===== Fechas RESALTADAS ===== -->
   <section>
@@ -74,7 +72,7 @@
   <button type="submit" class="button-normal-large">Guardar calendario</button>
 </form>
 
-<!-- ======= MODAL (fuera del form) ======= -->
+<!-- ======= MODAL ======= -->
 <div class="modal-overlay" *ngIf="modalOpen">
   <div class="modal-card">
     <header class="title-three">Agregar fecha no resaltada</header>
