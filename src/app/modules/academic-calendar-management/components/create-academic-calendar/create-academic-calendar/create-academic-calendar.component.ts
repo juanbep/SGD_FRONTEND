@@ -12,11 +12,12 @@ import {
   FECHAS_RESALTADAS,
   FECHAS_NO_RESALTADAS,
 } from '../../../../../core/enums/fechas-resaltadas';
+import { DateRangeFieldComponent } from "../../date-range-field/date-range-field.component";
 
 @Component({
   selector: 'app-create-academic-calendar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DateRangeFieldComponent],
   templateUrl: './create-academic-calendar.component.html',
   styleUrl: './create-academic-calendar.component.css',
 })

@@ -1,0 +1,16 @@
+<input
+  ngxDaterangepickerMd
+  class="form-control"
+  [readonly]="true"
+  [disabled]="disabled"
+  [locale]="locale"
+  [ranges]="resolvedRanges"
+  [autoApply]="autoApply"
+  [linkedCalendars]="linkedCalendars"
+  [showDropdowns]="showDropdowns"
+  (choosedDate)="onChoose($event)"
+  [placeholder]="placeholder"
+/>
+
+<small *ngIf="hint" class="text-muted">{{ hint }}</small>
+

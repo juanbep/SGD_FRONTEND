@@ -7,8 +7,7 @@
         <thead>
           <tr>
             <th class="text-body-heavy">Evento</th>
-            <th class="text-body-heavy">Fecha inicio</th>
-            <th class="text-body-heavy">Fecha fin</th>
+            <th class="text-body-heavy">Fecha(s)</th>
           </tr>
         </thead>
         <tbody>
@@ -18,18 +17,15 @@
           >
             <td [class.text-body-heavy]="meta.destacado">{{ meta.titulo }}</td>
             <td>
-              <input
-                type="date"
-                formControlName="fechaInicio"
-                class="form-control"
-              />
-            </td>
-            <td>
-              <input
-                type="date"
-                formControlName="fechaFin"
-                class="form-control"
-              />
+              <app-date-range-field
+                [group]="eventosResaltados.at(i)"
+                startKey="fechaInicio"
+                endKey="fechaFin"
+                placeholder="Selecciona fecha(s)"
+                [ranges]="{}"
+              >
+                <!-- si no quieres presets -->
+              </app-date-range-field>
             </td>
           </tr>
         </tbody>
@@ -134,5 +130,3 @@
     </div>
   </div>
 </div>
-
-
