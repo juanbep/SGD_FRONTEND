@@ -34,8 +34,10 @@ export class AcademicCalendarManagementComponent {
   calendariosEnEspera: any[] = [];
 
   isLoading: boolean = false;
+  calendarioSeleccionadoId!: number;
 
   formCrearCalendario!: FormGroup;
+  formEditarCalendario!: FormGroup;
 
   constructor(
     private router: Router,
@@ -49,6 +51,15 @@ export class AcademicCalendarManagementComponent {
     this.formCrearCalendario = this.fb.group({
       anioCalendario: [new Date().getFullYear(), Validators.required],
       numeroCalendario: [1, [Validators.required, Validators.min(1)]],
+      observacion: [''],
+    });
+    this.formEditarCalendario = this.fb.group({
+      anioCalendario: ['', Validators.required],
+      numeroCalendario: ['', Validators.required],
+      semanasClase: ['', Validators.required],
+      semanasPreparacion: ['', Validators.required],
+      horasTotales: ['', Validators.required],
+      estado: ['', Validators.required],
       observacion: [''],
     });
   }
@@ -105,14 +116,22 @@ export class AcademicCalendarManagementComponent {
           this.calendariosEnEspera = [];
 
           calendarios.forEach((cal: any) => {
-            const calendario = {
+            const calendario: any = {
               id: cal.oidcalendario,
-              anio: cal.anioCalendario,
+              anioCalendario: cal.anioCalendario,
               numeroCalendario: cal.numeroCalendario,
+              semanasClase: cal.semanasClase,
+              semanasPreparacion: cal.semanasPreparacion,
+              horasTotales: cal.horasTotales,
               estado: cal.estado,
               observacion: cal.observacion,
-              periodo: cal.periodo, // puede ser null
-              acuerdoAcademico: cal.acuerdoAcademico, // puede ser null
+              acuerdoAcademico: cal.acuerdoAcademico || null,
+              periodo: cal.numeroCalendario,
+              fechaCreacion: cal.fechaCreacion,
+              fechaActualizacion: cal.fechaActualizacion,
+              usuarioCreacion: cal.usuarioCreacion,
+              usuarioActualizacion: cal.usuarioActualizacion,
+              fechas: cal.fechas,
             };
 
             switch (cal.estado) {
@@ -145,5 +164,64 @@ export class AcademicCalendarManagementComponent {
     const modal =
       bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
     modal.show();
+  }
+
+  abrirModalEditarCalendario(calendario: any): void {
+    // Cargar valores en el formulario
+    this.formEditarCalendario.patchValue({
+      anioCalendario: calendario.anioCalendario,
+      numeroCalendario: calendario.numeroCalendario,
+      semanasClase: calendario.semanasClase,
+      semanasPreparacion: calendario.semanasPreparacion,
+      horasTotales: calendario.horasTotales,
+      estado: calendario.estado,
+      observacion: calendario.observacion,
+    });
+
+    // Guardar id temporalmente
+    this.calendarioSeleccionadoId = calendario.id;
+
+    // Abrir el modal
+    const modalEl = document.getElementById('editarCalendarioModal');
+    if (modalEl) {
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+    }
+  }
+
+  editarCalendario(): void {
+    if (this.formEditarCalendario.invalid || !this.calendarioSeleccionadoId)
+      return;
+
+    const payload = this.formEditarCalendario.value;
+
+    this.http
+      .put<any>(
+        `http://localhost:8090/sgd-back/api/calendarios/${this.calendarioSeleccionadoId}`,
+        payload
+      )
+      .subscribe({
+        next: (res) => {
+          if (res?.codigo === 200) {
+            this.toastr.success(
+              res.mensaje || 'Calendario actualizado con éxito'
+            );
+
+            // Cerrar modal
+            const modalEl = document.getElementById('editarCalendarioModal');
+            if (modalEl) {
+              const modal = bootstrap.Modal.getInstance(modalEl);
+              modal?.hide();
+            }
+
+            this.getCalendarios(); // Actualiza la vista
+          } else {
+            this.toastr.error('Error al actualizar el calendario');
+          }
+        },
+        error: () => {
+          this.toastr.error('Error en el servidor');
+        },
+      });
   }
 }
