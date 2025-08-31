@@ -12,6 +12,15 @@ import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 declare const bootstrap: any;
 
+interface Calendario {
+  id: number;
+  anio: string;
+  numeroCalendario?: number;
+  estado: string;
+  periodo?: string;
+  acuerdoAcademico?: string;
+}
+
 @Component({
   selector: 'app-academic-calendar-management',
   standalone: true,
@@ -20,8 +29,11 @@ declare const bootstrap: any;
   styleUrl: './academic-calendar-management.component.css',
 })
 export class AcademicCalendarManagementComponent {
-  calendarioVigente: CalendarioAcademico | null = null;
-  historialCalendarios: CalendarioAcademico[] = [];
+  calendarioVigente: any = null;
+  historialCalendarios: any[] = [];
+  calendariosEnEspera: any[] = [];
+
+  isLoading: boolean = false;
 
   formCrearCalendario!: FormGroup;
 

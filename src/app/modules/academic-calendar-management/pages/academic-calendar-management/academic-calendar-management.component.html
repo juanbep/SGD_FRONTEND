@@ -74,34 +74,74 @@
       </ng-template>
     </table>
   </section>
-  <section class="messages-container">
-    <img [src]="'assets/icons/messages/teacher.svg'" alt="teacher icon" />
-    <span class="text-body-heavy">
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate
-      voluptatibus ea corporis perspiciatis dolorem nulla temporibus sit, itaque
-      labore eius error totam similique porro nesciunt, molestias sed vero
-      numquam soluta.
-    </span>
+  <div><br /></div>
+  <section>
+    <header class="title-three">Calendarios en espera</header>
+
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th class="text-body-heavy">Acuerdo académico</th>
+          <th class="text-body-heavy">Id. Calendario académico</th>
+          <th class="text-body-heavy">Año</th>
+          <th class="text-body-heavy">Periodo</th>
+          <th class="text-body-heavy">Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <ng-container *ngIf="calendariosEnEspera.length > 0; else noPending">
+        <tbody>
+          <tr *ngFor="let calendario of calendariosEnEspera">
+            <td>{{ calendario.acuerdoAcademico || "-" }}</td>
+            <td>{{ calendario.id }}</td>
+            <td>{{ calendario.anio }}</td>
+            <td>{{ calendario.periodo || "-" }}</td>
+            <td>{{ calendario.estado }}</td>
+            <td class="text-center">
+              <!-- Ver -->
+              <a
+                [routerLink]="['/app/calendarios/ver', calendario.id]"
+                class="mx-1"
+                title="Ver calendario"
+              >
+                <i class="fas fa-eye text-success" style="cursor: pointer"></i>
+              </a>
+
+              <!-- Editar -->
+              <a
+                [routerLink]="['/app/calendarios/editar', calendario.id]"
+                class="mx-1"
+                title="Editar calendario"
+              >
+                <i class="fas fa-pen text-primary" style="cursor: pointer"></i>
+              </a>
+
+              <!-- Eliminar -->
+              <a
+                [routerLink]="['/app/calendarios/eliminar', calendario.id]"
+                class="mx-1"
+                title="Eliminar calendario"
+              >
+                <i class="fas fa-trash text-danger" style="cursor: pointer"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </ng-container>
+
+      <ng-template #noPending>
+        <tbody>
+          <tr>
+            <td colspan="6" class="text-center text-body-regular">
+              No hay calendarios pendientes o aprobados
+            </td>
+          </tr>
+        </tbody>
+      </ng-template>
+    </table>
   </section>
-  <div class="mb-3"></div>
-  <div class="row row-cols-auto d-flex justify-content-center">
-    <div class="col">
-      <div>
-        <!-- <button [routerLink]="['crear']" class="button-normal-large">
-          Crear calendario
-        </button> -->
-        <button
-          class="button-normal-large"
-          (click)="abrirModalCrearCalendario()"
-        >
-          Crear calendario
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="mb-3"></div>
-
+  <div><br /></div>
   <section>
     <header class="title-three">Historial de calendarios académicos</header>
 
@@ -189,6 +229,31 @@
       </ng-template>
     </table>
   </section>
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="teacher icon" />
+    <span class="text-body-heavy">
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate
+      voluptatibus ea corporis perspiciatis dolorem nulla temporibus sit, itaque
+      labore eius error totam similique porro nesciunt, molestias sed vero
+      numquam soluta.
+    </span>
+  </section>
+  <div class="mb-3"></div>
+  <div class="row row-cols-auto d-flex justify-content-center">
+    <div class="col">
+      <div>
+        <!-- <button [routerLink]="['crear']" class="button-normal-large">
+          Crear calendario
+        </button> -->
+        <button
+          class="button-normal-large"
+          (click)="abrirModalCrearCalendario()"
+        >
+          Crear calendario
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div class="mb-3"></div>
 
@@ -211,7 +276,10 @@
 >
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content rounded-4 shadow">
-      <div class="modal-header rounded-top-4" style="background-color: #000066; color: white">
+      <div
+        class="modal-header rounded-top-4"
+        style="background-color: #000066; color: white"
+      >
         <h5 class="modal-title" id="crearCalendarioModalLabel">
           Crear calendario
         </h5>
@@ -273,7 +341,13 @@
           >
             Cancelar
           </button>
-          <button type="submit" class="btn text-white" style="background-color: #000066">Guardar</button>
+          <button
+            type="submit"
+            class="btn text-white"
+            style="background-color: #000066"
+          >
+            Guardar
+          </button>
         </div>
       </form>
     </div>
