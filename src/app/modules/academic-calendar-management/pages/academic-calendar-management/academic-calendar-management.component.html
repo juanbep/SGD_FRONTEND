@@ -44,8 +44,9 @@
             </a>
 
             <!-- Ver -->
+            <!-- [routerLink]="['ver', calendarioVigente.id]" -->
             <a
-              [routerLink]="['/app/calendarios/ver', calendarioVigente.id]"
+              [routerLink]="['ver', calendarioVigente.id]"
               class="mx-1"
               title="Ver calendario"
             >
@@ -92,16 +93,16 @@
 
       <ng-container *ngIf="calendariosEnEspera.length > 0; else noPending">
         <tbody>
-          <tr *ngFor="let calendario of calendariosEnEspera">
-            <td>{{ calendario.acuerdoAcademico || "-" }}</td>
-            <td>{{ calendario.id }}</td>
-            <td>{{ calendario.anio }}</td>
-            <td>{{ calendario.periodo || "-" }}</td>
-            <td>{{ calendario.estado }}</td>
+          <tr *ngFor="let calendarioEsp of calendariosEnEspera">
+            <td>{{ calendarioEsp.acuerdoAcademico || "-" }}</td>
+            <td>{{ calendarioEsp.id }}</td>
+            <td>{{ calendarioEsp.anio }}</td>
+            <td>{{ calendarioEsp.periodo || "-" }}</td>
+            <td>{{ calendarioEsp.estado }}</td>
             <td class="text-center">
               <!-- Ver -->
               <a
-                [routerLink]="['/app/calendarios/ver', calendario.id]"
+                [routerLink]="['ver', calendarioEsp.id]"
                 class="mx-1"
                 title="Ver calendario"
               >
@@ -110,7 +111,7 @@
 
               <!-- Editar -->
               <a
-                (click)="abrirModalEditarCalendario(calendario)"
+                (click)="abrirModalEditarCalendario(calendarioEsp)"
                 class="mx-1"
                 title="Editar calendario"
               >
@@ -119,7 +120,7 @@
 
               <!-- Eliminar -->
               <a
-                [routerLink]="['/app/calendarios/eliminar', calendario.id]"
+                [routerLink]="['/app/calendarios/eliminar', calendarioEsp.id]"
                 class="mx-1"
                 title="Eliminar calendario"
               >
@@ -160,16 +161,16 @@
         *ngIf="historialCalendarios.length > 0; else noPeriodsHistory"
       >
         <tbody>
-          <tr *ngFor="let calendario of historialCalendarios">
-            <td>{{ calendario.acuerdoAcademico }}</td>
-            <td>{{ calendario.id }}</td>
-            <td>{{ calendario.anio }}</td>
-            <td>{{ calendario.periodo }}</td>
-            <td>{{ calendario.estado }}</td>
+          <tr *ngFor="let calendarioHist of historialCalendarios">
+            <td>{{ calendarioHist.acuerdoAcademico }}</td>
+            <td>{{ calendarioHist.id }}</td>
+            <td>{{ calendarioHist.anio }}</td>
+            <td>{{ calendarioHist.periodo }}</td>
+            <td>{{ calendarioHist.estado }}</td>
             <td class="text-center">
               <!-- Ver -->
               <a
-                [routerLink]="['/app/calendarios/ver', calendario.id]"
+                [routerLink]="['ver', calendarioHist.id]"
                 class="mx-1"
                 title="Ver calendario"
               >
@@ -178,7 +179,7 @@
 
               <!-- Eliminar -->
               <a
-                [routerLink]="['/app/calendarios/eliminar', calendario.id]"
+                [routerLink]="['/app/calendarios/eliminar', calendarioHist.id]"
                 class="mx-1"
                 title="Eliminar calendario"
               >
@@ -187,7 +188,7 @@
 
               <!-- Restaurar -->
               <a
-                [routerLink]="['/app/calendarios/restaurar', calendario.id]"
+                [routerLink]="['/app/calendarios/restaurar', calendarioHist.id]"
                 class="mx-1"
                 title="Restaurar calendario"
               >
@@ -196,7 +197,7 @@
 
               <!-- Descargar -->
               <a
-                [routerLink]="['/app/calendarios/descargar', calendario.id]"
+                [routerLink]="['/app/calendarios/descargar', calendarioHist.id]"
                 class="mx-1"
                 title="Descargar calendario"
               >

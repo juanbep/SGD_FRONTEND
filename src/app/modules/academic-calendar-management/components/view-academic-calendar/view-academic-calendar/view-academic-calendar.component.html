@@ -1,0 +1,124 @@
+<div class="container mt-4">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 style="color: #000066">Ver calendario académico</h3>
+    <button
+      class="btn btn-secondary"
+      routerLink="/app/gestion-periodo-academico"
+    >
+      <i class="fas fa-arrow-left me-2"></i>Volver
+    </button>
+  </div>
+
+  <!-- Información general del calendario -->
+  <div class="card shadow-sm" *ngIf="calendario">
+    <div
+      class="card-header text-white fw-bold"
+      style="background-color: #000066"
+    >
+      Información general del calendario
+    </div>
+
+    <div class="card-body table-responsive">
+      <table class="table table-bordered">
+        <tbody>
+          <!-- Fila 1 -->
+          <tr>
+            <td><strong>Año:</strong> {{ calendario.anioCalendario }}</td>
+            <td><strong>Número:</strong> {{ calendario.numeroCalendario }}</td>
+            <td><strong>Estado:</strong> {{ calendario.estado }}</td>
+            <td>
+              <strong>Observación:</strong> {{ calendario.observacion || "-" }}
+            </td>
+          </tr>
+
+          <!-- Fila 2 -->
+          <tr>
+            <td>
+              <strong>Semanas clase:</strong> {{ calendario.semanasClase }}
+            </td>
+            <td>
+              <strong>Semanas preparación:</strong>
+              {{ calendario.semanasPreparacion }}
+            </td>
+            <td>
+              <strong>Horas totales:</strong> {{ calendario.horasTotales }}
+            </td>
+            <td>
+              <strong>Creado:</strong>
+              {{ calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm" }}
+            </td>
+          </tr>
+
+          <!-- Fila 3 -->
+          <tr>
+            <td colspan="4">
+              <strong>Última actualización:</strong>
+              {{ calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div><br /></div>
+
+  <!-- Tabla de fechas -->
+  <div class="card shadow-sm" *ngIf="calendario?.fechas?.length">
+    <div
+      class="card-header text-white fw-bold"
+      style="background-color: #000066"
+    >
+      Fechas del calendario
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="width: 50%">Nombre</th>
+            <th style="width: 20%">Fecha inicial</th>
+            <th style="width: 20%">Fecha final</th>
+            <th style="width: 10%">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fecha of calendario.fechas">
+            <td>{{ fecha.nombre }}</td>
+            <td>
+              {{
+                fecha.fechaInicial
+                  ? (fecha.fechaInicial | date : "yyyy-MM-dd")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
+              }}
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-3">
+                <!-- Editar -->
+                <a title="Editar calendario">
+                  <i
+                    class="fas fa-pen text-primary"
+                    style="cursor: pointer"
+                  ></i>
+                </a>
+
+                <!-- Eliminar -->
+                <a title="Eliminar calendario">
+                  <i
+                    class="fas fa-trash text-danger"
+                    style="cursor: pointer"
+                  ></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
