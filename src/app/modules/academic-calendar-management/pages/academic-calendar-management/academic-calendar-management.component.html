@@ -3,7 +3,7 @@
   <header class="title-two">Calendario académico</header>
 
   <section class="messages-container">
-    <img [src]="'assets/icons/messages/teacher.svg'" alt="teacher icon" />
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
     <span class="text-body-heavy">
       A continuación encontrará el calendario académico vigente y el historial
       de calendarios académicos.
@@ -15,52 +15,70 @@
   <section>
     <header class="title-three">Calendario académico vigente</header>
 
-    <table class="table-bordered">
+    <table
+      class="table-bordered calendario-table"
+      role="table"
+      aria-label="Tabla de calendario académico vigente"
+    >
       <thead>
         <tr>
-          <th class="text-body-heavy">Acuerdo académico</th>
-          <th class="text-body-heavy">Id. Calendario académico</th>
-          <th class="text-body-heavy">Año</th>
-          <th class="text-body-heavy">Periodo</th>
-          <th class="text-body-heavy">Estado</th>
-          <th>Acciones</th>
+          <th class="text-body-heavy col-id" scope="col">OID</th>
+          <th class="text-body-heavy col-acuerdo" scope="col">
+            Acuerdo académico
+          </th>
+          <th class="text-body-heavy col-año-periodo" scope="col">Año</th>
+          <th class="text-body-heavy col-estado" scope="col">Estado</th>
+          <th class="col-acciones" scope="col">Acciones</th>
         </tr>
       </thead>
       <tbody *ngIf="calendarioVigente; else noData">
         <tr>
-          <td>{{ calendarioVigente.observacion || "-" }}</td>
-          <td>{{ calendarioVigente.id }}</td>
-          <td>{{ calendarioVigente.anioCalendario }}</td>
-          <td>{{ calendarioVigente.numeroCalendario || "-" }}</td>
-          <td>{{ calendarioVigente.estado }}</td>
-          <td class="text-center">
+          <td class="col-id">{{ calendarioVigente.id }}</td>
+          <td class="col-acuerdo">
+            {{ calendarioVigente.observacion || "Sin información" }}
+          </td>
+          <td class="col-año-periodo">
+            {{
+              formatearAnioPeriodo(
+                calendarioVigente.anioCalendario,
+                calendarioVigente.numeroCalendario
+              )
+            }}
+          </td>
+          <td class="col-estado">{{ calendarioVigente.estado }}</td>
+          <td class="text-center col-acciones">
             <!-- Ver -->
-            <!-- [routerLink]="['ver', calendarioVigente.id]" -->
             <a
               [routerLink]="['ver', calendarioVigente.id]"
               class="mx-1"
               title="Ver calendario"
+              aria-label="Ver detalles del calendario académico"
+              tabindex="0"
             >
-              <i class="fas fa-eye text-success" style="cursor: pointer"></i>
+              <i class="fas fa-eye text-success" aria-hidden="true"></i>
             </a>
 
             <!-- Editar -->
-            <a
+            <button
+              type="button"
               (click)="abrirModalEditarCalendario(calendarioVigente)"
-              class="mx-1"
+              class="btn-link mx-1"
               title="Editar calendario"
+              aria-label="Editar calendario académico"
             >
-              <i class="fas fa-pen text-primary" style="cursor: pointer"></i>
-            </a>
+              <i class="fas fa-pen text-primary" aria-hidden="true"></i>
+            </button>
 
             <!-- Eliminar -->
-            <a
+            <button
+              type="button"
               (click)="eliminarCalendario(calendarioVigente.id)"
-              class="mx-1"
+              class="btn-link mx-1"
               title="Eliminar calendario"
+              aria-label="Eliminar calendario académico"
             >
-              <i class="fas fa-trash text-danger" style="cursor: pointer"></i>
-            </a>
+              <i class="fas fa-trash text-danger" aria-hidden="true"></i>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -75,57 +93,78 @@
       </ng-template>
     </table>
   </section>
+
   <div><br /></div>
+
   <section>
     <header class="title-three">Calendarios en espera</header>
 
-    <table class="table-bordered">
+    <table
+      class="table-bordered calendario-table"
+      role="table"
+      aria-label="Tabla de calendarios en espera"
+    >
       <thead>
         <tr>
-          <th class="text-body-heavy">Acuerdo académico</th>
-          <th class="text-body-heavy">Id. Calendario académico</th>
-          <th class="text-body-heavy">Año</th>
-          <th class="text-body-heavy">Periodo</th>
-          <th class="text-body-heavy">Estado</th>
-          <th>Acciones</th>
+          <th class="text-body-heavy col-id" scope="col">OID</th>
+          <th class="text-body-heavy col-acuerdo" scope="col">
+            Acuerdo académico
+          </th>
+          <th class="text-body-heavy col-año-periodo" scope="col">Año</th>
+          <th class="text-body-heavy col-estado" scope="col">Estado</th>
+          <th class="col-acciones" scope="col">Acciones</th>
         </tr>
       </thead>
 
       <ng-container *ngIf="calendariosEnEspera.length > 0; else noPending">
         <tbody>
           <tr *ngFor="let calendarioEsp of calendariosEnEspera">
-            <td>{{ calendarioEsp.observacion || "-" }}</td>
-            <td>{{ calendarioEsp.id }}</td>
-            <td>{{ calendarioEsp.anioCalendario }}</td>
-            <td>{{ calendarioEsp.numeroCalendario || "-" }}</td>
-            <td>{{ calendarioEsp.estado }}</td>
-            <td class="text-center">
+            <td class="col-id">{{ calendarioEsp.id }}</td>
+            <td class="col-acuerdo">
+              {{ calendarioEsp.observacion || "Sin información" }}
+            </td>
+            <td class="col-año-periodo">
+              {{
+                formatearAnioPeriodo(
+                  calendarioEsp.anioCalendario,
+                  calendarioEsp.numeroCalendario
+                )
+              }}
+            </td>
+            <td class="col-estado">{{ calendarioEsp.estado }}</td>
+            <td class="text-center col-acciones">
               <!-- Ver -->
               <a
                 [routerLink]="['ver', calendarioEsp.id]"
                 class="mx-1"
                 title="Ver calendario"
+                aria-label="Ver detalles del calendario en espera"
+                tabindex="0"
               >
-                <i class="fas fa-eye text-success" style="cursor: pointer"></i>
+                <i class="fas fa-eye text-success" aria-hidden="true"></i>
               </a>
 
               <!-- Editar -->
-              <a
+              <button
+                type="button"
                 (click)="abrirModalEditarCalendario(calendarioEsp)"
-                class="mx-1"
+                class="btn-link mx-1"
                 title="Editar calendario"
+                aria-label="Editar calendario en espera"
               >
-                <i class="fas fa-pen text-primary" style="cursor: pointer"></i>
-              </a>
+                <i class="fas fa-pen text-primary" aria-hidden="true"></i>
+              </button>
 
               <!-- Eliminar -->
-              <a
+              <button
+                type="button"
                 (click)="eliminarCalendario(calendarioEsp.id)"
-                class="mx-1"
+                class="btn-link mx-1"
                 title="Eliminar calendario"
+                aria-label="Eliminar calendario en espera"
               >
-                <i class="fas fa-trash text-danger" style="cursor: pointer"></i>
-              </a>
+                <i class="fas fa-trash text-danger" aria-hidden="true"></i>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -142,19 +181,26 @@
       </ng-template>
     </table>
   </section>
+
   <div><br /></div>
+
   <section>
     <header class="title-three">Historial de calendarios académicos</header>
 
-    <table class="table-bordered">
+    <table
+      class="table-bordered calendario-table"
+      role="table"
+      aria-label="Tabla de historial de calendarios académicos"
+    >
       <thead>
         <tr>
-          <th class="text-body-heavy">Acuerdo académico</th>
-          <th class="text-body-heavy">Id. Calendario académico</th>
-          <th class="text-body-heavy">Año</th>
-          <th class="text-body-heavy">Periodo</th>
-          <th class="text-body-heavy">Estado</th>
-          <th>Acciones</th>
+          <th class="text-body-heavy col-id" scope="col">OID</th>
+          <th class="text-body-heavy col-acuerdo" scope="col">
+            Acuerdo académico
+          </th>
+          <th class="text-body-heavy col-año-periodo" scope="col">Año</th>
+          <th class="text-body-heavy col-estado" scope="col">Estado</th>
+          <th class="col-acciones" scope="col">Acciones</th>
         </tr>
       </thead>
       <ng-container
@@ -162,37 +208,66 @@
       >
         <tbody>
           <tr *ngFor="let calendarioHist of historialCalendarios">
-            <td>{{ calendarioHist.observacion }}</td>
-            <td>{{ calendarioHist.id }}</td>
-            <td>{{ calendarioHist.anioCalendario }}</td>
-            <td>{{ calendarioHist.numeroCalendario }}</td>
-            <td>{{ calendarioHist.estado }}</td>
-            <td class="text-center">
+            <td class="col-id">{{ calendarioHist.id }}</td>
+            <td class="col-acuerdo">
+              {{ calendarioHist.observacion || "Sin información" }}
+            </td>
+            <td class="col-año-periodo">
+              {{
+                formatearAnioPeriodo(
+                  calendarioHist.anioCalendario,
+                  calendarioHist.numeroCalendario
+                )
+              }}
+            </td>
+            <td class="col-estado">{{ calendarioHist.estado }}</td>
+            <td class="text-center col-acciones">
               <!-- Ver -->
               <a
                 [routerLink]="['ver', calendarioHist.id]"
                 class="mx-1"
                 title="Ver calendario"
+                aria-label="Ver detalles del calendario histórico"
+                tabindex="0"
               >
-                <i class="fas fa-eye text-success" style="cursor: pointer"></i>
+                <i class="fas fa-eye text-success" aria-hidden="true"></i>
               </a>
 
-              <!-- Eliminar -->
-              <a
-                (click)="eliminarCalendario(calendarioHist.id)"
-                class="mx-1"
-                title="Eliminar calendario"
+              <!-- Editar (solo para estados específicos) -->
+              <button
+                *ngIf="
+                  calendarioHist.estado === 'BORRADOR' ||
+                  calendarioHist.estado === 'PENDIENTE'
+                "
+                type="button"
+                (click)="abrirModalEditarCalendario(calendarioHist)"
+                class="btn-link mx-1"
+                title="Editar calendario"
+                aria-label="Editar calendario histórico"
               >
-                <i class="fas fa-trash text-danger" style="cursor: pointer"></i>
-              </a>
+                <i class="fas fa-pen text-primary" aria-hidden="true"></i>
+              </button>
+
+              <!-- Eliminar -->
+              <button
+                type="button"
+                (click)="eliminarCalendario(calendarioHist.id)"
+                class="btn-link mx-1"
+                title="Eliminar calendario"
+                aria-label="Eliminar calendario histórico"
+              >
+                <i class="fas fa-trash text-danger" aria-hidden="true"></i>
+              </button>
 
               <!-- Restaurar -->
               <a
                 [routerLink]="['/app/calendarios/restaurar', calendarioHist.id]"
                 class="mx-1"
                 title="Restaurar calendario"
+                aria-label="Restaurar calendario histórico"
+                tabindex="0"
               >
-                <i class="fas fa-undo text-warning" style="cursor: pointer"></i>
+                <i class="fas fa-undo text-warning" aria-hidden="true"></i>
               </a>
 
               <!-- Descargar -->
@@ -200,25 +275,16 @@
                 [routerLink]="['/app/calendarios/descargar', calendarioHist.id]"
                 class="mx-1"
                 title="Descargar calendario"
+                aria-label="Descargar calendario histórico"
+                tabindex="0"
               >
-                <i
-                  class="fas fa-download text-primary"
-                  style="cursor: pointer"
-                ></i>
+                <i class="fas fa-download text-primary" aria-hidden="true"></i>
               </a>
             </td>
           </tr>
         </tbody>
-        <ng-template #noPeriodsHistory>
-          <tbody>
-            <tr>
-              <td colspan="6" class="text-center text-body-regular">
-                No hay calendarios académicos registrados
-              </td>
-            </tr>
-          </tbody>
-        </ng-template>
       </ng-container>
+
       <ng-template #noPeriodsHistory>
         <tbody>
           <tr>
@@ -230,25 +296,26 @@
       </ng-template>
     </table>
   </section>
+
   <section class="messages-container">
-    <img [src]="'assets/icons/messages/teacher.svg'" alt="teacher icon" />
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
     <span class="text-body-heavy">
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cupiditate
-      voluptatibus ea corporis perspiciatis dolorem nulla temporibus sit, itaque
-      labore eius error totam similique porro nesciunt, molestias sed vero
-      numquam soluta.
+      Para gestionar los calendarios académicos, utilice las opciones de ver,
+      editar o eliminar según corresponda. Los calendarios históricos pueden ser
+      restaurados o descargados cuando sea necesario.
     </span>
   </section>
+
   <div class="mb-3"></div>
+
   <div class="row row-cols-auto d-flex justify-content-center">
     <div class="col">
       <div>
-        <!-- <button [routerLink]="['crear']" class="button-normal-large">
-          Crear calendario
-        </button> -->
         <button
+          type="button"
           class="button-normal-large"
           (click)="abrirModalCrearCalendario()"
+          aria-label="Crear nuevo calendario académico"
         >
           Crear calendario
         </button>

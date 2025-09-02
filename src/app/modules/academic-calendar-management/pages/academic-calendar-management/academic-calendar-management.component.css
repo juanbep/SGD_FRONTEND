@@ -1,0 +1,85 @@
+/* Configuración general de la tabla */
+.calendario-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+/* Anchos de las columnas */
+.col-acuerdo {
+  width: 40%;
+}
+
+.col-id {
+  width: 10%;
+}
+
+.col-año-periodo {
+  width: 10%;
+}
+
+.col-estado {
+  width: 20%;
+}
+
+.col-acciones {
+  width: 20%;
+}
+
+.calendario-table td,
+.calendario-table th {
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: middle;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.col-año,
+.col-periodo,
+.col-acciones {
+  text-align: center;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btn-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+a:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .col-acuerdo {
+    width: 30%;
+  }
+
+  .col-id {
+    width: 12%;
+  }
+
+  .col-año {
+    width: 8%;
+  }
+
+  .col-periodo {
+    width: 10%;
+  }
+
+  .col-estado {
+    width: 12%;
+  }
+
+  .col-acciones {
+    width: 28%;
+  }
+}
