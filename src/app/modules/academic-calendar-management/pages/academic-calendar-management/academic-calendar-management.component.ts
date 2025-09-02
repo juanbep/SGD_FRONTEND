@@ -88,6 +88,7 @@ export class AcademicCalendarManagementComponent {
               modal.hide();
             }
 
+            this.getCalendarios(); // Actualiza la vista
             // const oid = res?.data?.oidcalendario;
             // if (oid) {
             //   this.router.navigate(['/app/calendarios/crear', oid]);
@@ -123,14 +124,12 @@ export class AcademicCalendarManagementComponent {
               semanasClase: cal.semanasClase,
               semanasPreparacion: cal.semanasPreparacion,
               horasTotales: cal.horasTotales,
+              fechaCreacion: cal.fechaCreacion,
+              usuarioCreacion: cal.usuarioCreacion,
+              fechaActualizacion: cal.fechaActualizacion,
+              usuarioActualizacion: cal.usuarioActualizacion,
               estado: cal.estado,
               observacion: cal.observacion,
-              acuerdoAcademico: cal.acuerdoAcademico || null,
-              periodo: cal.numeroCalendario,
-              fechaCreacion: cal.fechaCreacion,
-              fechaActualizacion: cal.fechaActualizacion,
-              usuarioCreacion: cal.usuarioCreacion,
-              usuarioActualizacion: cal.usuarioActualizacion,
               fechas: cal.fechas,
             };
 
@@ -223,5 +222,26 @@ export class AcademicCalendarManagementComponent {
           this.toastr.error('Error en el servidor');
         },
       });
+  }
+
+  eliminarCalendario(id: number): void {
+    const confirmado = confirm(
+      '¿Estás seguro de eliminar este calendario? Esta acción no se puede deshacer.'
+    );
+
+    if (confirmado) {
+      const endpoint = `http://localhost:8090/sgd-back/api/calendarios/${id}`;
+
+      this.http.delete(endpoint).subscribe({
+        next: () => {
+          alert('Calendario eliminado correctamente.');
+          this.getCalendarios(); // Recargar las tablas
+        },
+        error: (error) => {
+          console.error('Error al eliminar calendario:', error);
+          alert('Ocurrió un error al intentar eliminar el calendario.');
+        },
+      });
+    }
   }
 }

@@ -28,21 +28,12 @@
       </thead>
       <tbody *ngIf="calendarioVigente; else noData">
         <tr>
-          <td>{{ calendarioVigente.acuerdoAcademico }}</td>
+          <td>{{ calendarioVigente.observacion || "-" }}</td>
           <td>{{ calendarioVigente.id }}</td>
-          <td>{{ calendarioVigente.anio }}</td>
-          <td>{{ calendarioVigente.periodo }}</td>
+          <td>{{ calendarioVigente.anioCalendario }}</td>
+          <td>{{ calendarioVigente.numeroCalendario || "-" }}</td>
           <td>{{ calendarioVigente.estado }}</td>
           <td class="text-center">
-            <!-- Editar -->
-            <a
-              (click)="abrirModalEditarCalendario(calendarioVigente)"
-              class="mx-1"
-              title="Editar calendario"
-            >
-              <i class="fas fa-pen text-primary" style="cursor: pointer"></i>
-            </a>
-
             <!-- Ver -->
             <!-- [routerLink]="['ver', calendarioVigente.id]" -->
             <a
@@ -53,9 +44,18 @@
               <i class="fas fa-eye text-success" style="cursor: pointer"></i>
             </a>
 
+            <!-- Editar -->
+            <a
+              (click)="abrirModalEditarCalendario(calendarioVigente)"
+              class="mx-1"
+              title="Editar calendario"
+            >
+              <i class="fas fa-pen text-primary" style="cursor: pointer"></i>
+            </a>
+
             <!-- Eliminar -->
             <a
-              [routerLink]="['/app/calendarios/eliminar', calendarioVigente.id]"
+              (click)="eliminarCalendario(calendarioVigente.id)"
               class="mx-1"
               title="Eliminar calendario"
             >
@@ -94,10 +94,10 @@
       <ng-container *ngIf="calendariosEnEspera.length > 0; else noPending">
         <tbody>
           <tr *ngFor="let calendarioEsp of calendariosEnEspera">
-            <td>{{ calendarioEsp.acuerdoAcademico || "-" }}</td>
+            <td>{{ calendarioEsp.observacion || "-" }}</td>
             <td>{{ calendarioEsp.id }}</td>
-            <td>{{ calendarioEsp.anio }}</td>
-            <td>{{ calendarioEsp.periodo || "-" }}</td>
+            <td>{{ calendarioEsp.anioCalendario }}</td>
+            <td>{{ calendarioEsp.numeroCalendario || "-" }}</td>
             <td>{{ calendarioEsp.estado }}</td>
             <td class="text-center">
               <!-- Ver -->
@@ -120,7 +120,7 @@
 
               <!-- Eliminar -->
               <a
-                [routerLink]="['/app/calendarios/eliminar', calendarioEsp.id]"
+                (click)="eliminarCalendario(calendarioEsp.id)"
                 class="mx-1"
                 title="Eliminar calendario"
               >
@@ -162,10 +162,10 @@
       >
         <tbody>
           <tr *ngFor="let calendarioHist of historialCalendarios">
-            <td>{{ calendarioHist.acuerdoAcademico }}</td>
+            <td>{{ calendarioHist.observacion }}</td>
             <td>{{ calendarioHist.id }}</td>
-            <td>{{ calendarioHist.anio }}</td>
-            <td>{{ calendarioHist.periodo }}</td>
+            <td>{{ calendarioHist.anioCalendario }}</td>
+            <td>{{ calendarioHist.numeroCalendario }}</td>
             <td>{{ calendarioHist.estado }}</td>
             <td class="text-center">
               <!-- Ver -->
@@ -179,7 +179,7 @@
 
               <!-- Eliminar -->
               <a
-                [routerLink]="['/app/calendarios/eliminar', calendarioHist.id]"
+                (click)="eliminarCalendario(calendarioHist.id)"
                 class="mx-1"
                 title="Eliminar calendario"
               >
