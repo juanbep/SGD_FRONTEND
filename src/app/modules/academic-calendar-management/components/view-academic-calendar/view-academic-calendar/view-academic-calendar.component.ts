@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe, NgIf, NgFor } from '@angular/common';
-import { CalendarModule } from 'primeng/calendar';
+
 
 @Component({
   selector: 'app-view-academic-calendar',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, RouterLink, CalendarModule],
+  imports: [NgIf, NgFor, DatePipe, RouterLink],
   templateUrl: './view-academic-calendar.component.html',
   styleUrl: './view-academic-calendar.component.css',
 })
