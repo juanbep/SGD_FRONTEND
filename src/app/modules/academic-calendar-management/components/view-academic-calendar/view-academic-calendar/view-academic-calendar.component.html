@@ -2,12 +2,9 @@
   <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 style="color: #000066">Ver calendario académico</h3>
-    <button
-      class="btn btn-secondary"
-      routerLink="/app/gestion-periodo-academico"
-    >
-      <i class="fas fa-arrow-left me-2"></i>Volver
-    </button>
+    <a class="btn btn-secondary" [routerLink]="['/app/gestion-calendario-academico']">
+  <i class="fas fa-arrow-left me-2"></i>Volver
+</a>
   </div>
 
   <!-- Información general del calendario -->
