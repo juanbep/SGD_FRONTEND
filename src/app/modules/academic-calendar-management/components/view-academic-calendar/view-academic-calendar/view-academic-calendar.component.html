@@ -67,10 +67,13 @@
   <!-- Tabla de fechas -->
   <div class="card shadow-sm" *ngIf="calendario?.fechas?.length">
     <div
-      class="card-header text-white fw-bold"
+      class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
       style="background-color: #000066"
     >
-      Fechas del calendario
+      <span>Fechas del calendario</span>
+      <button class="btn btn-light btn-sm" (click)="abrirModalCrearFecha()">
+        <i class="fas fa-plus me-1"></i> Agregar fecha
+      </button>
     </div>
     <div class="card-body table-responsive">
       <table class="table table-bordered">
@@ -123,6 +126,103 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- Modal Crear Fecha -->
+<div
+  class="modal fade"
+  id="modalCrearFecha"
+  tabindex="-1"
+  aria-labelledby="modalCrearFechaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form
+      class="modal-content"
+      [formGroup]="formCrearFecha"
+      (ngSubmit)="crearFecha()"
+    >
+      <div class="modal-header" style="background-color: #000066">
+        <h5 class="modal-title text-white" id="modalCrearFechaLabel">
+          Crear fecha
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Nombre de la fecha</label>
+          <select class="form-select" formControlName="oidNombreFecha">
+            <option [ngValue]="null" disabled>Seleccione...</option>
+            <option
+              *ngFor="let item of nombresFecha"
+              [ngValue]="item.oidNombreFecha"
+            >
+              {{ item.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <label class="form-label">Fecha inicial</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaInicial"
+            />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Fecha fin</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaFin"
+            />
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" formControlName="tipo">
+            <option *ngFor="let t of tiposFecha" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+
+        <div
+          *ngIf="
+            formCrearFecha.hasError('alMenosUnaFecha') &&
+            (formCrearFecha.dirty || formCrearFecha.touched)
+          "
+          class="text-danger mt-2"
+        >
+          Debe ingresar al menos una fecha (inicial o fin).
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="formCrearFecha.invalid"
+        >
+          Crear
+        </button>
+      </div>
+    </form>
   </div>
 </div>
 
