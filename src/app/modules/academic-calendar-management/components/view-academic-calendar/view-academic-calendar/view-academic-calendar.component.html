@@ -2,9 +2,12 @@
   <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 style="color: #000066">Ver calendario académico</h3>
-    <a class="btn btn-secondary" [routerLink]="['/app/gestion-calendario-academico']">
-  <i class="fas fa-arrow-left me-2"></i>Volver
-</a>
+    <a
+      class="btn btn-secondary"
+      [routerLink]="['/app/gestion-calendario-academico']"
+    >
+      <i class="fas fa-arrow-left me-2"></i>Volver
+    </a>
   </div>
 
   <!-- Información general del calendario -->
@@ -97,7 +100,10 @@
             <td class="text-center">
               <div class="d-flex justify-content-center gap-3">
                 <!-- Editar -->
-                <a title="Editar calendario">
+                <a
+                  title="Editar calendario"
+                  (click)="abrirModalEditarFecha(fecha)"
+                >
                   <i
                     class="fas fa-pen text-primary"
                     style="cursor: pointer"
@@ -117,5 +123,82 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- Modal Editar Fecha -->
+<div
+  class="modal fade"
+  id="modalEditarFecha"
+  tabindex="-1"
+  aria-labelledby="modalEditarFechaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form
+      class="modal-content"
+      [formGroup]="formEditarFecha"
+      (ngSubmit)="editarFecha()"
+    >
+      <div class="modal-header" style="background-color: #000066">
+        <h5 class="modal-title text-white" id="modalEditarFechaLabel">
+          Editar fecha
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input
+            class="form-control"
+            [value]="fechaSeleccionada?.nombre"
+            disabled
+          />
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <label class="form-label">Fecha inicial</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaInicial"
+            />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Fecha fin</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaFin"
+            />
+          </div>
+        </div>
+
+        <div
+          *ngIf="formEditarFecha.errors?.['alMenosUnaFecha']"
+          class="text-danger mt-2"
+        >
+          Debe ingresar al menos una fecha (inicial o fin).
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </form>
   </div>
 </div>
