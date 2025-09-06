@@ -157,13 +157,19 @@ export class SideBarV2Component implements OnInit {
     {
       role: ['SECRETARIA/O FACULTAD'],
       icon: 'assets/icons/sidebar/icon-calendar-management.svg',
-      label: 'Gestión Calendario académico',
+      label: 'Calendario académico',
       isOpen: false,
       children: [
         {
           role: ['SECRETARIA/O FACULTAD'],
           icon: 'fas fa-user',
-          label: 'Gestión de calendario académico',
+          label: 'Crear calendario',
+          url: '#',
+        },
+        {
+          role: ['SECRETARIA/O FACULTAD'],
+          icon: 'fas fa-user',
+          label: 'Gestiónar calendarios',
           url: '/app/gestion-calendario-academico',
         },
       ],

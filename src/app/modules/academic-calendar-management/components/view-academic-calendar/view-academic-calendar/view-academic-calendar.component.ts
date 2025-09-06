@@ -7,7 +7,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-view-academic-calendar',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, ReactiveFormsModule],
+  imports: [NgIf, NgFor, DatePipe, ReactiveFormsModule, RouterLink],
   templateUrl: './view-academic-calendar.component.html',
   styleUrl: './view-academic-calendar.component.css',
 })
