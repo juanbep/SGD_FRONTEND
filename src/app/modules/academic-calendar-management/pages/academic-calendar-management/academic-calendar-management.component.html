@@ -59,9 +59,10 @@
             </a>
 
             <!-- Editar -->
+            <!--  (click)="abrirModalEditarCalendario(calendarioVigente)" -->
             <button
               type="button"
-              (click)="abrirModalEditarCalendario(calendarioVigente)"
+              [routerLink]="['editar', calendarioVigente.id]"
               class="btn-link mx-1"
               title="Editar calendario"
               aria-label="Editar calendario académico"

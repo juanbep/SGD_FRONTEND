@@ -1,0 +1,314 @@
+<div class="container mt-4">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 style="color: #000066">Ver calendario académico</h3>
+    <a
+      class="btn btn-secondary"
+      [routerLink]="['/app/gestion-calendario-academico']"
+    >
+      <i class="fas fa-arrow-left me-2"></i>Volver
+    </a>
+  </div>
+
+  <!-- Información general del calendario -->
+  <div class="card shadow-sm" *ngIf="calendario">
+    <div
+      class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
+      style="background-color: #000066"
+    >
+      <span>Información general del calendario</span>
+      <button class="btn btn-light btn-sm">
+        <i class="fa-solid fa-pen-to-square me-1"></i>Editar
+      </button>
+    </div>
+
+    <div class="card-body table-responsive">
+      <table
+        class="table table-bordered text-center align-middle mb-0"
+        style="table-layout: fixed"
+      >
+        <tbody>
+          <!-- Fila 1 -->
+          <tr class="table-light fw-bold">
+            <td style="width: 25%">Año</td>
+            <td style="width: 25%">Periodo</td>
+            <td style="width: 25%">Estado</td>
+            <td style="width: 25%">Fecha Creación</td>
+          </tr>
+          <tr>
+            <td>{{ calendario.anioCalendario }}</td>
+            <td>{{ calendario.numeroCalendario }}</td>
+            <td>{{ calendario.estado }}</td>
+            <td>{{ calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm" }}</td>
+          </tr>
+
+          <!-- Fila 2 -->
+          <tr class="table-light fw-bold">
+            <td>Semanas clase</td>
+            <td>Semanas preparación</td>
+            <td>Horas totales</td>
+            <td>Última actualización</td>
+          </tr>
+          <tr>
+            <td>{{ calendario.semanasClase }}</td>
+            <td>{{ calendario.semanasPreparacion }}</td>
+            <td>{{ calendario.horasTotales }}</td>
+            <td>
+              {{ calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm" }}
+            </td>
+          </tr>
+
+          <!-- Fila observación -->
+          <tr class="table-light fw-bold text-start">
+            <td colspan="4">Observación</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="text-start" style="white-space: pre-line">
+              {{ calendario.observacion || "-" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div><br /></div>
+
+  <!-- Tabla de fechas -->
+  <div class="card shadow-sm" *ngIf="calendario?.fechas?.length">
+    <div
+      class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
+      style="background-color: #000066"
+    >
+      <span>Fechas del calendario</span>
+      <button class="btn btn-light btn-sm" (click)="abrirModalCrearFecha()">
+        <i class="fas fa-plus me-1"></i> Agregar fecha
+      </button>
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="width: 50%">Nombre</th>
+            <th style="width: 20%">Fecha inicial</th>
+            <th style="width: 20%">Fecha final</th>
+            <th style="width: 10%">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fecha of calendario.fechas">
+            <td>{{ fecha.nombre }}</td>
+            <td>
+              {{
+                fecha.fechaInicial
+                  ? (fecha.fechaInicial | date : "yyyy-MM-dd")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
+              }}
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-3">
+                <!-- Editar -->
+                <a
+                  title="Editar calendario"
+                  (click)="abrirModalEditarFecha(fecha)"
+                >
+                  <i
+                    class="fas fa-pen text-primary"
+                    style="cursor: pointer"
+                  ></i>
+                </a>
+
+                <!-- Eliminar -->
+                <a title="Eliminar calendario">
+                  <i
+                    class="fas fa-trash text-danger"
+                    style="cursor: pointer"
+                  ></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear Fecha -->
+<div
+  class="modal fade"
+  id="modalCrearFecha"
+  tabindex="-1"
+  aria-labelledby="modalCrearFechaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form
+      class="modal-content"
+      [formGroup]="formCrearFecha"
+      (ngSubmit)="crearFecha()"
+    >
+      <div class="modal-header" style="background-color: #000066">
+        <h5 class="modal-title text-white" id="modalCrearFechaLabel">
+          Crear fecha
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Nombre de la fecha</label>
+          <select class="form-select" formControlName="oidNombreFecha">
+            <option [ngValue]="null" disabled>Seleccione...</option>
+            <option
+              *ngFor="let item of nombresFecha"
+              [ngValue]="item.oidNombreFecha"
+            >
+              {{ item.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <label class="form-label">Fecha inicial</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaInicial"
+            />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Fecha fin</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaFin"
+            />
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" formControlName="tipo">
+            <option *ngFor="let t of tiposFecha" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+
+        <div
+          *ngIf="
+            formCrearFecha.hasError('alMenosUnaFecha') &&
+            (formCrearFecha.dirty || formCrearFecha.touched)
+          "
+          class="text-danger mt-2"
+        >
+          Debe ingresar al menos una fecha (inicial o fin).
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="formCrearFecha.invalid"
+        >
+          Crear
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal Editar Fecha -->
+<div
+  class="modal fade"
+  id="modalEditarFecha"
+  tabindex="-1"
+  aria-labelledby="modalEditarFechaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <form
+      class="modal-content"
+      [formGroup]="formEditarFecha"
+      (ngSubmit)="editarFecha()"
+    >
+      <div class="modal-header" style="background-color: #000066">
+        <h5 class="modal-title text-white" id="modalEditarFechaLabel">
+          Editar fecha
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Nombre</label>
+          <input
+            class="form-control"
+            [value]="fechaSeleccionada?.nombre"
+            disabled
+          />
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <label class="form-label">Fecha inicial</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaInicial"
+            />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Fecha fin</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fechaFin"
+            />
+          </div>
+        </div>
+
+        <div
+          *ngIf="formEditarFecha.errors?.['alMenosUnaFecha']"
+          class="text-danger mt-2"
+        >
+          Debe ingresar al menos una fecha (inicial o fin).
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+</div>

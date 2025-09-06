@@ -6,72 +6,102 @@
   <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="m-0" style="color: #333">Calendario académico</h3>
-    <button class="btn btn-outline-secondary btn-sm" disabled>
-      <i class="fas fa-file-download me-2"></i> Descargar calendario
+    <button
+      class="btn btn-outline-secondary btn-sm"
+      aria-label="Descargar calendario (deshabilitado)"
+      disabled
+    >
+      <i class="fas fa-file-download me-2" aria-hidden="true"></i>
+      Descargar calendario
     </button>
   </div>
 
   <!-- Información general -->
-  <div class="border p-3 mb-4" style="background-color: #ffffff">
-    <h6 class="fw-bold mb-3" style="color: #555">Información general</h6>
-    <div class="row">
-      <div class="col-md-3">
-        <strong>Año:</strong> {{ calendario.anioCalendario }}
-      </div>
-      <div class="col-md-3">
-        <strong>Periodo:</strong> {{ calendario.numeroCalendario }}
-      </div>
-      <div class="col-md-3">
-        <strong>Estado:</strong> {{ calendario.estado }}
-      </div>
-      <div class="col-md-3">
-        <strong>Observación:</strong> {{ calendario.observacion || "—" }}
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-md-3">
-        <strong>Semanas clase:</strong> {{ calendario.semanasClase }}
-      </div>
-      <div class="col-md-3">
-        <strong>Semanas preparación:</strong>
-        {{ calendario.semanasPreparacion }}
-      </div>
-      <div class="col-md-3">
-        <strong>Horas totales:</strong> {{ calendario.horasTotales }}
-      </div>
-      <div class="col-md-3">
-        <strong>Creado:</strong>
-        {{ calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm" }}
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-12">
-        <strong>Última actualización:</strong>
-        {{ calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm" }}
-      </div>
+  <div class="border p-3 mb-4 bg-white" style="font-size: 0.95rem">
+    <h6 class="fw-bold mb-3 text-secondary">Información general</h6>
+
+    <div class="table-responsive">
+      <table
+        class="table table-bordered table-sm text-center align-middle mb-0"
+        style="table-layout: fixed"
+      >
+        <tbody>
+          <!-- Fila 1 -->
+          <tr class="table-light fw-bold">
+            <td style="width: 25%">Año</td>
+            <td style="width: 25%">Periodo</td>
+            <td style="width: 25%">Creado</td>
+            <td style="width: 25%">Última actualización</td>
+          </tr>
+          <tr>
+            <td>{{ calendario.anioCalendario }}</td>
+            <td>{{ calendario.numeroCalendario }}</td>
+            <td>{{ calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm" }}</td>
+            <td>
+              {{ calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm" }}
+            </td>
+          </tr>
+
+          <!-- Fila 2 -->
+          <tr class="table-light fw-bold">
+            <td>Semanas clase</td>
+            <td>Semanas preparación</td>
+            <td>Horas totales</td>
+            <td>Estado</td>
+          </tr>
+          <tr>
+            <td>{{ calendario.semanasClase }}</td>
+            <td>{{ calendario.semanasPreparacion }}</td>
+            <td>{{ calendario.horasTotales }}</td>
+            <td>{{ calendario.estado }}</td>
+          </tr>
+
+          <!-- Fila observación -->
+          <tr class="table-light fw-bold text-start">
+            <td colspan="4">Observación</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="text-start" style="white-space: pre-line">
+              {{ calendario.observacion || "—" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- Tabla de fechas -->
-  <div class="border p-3" style="background-color: #ffffff">
+  <!-- Fechas del calendario -->
+  <div class="border p-3 bg-white" aria-label="Fechas del calendario académico">
     <h6 class="fw-bold mb-3" style="color: #555">Fechas del calendario</h6>
+
     <div class="table-responsive">
       <table
-        class="table table-bordered table-sm mb-0"
+        class="table table-bordered table-sm mb-0 align-middle text-center"
         *ngIf="calendario.fechas?.length > 0; else sinFechas"
+        role="table"
       >
         <thead class="table-light">
           <tr>
-            <th style="width: 50%">Nombre</th>
-            <th style="width: 25%">Fecha inicial</th>
-            <th style="width: 25%">Fecha final</th>
+            <th scope="col" style="width: 50%">Nombre</th>
+            <th scope="col" style="width: 25%">Fecha inicial</th>
+            <th scope="col" style="width: 25%">Fecha final</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let fecha of calendario.fechas">
-            <td>{{ fecha.nombre }}</td>
-            <td>{{ fecha.fechaInicial | date : "yyyy-MM-dd" }}</td>
-            <td>{{ fecha.fechaFin | date : "yyyy-MM-dd" }}</td>
+            <td class="text-start">{{ fecha.nombre }}</td>
+            <td>
+              {{
+                fecha.fechaInicial
+                  ? (fecha.fechaInicial | date : "yyyy-MM-dd")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
+              }}
+            </td>
           </tr>
         </tbody>
       </table>

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AcademicCalendarManagementComponent } from './pages/academic-calendar-management/academic-calendar-management.component';
 import { CreateAcademicCalendarComponent } from './components/create-academic-calendar/create-academic-calendar/create-academic-calendar.component';
 import { ViewAcademicCalendarComponent } from './components/view-academic-calendar/view-academic-calendar/view-academic-calendar.component';
+import { EditAcademicCalendarComponent } from './components/edit-academic-calendar/edit-academic-calendar/edit-academic-calendar.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
       {
         path: 'crear',
         component: CreateAcademicCalendarComponent,
+      },
+      {
+        path: 'editar/:id',
+        component: EditAcademicCalendarComponent,
       },
       {
         path: 'ver/:id',
