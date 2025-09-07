@@ -90,7 +90,7 @@
     <div class="table-responsive">
       <table
         class="table table-bordered table-sm mb-0 align-middle text-center"
-        *ngIf="calendario.fechas?.length > 0; else sinFechas"
+        *ngIf="calendario.fechas?.length"
         role="table"
       >
         <thead class="table-light">
@@ -118,12 +118,6 @@
           </tr>
         </tbody>
       </table>
-
-      <ng-template #sinFechas>
-        <div class="text-muted text-center">
-          Este calendario no tiene fechas asociadas.
-        </div>
-      </ng-template>
     </div>
   </div>
 </div>
