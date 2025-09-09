@@ -186,36 +186,71 @@
         <tbody>
           <tr *ngFor="let fecha of calendario.fechas">
             <td>{{ fecha.nombre }}</td>
-            <td>
-              {{
-                fecha.fechaInicial
-                  ? (fecha.fechaInicial | date : "yyyy-MM-dd")
-                  : "-"
-              }}
+            <!-- Fecha inicio -->
+            <td class="text-center align-middle">
+              <input
+                *ngIf="filaEnEdicionId === fecha.oidFecha"
+                type="date"
+                class="form-control form-control-sm"
+                [(ngModel)]="fecha.fechaInicial"
+              />
+              <span *ngIf="filaEnEdicionId !== fecha.oidFecha">
+                {{
+                  fecha.fechaInicial
+                    ? (fecha.fechaInicial | date : "yyyy-MM-dd")
+                    : "-"
+                }}
+              </span>
             </td>
-            <td>
-              {{
-                fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
-              }}
+            <!-- Fecha fin -->
+            <td class="text-center align-middle">
+              <input
+                *ngIf="filaEnEdicionId === fecha.oidFecha"
+                type="date"
+                class="form-control form-control-sm"
+                [(ngModel)]="fecha.fechaFin"
+              />
+              <span *ngIf="filaEnEdicionId !== fecha.oidFecha">
+                {{
+                  fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
+                }}
+              </span>
             </td>
-            <td class="text-center">
-              <div class="d-flex justify-content-center gap-3">
-                <!-- Editar Fecha -->
-                <a title="Editar fecha">
-                  <i
-                    class="fas fa-pen text-primary"
-                    style="cursor: pointer"
-                  ></i>
-                </a>
+            <!-- Acciones -->
+            <td class="text-center align-middle">
+              <button
+                class="btn btn-outline-success btn-sm me-1"
+                *ngIf="filaEnEdicionId === fecha.oidFecha"
+                (click)="guardarFechaEditada(fecha)"
+                title="Guardar"
+              >
+                <i class="fas fa-save"></i>
+              </button>
+              <button
+                class="btn btn-outline-danger btn-sm me-1"
+                *ngIf="filaEnEdicionId === fecha.oidFecha"
+                (click)="cancelarEdicionFecha(fecha)"
+                title="Cancelar"
+              >
+                <i class="fas fa-times"></i>
+              </button>
 
-                <!-- Eliminar Fecha -->
-                <a title="Eliminar fecha">
-                  <i
-                    class="fas fa-trash text-danger"
-                    style="cursor: pointer"
-                  ></i>
-                </a>
-              </div>
+              <button
+                class="btn btn-outline-primary btn-sm me-1"
+                *ngIf="filaEnEdicionId !== fecha.oidFecha"
+                (click)="activarEdicionFecha(fecha)"
+                title="Editar"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                class="btn btn-outline-danger btn-sm"
+                *ngIf="filaEnEdicionId !== fecha.oidFecha"
+                (click)="eliminarFecha(fecha.oidFecha)"
+                title="Eliminar"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
             </td>
           </tr>
         </tbody>
