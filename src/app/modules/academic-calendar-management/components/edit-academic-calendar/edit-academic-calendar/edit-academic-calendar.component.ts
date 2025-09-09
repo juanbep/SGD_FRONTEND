@@ -175,7 +175,69 @@ export class EditAcademicCalendarComponent {
     this.backupFecha = null;
   }
 
-  guardarFechaEditada(fecha: any): void {}
+  editarFecha(fecha: any): void {
+    if (!fecha?.oidFecha || !this.calendarioId) return;
+
+    const oidsUnicos = [1, 3, 4, 5, 7, 8, 9, 10];
+    const esFechaUnica = oidsUnicos.includes(
+      Number(fecha.oidNombreFecha ?? fecha.oidnombrefecha)
+    );
+
+    const payload = {
+      fechaInicial: this.formatearFechaConHora(fecha.fechaInicial),
+      fechaFin: esFechaUnica
+        ? null
+        : this.formatearFechaConHora(fecha.fechaFin),
+      oidCalendario: this.calendarioId,
+      oidNombreFecha: fecha.oidNombreFecha ?? fecha.oidnombrefecha ?? null,
+      tipo: fecha.tipo ?? 'RESALTADAS',
+    };
+
+    const url = `http://localhost:8090/sgd-back/api/fechas/${fecha.oidFecha}`;
+    console.log('Payload enviado:', payload);
+
+    this.http.put<any>(url, payload).subscribe({
+      next: (resp) => {
+        if (resp?.codigo === 200 && resp?.data) {
+          const actualizada = resp.data;
+          fecha.fechaInicial = actualizada.fechaInicial;
+          fecha.fechaFin = actualizada.fechaFin;
+          fecha.tipo = actualizada.tipo;
+
+          this.filaEnEdicionId = null;
+          this.backupFecha = null;
+
+          this.toastr.success(resp.mensaje || 'Fecha actualizada con éxito.');
+        } else {
+          this.toastr.error('Respuesta inesperada del servidor.');
+          console.error('Respuesta inesperada:', resp);
+        }
+      },
+      error: (err) => {
+        console.error('Error al actualizar fecha', err);
+        this.toastr.error(
+          err?.error?.mensaje || 'Ocurrió un error al actualizar la fecha.'
+        );
+      },
+    });
+  }
+
+  formatearFechaConHora(valor: any): string | null {
+    if (!valor) return null;
+
+    if (valor instanceof Date) {
+      const y = valor.getFullYear();
+      const m = String(valor.getMonth() + 1).padStart(2, '0');
+      const d = String(valor.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}T00:00:00`;
+    }
+
+    if (typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+      return `${valor}T00:00:00`;
+    }
+
+    return valor;
+  }
 
   eliminarFecha(fecha: any): void {}
 }
