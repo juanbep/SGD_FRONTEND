@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe, NgIf, NgFor } from '@angular/common';
+import { CatalogoNombresFecha } from '../../catalogos-nombres-fecha';
 import {
   FormBuilder,
   FormGroup,
@@ -35,6 +36,7 @@ export class EditAcademicCalendarComponent {
 
   filaEnEdicionId: number | null = null;
   backupFecha: any = null;
+  oidsUnicos = [1, 3, 4, 5, 7, 8, 9, 10];
 
   estadosDisponibles: string[] = [
     'ACTIVO',
@@ -178,18 +180,17 @@ export class EditAcademicCalendarComponent {
   editarFecha(fecha: any): void {
     if (!fecha?.oidFecha || !this.calendarioId) return;
 
-    const oidsUnicos = [1, 3, 4, 5, 7, 8, 9, 10];
-    const esFechaUnica = oidsUnicos.includes(
-      Number(fecha.oidNombreFecha ?? fecha.oidnombrefecha)
-    );
+    const oidNombreFecha = fecha.oidNombreFecha ?? fecha.oidnombrefecha ?? null;
+    //const oidsUnicos = [1, 3, 4, 5, 7, 8, 9, 10];
+    const esFechaUnica = this.oidsUnicos.includes(Number(oidNombreFecha));
 
     const payload = {
-      fechaInicial: this.formatearFechaConHora(fecha.fechaInicial),
-      fechaFin: esFechaUnica
+      fechaInicial: esFechaUnica
         ? null
-        : this.formatearFechaConHora(fecha.fechaFin),
+        : this.formatearFechaConHora(fecha.fechaInicial),
+      fechaFin: this.formatearFechaConHora(fecha.fechaFin),
       oidCalendario: this.calendarioId,
-      oidNombreFecha: fecha.oidNombreFecha ?? fecha.oidnombrefecha ?? null,
+      oidNombreFecha: oidNombreFecha,
       tipo: fecha.tipo ?? 'RESALTADAS',
     };
 
@@ -220,6 +221,10 @@ export class EditAcademicCalendarComponent {
         );
       },
     });
+  }
+
+  esFechaUnica(oidNombreFecha: number): boolean {
+    return this.oidsUnicos.includes(Number(oidNombreFecha));
   }
 
   formatearFechaConHora(valor: any): string | null {
