@@ -174,6 +174,57 @@ export class SideBarV2Component implements OnInit {
         },
       ],
     },
+    {
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'COORDINADOR',
+        'DOCENTE',
+        'SECRETARIA/O FACULTAD',
+        'DECANO',
+      ],
+      icon: 'assets/icons/sidebar/icon-activities.svg',
+      label: 'Gestión de actividades',
+      isOpen: false,
+      children: [
+        {
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'COORDINADOR',
+            'DOCENTE',
+            'SECRETARIA/O FACULTAD',
+            'DECANO',
+          ],
+          icon: 'fas fa-search',
+          label: 'Explorar actividades',
+          isOpen: false,
+          children: [
+            {
+              role: ['DOCENTE', 'COORDINADOR', 'JEFE DE DEPARTAMENTO'],
+              icon: 'fas fa-chalkboard-teacher',
+              label: 'Actividades de docencia',
+              url: '/app/gestion-actividades/docencia',
+            },
+            {
+              role: ['DOCENTE', 'JEFE DE DEPARTAMENTO'],
+              icon: 'fas fa-microscope',
+              label: 'Actividades de Investigación',
+              url: '/app/gestion-actividades/investigacion',
+            },
+            {
+              role: [
+                'DOCENTE',
+                'COORDINADOR',
+                'JEFE DE DEPARTAMENTO',
+                'SECRETARIA/O FACULTAD',
+              ],
+              icon: 'fas fa-tasks',
+              label: 'Otras Actividades',
+              url: '/app/gestion-actividades/otras',
+            },
+          ],
+        },
+      ],
+    },
   ];
 
   ngOnInit(): void {
@@ -191,7 +242,6 @@ export class SideBarV2Component implements OnInit {
   }
 
   toggleMenuItem(item: MenuItem) {
-    // Only toggle if sidebar is not collapsed and item has children
     if (!this.isSidebarCollapsed && item.children) {
       item.isOpen = !item.isOpen;
     }

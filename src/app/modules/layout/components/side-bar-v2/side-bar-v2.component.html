@@ -40,14 +40,48 @@
             class="sidebar-submenu"
           >
             <li *ngFor="let child of item.children">
-              <!-- *ngIf="hasRole(child.role ? child.role : [])"  -->
               <a
+                *ngIf="!child.children"
                 routerLink="{{ child.url }}"
                 class="sidebar-item sidebar-subitem"
               >
                 <i [class]="child.icon"></i>
                 <span class="sidebar-item-text">{{ child.label }}</span>
               </a>
+
+              <div *ngIf="child.children">
+                <a
+                  href="#"
+                  class="sidebar-item sidebar-subitem"
+                  [ngClass]="{ 'menu-item-active': child.isOpen }"
+                  (click)="toggleMenuItem(child); $event.preventDefault()"
+                >
+                  <i [class]="child.icon"></i>
+                  <span class="sidebar-item-text">{{ child.label }}</span>
+                  <i
+                    *ngIf="!isSidebarCollapsed"
+                    class="fas fa-chevron-down sidebar-item-arrow"
+                    [ngClass]="{ rotated: child.isOpen }"
+                  ></i>
+                </a>
+
+                <ul
+                  *ngIf="child.children && !isSidebarCollapsed && child.isOpen"
+                  class="sidebar-submenu sidebar-submenu-level3"
+                >
+                  <li *ngFor="let grandchild of child.children">
+                    <a
+                      routerLink="{{ grandchild.url }}"
+                      class="sidebar-item sidebar-subitem sidebar-grandchild"
+                    >
+                      <i [class]="grandchild.icon"></i>
+                      <span class="sidebar-item-text">{{
+                        grandchild.label
+                      }}</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </li>
           </ul>
         </li>
