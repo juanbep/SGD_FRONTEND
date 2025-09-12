@@ -169,7 +169,7 @@
       style="background-color: #000066"
     >
       <span>Fechas del calendario</span>
-      <button class="btn btn-light btn-sm">
+      <button class="btn btn-light btn-sm" (click)="abrirModalAgregarFecha()">
         <i class="fas fa-plus me-1"></i> Agregar fecha
       </button>
     </div>
@@ -255,6 +255,80 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal/Formulario para agregar nueva fecha -->
+<div class="card mt-3" *ngIf="mostrarFormularioNuevaFecha">
+  <div class="card mt-3" *ngIf="mostrarFormularioNuevaFecha">
+    <div class="card-header text-white" style="background-color: #000066">
+      <h6 class="mb-0">Agregar Nueva Fecha</h6>
+    </div>
+    <!-- resto del contenido -->
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <label for="nombreFecha" class="form-label">Nombre de Fecha</label>
+        <select
+          class="form-control form-control-sm"
+          [(ngModel)]="nuevaFecha.oidNombreFecha"
+        >
+          <option value="">Seleccionar...</option>
+          <option
+            *ngFor="let fecha of catalogoFechas"
+            [value]="fecha.oidNombreFecha"
+          >
+            {{ fecha.nombre }}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="fechaInicial" class="form-label">Fecha Inicial</label>
+        <input
+          type="date"
+          class="form-control form-control-sm"
+          [(ngModel)]="nuevaFecha.fechaInicial"
+          [disabled]="
+            oidsUnicos.includes(convertirANumero(nuevaFecha.oidNombreFecha))
+          "
+        />
+        <small
+          class="text-muted"
+          *ngIf="
+            oidsUnicos.includes(convertirANumero(nuevaFecha.oidNombreFecha))
+          "
+        >
+          Esta fecha no requiere fecha inicial
+        </small>
+      </div>
+      <div class="col-md-3">
+        <label for="fechaFin" class="form-label">Fecha Final *</label>
+        <input
+          type="date"
+          class="form-control form-control-sm"
+          [(ngModel)]="nuevaFecha.fechaFin"
+          required
+        />
+      </div>
+      <div class="col-md-2 d-flex align-items-end">
+        <div class="d-flex flex-column w-100">
+          <button
+            class="btn btn-success btn-sm mb-1"
+            (click)="agregarFecha()"
+            [disabled]="!nuevaFecha.oidNombreFecha || !nuevaFecha.fechaFin"
+          >
+            <i class="fas fa-save"></i> Guardar
+          </button>
+          <button
+            class="btn btn-secondary btn-sm"
+            (click)="cancelarAgregarFecha()"
+          >
+            <i class="fas fa-times"></i> Cancelar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -29,6 +29,7 @@ import { ToastrService } from 'ngx-toastr';
 export class EditAcademicCalendarComponent {
   calendario: any = null;
   calendarioId: number | null = null;
+  catalogoFechas = CatalogoNombresFecha.NOMBRES_FECHA;
 
   formularioCalendario!: FormGroup;
   modoEdicion: boolean = false;
@@ -44,6 +45,15 @@ export class EditAcademicCalendarComponent {
     'PENDIENTE',
     'DESHABILITADO',
   ];
+
+  // Propiedades para el modal/formulario de nueva fecha
+  mostrarFormularioNuevaFecha: boolean = false;
+  nuevaFecha: any = {
+    oidNombreFecha: null,
+    fechaInicial: null,
+    fechaFin: null,
+    tipo: 'RESALTADAS',
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -244,5 +254,134 @@ export class EditAcademicCalendarComponent {
     return valor;
   }
 
-  eliminarFecha(fecha: any): void {}
+  eliminarFecha(oidFecha: number): void {
+    if (!oidFecha) {
+      this.toastr.warning('ID de fecha no válido.');
+      return;
+    }
+
+    // Confirmación antes de eliminar
+    if (confirm('¿Estás seguro de que deseas eliminar esta fecha?')) {
+      const url = `http://localhost:8090/sgd-back/api/fechas/${oidFecha}`;
+
+      this.http.delete<any>(url).subscribe({
+        next: (response) => {
+          if (response?.codigo === 200) {
+            // Remover la fecha del array local
+            this.calendario.fechas = this.calendario.fechas.filter(
+              (fecha: any) => fecha.oidFecha !== oidFecha
+            );
+
+            this.toastr.success(
+              response.mensaje || 'Fecha eliminada con éxito.'
+            );
+          } else {
+            this.toastr.error('Error al eliminar la fecha.');
+          }
+        },
+        error: (err) => {
+          console.error('Error al eliminar fecha:', err);
+          this.toastr.error(
+            err?.error?.mensaje || 'Ocurrió un error al eliminar la fecha.'
+          );
+        },
+      });
+    }
+  }
+
+  // Métodos para agregar fecha
+  abrirModalAgregarFecha(): void {
+    this.mostrarFormularioNuevaFecha = true;
+    this.resetearNuevaFecha();
+  }
+
+  resetearNuevaFecha(): void {
+    this.nuevaFecha = {
+      oidNombreFecha: null,
+      fechaInicial: null,
+      fechaFin: null,
+      tipo: 'RESALTADAS',
+    };
+  }
+
+  agregarFecha(): void {
+    if (
+      !this.calendarioId ||
+      !this.nuevaFecha.oidNombreFecha ||
+      !this.nuevaFecha.fechaFin
+    ) {
+      this.toastr.warning('Por favor, completa todos los campos obligatorios.');
+      return;
+    }
+
+    const esFechaUnica = this.oidsUnicos.includes(
+      Number(this.nuevaFecha.oidNombreFecha)
+    );
+
+    const payload = {
+      fechaInicial: esFechaUnica
+        ? null
+        : this.formatearFechaConHora(this.nuevaFecha.fechaInicial),
+      fechaFin: this.formatearFechaConHora(this.nuevaFecha.fechaFin),
+      oidCalendario: this.calendarioId,
+      oidNombreFecha: this.nuevaFecha.oidNombreFecha,
+      tipo: this.nuevaFecha.tipo || 'RESALTADAS',
+    };
+
+    const url = `http://localhost:8090/sgd-back/api/fechas`;
+    console.log('Payload para agregar fecha:', payload);
+
+    this.http.post<any>(url, payload).subscribe({
+      next: (response) => {
+        if (response?.codigo === 201 && response?.data) {
+          // Buscar el nombre de la fecha agregada
+          const nombreFecha = this.catalogoFechas.find(
+            (f) => f.oidNombreFecha === response.data.oidNombreFecha
+          );
+
+          // Agregar el nombre a la respuesta del servidor
+          const nuevaFechaConNombre = {
+            ...response.data,
+            nombre: nombreFecha?.nombre || 'Fecha sin nombre',
+          };
+
+          // Agregar la nueva fecha al array local
+          if (!this.calendario.fechas) {
+            this.calendario.fechas = [];
+          }
+          this.calendario.fechas.push(nuevaFechaConNombre);
+
+          this.mostrarFormularioNuevaFecha = false;
+          this.resetearNuevaFecha();
+
+          this.toastr.success(response.mensaje || 'Fecha agregada con éxito.');
+        } else {
+          this.toastr.error('Error al agregar la fecha.');
+        }
+      },
+      error: (err) => {
+        console.error('Error al agregar fecha:', err);
+        this.toastr.error(
+          err?.error?.mensaje || 'Ocurrió un error al agregar la fecha.'
+        );
+      },
+    });
+  }
+
+  convertirANumero(valor: any): number {
+    return Number(valor);
+  }
+
+  cancelarAgregarFecha(): void {
+    this.mostrarFormularioNuevaFecha = false;
+    this.resetearNuevaFecha();
+  }
+
+  // Método helper para obtener el nombre de una fecha por su ID
+  obtenerNombreFecha(oidNombreFecha: number): string {
+    const fecha = this.catalogoFechas.find(
+      (f) => f.oidNombreFecha === oidNombreFecha
+    );
+    return fecha?.nombre || 'Fecha sin nombre';
+  }
 }
