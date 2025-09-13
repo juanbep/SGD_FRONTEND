@@ -129,6 +129,112 @@ export class SideBarV2Component implements OnInit {
       ],
     },
     {
+      role: ['SECRETARIA/O FACULTAD'],
+      icon: 'assets/icons/sidebar/icon-calendar-management.svg',
+      label: 'Calendario académico',
+      isOpen: false,
+      children: [
+        {
+          role: ['SECRETARIA/O FACULTAD'],
+          icon: 'fas fa-user',
+          label: 'Explorar calendarios',
+          url: '#',
+        },
+        {
+          role: ['SECRETARIA/O FACULTAD'],
+          icon: 'fas fa-user',
+          label: 'Crear calendario',
+          url: '#',
+        },
+        {
+          role: ['SECRETARIA/O FACULTAD'],
+          icon: 'fas fa-user',
+          label: 'Gestiónar calendarios',
+          url: '/app/gestion-calendario-academico',
+        },
+      ],
+    },
+    {
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'COORDINADOR',
+        'DOCENTE',
+        'ESTUDIANTE',
+        'DECANO',
+        'SECRETARIA/O FACULTAD',
+        'CPD',
+      ],
+      icon: 'assets/icons/sidebar/icon-activities-management.svg',
+      label: 'Gestión Actividades',
+      isOpen: false,
+      children: [
+        {
+          role: ['DOCENTE'],
+          icon: 'fas fa-user',
+          label: 'Explorar actividades',
+          url: '/app/gestion-soportes/actividades',
+        },
+        {
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'ESTUDIANTE',
+            'COORDINADOR',
+            'DECANO',
+            'DOCENTE',
+          ],
+          icon: 'fas fa-lock',
+          label: 'Crear actividades',
+          url: '/app/gestion-soportes/responsabilidades',
+        },
+        {
+          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
+          icon: 'fas fa-lock',
+          label: 'Gestionar Actividades',
+          url: '/app/gestion-soportes/consolidado/lista-docentes',
+        },
+      ],
+    },
+    {
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'COORDINADOR',
+        'DOCENTE',
+        'ESTUDIANTE',
+        'DECANO',
+        'SECRETARIA/O FACULTAD',
+        'CPD',
+      ],
+      icon: 'assets/icons/sidebar/icon-activities-management.svg',
+      label: 'Gestión Necesidades',
+      isOpen: false,
+      children: [
+        {
+          role: ['DOCENTE'],
+          icon: 'fas fa-user',
+          label: 'Opción 1',
+          url: '#',
+        },
+        {
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'ESTUDIANTE',
+            'COORDINADOR',
+            'DECANO',
+            'DOCENTE',
+          ],
+          icon: 'fas fa-lock',
+          label: 'Opción 2',
+          url: '#',
+        },
+        {
+          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
+          icon: 'fas fa-lock',
+          label: 'Opción 3',
+          url: '#',
+        },
+      ],
+    },
+    {
       role: [
         'JEFE DE DEPARTAMENTO',
         'SECRETARIA/O FACULTAD',
@@ -154,77 +260,6 @@ export class SideBarV2Component implements OnInit {
         },
       ],
     },
-    {
-      role: ['SECRETARIA/O FACULTAD'],
-      icon: 'assets/icons/sidebar/icon-calendar-management.svg',
-      label: 'Calendario académico',
-      isOpen: false,
-      children: [
-        {
-          role: ['SECRETARIA/O FACULTAD'],
-          icon: 'fas fa-user',
-          label: 'Crear calendario',
-          url: '#',
-        },
-        {
-          role: ['SECRETARIA/O FACULTAD'],
-          icon: 'fas fa-user',
-          label: 'Gestiónar calendarios',
-          url: '/app/gestion-calendario-academico',
-        },
-      ],
-    },
-    {
-      role: [
-        'JEFE DE DEPARTAMENTO',
-        'COORDINADOR',
-        'DOCENTE',
-        'SECRETARIA/O FACULTAD',
-        'DECANO',
-      ],
-      icon: 'assets/icons/sidebar/icon-activities.svg',
-      label: 'Gestión de actividades',
-      isOpen: false,
-      children: [
-        {
-          role: [
-            'JEFE DE DEPARTAMENTO',
-            'COORDINADOR',
-            'DOCENTE',
-            'SECRETARIA/O FACULTAD',
-            'DECANO',
-          ],
-          icon: 'fas fa-search',
-          label: 'Explorar actividades',
-          isOpen: false,
-          children: [
-            {
-              role: ['DOCENTE', 'COORDINADOR', 'JEFE DE DEPARTAMENTO'],
-              icon: 'fas fa-chalkboard-teacher',
-              label: 'Actividades de docencia',
-              url: '/app/gestion-actividades/docencia',
-            },
-            {
-              role: ['DOCENTE', 'JEFE DE DEPARTAMENTO'],
-              icon: 'fas fa-microscope',
-              label: 'Actividades de Investigación',
-              url: '/app/gestion-actividades/investigacion',
-            },
-            {
-              role: [
-                'DOCENTE',
-                'COORDINADOR',
-                'JEFE DE DEPARTAMENTO',
-                'SECRETARIA/O FACULTAD',
-              ],
-              icon: 'fas fa-tasks',
-              label: 'Otras Actividades',
-              url: '/app/gestion-actividades/otras',
-            },
-          ],
-        },
-      ],
-    },
   ];
 
   ngOnInit(): void {
@@ -243,6 +278,12 @@ export class SideBarV2Component implements OnInit {
 
   toggleMenuItem(item: MenuItem) {
     if (!this.isSidebarCollapsed && item.children) {
+      this.menuItems.forEach((menuItem) => {
+        if (menuItem !== item) {
+          menuItem.isOpen = false;
+        }
+      });
+
       item.isOpen = !item.isOpen;
     }
   }
