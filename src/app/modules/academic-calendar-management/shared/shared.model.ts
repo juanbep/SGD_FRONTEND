@@ -1,3 +1,5 @@
+import { EstadoCalendario } from "../models";
+
 export interface Pageable {
   pageNumber: number;
   pageSize: number;
@@ -37,4 +39,19 @@ export interface PaginatedResponse<T> {
     numberOfElements: number;
     empty: boolean;
   };
+}
+
+
+// ✅ Interface para parámetros de filtros
+export interface FiltrosCalendario {
+  page?: number;
+  size?: number;
+  estados?: EstadoCalendario[];
+  anio?: string;
+  periodo?: number;
+  busqueda?: string;
+  ordenPor?: 'anioCalendario' | 'observacion' | 'estado' | 'fechaCreacion';
+  orden?: 'asc' | 'desc';
+  fechaDesde?: string;
+  fechaHasta?: string;
 }
