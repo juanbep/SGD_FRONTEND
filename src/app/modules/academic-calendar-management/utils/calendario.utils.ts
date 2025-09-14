@@ -5,4 +5,19 @@ export class Utils {
     }
     return `${anio}-${periodo}`;
   }
+
+  static getBadgeClass(estado: string): string {
+    switch (estado) {
+      case 'ACTIVO':
+        return 'bg-success';
+      case 'PENDIENTE':
+        return 'bg-warning text-dark';
+      case 'APROBADO':
+        return 'bg-info text-dark';
+      case 'DESHABILITADO':
+        return 'bg-secondary';
+      default:
+        return 'bg-light text-dark';
+    }
+  }
 }

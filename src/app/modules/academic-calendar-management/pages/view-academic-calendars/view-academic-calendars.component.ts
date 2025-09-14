@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CalendarioService } from '../../services/calendario.service';
 import { ToastrService } from 'ngx-toastr';
+
 import { Utils } from '../../utils/calendario.utils';
 import { Calendario, PaginatedResponse } from '../../models';
+import { CalendarioService } from '../../services';
 
 @Component({
   selector: 'app-view-academic-calendar',
@@ -38,7 +39,7 @@ export class ViewAcademicCalendarsComponent implements OnInit {
     this.cargarCalendarios();
   }
 
-  // ✅ Método principal - USA directamente el response del backend
+  // ✅ Método principal
   cargarCalendarios(): void {
     this.loading = true;
     this.error = null;
@@ -47,7 +48,6 @@ export class ViewAcademicCalendarsComponent implements OnInit {
       next: (response: PaginatedResponse<Calendario>) => {
         console.log('Calendarios cargados:', response);
 
-        // ✅ Usar directamente los datos del response
         this.calendarios = response.data.content;
         this.totalElements = response.data.totalElements;
 
@@ -105,22 +105,6 @@ export class ViewAcademicCalendarsComponent implements OnInit {
     const fin = Math.min((this.page + 1) * this.size, this.totalElements);
 
     return `${inicio} - ${fin} de ${this.totalElements} registros`;
-  }
-
-  // ✅ Utilidades
-  getBadgeClass(estado: string): string {
-    switch (estado) {
-      case 'ACTIVO':
-        return 'bg-success';
-      case 'PENDIENTE':
-        return 'bg-warning text-dark';
-      case 'APROBADO':
-        return 'bg-info text-dark';
-      case 'DESHABILITADO':
-        return 'bg-secondary';
-      default:
-        return 'bg-light text-dark';
-    }
   }
 
   trackByCalendario(index: number, item: Calendario): any {
