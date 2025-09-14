@@ -1,0 +1,53 @@
+<div class="listar-calendarios-container">
+  
+  <!-- Header -->
+  <div class="header">
+    <h2>Calendarios Académicos</h2>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <p>Cargando calendarios...</p>
+    <!-- Puedes agregar un spinner aquí más adelante -->
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <p class="error-message">{{ error }}</p>
+    <button type="button" (click)="reintentar()" class="retry-button">
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Success State - Lista de calendarios -->
+  <div *ngIf="!loading && !error && calendarios.length > 0" class="calendarios-list">
+    
+    <div class="total-info">
+      <p>Total de calendarios: {{ totalElements }}</p>
+    </div>
+
+    <div class="calendarios-grid">
+      <div *ngFor="let calendario of calendarios" class="calendario-card">
+        <div class="calendario-info">
+          <h3>{{ calendario.anioCalendario }} - {{ calendario.numeroCalendario }}</h3>
+          <p><strong>Estado:</strong> {{ calendario.estado }}</p>
+          <p><strong>Semanas de clase:</strong> {{ calendario.semanasClase || 'No definido' }}</p>
+          <p><strong>Observaciones:</strong> {{ calendario.observacion || 'Sin observaciones' }}</p>
+        </div>
+        
+        <div class="calendario-actions">
+          <!-- Botones futuros para editar, ver detalles, etc. -->
+          <button type="button" class="view-button">Ver detalles</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && calendarios.length === 0" class="empty-state">
+    <p>No hay calendarios académicos registrados.</p>
+    <!-- Botón futuro para crear nuevo calendario -->
+  </div>
+
+</div>
+

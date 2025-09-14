@@ -138,7 +138,7 @@ export class SideBarV2Component implements OnInit {
           role: ['SECRETARIA/O FACULTAD'],
           icon: 'fas fa-user',
           label: 'Explorar calendarios',
-          url: '#',
+          url: '/app/gestion-calendario-academico/list',
         },
         {
           role: ['SECRETARIA/O FACULTAD'],
