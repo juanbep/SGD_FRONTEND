@@ -1,53 +1,594 @@
-<div class="listar-calendarios-container">
-  
-  <!-- Header -->
-  <div class="header">
-    <h2>Calendarios Académicos</h2>
-  </div>
+<!-- <shared-loading-overley [isLoading]="isLoading"></shared-loading-overley> -->
+<div class="view-container">
+  <header class="title-two">Gestión Calendario académico</header>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
-    <p>Cargando calendarios...</p>
-    <!-- Puedes agregar un spinner aquí más adelante -->
-  </div>
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
+    <span class="text-body-heavy">
+      A continuación encontrará el calendario académico vigente y el historial
+      de calendarios académicos.
+    </span>
+  </section>
 
-  <!-- Error State -->
-  <div *ngIf="error && !loading" class="error-container">
-    <p class="error-message">{{ error }}</p>
-    <button type="button" (click)="reintentar()" class="retry-button">
-      Reintentar
-    </button>
-  </div>
+  <div class="mb-3"></div>
 
-  <!-- Success State - Lista de calendarios -->
-  <div *ngIf="!loading && !error && calendarios.length > 0" class="calendarios-list">
-    
-    <div class="total-info">
-      <p>Total de calendarios: {{ totalElements }}</p>
-    </div>
+  <!-- BOOTSTRAP TABS -->
+  <div class="calendario-tabs-container">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" id="calendarioTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          id="vigente-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#vigente"
+          type="button"
+          role="tab"
+          aria-controls="vigente"
+          aria-selected="true"
+        >
+          Calendario Vigente
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="espera-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#espera"
+          type="button"
+          role="tab"
+          aria-controls="espera"
+          aria-selected="false"
+        >
+          Calendarios en Espera
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          id="historial-tab"
+          data-bs-toggle="tab"
+          data-bs-target="#historial"
+          type="button"
+          role="tab"
+          aria-controls="historial"
+          aria-selected="false"
+        >
+          Historial de Calendarios
+        </button>
+      </li>
+    </ul>
 
-    <div class="calendarios-grid">
-      <div *ngFor="let calendario of calendarios" class="calendario-card">
-        <div class="calendario-info">
-          <h3>{{ calendario.anioCalendario }} - {{ calendario.numeroCalendario }}</h3>
-          <p><strong>Estado:</strong> {{ calendario.estado }}</p>
-          <p><strong>Semanas de clase:</strong> {{ calendario.semanasClase || 'No definido' }}</p>
-          <p><strong>Observaciones:</strong> {{ calendario.observacion || 'Sin observaciones' }}</p>
+    <!-- Tab panes -->
+    <div class="tab-content" id="calendarioTabContent">
+      <!-- TAB 1: CALENDARIO VIGENTE -->
+      <div
+        class="tab-pane fade show active"
+        id="vigente"
+        role="tabpanel"
+        aria-labelledby="vigente-tab"
+      >
+        <div class="tab-content-wrapper">
+          <div class="table-container">
+            <div class="table-responsive">
+              <table
+                class="table table-bordered calendario-table"
+                role="table"
+                aria-label="Tabla de calendario académico vigente"
+              >
+                <thead>
+                  <tr>
+                    <th class="text-body-heavy col-id" scope="col">OID</th>
+                    <th class="text-body-heavy col-acuerdo" scope="col">
+                      Acuerdo académico
+                    </th>
+                    <th class="text-body-heavy col-año-periodo" scope="col">
+                      Año
+                    </th>
+                    <th class="text-body-heavy col-estado" scope="col">
+                      Estado
+                    </th>
+                    <th class="col-acciones text-center" scope="col">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  *ngIf="
+                    calendarioVigente.content &&
+                      calendarioVigente.content.length > 0;
+                    else noDataVigente
+                  "
+                >
+                  <tr *ngFor="let calendario of calendarioVigente.content">
+                    <td class="col-id">{{ calendario.oidcalendario }}</td>
+                    <td class="col-acuerdo">
+                      {{ calendario.observacion || "Sin información" }}
+                    </td>
+                    <td class="col-año-periodo">
+                      {{
+                        calendarioUtils.formatearAnioPeriodo(
+                          calendario.anioCalendario,
+                          calendario.numeroCalendario
+                        )
+                      }}
+                    </td>
+                    <td class="col-estado">{{ calendario.estado }}</td>
+                    <td class="text-center col-acciones">
+                      <a
+                        [routerLink]="['ver', calendario.oidcalendario]"
+                        class="mx-1"
+                        title="Ver calendario"
+                        aria-label="Ver detalles del calendario académico"
+                        tabindex="0"
+                      >
+                        <i
+                          class="fas fa-eye text-success"
+                          aria-hidden="true"
+                        ></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <ng-template #noDataVigente>
+                  <tbody>
+                    <tr>
+                      <td colspan="5" class="text-center text-body-regular">
+                        No hay periodos académicos vigentes
+                      </td>
+                    </tr>
+                  </tbody>
+                </ng-template>
+              </table>
+            </div>
+          </div>
+
+          <!-- PAGINADOR VIGENTE -->
+          <nav
+            aria-label="Paginación calendario vigente"
+            *ngIf="
+              calendarioVigente.content && calendarioVigente.content.length > 0
+            "
+          >
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="pagination-info">
+                <small class="text-muted">
+                  Mostrando
+                  {{ calendarioVigente.number * calendarioVigente.size + 1 }} -
+                  {{
+                    Math.min(
+                      (calendarioVigente.number + 1) * calendarioVigente.size,
+                      calendarioVigente.totalElements
+                    )
+                  }}
+                  de {{ calendarioVigente.totalElements }} registros
+                </small>
+              </div>
+              <ul class="pagination pagination-sm mb-0">
+                <li
+                  class="page-item"
+                  [class.disabled]="calendarioVigente.first"
+                >
+                  <button
+                    class="page-link"
+                    (click)="changePage('vigente', 0)"
+                    [disabled]="calendarioVigente.first"
+                  >
+                    <i class="fas fa-angle-double-left"></i>
+                  </button>
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="calendarioVigente.first"
+                >
+                  <button
+                    class="page-link"
+                    (click)="
+                      changePage('vigente', calendarioVigente.number - 1)
+                    "
+                    [disabled]="calendarioVigente.first"
+                  >
+                    <i class="fas fa-angle-left"></i>
+                  </button>
+                </li>
+                <li
+                  class="page-item active"
+                  *ngFor="let page of getVisiblePages(calendarioVigente)"
+                  [class.active]="page === calendarioVigente.number"
+                >
+                  <button
+                    class="page-link"
+                    (click)="changePage('vigente', page)"
+                  >
+                    {{ page + 1 }}
+                  </button>
+                </li>
+                <li class="page-item" [class.disabled]="calendarioVigente.last">
+                  <button
+                    class="page-link"
+                    (click)="
+                      changePage('vigente', calendarioVigente.number + 1)
+                    "
+                    [disabled]="calendarioVigente.last"
+                  >
+                    <i class="fas fa-angle-right"></i>
+                  </button>
+                </li>
+                <li class="page-item" [class.disabled]="calendarioVigente.last">
+                  <button
+                    class="page-link"
+                    (click)="
+                      changePage('vigente', calendarioVigente.totalPages - 1)
+                    "
+                    [disabled]="calendarioVigente.last"
+                  >
+                    <i class="fas fa-angle-double-right"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </nav>
         </div>
-        
-        <div class="calendario-actions">
-          <!-- Botones futuros para editar, ver detalles, etc. -->
-          <button type="button" class="view-button">Ver detalles</button>
+      </div>
+
+      <!-- TAB 2: CALENDARIOS EN ESPERA -->
+      <div
+        class="tab-pane fade"
+        id="espera"
+        role="tabpanel"
+        aria-labelledby="espera-tab"
+      >
+        <div class="tab-content-wrapper">
+          <div class="table-container">
+            <div class="table-responsive">
+              <table
+                class="table table-bordered calendario-table"
+                role="table"
+                aria-label="Tabla de calendarios en espera"
+              >
+                <thead>
+                  <tr>
+                    <th class="text-body-heavy col-id" scope="col">OID</th>
+                    <th class="text-body-heavy col-acuerdo" scope="col">
+                      Acuerdo académico
+                    </th>
+                    <th class="text-body-heavy col-año-periodo" scope="col">
+                      Año
+                    </th>
+                    <th class="text-body-heavy col-estado" scope="col">
+                      Estado
+                    </th>
+                    <th class="col-acciones text-center" scope="col">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  *ngIf="
+                    calendariosEspera.content &&
+                      calendariosEspera.content.length > 0;
+                    else noDataEspera
+                  "
+                >
+                  <tr *ngFor="let calendario of calendariosEspera.content">
+                    <td class="col-id">{{ calendario.oidcalendario }}</td>
+                    <td class="col-acuerdo">
+                      {{ calendario.observacion || "Sin información" }}
+                    </td>
+                    <td class="col-año-periodo">
+                      {{
+                        calendarioUtils.formatearAnioPeriodo(
+                          calendario.anioCalendario,
+                          calendario.numeroCalendario
+                        )
+                      }}
+                    </td>
+                    <td class="col-estado">{{ calendario.estado }}</td>
+                    <td class="text-center col-acciones">
+                      <a
+                        [routerLink]="['ver', calendario.oidcalendario]"
+                        class="mx-1"
+                        title="Ver calendario"
+                        aria-label="Ver detalles del calendario en espera"
+                        tabindex="0"
+                      >
+                        <i
+                          class="fas fa-eye text-success"
+                          aria-hidden="true"
+                        ></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <ng-template #noDataEspera>
+                  <tbody>
+                    <tr>
+                      <td colspan="5" class="text-center text-body-regular">
+                        No hay calendarios pendientes o aprobados
+                      </td>
+                    </tr>
+                  </tbody>
+                </ng-template>
+              </table>
+            </div>
+          </div>
+
+          <!-- PAGINADOR ESPERA -->
+          <nav
+            aria-label="Paginación calendarios en espera"
+            *ngIf="
+              calendariosEspera.content && calendariosEspera.content.length > 0
+            "
+          >
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="pagination-info">
+                <small class="text-muted">
+                  Mostrando
+                  {{ calendariosEspera.number * calendariosEspera.size + 1 }} -
+                  {{
+                    Math.min(
+                      (calendariosEspera.number + 1) * calendariosEspera.size,
+                      calendariosEspera.totalElements
+                    )
+                  }}
+                  de {{ calendariosEspera.totalElements }} registros
+                </small>
+              </div>
+              <ul class="pagination pagination-sm mb-0">
+                <li
+                  class="page-item"
+                  [class.disabled]="calendariosEspera.first"
+                >
+                  <button
+                    class="page-link"
+                    (click)="changePage('espera', 0)"
+                    [disabled]="calendariosEspera.first"
+                  >
+                    <i class="fas fa-angle-double-left"></i>
+                  </button>
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="calendariosEspera.first"
+                >
+                  <button
+                    class="page-link"
+                    (click)="changePage('espera', calendariosEspera.number - 1)"
+                    [disabled]="calendariosEspera.first"
+                  >
+                    <i class="fas fa-angle-left"></i>
+                  </button>
+                </li>
+                <li
+                  class="page-item"
+                  *ngFor="let page of getVisiblePages(calendariosEspera)"
+                  [class.active]="page === calendariosEspera.number"
+                >
+                  <button
+                    class="page-link"
+                    (click)="changePage('espera', page)"
+                  >
+                    {{ page + 1 }}
+                  </button>
+                </li>
+                <li class="page-item" [class.disabled]="calendariosEspera.last">
+                  <button
+                    class="page-link"
+                    (click)="changePage('espera', calendariosEspera.number + 1)"
+                    [disabled]="calendariosEspera.last"
+                  >
+                    <i class="fas fa-angle-right"></i>
+                  </button>
+                </li>
+                <li class="page-item" [class.disabled]="calendariosEspera.last">
+                  <button
+                    class="page-link"
+                    (click)="
+                      changePage('espera', calendariosEspera.totalPages - 1)
+                    "
+                    [disabled]="calendariosEspera.last"
+                  >
+                    <i class="fas fa-angle-double-right"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <!-- TAB 3: HISTORIAL -->
+      <div
+        class="tab-pane fade"
+        id="historial"
+        role="tabpanel"
+        aria-labelledby="historial-tab"
+      >
+        <div class="tab-content-wrapper">
+          <div class="table-container">
+            <div class="table-responsive">
+              <table
+                class="table table-bordered calendario-table"
+                role="table"
+                aria-label="Tabla de historial de calendarios académicos"
+              >
+                <thead>
+                  <tr>
+                    <th class="text-body-heavy col-id" scope="col">OID</th>
+                    <th class="text-body-heavy col-acuerdo" scope="col">
+                      Acuerdo académico
+                    </th>
+                    <th class="text-body-heavy col-año-periodo" scope="col">
+                      Año
+                    </th>
+                    <th class="text-body-heavy col-estado" scope="col">
+                      Estado
+                    </th>
+                    <th class="col-acciones text-center" scope="col">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  *ngIf="
+                    historialCalendarios.content &&
+                      historialCalendarios.content.length > 0;
+                    else noDataHistorial
+                  "
+                >
+                  <tr *ngFor="let calendario of historialCalendarios.content">
+                    <td class="col-id">{{ calendario.oidcalendario }}</td>
+                    <td class="col-acuerdo">
+                      {{ calendario.observacion || "Sin información" }}
+                    </td>
+                    <td class="col-año-periodo">
+                      {{
+                        calendarioUtils.formatearAnioPeriodo(
+                          calendario.anioCalendario,
+                          calendario.numeroCalendario
+                        )
+                      }}
+                    </td>
+                    <td class="col-estado">{{ calendario.estado }}</td>
+                    <td class="text-center col-acciones">
+                      <a
+                        [routerLink]="['ver', calendario.oidcalendario]"
+                        class="mx-1"
+                        title="Ver calendario"
+                        aria-label="Ver detalles del calendario histórico"
+                        tabindex="0"
+                      >
+                        <i
+                          class="fas fa-eye text-success"
+                          aria-hidden="true"
+                        ></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <ng-template #noDataHistorial>
+                  <tbody>
+                    <tr>
+                      <td colspan="5" class="text-center text-body-regular">
+                        No hay calendarios académicos registrados
+                      </td>
+                    </tr>
+                  </tbody>
+                </ng-template>
+              </table>
+            </div>
+          </div>
+
+          <!-- PAGINADOR HISTORIAL -->
+          <nav
+            aria-label="Paginación historial calendarios"
+            *ngIf="
+              historialCalendarios.content &&
+              historialCalendarios.content.length > 0
+            "
+          >
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="pagination-info">
+                <small class="text-muted">
+                  Mostrando
+                  {{
+                    historialCalendarios.number * historialCalendarios.size + 1
+                  }}
+                  -
+                  {{
+                    Math.min(
+                      (historialCalendarios.number + 1) *
+                        historialCalendarios.size,
+                      historialCalendarios.totalElements
+                    )
+                  }}
+                  de {{ historialCalendarios.totalElements }} registros
+                </small>
+              </div>
+              <ul class="pagination pagination-sm mb-0">
+                <li
+                  class="page-item"
+                  [class.disabled]="historialCalendarios.first"
+                >
+                  <button
+                    class="page-link"
+                    (click)="changePage('historial', 0)"
+                    [disabled]="historialCalendarios.first"
+                  >
+                    <i class="fas fa-angle-double-left"></i>
+                  </button>
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="historialCalendarios.first"
+                >
+                  <button
+                    class="page-link"
+                    (click)="
+                      changePage('historial', historialCalendarios.number - 1)
+                    "
+                    [disabled]="historialCalendarios.first"
+                  >
+                    <i class="fas fa-angle-left"></i>
+                  </button>
+                </li>
+                <li
+                  class="page-item"
+                  *ngFor="let page of getVisiblePages(historialCalendarios)"
+                  [class.active]="page === historialCalendarios.number"
+                >
+                  <button
+                    class="page-link"
+                    (click)="changePage('historial', page)"
+                  >
+                    {{ page + 1 }}
+                  </button>
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="historialCalendarios.last"
+                >
+                  <button
+                    class="page-link"
+                    (click)="
+                      changePage('historial', historialCalendarios.number + 1)
+                    "
+                    [disabled]="historialCalendarios.last"
+                  >
+                    <i class="fas fa-angle-right"></i>
+                  </button>
+                </li>
+                <li
+                  class="page-item"
+                  [class.disabled]="historialCalendarios.last"
+                >
+                  <button
+                    class="page-link"
+                    (click)="
+                      changePage(
+                        'historial',
+                        historialCalendarios.totalPages - 1
+                      )
+                    "
+                    [disabled]="historialCalendarios.last"
+                  >
+                    <i class="fas fa-angle-double-right"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </nav>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Empty State -->
-  <div *ngIf="!loading && !error && calendarios.length === 0" class="empty-state">
-    <p>No hay calendarios académicos registrados.</p>
-    <!-- Botón futuro para crear nuevo calendario -->
-  </div>
-
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
+    <span class="text-body-heavy">
+      Para gestionar los calendarios académicos, utilice las opciones de ver
+      según corresponda.
+    </span>
+  </section>
 </div>
-
