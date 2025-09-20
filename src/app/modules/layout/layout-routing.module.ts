@@ -59,6 +59,14 @@ const routes: Routes = [
           ).then((m) => m.AcademicCalendarManagementModule),
         title: 'Gestión de calendario académico',
       },
+      {
+        path: 'gestion-actividades-docente',
+        loadChildren: () =>
+          import(
+            '../activities-module-management/activities-management-routing.module'
+          ).then((m) => m.ActivitiesManagementRoutingModule),
+        title: 'Gestión de Activades Docente',
+      },
     ],
   },
 ];

@@ -172,7 +172,7 @@ export class SideBarV2Component implements OnInit {
           role: ['DOCENTE'],
           icon: 'fas fa-user',
           label: 'Explorar actividades',
-          url: '/app/gestion-soportes/actividades',
+          url: '/app/gestion-actividades-docente/list',
         },
         {
           role: [

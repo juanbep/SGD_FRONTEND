@@ -1,66 +1,102 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { ActividadResponse, ActividadItem, FiltrosActividad } from '../models/actividad.interface';
-
+import { Observable, catchError, throwError } from 'rxjs';
+import { ActividadesListResponse, ActividadFilters } from '../models';
+import { environment } from '../../../../environments/environments_sgd';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ActividadesService {
-  private readonly API_URL = 'api/actividades';
+  private readonly apiUrl = `${environment.baseUrl}/usuario-actividad-calendario`;
 
   constructor(private http: HttpClient) {}
 
-  // GET - Obtener actividades con paginación y filtros
-  obtenerActividades(
-    page: number = 0, 
-    size: number = 10, 
-    filtros?: FiltrosActividad
-  ): Observable<ActividadResponse> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+  getActividades(
+    filters: ActividadFilters = {}
+  ): Observable<ActividadesListResponse> {
+    let params = this.buildHttpParams(filters);
 
-    if (filtros) {
-      Object.keys(filtros).forEach(key => {
-        const value = filtros[key as keyof FiltrosActividad];
-        if (value !== undefined && value !== null && value !== '') {
-          params = params.set(key, value.toString());
-        }
-      });
+    return this.http
+      .get<ActividadesListResponse>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  private buildHttpParams(filters: ActividadFilters): HttpParams {
+    let params = new HttpParams();
+
+    // Paginación
+    if (filters.page !== undefined) {
+      params = params.set('page', filters.page.toString());
+    }
+    if (filters.size !== undefined) {
+      params = params.set('size', filters.size.toString());
     }
 
-    return this.http.get<ActividadResponse>(this.API_URL, { params });
+    // Filtros de búsqueda
+    if (filters.searchTerm?.trim()) {
+      params = params.set('search', filters.searchTerm.trim());
+    }
+    if (filters.nombreActividad?.trim()) {
+      params = params.set('nombreActividad', filters.nombreActividad.trim());
+    }
+
+    // Filtros por ID/estado
+    if (filters.oidEstadoActividad !== undefined) {
+      params = params.set('estado', filters.oidEstadoActividad.toString());
+    }
+    if (filters.oidTipoActividad !== undefined) {
+      params = params.set('tipoActividad', filters.oidTipoActividad.toString());
+    }
+    if (filters.oidCalendario !== undefined) {
+      params = params.set('calendario', filters.oidCalendario.toString());
+    }
+
+    // Filtros por rangos
+    if (filters.horasMin !== undefined) {
+      params = params.set('horasMin', filters.horasMin.toString());
+    }
+    if (filters.horasMax !== undefined) {
+      params = params.set('horasMax', filters.horasMax.toString());
+    }
+    if (filters.semanasMin !== undefined) {
+      params = params.set('semanasMin', filters.semanasMin.toString());
+    }
+    if (filters.semanasMax !== undefined) {
+      params = params.set('semanasMax', filters.semanasMax.toString());
+    }
+
+    // Filtros por fechas
+    if (filters.fechaCreacionDesde) {
+      params = params.set('fechaCreacionDesde', filters.fechaCreacionDesde);
+    }
+    if (filters.fechaCreacionHasta) {
+      params = params.set('fechaCreacionHasta', filters.fechaCreacionHasta);
+    }
+
+    // Filtros por atributos específicos
+    if (filters.semestre?.trim()) {
+      params = params.set('semestre', filters.semestre.trim());
+    }
+    if (filters.nombreEstudiante?.trim()) {
+      params = params.set('nombreEstudiante', filters.nombreEstudiante.trim());
+    }
+
+    // Ordenamiento
+    if (filters.sortBy) {
+      params = params.set('sort', filters.sortBy);
+    }
+    if (filters.sortDirection) {
+      params = params.set('direction', filters.sortDirection);
+    }
+
+    return params;
   }
 
-  // GET - Obtener actividad por ID
-  obtenerActividadPorId(id: number): Observable<ActividadItem> {
-    return this.http.get<ActividadItem>(`${this.API_URL}/${id}`);
-  }
-
-  // POST - Crear nueva actividad
-  crearActividad(actividad: Partial<ActividadItem>): Observable<ActividadItem> {
-    return this.http.post<ActividadItem>(this.API_URL, actividad);
-  }
-
-  // PUT - Actualizar actividad
-  actualizarActividad(id: number, actividad: Partial<ActividadItem>): Observable<ActividadItem> {
-    return this.http.put<ActividadItem>(`${this.API_URL}/${id}`, actividad);
-  }
-
-  // DELETE - Eliminar actividad
-  eliminarActividad(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/${id}`);
-  }
-
-  // GET - Obtener tipos de actividad
-  obtenerTiposActividad(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.API_URL}/tipos`);
-  }
-
-  // GET - Obtener calendarios
-  obtenerCalendarios(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.API_URL}/calendarios`);
+  private handleError(error: any): Observable<never> {
+    console.error('Error en ActividadService:', error);
+    return throwError(
+      () => new Error(error.mensaje || 'Error al obtener actividades')
+    );
   }
 }

@@ -1,0 +1,130 @@
+<div class="actividades-container">
+  <h2>Lista de Actividades</h2>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <p>Cargando actividades...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading">
+    <!-- Summary info -->
+    <div class="summary-info">
+      <p>Total de actividades: {{ pagination.totalElements }}</p>
+    </div>
+
+    <!-- Activities list -->
+    <div *ngIf="actividades.length > 0; else noData" class="actividades-list">
+      <div
+        *ngFor="let actividadData of actividades; trackBy: trackByOid"
+        class="actividad-card"
+      >
+        <div class="actividad-header">
+          <h3>{{ actividadData.actividad.nombreActividad }}</h3>
+          <span class="calendario-badge">{{
+            actividadData.nombreCalendario
+          }}</span>
+        </div>
+
+        <div class="actividad-details">
+          <div class="detail-item">
+            <strong>Tipo:</strong>
+            {{ actividadData.actividad.tipoActividad.nombre }}
+          </div>
+          <div class="detail-item">
+            <strong>Horas:</strong> {{ actividadData.actividad.horas }}
+          </div>
+          <div class="detail-item">
+            <strong>Semanas:</strong> {{ actividadData.actividad.semanas }}
+          </div>
+          <div class="detail-item">
+            <strong>Estado ID:</strong>
+            {{ actividadData.actividad.oidEstadoActividad }}
+          </div>
+          <div class="detail-item">
+            <strong>Fecha creación:</strong>
+            {{ actividadData.actividad.fechaCreacion | date : "dd/MM/yyyy" }}
+          </div>
+        </div>
+
+        <!-- Usuarios asociados -->
+        <div *ngIf="actividadData.usuarios.length > 0" class="usuarios-section">
+          <strong>Usuarios:</strong>
+          <ul class="usuarios-list">
+            <li *ngFor="let usuario of actividadData.usuarios">
+              {{ usuario.nombres }} {{ usuario.apellidos }} ({{
+                usuario.identificacion
+              }})
+            </li>
+          </ul>
+        </div>
+
+        <!-- Atributos -->
+        <div
+          *ngIf="actividadData.actividad.atributos.length > 0"
+          class="atributos-section"
+        >
+          <strong>Atributos:</strong>
+          <ul class="atributos-list">
+            <li *ngFor="let atributo of actividadData.actividad.atributos">
+              <span class="atributo-codigo"
+                >{{ atributo.codigoAtributo }}:</span
+              >
+              <span class="atributo-valor">{{ atributo.valor }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- No data template -->
+    <ng-template #noData>
+      <div class="no-data">
+        <p>No se encontraron actividades</p>
+        <button (click)="loadActividades()" class="btn-reload">Recargar</button>
+      </div>
+    </ng-template>
+
+    <!-- Pagination -->
+    <div *ngIf="pagination.totalPages > 1" class="pagination-container">
+      <button
+        (click)="onPageChange(pagination.currentPage - 1)"
+        [disabled]="pagination.currentPage === 0"
+        class="btn-pagination"
+      >
+        ← Anterior
+      </button>
+
+      <span class="pagination-info">
+        Página {{ pagination.currentPage + 1 }} de
+        {{ pagination.totalPages }} ({{ pagination.totalElements }} registros)
+      </span>
+
+      <button
+        (click)="onPageChange(pagination.currentPage + 1)"
+        [disabled]="pagination.currentPage + 1 >= pagination.totalPages"
+        class="btn-pagination"
+      >
+        Siguiente →
+      </button>
+    </div>
+
+    <!-- Page size selector -->
+    <div class="page-size-selector">
+      <label for="pageSize">Registros por página:</label>
+      <select
+        id="pageSize"
+        [(ngModel)]="filters.size"
+        (change)="onPageSizeChange()"
+        class="select-page-size"
+      >
+        <option
+          *ngFor="let option of pagination.pageSizeOptions"
+          [value]="option"
+        >
+          {{ option }}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
