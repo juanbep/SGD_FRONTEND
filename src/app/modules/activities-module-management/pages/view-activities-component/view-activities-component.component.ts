@@ -41,6 +41,7 @@ export class ViewActivitiesComponentComponent implements OnInit {
       next: (response) => {
         if (response.codigo === 200) {
           this.actividades = response.data.content;
+          //console.log(this.actividades)
           this.updatePagination(response.data);
           this.toastr.success(
             response.mensaje || 'Actividades cargadas correctamente'

@@ -19,37 +19,18 @@ export interface Pageable {
   unpaged: boolean;
 }
 
-export interface ActividadFilters {
-  // Paginación
-  page?: number;
-  size?: number;
-
-  // Búsqueda general
-  searchTerm?: string;
-  nombreActividad?: string;
-
-  // Filtros por ID/estado
-  oidEstadoActividad?: number;
-  oidTipoActividad?: number;
-  oidCalendario?: number;
-
-  // Filtros por rangos numéricos
-  horasMin?: number;
-  horasMax?: number;
-  semanasMin?: number;
-  semanasMax?: number;
-
-  // Filtros por fechas
-  fechaCreacionDesde?: string;
-  fechaCreacionHasta?: string;
-
-  // Filtros por atributos específicos
-  semestre?: string;
-  nombreEstudiante?: string;
-
-  // Ordenamiento
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
+export interface PaginatedResponse<T> {
+  content: T[];
+  pageable: Pageable;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: Sort;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
 }
 
 export interface PaginationConfig {
@@ -68,16 +49,3 @@ export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
   pageSizeOptions: [5, 10, 20, 50]
 };
 
-export interface PaginatedResponse<T> {
-  content: T[];
-  pageable: Pageable;
-  last: boolean;
-  totalPages: number;
-  totalElements: number;
-  size: number;
-  number: number;
-  sort: Sort;
-  first: boolean;
-  numberOfElements: number;
-  empty: boolean;
-}
