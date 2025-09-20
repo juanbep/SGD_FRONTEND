@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { ActividadesListResponse, ActividadFilters } from '../models';
+import {
+  ActividadesListResponse,
+  CreateActividadResponse,
+  UpdateActividadResponse,
+  DeleteActividadResponse,
+  CreateActividadDTO,
+  UpdateActividadDTO,
+  DeleteActividadDTO,
+  ActividadFilters,
+} from '../models';
 import { environment } from '../../../../environments/environments_sgd';
 
 @Injectable({
@@ -12,6 +21,7 @@ export class ActividadesService {
 
   constructor(private http: HttpClient) {}
 
+  // READ
   getActividades(
     filters: ActividadFilters = {}
   ): Observable<ActividadesListResponse> {
@@ -19,6 +29,40 @@ export class ActividadesService {
 
     return this.http
       .get<ActividadesListResponse>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  // CREATE
+  createActividad(
+    actividadData: CreateActividadDTO
+  ): Observable<CreateActividadResponse> {
+    return this.http
+      .post<CreateActividadResponse>(this.apiUrl, actividadData)
+      .pipe(catchError(this.handleError));
+  }
+
+  // UPDATE
+  updateActividad(
+    actividadData: UpdateActividadDTO
+  ): Observable<UpdateActividadResponse> {
+    const { oidActividad, ...updateData } = actividadData;
+
+    return this.http
+      .put<UpdateActividadResponse>(
+        `${this.apiUrl}/${oidActividad}`,
+        updateData
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  // DELETE -
+  deleteActividad(
+    deleteData: DeleteActividadDTO
+  ): Observable<DeleteActividadResponse> {
+    return this.http
+      .delete<DeleteActividadResponse>(
+        `${this.apiUrl}/${deleteData.oidActividad}`
+      )
       .pipe(catchError(this.handleError));
   }
 

@@ -1,0 +1,48 @@
+<div class="crear-actividad-form">
+  <h2>Crear Nueva Actividad</h2>
+
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <div class="form-group">
+      <label for="nombreActividad">Nombre de la Actividad:</label>
+      <input
+        type="text"
+        id="nombreActividad"
+        [(ngModel)]="actividadData.nombreActividad"
+        name="nombreActividad"
+        required
+      />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="horas">Horas:</label>
+        <input
+          type="number"
+          id="horas"
+          [(ngModel)]="actividadData.horas"
+          name="horas"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="semanas">Semanas:</label>
+        <input
+          type="number"
+          id="semanas"
+          [(ngModel)]="actividadData.semanas"
+          name="semanas"
+          required
+        />
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="loading || !form.valid"
+      class="btn-submit"
+    >
+      {{ loading ? "Creando..." : "Crear Actividad" }}
+    </button>
+  </form>
+</div>

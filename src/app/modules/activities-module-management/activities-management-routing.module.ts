@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role.guard';
 
 import { ViewActivitiesComponentComponent } from './pages/view-activities-component/view-activities-component.component';
+import { CreateActivitiesComponentComponent } from './pages/create-activities-component/create-activities-component.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
       {
         path: 'list',
         component: ViewActivitiesComponentComponent,
+      },
+      {
+        path: 'create',
+        component: CreateActivitiesComponentComponent,
       },
     ],
   },
