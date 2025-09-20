@@ -109,6 +109,7 @@ export interface ActividadResponse {
 export type ActividadesListResponse = BaseResponse<
   PaginatedResponse<ActividadResponse>
 >;
+export type GetActividadResponse = BaseResponse<ActividadResponse>;
 export type CreateActividadResponse = BaseResponse<ActividadResponse>;
 export type UpdateActividadResponse = BaseResponse<ActividadResponse>;
 export type DeleteActividadResponse = BaseResponse<boolean>;

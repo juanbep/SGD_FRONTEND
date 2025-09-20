@@ -6,12 +6,13 @@ import {
   CreateActividadResponse,
   UpdateActividadResponse,
   DeleteActividadResponse,
+  GetActividadResponse,
   CreateActividadDTO,
   UpdateActividadDTO,
   DeleteActividadDTO,
   ActividadFilters,
-} from '../models';
-import { environment } from '../../../../environments/environments_sgd';
+} from '../../models';
+import { environment } from '../../../../../environments/environments_sgd';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +30,13 @@ export class ActividadesService {
 
     return this.http
       .get<ActividadesListResponse>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  // GET BY ID
+  getActividadById(oidActividad: number): Observable<GetActividadResponse> {
+    return this.http
+      .get<GetActividadResponse>(`${this.apiUrl}/${oidActividad}`)
       .pipe(catchError(this.handleError));
   }
 
@@ -55,7 +63,7 @@ export class ActividadesService {
       .pipe(catchError(this.handleError));
   }
 
-  // DELETE -
+  // DELETE
   deleteActividad(
     deleteData: DeleteActividadDTO
   ): Observable<DeleteActividadResponse> {
@@ -66,6 +74,7 @@ export class ActividadesService {
       .pipe(catchError(this.handleError));
   }
 
+  // FILTROS
   private buildHttpParams(filters: ActividadFilters): HttpParams {
     let params = new HttpParams();
 

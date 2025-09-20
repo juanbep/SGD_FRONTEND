@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActividadesService } from '../../services/actividades.service';
+import { ActividadesService } from '../../services/actividades/actividades.service';
 import {
   ActividadFilters,
   PaginationConfig,
@@ -9,6 +9,7 @@ import {
   ActividadResponse,
 } from '../../models';
 import { ToastrService } from 'ngx-toastr';
+import { ActividadHelperService } from '../../services/actividades/actividad-helper.service';
 
 @Component({
   selector: 'app-view-activities-component',
@@ -19,6 +20,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ViewActivitiesComponentComponent implements OnInit {
   private actividadesService = inject(ActividadesService);
+  private actividadHelper = inject(ActividadHelperService);
   private toastr = inject(ToastrService);
 
   actividades: ActividadResponse[] = [];
@@ -32,6 +34,7 @@ export class ViewActivitiesComponentComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadActividades();
+    //this.onSomeAction(2);
   }
 
   loadActividades(): void {
@@ -88,5 +91,22 @@ export class ViewActivitiesComponentComponent implements OnInit {
       totalPages: data.totalPages,
       pageSize: data.size,
     };
+  }
+
+  async onSomeAction(actividadId: number): Promise<void> {
+    const actividad = await this.actividadHelper.getById(actividadId);
+
+    if (actividad) {
+      console.log(actividad);
+
+      const nombre = await this.actividadHelper.getActividadNombre(actividadId);
+      const tipo = await this.actividadHelper.getActividadTipo(actividadId);
+
+      console.log(`${nombre} - ${tipo}`);
+    }
+  }
+
+  async checkIfExists(id: number): Promise<boolean> {
+    return this.actividadHelper.checkActividadExists(id);
   }
 }

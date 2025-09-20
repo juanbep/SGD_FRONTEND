@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActividadesService } from '../../services/actividades.service';
+import { ActividadesService } from '../../services/actividades/actividades.service';
 import { CreateActividadDTO } from '../../models';
 import { ToastrService } from 'ngx-toastr';
 
