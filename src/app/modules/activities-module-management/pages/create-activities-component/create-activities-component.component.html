@@ -2,6 +2,19 @@
   <h2>Crear Nueva Actividad</h2>
 
   <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <div class="tipos-actividad-selector">
+      <label for="tipoActividad">Tipo de Actividad:</label>
+      <select
+        id="tipoActividad"
+        [(ngModel)]="selectedTipo"
+        name="tipoActividad"
+      >
+        <option value="">Seleccionar...</option>
+        <option *ngFor="let tipo of tiposDisponibles" [value]="tipo.value">
+          {{ tipo.label }}
+        </option>
+      </select>
+    </div>
     <div class="form-group">
       <label for="nombreActividad">Nombre de la Actividad:</label>
       <input

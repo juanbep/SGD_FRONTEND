@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../services/actividades/actividades.service';
+import { TiposActividadHelperService } from '../../services/tiposActividades/tipos-actividad-helper.service';
 import { CreateActividadDTO } from '../../models';
 import { ToastrService } from 'ngx-toastr';
 
@@ -12,9 +13,18 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './create-activities-component.component.html',
   styleUrl: './create-activities-component.component.css',
 })
-export class CreateActivitiesComponentComponent {
+export class CreateActivitiesComponentComponent implements OnInit {
   private actividadService = inject(ActividadesService);
+  private tiposHelper = inject(TiposActividadHelperService);
   private toastr = inject(ToastrService);
+
+  tiposDisponibles: { value: number; label: string }[] = [];
+  selectedTipo: number | null = null;
+
+  async ngOnInit(): Promise<void> {
+    // Cargar tipos de actividad para el dropdown
+    this.tiposDisponibles = await this.tiposHelper.getAllForDropdown();
+  }
 
   loading = false;
 
