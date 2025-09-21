@@ -13,7 +13,7 @@ export class BaseHelperService {
       const response = await firstValueFrom(apiCall);
       return this.isSuccessResponse(response.codigo) ? response.data : null;
     } catch (error) {
-      console.error('Error en BaseHelper:', error);
+      console.error('Error en BaseHelper:', error); //TODO: implementar manejo de errores mas explicito
       return null;
     }
   }
@@ -26,7 +26,7 @@ export class BaseHelperService {
         this.isSuccessResponse(response.codigo) ? response.data : null
       ),
       catchError((error) => {
-        console.error('Error en BaseHelper:', error);
+        console.error('Error en BaseHelper:', error); //TODO: implementar manejo de errores mas explicito
         return of(null);
       })
     );
