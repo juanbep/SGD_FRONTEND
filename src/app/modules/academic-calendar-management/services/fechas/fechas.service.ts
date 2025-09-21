@@ -8,7 +8,7 @@ import {
   PaginatedResponse,
   BaseResponse,
   TipoFecha,
-} from '../models';
+} from '../../models';
 
 @Injectable({
   providedIn: 'root',

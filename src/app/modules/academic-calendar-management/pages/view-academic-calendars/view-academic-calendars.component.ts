@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Utils } from '../../utils/calendario.utils';
 import { Calendario, PaginatedResponse } from '../../models';
 import { CalendarioService } from '../../services';
+import { CalendarioHelperService } from '../../services/calendario/calendario-helper.service';
 
 @Component({
   selector: 'app-view-academic-calendar',
@@ -39,30 +40,35 @@ export class ViewAcademicCalendarsComponent implements OnInit {
     this.cargarCalendarios();
   }
 
-  // ✅ Método principal
   cargarCalendarios(): void {
     this.loading = true;
     this.error = null;
 
-    this.calendarioService.obtenerCalendarios(this.page, this.size).subscribe({
-      next: (response: PaginatedResponse<Calendario>) => {
-        console.log('Calendarios cargados:', response);
-
-        this.calendarios = response.data.content;
-        this.totalElements = response.data.totalElements;
-
-        if (response.mensaje) {
-          this.toastr.success(response.mensaje, 'Calendarios Cargados');
-        }
-
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error al cargar calendarios:', error);
-        this.handleError(error, 'cargar calendarios');
-        this.loading = false;
-      },
-    });
+    this.calendarioService
+      .getCalendariosAcademicos({
+        page: this.page,
+        size: this.size,
+      })
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === 200) {
+            this.calendarios = response.data.content;
+            this.totalElements = response.data.totalElements;
+            this.toastr.success(
+              response.mensaje || 'Calendarios cargados correctamente'
+            );
+          } else {
+            this.toastr.warning(
+              response.mensaje || 'Respuesta inesperada del servidor'
+            );
+          }
+          this.loading = false;
+        },
+        error: (error) => {
+          this.handleError(error, 'cargar calendarios');
+          this.loading = false;
+        },
+      });
   }
 
   // ✅ Navegación de página - Nueva petición HTTP

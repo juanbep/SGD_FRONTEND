@@ -7,7 +7,7 @@ import {
   ActualizarNombreFecha,
   PaginatedResponse,
   BaseResponse,
-} from '../models';
+} from '../../models';
 
 @Injectable({
   providedIn: 'root',

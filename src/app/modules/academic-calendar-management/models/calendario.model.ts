@@ -1,5 +1,6 @@
 import { PaginatedResponse, BaseResponse } from '../shared/shared.model';
 
+// Modelo principal
 export interface Calendario {
   oidcalendario: number;
   anioCalendario: string;
@@ -16,7 +17,7 @@ export interface Calendario {
   usuarioActualizacion: string;
   estado: EstadoCalendario;
   observacion: string;
-  fechas?: any | null; // Definir interface
+  fechas?: any | null;
 }
 
 export type EstadoCalendario =
@@ -25,19 +26,61 @@ export type EstadoCalendario =
   | 'APROBADO'
   | 'PENDIENTE';
 
-export interface CrearCalendario {
+// Filtros para búsqueda y paginación
+export interface CalendarioFilters {
+  // Paginación
+  page?: number;
+  size?: number;
+
+  // Búsqueda general
+  searchTerm?: string;
+  observacion?: string;
+
+  // Filtros específicos
+  anioCalendario?: string;
+  numeroCalendario?: number;
+  estado?: EstadoCalendario;
+  estados?: EstadoCalendario[];
+
+  // Filtros por fechas
+  fechaCreacionDesde?: string;
+  fechaCreacionHasta?: string;
+
+  // Ordenamiento
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+// DTOs
+export interface CreateCalendarioDTO {
   anioCalendario: string;
   numeroCalendario: number;
-  observacion?: string;
+  observacion?: string; // Opcional para creación
 }
 
-export interface ActualizarCalendario {
-  anioCalendario?: string;
-  estado?: EstadoCalendario;
-  semanasClase?: number;
-  numeroCalendario?: number;
-  observacion?: string;
+export interface UpdateCalendarioDTO
+  extends Partial<
+    Omit<
+      Calendario,
+      | 'fechaCreacion'
+      | 'usuarioCreacion'
+      | 'fechaActualizacion'
+      | 'usuarioActualizacion'
+      | 'fechas'
+    >
+  > {
+  oidcalendario: number;
 }
 
-export interface CalendarioResponse extends PaginatedResponse<Calendario> {}
-export interface CalendarioItemResponse extends BaseResponse<Calendario> {}
+export interface DeleteCalendarioDTO {
+  oidcalendario: number;
+}
+
+// Tipos de respuesta API
+export type CalendariosListResponse = BaseResponse<
+  PaginatedResponse<Calendario>
+>;
+export type GetCalendarioResponse = BaseResponse<Calendario>;
+export type CreateCalendarioResponse = BaseResponse<Calendario>;
+export type UpdateCalendarioResponse = BaseResponse<Calendario>;
+export type DeleteCalendarioResponse = BaseResponse<boolean>;

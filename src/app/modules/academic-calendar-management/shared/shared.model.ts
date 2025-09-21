@@ -1,5 +1,15 @@
-import { EstadoCalendario } from "../models";
+import { EstadoCalendario } from '../models';
 
+export interface BaseResponse<T = any> {
+  codigo: number;
+  mensaje: string;
+  data: T;
+}
+export interface Sort {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+}
 export interface Pageable {
   pageNumber: number;
   pageSize: number;
@@ -8,50 +18,30 @@ export interface Pageable {
   paged: boolean;
   unpaged: boolean;
 }
-
-export interface Sort {
-  empty: boolean;
-  sorted: boolean;
-  unsorted: boolean;
-}
-
-// Estructura response genérica
-export interface BaseResponse<T> {
-  codigo: number;
-  mensaje: string;
-  data: T;
-}
-
-// Estructura paginator response genérica
 export interface PaginatedResponse<T> {
-  codigo: number;
-  mensaje: string;
-  data: {
-    content: T[];
-    pageable: Pageable;
-    last: boolean;
-    totalElements: number;
-    totalPages: number;
-    size: number;
-    number: number;
-    sort: Sort;
-    first: boolean;
-    numberOfElements: number;
-    empty: boolean;
-  };
+  content: T[];
+  pageable: Pageable;
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  sort: Sort;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
 }
-
-
-// ✅ Interface para parámetros de filtros
-export interface FiltrosCalendario {
-  page?: number;
-  size?: number;
-  estados?: EstadoCalendario[];
-  anio?: string;
-  periodo?: number;
-  busqueda?: string;
-  ordenPor?: 'anioCalendario' | 'observacion' | 'estado' | 'fechaCreacion';
-  orden?: 'asc' | 'desc';
-  fechaDesde?: string;
-  fechaHasta?: string;
+export interface PaginationConfig {
+  currentPage: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  pageSizeOptions: number[];
 }
+export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
+  currentPage: 0,
+  pageSize: 10,
+  totalElements: 0,
+  totalPages: 0,
+  pageSizeOptions: [5, 10, 20, 50],
+};

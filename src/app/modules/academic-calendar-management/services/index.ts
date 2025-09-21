@@ -1,3 +1,3 @@
-export * from './calendario.service';
-export * from './fechas.service';
-export * from './nombres-fechas.service';
+export * from './calendario/calendario.service';
+export * from './fechas/fechas.service';
+export * from './nombres-fechas/nombres-fechas.service';
