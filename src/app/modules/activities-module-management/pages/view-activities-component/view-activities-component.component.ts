@@ -10,6 +10,8 @@ import {
 } from '../../models';
 import { ToastrService } from 'ngx-toastr';
 import { ActividadHelperService } from '../../services/actividades/actividad-helper.service';
+import { CalendarioHelperService } from '../../../academic-calendar-management/services/calendario/calendario-helper.service';
+import { EstadoCalendario } from '../../../academic-calendar-management/models';
 
 @Component({
   selector: 'app-view-activities-component',
@@ -21,46 +23,84 @@ import { ActividadHelperService } from '../../services/actividades/actividad-hel
 export class ViewActivitiesComponentComponent implements OnInit {
   private actividadesService = inject(ActividadesService);
   private actividadHelper = inject(ActividadHelperService);
+  private calendarioHelper = inject(CalendarioHelperService);
   private toastr = inject(ToastrService);
 
   actividades: ActividadResponse[] = [];
   loading = false;
+  error: string = '';
   pagination: PaginationConfig = { ...DEFAULT_PAGINATION_CONFIG };
+  actividadSeleccionada: ActividadResponse | null = null;
+
+  // Lista de calendarios para el dropdown filtro calendarios
+  calendariosDropdown: {
+    value: number;
+    label: string;
+    estado: EstadoCalendario;
+  }[] = [];
+  loadingCalendarios = false;
 
   filters: ActividadFilters = {
     page: 0,
     size: 10,
+    nombreActividad: '',
+    oidEstadoActividad: 0, //validar la asignación
+    fechaCreacionDesde: '',
+    searchTerm: '',
+    oidCalendario: 0,
   };
+
+  // Estados disponibles
+  estados = [
+    { oid: 1, nombre: 'ACTIVA', class: 'bg-success' },
+    { oid: 2, nombre: 'INACTIVA', class: 'bg-danger' },
+    { oid: 3, nombre: 'INCOMPLETA', class: 'bg-warning' },
+  ];
 
   ngOnInit(): void {
     this.loadActividades();
+    this.loadCalendarios();
     //this.onSomeAction(2);
+  }
+
+  // Método para cargar calendarios en el dropdown
+  async loadCalendarios(): Promise<void> {
+    try {
+      this.loadingCalendarios = true;
+      this.calendariosDropdown =
+        await this.calendarioHelper.getAllForDropdown();
+    } catch (error) {
+      console.error('Error al cargar calendarios:', error);
+      this.toastr.error('Error al cargar la lista de calendarios');
+      this.calendariosDropdown = [];
+    } finally {
+      this.loadingCalendarios = false;
+    }
   }
 
   loadActividades(): void {
     this.loading = true;
+    this.error = '';
 
     this.actividadesService.getActividades(this.filters).subscribe({
       next: (response) => {
         if (response.codigo === 200) {
           this.actividades = response.data.content;
-          //console.log(this.actividades)
           this.updatePagination(response.data);
-          this.toastr.success(
-            response.mensaje || 'Actividades cargadas correctamente'
-          );
+          if (this.filters.page === 0) {
+            this.toastr.success(
+              response.mensaje || 'Actividades cargadas correctamente'
+            );
+          }
         } else {
-          this.toastr.warning(
-            response.mensaje || 'Respuesta inesperada del servidor'
-          );
+          this.error = response.mensaje || 'Respuesta inesperada del servidor';
+          this.toastr.warning(this.error);
         }
         this.loading = false;
       },
       error: (error) => {
-        this.toastr.error(
-          'Error al cargar actividades',
-          error.message || 'Error desconocido'
-        );
+        this.error = error.message || 'Error al cargar actividades';
+        this.toastr.error('Error al cargar actividades', this.error);
         this.loading = false;
         this.actividades = [];
       },
@@ -75,8 +115,36 @@ export class ViewActivitiesComponentComponent implements OnInit {
   }
 
   onPageSizeChange(): void {
-    this.filters.page = 0; // Reset to first page
+    this.filters.page = 0;
     this.loadActividades();
+  }
+
+  aplicarFiltros(): void {
+    this.filters.page = 0;
+    this.loadActividades();
+  }
+
+  limpiarFiltros(): void {
+    this.filters = {
+      page: 0,
+      size: this.filters.size,
+      nombreActividad: '',
+      oidEstadoActividad: 0, //validar la asignación
+      fechaCreacionDesde: '',
+      searchTerm: '',
+      oidCalendario: 0,
+    };
+    this.loadActividades();
+  }
+
+  // Método para obtener el badge class del estado del calendario
+  getCalendarioEstadoBadgeClass(estado: EstadoCalendario): string {
+    switch (estado) {
+      case 'ACTIVO': return 'text-success';
+      case 'DESHABILITADO': return 'text-danger';
+      case 'PENDIENTE': return 'text-warning';
+      default: return 'text-secondary';
+    }
   }
 
   trackByOid(index: number, item: ActividadResponse): number {
@@ -93,6 +161,57 @@ export class ViewActivitiesComponentComponent implements OnInit {
     };
   }
 
+  // Métodos para estados
+  getEstadoNombre(oidEstado: number): string {
+    const estado = this.estados.find((e) => e.oid === oidEstado);
+    return estado ? estado.nombre : 'DESCONOCIDO';
+  }
+
+  getEstadoBadgeClass(oidEstado: number): string {
+    const estado = this.estados.find((e) => e.oid === oidEstado);
+    return estado ? estado.class : 'bg-secondary';
+  }
+
+  // Métodos para paginación visual
+  getPaginasVisibles(): number[] {
+    const totalPages = this.pagination.totalPages;
+    const currentPage = this.pagination.currentPage;
+    const visiblePages: number[] = [];
+
+    let startPage = Math.max(0, currentPage - 2);
+    let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+    for (let i = startPage; i <= endPage; i++) {
+      visiblePages.push(i);
+    }
+
+    return visiblePages;
+  }
+
+  getInfoPaginacion(): string {
+    const start = this.pagination.currentPage * this.pagination.pageSize + 1;
+    const end = Math.min(
+      (this.pagination.currentPage + 1) * this.pagination.pageSize,
+      this.pagination.totalElements
+    );
+    return `Mostrando ${start} - ${end} de ${this.pagination.totalElements} registros`;
+  }
+
+  // Métodos para detalles
+  verDetalles(actividad: ActividadResponse): void {
+    this.actividadSeleccionada = actividad;
+  }
+
+  cerrarDetalles(): void {
+    this.actividadSeleccionada = null;
+  }
+
+  getUsersTooltip(usuarios: any[]): string {
+    if (usuarios.length === 0) return 'Sin usuarios';
+    return usuarios.map((u) => `${u.nombres} ${u.apellidos}`).join(', ');
+  }
+
+  // Métodos helper
   async onSomeAction(actividadId: number): Promise<void> {
     const actividad = await this.actividadHelper.getById(actividadId);
 

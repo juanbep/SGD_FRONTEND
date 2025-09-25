@@ -1,130 +1,554 @@
-<div class="actividades-container">
-  <h2>Lista de Actividades</h2>
+<div class="view-container">
+  <header class="title-two">Gestión de Actividades Académicas</header>
 
-  <!-- Loading state -->
-  <div *ngIf="loading" class="loading-container">
-    <p>Cargando actividades...</p>
-  </div>
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
+    <span class="text-body-heavy">
+      A continuación encontrará todas las actividades académicas con opciones de
+      filtrado y búsqueda avanzada.
+    </span>
+  </section>
 
-  <!-- Content -->
-  <div *ngIf="!loading">
-    <!-- Summary info -->
-    <div class="summary-info">
-      <p>Total de actividades: {{ pagination.totalElements }}</p>
-    </div>
+  <section class="messages-container mt-4">
+    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
+    <span class="text-body-heavy">
+      Utilice los filtros para refinar su búsqueda y consulte los detalles
+      completos de cada actividad incluyendo usuarios asociados y atributos.
+    </span>
+  </section>
 
-    <!-- Activities list -->
-    <div *ngIf="actividades.length > 0; else noData" class="actividades-list">
-      <div
-        *ngFor="let actividadData of actividades; trackBy: trackByOid"
-        class="actividad-card"
+  <div><br /></div>
+
+  <!-- SECCIÓN DE FILTROS -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0 d-flex align-items-center">
+        <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+      </h6>
+      <button
+        type="button"
+        class="btn btn-outline-secondary d-flex align-items-center"
+        (click)="limpiarFiltros()"
       >
-        <div class="actividad-header">
-          <h3>{{ actividadData.actividad.nombreActividad }}</h3>
-          <span class="calendario-badge">{{
-            actividadData.nombreCalendario
-          }}</span>
-        </div>
-
-        <div class="actividad-details">
-          <div class="detail-item">
-            <strong>Tipo:</strong>
-            {{ actividadData.actividad.tipoActividad.nombre }}
-          </div>
-          <div class="detail-item">
-            <strong>Horas:</strong> {{ actividadData.actividad.horas }}
-          </div>
-          <div class="detail-item">
-            <strong>Semanas:</strong> {{ actividadData.actividad.semanas }}
-          </div>
-          <div class="detail-item">
-            <strong>Estado ID:</strong>
-            {{ actividadData.actividad.oidEstadoActividad }}
-          </div>
-          <div class="detail-item">
-            <strong>Fecha creación:</strong>
-            {{ actividadData.actividad.fechaCreacion | date : "dd/MM/yyyy" }}
-          </div>
-        </div>
-
-        <!-- Usuarios asociados -->
-        <div *ngIf="actividadData.usuarios.length > 0" class="usuarios-section">
-          <strong>Usuarios:</strong>
-          <ul class="usuarios-list">
-            <li *ngFor="let usuario of actividadData.usuarios">
-              {{ usuario.nombres }} {{ usuario.apellidos }} ({{
-                usuario.identificacion
-              }})
-            </li>
-          </ul>
-        </div>
-
-        <!-- Atributos -->
-        <div
-          *ngIf="actividadData.actividad.atributos.length > 0"
-          class="atributos-section"
-        >
-          <strong>Atributos:</strong>
-          <ul class="atributos-list">
-            <li *ngFor="let atributo of actividadData.actividad.atributos">
-              <span class="atributo-codigo"
-                >{{ atributo.codigoAtributo }}:</span
+        <i class="fas fa-times"></i>
+        <span class="d-none d-lg-inline ms-1">Limpiar</span>
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <!-- Filtro por Calendario -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label class="form-label fw-bold">
+            <i class="fas fa-calendar me-1"></i>Calendario:
+          </label>
+          <select
+            class="form-select"
+            [(ngModel)]="filters.oidCalendario"
+            (change)="aplicarFiltros()"
+            [disabled]="loadingCalendarios"
+          >
+            <option value="">Todos los calendarios</option>
+            <option *ngIf="loadingCalendarios" disabled>
+              Cargando calendarios...
+            </option>
+            <option
+              *ngFor="let calendario of calendariosDropdown"
+              [value]="calendario.value"
+            >
+              {{ calendario.label }}
+              <span
+                [ngClass]="getCalendarioEstadoBadgeClass(calendario.estado)"
               >
-              <span class="atributo-valor">{{ atributo.valor }}</span>
+                ({{ calendario.estado }})
+              </span>
+            </option>
+          </select>
+          <small class="text-muted">Filtrar por calendario académico</small>
+        </div>
+        <!-- Filtro por Tipo de Actividad -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label class="form-label fw-bold">
+            <i class="fas fa-tags me-1"></i>Tipo de Actividad:
+          </label>
+          <select
+            class="form-select"
+            [(ngModel)]="filters.oidTipoActividad"
+            (change)="aplicarFiltros()"
+            disabled
+          >
+            <option value="">Todos los tipos</option>
+            <option>Seleccionar tipos (Próximamente)</option>
+          </select>
+          <small class="text-muted">Filtrar por tipo específico</small>
+        </div>
+
+        <!-- Filtro por Estado -->
+        <div class="col-xl-2 col-lg-3 col-md-6">
+          <label class="form-label fw-bold">
+            <i class="fas fa-info-circle me-1"></i>Estado:
+          </label>
+          <select
+            class="form-select"
+            [(ngModel)]="filters.oidEstadoActividad"
+            (change)="aplicarFiltros()"
+          >
+            <option value="">Todos los estados</option>
+            <option value="1">ACTIVA</option>
+            <option value="2">INACTIVA</option>
+            <option value="3">INCOMPLETA</option>
+          </select>
+          <small class="text-muted">Estado actual de la actividad</small>
+        </div>
+
+        <!-- Filtro por Fecha de Creación -->
+        <div class="col-xl-2 col-lg-3 col-md-6">
+          <label class="form-label fw-bold">
+            <i class="fas fa-calendar-alt me-1"></i>Fecha Creación:
+          </label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="filters.fechaCreacionDesde"
+            (change)="aplicarFiltros()"
+          />
+          <small class="text-muted">Filtrar por fecha específica</small>
+        </div>
+
+        <!-- Búsqueda General -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label class="form-label fw-bold">
+            <i class="fas fa-search me-1"></i>Buscar:
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar por nombre de actividad..."
+            [(ngModel)]="filters.searchTerm"
+            (input)="aplicarFiltros()"
+          />
+          <small class="text-muted">Búsqueda en nombre de actividad</small>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="col-xl-2 col-lg-12 d-flex align-items-end">
+          <div class="btn-group w-100" role="group">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="aplicarFiltros()"
+            >
+              <i class="fas fa-search me-1"></i>Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje informativo para tipos -->
+      <div class="alert alert-info mt-3 mb-0" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Próximamente:</strong> El filtro de tipos de actividad estará
+        disponible cuando se implemente el servicio correspondiente.
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DE ACTIVIDADES -->
+  <div class="card">
+    <div
+      class="card-header d-flex justify-content-between align-items-center flex-wrap"
+    >
+      <!-- Título -->
+      <h6 class="mb-0 d-flex align-items-center">
+        <i class="fas fa-tasks me-2"></i>Actividades Académicas
+        <span class="badge bg-primary ms-2">{{
+          pagination.totalElements
+        }}</span>
+      </h6>
+
+      <!-- Botón Actualizar -->
+      <button
+        type="button"
+        class="btn btn-link text-decoration-none text-primary ms-auto d-flex align-items-center"
+        (click)="loadActividades()"
+        [disabled]="loading"
+      >
+        <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
+        <span class="d-none d-lg-inline">
+          {{ loading ? "Cargando..." : "Actualizar" }}
+        </span>
+      </button>
+
+      <!-- Selector de tamaño de página -->
+      <div class="d-flex align-items-center ms-3 mt-2 mt-lg-0">
+        <label class="form-label mb-0 me-2 small">Mostrar:</label>
+        <select
+          class="form-select form-select-sm"
+          style="width: 80px"
+          [(ngModel)]="filters.size"
+          (change)="onPageSizeChange()"
+        >
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+        <span class="ms-2 small text-muted">por página</span>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <!-- Tabla Responsiva -->
+      <div class="table-responsive" style="max-height: 800px">
+        <table class="table table-hover mb-0">
+          <thead class="table-light sticky-top">
+            <tr>
+              <th class="fw-bold">
+                <i class="fas fa-file-alt me-1"></i>Actividad
+              </th>
+              <th class="fw-bold" style="width: 150px">
+                <i class="fas fa-tags me-1"></i>Tipo
+              </th>
+              <th class="fw-bold text-center" style="width: 100px">
+                <i class="fas fa-clock me-1"></i>Horas
+              </th>
+              <th class="fw-bold text-center" style="width: 100px">
+                <i class="fas fa-calendar-week me-1"></i>Semanas
+              </th>
+              <th class="fw-bold text-center" style="width: 120px">
+                <i class="fas fa-info-circle me-1"></i>Estado
+              </th>
+              <th class="fw-bold text-center" style="width: 130px">
+                <i class="fas fa-calendar-alt me-1"></i>Fecha Creación
+              </th>
+              <th class="fw-bold text-center" style="width: 100px">
+                <i class="fas fa-users me-1"></i>Usuarios
+              </th>
+              <th class="fw-bold text-center" style="width: 100px">
+                <i class="fas fa-cogs me-1"></i>Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="actividades && actividades.length > 0; else noData">
+            <tr *ngFor="let actividadData of actividades; trackBy: trackByOid">
+              <!-- Información Principal -->
+              <td>
+                <div class="fw-semibold">
+                  {{ actividadData.actividad.nombreActividad || "Sin nombre" }}
+                </div>
+                <small class="text-muted">
+                  <strong>Calendario:</strong>
+                  {{ actividadData.nombreCalendario }}
+                </small>
+                <br />
+                <small class="text-muted">
+                  ID: {{ actividadData.actividad.oidActividad }}
+                </small>
+                <!-- Atributos (si existen) -->
+                <div
+                  *ngIf="actividadData.actividad.atributos.length > 0"
+                  class="mt-1"
+                >
+                  <small class="text-info">
+                    <i class="fas fa-list-ul me-1"></i>
+                    {{ actividadData.actividad.atributos.length }} atributo(s)
+                  </small>
+                </div>
+              </td>
+
+              <!-- Tipo -->
+              <td>
+                <span class="badge bg-secondary">
+                  {{ actividadData.actividad.tipoActividad.nombre }}
+                </span>
+              </td>
+
+              <!-- Horas -->
+              <td class="text-center fw-bold">
+                {{ actividadData.actividad.horas }}
+              </td>
+
+              <!-- Semanas -->
+              <td class="text-center">
+                <span class="badge bg-light text-dark">
+                  {{ actividadData.actividad.semanas }}
+                </span>
+              </td>
+
+              <!-- Estado -->
+              <td class="text-center">
+                <span
+                  class="badge rounded-pill"
+                  [ngClass]="
+                    getEstadoBadgeClass(
+                      actividadData.actividad.oidEstadoActividad
+                    )
+                  "
+                >
+                  {{
+                    getEstadoNombre(actividadData.actividad.oidEstadoActividad)
+                  }}
+                </span>
+              </td>
+
+              <!-- Fecha Creación -->
+              <td class="text-center">
+                <small>
+                  {{
+                    actividadData.actividad.fechaCreacion | date : "dd/MM/yyyy"
+                  }}
+                </small>
+              </td>
+
+              <!-- Usuarios -->
+              <td class="text-center">
+                <span
+                  class="badge bg-info text-dark"
+                  [title]="getUsersTooltip(actividadData.usuarios)"
+                >
+                  {{ actividadData.usuarios.length }} usuario(s)
+                </span>
+              </td>
+
+              <!-- Acciones -->
+              <td class="text-center">
+                <button
+                  class="btn btn-sm btn-outline-success me-1"
+                  title="Ver detalles"
+                  (click)="verDetalles(actividadData)"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <ng-template #noData>
+            <tbody>
+              <tr>
+                <td colspan="8" class="text-center py-5">
+                  <div
+                    *ngIf="loading"
+                    class="d-flex justify-content-center align-items-center"
+                  >
+                    <div
+                      class="spinner-border spinner-border-sm me-3"
+                      role="status"
+                    >
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <span class="text-muted">Cargando actividades...</span>
+                  </div>
+                  <div *ngIf="!loading && error" class="text-danger">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                    <div class="fw-bold">Error al cargar actividades</div>
+                    <div class="small">{{ error }}</div>
+                    <button
+                      class="btn btn-outline-primary btn-sm mt-3"
+                      (click)="loadActividades()"
+                    >
+                      <i class="fas fa-redo me-1"></i>Reintentar
+                    </button>
+                  </div>
+                  <div *ngIf="!loading && !error" class="text-muted">
+                    <i class="fas fa-tasks fa-2x mb-3"></i>
+                    <div class="fw-bold">No hay actividades disponibles</div>
+                    <div class="small">
+                      No se encontraron registros que coincidan con los filtros
+                      aplicados
+                    </div>
+                    <button
+                      class="btn btn-outline-primary btn-sm mt-3"
+                      (click)="limpiarFiltros()"
+                    >
+                      <i class="fas fa-filter me-1"></i>Limpiar filtros
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+    </div>
+
+    <!-- PAGINADOR -->
+    <div class="card-footer" *ngIf="actividades && actividades.length > 0">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="text-muted small">{{ getInfoPaginacion() }}</div>
+
+        <nav aria-label="Paginación actividades">
+          <ul class="pagination pagination-sm mb-0">
+            <li
+              class="page-item"
+              [class.disabled]="pagination.currentPage === 0"
+            >
+              <button
+                class="page-link"
+                (click)="onPageChange(0)"
+                [disabled]="pagination.currentPage === 0"
+                title="Primera página"
+              >
+                <i class="fas fa-angle-double-left"></i>
+              </button>
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="pagination.currentPage === 0"
+            >
+              <button
+                class="page-link"
+                (click)="onPageChange(pagination.currentPage - 1)"
+                [disabled]="pagination.currentPage === 0"
+                title="Página anterior"
+              >
+                <i class="fas fa-angle-left"></i>
+              </button>
+            </li>
+            <li
+              class="page-item"
+              *ngFor="let p of getPaginasVisibles()"
+              [class.active]="p === pagination.currentPage"
+            >
+              <button class="page-link" (click)="onPageChange(p)">
+                {{ p + 1 }}
+              </button>
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="
+                pagination.currentPage >= pagination.totalPages - 1
+              "
+            >
+              <button
+                class="page-link"
+                (click)="onPageChange(pagination.currentPage + 1)"
+                [disabled]="pagination.currentPage >= pagination.totalPages - 1"
+                title="Página siguiente"
+              >
+                <i class="fas fa-angle-right"></i>
+              </button>
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="
+                pagination.currentPage >= pagination.totalPages - 1
+              "
+            >
+              <button
+                class="page-link"
+                (click)="onPageChange(pagination.totalPages - 1)"
+                [disabled]="pagination.currentPage >= pagination.totalPages - 1"
+                title="Última página"
+              >
+                <i class="fas fa-angle-double-right"></i>
+              </button>
             </li>
           </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de detalles (opcional) -->
+  <div
+    *ngIf="actividadSeleccionada"
+    class="modal fade show d-block"
+    tabindex="-1"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fas fa-file-alt me-2"></i>
+            Detalles de Actividad
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="cerrarDetalles()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>
+                <i class="fas fa-info-circle me-1"></i>Información General
+              </h6>
+              <p>
+                <strong>Nombre:</strong>
+                {{ actividadSeleccionada.actividad.nombreActividad }}
+              </p>
+              <p>
+                <strong>Tipo:</strong>
+                {{ actividadSeleccionada.actividad.tipoActividad.nombre }}
+              </p>
+              <p>
+                <strong>Horas:</strong>
+                {{ actividadSeleccionada.actividad.horas }}
+              </p>
+              <p>
+                <strong>Semanas:</strong>
+                {{ actividadSeleccionada.actividad.semanas }}
+              </p>
+              <p>
+                <strong>Calendario:</strong>
+                {{ actividadSeleccionada.nombreCalendario }}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <h6><i class="fas fa-users me-1"></i>Usuarios Asociados</h6>
+              <ul
+                *ngIf="actividadSeleccionada.usuarios.length > 0; else noUsers"
+              >
+                <li *ngFor="let usuario of actividadSeleccionada.usuarios">
+                  {{ usuario.nombres }} {{ usuario.apellidos }} ({{
+                    usuario.identificacion
+                  }})
+                </li>
+              </ul>
+              <ng-template #noUsers>
+                <p class="text-muted">No hay usuarios asociados</p>
+              </ng-template>
+            </div>
+          </div>
+
+          <div
+            *ngIf="actividadSeleccionada.actividad.atributos.length > 0"
+            class="mt-3"
+          >
+            <h6><i class="fas fa-list-ul me-1"></i>Atributos</h6>
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let atributo of actividadSeleccionada.actividad.atributos
+                    "
+                  >
+                    <td>{{ atributo.codigoAtributo }}</td>
+                    <td>{{ atributo.valor }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cerrarDetalles()"
+          >
+            Cerrar
+          </button>
         </div>
       </div>
     </div>
-
-    <!-- No data template -->
-    <ng-template #noData>
-      <div class="no-data">
-        <p>No se encontraron actividades</p>
-        <button (click)="loadActividades()" class="btn-reload">Recargar</button>
-      </div>
-    </ng-template>
-
-    <!-- Pagination -->
-    <div *ngIf="pagination.totalPages > 1" class="pagination-container">
-      <button
-        (click)="onPageChange(pagination.currentPage - 1)"
-        [disabled]="pagination.currentPage === 0"
-        class="btn-pagination"
-      >
-        ← Anterior
-      </button>
-
-      <span class="pagination-info">
-        Página {{ pagination.currentPage + 1 }} de
-        {{ pagination.totalPages }} ({{ pagination.totalElements }} registros)
-      </span>
-
-      <button
-        (click)="onPageChange(pagination.currentPage + 1)"
-        [disabled]="pagination.currentPage + 1 >= pagination.totalPages"
-        class="btn-pagination"
-      >
-        Siguiente →
-      </button>
-    </div>
-
-    <!-- Page size selector -->
-    <div class="page-size-selector">
-      <label for="pageSize">Registros por página:</label>
-      <select
-        id="pageSize"
-        [(ngModel)]="filters.size"
-        (change)="onPageSizeChange()"
-        class="select-page-size"
-      >
-        <option
-          *ngFor="let option of pagination.pageSizeOptions"
-          [value]="option"
-        >
-          {{ option }}
-        </option>
-      </select>
-    </div>
   </div>
+  <div *ngIf="actividadSeleccionada" class="modal-backdrop fade show"></div>
 </div>
