@@ -4,11 +4,25 @@
   background-color: var(--neutral-90);
   overflow-y: scroll;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .container-fluid{
-  padding-top: 50px;
+  /*padding-top: 50px;
   padding-left: 50px;
   padding-bottom: 50px;
-  padding-right: 50px;
+  padding-right: 50px; */
+  flex: 1;
+  padding-right: 0px !important;
 }
+
+layout-header {
+  position: sticky;
+  margin-left: 12px;
+  top: 0;
+  z-index: 999;
+  background-color: white; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
