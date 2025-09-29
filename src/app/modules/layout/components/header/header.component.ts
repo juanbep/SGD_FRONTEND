@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, effect, HostListener, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from '../../../auth/service/auth-service.service';
 import { CommonModule } from '@angular/common';
@@ -24,6 +24,9 @@ export class HeaderComponent implements OnInit {
 
   public currentUser: UsuarioResponse | null = null;
   public currentAcademicPeriod: PeriodoAcademicoResponse | null = null;
+
+  public isUserDropdownOpen = false;
+  public isRolesSubmenuOpen = false;
   
   currentAcademicPeriodEffect = effect(() => {
     this.currentAcademicPeriod = this.academicPeriodService.currentAcademicPeriodValue;
@@ -46,6 +49,25 @@ export class HeaderComponent implements OnInit {
         this.currentAcademicPeriod = null;
       }
     });
+  }
+
+  toggleUserDropdown() {
+    this.isUserDropdownOpen = !this.isUserDropdownOpen;
+    this.isRolesSubmenuOpen = false; // Cerrar submenu al abrir/cerrar dropdown
+  }
+  
+  toggleRolesSubmenu() {
+    this.isRolesSubmenuOpen = !this.isRolesSubmenuOpen;
+  }
+
+  // Cerrar dropdown al hacer clic fuera
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.user-dropdown')) {
+      this.isUserDropdownOpen = false;
+      this.isRolesSubmenuOpen = false;
+    }
   }
 
   logOut() {
