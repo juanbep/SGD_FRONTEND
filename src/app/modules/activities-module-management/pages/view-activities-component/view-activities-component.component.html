@@ -203,10 +203,10 @@
           <thead class="table-light sticky-top">
             <tr>
               <th class="fw-bold">
-                <i class="fas fa-file-alt me-1"></i>Actividad
+                <i class="fas fa-tags me-1"></i>Tipo Actividad
               </th>
               <th class="fw-bold" style="width: 150px">
-                <i class="fas fa-tags me-1"></i>Tipo
+                <i class="fas fa-file-alt me-1"></i>Actividad
               </th>
               <th class="fw-bold text-center" style="width: 100px">
                 <i class="fas fa-clock me-1"></i>Horas
@@ -230,6 +230,22 @@
           </thead>
           <tbody *ngIf="actividades && actividades.length > 0; else noData">
             <tr *ngFor="let actividadData of actividades; trackBy: trackByOid">
+              <!-- Tipo Actividad -->
+              <td>
+                <div class="badge bg-primary tipo-badge">
+                  {{ actividadData.actividad.tipoActividad.nombre || "Sin nombre" }}
+                </div>
+                <br>
+                <small class="text-muted">
+                  <strong>Calendario:</strong>
+                  {{ actividadData.nombreCalendario }}
+                </small>
+                <br />
+                <small class="text-muted">
+                  ID: {{ actividadData.actividad.oidActividad }}
+                </small>
+              </td>
+
               <!-- Información Principal -->
               <td>
                 <div class="fw-semibold">
@@ -243,23 +259,6 @@
                 <small class="text-muted">
                   ID: {{ actividadData.actividad.oidActividad }}
                 </small>
-                <!-- Atributos (si existen) -->
-                <div
-                  *ngIf="actividadData.actividad.atributos.length > 0"
-                  class="mt-1"
-                >
-                  <small class="text-info">
-                    <i class="fas fa-list-ul me-1"></i>
-                    {{ actividadData.actividad.atributos.length }} atributo(s)
-                  </small>
-                </div>
-              </td>
-
-              <!-- Tipo -->
-              <td>
-                <span class="badge bg-secondary">
-                  {{ actividadData.actividad.tipoActividad.nombre }}
-                </span>
               </td>
 
               <!-- Horas -->

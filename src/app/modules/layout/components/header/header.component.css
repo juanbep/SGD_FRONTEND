@@ -1,35 +1,59 @@
+/* Header base */
 header {
   height: 107px;
   background: var(--white);
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 25%);
 }
 
+.row.d-flex.align-items-center.h-100.mx-4 {
+  flex-wrap: nowrap !important;
+  gap: 0.5rem;
+}
+
+.col-auto:has(.responsive-title) {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .responsive-title {
   font-size: clamp(0.8rem, 2.5vw, 2rem) !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block !important;
+}
+
+.col-auto:has(.responsive-separator),
+.col-auto:has(.responsive-period) {
+  flex-shrink: 0;
 }
 
 .responsive-separator {
   font-size: clamp(0.8rem, 2.5vw, 1.2rem) !important;
+  white-space: nowrap;
 }
 
 .responsive-period {
   font-size: clamp(0.7rem, 2vw, 1rem) !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block !important;
 }
 
-/* NUEVOS ESTILOS DEL USUARIO */
+.col.d-flex.justify-content-end {
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  min-width: fit-content !important;
+}
+
 .user-section {
   display: flex;
   align-items: center;
   gap: 1rem;
   position: relative;
+  flex-shrink: 0;
 }
 
 .user-name {
@@ -37,10 +61,12 @@ header {
   font-weight: 600;
   color: #333;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .user-dropdown {
   position: relative;
+  flex-shrink: 0;
 }
 
 .user-btn {
@@ -68,7 +94,7 @@ header {
 /* Menú desplegable */
 .user-menu {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 5px);
   right: 0;
   background: white;
   border-radius: 8px;
@@ -118,7 +144,7 @@ header {
 .arrow {
   font-size: 0.8rem;
   color: #333;
-  transition: transform 0.5s ease;
+  transition: transform 0.2s ease;
 }
 
 .submenu-content {
@@ -130,6 +156,7 @@ header {
 
 .submenu-content.show {
   max-height: 200px;
+  overflow-y: hidden;
 }
 
 .role-item {
@@ -161,12 +188,39 @@ header {
   background-color: #f8f9fa;
 }
 
-/* RESPONSIVE */
+@media (max-width: 1200px) {
+  /* Reducir padding del título */
+  /* .responsive-title {
+    padding-left: 1rem !important;
+  } */
+
+  .responsive-separator,
+  .responsive-period {
+    padding-left: 1rem !important;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Ocultar período académico en tablets */
+  .col-auto:has(.responsive-separator),
+  .col-auto:has(.responsive-period) {
+    display: none !important;
+  }
+}
+
 @media (max-width: 768px) {
-  .user-section {
-    gap: 0.5rem;
+  /* Ocultar nombre de usuario en móvil */
+  .user-name {
+    display: none !important;
   }
 
+  /* Reducir márgenes del header */
+  .row.d-flex.align-items-center.h-100.mx-4 {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+  }
+
+  /* Ajustar menú dropdown en móvil */
   .user-menu {
     min-width: 250px;
     right: -20px;
@@ -175,5 +229,26 @@ header {
   .user-btn img {
     width: 20px;
     height: 20px;
+  }
+
+  .user-section {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Título más pequeño en móviles muy pequeños */
+  .responsive-title {
+    font-size: clamp(0.7rem, 3vw, 1rem) !important;
+  }
+
+  /* Header más compacto */
+  header {
+    height: 80px;
+  }
+
+  .row.d-flex.align-items-center.h-100.mx-4 {
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
   }
 }
