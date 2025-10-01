@@ -95,14 +95,39 @@ export class ActividadesService {
     }
 
     // Filtros por ID/estado
-    if (filters.oidEstadoActividad !== undefined) {
+    if (
+      filters.oidEstadoActividad !== undefined &&
+      filters.oidEstadoActividad !== null &&
+      filters.oidEstadoActividad !== ''
+    ) {
       params = params.set('estado', filters.oidEstadoActividad.toString());
     }
-    if (filters.oidTipoActividad !== undefined) {
-      params = params.set('tipoActividad', filters.oidTipoActividad.toString());
+    if (
+      filters.oidCalendario !== undefined &&
+      filters.oidCalendario !== null &&
+      filters.oidCalendario !== ''
+    ) {
+      params = params.set('oidCalendario', filters.oidCalendario.toString());
     }
-    if (filters.oidCalendario !== undefined) {
-      params = params.set('calendario', filters.oidCalendario.toString());
+    if (
+      filters.oidDepartamento !== undefined &&
+      filters.oidDepartamento !== null &&
+      filters.oidDepartamento !== ''
+    ) {
+      params = params.set(
+        'oidDepartamento',
+        filters.oidDepartamento.toString()
+      );
+    }
+    if (
+      filters.oidTipoActividad !== undefined &&
+      filters.oidTipoActividad !== null &&
+      filters.oidTipoActividad !== ''
+    ) {
+      params = params.set(
+        'oidTipoActividad',
+        filters.oidTipoActividad.toString()
+      );
     }
 
     // Filtros por rangos

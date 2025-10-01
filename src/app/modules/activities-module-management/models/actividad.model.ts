@@ -76,9 +76,10 @@ export interface ActividadFilters {
   nombreActividad?: string;
 
   // Filtros por ID/estado
-  oidEstadoActividad?: number;
-  oidTipoActividad?: number;
-  oidCalendario?: number;
+  oidEstadoActividad?: string | number;
+  oidTipoActividad?: string | number;
+  oidCalendario?: string | number;
+  oidDepartamento?: string | number;
 
   // Filtros por rangos numéricos
   horasMin?: number;

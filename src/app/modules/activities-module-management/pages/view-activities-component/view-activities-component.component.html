@@ -44,7 +44,6 @@
           <select
             class="form-select"
             [(ngModel)]="filters.oidCalendario"
-            (change)="aplicarFiltros()"
             [disabled]="loadingCalendarios"
           >
             <option value="">Todos los calendarios</option>
@@ -65,6 +64,7 @@
           </select>
           <small class="text-muted">Filtrar por calendario académico</small>
         </div>
+
         <!-- Filtro por Tipo de Actividad -->
         <div class="col-xl-3 col-lg-4 col-md-6">
           <label class="form-label fw-bold">
@@ -73,16 +73,22 @@
           <select
             class="form-select"
             [(ngModel)]="filters.oidTipoActividad"
-            (change)="aplicarFiltros()"
-            disabled
+            [disabled]="loadingTiposActividad"
           >
             <option value="">Todos los tipos</option>
-            <option>Seleccionar tipos (Próximamente)</option>
+            <option *ngIf="loadingTiposActividad" disabled>
+              Cargando tipos...
+            </option>
+            <option
+              *ngFor="let tipo of tiposActividadDropdown"
+              [value]="tipo.value"
+            >
+              {{ tipo.label }}
+            </option>
           </select>
           <small class="text-muted">Filtrar por tipo específico</small>
         </div>
-
-        <!-- Filtro por Estado -->
+        <!-- Filtro por Estado (deshabilitado por ahora) -->
         <div class="col-xl-2 col-lg-3 col-md-6">
           <label class="form-label fw-bold">
             <i class="fas fa-info-circle me-1"></i>Estado:
@@ -90,17 +96,17 @@
           <select
             class="form-select"
             [(ngModel)]="filters.oidEstadoActividad"
-            (change)="aplicarFiltros()"
+            disabled
           >
             <option value="">Todos los estados</option>
             <option value="1">ACTIVA</option>
             <option value="2">INACTIVA</option>
             <option value="3">INCOMPLETA</option>
           </select>
-          <small class="text-muted">Estado actual de la actividad</small>
+          <small class="text-muted">Próximamente</small>
         </div>
 
-        <!-- Filtro por Fecha de Creación -->
+        <!-- Filtro por Fecha creación (deshabilitado por ahora) -->
         <div class="col-xl-2 col-lg-3 col-md-6">
           <label class="form-label fw-bold">
             <i class="fas fa-calendar-alt me-1"></i>Fecha Creación:
@@ -109,35 +115,48 @@
             type="date"
             class="form-control"
             [(ngModel)]="filters.fechaCreacionDesde"
-            (change)="aplicarFiltros()"
+            disabled
           />
-          <small class="text-muted">Filtrar por fecha específica</small>
+          <small class="text-muted">Próximamente</small>
         </div>
 
-        <!-- Búsqueda General -->
-        <div class="col-xl-3 col-lg-4 col-md-6">
+        <!-- Búsqueda (deshabilitada por ahora) -->
+        <div class="col-xl-2 col-lg-4 col-md-6">
           <label class="form-label fw-bold">
             <i class="fas fa-search me-1"></i>Buscar:
           </label>
           <input
             type="text"
             class="form-control"
-            placeholder="Buscar por nombre de actividad..."
+            placeholder="Buscar por nombre..."
             [(ngModel)]="filters.searchTerm"
-            (input)="aplicarFiltros()"
+            disabled
           />
-          <small class="text-muted">Búsqueda en nombre de actividad</small>
+          <small class="text-muted">Próximamente</small>
         </div>
 
         <!-- Botones de Acción -->
-        <div class="col-xl-2 col-lg-12 d-flex align-items-end">
-          <div class="btn-group w-100" role="group">
+        <div class="col-xl-12 d-flex justify-content-end align-items-end">
+          <div class="btn-group" role="group">
             <button
               type="button"
               class="btn btn-primary"
               (click)="aplicarFiltros()"
+              [disabled]="loading"
             >
               <i class="fas fa-search me-1"></i>Buscar
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="loadCalendarios(); loadTiposActividad()"
+              [disabled]="loadingCalendarios || loadingTiposActividad"
+              title="Recargar filtros"
+            >
+              <i
+                class="fas fa-sync-alt"
+                [class.fa-spin]="loadingCalendarios || loadingTiposActividad"
+              ></i>
             </button>
           </div>
         </div>
@@ -146,8 +165,9 @@
       <!-- Mensaje informativo para tipos -->
       <div class="alert alert-info mt-3 mb-0" role="alert">
         <i class="fas fa-info-circle me-2"></i>
-        <strong>Próximamente:</strong> El filtro de tipos de actividad estará
-        disponible cuando se implemente el servicio correspondiente.
+        <strong>Disponibles:</strong> Filtros por Calendario y Tipo de
+        Actividad. <strong>Próximamente:</strong> Estado, Fecha de Creación y
+        Búsqueda por nombre.
       </div>
     </div>
   </div>
@@ -233,9 +253,11 @@
               <!-- Tipo Actividad -->
               <td>
                 <div class="badge bg-primary tipo-badge">
-                  {{ actividadData.actividad.tipoActividad.nombre || "Sin nombre" }}
+                  {{
+                    actividadData.actividad.tipoActividad.nombre || "Sin nombre"
+                  }}
                 </div>
-                <br>
+                <br />
                 <small class="text-muted">
                   <strong>Calendario:</strong>
                   {{ actividadData.nombreCalendario }}

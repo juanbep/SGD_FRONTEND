@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActividadHelperService } from '../../services/actividades/actividad-helper.service';
 import { CalendarioHelperService } from '../../../academic-calendar-management/services/calendario/calendario-helper.service';
 import { EstadoCalendario } from '../../../academic-calendar-management/models';
+import { TiposActividadHelperService } from '../../services/tiposActividades/tipos-actividad-helper.service';
 
 @Component({
   selector: 'app-view-activities-component',
@@ -24,6 +25,8 @@ export class ViewActivitiesComponentComponent implements OnInit {
   private actividadesService = inject(ActividadesService);
   private actividadHelper = inject(ActividadHelperService);
   private calendarioHelper = inject(CalendarioHelperService);
+  private tiposActividadHelper = inject(TiposActividadHelperService);
+
   private toastr = inject(ToastrService);
 
   actividades: ActividadResponse[] = [];
@@ -40,14 +43,19 @@ export class ViewActivitiesComponentComponent implements OnInit {
   }[] = [];
   loadingCalendarios = false;
 
+  // Lista de tipos de actividad para el dropdown
+  tiposActividadDropdown: { value: number; label: string }[] = [];
+  loadingTiposActividad = false;
+
   filters: ActividadFilters = {
     page: 0,
     size: 10,
-    nombreActividad: '',
-    oidEstadoActividad: 0, //validar la asignación
-    fechaCreacionDesde: '',
     searchTerm: '',
-    oidCalendario: 0,
+    oidEstadoActividad: '', //validar la asignación
+    oidCalendario: '',
+    oidDepartamento: 4, //obtener del token del usuario
+    oidTipoActividad: '',
+    fechaCreacionDesde: '',
   };
 
   // Estados disponibles
@@ -60,6 +68,7 @@ export class ViewActivitiesComponentComponent implements OnInit {
   ngOnInit(): void {
     this.loadActividades();
     this.loadCalendarios();
+    this.loadTiposActividad();
     //this.onSomeAction(2);
   }
 
@@ -75,6 +84,21 @@ export class ViewActivitiesComponentComponent implements OnInit {
       this.calendariosDropdown = [];
     } finally {
       this.loadingCalendarios = false;
+    }
+  }
+
+  // Método para cargar tipos de actividad en el dropdown
+  async loadTiposActividad(): Promise<void> {
+    try {
+      this.loadingTiposActividad = true;
+      this.tiposActividadDropdown =
+        await this.tiposActividadHelper.getAllForDropdown();
+    } catch (error) {
+      console.error('Error al cargar tipos de actividad:', error);
+      this.toastr.error('Error al cargar la lista de tipos de actividad');
+      this.tiposActividadDropdown = [];
+    } finally {
+      this.loadingTiposActividad = false;
     }
   }
 
@@ -128,11 +152,11 @@ export class ViewActivitiesComponentComponent implements OnInit {
     this.filters = {
       page: 0,
       size: this.filters.size,
-      nombreActividad: '',
-      oidEstadoActividad: 0, //validar la asignación
+      oidCalendario: '',
+      oidTipoActividad: '',
+      oidEstadoActividad: '', //validar la asignación
       fechaCreacionDesde: '',
       searchTerm: '',
-      oidCalendario: 0,
     };
     this.loadActividades();
   }
@@ -140,10 +164,14 @@ export class ViewActivitiesComponentComponent implements OnInit {
   // Método para obtener el badge class del estado del calendario
   getCalendarioEstadoBadgeClass(estado: EstadoCalendario): string {
     switch (estado) {
-      case 'ACTIVO': return 'text-success';
-      case 'DESHABILITADO': return 'text-danger';
-      case 'PENDIENTE': return 'text-warning';
-      default: return 'text-secondary';
+      case 'ACTIVO':
+        return 'text-success';
+      case 'DESHABILITADO':
+        return 'text-danger';
+      case 'PENDIENTE':
+        return 'text-warning';
+      default:
+        return 'text-secondary';
     }
   }
 
