@@ -52,9 +52,9 @@ export class ViewActivitiesComponentComponent implements OnInit {
     size: 10,
     searchTerm: '',
     oidEstadoActividad: '', //validar la asignación
-    oidCalendario: '',
+    oidCalendario: 1,
     oidDepartamento: 4, //obtener del token del usuario
-    oidTipoActividad: '',
+    oidTipoActividad: 2,
     fechaCreacionDesde: '',
   };
 

@@ -31,3 +31,23 @@
 .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+.descripcion-tipo-actividad {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.descripcion-actividad{
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: #6c757d;
+  font-weight: 400;
+}
+
+.tipo-badge {
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+}
