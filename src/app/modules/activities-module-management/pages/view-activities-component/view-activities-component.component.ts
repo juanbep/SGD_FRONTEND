@@ -15,11 +15,12 @@ import { CalendarioHelperService } from '../../../academic-calendar-management/s
 import { EstadoCalendario } from '../../../academic-calendar-management/models';
 import { TiposActividadHelperService } from '../../services/tiposActividades/tipos-actividad-helper.service';
 import { UsuarioHelperService } from '../../../users-roles-management/services/users/usuario-helper.service';
+import { UsuarioCarouselComponent } from '../../components/activities-component/explore-activities-component/usuario-carrousel/usuario-carousel/usuario-carousel.component';
 
 @Component({
   selector: 'app-view-activities-component',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UsuarioCarouselComponent],
   templateUrl: './view-activities-component.component.html',
   styleUrl: './view-activities-component.component.css',
 })
@@ -73,8 +74,12 @@ export class ViewActivitiesComponentComponent implements OnInit {
     this.loadActividades();
     this.loadCalendarios();
     this.loadTiposActividad();
-    this.cargarUsuario(9);
+    //this.cargarUsuario(9);
     //this.onSomeAction(2);
+  }
+
+  getUsuariosIds(usuarios: any[]): number[] {
+    return usuarios.map((u) => u.oidUsuario);
   }
 
   // Método para cargar la información de un Usuario por ID

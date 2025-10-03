@@ -541,39 +541,16 @@
             </div>
 
             <!-- Columna Derecha: Usuarios Asociados -->
-            <div class="col-lg-6 col-md-12">
+            <!-- En tu modal de detalles, reemplaza la columna de usuarios con: -->
+            <div class="col-12">
               <div class="info-section">
                 <h6 class="section-title mb-3">
                   <i class="fas fa-users me-2 text-primary"></i>
                   Responsables
                 </h6>
-                <div
-                  *ngIf="
-                    actividadSeleccionada.usuarios.length > 0;
-                    else noUsers
-                  "
-                >
-                  <ul class="user-list">
-                    <li
-                      *ngFor="let usuario of actividadSeleccionada.usuarios"
-                      class="user-item"
-                    >
-                      <i class="fas fa-user-circle me-2 text-muted"></i>
-                      <span>
-                        {{ usuario.nombres }} {{ usuario.apellidos }}
-                        <small class="text-muted"
-                          >({{ usuario.identificacion }})</small
-                        >
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-                <ng-template #noUsers>
-                  <div class="alert alert-info mb-0" role="alert">
-                    <i class="fas fa-info-circle me-2"></i>
-                    No hay usuarios asociados
-                  </div>
-                </ng-template>
+                <app-usuario-carousel
+                  [usuariosIds]="getUsuariosIds(actividadSeleccionada.usuarios)"
+                ></app-usuario-carousel>
               </div>
             </div>
           </div>

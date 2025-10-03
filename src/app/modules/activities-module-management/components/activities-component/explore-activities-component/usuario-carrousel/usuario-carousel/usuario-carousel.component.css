@@ -1,0 +1,180 @@
+.carousel-container {
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+}
+
+/* Overlay de carga */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+/* Contenido del carousel */
+.carousel-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+}
+
+/* Botones de navegación */
+.carousel-btn {
+  background: #0d6efd;
+  border: none;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: #0b5ed7;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-btn i {
+  font-size: 1.2rem;
+}
+
+/* Tarjeta de usuario */
+.usuario-card {
+  flex: 1;
+  max-width: 800px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.usuario-card .card-header {
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+.usuario-card .card-body {
+  padding: 1.5rem;
+}
+
+/* Subtítulos de sección */
+.section-subtitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+/* Grupos de información */
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-item label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6c757d;
+  margin: 0;
+}
+
+.info-item span {
+  font-size: 0.95rem;
+  color: #212529;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #0d6efd;
+}
+
+/* Sección de roles */
+.roles-section {
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.roles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Paginador */
+.carousel-paginator {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .carousel-content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .carousel-btn {
+    position: static;
+    width: 50px;
+    height: 50px;
+  }
+
+  .btn-prev,
+  .btn-next {
+    order: 2;
+  }
+
+  .usuario-card {
+    order: 1;
+    max-width: 100%;
+  }
+
+  .usuario-card .card-body {
+    padding: 1rem;
+  }
+
+  .info-item span {
+    font-size: 0.9rem;
+  }
+}
