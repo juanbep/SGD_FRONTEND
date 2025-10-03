@@ -8,11 +8,13 @@ import {
   DEFAULT_PAGINATION_CONFIG,
   ActividadResponse,
 } from '../../models';
+import { Usuario } from '../../../users-roles-management/models';
 import { ToastrService } from 'ngx-toastr';
 import { ActividadHelperService } from '../../services/actividades/actividad-helper.service';
 import { CalendarioHelperService } from '../../../academic-calendar-management/services/calendario/calendario-helper.service';
 import { EstadoCalendario } from '../../../academic-calendar-management/models';
 import { TiposActividadHelperService } from '../../services/tiposActividades/tipos-actividad-helper.service';
+import { UsuarioHelperService } from '../../../users-roles-management/services/users/usuario-helper.service';
 
 @Component({
   selector: 'app-view-activities-component',
@@ -25,9 +27,11 @@ export class ViewActivitiesComponentComponent implements OnInit {
   private actividadesService = inject(ActividadesService);
   private actividadHelper = inject(ActividadHelperService);
   private calendarioHelper = inject(CalendarioHelperService);
+  private usuarioHelper = inject(UsuarioHelperService);
   private tiposActividadHelper = inject(TiposActividadHelperService);
 
   private toastr = inject(ToastrService);
+  usuario: Usuario | null = null;
 
   actividades: ActividadResponse[] = [];
   loading = false;
@@ -69,7 +73,20 @@ export class ViewActivitiesComponentComponent implements OnInit {
     this.loadActividades();
     this.loadCalendarios();
     this.loadTiposActividad();
+    this.cargarUsuario(9);
     //this.onSomeAction(2);
+  }
+
+  // Método para cargar la información de un Usuario por ID
+  async cargarUsuario(usuarioId: number): Promise<void> {
+    // Uso básico del getById
+    this.usuario = await this.usuarioHelper.getById(usuarioId);
+
+    if (this.usuario) {
+      console.log('Usuario cargado:', this.usuario);
+    } else {
+      console.log('Usuario no encontrado');
+    }
   }
 
   // Método para cargar calendarios en el dropdown
