@@ -222,13 +222,13 @@
         <table class="table table-hover mb-0">
           <thead class="table-light sticky-top">
             <tr>
-              <th class="fw-bold align-middle">
+              <th class="fw-bold text-center align-middle">
                 <i class="fas fa-tags me-1"></i>Tipo Actividad
               </th>
               <th class="fw-bold align-middle">
                 <i class="fas fa-file-alt me-1"></i>Información Actividad
               </th>
-              <th class="fw-bold text-center align-middle" style="width: 120px">
+              <th class="fw-bold text-center align-middle">
                 <i class="fas fa-info-circle me-1"></i>Estado
               </th>
               <th class="fw-bold text-center align-middle" style="width: 120px">
@@ -251,7 +251,7 @@
           <tbody *ngIf="actividades && actividades.length > 0; else noData">
             <tr *ngFor="let actividadData of actividades; trackBy: trackByOid">
               <!-- Tipo Actividad -->
-              <td class="align-middle">
+              <td class="text-center align-middle">
                 <div class="badge bg-primary tipo-badge">
                   {{
                     actividadData.actividad.tipoActividad.nombre || "Sin nombre"
@@ -466,102 +466,160 @@
     </div>
   </div>
 
-  <!-- Modal de detalles (opcional) -->
+  <!-- Modal de detalles -->
   <div
     *ngIf="actividadSeleccionada"
     class="modal fade show d-block"
     tabindex="-1"
   >
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg">
+        <!-- Header con fondo azul oscuro -->
+        <div class="modal-header bg-dark-blue text-white border-0 py-3">
+          <h5 class="modal-title fw-bold mb-0">
             <i class="fas fa-file-alt me-2"></i>
             Detalles de Actividad
           </h5>
           <button
             type="button"
-            class="btn-close"
+            class="btn-close btn-close-white"
             (click)="cerrarDetalles()"
+            aria-label="Cerrar"
           ></button>
         </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <h6>
-                <i class="fas fa-info-circle me-1"></i>Información General
-              </h6>
-              <p>
-                <strong>Nombre:</strong>
-                {{ actividadSeleccionada.actividad.nombreActividad }}
-              </p>
-              <p>
-                <strong>Tipo:</strong>
-                {{ actividadSeleccionada.actividad.tipoActividad.nombre }}
-              </p>
-              <p>
-                <strong>Horas:</strong>
-                {{ actividadSeleccionada.actividad.horas }}
-              </p>
-              <p>
-                <strong>Semanas:</strong>
-                {{ actividadSeleccionada.actividad.semanas }}
-              </p>
-              <p>
-                <strong>Calendario:</strong>
-                {{ actividadSeleccionada.nombreCalendario }}
-              </p>
+
+        <!-- Body -->
+        <div class="modal-body p-4">
+          <!-- Información General y Usuarios -->
+          <div class="row g-4">
+            <!-- Columna Izquierda: Información General -->
+            <div class="col-lg-6 col-md-12">
+              <div class="info-section">
+                <h6 class="section-title mb-3">
+                  <i class="fas fa-info-circle me-2 text-primary"></i>
+                  Información General
+                </h6>
+                <div class="info-item">
+                  <label class="info-label">Nombre Actividad:</label>
+                  <p class="info-value">
+                    {{ actividadSeleccionada.actividad.nombreActividad }}
+                  </p>
+                </div>
+                <div class="info-item">
+                  <label class="info-label">Tipo Actividad:</label>
+                  <p class="info-value">
+                    {{ actividadSeleccionada.actividad.tipoActividad.nombre }}
+                  </p>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="info-item">
+                      <label class="info-label">Horas:</label>
+                      <p class="info-value">
+                        {{ actividadSeleccionada.actividad.horas }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="info-item">
+                      <label class="info-label">Semanas:</label>
+                      <p class="info-value">
+                        {{ actividadSeleccionada.actividad.semanas }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="info-item">
+                  <label class="info-label">Calendario:</label>
+                  <p class="info-value">
+                    {{
+                      actividadSeleccionada.nombreCalendario || "No asignado"
+                    }}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div class="col-md-6">
-              <h6><i class="fas fa-users me-1"></i>Usuarios Asociados</h6>
-              <ul
-                *ngIf="actividadSeleccionada.usuarios.length > 0; else noUsers"
-              >
-                <li *ngFor="let usuario of actividadSeleccionada.usuarios">
-                  {{ usuario.nombres }} {{ usuario.apellidos }} ({{
-                    usuario.identificacion
-                  }})
-                </li>
-              </ul>
-              <ng-template #noUsers>
-                <p class="text-muted">No hay usuarios asociados</p>
-              </ng-template>
+
+            <!-- Columna Derecha: Usuarios Asociados -->
+            <div class="col-lg-6 col-md-12">
+              <div class="info-section">
+                <h6 class="section-title mb-3">
+                  <i class="fas fa-users me-2 text-primary"></i>
+                  Responsables
+                </h6>
+                <div
+                  *ngIf="
+                    actividadSeleccionada.usuarios.length > 0;
+                    else noUsers
+                  "
+                >
+                  <ul class="user-list">
+                    <li
+                      *ngFor="let usuario of actividadSeleccionada.usuarios"
+                      class="user-item"
+                    >
+                      <i class="fas fa-user-circle me-2 text-muted"></i>
+                      <span>
+                        {{ usuario.nombres }} {{ usuario.apellidos }}
+                        <small class="text-muted"
+                          >({{ usuario.identificacion }})</small
+                        >
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+                <ng-template #noUsers>
+                  <div class="alert alert-info mb-0" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No hay usuarios asociados
+                  </div>
+                </ng-template>
+              </div>
             </div>
           </div>
 
+          <!-- Atributos -->
           <div
             *ngIf="actividadSeleccionada.actividad.atributos.length > 0"
-            class="mt-3"
+            class="mt-4"
           >
-            <h6><i class="fas fa-list-ul me-1"></i>Atributos</h6>
-            <div class="table-responsive">
-              <table class="table table-sm">
-                <thead>
-                  <tr>
-                    <th>Código</th>
-                    <th>Valor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let atributo of actividadSeleccionada.actividad.atributos
-                    "
-                  >
-                    <td>{{ atributo.codigoAtributo }}</td>
-                    <td>{{ atributo.valor }}</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="info-section">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-list-ul me-2 text-primary"></i>
+                Información Adicional
+              </h6>
+              <div class="table-responsive">
+                <table class="table table-hover table-bordered mb-0">
+                  <!-- Aqui va el acto administrativo-->
+                  <tbody>
+                    <tr>
+                      <td class="text-muted">ACTO ADMINISTRATIVO</td>
+                      <td>R-1345, 11 de diciembre de 23, Rectoría</td>
+                    </tr>
+                    <tr
+                      *ngFor="
+                        let atributo of actividadSeleccionada.actividad
+                          .atributos
+                      "
+                    >
+                      <td class="text-muted">{{ atributo.codigoAtributo }}</td>
+                      <td>{{ atributo.valor }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
+
+        <!-- Footer -->
+        <div class="modal-footer bg-light border-0 py-3">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-secondary px-4"
             (click)="cerrarDetalles()"
           >
+            <i class="fas fa-times me-2"></i>
             Cerrar
           </button>
         </div>
