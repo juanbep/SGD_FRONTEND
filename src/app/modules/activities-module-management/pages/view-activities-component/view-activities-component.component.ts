@@ -52,6 +52,10 @@ export class ViewActivitiesComponentComponent implements OnInit {
   tiposActividadDropdown: { value: number; label: string }[] = [];
   loadingTiposActividad = false;
 
+  // Variables para el modal de usuarios
+  usuariosSeleccionados: number[] = [];
+  mostrarModalUsuarios: boolean = false;
+
   filters: ActividadFilters = {
     page: 0,
     size: 10,
@@ -259,6 +263,18 @@ export class ViewActivitiesComponentComponent implements OnInit {
   getUsersTooltip(usuarios: any[]): string {
     if (usuarios.length === 0) return 'Sin usuarios';
     return usuarios.map((u) => `${u.nombres} ${u.apellidos}`).join(', ');
+  }
+
+  // Método para abrir el modal de usuarios
+  abrirModalUsuarios(usuarios: any[]): void {
+    this.usuariosSeleccionados = usuarios.map((u) => u.oidUsuario);
+    this.mostrarModalUsuarios = true;
+  }
+
+  // Método para cerrar el modal de usuarios
+  cerrarModalUsuarios(): void {
+    this.mostrarModalUsuarios = false;
+    this.usuariosSeleccionados = [];
   }
 
   // Métodos helper

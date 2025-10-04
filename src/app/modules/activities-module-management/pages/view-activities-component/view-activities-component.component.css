@@ -173,3 +173,43 @@
   background: #555;
 }
 
+/*Estilos para el modal de usuarios*/
+
+/* Badge de usuarios clickeable */
+.usuario-badge-clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.usuario-badge-clickable:hover {
+  background-color: #FFB000 !important;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.usuario-badge-clickable:active {
+  transform: scale(0.98);
+}
+
+/* Modal de usuarios - ajustes específicos */
+.modal-xl {
+  max-width: 95%;
+}
+
+.modal-xl .modal-body {
+  min-height: 500px;
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+  .modal-xl {
+    max-width: 98%;
+    margin: 0.5rem;
+  }
+
+  .modal-xl .modal-body {
+    min-height: 400px;
+  }
+}

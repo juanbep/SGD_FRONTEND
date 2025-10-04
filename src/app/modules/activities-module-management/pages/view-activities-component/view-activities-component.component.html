@@ -320,9 +320,12 @@
               <!-- Usuarios -->
               <td class="text-center align-middle">
                 <span
-                  class="badge bg-info text-dark"
-                  [title]="getUsersTooltip(actividadData.usuarios)"
+                  class="badge text-dark usuario-badge-clickable"
+                  style="background: #FFB000"
+                  [title]="'Clic para ver detalles de los usuarios asociados'"
+                  (click)="abrirModalUsuarios(actividadData.usuarios)"
                 >
+                  <i class="fas fa-users me-1"></i>
                   {{ actividadData.usuarios.length }} usuario(s)
                 </span>
               </td>
@@ -492,27 +495,52 @@
         <div class="modal-body p-4">
           <!-- Información General y Usuarios -->
           <div class="row g-4">
-            <!-- Columna Izquierda: Información General -->
-            <div class="col-lg-6 col-md-12">
+            <!-- Información General - Ancho completo -->
+            <div class="col-12">
               <div class="info-section">
                 <h6 class="section-title mb-3">
                   <i class="fas fa-info-circle me-2 text-primary"></i>
                   Información General
                 </h6>
-                <div class="info-item">
-                  <label class="info-label">Nombre Actividad:</label>
-                  <p class="info-value">
-                    {{ actividadSeleccionada.actividad.nombreActividad }}
-                  </p>
-                </div>
-                <div class="info-item">
-                  <label class="info-label">Tipo Actividad:</label>
-                  <p class="info-value">
-                    {{ actividadSeleccionada.actividad.tipoActividad.nombre }}
-                  </p>
-                </div>
-                <div class="row">
-                  <div class="col-6">
+
+                <!-- Grid de 2 columnas para los campos -->
+                <div class="row g-3">
+                  <!-- Nombre Actividad - Ancho completo -->
+                  <div class="col-12">
+                    <div class="info-item">
+                      <label class="info-label">Nombre Actividad:</label>
+                      <p class="info-value">
+                        {{ actividadSeleccionada.actividad.nombreActividad }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Tipo Actividad y Calendario -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">Tipo Actividad:</label>
+                      <p class="info-value">
+                        {{
+                          actividadSeleccionada.actividad.tipoActividad.nombre
+                        }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">Calendario:</label>
+                      <p class="info-value">
+                        {{
+                          actividadSeleccionada.nombreCalendario ||
+                            "No asignado"
+                        }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Horas y Semanas -->
+                  <div class="col-md-6 col-sm-6">
                     <div class="info-item">
                       <label class="info-label">Horas:</label>
                       <p class="info-value">
@@ -520,7 +548,8 @@
                       </p>
                     </div>
                   </div>
-                  <div class="col-6">
+
+                  <div class="col-md-6 col-sm-6">
                     <div class="info-item">
                       <label class="info-label">Semanas:</label>
                       <p class="info-value">
@@ -529,28 +558,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="info-item">
-                  <label class="info-label">Calendario:</label>
-                  <p class="info-value">
-                    {{
-                      actividadSeleccionada.nombreCalendario || "No asignado"
-                    }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Columna Derecha: Usuarios Asociados -->
-            <!-- En tu modal de detalles, reemplaza la columna de usuarios con: -->
-            <div class="col-12">
-              <div class="info-section">
-                <h6 class="section-title mb-3">
-                  <i class="fas fa-users me-2 text-primary"></i>
-                  Responsables
-                </h6>
-                <app-usuario-carousel
-                  [usuariosIds]="getUsuariosIds(actividadSeleccionada.usuarios)"
-                ></app-usuario-carousel>
               </div>
             </div>
           </div>
@@ -569,10 +576,6 @@
                 <table class="table table-hover table-bordered mb-0">
                   <!-- Aqui va el acto administrativo-->
                   <tbody>
-                    <tr>
-                      <td class="text-muted">ACTO ADMINISTRATIVO</td>
-                      <td>R-1345, 11 de diciembre de 23, Rectoría</td>
-                    </tr>
                     <tr
                       *ngFor="
                         let atributo of actividadSeleccionada.actividad
@@ -604,4 +607,50 @@
     </div>
   </div>
   <div *ngIf="actividadSeleccionada" class="modal-backdrop fade show"></div>
+
+  <!-- Modal de Usuarios -->
+  <div
+    *ngIf="mostrarModalUsuarios"
+    class="modal fade show d-block"
+    tabindex="-1"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg">
+        <!-- Header -->
+        <div class="modal-header text-white border-0 py-3"
+        style="background-color: darkblue">
+          <h5 class="modal-title fw-bold mb-0">
+            <i class="fas fa-users me-2"></i>
+            Usuarios Responsables
+          </h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            (click)="cerrarModalUsuarios()"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body p-0">
+          <app-usuario-carousel
+            [usuariosIds]="usuariosSeleccionados"
+          ></app-usuario-carousel>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer bg-light border-0 py-2">
+          <button
+            type="button"
+            class="btn btn-secondary px-4"
+            (click)="cerrarModalUsuarios()"
+          >
+            <i class="fas fa-times me-2"></i>
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="mostrarModalUsuarios" class="modal-backdrop fade show"></div>
 </div>
