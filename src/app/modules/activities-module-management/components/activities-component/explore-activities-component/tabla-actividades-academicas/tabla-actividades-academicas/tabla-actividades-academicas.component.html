@@ -485,20 +485,10 @@
 
                 <!-- Grid de 2 columnas para los campos -->
                 <div class="row g-3">
-                  <!-- Nombre Actividad - Ancho completo -->
-                  <div class="col-12">
-                    <div class="info-item">
-                      <label class="info-label">Nombre Actividad:</label>
-                      <p class="info-value">
-                        {{ actividadSeleccionada.actividad.nombreActividad }}
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Tipo Actividad y Calendario -->
+                  <!-- Tipo Actividad -->
                   <div class="col-md-6">
                     <div class="info-item">
-                      <label class="info-label">Tipo Actividad:</label>
+                      <label class="info-label">Tipo:</label>
                       <p class="info-value">
                         {{
                           actividadSeleccionada.actividad.tipoActividad.nombre
@@ -507,6 +497,44 @@
                     </div>
                   </div>
 
+                  <!-- Nombre Actividad - Ancho completo -->
+                  <div class="col-6">
+                    <div class="info-item">
+                      <label class="info-label">Nombre:</label>
+                      <p class="info-value">
+                        {{ actividadSeleccionada.actividad.nombreActividad }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Descripción Tipo Actividad -->
+                  <div class="col-md-12">
+                    <div class="info-item">
+                      <label class="info-label">Descripción:</label>
+                      <p class="info-value">
+                        {{
+                          actividadSeleccionada.actividad.tipoActividad
+                            .descripcion || "Sin descripción"
+                        }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Estado Actividad -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">Estado:</label>
+                      <p class="info-value">
+                        {{
+                          getEstadoNombre(
+                            actividadSeleccionada.actividad.oidEstadoActividad
+                          )
+                        }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Calendario -->
                   <div class="col-md-6">
                     <div class="info-item">
                       <label class="info-label">Calendario:</label>
@@ -519,21 +547,48 @@
                     </div>
                   </div>
 
-                  <!-- Horas y Semanas -->
+                  <!-- Horas -->
                   <div class="col-md-6 col-sm-6">
                     <div class="info-item">
                       <label class="info-label">Horas:</label>
                       <p class="info-value">
-                        {{ actividadSeleccionada.actividad.horas }}
+                        {{ actividadSeleccionada.actividad.horas }} horas
                       </p>
                     </div>
                   </div>
 
+                  <!-- Semanas -->
                   <div class="col-md-6 col-sm-6">
                     <div class="info-item">
                       <label class="info-label">Semanas:</label>
                       <p class="info-value">
-                        {{ actividadSeleccionada.actividad.semanas }}
+                        {{ actividadSeleccionada.actividad.semanas }} semanas
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Fecha Creación -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">Fecha Creación:</label>
+                      <p class="info-value">
+                        {{
+                          actividadSeleccionada.actividad.fechaCreacion
+                            | date : "dd/MM/yyyy HH:mm"
+                        }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Fecha Actualización -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">Última Actualización:</label>
+                      <p class="info-value">
+                        {{
+                          actividadSeleccionada.actividad.fechaActualizacion
+                            | date : "dd/MM/yyyy HH:mm"
+                        }}
                       </p>
                     </div>
                   </div>
