@@ -35,6 +35,7 @@ export class ViewActivitiesComponentComponent implements OnInit {
   usuario: Usuario | null = null;
 
   actividades: ActividadResponse[] = [];
+  actividadData!: ActividadResponse;
   loading = false;
   error: string = '';
   pagination: PaginationConfig = { ...DEFAULT_PAGINATION_CONFIG };
@@ -78,6 +79,7 @@ export class ViewActivitiesComponentComponent implements OnInit {
     this.loadActividades();
     this.loadCalendarios();
     this.loadTiposActividad();
+    this.getActividadByID(14);
     //this.cargarUsuario(9);
     //this.onSomeAction(2);
   }
@@ -136,6 +138,35 @@ export class ViewActivitiesComponentComponent implements OnInit {
       next: (response) => {
         if (response.codigo === 200) {
           this.actividades = response.data.content;
+          this.updatePagination(response.data);
+          if (this.filters.page === 0) {
+            this.toastr.success(
+              response.mensaje || 'Actividades cargadas correctamente'
+            );
+          }
+        } else {
+          this.error = response.mensaje || 'Respuesta inesperada del servidor';
+          this.toastr.warning(this.error);
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = error.message || 'Error al cargar actividades';
+        this.toastr.error('Error al cargar actividades', this.error);
+        this.loading = false;
+        this.actividades = [];
+      },
+    });
+  }
+
+  getActividadByID(idActividad: number): void {
+    this.loading = true;
+    this.error = '';
+
+    this.actividadesService.getActividadById(idActividad).subscribe({
+      next: (response) => {
+        if (response.codigo === 200) {
+          this.actividadData = response.data;
           this.updatePagination(response.data);
           if (this.filters.page === 0) {
             this.toastr.success(
