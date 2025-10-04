@@ -76,7 +76,7 @@ export class ViewActivitiesComponentComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.loadActividades();
+    //this.loadActividades();
     this.loadCalendarios();
     this.loadTiposActividad();
     this.getActividadByID(14);

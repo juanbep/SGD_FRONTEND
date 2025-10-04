@@ -10,60 +10,50 @@ import { UsuarioHelperService } from '../../../../../../users-roles-management/s
   templateUrl: './usuario-carousel.component.html',
   styleUrl: './usuario-carousel.component.css',
 })
-export class UsuarioCarouselComponent {
+export class UsuarioCarouselComponent implements OnInit {
   @Input() usuariosIds: number[] = []; // IDs de los usuarios asociados
   private usuarioHelper = inject(UsuarioHelperService);
 
+  usuarios: Usuario[] = [];
   currentIndex: number = 0;
   usuarioActual: Usuario | null = null;
   loading: boolean = false;
   error: string = '';
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (this.usuariosIds && this.usuariosIds.length > 0) {
-      this.cargarUsuario(this.usuariosIds[0]);
+      await this.cargarTodosLosUsuarios();
     }
   }
 
-  async cargarUsuario(usuarioId: number): Promise<void> {
+  async cargarTodosLosUsuarios(): Promise<void> {
     this.loading = true;
     this.error = '';
 
     try {
-      this.usuarioActual = await this.usuarioHelper.getById(usuarioId);
+      // Cargar todos los usuarios en paralelo
+      const promesas = this.usuariosIds.map((id) =>
+        this.usuarioHelper.getById(id)
+      );
+      const resultados = await Promise.all(promesas);
 
-      if (!this.usuarioActual) {
-        this.error = 'Usuario no encontrado';
+      // Filtrar usuarios válidos
+      this.usuarios = resultados.filter(
+        (usuario) => usuario !== null
+      ) as Usuario[];
+
+      if (this.usuarios.length === 0) {
+        this.error = 'No se pudieron cargar los usuarios';
       }
     } catch (err) {
-      this.error = 'Error al cargar el usuario';
-      console.error('Error cargando usuario:', err);
+      this.error = 'Error al cargar los usuarios';
+      console.error('Error cargando usuarios:', err);
     } finally {
       this.loading = false;
     }
   }
 
-  siguiente(): void {
-    if (this.usuariosIds.length === 0) return;
-
-    this.currentIndex = (this.currentIndex + 1) % this.usuariosIds.length;
-    this.cargarUsuario(this.usuariosIds[this.currentIndex]);
-  }
-
-  anterior(): void {
-    if (this.usuariosIds.length === 0) return;
-
-    this.currentIndex =
-      (this.currentIndex - 1 + this.usuariosIds.length) %
-      this.usuariosIds.length;
-    this.cargarUsuario(this.usuariosIds[this.currentIndex]);
-  }
-
-  get numeroPagina(): string {
-    return `${this.currentIndex + 1} / ${this.usuariosIds.length}`;
-  }
-
-  get tieneMultiplesUsuarios(): boolean {
-    return this.usuariosIds.length > 1;
+  get totalUsuarios(): number {
+    return this.usuarios.length;
   }
 }

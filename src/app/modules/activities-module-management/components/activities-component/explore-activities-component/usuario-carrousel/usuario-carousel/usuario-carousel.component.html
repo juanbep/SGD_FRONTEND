@@ -1,153 +1,160 @@
-<div class="carousel-container">
+<div class="scroll-container">
   <!-- Spinner de carga -->
   <div *ngIf="loading" class="loading-overlay">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
-    <p class="mt-2 text-muted">Cargando información del usuario...</p>
+    <p class="mt-2 text-muted">Cargando información de los usuarios...</p>
   </div>
 
   <!-- Mensaje de error -->
-  <div *ngIf="error && !loading" class="alert alert-danger" role="alert">
+  <div *ngIf="error && !loading" class="alert alert-danger m-3" role="alert">
     <i class="fas fa-exclamation-triangle me-2"></i>
     {{ error }}
   </div>
 
-  <!-- Contenido del carousel -->
-  <div *ngIf="usuarioActual && !loading && !error" class="carousel-content">
-    <!-- Botón Anterior -->
-    <button
-      *ngIf="tieneMultiplesUsuarios"
-      class="carousel-btn btn-prev"
-      (click)="anterior()"
-      [disabled]="loading"
+  <!-- Lista de usuarios con scroll continuo -->
+  <div *ngIf="!loading && !error && usuarios.length > 0" class="usuarios-list">
+    <!-- Indicador superior -->
+    <div class="scroll-hint scroll-hint-top" *ngIf="totalUsuarios > 1">
+      <i class="fas fa-chevron-down"></i>
+      <span>Desplázate para ver todos los usuarios</span>
+    </div>
+
+    <!-- Tarjetas de usuarios -->
+    <div
+      *ngFor="let usuario of usuarios; let i = index"
+      class="usuario-card-wrapper"
     >
-      <i class="fas fa-chevron-left"></i>
-    </button>
+      <div class="usuario-card">
+        <!-- Contador de usuario -->
+        <!-- <div class="usuario-numero">
+          <span class="badge bg-primary">
+            <i class="fas fa-user me-1"></i>
+            Usuario {{ i + 1 }} de {{ totalUsuarios }}
+          </span>
+        </div> -->
 
-    <!-- Tarjeta de Usuario -->
-    <div class="usuario-card">
-      <!-- Header de la tarjeta -->
-      <div class="card-header bg-dark-blue text-white">
-        <i class="fas fa-user-circle me-2"></i>
-        <span class="fw-bold"
-          >{{ usuarioActual.nombres }} {{ usuarioActual.apellidos }}</span
+        <!-- Header de la tarjeta -->
+        <div
+          class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center"
         >
-      </div>
-
-      <!-- Body de la tarjeta -->
-      <div class="card-body">
-        <div class="row g-3">
-          <!-- Columna 1: Información Personal -->
-          <div class="col-md-6">
-            <h6 class="section-subtitle">
-              <i class="fas fa-id-card me-2 text-primary"></i>
-              Información Personal
-            </h6>
-            <div class="info-group">
-              <div class="info-item">
-                <label>Identificación:</label>
-                <span>{{ usuarioActual.identificacion }}</span>
-              </div>
-              <div class="info-item">
-                <label>Username:</label>
-                <span>{{ usuarioActual.username }}</span>
-              </div>
-              <div class="info-item">
-                <label>Correo:</label>
-                <span class="text-break">{{ usuarioActual.correo }}</span>
-              </div>
-              <div class="info-item">
-                <label>Estado:</label>
-                <span class="text-break">
-                  {{ usuarioActual.estadoUsuario.nombre }}
-                </span>
-              </div>
-            </div>
+          <div class="d-flex align-items-center">
+            <i class="fas fa-user-circle me-2"></i>
+            <span class="fw-bold"
+              >{{ usuario.nombres }} {{ usuario.apellidos }}</span
+            >
           </div>
-
-          <!-- Columna 2: Información Académica -->
-          <div class="col-md-6">
-            <h6 class="section-subtitle">
-              <i class="fas fa-graduation-cap me-2 text-primary"></i>
-              Información Académica
-            </h6>
-            <div class="info-group">
-              <div class="info-item">
-                <label>Departamento:</label>
-                <span>{{ usuarioActual.usuarioDetalle.departamento }}</span>
-              </div>
-              <div class="info-item">
-                <label>Programa:</label>
-                <span>{{
-                  usuarioActual.usuarioDetalle.programa || "No asignado"
-                }}</span>
-              </div>
-              <div class="info-item">
-                <label>Categoría:</label>
-                <span>{{ usuarioActual.usuarioDetalle.categoria }}</span>
-              </div>
-              <div class="info-item">
-                <label>Contratación:</label>
-                <span>{{ usuarioActual.usuarioDetalle.contratacion }}</span>
-              </div>
-              <div class="info-item">
-                <label>Dedicación:</label>
-                <span>{{ usuarioActual.usuarioDetalle.dedicacion }}</span>
-              </div>
-              <div class="info-item">
-                <label>Estudios:</label>
-                <span>{{ usuarioActual.usuarioDetalle.estudios }}</span>
-              </div>
-            </div>
-          </div>
+          <span
+            class="badge rounded-pill px-3 py-2 text-dark"
+            style="background: white; font-weight: 500"
+          >
+            <i class="fas fa-user me-1"></i>
+            Usuario {{ i + 1 }} de {{ totalUsuarios }}
+          </span>
         </div>
 
-        <!-- Sección de Roles -->
-        <div
-          class="roles-section mt-3"
-          *ngIf="usuarioActual.roles && usuarioActual.roles.length > 0"
-        >
-          <h6 class="section-subtitle">
-            <i class="fas fa-user-tag me-2 text-primary"></i>
-            Roles Asignados
-          </h6>
-          <div class="roles-container">
-            <span
-              *ngFor="let rol of usuarioActual.roles"
-              class="badge bg-info text-dark me-2 mb-2"
-            >
-              {{ rol.nombre }}
-            </span>
+        <!-- Body de la tarjeta -->
+        <div class="card-body">
+          <div class="row g-3">
+            <!-- Columna 1: Información Personal -->
+            <div class="col-md-6">
+              <h6 class="section-subtitle">
+                <i class="fas fa-id-card me-2 text-primary"></i>
+                Información Personal
+              </h6>
+              <div class="info-group">
+                <div class="info-item">
+                  <label>Identificación:</label>
+                  <span>{{ usuario.identificacion }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Username:</label>
+                  <span>{{ usuario.username }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Correo:</label>
+                  <span class="text-break">{{ usuario.correo }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Estado:</label>
+                  <span class="text-break">
+                    {{ usuario.estadoUsuario.nombre }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 2: Información Académica -->
+            <div class="col-md-6">
+              <h6 class="section-subtitle">
+                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                Información Académica
+              </h6>
+              <div class="info-group">
+                <div class="info-item">
+                  <label>Departamento:</label>
+                  <span>{{ usuario.usuarioDetalle.departamento }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Programa:</label>
+                  <span>{{
+                    usuario.usuarioDetalle.programa || "No asignado"
+                  }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Categoría:</label>
+                  <span>{{ usuario.usuarioDetalle.categoria }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Contratación:</label>
+                  <span>{{ usuario.usuarioDetalle.contratacion }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Dedicación:</label>
+                  <span>{{ usuario.usuarioDetalle.dedicacion }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Estudios:</label>
+                  <span>{{ usuario.usuarioDetalle.estudios }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección de Roles -->
+          <div
+            class="roles-section mt-3"
+            *ngIf="usuario.roles && usuario.roles.length > 0"
+          >
+            <h6 class="section-subtitle">
+              <i class="fas fa-user-tag me-2 text-primary"></i>
+              Roles Asignados
+            </h6>
+            <div class="roles-container">
+              <span
+                *ngFor="let rol of usuario.roles"
+                class="badge bg-secondary text-white me-2 mb-2"
+              >
+                {{ rol.nombre }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Botón Siguiente -->
-    <button
-      *ngIf="tieneMultiplesUsuarios"
-      class="carousel-btn btn-next"
-      (click)="siguiente()"
-      [disabled]="loading"
-    >
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
-
-  <!-- Paginador -->
-  <div
-    *ngIf="tieneMultiplesUsuarios && usuarioActual && !loading"
-    class="carousel-paginator"
-  >
-    <i class="fas fa-users me-2"></i>
-    <span>Usuario {{ numeroPagina }}</span>
+    <!-- Indicador inferior -->
+    <div class="scroll-hint scroll-hint-bottom" *ngIf="totalUsuarios > 1">
+      <span>Desplázate para ver todos los usuarios</span>
+      <i class="fas fa-chevron-up"></i>
+    </div>
   </div>
 
   <!-- Mensaje cuando no hay usuarios -->
   <div
-    *ngIf="!usuariosIds || usuariosIds.length === 0"
-    class="alert alert-info"
+    *ngIf="!loading && !error && usuarios.length === 0"
+    class="alert alert-info m-3"
   >
     <i class="fas fa-info-circle me-2"></i>
     No hay usuarios asociados a esta actividad
