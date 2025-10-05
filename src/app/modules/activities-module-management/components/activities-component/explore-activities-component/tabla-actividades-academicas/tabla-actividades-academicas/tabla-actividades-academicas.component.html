@@ -315,7 +315,7 @@
                 <button
                   class="btn btn-sm btn-outline-success me-1"
                   title="Ver detalles"
-                  (click)="verDetalles(actividadData)"
+                  (click)="abrirModalDetalles(actividadData)"
                 >
                   <i class="fas fa-eye"></i>
                 </button>
@@ -453,54 +453,13 @@
   <app-modal-detalle-actividad
     [actividad]="actividadSeleccionada"
     [visible]="mostrarModalDetalles"
-    (onCerrar)="cerrarDetalles()"
+    (onCerrar)="cerrarModalDetalles()"
   ></app-modal-detalle-actividad>
 
   <!-- Modal de Usuarios -->
-  <div
-    *ngIf="mostrarModalUsuarios"
-    class="modal fade show d-block"
-    tabindex="-1"
-  >
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content border-0 shadow-lg">
-        <!-- Header -->
-        <div
-          class="modal-header text-white border-0 py-3"
-          style="background-color: darkblue"
-        >
-          <h5 class="modal-title fw-bold mb-0">
-            <i class="fas fa-users me-2"></i>
-            Usuarios Responsables
-          </h5>
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            (click)="cerrarModalUsuarios()"
-            aria-label="Cerrar"
-          ></button>
-        </div>
-
-        <!-- Body -->
-        <div class="modal-body p-0">
-          <app-usuario-carousel
-            [usuariosIds]="usuariosSeleccionados"
-          ></app-usuario-carousel>
-        </div>
-
-        <!-- Footer -->
-        <div class="modal-footer bg-light border-0 py-2">
-          <button
-            type="button"
-            class="btn btn-secondary px-4"
-            (click)="cerrarModalUsuarios()"
-          >
-            <i class="fas fa-times me-2"></i>
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="mostrarModalUsuarios" class="modal-backdrop fade show"></div>
+  <app-modal-usuarios
+    [usuariosIds]="usuariosSeleccionados"
+    [visible]="mostrarModalUsuarios"
+    (onCerrar)="cerrarModalUsuarios()"
+  ></app-modal-usuarios>
 </div>

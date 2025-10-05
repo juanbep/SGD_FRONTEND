@@ -4,7 +4,7 @@
   z-index: 10;
 }
 
-.view-container{
+.view-container {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
@@ -19,22 +19,6 @@
 
 .badge.bg-info {
   color: #212529 !important;
-}
-
-/* Responsividad para botones pequeños */
-@media (max-width: 768px) {
-  .btn-group .btn {
-    padding: 0.375rem 0.5rem;
-  }
-
-  .pagination-sm .page-link {
-    padding: 0.25rem 0.4rem;
-  }
-}
-
-/* Modal backdrop */
-.modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .descripcion-tipo-actividad {
@@ -57,129 +41,6 @@
   font-weight: 500;
 }
 
-/*Estilos modal detalles de actividad*/
-
-/* Header azul oscuro */
-.bg-dark-blue {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-}
-
-/* Secciones de información */
-.info-section {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 1.5rem;
-  height: 100%;
-}
-
-.section-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #212529;
-  border-bottom: 2px solid #dee2e6;
-  padding-bottom: 0.5rem;
-}
-
-/* Items de información */
-.info-item {
-  margin-bottom: 1rem;
-}
-
-.info-item:last-child {
-  margin-bottom: 0;
-}
-
-.info-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-.info-value {
-  font-size: 0.95rem;
-  color: #212529;
-  margin-bottom: 0;
-  padding: 0.5rem;
-  background: white;
-  border-radius: 4px;
-  border-left: 3px solid #0d6efd;
-}
-
-/* Lista de usuarios */
-.user-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.user-item {
-  padding: 0.75rem;
-  background: white;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-  border-left: 3px solid #0d6efd;
-  transition: all 0.2s ease;
-}
-
-.user-item:hover {
-  background: #f8f9fa;
-  transform: translateX(5px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.user-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Tabla de atributos */
-.table-bordered {
-  border: 1px solid #dee2e6;
-}
-
-.table-hover tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-/* Modal responsive */
-@media (max-width: 768px) {
-  .modal-dialog {
-    margin: 0.5rem;
-  }
-
-  .info-section {
-    padding: 1rem;
-  }
-
-  .modal-body {
-    padding: 1.5rem !important;
-  }
-}
-
-/* Scroll personalizado para lista de usuarios */
-.user-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.user-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.user-list::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.user-list::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/*Estilos para el modal de usuarios*/
-
 /* Badge de usuarios clickeable */
 .usuario-badge-clickable {
   cursor: pointer;
@@ -198,17 +59,28 @@
   transform: scale(0.98);
 }
 
-/* Modal de usuarios - ajustes específicos */
-.modal-xl {
-  max-width: 95%;
-}
-
-.modal-xl .modal-body {
-  min-height: 500px;
-}
-
-/* Responsive para el modal */
+/* Modal responsive */
 @media (max-width: 768px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .info-section {
+    padding: 1rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem !important;
+  }
+
+  .btn-group .btn {
+    padding: 0.375rem 0.5rem;
+  }
+
+  .pagination-sm .page-link {
+    padding: 0.25rem 0.4rem;
+  }
+
   .modal-xl {
     max-width: 98%;
     margin: 0.5rem;

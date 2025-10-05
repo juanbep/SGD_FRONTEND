@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UsuarioCarouselComponent } from '../../usuario-carrousel/usuario-carousel/usuario-carousel.component';
 import { ActividadesService } from '../../../../../services/actividades/actividades.service';
 import { ActividadHelperService } from '../../../../../services/actividades/actividad-helper.service';
 import { CalendarioHelperService } from '../../../../../../academic-calendar-management/services/calendario/calendario-helper.service';
@@ -24,6 +23,7 @@ import {
 } from '../../../../../models';
 import { EstadoCalendario } from '../../../../../../academic-calendar-management/models';
 import { ModalDetalleActividadComponent } from '../../modal-detalle-actividad/modal-detalle-actividad/modal-detalle-actividad.component';
+import { ModalUsuariosComponent } from '../../modal-usuarios-component/modal-usuarios/modal-usuarios.component';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
@@ -32,7 +32,7 @@ import { ModalDetalleActividadComponent } from '../../modal-detalle-actividad/mo
     CommonModule,
     FormsModule,
     ModalDetalleActividadComponent,
-    UsuarioCarouselComponent,
+    ModalUsuariosComponent,
   ],
   templateUrl: './tabla-actividades-academicas.component.html',
   styleUrl: './tabla-actividades-academicas.component.css',
@@ -52,7 +52,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   usuario: Usuario | null = null;
 
   actividades: ActividadResponse[] = [];
-  //actividadData: ActividadResponse | null = null;
+  //actividadData!: ActividadResponse;
   loading: boolean = false;
   error: string = '';
   pagination: PaginationConfig = { ...DEFAULT_PAGINATION_CONFIG };
@@ -75,6 +75,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   tiposActividadDropdown: { value: number; label: string }[] = [];
   loadingTiposActividad = false;
 
+  // Filtros y paginación
   filters: ActividadFilters = {
     page: 0,
     size: 10,
@@ -86,7 +87,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     fechaCreacionDesde: '',
   };
 
-  // Estados disponibles para las actividades
+  // Estados de las actividades
   estados = [
     { oid: 1, nombre: 'ACTIVA', class: 'bg-success' },
     { oid: 2, nombre: 'INACTIVA', class: 'bg-danger' },
@@ -94,7 +95,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.loadActividades();
+    //this.loadActividades();
     this.loadCalendarios();
     this.loadTiposActividad();
     //this.getActividadByID(14);
@@ -161,34 +162,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
   }
 
-  // Método que mapea los ID de los usuarios asociados a una actividad
-  getUsuariosIds(usuarios: any[]): number[] {
-    return usuarios.map((u) => u.oidUsuario);
-  }
-
-  // Método para cargar la información de un Usuario por ID
-  async cargarUsuario(usuarioId: number): Promise<void> {
-    // Uso básico del getById
-    this.usuario = await this.usuarioHelper.getById(usuarioId);
-
-    if (this.usuario) {
-      console.log('Usuario cargado:', this.usuario);
-    } else {
-      console.log('Usuario no encontrado');
-    }
-  }
-
-  onPageChange(page: number): void {
-    if (page >= 0 && page < this.pagination.totalPages) {
-      this.filters.page = page;
-      this.loadActividades();
-    }
-  }
-
-  onPageSizeChange(): void {
-    this.filters.page = 0;
-    this.loadActividades();
-  }
+  // FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES
 
   aplicarFiltros(): void {
     this.filters.page = 0;
@@ -208,22 +182,43 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loadActividades();
   }
 
-  // Método para obtener el badge class del estado del calendario
-  getCalendarioEstadoBadgeClass(estado: EstadoCalendario): string {
-    switch (estado) {
-      case 'ACTIVO':
-        return 'text-success';
-      case 'DESHABILITADO':
-        return 'text-danger';
-      case 'PENDIENTE':
-        return 'text-warning';
-      default:
-        return 'text-secondary';
+  // MODALES
+
+  // Método par abrir el modal de vista detallada
+  abrirModalDetalles(actividad: ActividadResponse): void {
+    this.actividadSeleccionada = actividad;
+    this.mostrarModalDetalles = true;
+  }
+
+  // Método para cerrar el modal de vista detallada
+  cerrarModalDetalles(): void {
+    this.mostrarModalDetalles = false;
+    this.actividadSeleccionada = null;
+  }
+
+  // Método para abrir el modal de usuarios
+  abrirModalUsuarios(usuarios: any[]): void {
+    this.usuariosSeleccionados = usuarios.map((u) => u.oidUsuario);
+    this.mostrarModalUsuarios = true;
+  }
+
+  // Método para cerrar el modal de usuarios
+  cerrarModalUsuarios(): void {
+    this.mostrarModalUsuarios = false;
+    this.usuariosSeleccionados = [];
+  }
+
+  // PAGINACIÓN
+  onPageChange(page: number): void {
+    if (page >= 0 && page < this.pagination.totalPages) {
+      this.filters.page = page;
+      this.loadActividades();
     }
   }
 
-  trackByOid(index: number, item: ActividadResponse): number {
-    return item.actividad.oidActividad;
+  onPageSizeChange(): void {
+    this.filters.page = 0;
+    this.loadActividades();
   }
 
   private updatePagination(data: any): void {
@@ -236,18 +231,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     };
   }
 
-  // Métodos para estados
-  getEstadoNombre(oidEstado: number): string {
-    const estado = this.estados.find((e) => e.oid === oidEstado);
-    return estado ? estado.nombre : 'DESCONOCIDO';
-  }
-
-  getEstadoBadgeClass(oidEstado: number): string {
-    const estado = this.estados.find((e) => e.oid === oidEstado);
-    return estado ? estado.class : 'bg-secondary';
-  }
-
-  // Métodos para paginación visual
   getPaginasVisibles(): number[] {
     const totalPages = this.pagination.totalPages;
     const currentPage = this.pagination.currentPage;
@@ -272,27 +255,36 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     return `Mostrando ${start} - ${end} de ${this.pagination.totalElements} registros`;
   }
 
-  // Métodos para detalles
-  verDetalles(actividad: ActividadResponse): void {
-    this.actividadSeleccionada = actividad;
-    this.mostrarModalDetalles = true;
+  // UTILIDADES
+
+  trackByOid(index: number, item: ActividadResponse): number {
+    return item.actividad.oidActividad;
   }
 
-  cerrarDetalles(): void {
-    this.mostrarModalDetalles = false;
-    this.actividadSeleccionada = null;
+  // Método para obtener el badge class del estado del calendario
+  getCalendarioEstadoBadgeClass(estado: EstadoCalendario): string {
+    switch (estado) {
+      case 'ACTIVO':
+        return 'text-success';
+      case 'DESHABILITADO':
+        return 'text-danger';
+      case 'PENDIENTE':
+        return 'text-warning';
+      default:
+        return 'text-secondary';
+    }
   }
 
-  // Método para abrir el modal de usuarios
-  abrirModalUsuarios(usuarios: any[]): void {
-    this.usuariosSeleccionados = usuarios.map((u) => u.oidUsuario);
-    this.mostrarModalUsuarios = true;
+  // Método para obetener el estado de una actividad según su ID
+  getEstadoNombre(oidEstado: number): string {
+    const estado = this.estados.find((e) => e.oid === oidEstado);
+    return estado ? estado.nombre : 'DESCONOCIDO';
   }
 
-  // Método para cerrar el modal de usuarios
-  cerrarModalUsuarios(): void {
-    this.mostrarModalUsuarios = false;
-    this.usuariosSeleccionados = [];
+  // Método para aplicar estilos según el estado de una actividad
+  getEstadoBadgeClass(oidEstado: number): string {
+    const estado = this.estados.find((e) => e.oid === oidEstado);
+    return estado ? estado.class : 'bg-secondary';
   }
 
   getUsersTooltip(usuarios: any[]): string {
