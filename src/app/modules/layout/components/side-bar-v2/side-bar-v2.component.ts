@@ -190,7 +190,7 @@ export class SideBarV2Component implements OnInit {
           role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
           icon: 'fas fa-lock',
           label: 'Gestionar Actividades',
-          url: '/app/gestion-soportes/consolidado/lista-docentes',
+          url: '/app/gestion-actividades-docente/management',
         },
       ],
     },
