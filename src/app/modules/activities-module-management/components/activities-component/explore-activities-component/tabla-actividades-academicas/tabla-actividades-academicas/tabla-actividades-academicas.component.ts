@@ -1,4 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuarioCarouselComponent } from '../../usuario-carrousel/usuario-carousel/usuario-carousel.component';
@@ -16,30 +23,45 @@ import {
   ActividadResponse,
 } from '../../../../../models';
 import { EstadoCalendario } from '../../../../../../academic-calendar-management/models';
+import { ModalDetalleActividadComponent } from '../../modal-detalle-actividad/modal-detalle-actividad/modal-detalle-actividad.component';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
   standalone: true,
-  imports: [CommonModule, FormsModule, UsuarioCarouselComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ModalDetalleActividadComponent,
+    UsuarioCarouselComponent,
+  ],
   templateUrl: './tabla-actividades-academicas.component.html',
   styleUrl: './tabla-actividades-academicas.component.css',
 })
 export class TablaActividadesAcademicasComponent implements OnInit {
+  @Input() modo: 'visualizar' | 'gestionar' = 'visualizar';
+  @Output() onEditar = new EventEmitter<ActividadResponse>();
+  @Output() onEliminar = new EventEmitter<ActividadResponse>();
+
   private actividadesService = inject(ActividadesService);
-  private actividadHelper = inject(ActividadHelperService);
+  //private actividadHelper = inject(ActividadHelperService);
   private calendarioHelper = inject(CalendarioHelperService);
   private usuarioHelper = inject(UsuarioHelperService);
   private tiposActividadHelper = inject(TiposActividadHelperService);
-
   private toastr = inject(ToastrService);
+
   usuario: Usuario | null = null;
 
   actividades: ActividadResponse[] = [];
-  actividadData!: ActividadResponse;
-  loading = false;
+  //actividadData: ActividadResponse | null = null;
+  loading: boolean = false;
   error: string = '';
   pagination: PaginationConfig = { ...DEFAULT_PAGINATION_CONFIG };
+
+  // Modales
   actividadSeleccionada: ActividadResponse | null = null;
+  mostrarModalDetalles: boolean = false;
+  mostrarModalUsuarios: boolean = false;
+  usuariosSeleccionados: number[] = [];
 
   // Lista de calendarios para el dropdown filtro calendarios
   calendariosDropdown: {
@@ -53,10 +75,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   tiposActividadDropdown: { value: number; label: string }[] = [];
   loadingTiposActividad = false;
 
-  // Variables para el modal de usuarios
-  usuariosSeleccionados: number[] = [];
-  mostrarModalUsuarios: boolean = false;
-
   filters: ActividadFilters = {
     page: 0,
     size: 10,
@@ -68,7 +86,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     fechaCreacionDesde: '',
   };
 
-  // Estados disponibles
+  // Estados disponibles para las actividades
   estados = [
     { oid: 1, nombre: 'ACTIVA', class: 'bg-success' },
     { oid: 2, nombre: 'INACTIVA', class: 'bg-danger' },
@@ -84,20 +102,33 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     //this.onSomeAction(2);
   }
 
-  getUsuariosIds(usuarios: any[]): number[] {
-    return usuarios.map((u) => u.oidUsuario);
-  }
+  loadActividades(): void {
+    this.loading = true;
+    this.error = '';
 
-  // Método para cargar la información de un Usuario por ID
-  async cargarUsuario(usuarioId: number): Promise<void> {
-    // Uso básico del getById
-    this.usuario = await this.usuarioHelper.getById(usuarioId);
-
-    if (this.usuario) {
-      console.log('Usuario cargado:', this.usuario);
-    } else {
-      console.log('Usuario no encontrado');
-    }
+    this.actividadesService.getActividades(this.filters).subscribe({
+      next: (response) => {
+        if (response.codigo === 200) {
+          this.actividades = response.data.content;
+          this.updatePagination(response.data);
+          if (this.filters.page === 0) {
+            this.toastr.success(
+              response.mensaje || 'Actividades cargadas correctamente'
+            );
+          }
+        } else {
+          this.error = response.mensaje || 'Respuesta inesperada del servidor';
+          this.toastr.warning(this.error);
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.error = error.message || 'Error al cargar actividades';
+        this.toastr.error('Error al cargar actividades', this.error);
+        this.loading = false;
+        this.actividades = [];
+      },
+    });
   }
 
   // Método para cargar calendarios en el dropdown
@@ -130,62 +161,21 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
   }
 
-  loadActividades(): void {
-    this.loading = true;
-    this.error = '';
-
-    this.actividadesService.getActividades(this.filters).subscribe({
-      next: (response) => {
-        if (response.codigo === 200) {
-          this.actividades = response.data.content;
-          this.updatePagination(response.data);
-          if (this.filters.page === 0) {
-            this.toastr.success(
-              response.mensaje || 'Actividades cargadas correctamente'
-            );
-          }
-        } else {
-          this.error = response.mensaje || 'Respuesta inesperada del servidor';
-          this.toastr.warning(this.error);
-        }
-        this.loading = false;
-      },
-      error: (error) => {
-        this.error = error.message || 'Error al cargar actividades';
-        this.toastr.error('Error al cargar actividades', this.error);
-        this.loading = false;
-        this.actividades = [];
-      },
-    });
+  // Método que mapea los ID de los usuarios asociados a una actividad
+  getUsuariosIds(usuarios: any[]): number[] {
+    return usuarios.map((u) => u.oidUsuario);
   }
 
-  getActividadByID(idActividad: number): void {
-    this.loading = true;
-    this.error = '';
+  // Método para cargar la información de un Usuario por ID
+  async cargarUsuario(usuarioId: number): Promise<void> {
+    // Uso básico del getById
+    this.usuario = await this.usuarioHelper.getById(usuarioId);
 
-    this.actividadesService.getActividadById(idActividad).subscribe({
-      next: (response) => {
-        if (response.codigo === 200) {
-          this.actividadData = response.data;
-          this.updatePagination(response.data);
-          if (this.filters.page === 0) {
-            this.toastr.success(
-              response.mensaje || 'Actividades cargadas correctamente'
-            );
-          }
-        } else {
-          this.error = response.mensaje || 'Respuesta inesperada del servidor';
-          this.toastr.warning(this.error);
-        }
-        this.loading = false;
-      },
-      error: (error) => {
-        this.error = error.message || 'Error al cargar actividades';
-        this.toastr.error('Error al cargar actividades', this.error);
-        this.loading = false;
-        this.actividades = [];
-      },
-    });
+    if (this.usuario) {
+      console.log('Usuario cargado:', this.usuario);
+    } else {
+      console.log('Usuario no encontrado');
+    }
   }
 
   onPageChange(page: number): void {
@@ -285,15 +275,12 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   // Métodos para detalles
   verDetalles(actividad: ActividadResponse): void {
     this.actividadSeleccionada = actividad;
+    this.mostrarModalDetalles = true;
   }
 
   cerrarDetalles(): void {
+    this.mostrarModalDetalles = false;
     this.actividadSeleccionada = null;
-  }
-
-  getUsersTooltip(usuarios: any[]): string {
-    if (usuarios.length === 0) return 'Sin usuarios';
-    return usuarios.map((u) => `${u.nombres} ${u.apellidos}`).join(', ');
   }
 
   // Método para abrir el modal de usuarios
@@ -308,21 +295,8 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.usuariosSeleccionados = [];
   }
 
-  // Métodos helper
-  async onSomeAction(actividadId: number): Promise<void> {
-    const actividad = await this.actividadHelper.getById(actividadId);
-
-    if (actividad) {
-      console.log(actividad);
-
-      const nombre = await this.actividadHelper.getActividadNombre(actividadId);
-      const tipo = await this.actividadHelper.getActividadTipo(actividadId);
-
-      console.log(`${nombre} - ${tipo}`);
-    }
-  }
-
-  async checkIfExists(id: number): Promise<boolean> {
-    return this.actividadHelper.checkActividadExists(id);
+  getUsersTooltip(usuarios: any[]): string {
+    if (usuarios.length === 0) return 'Sin usuarios';
+    return usuarios.map((u) => `${u.nombres} ${u.apellidos}`).join(', ');
   }
 }
