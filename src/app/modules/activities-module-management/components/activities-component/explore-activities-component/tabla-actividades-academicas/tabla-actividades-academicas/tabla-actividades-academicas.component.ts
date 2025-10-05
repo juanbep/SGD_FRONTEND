@@ -76,10 +76,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    //this.loadActividades();
+    this.loadActividades();
     this.loadCalendarios();
     this.loadTiposActividad();
-    this.getActividadByID(14);
+    //this.getActividadByID(14);
     //this.cargarUsuario(9);
     //this.onSomeAction(2);
   }

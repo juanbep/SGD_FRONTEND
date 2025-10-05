@@ -10,10 +10,7 @@ import { TablaActividadesAcademicasComponent } from '../../components/activities
   templateUrl: './view-activities-component.component.html',
   styleUrl: './view-activities-component.component.css',
 })
-export class ViewActivitiesComponentComponent implements OnInit {
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
+export class ViewActivitiesComponentComponent {
   activeTab: string = 'academicas';
 
   selectTab(tab: string): void {

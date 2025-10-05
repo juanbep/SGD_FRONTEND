@@ -228,8 +228,8 @@
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
+          <tbody *ngIf="actividades && actividades.length > 0; else noData">
+            <tr *ngFor="let actividadData of actividades; trackBy: trackByOid">
               <!-- Tipo Actividad -->
               <td class="text-center align-middle">
                 <div class="badge bg-primary tipo-badge">
