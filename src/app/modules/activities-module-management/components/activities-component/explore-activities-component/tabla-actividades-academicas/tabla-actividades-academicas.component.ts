@@ -162,6 +162,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
   }
 
+  eliminarActividad(actividadData: ActividadResponse): void {
+    this.onEliminar.emit(actividadData); // ← Emite el evento con los datos
+  }
+
   // FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES
 
   aplicarFiltros(): void {

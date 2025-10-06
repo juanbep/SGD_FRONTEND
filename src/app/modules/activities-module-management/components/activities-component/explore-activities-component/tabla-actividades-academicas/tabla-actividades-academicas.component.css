@@ -59,6 +59,32 @@
   transform: scale(0.98);
 }
 
+/* BOTONES DE ACCIÓN */
+.btn-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-group .btn {
+  transition: all 0.3s ease;
+}
+
+.btn-outline-info:hover {
+  transform: scale(1.05);
+}
+
+.btn-outline-primary:hover {
+  transform: scale(1.05);
+}
+
+.btn-outline-danger:hover {
+  transform: scale(1.05);
+}
+
+.btn-outline-success:hover {
+  transform: scale(1.05);
+}
+
 /* Modal responsive */
 @media (max-width: 768px) {
   .modal-dialog {
@@ -88,5 +114,14 @@
 
   .modal-xl .modal-body {
     min-height: 400px;
+  }
+
+  .btn-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-group .btn {
+    width: 100%;
   }
 }

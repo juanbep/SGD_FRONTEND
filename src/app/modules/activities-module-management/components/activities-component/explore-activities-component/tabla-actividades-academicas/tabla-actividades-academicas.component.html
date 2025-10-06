@@ -68,6 +68,7 @@
           </select>
           <small class="text-muted">Filtrar por tipo específico</small>
         </div>
+
         <!-- Filtro por Estado (deshabilitado por ahora) -->
         <div class="col-xl-2 col-lg-3 col-md-6">
           <label class="form-label fw-bold">
@@ -223,11 +224,26 @@
               <th class="fw-bold text-center align-middle" style="width: 100px">
                 <i class="fas fa-users me-1"></i>Responsables
               </th>
-              <th class="fw-bold text-center align-middle" style="width: 100px">
+
+              <!-- COLUMNA DINÁMICA SEGÚN MODO -->
+              <th
+                *ngIf="modo === 'visualizar'"
+                class="fw-bold text-center align-middle"
+                style="width: 100px"
+              >
                 <i class="fas fa-search me-1"></i>Vista Detallada
+              </th>
+
+              <th
+                *ngIf="modo === 'gestionar'"
+                class="fw-bold text-center align-middle"
+                style="width: 150px"
+              >
+                <i class="fas fa-cog me-1"></i>Acciones
               </th>
             </tr>
           </thead>
+
           <tbody *ngIf="actividades && actividades.length > 0; else noData">
             <tr *ngFor="let actividadData of actividades; trackBy: trackByOid">
               <!-- Tipo Actividad -->
@@ -310,22 +326,49 @@
                 </span>
               </td>
 
-              <!-- Acciones -->
-              <td class="text-center align-middle">
+              <!-- ACCIONES - MODO VISUALIZAR -->
+              <td
+                *ngIf="modo === 'visualizar'"
+                class="text-center align-middle"
+              >
                 <button
-                  class="btn btn-sm btn-outline-success me-1"
+                  class="btn btn-sm btn-outline-success"
                   title="Ver detalles"
                   (click)="abrirModalDetalles(actividadData)"
                 >
                   <i class="fas fa-eye"></i>
                 </button>
               </td>
+
+              <!-- ACCIONES - MODO GESTIONAR -->
+              <td *ngIf="modo === 'gestionar'" class="text-center align-middle">
+                <div class="btn-group" role="group">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    title="Editar actividad"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    title="Eliminar actividad"
+                    (click)="eliminarActividad(actividadData)"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
+
           <ng-template #noData>
             <tbody>
               <tr>
-                <td colspan="8" class="text-center py-5 align-middle">
+                <!-- COLSPAN DINÁMICO SEGÚN MODO -->
+                <td
+                  [attr.colspan]="modo === 'gestionar' ? 8 : 8"
+                  class="text-center py-5 align-middle"
+                >
                   <div
                     *ngIf="loading"
                     class="d-flex justify-content-center align-items-center"
