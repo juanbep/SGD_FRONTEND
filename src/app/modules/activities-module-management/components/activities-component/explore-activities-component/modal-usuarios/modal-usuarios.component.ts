@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsuarioCarouselComponent } from '../../usuario-carrousel/usuario-carousel/usuario-carousel.component';
+import { UsuarioCarouselComponent } from '../usuario-carousel/usuario-carousel.component';
 
 @Component({
   selector: 'app-modal-usuarios',

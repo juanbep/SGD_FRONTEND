@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TablaActividadesAcademicasComponent } from '../../components/activities-component/explore-activities-component/tabla-actividades-academicas/tabla-actividades-academicas/tabla-actividades-academicas.component';
+import { TablaActividadesAcademicasComponent } from '../../components/activities-component/explore-activities-component/tabla-actividades-academicas/tabla-actividades-academicas.component';
 
 @Component({
   selector: 'app-view-activities-component',

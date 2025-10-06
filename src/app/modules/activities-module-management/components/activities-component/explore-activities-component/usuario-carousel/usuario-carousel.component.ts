@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Usuario } from '../../../../../../users-roles-management/models';
-import { UsuarioHelperService } from '../../../../../../users-roles-management/services/users/usuario-helper.service';
+import { Usuario } from '../../../../../users-roles-management/models';
+import { UsuarioHelperService } from '../../../../../users-roles-management/services/users/usuario-helper.service';
 
 @Component({
   selector: 'app-usuario-carousel',
