@@ -13,12 +13,13 @@ import {
   UpdateProgramaDto,
   DeleteProgramaDto,
 } from '../../models';
+import { environment } from '../../../../../environments/environments_sgd';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProgramaService {
-  private readonly apiUrl = '/api/programas';
+  private readonly apiUrl = `${environment.baseUrl}/programas`;
 
   constructor(private http: HttpClient) {}
 

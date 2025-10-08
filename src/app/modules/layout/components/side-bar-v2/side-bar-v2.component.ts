@@ -211,7 +211,7 @@ export class SideBarV2Component implements OnInit {
         {
           role: ['DOCENTE'],
           icon: 'fas fa-user',
-          label: 'Opción 1',
+          label: 'Gestionar Planes',
           url: '#',
         },
         {
@@ -223,13 +223,13 @@ export class SideBarV2Component implements OnInit {
             'DOCENTE',
           ],
           icon: 'fas fa-lock',
-          label: 'Opción 2',
+          label: 'Gestionar Necesidades',
           url: '#',
         },
         {
           role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
           icon: 'fas fa-lock',
-          label: 'Opción 3',
+          label: 'Ver Necesidades',
           url: '#',
         },
       ],
