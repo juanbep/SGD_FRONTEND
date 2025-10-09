@@ -63,7 +63,7 @@ export class ProgramaHelperService {
     return result === true;
   }
 
-  // Métodos de conveniencia específicos del dominio
+  // Métodos para usos específicos del dominio
   async getProgramaNombre(id: number): Promise<string | null> {
     const programa = await this.getById(id);
     return programa?.nombre || null;
