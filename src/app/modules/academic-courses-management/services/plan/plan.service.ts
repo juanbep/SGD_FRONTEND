@@ -18,7 +18,7 @@ import { environment } from '../../../../../environments/environments_sgd';
   providedIn: 'root',
 })
 export class PlanService {
-  private readonly apiUrl = `${environment.baseUrl}/programas`;
+  private readonly apiUrl = `${environment.baseUrl}/planes`;
 
   constructor(private http: HttpClient) {}
 
