@@ -1,5 +1,5 @@
 <div
-  class="container py-4"
+  class="view-container py-4"
   style="background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif"
   *ngIf="calendario"
 >
@@ -23,7 +23,7 @@
     </button>
     <a
       class="btn btn-secondary"
-      [routerLink]="['/app/gestion-calendario-academico']"
+      [routerLink]="['/app/gestion-calendario-academico/list']"
     >
       <i class="fas fa-arrow-left me-2"></i>Volver
     </a>
@@ -43,15 +43,25 @@
           <tr class="table-light fw-bold">
             <td style="width: 25%">Año</td>
             <td style="width: 25%">Periodo</td>
-            <td style="width: 25%">Creado</td>
+            <td style="width: 25%">Fecha Creación</td>
             <td style="width: 25%">Última actualización</td>
           </tr>
           <tr>
-            <td>{{ calendario.anioCalendario }}</td>
-            <td>{{ calendario.numeroCalendario }}</td>
-            <td>{{ calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm" }}</td>
+            <td>{{ calendario.anioCalendario || "—" }}</td>
+            <td>{{ calendario.numeroCalendario || "—" }}</td>
             <td>
-              {{ calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm" }}
+              {{
+                calendario.fechaCreacion
+                  ? (calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm")
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                calendario.fechaActualizacion
+                  ? (calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm")
+                  : "-"
+              }}
             </td>
           </tr>
 
@@ -59,21 +69,37 @@
           <tr class="table-light fw-bold">
             <td>Semanas clase</td>
             <td>Semanas preparación</td>
-            <td>Horas totales</td>
-            <td>Estado</td>
+            <td>Horas Planta</td>
+            <td>Horas Catedra</td>
           </tr>
           <tr>
-            <td>{{ calendario.semanasClase }}</td>
-            <td>{{ calendario.semanasPreparacion }}</td>
-            <td>{{ calendario.horasTotales }}</td>
-            <td>{{ calendario.estado }}</td>
+            <td>{{ calendario.semanasClase || "—" }}</td>
+            <td>{{ calendario.semanasPreparacion || "—" }}</td>
+            <td>{{ calendario.horasPlanta || "—" }}</td>
+            <td>{{ calendario.horasCatedra || "—" }}</td>
           </tr>
 
-          <!-- Fila observación -->
-          <tr class="table-light fw-bold text-start">
+          <!-- Fila 3 -->
+          <tr class="table-light fw-bold">
+            <td>Horas Ocasionales</td>
+            <td>Horas Becario/Practicante</td>
+            <td>Usuario Creación</td>
+            <td>Usuario Actualización</td>
+          </tr>
+          <tr>
+            <td>{{ calendario.horasOcasionales || "—" }}</td>
+            <td>{{ calendario.horasBecarioPracticante || "—" }}</td>
+            <td>{{ calendario.usuarioCreacion || "—" }}</td>
+            <td>{{ calendario.usuarioActualizacion || "-" }}</td>
+          </tr>
+
+          <!-- Fila 4 -->
+          <tr class="table-light fw-bold">
+            <td>Estado</td>
             <td colspan="4">Observación</td>
           </tr>
           <tr>
+            <td>{{ calendario.estado || "—" }}</td>
             <td colspan="4" class="text-start" style="white-space: pre-line">
               {{ calendario.observacion || "—" }}
             </td>
@@ -102,7 +128,12 @@
         </thead>
         <tbody>
           <tr *ngFor="let fecha of calendario.fechas">
-            <td class="text-start">{{ fecha.nombre }}</td>
+            <td
+              class="text-start"
+              [ngClass]="{ 'fw-bold': fecha.tipo === 'RESALTADAS' }"
+            >
+              {{ fecha.nombre }}
+            </td>
             <td>
               {{
                 fecha.fechaInicial

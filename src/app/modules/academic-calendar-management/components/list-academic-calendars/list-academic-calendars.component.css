@@ -1,0 +1,33 @@
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.table-responsive {
+  border-radius: 0.375rem;
+}
+
+.badge.bg-warning {
+  color: #212529 !important;
+}
+
+.badge.bg-info {
+  color: #212529 !important;
+}
+
+/* Responsividad para botones pequeños */
+@media (max-width: 768px) {
+  .btn-group .btn {
+    padding: 0.375rem 0.5rem;
+  }
+
+  .pagination-sm .page-link {
+    padding: 0.25rem 0.4rem;
+  }
+}

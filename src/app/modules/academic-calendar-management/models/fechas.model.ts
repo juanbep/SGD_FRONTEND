@@ -11,7 +11,7 @@ export interface Fecha {
   nombreCalendario: string;
 }
 
-export type TipoFecha = 'RESALTADAS' | 'CLASES' | 'NO_RESALTADAS';
+export type TipoFecha = 'RESALTADAS' | 'CLASES' | 'NO_RESALTADAS' | 'ADMINISTRATIVAS';
 
 export interface CrearFecha {
   fechaInicial: string;

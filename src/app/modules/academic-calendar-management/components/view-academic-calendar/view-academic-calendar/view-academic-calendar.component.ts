@@ -1,24 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { DatePipe, NgIf, NgFor } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule, DatePipe, NgIf, NgFor } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { CalendarioHelperService } from '../../../services/calendario/calendario-helper.service';
+import { Calendario } from '../../../models';
 
 @Component({
   selector: 'app-view-academic-calendar',
   standalone: true,
-  imports: [NgIf, NgFor, DatePipe, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, NgIf, NgFor, DatePipe, RouterLink],
   templateUrl: './view-academic-calendar.component.html',
   styleUrl: './view-academic-calendar.component.css',
 })
 export class ViewAcademicCalendarComponent implements OnInit {
-  calendario: any = null;
+  calendario: Calendario | null = null;
   calendarioId: number | null = null;
+  loading = false;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private fb: FormBuilder
+    private calendarioHelper: CalendarioHelperService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -31,20 +34,42 @@ export class ViewAcademicCalendarComponent implements OnInit {
     });
   }
 
-  // ====== Cargar calendario ======
   obtenerCalendarioPorId(id: number): void {
-    const url = `http://localhost:8090/sgd-back/api/calendarios/${id}`;
-    this.http.get<any>(url).subscribe({
-      next: (response) => {
-        if (response.codigo === 200 && response.data) {
-          this.calendario = response.data;
+    this.loading = true;
+    this.error = null;
+
+    this.calendarioHelper.getByIdObservable(id).subscribe({
+      next: (calendario) => {
+        if (calendario) {
+          this.calendario = calendario;
+          this.toastr.success('Calendario cargado correctamente');
         } else {
-          console.error('Calendario no encontrado o sin datos válidos');
+          this.error = 'Calendario no encontrado';
+          this.toastr.warning('Calendario no encontrado');
         }
+        this.loading = false;
       },
       error: (error) => {
-        console.error('Error al obtener el calendario:', error);
+        this.handleError(error);
+        this.loading = false;
       },
     });
+  }
+
+  private handleError(error: any): void {
+    const codigoBackend = error?.error?.codigo || error.status || '—';
+    const mensajeBackend =
+      error?.error?.mensaje ||
+      error?.message ||
+      'Error al cargar el calendario';
+
+    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
+    this.toastr.error(this.error, 'Error');
+  }
+
+  reintentar(): void {
+    if (this.calendarioId) {
+      this.obtenerCalendarioPorId(this.calendarioId);
+    }
   }
 }

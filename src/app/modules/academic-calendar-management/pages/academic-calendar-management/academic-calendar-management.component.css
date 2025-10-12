@@ -5,6 +5,37 @@
   border-collapse: collapse;
 }
 
+.modal.show {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.title-two {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.messages-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  border-left: 4px solid #007bff;
+}
+
+.messages-container img {
+  width: 48px;
+  height: 48px;
+}
+
+.text-body-heavy {
+  font-weight: 500;
+  color: #495057;
+}
+
 /* Anchos de las columnas */
 .col-acuerdo {
   width: 40%;

@@ -1,4 +1,5 @@
 import { PaginatedResponse, BaseResponse } from '../shared/shared.model';
+import { Fecha } from './fechas.model';
 
 // Modelo principal
 export interface Calendario {
@@ -17,7 +18,7 @@ export interface Calendario {
   usuarioActualizacion: string;
   estado: EstadoCalendario;
   observacion: string;
-  fechas?: any | null;
+  fechas?: Fecha[];
 }
 
 export type EstadoCalendario =
