@@ -1,19 +1,53 @@
-import { PaginatedResponse, BaseResponse } from '../shared/shared.model';
+import { BaseResponse, PaginatedResponse } from '../shared/shared.model';
 
+// Modelo principal
 export interface Fecha {
   oidFecha: number;
   oidNombreFecha: number;
   nombre: string;
-  fechaInicial: string | null;
-  fechaFin: string | null;
+  fechaInicial: string;
+  fechaFin: string;
   tipo: TipoFecha;
   oidCalendario: number;
   nombreCalendario: string;
 }
 
-export type TipoFecha = 'RESALTADAS' | 'CLASES' | 'NO_RESALTADAS' | 'ADMINISTRATIVAS';
+export type TipoFecha =
+  | 'RESALTADAS'
+  | 'CLASES'
+  | 'NO_RESALTADAS'
+  | 'ADMINISTRATIVAS';
 
-export interface CrearFecha {
+// Filtros para búsqueda y paginación
+export interface FechaFilters {
+  // Paginación
+  page?: number;
+  size?: number;
+
+  // Búsqueda general
+  searchTerm?: string;
+  nombre?: string;
+
+  // Filtros específicos
+  tipo?: TipoFecha;
+  tipos?: TipoFecha[];
+  oidCalendario?: number;
+  nombreCalendario?: string;
+  oidNombreFecha?: number;
+
+  // Filtros por rangos de fecha
+  fechaInicialDesde?: string;
+  fechaInicialHasta?: string;
+  fechaFinDesde?: string;
+  fechaFinHasta?: string;
+
+  // Ordenamiento
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+// DTOs para CRUD
+export interface CreateFechaDto {
   fechaInicial: string;
   fechaFin: string;
   tipo: TipoFecha;
@@ -21,13 +55,17 @@ export interface CrearFecha {
   oidCalendario: number;
 }
 
-export interface ActualizarFecha {
-  fechaInicial: string;
-  fechaFin: string;
-  oidCalendario: number;
-  oidNombreFecha: number;
-  tipo: TipoFecha;
+export interface UpdateFechaDto extends Partial<CreateFechaDto> {
+  oidFecha: number;
 }
 
-export interface FechaResponse extends PaginatedResponse<Fecha> {}
-export interface FechaItemResponse extends BaseResponse<Fecha> {}
+export interface DeleteFechaDto {
+  oidFecha: number;
+}
+
+// Tipos de respuesta API
+export type FechasListResponse = BaseResponse<PaginatedResponse<Fecha>>;
+export type GetFechaResponse = BaseResponse<Fecha>;
+export type CreateFechaResponse = BaseResponse<Fecha>;
+export type UpdateFechaResponse = BaseResponse<Fecha>;
+export type DeleteFechaResponse = BaseResponse<boolean>;

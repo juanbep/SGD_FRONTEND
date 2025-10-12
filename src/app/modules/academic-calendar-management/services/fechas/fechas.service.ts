@@ -1,161 +1,131 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import {
-  Fecha,
-  CrearFecha,
-  ActualizarFecha,
-  PaginatedResponse,
-  BaseResponse,
-  TipoFecha,
+  FechasListResponse,
+  GetFechaResponse,
+  CreateFechaResponse,
+  UpdateFechaResponse,
+  DeleteFechaResponse,
+  FechaFilters,
+  CreateFechaDto,
+  UpdateFechaDto,
+  DeleteFechaDto,
 } from '../../models';
+import { environment } from '../../../../../environments/environments_sgd';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FechasService {
-  private readonly apiUrl = '/api/fechas';
+  private readonly apiUrl = `${environment.baseUrl}/fechas`;
 
   constructor(private http: HttpClient) {}
 
-  // ===============================
-  // CREATE - Crear nueva fecha
-  // ===============================
-  crearFecha(fecha: CrearFecha): Observable<BaseResponse<Fecha>> {
-    return this.http.post<BaseResponse<Fecha>>(this.apiUrl, fecha);
+  // READ - Lista con filtros y paginación
+  getFechas(filters: FechaFilters = {}): Observable<FechasListResponse> {
+    let params = this.buildHttpParams(filters);
+
+    return this.http
+      .get<FechasListResponse>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
   }
 
-  // ===============================
-  // READ - Obtener fechas paginadas
-  // ===============================
-  obtenerFechas(
-    page: number = 0,
-    size: number = 10
-  ): Observable<PaginatedResponse<Fecha>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get<PaginatedResponse<Fecha>>(this.apiUrl, { params });
+  // GET BY ID
+  getFechaById(oidFecha: number): Observable<GetFechaResponse> {
+    return this.http
+      .get<GetFechaResponse>(`${this.apiUrl}/${oidFecha}`)
+      .pipe(catchError(this.handleError));
   }
 
-  // ===============================
-  // READ - Obtener fecha por ID
-  // ===============================
-  obtenerFechaPorId(oidFecha: number): Observable<BaseResponse<Fecha>> {
-    const url = `${this.apiUrl}/${oidFecha}`;
-    return this.http.get<BaseResponse<Fecha>>(url);
+  // CREATE
+  createFecha(fechaData: CreateFechaDto): Observable<CreateFechaResponse> {
+    return this.http
+      .post<CreateFechaResponse>(this.apiUrl, fechaData)
+      .pipe(catchError(this.handleError));
   }
 
-  // ===============================
-  // UPDATE - Actualizar fecha
-  // ===============================
-  actualizarFecha(
-    oidFecha: number,
-    fecha: ActualizarFecha
-  ): Observable<BaseResponse<Fecha>> {
-    const url = `${this.apiUrl}/${oidFecha}`;
-    return this.http.put<BaseResponse<Fecha>>(url, fecha);
+  // UPDATE
+  updateFecha(fechaData: UpdateFechaDto): Observable<UpdateFechaResponse> {
+    const { oidFecha, ...updateData } = fechaData;
+
+    return this.http
+      .put<UpdateFechaResponse>(`${this.apiUrl}/${oidFecha}`, updateData)
+      .pipe(catchError(this.handleError));
   }
 
-  // ===============================
-  // DELETE - Eliminar fecha
-  // ===============================
-  eliminarFecha(oidFecha: number): Observable<BaseResponse<any>> {
-    const url = `${this.apiUrl}/${oidFecha}`;
-    return this.http.delete<BaseResponse<any>>(url);
+  // DELETE
+  deleteFecha(deleteData: DeleteFechaDto): Observable<DeleteFechaResponse> {
+    return this.http
+      .delete<DeleteFechaResponse>(`${this.apiUrl}/${deleteData.oidFecha}`)
+      .pipe(catchError(this.handleError));
   }
 
-  // ===============================
-  // FILTROS ESPECÍFICOS
-  // ===============================
+  private buildHttpParams(filters: FechaFilters): HttpParams {
+    let params = new HttpParams();
 
-  // Obtener fechas por calendario específico
-  obtenerFechasPorCalendario(
-    oidCalendario: number,
-    page: number = 0,
-    size: number = 10
-  ): Observable<PaginatedResponse<Fecha>> {
-    const params = new HttpParams()
-      .set('oidCalendario', oidCalendario.toString())
-      .set('page', page.toString())
-      .set('size', size.toString());
+    // Paginación
+    if (filters.page !== undefined) {
+      params = params.set('page', filters.page.toString());
+    }
+    if (filters.size !== undefined) {
+      params = params.set('size', filters.size.toString());
+    }
 
-    return this.http.get<PaginatedResponse<Fecha>>(this.apiUrl, { params });
+    // Filtros de búsqueda
+    if (filters.searchTerm?.trim()) {
+      params = params.set('search', filters.searchTerm.trim());
+    }
+    if (filters.nombre?.trim()) {
+      params = params.set('nombre', filters.nombre.trim());
+    }
+
+    // Filtros específicos
+    if (filters.tipo?.trim()) {
+      params = params.set('tipo', filters.tipo.trim());
+    }
+    if (filters.tipos && filters.tipos.length > 0) {
+      params = params.set('tipos', filters.tipos.join(','));
+    }
+    if (filters.oidCalendario !== undefined) {
+      params = params.set('oidCalendario', filters.oidCalendario.toString());
+    }
+    if (filters.nombreCalendario?.trim()) {
+      params = params.set('nombreCalendario', filters.nombreCalendario.trim());
+    }
+    if (filters.oidNombreFecha !== undefined) {
+      params = params.set('oidNombreFecha', filters.oidNombreFecha.toString());
+    }
+
+    // Filtros por rangos de fecha
+    if (filters.fechaInicialDesde) {
+      params = params.set('fechaInicialDesde', filters.fechaInicialDesde);
+    }
+    if (filters.fechaInicialHasta) {
+      params = params.set('fechaInicialHasta', filters.fechaInicialHasta);
+    }
+    if (filters.fechaFinDesde) {
+      params = params.set('fechaFinDesde', filters.fechaFinDesde);
+    }
+    if (filters.fechaFinHasta) {
+      params = params.set('fechaFinHasta', filters.fechaFinHasta);
+    }
+
+    // Ordenamiento
+    if (filters.sortBy) {
+      params = params.set('sort', filters.sortBy);
+    }
+    if (filters.sortDirection) {
+      params = params.set('direction', filters.sortDirection);
+    }
+
+    return params;
   }
 
-  // Obtener fechas por tipo
-  obtenerFechasPorTipo(
-    tipo: TipoFecha,
-    page: number = 0,
-    size: number = 10
-  ): Observable<PaginatedResponse<Fecha>> {
-    const params = new HttpParams()
-      .set('tipo', tipo)
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get<PaginatedResponse<Fecha>>(this.apiUrl, { params });
-  }
-
-  // Obtener fechas por calendario y tipo (filtro combinado)
-  obtenerFechasPorCalendarioYTipo(
-    oidCalendario: number,
-    tipo: TipoFecha,
-    page: number = 0,
-    size: number = 10
-  ): Observable<PaginatedResponse<Fecha>> {
-    const params = new HttpParams()
-      .set('oidCalendario', oidCalendario.toString())
-      .set('tipo', tipo)
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get<PaginatedResponse<Fecha>>(this.apiUrl, { params });
-  }
-
-  // Buscar fechas por rango de fechas
-  obtenerFechasPorRango(
-    fechaInicio: string,
-    fechaFin: string,
-    page: number = 0,
-    size: number = 10
-  ): Observable<PaginatedResponse<Fecha>> {
-    const params = new HttpParams()
-      .set('fechaInicio', fechaInicio)
-      .set('fechaFin', fechaFin)
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get<PaginatedResponse<Fecha>>(this.apiUrl, { params });
-  }
-
-  // ===============================
-  // MÉTODOS UTILITARIOS
-  // ===============================
-
-  // Obtener todas las fechas de un calendario (sin paginación)
-  obtenerTodasLasFechasDelCalendario(
-    oidCalendario: number
-  ): Observable<BaseResponse<Fecha[]>> {
-    const params = new HttpParams()
-      .set('oidCalendario', oidCalendario.toString())
-      .set('size', '1000'); // Número grande para obtener todas
-
-    return this.http.get<BaseResponse<Fecha[]>>(this.apiUrl, { params });
-  }
-
-  // Obtener fechas resaltadas de un calendario específico
-  obtenerFechasResaltadas(
-    oidCalendario: number
-  ): Observable<PaginatedResponse<Fecha>> {
-    return this.obtenerFechasPorCalendarioYTipo(oidCalendario, 'RESALTADAS');
-  }
-
-  // Obtener fechas de clases de un calendario específico
-  obtenerFechasClases(
-    oidCalendario: number
-  ): Observable<PaginatedResponse<Fecha>> {
-    return this.obtenerFechasPorCalendarioYTipo(oidCalendario, 'CLASES');
+  private handleError(error: any): Observable<never> {
+    console.error('Error en FechaService:', error);
+    return throwError(
+      () => new Error(error.mensaje || 'Error en el servicio de fechas')
+    );
   }
 }
