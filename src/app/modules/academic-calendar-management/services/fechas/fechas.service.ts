@@ -124,8 +124,6 @@ export class FechasService {
 
   private handleError(error: any): Observable<never> {
     console.error('Error en FechaService:', error);
-    return throwError(
-      () => new Error(error.mensaje || 'Error en el servicio de fechas')
-    );
+    return throwError(() => error);
   }
 }

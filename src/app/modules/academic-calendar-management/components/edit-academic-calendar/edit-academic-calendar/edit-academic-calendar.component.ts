@@ -1,387 +1,275 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { DatePipe, NgIf, NgFor } from '@angular/common';
-import { CatalogoNombresFecha } from '../../catalogos-nombres-fecha';
+import { Component, signal, computed, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import {
+  ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
-  FormsModule,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import {
+  CalendarioService,
+  FechaHelperService,
+  FechasService,
+  NombresFechasService,
+} from '../../../services';
+import {
+  Calendario,
+  EstadoCalendario,
+  Fecha,
+  NombreFecha,
+  UpdateCalendarioDTO,
+} from '../../../models';
 
 @Component({
   selector: 'app-edit-academic-calendar',
   standalone: true,
-  imports: [
-    NgIf,
-    NgFor,
-    DatePipe,
-    RouterLink,
-    ReactiveFormsModule,
-    FormsModule,
-  ],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule],
   templateUrl: './edit-academic-calendar.component.html',
   styleUrl: './edit-academic-calendar.component.css',
 })
-export class EditAcademicCalendarComponent {
-  calendario: any = null;
-  calendarioId: number | null = null;
-  catalogoFechas = CatalogoNombresFecha.NOMBRES_FECHA;
+export class EditAcademicCalendarComponent implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly toastr = inject(ToastrService);
+  private readonly calendarioService = inject(CalendarioService);
+  private readonly fechaService = inject(FechasService);
+  private readonly fechaHelper = inject(FechaHelperService);
+  private readonly nombreFechaService = inject(NombresFechasService);
 
-  formularioCalendario!: FormGroup;
-  modoEdicion: boolean = false;
-  backupCalendario: any;
+  readonly calendario = signal<Calendario | null>(null);
+  readonly catalogoNombresFecha = signal<NombreFecha[]>([]);
 
-  filaEnEdicionId: number | null = null;
-  backupFecha: any = null;
-  oidsUnicos = [1, 3, 4, 5, 7, 8, 9, 10];
+  // ===== ESTADOS UI =====
+  readonly isLoading = signal<boolean>(false);
+  readonly modoEdicionCalendario = signal<boolean>(false);
+  readonly mostrarFormularioNuevaFecha = signal<boolean>(false);
+  readonly filaEnEdicionId = signal<number | null>(null);
 
-  estadosDisponibles: string[] = [
+  readonly tituloCalendario = computed(() => {
+    const cal = this.calendario();
+    return cal
+      ? `Calendario académico ${cal.anioCalendario}-${cal.numeroCalendario}`
+      : 'Cargando...';
+  });
+
+  readonly fechasCalendario = computed(() => this.calendario()?.fechas || []);
+
+  // ===== CONSTANTES =====
+  readonly ESTADOS_DISPONIBLES: EstadoCalendario[] = [
     'ACTIVO',
     'APROBADO',
     'PENDIENTE',
     'DESHABILITADO',
   ];
 
-  // Propiedades para el modal/formulario de nueva fecha
-  mostrarFormularioNuevaFecha: boolean = false;
-  nuevaFecha: any = {
-    oidNombreFecha: null,
-    fechaInicial: null,
-    fechaFin: null,
-    tipo: 'RESALTADAS',
-  };
+  readonly OIDS_FECHA_UNICA = [1, 3, 4, 5, 7, 8, 9, 10];
 
-  constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient,
-    private fb: FormBuilder,
-    private toastr: ToastrService
-  ) {}
+  // ===== FORMULARIOS REACTIVOS =====
+  calendarioForm!: FormGroup;
+  nuevaFechaForm!: FormGroup;
+
+  // ===== BACKUPS PARA CANCELAR EDICIÓN =====
+  private backupCalendario: Calendario | null = null;
+  private backupFecha: Fecha | null = null;
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-      if (idParam) {
-        this.calendarioId = +idParam;
-        this.obtenerCalendarioPorId(this.calendarioId);
-      }
+    this.inicializarFormularios();
+    this.cargarCalendario();
+  }
+
+  private inicializarFormularios(): void {
+    // Formulario para editar calendario
+    this.calendarioForm = this.fb.group({
+      semanasClase: [null, [Validators.min(0)]],
+      semanasPreparacion: [null, [Validators.min(0)]],
+      horasPlanta: [null, [Validators.min(0)]],
+      horasCatedra: [null, [Validators.min(0)]],
+      horasOcasionales: [null, [Validators.min(0)]],
+      horasBecarioPracticante: [null, [Validators.min(0)]],
+      estado: ['', Validators.required],
+      observacion: [''],
     });
   }
 
-  // === Obtener calendario por ID ===
-  obtenerCalendarioPorId(id: number): void {
-    const url = `http://localhost:8090/sgd-back/api/calendarios/${id}`;
-    this.http.get<any>(url).subscribe({
+  // ===== MANEJO DE ERRORES =====
+  private obtenerMensajeError(error: any): string {
+    // Tu backend siempre devuelve BaseResponse con mensaje
+    // En errores HTTP, viene en error.error.mensaje
+    return error?.error?.mensaje || 'Ocurrió un error inesperado';
+  }
+
+  // ===== CARGA DE DATOS =====
+  private cargarCalendario(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    if (!id || isNaN(+id)) {
+      this.toastr.error('ID de calendario inválido');
+      this.router.navigate(['/app/gestion-calendario-academico']);
+      return;
+    }
+
+    this.isLoading.set(true);
+
+    this.calendarioService.getCalendarioAcademicoById(+id).subscribe({
       next: (response) => {
         if (response.codigo === 200 && response.data) {
-          this.calendario = response.data;
+          this.calendario.set(response.data);
+          // Opcional: mostrar mensaje de éxito del backend
+          // this.toastr.success(response.mensaje);
         } else {
-          //this.toastr.error('Calendario no encontrado o sin datos válidos.');
-          alert('Calendario no encontrado o sin datos válidos.');
+          // Mensaje específico del backend
+          const mensaje = response.mensaje || 'No se pudo cargar el calendario';
+          this.toastr.error(mensaje);
+          this.router.navigate(['/app/gestion-calendario-academico']);
         }
       },
-      error: () => {
-        //this.toastr.error('Error al obtener el calendario.');
-        alert('Error al obtener el calendario.');
+      error: (error) => {
+        console.error('Error al cargar calendario:', error);
+        const mensajeError = this.obtenerMensajeError(error);
+        this.toastr.error(mensajeError);
+        this.router.navigate(['/app/gestion-calendario-academico']);
       },
+      complete: () => this.isLoading.set(false),
     });
   }
 
-  // === Activar modo edición ===
+  // ===== EDICIÓN DE CALENDARIO =====
   activarModoEdicion(): void {
-    this.formularioCalendario = this.fb.group({
-      semanasClase: [this.calendario.semanasClase, Validators.required],
-      semanasPreparacion: [
-        this.calendario.semanasPreparacion,
-        Validators.required,
-      ],
-      horasTotales: [this.calendario.horasTotales, Validators.required],
-      estado: [this.calendario.estado, Validators.required],
-      observacion: [this.calendario.observacion || ''],
+    const cal = this.calendario();
+    if (!cal) return;
+
+    // Guardar backup para poder cancelar
+    this.backupCalendario = structuredClone(cal);
+
+    // Cargar valores actuales en el formulario
+    this.calendarioForm.patchValue({
+      semanasClase: cal.semanasClase,
+      semanasPreparacion: cal.semanasPreparacion,
+      horasPlanta: cal.horasPlanta,
+      horasCatedra: cal.horasCatedra,
+      horasOcasionales: cal.horasOcasionales,
+      horasBecarioPracticante: cal.horasBecarioPracticante,
+      estado: cal.estado,
+      observacion: cal.observacion || '',
     });
 
-    this.backupCalendario = structuredClone(this.calendario);
-    this.modoEdicion = true;
+    // Activar modo edición
+    this.modoEdicionCalendario.set(true);
   }
 
-  // === Cancelar edición y restaurar backup ===
   cancelarEdicionCalendario(): void {
-    this.calendario = structuredClone(this.backupCalendario);
-    this.modoEdicion = false;
+    if (this.backupCalendario) {
+      // Restaurar desde el backup
+      this.calendario.set(this.backupCalendario);
+      this.backupCalendario = null;
+    }
+
+    // Resetear formulario
+    this.calendarioForm.reset();
+
+    // Desactivar modo edición
+    this.modoEdicionCalendario.set(false);
   }
 
-  /**
-   * @todo Implementar validaciones que eviten realizar la petición si no se ha modificado ningún dato.
-   * En caso de cambios, enviar únicamente los campos actualizados junto con aquellos que sean obligatorios.
-   * @returns
-   */
-  // === Guardar cambios ===
   guardarCambiosCalendario(): void {
-    if (!this.calendario) {
-      //this.toastr.error('No hay datos del calendario cargados.');
-      alert('No hay datos del calendario cargados.');
+    const cal = this.calendario();
+
+    if (!cal) {
+      this.toastr.error('No hay datos del calendario cargados');
       return;
     }
 
-    if (
-      !this.calendario.semanasClase ||
-      !this.calendario.semanasPreparacion ||
-      !this.calendario.horasTotales ||
-      !this.calendario.estado
-    ) {
-      //this.toastr.warning('Por favor, completa todos los campos obligatorios.');
-      alert('Por favor, completa todos los campos obligatorios.');
+    if (this.calendarioForm.invalid) {
+      this.toastr.warning('Por favor, completa todos los campos obligatorios');
       return;
     }
 
-    const payload = {
-      anioCalendario: this.calendario.anioCalendario,
-      numeroCalendario: this.calendario.numeroCalendario,
-      semanasClase: this.calendario.semanasClase,
-      semanasPreparacion: this.calendario.semanasPreparacion,
-      horasTotales: this.calendario.horasTotales,
-      estado: this.calendario.estado,
-      observacion: this.calendario.observacion || '',
+    // Construir el DTO con los valores del formulario
+    const formValues = this.calendarioForm.value;
+
+    const updateDto: UpdateCalendarioDTO = {
+      oidcalendario: cal.oidcalendario,
+      anioCalendario: cal.anioCalendario,
+      numeroCalendario: cal.numeroCalendario,
+      semanasClase: formValues.semanasClase,
+      semanasPreparacion: formValues.semanasPreparacion,
+      horasPlanta: formValues.horasPlanta,
+      horasCatedra: formValues.horasCatedra,
+      horasOcasionales: formValues.horasOcasionales,
+      horasBecarioPracticante: formValues.horasBecarioPracticante,
+      estado: formValues.estado,
+      observacion: formValues.observacion || '',
     };
 
-    this.http
-      .put<any>(
-        `http://localhost:8090/sgd-back/api/calendarios/${this.calendarioId}`,
-        payload
-      )
-      .subscribe({
-        next: (res) => {
-          if (res?.codigo === 200) {
-            this.toastr.success(
-              res.mensaje || 'Calendario actualizado con éxito'
-            );
-
-            if (this.calendarioId) {
-              this.obtenerCalendarioPorId(this.calendarioId);
-            }
-
-            this.modoEdicion = false;
-          } else {
-            this.toastr.error('Error al actualizar el calendario.');
-          }
-        },
-        error: () => {
-          this.toastr.error('Error en el servidor.');
-        },
-      });
-  }
-
-  //===============CRUD FECHAS=========================
-  activarEdicionFecha(fecha: any): void {
-    this.filaEnEdicionId = fecha.oidFecha;
-    this.backupFecha = structuredClone(fecha);
-  }
-
-  cancelarEdicionFecha(fecha: any): void {
-    Object.assign(fecha, this.backupFecha);
-    this.filaEnEdicionId = null;
-    this.backupFecha = null;
-  }
-
-  editarFecha(fecha: any): void {
-    if (!fecha?.oidFecha || !this.calendarioId) return;
-
-    const oidNombreFecha = fecha.oidNombreFecha ?? fecha.oidnombrefecha ?? null;
-    //const oidsUnicos = [1, 3, 4, 5, 7, 8, 9, 10];
-    const esFechaUnica = this.oidsUnicos.includes(Number(oidNombreFecha));
-
-    const payload = {
-      fechaInicial: esFechaUnica
-        ? null
-        : this.formatearFechaConHora(fecha.fechaInicial),
-      fechaFin: this.formatearFechaConHora(fecha.fechaFin),
-      oidCalendario: this.calendarioId,
-      oidNombreFecha: oidNombreFecha,
-      tipo: fecha.tipo ?? 'RESALTADAS',
-    };
-
-    const url = `http://localhost:8090/sgd-back/api/fechas/${fecha.oidFecha}`;
-    console.log('Payload enviado:', payload);
-
-    this.http.put<any>(url, payload).subscribe({
-      next: (resp) => {
-        if (resp?.codigo === 200 && resp?.data) {
-          const actualizada = resp.data;
-          fecha.fechaInicial = actualizada.fechaInicial;
-          fecha.fechaFin = actualizada.fechaFin;
-          fecha.tipo = actualizada.tipo;
-
-          this.filaEnEdicionId = null;
-          this.backupFecha = null;
-
-          this.toastr.success(resp.mensaje || 'Fecha actualizada con éxito.');
-        } else {
-          this.toastr.error('Respuesta inesperada del servidor.');
-          console.error('Respuesta inesperada:', resp);
-        }
-      },
-      error: (err) => {
-        console.error('Error al actualizar fecha', err);
-        this.toastr.error(
-          err?.error?.mensaje || 'Ocurrió un error al actualizar la fecha.'
-        );
-      },
-    });
-  }
-
-  esFechaUnica(oidNombreFecha: number): boolean {
-    return this.oidsUnicos.includes(Number(oidNombreFecha));
-  }
-
-  formatearFechaConHora(valor: any): string | null {
-    if (!valor) return null;
-
-    if (valor instanceof Date) {
-      const y = valor.getFullYear();
-      const m = String(valor.getMonth() + 1).padStart(2, '0');
-      const d = String(valor.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}T00:00:00`;
-    }
-
-    if (typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(valor)) {
-      return `${valor}T00:00:00`;
-    }
-
-    return valor;
-  }
-
-  eliminarFecha(oidFecha: number): void {
-    if (!oidFecha) {
-      this.toastr.warning('ID de fecha no válido.');
-      return;
-    }
-
-    // Confirmación antes de eliminar
-    if (confirm('¿Estás seguro de que deseas eliminar esta fecha?')) {
-      const url = `http://localhost:8090/sgd-back/api/fechas/${oidFecha}`;
-
-      this.http.delete<any>(url).subscribe({
-        next: (response) => {
-          if (response?.codigo === 200) {
-            // Remover la fecha del array local
-            this.calendario.fechas = this.calendario.fechas.filter(
-              (fecha: any) => fecha.oidFecha !== oidFecha
-            );
-
-            this.toastr.success(
-              response.mensaje || 'Fecha eliminada con éxito.'
-            );
-          } else {
-            this.toastr.error('Error al eliminar la fecha.');
-          }
-        },
-        error: (err) => {
-          console.error('Error al eliminar fecha:', err);
-          this.toastr.error(
-            err?.error?.mensaje || 'Ocurrió un error al eliminar la fecha.'
-          );
-        },
-      });
-    }
-  }
-
-  // Métodos para agregar fecha
-  abrirModalAgregarFecha(): void {
-    this.mostrarFormularioNuevaFecha = true;
-    this.resetearNuevaFecha();
-  }
-
-  resetearNuevaFecha(): void {
-    this.nuevaFecha = {
-      oidNombreFecha: null,
-      fechaInicial: null,
-      fechaFin: null,
-      tipo: 'RESALTADAS',
-    };
-  }
-
-  agregarFecha(): void {
-    if (
-      !this.calendarioId ||
-      !this.nuevaFecha.oidNombreFecha ||
-      !this.nuevaFecha.fechaFin
-    ) {
-      this.toastr.warning('Por favor, completa todos los campos obligatorios.');
-      return;
-    }
-
-    const esFechaUnica = this.oidsUnicos.includes(
-      Number(this.nuevaFecha.oidNombreFecha)
-    );
-
-    const payload = {
-      fechaInicial: esFechaUnica
-        ? null
-        : this.formatearFechaConHora(this.nuevaFecha.fechaInicial),
-      fechaFin: this.formatearFechaConHora(this.nuevaFecha.fechaFin),
-      oidCalendario: this.calendarioId,
-      oidNombreFecha: this.nuevaFecha.oidNombreFecha,
-      tipo: this.nuevaFecha.tipo || 'RESALTADAS',
-    };
-
-    const url = `http://localhost:8090/sgd-back/api/fechas`;
-    console.log('Payload para agregar fecha:', payload);
-
-    this.http.post<any>(url, payload).subscribe({
+    this.calendarioService.updateCalendarioAcademico(updateDto).subscribe({
       next: (response) => {
-        if (response?.codigo === 201 && response?.data) {
-          // Buscar el nombre de la fecha agregada
-          const nombreFecha = this.catalogoFechas.find(
-            (f) => f.oidNombreFecha === response.data.oidNombreFecha
-          );
+        if (response.codigo === 200 && response.data) {
+          // Actualizar el signal con los nuevos datos
+          this.calendario.set(response.data);
 
-          // Agregar el nombre a la respuesta del servidor
-          const nuevaFechaConNombre = {
-            ...response.data,
-            nombre: nombreFecha?.nombre || 'Fecha sin nombre',
-          };
+          // Mensaje del backend
+          const mensaje =
+            response.mensaje || 'Calendario actualizado con éxito';
+          this.toastr.success(mensaje);
 
-          // Agregar la nueva fecha al array local
-          if (!this.calendario.fechas) {
-            this.calendario.fechas = [];
-          }
-          this.calendario.fechas.push(nuevaFechaConNombre);
-
-          this.mostrarFormularioNuevaFecha = false;
-          this.resetearNuevaFecha();
-
-          this.toastr.success(response.mensaje || 'Fecha agregada con éxito.');
+          // Desactivar modo edición
+          this.modoEdicionCalendario.set(false);
+          this.backupCalendario = null;
+          this.calendarioForm.reset();
         } else {
-          this.toastr.error('Error al agregar la fecha.');
+
+          const mensaje =
+            response.mensaje || 'Error al actualizar el calendario';
+          this.toastr.error(mensaje);
         }
       },
-      error: (err) => {
-        console.error('Error al agregar fecha:', err);
-        this.toastr.error(
-          err?.error?.mensaje || 'Ocurrió un error al agregar la fecha.'
-        );
+      error: (error) => {
+        console.error('Error al actualizar calendario:', error);
+        const mensajeError = this.obtenerMensajeError(error);
+        this.toastr.error(mensajeError);
       },
     });
   }
 
-  convertirANumero(valor: any): number {
-    return Number(valor);
-  }
+  // ===== CRUD FECHAS =====
+  async eliminarFecha(oidFecha: number): Promise<void> {
+    if (!oidFecha) {
+      this.toastr.warning('ID de fecha no válido');
+      return;
+    }
 
-  cancelarAgregarFecha(): void {
-    this.mostrarFormularioNuevaFecha = false;
-    this.resetearNuevaFecha();
-  }
-
-  // Método helper para obtener el nombre de una fecha por su ID
-  obtenerNombreFecha(oidNombreFecha: number): string {
-    const fecha = this.catalogoFechas.find(
-      (f) => f.oidNombreFecha === oidNombreFecha
+    const confirmar = confirm(
+      '¿Estás seguro de que deseas eliminar esta fecha?'
     );
-    return fecha?.nombre || 'Fecha sin nombre';
+    if (!confirmar) return;
+
+    try {
+  
+      const resultado = await this.fechaHelper.delete(oidFecha);
+
+      if (resultado) {
+
+        const calendarioActual = this.calendario();
+        if (calendarioActual?.fechas) {
+          const fechasActualizadas = calendarioActual.fechas.filter(
+            (fecha) => fecha.oidFecha !== oidFecha
+          );
+
+          this.calendario.set({
+            ...calendarioActual,
+            fechas: fechasActualizadas,
+          });
+        }
+
+        this.toastr.success('Fecha eliminada con éxito');
+      }
+    } catch (error: any) {
+      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
+      const mensaje = error?.error?.mensaje || 'Error al eliminar la fecha';
+      this.toastr.error(mensaje);
+    }
   }
 }
