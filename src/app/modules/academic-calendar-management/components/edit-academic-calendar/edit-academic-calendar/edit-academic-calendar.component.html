@@ -224,6 +224,7 @@
       </table>
     </div>
   </div>
+  <div><br></div>
   <!-- Tabla de fechas -->
   <div class="card shadow-sm" *ngIf="fechasCalendario().length > 0">
     <div
@@ -267,7 +268,7 @@
             <td class="text-center align-middle">
               <button
                 class="btn btn-outline-danger btn-sm"
-                (click)="eliminarFecha(fecha.oidFecha)"
+                (click)="abrirModalEliminar(fecha)"
                 title="Eliminar"
               >
                 <i class="fas fa-trash"></i>
@@ -278,4 +279,12 @@
       </table>
     </div>
   </div>
+
+  <app-modal-eliminar-fecha
+    [fecha]="fechaAEliminar()"
+    [visible]="modalEliminarVisible()"
+    [eliminando]="eliminandoFecha()"
+    (onConfirmar)="confirmarEliminarFecha()"
+    (onCancelar)="cerrarModalEliminar()"
+  ></app-modal-eliminar-fecha>
 </div>

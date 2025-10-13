@@ -1,0 +1,109 @@
+<div *ngIf="visible && fecha" class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header bg-danger text-white border-0">
+        <h5 class="modal-title fw-bold">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          Confirmar Eliminación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cancelar()"
+          [disabled]="eliminando"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+          <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+          <div>
+            <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+          </div>
+        </div>
+
+        <p class="mb-3">
+          ¿Está seguro que desea eliminar la siguiente fecha del calendario?
+        </p>
+
+        <div class="card bg-light border-0">
+          <div class="card-body">
+            <div class="mb-2">
+              <strong class="text-primary">
+                <i class="fas fa-tag me-2"></i>Nombre:
+              </strong>
+              <div class="ms-4">{{ fecha.nombre }}</div>
+            </div>
+            <div class="mb-2">
+              <strong class="text-primary">
+                <i class="fas fa-calendar me-2"></i>Fecha inicial:
+              </strong>
+              <div class="ms-4">
+                {{
+                  fecha.fechaInicial
+                    ? (fecha.fechaInicial | date : "yyyy-MM-dd")
+                    : "-"
+                }}
+              </div>
+            </div>
+            <div class="mb-2">
+              <strong class="text-primary">
+                <i class="fas fa-calendar-check me-2"></i>Fecha final:
+              </strong>
+              <div class="ms-4">
+                {{
+                  fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
+                }}
+              </div>
+            </div>
+            <div>
+              <strong class="text-primary">
+                <i class="fas fa-info-circle me-2"></i>Tipo:
+              </strong>
+              <div class="ms-4">{{ fecha.tipo }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-warning mt-3 mb-0" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          Esta fecha será eliminada permanentemente del calendario.
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelar()"
+          [disabled]="eliminando"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="confirmar()"
+          [disabled]="eliminando"
+        >
+          <span *ngIf="!eliminando">
+            <i class="fas fa-trash me-2"></i>
+            Eliminar
+          </span>
+          <span *ngIf="eliminando">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Eliminando...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="visible && fecha" class="modal-backdrop fade show"></div>

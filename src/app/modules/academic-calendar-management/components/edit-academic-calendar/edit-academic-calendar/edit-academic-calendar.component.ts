@@ -21,11 +21,12 @@ import {
   NombreFecha,
   UpdateCalendarioDTO,
 } from '../../../models';
+import { ModalEliminarFechaComponent } from '../modal-eliminar-fecha/modal-eliminar-fecha.component';
 
 @Component({
   selector: 'app-edit-academic-calendar',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, ModalEliminarFechaComponent ],
   templateUrl: './edit-academic-calendar.component.html',
   styleUrl: './edit-academic-calendar.component.css',
 })
@@ -47,6 +48,11 @@ export class EditAcademicCalendarComponent implements OnInit {
   readonly modoEdicionCalendario = signal<boolean>(false);
   readonly mostrarFormularioNuevaFecha = signal<boolean>(false);
   readonly filaEnEdicionId = signal<number | null>(null);
+
+  // ===== ESTADO MODAL ELIMINAR FECHA=====
+  readonly modalEliminarVisible = signal<boolean>(false);
+  readonly fechaAEliminar = signal<Fecha | null>(null);
+  readonly eliminandoFecha = signal<boolean>(false);
 
   readonly tituloCalendario = computed(() => {
     const cal = this.calendario();
@@ -207,20 +213,21 @@ export class EditAcademicCalendarComponent implements OnInit {
     this.calendarioService.updateCalendarioAcademico(updateDto).subscribe({
       next: (response) => {
         if (response.codigo === 200 && response.data) {
-          // Actualizar el signal con los nuevos datos
-          this.calendario.set(response.data);
+          const calendarioActualizado = {
+            ...response.data,
+            fechas: cal.fechas || [],
+          };
 
-          // Mensaje del backend
+          this.calendario.set(calendarioActualizado);
+
           const mensaje =
             response.mensaje || 'Calendario actualizado con éxito';
           this.toastr.success(mensaje);
 
-          // Desactivar modo edición
           this.modoEdicionCalendario.set(false);
           this.backupCalendario = null;
           this.calendarioForm.reset();
         } else {
-
           const mensaje =
             response.mensaje || 'Error al actualizar el calendario';
           this.toastr.error(mensaje);
@@ -234,28 +241,33 @@ export class EditAcademicCalendarComponent implements OnInit {
     });
   }
 
-  // ===== CRUD FECHAS =====
-  async eliminarFecha(oidFecha: number): Promise<void> {
-    if (!oidFecha) {
-      this.toastr.warning('ID de fecha no válido');
-      return;
-    }
+  // ===== MODAL ELIMINAR FECHAS =====
+  abrirModalEliminar(fecha: Fecha): void {
+    this.fechaAEliminar.set(fecha);
+    this.modalEliminarVisible.set(true);
+  }
 
-    const confirmar = confirm(
-      '¿Estás seguro de que deseas eliminar esta fecha?'
-    );
-    if (!confirmar) return;
+  cerrarModalEliminar(): void {
+    this.modalEliminarVisible.set(false);
+    this.fechaAEliminar.set(null);
+  }
+
+  // ===== CRUD FECHAS =====
+  async confirmarEliminarFecha(): Promise<void> {
+    const fecha = this.fechaAEliminar();
+    if (!fecha) return;
+
+    this.eliminandoFecha.set(true);
 
     try {
-  
-      const resultado = await this.fechaHelper.delete(oidFecha);
+      const resultado = await this.fechaHelper.delete(fecha.oidFecha);
 
       if (resultado) {
-
+        // Actualizar el signal eliminando la fecha del array
         const calendarioActual = this.calendario();
         if (calendarioActual?.fechas) {
           const fechasActualizadas = calendarioActual.fechas.filter(
-            (fecha) => fecha.oidFecha !== oidFecha
+            (f) => f.oidFecha !== fecha.oidFecha
           );
 
           this.calendario.set({
@@ -265,11 +277,14 @@ export class EditAcademicCalendarComponent implements OnInit {
         }
 
         this.toastr.success('Fecha eliminada con éxito');
+        this.cerrarModalEliminar();
       }
     } catch (error: any) {
       console.log('ERROR CAPTURADO EN COMPONENTE:', error);
       const mensaje = error?.error?.mensaje || 'Error al eliminar la fecha';
       this.toastr.error(mensaje);
+    } finally {
+      this.eliminandoFecha.set(false);
     }
   }
 }
