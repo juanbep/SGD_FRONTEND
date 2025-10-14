@@ -134,12 +134,7 @@ export class CalendarioService {
   }
 
   private handleError(error: any): Observable<never> {
-    console.error('Error en CalendarioAcademicoService:', error);
-    return throwError(
-      () =>
-        new Error(
-          error.mensaje || 'Error en el servicio de calendario académico'
-        )
-    );
+    console.error('Error en Calendario Académico Service:', error);
+    return throwError(() => error);
   }
 }

@@ -20,4 +20,5 @@ export class Utils {
         return 'bg-light text-dark';
     }
   }
+
 }

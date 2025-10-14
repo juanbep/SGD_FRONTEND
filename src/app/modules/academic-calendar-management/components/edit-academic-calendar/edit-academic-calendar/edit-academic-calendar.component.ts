@@ -26,7 +26,12 @@ import { ModalEliminarFechaComponent } from '../modal-eliminar-fecha/modal-elimi
 @Component({
   selector: 'app-edit-academic-calendar',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, ModalEliminarFechaComponent ],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    ModalEliminarFechaComponent,
+  ],
   templateUrl: './edit-academic-calendar.component.html',
   styleUrl: './edit-academic-calendar.component.css',
 })
@@ -71,7 +76,7 @@ export class EditAcademicCalendarComponent implements OnInit {
     'DESHABILITADO',
   ];
 
-  readonly OIDS_FECHA_UNICA = [1, 3, 4, 5, 7, 8, 9, 10];
+  readonly OIDS_FECHA_UNICA = [1, 3, 4, 5, 7, 8, 9, 10, 14, 16, 18];
 
   // ===== FORMULARIOS REACTIVOS =====
   calendarioForm!: FormGroup;
@@ -261,9 +266,10 @@ export class EditAcademicCalendarComponent implements OnInit {
 
     try {
       const resultado = await this.fechaHelper.delete(fecha.oidFecha);
-
+      console.log(resultado)
       if (resultado) {
         // Actualizar el signal eliminando la fecha del array
+
         const calendarioActual = this.calendario();
         if (calendarioActual?.fechas) {
           const fechasActualizadas = calendarioActual.fechas.filter(
@@ -287,4 +293,74 @@ export class EditAcademicCalendarComponent implements OnInit {
       this.eliminandoFecha.set(false);
     }
   }
+
+  readonly formatoFecha = (fecha: Fecha): string => {
+    if (!fecha.fechaInicial) return '-';
+
+    const fechaInicio = new Date(fecha.fechaInicial);
+
+    // Array de nombres de meses en español
+    const meses = [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ];
+
+
+    const formatearFechaCompleta = (date: Date): string => {
+      const dia = date.getDate();
+      const mes = meses[date.getMonth()];
+      const anio = date.getFullYear();
+      return `${dia} de ${mes} de ${anio}`;
+    };
+
+    const formatearRango = (inicio: Date, fin: Date): string => {
+      const diaInicio = inicio.getDate();
+      const mesInicio = meses[inicio.getMonth()];
+      const anioInicio = inicio.getFullYear();
+
+      const diaFin = fin.getDate();
+      const mesFin = meses[fin.getMonth()];
+      const anioFin = fin.getFullYear();
+
+      // Si es el mismo mes y año
+      if (mesInicio === mesFin && anioInicio === anioFin) {
+        return `Del ${diaInicio} al ${diaFin} de ${mesInicio} de ${anioInicio}`;
+      }
+
+      // Si es el mismo año pero diferente mes
+      if (anioInicio === anioFin) {
+        return `Del ${diaInicio} de ${mesInicio} al ${diaFin} de ${mesFin} de ${anioFin}`;
+      }
+
+      // Si son años diferentes
+      return `Del ${diaInicio} de ${mesInicio} de ${anioInicio} al ${diaFin} de ${mesFin} de ${anioFin}`;
+    };
+
+    // Verificar si es fecha única según su oidNombreFecha
+    const esFechaUnica = this.OIDS_FECHA_UNICA.includes(fecha.oidNombreFecha);
+
+    if (esFechaUnica) {
+      // Fecha única: "7 de julio de 2025"
+      return formatearFechaCompleta(fechaInicio);
+    }
+
+    // Fecha con rango
+    if (fecha.fechaFin) {
+      const fechaFin = new Date(fecha.fechaFin);
+      return formatearRango(fechaInicio, fechaFin);
+    }
+
+    // Si no hay fechaFin pero debería ser rango, mostrar solo inicio
+    return formatearFechaCompleta(fechaInicio);
+  };
 }

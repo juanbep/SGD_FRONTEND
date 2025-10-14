@@ -224,7 +224,7 @@
       </table>
     </div>
   </div>
-  <div><br></div>
+  <div><br /></div>
   <!-- Tabla de fechas -->
   <div class="card shadow-sm" *ngIf="fechasCalendario().length > 0">
     <div
@@ -232,36 +232,26 @@
       style="background-color: #000066"
     >
       <span>Fechas del calendario</span>
-      <!-- Por ahora sin botón "Agregar fecha" -->
+      <!-- Botón agregar fecha (para después) -->
     </div>
     <div class="card-body table-responsive">
       <table class="table table-bordered">
         <thead>
           <tr>
             <th style="width: 50%">Nombre</th>
-            <th style="width: 20%">Fecha inicial</th>
-            <th style="width: 20%">Fecha final</th>
-            <th style="width: 10%">Acciones</th>
+            <th class="text-center align-middle" style="width: 40%">Fecha</th>
+            <th class="text-center align-middle" style="width: 10%">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let fecha of fechasCalendario()">
             <td>{{ fecha.nombre }}</td>
 
-            <!-- Fecha inicio -->
+            <!-- Columna única de período con formato condicional -->
             <td class="text-center align-middle">
-              {{
-                fecha.fechaInicial
-                  ? (fecha.fechaInicial | date : "yyyy-MM-dd")
-                  : "-"
-              }}
-            </td>
-
-            <!-- Fecha fin -->
-            <td class="text-center align-middle">
-              {{
-                fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
-              }}
+              {{ formatoFecha(fecha) }}
             </td>
 
             <!-- Acciones -->
@@ -279,7 +269,6 @@
       </table>
     </div>
   </div>
-
   <app-modal-eliminar-fecha
     [fecha]="fechaAEliminar()"
     [visible]="modalEliminarVisible()"

@@ -60,6 +60,8 @@ export class AcademicCalendarManagementComponent {
         this.eliminando = false;
       }
     } catch (error) {
+      console.log("acontinuacion el error")
+      console.log(error)
       this.handleError(error);
       this.eliminando = false;
     }
@@ -81,7 +83,6 @@ export class AcademicCalendarManagementComponent {
       error?.error?.mensaje ||
       error?.message ||
       'Error al eliminar el calendario';
-
     this.toastr.error(
       `Status Code: ${codigoBackend} - ${mensajeBackend}`,
       'Error'
