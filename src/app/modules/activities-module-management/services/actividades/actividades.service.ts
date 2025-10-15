@@ -172,9 +172,7 @@ export class ActividadesService {
   }
 
   private handleError(error: any): Observable<never> {
-    console.error('Error en ActividadService:', error);
-    return throwError(
-      () => new Error(error.mensaje || 'Error al obtener actividades')
-    );
+    console.error('Error en FechaService:', error);
+    return throwError(() => error);
   }
 }

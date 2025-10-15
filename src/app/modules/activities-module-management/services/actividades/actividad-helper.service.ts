@@ -43,7 +43,7 @@ export class ActividadHelperService {
     const result = await this.baseHelper.getDataFromResponse(
       this.actividadService.deleteActividad({ oidActividad: id })
     );
-    return result === true;
+     return result === true || result === null; // trampita mientras se acomoda por parte del backend
   }
 
   async getMultipleByIds(ids: number[]): Promise<(ActividadResponse | null)[]> {

@@ -14,7 +14,7 @@ export class BaseHelperService {
       return this.isSuccessResponse(response.codigo) ? response.data : null;
     } catch (error: any) {
       console.error('Error en BaseHelper:', error);
-      // Re-lanzar el error 
+      // Re-lanzar el error
       throw error;
     }
   }
@@ -28,7 +28,7 @@ export class BaseHelperService {
       ),
       catchError((error) => {
         console.error('Error en BaseHelper:', error);
-        // Re-lanzar el error 
+        // Re-lanzar el error
         return throwError(() => error);
       })
     );
