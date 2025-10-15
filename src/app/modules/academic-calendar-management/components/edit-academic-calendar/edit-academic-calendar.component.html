@@ -1,0 +1,70 @@
+<div class="view-container">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 style="color: #000066">
+      {{ tituloCalendario() }}
+    </h3>
+    <a
+      class="btn btn-secondary"
+      [routerLink]="['/app/gestion-calendario-academico']"
+    >
+      <i class="fas fa-arrow-left me-2"></i>Volver
+    </a>
+  </div>
+
+  <!-- Componente de detalle del calendario -->
+  <app-detalle-calendario
+    [calendario]="calendario()"
+    (calendarioActualizado)="onCalendarioActualizado($event)"
+  ></app-detalle-calendario>
+
+  <div><br /></div>
+
+  <!-- Tabla de fechas -->
+  <div class="card shadow-sm" *ngIf="fechasCalendario().length > 0">
+    <div
+      class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
+      style="background-color: #000066"
+    >
+      <span>Fechas del calendario</span>
+      <!-- Botón agregar fecha (para después) -->
+    </div>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="width: 50%">Nombre</th>
+            <th class="text-center align-middle" style="width: 40%">Fecha</th>
+            <th class="text-center align-middle" style="width: 10%">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fecha of fechasCalendario()">
+            <td>{{ fecha.nombre }}</td>
+            <td class="text-center align-middle">
+              {{ formatoFecha(fecha) }}
+            </td>
+            <td class="text-center align-middle">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                (click)="abrirModalEliminar(fecha)"
+                title="Eliminar"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <app-modal-eliminar-fecha
+    [fecha]="fechaAEliminar()"
+    [visible]="modalEliminarVisible()"
+    (onConfirmar)="confirmarEliminarFecha()"
+    (onCancelar)="cerrarModalEliminar()"
+  ></app-modal-eliminar-fecha>
+</div>

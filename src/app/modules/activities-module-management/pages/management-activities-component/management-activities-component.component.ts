@@ -69,7 +69,7 @@ export class ManagementActivitiesComponentComponent {
     } catch (error: any) {
       console.error('Error al eliminar actividad:', error);
       this.mensajeError =
-        error?.error?.mensaje ||
+        error?.message ||
         'Error al eliminar la actividad. Por favor, intente nuevamente.';
       this.cerrarModalEliminar();
 

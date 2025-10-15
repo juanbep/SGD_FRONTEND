@@ -21,4 +21,85 @@ export class Utils {
     }
   }
 
+  /**
+   * Formatea una fecha según si es única o rango
+   * @param fecha Objeto Fecha con fechaInicial, fechaFin y oidNombreFecha
+   * @param oidsFechaUnica Array de oids que representan fechas únicas
+   * @returns String formateado según el tipo de fecha
+   */
+  static formatearFecha(
+    fechaInicial: Date | string | null,
+    fechaFin: Date | string | null,
+    oidNombreFecha: number,
+    oidsFechaUnica: number[]
+  ): string {
+    if (!fechaInicial) return '-';
+
+    const fechaInicio = new Date(fechaInicial);
+
+    // Array de nombres de meses en español
+    const meses = [
+      'enero',
+      'febrero',
+      'marzo',
+      'abril',
+      'mayo',
+      'junio',
+      'julio',
+      'agosto',
+      'septiembre',
+      'octubre',
+      'noviembre',
+      'diciembre',
+    ];
+
+    // Formato para fecha única: "7 de julio de 2025"
+    const formatearFechaCompleta = (date: Date): string => {
+      const dia = date.getDate();
+      const mes = meses[date.getMonth()];
+      const anio = date.getFullYear();
+      return `${dia} de ${mes} de ${anio}`;
+    };
+
+    // Formato para rango
+    const formatearRango = (inicio: Date, fin: Date): string => {
+      const diaInicio = inicio.getDate();
+      const mesInicio = meses[inicio.getMonth()];
+      const anioInicio = inicio.getFullYear();
+
+      const diaFin = fin.getDate();
+      const mesFin = meses[fin.getMonth()];
+      const anioFin = fin.getFullYear();
+
+      // Si es el mismo mes y año
+      if (mesInicio === mesFin && anioInicio === anioFin) {
+        return `Del ${diaInicio} al ${diaFin} de ${mesInicio} de ${anioInicio}`;
+      }
+
+      // Si es el mismo año pero diferente mes
+      if (anioInicio === anioFin) {
+        return `Del ${diaInicio} de ${mesInicio} al ${diaFin} de ${mesFin} de ${anioFin}`;
+      }
+
+      // Si son años diferentes
+      return `Del ${diaInicio} de ${mesInicio} de ${anioInicio} al ${diaFin} de ${mesFin} de ${anioFin}`;
+    };
+
+    // Verificar si es fecha única según su oidNombreFecha
+    const esFechaUnica = oidsFechaUnica.includes(oidNombreFecha);
+
+    if (esFechaUnica) {
+      // Fecha única: "7 de julio de 2025"
+      return formatearFechaCompleta(fechaInicio);
+    }
+
+    // Fecha con rango
+    if (fechaFin) {
+      const fechaFinDate = new Date(fechaFin);
+      return formatearRango(fechaInicio, fechaFinDate);
+    }
+
+    // Si no hay fechaFin pero debería ser rango, mostrar solo inicio
+    return formatearFechaCompleta(fechaInicio);
+  }
 }

@@ -72,7 +72,6 @@
           Esta fecha será eliminada permanentemente del calendario.
         </div>
       </div>
-
       <!-- Footer -->
       <div class="modal-footer border-0">
         <button
@@ -90,17 +89,8 @@
           (click)="confirmar()"
           [disabled]="eliminando"
         >
-          <span *ngIf="!eliminando">
-            <i class="fas fa-trash me-2"></i>
-            Eliminar
-          </span>
-          <span *ngIf="eliminando">
-            <span
-              class="spinner-border spinner-border-sm me-2"
-              role="status"
-            ></span>
-            Eliminando...
-          </span>
+          <i class="fas fa-trash me-2"></i>
+          Eliminar
         </button>
       </div>
     </div>

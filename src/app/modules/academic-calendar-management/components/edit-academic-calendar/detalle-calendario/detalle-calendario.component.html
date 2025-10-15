@@ -1,0 +1,203 @@
+<div class="card shadow-sm" *ngIf="calendario">
+  <div
+    class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
+    style="background-color: #000066"
+  >
+    <span>Información general del calendario</span>
+
+    <ng-container *ngIf="!modoEdicion(); else botonesEdicion">
+      <button class="btn btn-light btn-sm" (click)="activarModoEdicion()">
+        <i class="fa-solid fa-pen-to-square me-1"></i>Editar
+      </button>
+    </ng-container>
+
+    <ng-template #botonesEdicion>
+      <div class="d-flex gap-2">
+        <button class="btn btn-secondary btn-sm" (click)="cancelarEdicion()">
+          <i class="fa-solid fa-xmark me-1"></i>Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success btn-sm"
+          [disabled]="guardando() || calendarioForm.invalid"
+          (click)="guardarCambios()"
+        >
+          <span [hidden]="guardando()">
+            <i class="fas fa-save me-2"></i>
+            Guardar Cambios
+          </span>
+          <span [hidden]="!guardando()">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Guardando...
+          </span>
+        </button>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="card-body table-responsive">
+    <table
+      class="table table-bordered text-center align-middle mb-0"
+      style="table-layout: fixed"
+    >
+      <tbody>
+        <!-- Fila 1: Headers -->
+        <tr class="table-light fw-bold">
+          <td style="width: 25%">Año</td>
+          <td style="width: 25%">Periodo</td>
+          <td style="width: 25%">Estado</td>
+          <td style="width: 25%">Fecha Creación</td>
+        </tr>
+        <!-- Fila 1: Datos -->
+        <tr>
+          <td>{{ calendario.anioCalendario }}</td>
+          <td>{{ calendario.numeroCalendario }}</td>
+          <td [formGroup]="calendarioForm">
+            <ng-container *ngIf="!modoEdicion(); else editarEstado">
+              {{ calendario.estado }}
+            </ng-container>
+            <ng-template #editarEstado>
+              <select
+                class="form-select form-select-sm"
+                formControlName="estado"
+              >
+                <option
+                  *ngFor="let estado of ESTADOS_DISPONIBLES"
+                  [value]="estado"
+                >
+                  {{ estado }}
+                </option>
+              </select>
+            </ng-template>
+          </td>
+          <td>{{ calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm" }}</td>
+        </tr>
+
+        <!-- Fila 2: Headers -->
+        <tr class="table-light fw-bold">
+          <td>Semanas clase</td>
+          <td>Semanas preparación</td>
+          <td>Horas Planta</td>
+          <td>Última actualización</td>
+        </tr>
+        <!-- Fila 2: Datos -->
+        <tr [formGroup]="calendarioForm">
+          <td>
+            <ng-container *ngIf="!modoEdicion(); else editarSemanasClase">
+              {{ calendario.semanasClase }}
+            </ng-container>
+            <ng-template #editarSemanasClase>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="semanasClase"
+                min="0"
+              />
+            </ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="!modoEdicion(); else editarSemanasPreparacion">
+              {{ calendario.semanasPreparacion }}
+            </ng-container>
+            <ng-template #editarSemanasPreparacion>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="semanasPreparacion"
+                min="0"
+              />
+            </ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="!modoEdicion(); else editarHorasPlanta">
+              {{ calendario.horasPlanta }}
+            </ng-container>
+            <ng-template #editarHorasPlanta>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="horasPlanta"
+                min="0"
+              />
+            </ng-template>
+          </td>
+          <td>
+            {{ calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm" }}
+          </td>
+        </tr>
+
+        <!-- Fila 3: Headers -->
+        <tr class="table-light fw-bold">
+          <td>Horas Cátedra</td>
+          <td>Horas Ocasionales</td>
+          <td colspan="2">Horas Becario/Practicante</td>
+        </tr>
+        <!-- Fila 3: Datos -->
+        <tr [formGroup]="calendarioForm">
+          <td>
+            <ng-container *ngIf="!modoEdicion(); else editarHorasCatedra">
+              {{ calendario.horasCatedra }}
+            </ng-container>
+            <ng-template #editarHorasCatedra>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="horasCatedra"
+                min="0"
+              />
+            </ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="!modoEdicion(); else editarHorasOcasionales">
+              {{ calendario.horasOcasionales }}
+            </ng-container>
+            <ng-template #editarHorasOcasionales>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="horasOcasionales"
+                min="0"
+              />
+            </ng-template>
+          </td>
+          <td colspan="2">
+            <ng-container *ngIf="!modoEdicion(); else editarHorasBecario">
+              {{ calendario.horasBecarioPracticante }}
+            </ng-container>
+            <ng-template #editarHorasBecario>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="horasBecarioPracticante"
+                min="0"
+              />
+            </ng-template>
+          </td>
+        </tr>
+
+        <!-- Fila 4: Observación -->
+        <tr class="table-light fw-bold text-start">
+          <td colspan="4">Observación</td>
+        </tr>
+        <tr [formGroup]="calendarioForm">
+          <td colspan="4" class="text-start" style="white-space: pre-line">
+            <ng-container *ngIf="!modoEdicion(); else editarObservacion">
+              {{ calendario.observacion || "-" }}
+            </ng-container>
+            <ng-template #editarObservacion>
+              <textarea
+                class="form-control"
+                rows="3"
+                formControlName="observacion"
+                placeholder="Observaciones..."
+              ></textarea>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -60,8 +60,8 @@ export class AcademicCalendarManagementComponent {
         this.eliminando = false;
       }
     } catch (error) {
-      console.log("acontinuacion el error")
-      console.log(error)
+      this.cerrarModal();
+      console.log(error);
       this.handleError(error);
       this.eliminando = false;
     }
