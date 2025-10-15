@@ -1,0 +1,94 @@
+<div
+  *ngIf="visible && calendario"
+  class="modal fade show d-block"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header bg-danger text-white border-0">
+        <h5 class="modal-title fw-bold">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          Confirmar Eliminación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cancelar()"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+          <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+          <div>
+            <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+          </div>
+        </div>
+
+        <p class="mb-3">
+          ¿Está seguro que desea eliminar el siguiente calendario académico?
+        </p>
+
+        <div class="card bg-light border-0">
+          <div class="card-body">
+            <div class="mb-2">
+              <strong class="text-primary">
+                <i class="fas fa-hashtag me-2"></i>ID:
+              </strong>
+              <div class="ms-4">{{ calendario.oidcalendario }}</div>
+            </div>
+            <div class="mb-2">
+              <strong class="text-primary">
+                <i class="fas fa-calendar-alt me-2"></i>Año:
+              </strong>
+              <div class="ms-4">{{ calendario.anioCalendario }}</div>
+            </div>
+            <div class="mb-2">
+              <strong class="text-primary">
+                <i class="fas fa-list-ol me-2"></i>Periodo:
+              </strong>
+              <div class="ms-4">{{ calendario.numeroCalendario }}</div>
+            </div>
+            <div class="mb-2">
+              <strong class="text-primary">
+                <i class="fas fa-info-circle me-2"></i>Estado:
+              </strong>
+              <div class="ms-4">
+                <span class="badge bg-secondary">{{ calendario.estado }}</span>
+              </div>
+            </div>
+            <div>
+              <strong class="text-primary">
+                <i class="fas fa-file-alt me-2"></i>Acuerdo Académico:
+              </strong>
+              <div class="ms-4">
+                {{ calendario.observacion || "Sin información" }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-warning mt-3 mb-0" role="alert">
+          <i class="fas fa-exclamation-circle me-2"></i>
+          Este calendario y todas sus fechas asociadas serán eliminados
+          permanentemente.
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" (click)="cancelar()">
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" (click)="confirmar()">
+          <i class="fas fa-trash me-2"></i>
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="visible && calendario" class="modal-backdrop fade show"></div>
