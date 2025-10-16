@@ -1,0 +1,10 @@
+#oidNombreFecha option {
+  padding: 8px;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#oidNombreFecha {
+  max-height: 300px;
+}

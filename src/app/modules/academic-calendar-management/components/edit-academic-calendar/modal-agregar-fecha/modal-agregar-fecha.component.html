@@ -1,0 +1,117 @@
+<div *ngIf="visible" class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div
+        class="modal-header text-white border-0"
+        style="background-color: #000066"
+      >
+        <h5 class="modal-title fw-bold">
+          <i class="fas fa-calendar-plus me-2"></i>
+          Agregar Nueva Fecha
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cancelar()"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <form [formGroup]="fechaForm">
+          <!-- Selector de tipo de fecha -->
+          <div class="mb-3">
+            <label for="oidNombreFecha" class="form-label fw-bold">
+              <i class="fas fa-tag me-2 text-primary"></i>
+              Tipo de fecha *
+            </label>
+            <select
+              id="oidNombreFecha"
+              class="form-select"
+              formControlName="oidNombreFecha"
+              [class.is-invalid]="
+                nombreFechaControl?.invalid && nombreFechaControl?.touched
+              "
+            >
+              <option [value]="null" disabled>
+                Seleccione un tipo de fecha
+              </option>
+              <option
+                *ngFor="let item of catalogoNombresFecha"
+                [value]="item.value"
+              >
+                {{ item.label }}
+              </option>
+            </select>
+            <div
+              class="invalid-feedback"
+              *ngIf="nombreFechaControl?.invalid && nombreFechaControl?.touched"
+            >
+              Debe seleccionar un tipo de fecha
+            </div>
+          </div>
+
+          <!-- Fecha Inicial -->
+          <div class="mb-3">
+            <label for="fechaInicial" class="form-label fw-bold">
+              <i class="fas fa-calendar me-2 text-primary"></i>
+              Fecha inicial *
+            </label>
+            <input
+              type="date"
+              id="fechaInicial"
+              class="form-control"
+              formControlName="fechaInicial"
+              [class.is-invalid]="
+                fechaInicialControl?.invalid && fechaInicialControl?.touched
+              "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                fechaInicialControl?.invalid && fechaInicialControl?.touched
+              "
+            >
+              La fecha inicial es requerida
+            </div>
+          </div>
+
+          <!-- Fecha Final -->
+          <div class="mb-3">
+            <label for="fechaFin" class="form-label fw-bold">
+              <i class="fas fa-calendar-check me-2 text-primary"></i>
+              Fecha final
+            </label>
+            <input
+              type="date"
+              id="fechaFin"
+              class="form-control"
+              formControlName="fechaFin"
+              [class.is-invalid]="
+                fechaFinControl?.invalid && fechaFinControl?.touched
+              "
+            />
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary" (click)="cancelar()">
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="fechaForm.invalid"
+        >
+          <i class="fas fa-save me-2"></i>
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="visible" class="modal-backdrop fade show"></div>

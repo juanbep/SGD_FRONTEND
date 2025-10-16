@@ -23,19 +23,23 @@ export class Utils {
 
   /**
    * Formatea una fecha según si es única o rango
-   * @param fecha Objeto Fecha con fechaInicial, fechaFin y oidNombreFecha
+   * @param fechaInicial Fecha inicial
+   * @param fechaFin Fecha final (opcional)
+   * @param oidNombreFecha ID del tipo de fecha
    * @param oidsFechaUnica Array de oids que representan fechas únicas
    * @returns String formateado según el tipo de fecha
    */
   static formatearFecha(
     fechaInicial: Date | string | null,
     fechaFin: Date | string | null,
-    oidNombreFecha: number,
-    oidsFechaUnica: number[]
+    oidNombreFecha: number
   ): string {
     if (!fechaInicial) return '-';
 
     const fechaInicio = new Date(fechaInicial);
+
+    // Id de nombres de fechas unicas
+    const oidsFechaUnica = [1, 3, 4, 5, 7, 8, 9, 10, 14, 16, 18];
 
     // Array de nombres de meses en español
     const meses = [
@@ -53,12 +57,23 @@ export class Utils {
       'diciembre',
     ];
 
+    // ✅ OIDs que requieren el prefijo "Hasta el"
+    const OIDS_CON_PREFIJO_HASTA = [4, 5, 18];
+
     // Formato para fecha única: "7 de julio de 2025"
     const formatearFechaCompleta = (date: Date): string => {
       const dia = date.getDate();
       const mes = meses[date.getMonth()];
       const anio = date.getFullYear();
       return `${dia} de ${mes} de ${anio}`;
+    };
+
+    // ✅ Formato para fecha única con prefijo "Hasta el"
+    const formatearFechaHasta = (date: Date): string => {
+      const dia = date.getDate();
+      const mes = meses[date.getMonth()];
+      const anio = date.getFullYear();
+      return `Hasta el ${dia} de ${mes} de ${anio}`;
     };
 
     // Formato para rango
@@ -89,7 +104,12 @@ export class Utils {
     const esFechaUnica = oidsFechaUnica.includes(oidNombreFecha);
 
     if (esFechaUnica) {
-      // Fecha única: "7 de julio de 2025"
+      // ✅ Verificar si requiere el prefijo "Hasta el"
+      if (OIDS_CON_PREFIJO_HASTA.includes(oidNombreFecha)) {
+        return formatearFechaHasta(fechaInicio);
+      }
+
+      // Fecha única normal: "7 de julio de 2025"
       return formatearFechaCompleta(fechaInicio);
     }
 

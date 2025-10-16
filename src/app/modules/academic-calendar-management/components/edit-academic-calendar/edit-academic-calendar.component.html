@@ -19,46 +19,78 @@
 
   <div><br /></div>
 
-  <!-- Tabla de fechas -->
-  <div class="card shadow-sm" *ngIf="fechasCalendario().length > 0">
+  <!-- Card de fechas siempre visible -->
+  <div class="card shadow-sm">
     <div
       class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
       style="background-color: #000066"
     >
       <span>Fechas del calendario</span>
-      <!-- Botón agregar fecha (para después) -->
+      <button
+        type="button"
+        class="btn btn-light btn-sm"
+        (click)="abrirModalAgregar()"
+      >
+        <i class="fas fa-plus me-2"></i>
+        Agregar fecha
+      </button>
     </div>
-    <div class="card-body table-responsive">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th style="width: 50%">Nombre</th>
-            <th class="text-center align-middle" style="width: 40%">Fecha</th>
-            <th class="text-center align-middle" style="width: 10%">
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let fecha of fechasCalendario()">
-            <td>{{ fecha.nombre }}</td>
-            <td class="text-center align-middle">
-              {{ formatoFecha(fecha) }}
-            </td>
-            <td class="text-center align-middle">
-              <button
-                type="button"
-                class="btn btn-outline-danger btn-sm"
-                (click)="abrirModalEliminar(fecha)"
-                title="Eliminar"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div
+      class="card-body"
+      *ngIf="fechasCalendario().length > 0; else sinFechas"
+    >
+      <div class="table-responsive">
+        <table class="table table-bordered mb-0">
+          <thead>
+            <tr>
+              <th style="width: 50%">Nombre</th>
+              <th class="text-center align-middle" style="width: 40%">Fecha</th>
+              <th class="text-center align-middle" style="width: 10%">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fecha of fechasCalendario()">
+              <td>{{ fecha.nombre }}</td>
+              <td class="text-center align-middle">
+                {{ formatoFecha(fecha) }}
+              </td>
+              <td class="text-center align-middle">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="abrirModalEliminar(fecha)"
+                  title="Eliminar"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
+    <!-- Mensaje cuando no hay fechas -->
+    <ng-template #sinFechas>
+      <div class="card-body">
+        <div
+          class="alert alert-info d-flex align-items-center mb-0"
+          role="alert"
+        >
+          <i class="fas fa-info-circle fa-2x me-3"></i>
+          <div>
+            <h6 class="alert-heading mb-1">No hay fechas registradas</h6>
+            <p class="mb-0">
+              Este calendario aún no tiene fechas asociadas. Puede agregar
+              fechas haciendo clic en el botón "Agregar fecha".
+            </p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
   </div>
 
   <app-modal-eliminar-fecha
@@ -67,4 +99,9 @@
     (onConfirmar)="confirmarEliminarFecha()"
     (onCancelar)="cerrarModalEliminar()"
   ></app-modal-eliminar-fecha>
+  <app-modal-agregar-fecha
+    [visible]="modalAgregarVisible()"
+    [catalogoNombresFecha]="catalogoNombresFecha()"
+    (onCancelar)="cerrarModalAgregar()"
+  ></app-modal-agregar-fecha>
 </div>
