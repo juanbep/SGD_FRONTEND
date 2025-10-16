@@ -64,4 +64,18 @@ export class ModalAgregarFechaComponent implements OnInit {
   get fechaFinControl() {
     return this.fechaForm.get('fechaFin');
   }
+
+  selectTipoFecha(value: number): void {
+    this.fechaForm.patchValue({ oidNombreFecha: value });
+  }
+
+  getSelectedLabel(): string {
+    const value = this.nombreFechaControl?.value;
+    if (!value) return '';
+
+    const selected = this.catalogoNombresFecha.find(
+      (item) => item.value === Number(value)
+    );
+    return selected?.label || '';
+  }
 }

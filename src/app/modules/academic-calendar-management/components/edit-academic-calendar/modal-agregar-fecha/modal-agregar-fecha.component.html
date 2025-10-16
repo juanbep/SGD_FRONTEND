@@ -22,30 +22,48 @@
         <form [formGroup]="fechaForm">
           <!-- Selector de tipo de fecha -->
           <div class="mb-3">
-            <label for="oidNombreFecha" class="form-label fw-bold">
+            <label class="form-label fw-bold">
               <i class="fas fa-tag me-2 text-primary"></i>
               Tipo de fecha *
             </label>
-            <select
-              id="oidNombreFecha"
-              class="form-select"
-              formControlName="oidNombreFecha"
-              [class.is-invalid]="
-                nombreFechaControl?.invalid && nombreFechaControl?.touched
-              "
-            >
-              <option [value]="null" disabled>
-                Seleccione un tipo de fecha
-              </option>
-              <option
-                *ngFor="let item of catalogoNombresFecha"
-                [value]="item.value"
+
+            <input type="hidden" formControlName="oidNombreFecha" />
+
+            <!-- Custom Dropdown -->
+            <div class="dropdown w-100">
+              <button
+                class="btn btn-outline-secondary dropdown-toggle w-100 text-start d-flex justify-content-between align-items-center"
+                type="button"
+                id="dropdownTipoFecha"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                [class.is-invalid]="
+                  nombreFechaControl?.invalid && nombreFechaControl?.touched
+                "
               >
-                {{ item.label }}
-              </option>
-            </select>
+                <span>{{
+                  getSelectedLabel() || "Seleccione un tipo de fecha"
+                }}</span>
+              </button>
+              <ul
+                class="dropdown-menu w-100 custom-dropdown-menu"
+                aria-labelledby="dropdownTipoFecha"
+              >
+                <li *ngFor="let item of catalogoNombresFecha">
+                  <a
+                    class="dropdown-item custom-dropdown-item"
+                    href="javascript:void(0)"
+                    (click)="selectTipoFecha(item.value)"
+                    [class.active]="nombreFechaControl?.value === item.value"
+                  >
+                    {{ item.label }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+
             <div
-              class="invalid-feedback"
+              class="invalid-feedback d-block"
               *ngIf="nombreFechaControl?.invalid && nombreFechaControl?.touched"
             >
               Debe seleccionar un tipo de fecha
