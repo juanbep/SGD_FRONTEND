@@ -14,9 +14,14 @@ export interface Fecha {
 
 export type TipoFecha =
   | 'RESALTADAS'
-  | 'CLASES'
   | 'NO_RESALTADAS'
-  | 'ADMINISTRATIVAS';
+  | 'ADMINISTRATIVAS'
+  | 'CLASES'
+  | 'OCASIONAL'
+  | 'CATEDRA'
+  | 'PLANTA'
+  | 'BECARIO_Y_PRACTICANTE'
+  | 'PLANIFICACION';
 
 // Filtros para búsqueda y paginación
 export interface FechaFilters {

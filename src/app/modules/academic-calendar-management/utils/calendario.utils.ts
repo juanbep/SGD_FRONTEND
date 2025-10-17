@@ -1,3 +1,5 @@
+import { Fecha } from '../models';
+
 export class Utils {
   static formatearAnioPeriodo(anio: number, periodo: number | null): string {
     if (!periodo) {
@@ -19,6 +21,12 @@ export class Utils {
       default:
         return 'bg-light text-dark';
     }
+  }
+
+  static ordenarFechasPorOid(fechas: Fecha[]): Fecha[] {
+    if (!fechas || fechas.length === 0) return [];
+
+    return [...fechas].sort((a, b) => a.oidNombreFecha - b.oidNombreFecha);
   }
 
   /**
