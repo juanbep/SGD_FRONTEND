@@ -6,9 +6,7 @@
   <!-- Encabezado -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 style="color: #000066">
-      Calendario académico {{ calendario.anioCalendario }}-{{
-        calendario.numeroCalendario
-      }}
+      {{ tituloCalendario() }}
     </h3>
   </div>
 
@@ -30,7 +28,11 @@
   </div>
 
   <!-- Información general -->
-  <div class="border p-3 mb-4 bg-white" style="font-size: 0.95rem">
+  <div
+    class="border p-3 mb-4 bg-white"
+    style="font-size: 0.95rem"
+    *ngIf="calendario()"
+  >
     <h6 class="fw-bold mb-3 text-secondary">Información general</h6>
 
     <div class="table-responsive">
@@ -47,19 +49,20 @@
             <td style="width: 25%">Última actualización</td>
           </tr>
           <tr>
-            <td>{{ calendario.anioCalendario || "—" }}</td>
-            <td>{{ calendario.numeroCalendario || "—" }}</td>
+            <td>{{ calendario()!.anioCalendario || "—" }}</td>
+            <td>{{ calendario()!.numeroCalendario || "—" }}</td>
             <td>
               {{
-                calendario.fechaCreacion
-                  ? (calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm")
+                calendario()!.fechaCreacion
+                  ? (calendario()!.fechaCreacion | date : "yyyy-MM-dd HH:mm")
                   : "-"
               }}
             </td>
             <td>
               {{
-                calendario.fechaActualizacion
-                  ? (calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm")
+                calendario()!.fechaActualizacion
+                  ? (calendario()!.fechaActualizacion
+                    | date : "yyyy-MM-dd HH:mm")
                   : "-"
               }}
             </td>
@@ -73,10 +76,10 @@
             <td>Horas Catedra</td>
           </tr>
           <tr>
-            <td>{{ calendario.semanasClase || "—" }}</td>
-            <td>{{ calendario.semanasPreparacion || "—" }}</td>
-            <td>{{ calendario.horasPlanta || "—" }}</td>
-            <td>{{ calendario.horasCatedra || "—" }}</td>
+            <td>{{ calendario()!.semanasClase || "—" }}</td>
+            <td>{{ calendario()!.semanasPreparacion || "—" }}</td>
+            <td>{{ calendario()!.horasPlanta || "—" }}</td>
+            <td>{{ calendario()!.horasCatedra || "—" }}</td>
           </tr>
 
           <!-- Fila 3 -->
@@ -87,10 +90,10 @@
             <td>Usuario Actualización</td>
           </tr>
           <tr>
-            <td>{{ calendario.horasOcasionales || "—" }}</td>
-            <td>{{ calendario.horasBecarioPracticante || "—" }}</td>
-            <td>{{ calendario.usuarioCreacion || "—" }}</td>
-            <td>{{ calendario.usuarioActualizacion || "-" }}</td>
+            <td>{{ calendario()!.horasOcasionales || "—" }}</td>
+            <td>{{ calendario()!.horasBecarioPracticante || "—" }}</td>
+            <td>{{ calendario()!.usuarioCreacion || "—" }}</td>
+            <td>{{ calendario()!.usuarioActualizacion || "-" }}</td>
           </tr>
 
           <!-- Fila 4 -->
@@ -99,9 +102,9 @@
             <td colspan="4">Observación</td>
           </tr>
           <tr>
-            <td>{{ calendario.estado || "—" }}</td>
+            <td>{{ calendario()!.estado || "—" }}</td>
             <td colspan="4" class="text-start" style="white-space: pre-line">
-              {{ calendario.observacion || "—" }}
+              {{ calendario()!.observacion || "—" }}
             </td>
           </tr>
         </tbody>
@@ -113,37 +116,68 @@
   <div class="border p-3 bg-white" aria-label="Fechas del calendario académico">
     <h6 class="fw-bold mb-3" style="color: #555">Fechas del calendario</h6>
 
-    <div class="table-responsive">
+    <!-- Loading state -->
+    <div *ngIf="isLoading()" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando fechas...</span>
+      </div>
+      <p class="text-muted mt-2 mb-0">Cargando fechas del calendario...</p>
+    </div>
+
+    <!-- Error state -->
+    <div
+      *ngIf="error() && !isLoading()"
+      class="alert alert-danger"
+      role="alert"
+    >
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      {{ error() }}
+    </div>
+
+    <!-- Sin fechas (Empty state) -->
+    <div
+      *ngIf="!isLoading() && !error() && !tieneFechas()"
+      class="text-center py-5"
+    >
+      <i class="bi bi-calendar-x" style="font-size: 3rem; color: #dee2e6"></i>
+      <p class="text-muted mt-3 mb-0">
+        No hay fechas registradas para este calendario académico
+      </p>
+      <small class="text-muted">
+        Las fechas del calendario aparecerán aquí una vez sean agregadas
+      </small>
+    </div>
+
+    <!-- Tabla con fechas -->
+    <div
+      class="table-responsive"
+      *ngIf="!isLoading() && !error() && tieneFechas()"
+    >
       <table
-        class="table table-bordered table-sm mb-0 align-middle text-center"
-        *ngIf="calendario.fechas?.length"
+        class="table table-bordered table-sm mb-0 align-middle"
         role="table"
       >
         <thead class="table-light">
           <tr>
-            <th scope="col" style="width: 50%">Nombre</th>
-            <th scope="col" style="width: 25%">Fecha inicial</th>
-            <th scope="col" style="width: 25%">Fecha final</th>
+            <th scope="col" style="width: 60%" class="text-center">Nombre</th>
+            <th scope="col" style="width: 40%" class="text-center">Fecha</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let fecha of calendario.fechas">
+          <tr *ngFor="let fecha of fechasOrdenadas()">
             <td
               class="text-start"
               [ngClass]="{ 'fw-bold': fecha.tipo === 'RESALTADAS' }"
             >
               {{ fecha.nombre }}
             </td>
-            <td>
+            <td class="text-center">
               {{
-                fecha.fechaInicial
-                  ? (fecha.fechaInicial | date : "yyyy-MM-dd")
-                  : "-"
-              }}
-            </td>
-            <td>
-              {{
-                fecha.fechaFin ? (fecha.fechaFin | date : "yyyy-MM-dd") : "-"
+                formatearFecha(
+                  fecha.fechaInicial,
+                  fecha.fechaFin,
+                  fecha.oidNombreFecha
+                )
               }}
             </td>
           </tr>

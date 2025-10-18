@@ -34,7 +34,6 @@ export class Utils {
    * @param fechaInicial Fecha inicial
    * @param fechaFin Fecha final (opcional)
    * @param oidNombreFecha ID del tipo de fecha
-   * @param oidsFechaUnica Array de oids que representan fechas únicas
    * @returns String formateado según el tipo de fecha
    */
   static formatearFecha(
@@ -47,7 +46,7 @@ export class Utils {
     const fechaInicio = new Date(fechaInicial);
 
     // Id de nombres de fechas unicas
-    const oidsFechaUnica = [1, 3, 4, 5, 7, 8, 9, 10, 14, 16, 18];
+    const oidsFechaUnica = [1, 6, 7, 8, 10, 12, 14, 15, 16, 18, 19];
 
     // Array de nombres de meses en español
     const meses = [
@@ -66,7 +65,7 @@ export class Utils {
     ];
 
     // ✅ OIDs que requieren el prefijo "Hasta el"
-    const OIDS_CON_PREFIJO_HASTA = [4, 5, 18];
+    const OIDS_CON_PREFIJO_HASTA = [4, 5, 8, 12, 14];
 
     // Formato para fecha única: "7 de julio de 2025"
     const formatearFechaCompleta = (date: Date): string => {
