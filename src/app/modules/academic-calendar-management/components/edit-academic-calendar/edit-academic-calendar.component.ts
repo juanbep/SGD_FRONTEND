@@ -43,7 +43,7 @@ export class EditAcademicCalendarComponent implements OnInit {
   readonly modalEliminarVisible = signal<boolean>(false);
   readonly fechaAEliminar = signal<Fecha | null>(null);
   readonly modalAgregarVisible = signal<boolean>(false);
-  readonly catalogoNombresFecha = signal<
+  readonly listaNombresFecha = signal<
     { value: number; label: string; tieneTemplate: boolean }[]
   >([]);
   readonly guardandoFecha = signal<boolean>(false);
@@ -107,8 +107,10 @@ export class EditAcademicCalendarComponent implements OnInit {
     this.cargandoCatalogo.set(true);
 
     try {
-      const catalogo = await this.nombreFechaHelper.getAllForDropdown();
-      this.catalogoNombresFecha.set(catalogo);
+      const nombresFechas = await this.nombreFechaHelper.getAllForDropdown();
+      // Ordenar antes de asignar al signal
+      const listaOrdenada = Utils.ordenarListaNombresFecha(nombresFechas);
+      this.listaNombresFecha.set(listaOrdenada);
     } catch (error) {
       console.error('Error al cargar catálogo de fechas:', error);
       this.toastr.error('Error al cargar el catálogo de tipos de fecha');

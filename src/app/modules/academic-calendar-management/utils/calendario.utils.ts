@@ -29,6 +29,14 @@ export class Utils {
     return [...fechas].sort((a, b) => a.oidNombreFecha - b.oidNombreFecha);
   }
 
+  static ordenarListaNombresFecha(
+    catalogo: { value: number; label: string; tieneTemplate: boolean }[]
+  ): { value: number; label: string; tieneTemplate: boolean }[] {
+    if (!catalogo || catalogo.length === 0) return [];
+
+    return [...catalogo].sort((a, b) => a.value - b.value);
+  }
+
   /**
    * Formatea una fecha según si es única o rango
    * @param fechaInicial Fecha inicial

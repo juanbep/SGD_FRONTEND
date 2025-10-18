@@ -74,7 +74,7 @@
           <div class="mb-3">
             <label for="fechaInicial" class="form-label fw-bold">
               <i class="fas fa-calendar me-2 text-primary"></i>
-              Fecha inicial *
+              {{ esFechaUnica() ? "Fecha *" : "Fecha inicial *" }}
             </label>
             <input
               type="date"
@@ -91,15 +91,22 @@
                 fechaInicialControl?.invalid && fechaInicialControl?.touched
               "
             >
-              La fecha inicial es requerida
+              {{
+                esFechaUnica()
+                  ? "La fecha es requerida"
+                  : "La fecha inicial es requerida"
+              }}
             </div>
           </div>
 
-          <!-- Fecha Final -->
-          <div class="mb-3">
+          <!-- Fecha Final - Solo si NO es fecha única -->
+          <div
+            class="mb-3"
+            *ngIf="!esFechaUnica() && tipoFechaSeleccionado() !== null"
+          >
             <label for="fechaFin" class="form-label fw-bold">
               <i class="fas fa-calendar-check me-2 text-primary"></i>
-              Fecha final
+              Fecha final *
             </label>
             <input
               type="date"
@@ -110,6 +117,32 @@
                 fechaFinControl?.invalid && fechaFinControl?.touched
               "
             />
+            <div
+              class="invalid-feedback"
+              *ngIf="fechaFinControl?.invalid && fechaFinControl?.touched"
+            >
+              La fecha final es requerida para rangos
+            </div>
+          </div>
+
+          <!-- Mensaje informativo dinámico -->
+          <div
+            class="alert alert-info d-flex align-items-start"
+            role="alert"
+            *ngIf="tipoFechaSeleccionado() !== null"
+          >
+            <i class="fas fa-info-circle me-2 mt-1"></i>
+            <div>
+              <strong>Información:</strong>
+              <span *ngIf="esFechaUnica()">
+                Esta es una <strong>fecha única</strong>. Solo necesita
+                seleccionar una fecha.
+              </span>
+              <span *ngIf="!esFechaUnica()">
+                Esta es una <strong>fecha de rango</strong>. Debe seleccionar
+                fecha inicial y final.
+              </span>
+            </div>
           </div>
         </form>
       </div>
