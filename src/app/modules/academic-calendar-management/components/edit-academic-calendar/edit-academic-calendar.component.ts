@@ -9,7 +9,7 @@ import {
   FechaHelperService,
   NombreFechaHelperService,
 } from '../../services';
-import { Calendario, Fecha } from '../../models';
+import { Calendario, CreateFechaDto, Fecha } from '../../models';
 import { ModalEliminarFechaComponent } from './modal-eliminar-fecha/modal-eliminar-fecha.component';
 import { DetalleCalendarioComponent } from './detalle-calendario/detalle-calendario.component';
 import { Utils } from '../../utils/calendario.utils';
@@ -43,11 +43,11 @@ export class EditAcademicCalendarComponent implements OnInit {
   readonly modalEliminarVisible = signal<boolean>(false);
   readonly fechaAEliminar = signal<Fecha | null>(null);
   readonly modalAgregarVisible = signal<boolean>(false);
-  readonly listaNombresFecha = signal<
+  readonly listaNombreFechas = signal<
     { value: number; label: string; tieneTemplate: boolean }[]
   >([]);
   readonly guardandoFecha = signal<boolean>(false);
-  readonly cargandoCatalogo = signal<boolean>(false);
+  readonly cargandoListaFechas = signal<boolean>(false);
 
   // ===== COMPUTED =====
   readonly tituloCalendario = computed(() => {
@@ -104,18 +104,18 @@ export class EditAcademicCalendarComponent implements OnInit {
 
   // ===== CARGAR NOMBRES FECHAS =====
   private async cargarCatalogoNombresFechas(): Promise<void> {
-    this.cargandoCatalogo.set(true);
+    this.cargandoListaFechas.set(true);
 
     try {
       const nombresFechas = await this.nombreFechaHelper.getAllForDropdown();
       // Ordenar antes de asignar al signal
       const listaOrdenada = Utils.ordenarListaNombresFecha(nombresFechas);
-      this.listaNombresFecha.set(listaOrdenada);
+      this.listaNombreFechas.set(listaOrdenada);
     } catch (error) {
       console.error('Error al cargar catálogo de fechas:', error);
       this.toastr.error('Error al cargar el catálogo de tipos de fecha');
     } finally {
-      this.cargandoCatalogo.set(false);
+      this.cargandoListaFechas.set(false);
     }
   }
 
@@ -148,6 +148,42 @@ export class EditAcademicCalendarComponent implements OnInit {
       this.cerrarModalEliminar();
       const mensaje = error?.error?.mensaje || 'Error al eliminar la fecha';
       this.toastr.error(mensaje);
+    }
+  }
+
+  async confirmarAgregarFecha(createDto: CreateFechaDto): Promise<void> {
+    // Prevención de doble clic
+    if (this.guardandoFecha()) return;
+
+    this.guardandoFecha.set(true);
+
+    try {
+      const nuevaFecha = await this.fechaHelper.create(createDto);
+
+      if (nuevaFecha) {
+        const calendarioActual = this.calendario();
+        if (calendarioActual) {
+          // Agregar la nueva fecha al array de fechas
+          const fechasActualizadas = [
+            ...(calendarioActual.fechas || []),
+            nuevaFecha,
+          ];
+
+          this.calendario.set({
+            ...calendarioActual,
+            fechas: fechasActualizadas,
+          });
+        }
+
+        this.toastr.success('Fecha agregada con éxito');
+        this.cerrarModalAgregar();
+      }
+    } catch (error: any) {
+      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
+      const mensaje = error?.error?.mensaje || 'Error al agregar la fecha';
+      this.toastr.error(mensaje);
+    } finally {
+      this.guardandoFecha.set(false);
     }
   }
 

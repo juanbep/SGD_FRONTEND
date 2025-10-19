@@ -101,7 +101,9 @@
   ></app-modal-eliminar-fecha>
   <app-modal-agregar-fecha
     [visible]="modalAgregarVisible()"
-    [catalogoNombresFecha]="listaNombresFecha()"
+    [listaNombreFechas]="listaNombreFechas()"
+    [oidCalendario]="calendario()?.oidcalendario || 0"
+    (onConfirmar)="confirmarAgregarFecha($event)"
     (onCancelar)="cerrarModalAgregar()"
   ></app-modal-agregar-fecha>
 </div>

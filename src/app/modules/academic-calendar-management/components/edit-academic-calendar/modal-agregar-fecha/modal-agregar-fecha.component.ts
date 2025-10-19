@@ -15,7 +15,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { NombreFecha } from '../../../models';
+import { CreateFechaDto, NombreFecha } from '../../../models';
+import { ActivatedRoute } from '@angular/router';
+import { Utils } from '../../../utils/calendario.utils';
 @Component({
   selector: 'app-modal-agregar-fecha',
   standalone: true,
@@ -25,14 +27,17 @@ import { NombreFecha } from '../../../models';
 })
 export class ModalAgregarFechaComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
 
   // ===== INPUTS/OUTPUTS =====
   @Input() visible: boolean = false;
-  @Input() catalogoNombresFecha: {
+  @Input() listaNombreFechas: {
     value: number;
     label: string;
     tieneTemplate: boolean;
   }[] = [];
+  @Input() oidCalendario: number = 0;
+  @Output() onConfirmar = new EventEmitter<CreateFechaDto>();
   @Output() onCancelar = new EventEmitter<void>();
 
   // ===== CONSTANTES =====
@@ -52,6 +57,12 @@ export class ModalAgregarFechaComponent implements OnInit {
 
   ngOnInit(): void {
     this.inicializarFormulario();
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      if (id) {
+        this.oidCalendario = +id;
+      }
+    });
   }
 
   private inicializarFormulario(): void {
@@ -83,6 +94,29 @@ export class ModalAgregarFechaComponent implements OnInit {
     fechaFinControl?.updateValueAndValidity();
   }
 
+  // ===== MÉTODO CONFIRMAR =====
+  confirmar(): void {
+    if (this.fechaForm.invalid) {
+      this.fechaForm.markAllAsTouched();
+      return;
+    }
+
+    const formValues = this.fechaForm.value;
+
+    const createDto: CreateFechaDto = {
+      oidCalendario: this.oidCalendario,
+      oidNombreFecha: Number(formValues.oidNombreFecha),
+      tipo: 'RESALTADAS',
+      fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
+      // Si es fecha única, enviar null; si es rango, enviar la fecha final
+      fechaFin: this.esFechaUnica()
+        ? null // Enviar null para fechas únicas
+        : Utils.convertirFechaADateTime(formValues.fechaFin)!,
+    };
+
+    this.onConfirmar.emit(createDto);
+  }
+
   selectTipoFecha(value: number): void {
     this.fechaForm.patchValue({ oidNombreFecha: value });
   }
@@ -91,7 +125,7 @@ export class ModalAgregarFechaComponent implements OnInit {
     const value = this.nombreFechaControl?.value;
     if (!value) return '';
 
-    const selected = this.catalogoNombresFecha.find(
+    const selected = this.listaNombreFechas.find(
       (item) => item.value === Number(value)
     );
     return selected?.label || '';

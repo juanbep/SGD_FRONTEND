@@ -23,6 +23,21 @@ export class Utils {
     }
   }
 
+  /**
+   * Convierte una fecha en formato YYYY-MM-DD a LocalDateTime ISO string
+   * @param fecha Fecha en formato YYYY-MM-DD
+   * @returns Fecha en formato YYYY-MM-DDTHH:mm:ss
+   */
+  static convertirFechaADateTime(fecha: string | null): string | null {
+    if (!fecha) return null;
+
+    // Si ya tiene el formato completo, retornar
+    if (fecha.includes('T')) return fecha;
+
+    // Agregar hora por defecto (medianoche)
+    return `${fecha}T00:00:00`;
+  }
+
   static ordenarFechasPorOid(fechas: Fecha[]): Fecha[] {
     if (!fechas || fechas.length === 0) return [];
 
