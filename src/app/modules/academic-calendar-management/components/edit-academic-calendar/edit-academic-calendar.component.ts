@@ -9,7 +9,12 @@ import {
   FechaHelperService,
   NombreFechaHelperService,
 } from '../../services';
-import { Calendario, CreateFechaDto, Fecha } from '../../models';
+import {
+  Calendario,
+  CreateFechaDto,
+  Fecha,
+  UpdateFechaDto,
+} from '../../models';
 import { ModalEliminarFechaComponent } from './modal-eliminar-fecha/modal-eliminar-fecha.component';
 import { DetalleCalendarioComponent } from './detalle-calendario/detalle-calendario.component';
 import { Utils } from '../../utils/calendario.utils';
@@ -48,6 +53,7 @@ export class EditAcademicCalendarComponent implements OnInit {
   >([]);
   readonly guardandoFecha = signal<boolean>(false);
   readonly cargandoListaFechas = signal<boolean>(false);
+  readonly fechaAEditar = signal<Fecha | null>(null);
 
   // ===== COMPUTED =====
   readonly tituloCalendario = computed(() => {
@@ -151,6 +157,7 @@ export class EditAcademicCalendarComponent implements OnInit {
     }
   }
 
+  // ===== AGREGAR FECHA =====
   async confirmarAgregarFecha(createDto: CreateFechaDto): Promise<void> {
     // Prevención de doble clic
     if (this.guardandoFecha()) return;
@@ -187,6 +194,40 @@ export class EditAcademicCalendarComponent implements OnInit {
     }
   }
 
+  // ===== ACTUALIZAR FECHA =====
+  async confirmarEditarFecha(updateDto: UpdateFechaDto): Promise<void> {
+    if (this.guardandoFecha()) return;
+
+    this.guardandoFecha.set(true);
+
+    try {
+      const fechaActualizada = await this.fechaHelper.update(updateDto);
+
+      if (fechaActualizada) {
+        const calendarioActual = this.calendario();
+        if (calendarioActual) {
+          const fechasActualizadas = calendarioActual.fechas?.map((f) =>
+            f.oidFecha === fechaActualizada.oidFecha ? fechaActualizada : f
+          );
+
+          this.calendario.set({
+            ...calendarioActual,
+            fechas: fechasActualizadas,
+          });
+        }
+
+        this.toastr.success('Fecha actualizada con éxito');
+        this.cerrarModalAgregar();
+      }
+    } catch (error: any) {
+      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
+      const mensaje = error?.error?.mensaje || 'Error al actualizar la fecha';
+      this.toastr.error(mensaje);
+    } finally {
+      this.guardandoFecha.set(false);
+    }
+  }
+
   // ===== HANDLER PARA ACTUALIZACIÓN CALENDARIO DESDE COMPONENTE HIJO =====
   onCalendarioActualizado(calendarioActualizado: Calendario): void {
     this.calendario.set(calendarioActualizado);
@@ -216,10 +257,19 @@ export class EditAcademicCalendarComponent implements OnInit {
 
   // ===== MODAL AGREGAR FECHA =====
   abrirModalAgregar(): void {
+    this.fechaAEditar.set(null); // Asegurar que está en modo crear
     this.modalAgregarVisible.set(true);
   }
 
   cerrarModalAgregar(): void {
     this.modalAgregarVisible.set(false);
+    this.fechaAEditar.set(null);
+    this.guardandoFecha.set(false);
+  }
+
+  // ===== MODAL EDITAR FECHA =====
+  abrirModalEditar(fecha: Fecha): void {
+    this.fechaAEditar.set(fecha);
+    this.modalAgregarVisible.set(true);
   }
 }

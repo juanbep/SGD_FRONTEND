@@ -53,3 +53,8 @@
 .dropdown-toggle.is-invalid {
   border-color: #dc3545;
 }
+
+/* Estilo para dropdown deshabilitado */
+.dropdown-toggle::after {
+  content: none;
+}

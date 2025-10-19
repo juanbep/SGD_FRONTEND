@@ -58,6 +58,16 @@
                 {{ formatoFecha(fecha) }}
               </td>
               <td class="text-center align-middle">
+                <!-- Botón Editar -->
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm me-2"
+                  (click)="abrirModalEditar(fecha)"
+                  title="Editar"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <!-- Botón Eliminar -->
                 <button
                   type="button"
                   class="btn btn-outline-danger btn-sm"
@@ -103,7 +113,10 @@
     [visible]="modalAgregarVisible()"
     [listaNombreFechas]="listaNombreFechas()"
     [oidCalendario]="calendario()?.oidcalendario || 0"
+    [guardando]="guardandoFecha()"
+    [fechaAEditar]="fechaAEditar()"
     (onConfirmar)="confirmarAgregarFecha($event)"
+    (onConfirmarEdicion)="confirmarEditarFecha($event)"
     (onCancelar)="cerrarModalAgregar()"
   ></app-modal-agregar-fecha>
 </div>

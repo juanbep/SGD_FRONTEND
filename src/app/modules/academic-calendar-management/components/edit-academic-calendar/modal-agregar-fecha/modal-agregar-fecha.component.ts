@@ -7,6 +7,8 @@ import {
   inject,
   computed,
   signal,
+  SimpleChanges,
+  OnChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -15,7 +17,12 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { CreateFechaDto, NombreFecha } from '../../../models';
+import {
+  CreateFechaDto,
+  Fecha,
+  NombreFecha,
+  UpdateFechaDto,
+} from '../../../models';
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from '../../../utils/calendario.utils';
 @Component({
@@ -25,7 +32,7 @@ import { Utils } from '../../../utils/calendario.utils';
   templateUrl: './modal-agregar-fecha.component.html',
   styleUrl: './modal-agregar-fecha.component.css',
 })
-export class ModalAgregarFechaComponent implements OnInit {
+export class ModalAgregarFechaComponent implements OnInit, OnChanges {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
 
@@ -37,7 +44,10 @@ export class ModalAgregarFechaComponent implements OnInit {
     tieneTemplate: boolean;
   }[] = [];
   @Input() oidCalendario: number = 0;
+  @Input() guardando: boolean = false;
+  @Input() fechaAEditar: Fecha | null = null;
   @Output() onConfirmar = new EventEmitter<CreateFechaDto>();
+  @Output() onConfirmarEdicion = new EventEmitter<UpdateFechaDto>();
   @Output() onCancelar = new EventEmitter<void>();
 
   // ===== CONSTANTES =====
@@ -45,11 +55,19 @@ export class ModalAgregarFechaComponent implements OnInit {
 
   // ===== SIGNALS =====
   readonly tipoFechaSeleccionado = signal<number | null>(null);
+  readonly fechaActual = signal<Fecha | null>(null);
 
   // ===== COMPUTED =====
   readonly esFechaUnica = computed(() => {
     const oid = this.tipoFechaSeleccionado();
     return oid !== null && this.OIDS_FECHA_UNICA.includes(oid);
+  });
+  readonly modoEdicion = computed(() => this.fechaActual() !== null);
+  readonly tituloModal = computed(() => {
+    return this.modoEdicion() ? 'Editar Fecha' : 'Agregar Nueva Fecha';
+  });
+  readonly iconoModal = computed(() => {
+    return this.modoEdicion() ? 'fa-edit' : 'fa-calendar-plus';
   });
 
   // ===== FORMULARIO =====
@@ -65,6 +83,20 @@ export class ModalAgregarFechaComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['fechaAEditar']) {
+      this.fechaActual.set(this.fechaAEditar);
+
+      if (this.fechaAEditar) {
+        this.cargarDatosFecha(this.fechaAEditar);
+      }
+    }
+
+    if (changes['visible'] && !this.visible) {
+      this.resetearFormulario();
+    }
+  }
+
   private inicializarFormulario(): void {
     this.fechaForm = this.fb.group({
       oidNombreFecha: [null, Validators.required],
@@ -77,6 +109,27 @@ export class ModalAgregarFechaComponent implements OnInit {
       this.tipoFechaSeleccionado.set(oid ? Number(oid) : null);
       this.ajustarValidacionesFecha(oid ? Number(oid) : null);
     });
+  }
+
+  private cargarDatosFecha(fecha: Fecha): void {
+    // Convertir fechas de DateTime a formato date input (YYYY-MM-DD)
+    const fechaInicial = fecha.fechaInicial
+      ? this.extraerSoloFecha(fecha.fechaInicial.toString())
+      : null;
+    const fechaFin = fecha.fechaFin
+      ? this.extraerSoloFecha(fecha.fechaFin.toString())
+      : null;
+
+    this.fechaForm.patchValue({
+      oidNombreFecha: fecha.oidNombreFecha,
+      fechaInicial: fechaInicial,
+      fechaFin: fechaFin,
+    });
+  }
+
+  private extraerSoloFecha(fechaDateTime: string): string {
+    // Extrae "2025-08-07" de "2025-08-07T00:00:00"
+    return fechaDateTime.split('T')[0];
   }
 
   private ajustarValidacionesFecha(oid: number | null): void {
@@ -103,18 +156,32 @@ export class ModalAgregarFechaComponent implements OnInit {
 
     const formValues = this.fechaForm.value;
 
-    const createDto: CreateFechaDto = {
-      oidCalendario: this.oidCalendario,
-      oidNombreFecha: Number(formValues.oidNombreFecha),
-      tipo: 'RESALTADAS',
-      fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
-      // Si es fecha única, enviar null; si es rango, enviar la fecha final
-      fechaFin: this.esFechaUnica()
-        ? null // Enviar null para fechas únicas
-        : Utils.convertirFechaADateTime(formValues.fechaFin)!,
-    };
-
-    this.onConfirmar.emit(createDto);
+    if (this.modoEdicion()) {
+      // Modo edición
+      const updateDto: UpdateFechaDto = {
+        oidFecha: this.fechaAEditar!.oidFecha,
+        oidCalendario: this.oidCalendario,
+        oidNombreFecha: Number(formValues.oidNombreFecha),
+        tipo: 'RESALTADAS',
+        fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
+        fechaFin: this.esFechaUnica()
+          ? null
+          : Utils.convertirFechaADateTime(formValues.fechaFin)!,
+      };
+      this.onConfirmarEdicion.emit(updateDto);
+    } else {
+      // Modo crear
+      const createDto: CreateFechaDto = {
+        oidCalendario: this.oidCalendario,
+        oidNombreFecha: Number(formValues.oidNombreFecha),
+        tipo: 'RESALTADAS',
+        fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
+        fechaFin: this.esFechaUnica()
+          ? null
+          : Utils.convertirFechaADateTime(formValues.fechaFin)!,
+      };
+      this.onConfirmar.emit(createDto);
+    }
   }
 
   selectTipoFecha(value: number): void {
@@ -129,6 +196,12 @@ export class ModalAgregarFechaComponent implements OnInit {
       (item) => item.value === Number(value)
     );
     return selected?.label || '';
+  }
+
+  private resetearFormulario(): void {
+    this.fechaForm.reset();
+    this.tipoFechaSeleccionado.set(null);
+    this.fechaActual.set(null);
   }
 
   cancelar(): void {
