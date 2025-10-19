@@ -29,10 +29,10 @@ import { Utils } from '../../../utils/calendario.utils';
   selector: 'app-modal-agregar-fecha',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './modal-agregar-fecha.component.html',
-  styleUrl: './modal-agregar-fecha.component.css',
+  templateUrl: './modal-agregar-editar-fecha.component.html',
+  styleUrl: './modal-agregar-editar-fecha.component.css',
 })
-export class ModalAgregarFechaComponent implements OnInit, OnChanges {
+export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
 

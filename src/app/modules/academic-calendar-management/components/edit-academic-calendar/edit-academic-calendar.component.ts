@@ -18,7 +18,7 @@ import {
 import { ModalEliminarFechaComponent } from './modal-eliminar-fecha/modal-eliminar-fecha.component';
 import { DetalleCalendarioComponent } from './detalle-calendario/detalle-calendario.component';
 import { Utils } from '../../utils/calendario.utils';
-import { ModalAgregarFechaComponent } from './modal-agregar-fecha/modal-agregar-fecha.component';
+import { ModalAgregarEditarFechaComponent } from './modal-agregar-editar-fecha/modal-agregar-editar-fecha.component';
 
 @Component({
   selector: 'app-edit-academic-calendar',
@@ -27,7 +27,7 @@ import { ModalAgregarFechaComponent } from './modal-agregar-fecha/modal-agregar-
     CommonModule,
     RouterLink,
     ModalEliminarFechaComponent,
-    ModalAgregarFechaComponent,
+    ModalAgregarEditarFechaComponent,
     DetalleCalendarioComponent,
   ],
   templateUrl: './edit-academic-calendar.component.html',
