@@ -2,9 +2,9 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule, DatePipe, NgIf, NgFor } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { CalendarioHelperService } from '../../../services/calendario/calendario-helper.service';
-import { Calendario } from '../../../models';
-import { Utils } from '../../../utils/calendario.utils';
+import { CalendarioHelperService } from '../../services/calendario/calendario-helper.service';
+import { Calendario } from '../../models';
+import { Utils } from '../../utils/calendario.utils';
 
 @Component({
   selector: 'app-view-academic-calendar',
