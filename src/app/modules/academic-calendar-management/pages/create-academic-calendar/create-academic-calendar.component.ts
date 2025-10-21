@@ -15,11 +15,20 @@ import {
   InfoBasicaData,
 } from '../../components/create-academic-calendar/step-info-basica/step-info-basica.component';
 import { CreateCalendarioWizardData, INITIAL_WIZARD_DATA } from '../../models';
+import {
+  ConfigAcademicaData,
+  StepConfigAcademicaComponent,
+} from '../../components/create-academic-calendar/step-config-academica/step-config-academica.component';
 
 @Component({
   selector: 'app-create-academic-calendar',
   standalone: true,
-  imports: [CommonModule, StepperComponent, StepInfoBasicaComponent],
+  imports: [
+    CommonModule,
+    StepperComponent,
+    StepInfoBasicaComponent,
+    StepConfigAcademicaComponent,
+  ],
   templateUrl: './create-academic-calendar.component.html',
   styleUrl: './create-academic-calendar.component.css',
 })
@@ -28,6 +37,8 @@ export class CreateAcademicCalendarComponent implements OnInit {
   private readonly toastr = inject(ToastrService);
 
   @ViewChild(StepInfoBasicaComponent) stepInfoBasica!: StepInfoBasicaComponent;
+  @ViewChild(StepConfigAcademicaComponent)
+  stepConfigAcademica!: StepConfigAcademicaComponent;
 
   // ===== SIGNALS =====
   readonly datosWizard = signal<CreateCalendarioWizardData>(
@@ -37,6 +48,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
   readonly esUltimoPaso = computed(() => this.pasoActual() === 4);
   readonly esPrimerPaso = computed(() => this.pasoActual() === 1);
   readonly paso1Valido = signal<boolean>(false);
+  readonly paso2Valido = signal<boolean>(false);
 
   // ===== CONSTANTES =====
   readonly TOTAL_PASOS = 4;
@@ -52,6 +64,8 @@ export class CreateAcademicCalendarComponent implements OnInit {
   }
 
   // ===== MANEJADOR DE EVENTOS =====
+
+  // Manejador de eventos paso 1
   alCambiarInfoBasica(datos: InfoBasicaData): void {
     const datosActuales = this.datosWizard();
     this.datosWizard.set({
@@ -61,8 +75,22 @@ export class CreateAcademicCalendarComponent implements OnInit {
     this.guardarBorradorEnStorage();
   }
 
+  // Manejador de eventos paso 2
+  alCambiarConfigAcademica(datos: ConfigAcademicaData): void {
+    const datosActuales = this.datosWizard();
+    this.datosWizard.set({
+      ...datosActuales,
+      configAcademica: datos,
+    });
+    this.guardarBorradorEnStorage();
+  }
+
   alCambiarValidezPaso1(valido: boolean): void {
     this.paso1Valido.set(valido);
+  }
+
+  alCambiarValidezPaso2(valido: boolean): void {
+    this.paso2Valido.set(valido);
   }
 
   // ===== NAVEGACIÓN =====
@@ -77,6 +105,14 @@ export class CreateAcademicCalendarComponent implements OnInit {
 
       const valido = await this.stepInfoBasica.validarCalendarioExistente();
       if (!valido) return;
+    }
+
+    if (this.pasoActual() === 2) {
+      if (!this.paso2Valido()) {
+        this.stepConfigAcademica.marcarTodoComoTocado();
+        this.toastr.warning('Por favor, completa todos los campos requeridos');
+        return;
+      }
     }
 
     if (this.pasoActual() < this.TOTAL_PASOS) {

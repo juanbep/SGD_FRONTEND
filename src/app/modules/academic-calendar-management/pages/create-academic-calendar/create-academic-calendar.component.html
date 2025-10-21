@@ -30,9 +30,12 @@
     ></app-step-info-basica>
 
     <!-- Paso 2: TODO -->
-    <div *ngIf="pasoActual() === 2">
-      <h5>Paso 2: Configuración Académica (próximamente)</h5>
-    </div>
+    <app-step-config-academica
+      *ngIf="pasoActual() === 2"
+      [datosIniciales]="datosWizard().configAcademica"
+      (cambioFormulario)="alCambiarConfigAcademica($event)"
+      (formularioValido)="alCambiarValidezPaso2($event)"
+    ></app-step-config-academica>
 
     <!-- Paso 3: TODO -->
     <div *ngIf="pasoActual() === 3">
