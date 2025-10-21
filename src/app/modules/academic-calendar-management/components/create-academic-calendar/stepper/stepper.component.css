@@ -77,17 +77,3 @@
 .stepper-item.completed .stepper-label {
   color: #198754;
 }
-
-/* Wizard Content */
-.wizard-content {
-  min-height: 400px;
-}
-
-/* Wizard Footer */
-.wizard-footer {
-  padding: 1.5rem 0;
-}
-
-.wizard-footer button {
-  min-width: 150px;
-}

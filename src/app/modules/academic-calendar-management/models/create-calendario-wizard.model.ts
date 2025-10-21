@@ -24,7 +24,7 @@ export interface CreateCalendarioWizardData {
   fechas: CreateFechaDto[];
 
   // Meta información del wizard
-  estadoActual: number;
+  currentStep: number;
   stepsCompleted: boolean[];
 }
 
@@ -45,6 +45,6 @@ export const INITIAL_WIZARD_DATA: CreateCalendarioWizardData = {
     horasBecarioPracticante: null,
   },
   fechas: [],
-  estadoActual: 1,
+  currentStep: 1,
   stepsCompleted: [false, false, false, false],
 };

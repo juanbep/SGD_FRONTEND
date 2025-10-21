@@ -1,0 +1,38 @@
+.step-header h5 {
+  color: #000066;
+  font-weight: 600;
+}
+
+.wizard-form {
+  padding: 1rem 0;
+}
+
+.wizard-form .form-label {
+  margin-bottom: 0.5rem;
+}
+
+.wizard-form .form-text {
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.input-group .btn {
+  border-color: #ced4da;
+}
+
+.input-group .btn:hover {
+  background-color: #e9ecef;
+}
+
+.form-control.bg-light {
+  cursor: default;
+}
+
+.alert ul {
+  padding-left: 1.25rem;
+  margin-bottom: 0;
+}
+
+.alert ul li {
+  margin-bottom: 0.25rem;
+}

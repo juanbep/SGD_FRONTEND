@@ -199,7 +199,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   }
 
   private resetearFormulario(): void {
-    this.fechaForm.reset();
+    //this.fechaForm.reset();
     this.tipoFechaSeleccionado.set(null);
     this.fechaActual.set(null);
   }

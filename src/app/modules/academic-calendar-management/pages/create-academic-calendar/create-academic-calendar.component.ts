@@ -1,99 +1,176 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  signal,
+  computed,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CalendarioService } from '../../services/calendario.service';
-import { CrearCalendario } from '../../models';
+import { StepperComponent } from '../../components/create-academic-calendar/stepper/stepper.component';
+import {
+  StepInfoBasicaComponent,
+  InfoBasicaData,
+} from '../../components/create-academic-calendar/step-info-basica/step-info-basica.component';
+import { CreateCalendarioWizardData, INITIAL_WIZARD_DATA } from '../../models';
 
 @Component({
   selector: 'app-create-academic-calendar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StepperComponent, StepInfoBasicaComponent],
   templateUrl: './create-academic-calendar.component.html',
   styleUrl: './create-academic-calendar.component.css',
 })
-export class CreateAcademicCalendarComponent {
-  loading = false;
+export class CreateAcademicCalendarComponent implements OnInit {
+  private readonly router = inject(Router);
+  private readonly toastr = inject(ToastrService);
 
-  constructor(
-    private calendarioService: CalendarioService,
-    private toastr: ToastrService,
-    private router: Router
-  ) {}
+  @ViewChild(StepInfoBasicaComponent) stepInfoBasica!: StepInfoBasicaComponent;
 
-  // Método principal para crear calendario
-  crearCalendario(calendarioData: CrearCalendario): void {
-    this.loading = true;
+  // ===== SIGNALS =====
+  readonly datosWizard = signal<CreateCalendarioWizardData>(
+    structuredClone(INITIAL_WIZARD_DATA)
+  );
+  readonly pasoActual = computed(() => this.datosWizard().currentStep);
+  readonly esUltimoPaso = computed(() => this.pasoActual() === 4);
+  readonly esPrimerPaso = computed(() => this.pasoActual() === 1);
+  readonly paso1Valido = signal<boolean>(false);
 
-    console.log('Creando calendario:', calendarioData); // Debug
+  // ===== CONSTANTES =====
+  readonly TOTAL_PASOS = 4;
+  readonly TITULOS_PASOS = [
+    'Información Básica',
+    'Configuración Académica',
+    'Fechas del Calendario',
+    'Revisión y Confirmación',
+  ];
 
-    this.calendarioService.crearCalendario(calendarioData).subscribe({
-      next: (response) => {
-        console.log('Calendario creado exitosamente:', response);
-        this.toastr.success(
-          response.mensaje || 'Calendario creado correctamente'
-        );
-        this.loading = false;
+  ngOnInit(): void {
+    this.cargarBorradorDeStorage();
+  }
 
-        // Opcional: Navegar a la lista después de crear
-        // this.navegarALista();
-      },
-      error: (error) => {
-        console.error('Error creando calendario:', error);
-        this.loading = false;
-        this.toastr.error(
-          error?.error?.mensaje || 'Error al crear el calendario'
-        );
-      },
+  // ===== MANEJADOR DE EVENTOS =====
+  alCambiarInfoBasica(datos: InfoBasicaData): void {
+    const datosActuales = this.datosWizard();
+    this.datosWizard.set({
+      ...datosActuales,
+      infoBasica: datos,
     });
+    this.guardarBorradorEnStorage();
   }
 
-  // Método para validar datos antes de enviar
-  validarYCrear(formData: any): void {
-    const calendarioData: CrearCalendario = {
-      anioCalendario: formData.anioCalendario?.toString() || '',
-      numeroCalendario: formData.numeroCalendario || 0,
-      observacion: formData.observacion || '',
-    };
+  alCambiarValidezPaso1(valido: boolean): void {
+    this.paso1Valido.set(valido);
+  }
 
-    // Validaciones básicas
-    if (!this.validarDatos(calendarioData)) {
-      return;
+  // ===== NAVEGACIÓN =====
+  async siguientePaso(): Promise<void> {
+    // Validar paso actual antes de avanzar
+    if (this.pasoActual() === 1) {
+      if (!this.paso1Valido()) {
+        this.stepInfoBasica.marcarTodoComoTocado();
+        this.toastr.warning('Por favor, completa todos los campos requeridos');
+        return;
+      }
+
+      const valido = await this.stepInfoBasica.validarCalendarioExistente();
+      if (!valido) return;
     }
 
-    this.crearCalendario(calendarioData);
-  }
+    if (this.pasoActual() < this.TOTAL_PASOS) {
+      const datos = this.datosWizard();
+      const pasosCompletadosActualizados = [...datos.stepsCompleted];
+      pasosCompletadosActualizados[this.pasoActual() - 1] = true;
 
-  // Validaciones locales
-  private validarDatos(data: CrearCalendario): boolean {
-    if (!data.anioCalendario.trim()) {
-      this.toastr.warning('El año del calendario es requerido');
-      return false;
+      this.datosWizard.set({
+        ...datos,
+        currentStep: datos.currentStep + 1,
+        stepsCompleted: pasosCompletadosActualizados,
+      });
+      this.guardarBorradorEnStorage();
     }
+  }
 
-    if (!data.numeroCalendario || data.numeroCalendario <= 0) {
-      this.toastr.warning('El número del calendario debe ser mayor a 0');
-      return false;
+  pasoAnterior(): void {
+    if (this.pasoActual() > 1) {
+      const datos = this.datosWizard();
+      this.datosWizard.set({
+        ...datos,
+        currentStep: datos.currentStep - 1,
+      });
     }
-
-    return true;
   }
 
-  // Navegación
-  navegarALista(): void {
-    this.router.navigate(['/calendario-academico/listar']); // Ajusta la ruta
+  irAPaso(paso: number): void {
+    const datos = this.datosWizard();
+    if (paso >= 1 && paso <= this.TOTAL_PASOS) {
+      if (paso > 1 && !datos.stepsCompleted[paso - 2]) {
+        this.toastr.info('Debes completar los pasos anteriores primero');
+        return;
+      }
+
+      this.datosWizard.set({
+        ...datos,
+        currentStep: paso,
+      });
+    }
   }
 
-  cancelar(): void {
-    this.navegarALista();
+  // ===== AUTO-SAVE =====
+  private guardarBorradorEnStorage(): void {
+    try {
+      localStorage.setItem(
+        'calendario_draft',
+        JSON.stringify(this.datosWizard())
+      );
+    } catch (error) {
+      console.error('Error al guardar borrador:', error);
+    }
   }
 
-  // Getters para el template
-  get puedeCrear(): boolean {
-    return !this.loading;
+  private cargarBorradorDeStorage(): void {
+    try {
+      const borrador = localStorage.getItem('calendario_draft');
+      if (borrador) {
+        this.datosWizard.set(JSON.parse(borrador));
+        this.toastr.info(
+          'Se ha cargado un borrador guardado',
+          'Borrador encontrado',
+          {
+            timeOut: 3000,
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error al cargar borrador:', error);
+    }
   }
 
-  get mostrarSpinner(): boolean {
-    return this.loading;
+  limpiarBorrador(): void {
+    localStorage.removeItem('calendario_draft');
+  }
+
+  // ===== ACCIONES =====
+  guardarBorrador(): void {
+    this.guardarBorradorEnStorage();
+    this.toastr.success('Borrador guardado correctamente');
+  }
+
+  cancel(): void {
+    if (
+      confirm(
+        '¿Estás seguro de cancelar? Se perderán los cambios no guardados.'
+      )
+    ) {
+      this.limpiarBorrador();
+      this.router.navigate(['/app/gestion-calendario-academico']);
+    }
+  }
+
+  submit(): void {
+    console.log('Datos a enviar:', this.datosWizard());
+    this.toastr.info('Funcionalidad de envío próximamente');
   }
 }

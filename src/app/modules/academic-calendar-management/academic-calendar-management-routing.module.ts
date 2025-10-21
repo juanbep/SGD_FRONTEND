@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role.guard';
 import { AcademicCalendarManagementComponent } from './pages/academic-calendar-management/academic-calendar-management.component';
-import { CreateAcademicCalendarComponent } from './components/create-academic-calendar/create-academic-calendar.component';
+import { CreateAcademicCalendarComponent } from './pages/create-academic-calendar/create-academic-calendar.component';
 import { ViewAcademicCalendarComponent } from './components/view-academic-calendar/view-academic-calendar.component';
 import { ViewAcademicCalendarsComponent } from './pages/view-academic-calendars/view-academic-calendars.component';
 import { EditAcademicCalendarComponent } from './components/edit-academic-calendar/edit-academic-calendar.component';
