@@ -14,11 +14,16 @@ import {
   StepInfoBasicaComponent,
   InfoBasicaData,
 } from '../../components/create-academic-calendar/step-info-basica/step-info-basica.component';
-import { CreateCalendarioWizardData, INITIAL_WIZARD_DATA } from '../../models';
+import {
+  CreateCalendarioWizardData,
+  CreateFechaDto,
+  INITIAL_WIZARD_DATA,
+} from '../../models';
 import {
   ConfigAcademicaData,
   StepConfigAcademicaComponent,
 } from '../../components/create-academic-calendar/step-config-academica/step-config-academica.component';
+import { StepFechasComponent } from '../../components/create-academic-calendar/step-fechas/step-fechas.component';
 
 @Component({
   selector: 'app-create-academic-calendar',
@@ -28,6 +33,7 @@ import {
     StepperComponent,
     StepInfoBasicaComponent,
     StepConfigAcademicaComponent,
+    StepFechasComponent,
   ],
   templateUrl: './create-academic-calendar.component.html',
   styleUrl: './create-academic-calendar.component.css',
@@ -39,6 +45,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
   @ViewChild(StepInfoBasicaComponent) stepInfoBasica!: StepInfoBasicaComponent;
   @ViewChild(StepConfigAcademicaComponent)
   stepConfigAcademica!: StepConfigAcademicaComponent;
+  @ViewChild(StepFechasComponent) stepFechas!: StepFechasComponent;
 
   // ===== SIGNALS =====
   readonly datosWizard = signal<CreateCalendarioWizardData>(
@@ -49,6 +56,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
   readonly esPrimerPaso = computed(() => this.pasoActual() === 1);
   readonly paso1Valido = signal<boolean>(false);
   readonly paso2Valido = signal<boolean>(false);
+  readonly paso3Valido = signal<boolean>(false);
 
   // ===== CONSTANTES =====
   readonly TOTAL_PASOS = 4;
@@ -93,6 +101,19 @@ export class CreateAcademicCalendarComponent implements OnInit {
     this.paso2Valido.set(valido);
   }
 
+  alCambiarValidezPaso3(valido: boolean): void {
+    this.paso3Valido.set(valido);
+  }
+
+  alCambiarFechas(fechas: CreateFechaDto[]): void {
+    const datosActuales = this.datosWizard();
+    this.datosWizard.set({
+      ...datosActuales,
+      fechas: fechas,
+    });
+    this.guardarBorradorEnStorage();
+  }
+
   // ===== NAVEGACIÓN =====
   async siguientePaso(): Promise<void> {
     // Validar paso actual antes de avanzar
@@ -111,6 +132,15 @@ export class CreateAcademicCalendarComponent implements OnInit {
       if (!this.paso2Valido()) {
         this.stepConfigAcademica.marcarTodoComoTocado();
         this.toastr.warning('Por favor, completa todos los campos requeridos');
+        return;
+      }
+    }
+
+    if (this.pasoActual() === 3) {
+      if (!this.paso3Valido()) {
+        this.toastr.error(
+          'Debes agregar al menos la fecha de Inicio del periodo'
+        );
         return;
       }
     }

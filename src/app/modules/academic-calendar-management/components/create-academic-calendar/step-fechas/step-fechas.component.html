@@ -1,1 +1,173 @@
-<p>step-fechas works!</p>
+<div class="step-header mb-4">
+  <h5 class="mb-2">
+    <i class="fas fa-calendar-alt me-2 text-primary"></i>
+    Paso 3: Fechas del Calendario
+  </h5>
+  <p class="text-muted mb-0">
+    Agrega las fechas importantes del calendario. La fecha de
+    <strong>Inicio del periodo</strong> es obligatoria.
+  </p>
+</div>
+
+<!-- Mensaje informativo -->
+<div class="alert alert-warning d-flex align-items-start" role="alert">
+  <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+  <div>
+    <strong>Fecha obligatoria:</strong>
+    <p class="mb-0 mt-1">
+      Debes agregar al menos la fecha de <strong>Inicio del periodo</strong>.
+      Las demás fechas son opcionales y pueden agregarse ahora o después.
+    </p>
+  </div>
+</div>
+
+<!-- Botones de acción -->
+<div class="d-flex gap-2 mb-4">
+  <button type="button" class="btn btn-primary" (click)="abrirModalAgregar()">
+    <i class="fas fa-plus me-2"></i>
+    Agregar fecha
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    (click)="abrirModalSeleccionar()"
+    [disabled]="cargandoCalendarios()"
+  >
+    <span *ngIf="!cargandoCalendarios()">
+      <i class="fas fa-copy me-2"></i>
+      Copiar fechas de calendario anterior
+    </span>
+    <span *ngIf="cargandoCalendarios()">
+      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Cargando...
+    </span>
+  </button>
+</div>
+
+<!-- Estado: Sin fecha obligatoria -->
+<div
+  *ngIf="!esValido()"
+  class="alert alert-danger d-flex align-items-center"
+  role="alert"
+>
+  <i class="fas fa-times-circle fa-2x me-3"></i>
+  <div>
+    <strong>Fecha obligatoria faltante</strong>
+    <p class="mb-0">
+      Debes agregar la fecha de <strong>Inicio del periodo</strong> para
+      continuar.
+    </p>
+  </div>
+</div>
+
+<!-- Lista de fechas -->
+<div class="card shadow-sm">
+  <div
+    class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
+    style="background-color: #000066"
+  >
+    <span>
+      <i class="fas fa-list me-2"></i>
+      Fechas Agregadas ({{ fechasLocales().length }})
+    </span>
+  </div>
+
+  <!-- Sin fechas -->
+  <div class="card-body" *ngIf="fechasLocales().length === 0; else tablaFechas">
+    <div class="alert alert-info d-flex align-items-center mb-0" role="alert">
+      <i class="fas fa-info-circle fa-2x me-3"></i>
+      <div>
+        <h6 class="alert-heading mb-1">No hay fechas agregadas</h6>
+        <p class="mb-0">
+          Haz clic en "Agregar fecha" para comenzar o copia las fechas de un
+          calendario anterior.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Con fechas -->
+  <ng-template #tablaFechas>
+    <div class="card-body table-responsive">
+      <table class="table table-bordered table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 50%">
+              <i class="fas fa-tag me-2"></i>
+              Nombre
+            </th>
+            <th class="text-center" style="width: 40%">
+              <i class="fas fa-calendar me-2"></i>
+              Fecha
+            </th>
+            <th class="text-center" style="width: 10%">
+              <i class="fas fa-cog me-2"></i>
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let fecha of fechasLocales()"
+            [class.table-warning]="fecha.oidNombreFecha === 1"
+          >
+            <td>
+              <i
+                class="fas fa-star text-warning me-2"
+                *ngIf="fecha.oidNombreFecha === 1"
+                title="Fecha obligatoria"
+              ></i>
+              {{ fecha.nombre }}
+            </td>
+            <td class="text-center">
+              {{ formatearFecha(fecha) }}
+            </td>
+            <td class="text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm me-2"
+                (click)="abrirModalEditar(fecha)"
+                title="Editar"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm"
+                (click)="eliminarFecha(fecha)"
+                [disabled]="fecha.oidNombreFecha === 1"
+                [title]="
+                  fecha.oidNombreFecha === 1
+                    ? 'No se puede eliminar (obligatoria)'
+                    : 'Eliminar'
+                "
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modales -->
+<app-modal-agregar-fecha
+  [visible]="modalAgregarVisible()"
+  [listaNombreFechas]="catalogoNombresFecha()"
+  [oidCalendario]="0"
+  [guardando]="guardandoFecha()"
+  [fechaAEditar]="fechaAEditar()"
+  (onConfirmar)="confirmarAgregarFecha($event)"
+  (onConfirmarEdicion)="confirmarEditarFecha($event)"
+  (onCancelar)="cerrarModalAgregar()"
+></app-modal-agregar-fecha>
+
+<app-modal-seleccionar-calendario
+  [visible]="modalSeleccionarVisible()"
+  [calendarios]="calendariosDisponibles()"
+  (onSeleccionar)="copiarFechas($event)"
+  (onCancelar)="cerrarModalSeleccionar()"
+></app-modal-seleccionar-calendario>

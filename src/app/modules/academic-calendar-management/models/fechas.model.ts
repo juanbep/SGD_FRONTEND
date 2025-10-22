@@ -53,11 +53,11 @@ export interface FechaFilters {
 
 // DTOs para CRUD
 export interface CreateFechaDto {
+  oidCalendario: number;
+  oidNombreFecha: number;
   fechaInicial: string;
   fechaFin: string | null;
   tipo: TipoFecha;
-  oidNombreFecha: number;
-  oidCalendario: number;
 }
 
 export interface UpdateFechaDto extends Partial<CreateFechaDto> {

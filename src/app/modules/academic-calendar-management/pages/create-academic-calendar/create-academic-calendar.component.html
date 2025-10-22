@@ -38,9 +38,12 @@
     ></app-step-config-academica>
 
     <!-- Paso 3: TODO -->
-    <div *ngIf="pasoActual() === 3">
-      <h5>Paso 3: Fechas del Calendario (próximamente)</h5>
-    </div>
+    <app-step-fechas
+      *ngIf="pasoActual() === 3"
+      [fechasIniciales]="datosWizard().fechas"
+      (cambioFechas)="alCambiarFechas($event)"
+      (formularioValido)="alCambiarValidezPaso3($event)"
+    ></app-step-fechas>
 
     <!-- Paso 4: TODO -->
     <div *ngIf="pasoActual() === 4">

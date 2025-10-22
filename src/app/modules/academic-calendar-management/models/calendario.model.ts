@@ -4,7 +4,7 @@ import { Fecha } from './fechas.model';
 // Modelo principal
 export interface Calendario {
   oidcalendario: number;
-  anioCalendario: string;
+  anioCalendario: number;
   numeroCalendario: number;
   semanasClase?: number | null;
   semanasPreparacion?: number | null;

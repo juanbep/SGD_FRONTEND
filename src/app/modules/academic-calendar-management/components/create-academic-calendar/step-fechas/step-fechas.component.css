@@ -1,0 +1,22 @@
+.step-header h5 {
+  color: #000066;
+  font-weight: 600;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.table-warning {
+  --bs-table-bg: #fff3cd;
+  --bs-table-striped-bg: #fff3cd;
+}
+
+.table thead th {
+  font-weight: 600;
+  background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
