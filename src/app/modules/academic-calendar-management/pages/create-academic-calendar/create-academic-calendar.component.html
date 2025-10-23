@@ -46,39 +46,27 @@
     ></app-step-fechas>
 
     <!-- Paso 4: TODO -->
-    <div *ngIf="pasoActual() === 4">
-      <h5>Paso 4: Revisión y Confirmación (próximamente)</h5>
-    </div>
+    <app-step-revision
+      *ngIf="pasoActual() === 4"
+      [datosWizard]="datosWizard()"
+      [catalogoNombresFecha]="catalogoNombresFecha()"
+    ></app-step-revision>
   </div>
 
-  <!-- Footer de navegación -->
-  <div class="wizard-footer d-flex justify-content-between">
-    <button
-      class="btn btn-secondary"
-      (click)="pasoAnterior()"
-      [disabled]="esPrimerPaso()"
-    >
-      <i class="fas fa-arrow-left me-2"></i>
-      Anterior
-    </button>
-
-    <button class="btn btn-outline-secondary" (click)="guardarBorrador()">
-      <i class="fas fa-save me-2"></i>
-      Guardar borrador
-    </button>
-
-    <button
-      *ngIf="!esUltimoPaso()"
-      class="btn btn-primary"
-      (click)="siguientePaso()"
-    >
-      Siguiente
-      <i class="fas fa-arrow-right ms-2"></i>
-    </button>
-
-    <button *ngIf="esUltimoPaso()" class="btn btn-success" (click)="submit()">
+  <!-- Footer - Actualizar botón final -->
+  <button
+    *ngIf="esUltimoPaso()"
+    class="btn btn-success"
+    (click)="enviar()"
+    [disabled]="enviandoDatos()"
+  >
+    <span [hidden]="enviandoDatos()">
       <i class="fas fa-check me-2"></i>
       Crear Calendario
-    </button>
-  </div>
+    </span>
+    <span [hidden]="!enviandoDatos()">
+      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Creando...
+    </span>
+  </button>
 </div>

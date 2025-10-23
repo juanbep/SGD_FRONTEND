@@ -1,1 +1,243 @@
-<p>step-revision works!</p>
+<!-- Header del paso -->
+<div class="step-header mb-4">
+  <h5 class="mb-2">
+    <i class="fas fa-check-circle me-2 text-primary"></i>
+    Paso 4: Revisión y Confirmación
+  </h5>
+  <p class="text-muted mb-0">
+    Revisa toda la información antes de crear el calendario académico. 
+    Puedes volver a cualquier paso para hacer cambios.
+  </p>
+</div>
+
+<!-- Alert de confirmación -->
+<div class="alert alert-success d-flex align-items-start" role="alert">
+  <i class="fas fa-info-circle fa-2x me-3"></i>
+  <div>
+    <strong>¡Todo listo para crear el calendario!</strong>
+    <p class="mb-0 mt-1">
+      Revisa cuidadosamente la información. Una vez creado, podrás editar las fechas pero 
+      no la información básica ni la configuración académica.
+    </p>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Columna izquierda: Información Básica y Config Académica -->
+  <div class="col-lg-7">
+    <!-- Card: Información Básica -->
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header d-flex justify-content-between align-items-center text-white"
+        style="background-color: #000066"
+      >
+        <span class="fw-bold">
+          <i class="fas fa-info-circle me-2"></i>
+          Información Básica
+        </span>
+        <button
+          class="btn btn-light btn-sm"
+          type="button"
+          onclick="window.dispatchEvent(new CustomEvent('goToStep', {detail: 1}))"
+        >
+          <i class="fas fa-edit me-1"></i>
+          Editar
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="info-item">
+              <label class="info-label">
+                <i class="fas fa-calendar me-2 text-primary"></i>
+                Identificador
+              </label>
+              <div class="info-value">{{ obtenerIdentificadorCalendario() }}</div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="info-item">
+              <label class="info-label">
+                <i class="fas fa-toggle-on me-2 text-primary"></i>
+                Estado
+              </label>
+              <div class="info-value">
+                <span class="badge {{ obtenerBadgeClass(datosWizard.infoBasica.estado) }}">
+                  {{ datosWizard.infoBasica.estado }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-item" *ngIf="datosWizard.infoBasica.observacion">
+          <label class="info-label">
+            <i class="fas fa-comment-alt me-2 text-primary"></i>
+            Observación
+          </label>
+          <div class="info-value">{{ datosWizard.infoBasica.observacion }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card: Configuración Académica -->
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header d-flex justify-content-between align-items-center text-white"
+        style="background-color: #000066"
+      >
+        <span class="fw-bold">
+          <i class="fas fa-cog me-2"></i>
+          Configuración Académica
+        </span>
+        <button
+          class="btn btn-light btn-sm"
+          type="button"
+          onclick="window.dispatchEvent(new CustomEvent('goToStep', {detail: 2}))"
+        >
+          <i class="fas fa-edit me-1"></i>
+          Editar
+        </button>
+      </div>
+      <div class="card-body">
+        <!-- Semanas -->
+        <div class="config-section mb-3">
+          <h6 class="config-subtitle">
+            <i class="fas fa-calendar-week me-2"></i>
+            Configuración de Semanas
+          </h6>
+          <div class="row">
+            <div class="col-6">
+              <div class="info-item-inline">
+                <span class="info-label-inline">Clase:</span>
+                <span class="info-value-inline">{{ datosWizard.configAcademica.semanasClase }}</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="info-item-inline">
+                <span class="info-label-inline">Preparación:</span>
+                <span class="info-value-inline">{{ datosWizard.configAcademica.semanasPreparacion }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="total-badge mt-2">
+            <i class="fas fa-calculator me-2"></i>
+            <strong>Total:</strong> {{ totalSemanas }} semanas
+          </div>
+        </div>
+
+        <!-- Horas -->
+        <div class="config-section">
+          <h6 class="config-subtitle">
+            <i class="fas fa-clock me-2"></i>
+            Carga Horaria
+          </h6>
+          <div class="row">
+            <div class="col-6">
+              <div class="info-item-inline">
+                <span class="info-label-inline">Planta:</span>
+                <span class="info-value-inline">{{ datosWizard.configAcademica.horasPlanta }}h</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="info-item-inline">
+                <span class="info-label-inline">Cátedra:</span>
+                <span class="info-value-inline">{{ datosWizard.configAcademica.horasCatedra }}h</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="info-item-inline">
+                <span class="info-label-inline">Ocasionales:</span>
+                <span class="info-value-inline">{{ datosWizard.configAcademica.horasOcasionales }}h</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="info-item-inline">
+                <span class="info-label-inline">Becario/Pract.:</span>
+                <span class="info-value-inline">{{ datosWizard.configAcademica.horasBecarioPracticante }}h</span>
+              </div>
+            </div>
+          </div>
+          <div class="total-badge mt-2">
+            <i class="fas fa-calculator me-2"></i>
+            <strong>Total:</strong> {{ totalHoras }} horas
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna derecha: Fechas -->
+  <div class="col-lg-5">
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header d-flex justify-content-between align-items-center text-white"
+        style="background-color: #000066"
+      >
+        <span class="fw-bold">
+          <i class="fas fa-calendar-alt me-2"></i>
+          Fechas del Calendario ({{ datosWizard.fechas.length }})
+        </span>
+        <button
+          class="btn btn-light btn-sm"
+          type="button"
+          onclick="window.dispatchEvent(new CustomEvent('goToStep', {detail: 3}))"
+        >
+          <i class="fas fa-edit me-1"></i>
+          Editar
+        </button>
+      </div>
+      <div class="card-body">
+        <div *ngIf="datosWizard.fechas.length === 0" class="text-center text-muted py-4">
+          <i class="fas fa-calendar-times fa-3x mb-2"></i>
+          <p class="mb-0">No hay fechas agregadas</p>
+        </div>
+
+        <div *ngIf="datosWizard.fechas.length > 0" class="fechas-list">
+          <div
+            *ngFor="let fecha of datosWizard.fechas; let i = index"
+            class="fecha-item"
+            [class.fecha-obligatoria]="fecha.oidNombreFecha === 1"
+          >
+            <div class="fecha-nombre">
+              <i
+                class="fas fa-star text-warning me-2"
+                *ngIf="fecha.oidNombreFecha === 1"
+              ></i>
+              {{ obtenerNombreFecha(fecha.oidNombreFecha) }}
+            </div>
+            <div class="fecha-valor">
+              {{ formatearFecha(fecha.fechaInicial, fecha.fechaFin, fecha.oidNombreFecha) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card resumen final -->
+    <div class="card shadow-sm border-success">
+      <div class="card-header bg-success text-white fw-bold">
+        <i class="fas fa-check-double me-2"></i>
+        Resumen
+      </div>
+      <div class="card-body">
+        <div class="resumen-item">
+          <i class="fas fa-calendar-check text-success me-2"></i>
+          <span>Calendario {{ obtenerIdentificadorCalendario() }}</span>
+        </div>
+        <div class="resumen-item">
+          <i class="fas fa-calendar-week text-primary me-2"></i>
+          <span>{{ totalSemanas }} semanas totales</span>
+        </div>
+        <div class="resumen-item">
+          <i class="fas fa-clock text-info me-2"></i>
+          <span>{{ totalHoras }} horas totales</span>
+        </div>
+        <div class="resumen-item">
+          <i class="fas fa-list text-warning me-2"></i>
+          <span>{{ datosWizard.fechas.length }} fechas agregadas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
