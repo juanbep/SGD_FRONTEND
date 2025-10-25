@@ -1,43 +1,101 @@
-.crear-actividad-form {
-  max-width: 500px;
+.wizard-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+}
+
+.wizard-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.wizard-progress-bar {
+  background-color: white;
+  position: sticky;
+  top: 60px;
+  z-index: 999;
+}
+
+.steps-indicator {
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
+.step-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9ecef;
+  color: #6c757d;
   font-weight: bold;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
 }
 
-input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.btn-submit {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
+.step-active .step-circle {
+  background-color: #0d6efd;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  border-color: #0d6efd;
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
 }
 
-.btn-submit:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.step-completed .step-circle {
+  background-color: #198754;
+  color: white;
+  border-color: #198754;
+}
+
+.wizard-content {
+  flex: 1;
+  min-height: 400px;
+}
+
+.wizard-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 998;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wizard-content > div {
+  animation: fadeIn 0.4s ease;
 }

@@ -1,61 +1,205 @@
-<div class="crear-actividad-form">
-  <h2>Crear Nueva Actividad</h2>
-
-  <form (ngSubmit)="onSubmit()" #form="ngForm">
-    <div class="tipos-actividad-selector">
-      <label for="tipoActividad">Tipo de Actividad:</label>
-      <select
-        id="tipoActividad"
-        [(ngModel)]="selectedTipo"
-        name="tipoActividad"
-      >
-        <option value="">Seleccionar...</option>
-        <option *ngFor="let tipo of tiposDisponibles" [value]="tipo.value">
-          {{ tipo.label }}
-        </option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="nombreActividad">Nombre de la Actividad:</label>
-      <input
-        type="text"
-        id="nombreActividad"
-        [(ngModel)]="actividadData.nombreActividad"
-        name="nombreActividad"
-        required
-      />
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="horas">Horas:</label>
-        <input
-          type="number"
-          id="horas"
-          [(ngModel)]="actividadData.horas"
-          name="horas"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="semanas">Semanas:</label>
-        <input
-          type="number"
-          id="semanas"
-          [(ngModel)]="actividadData.semanas"
-          name="semanas"
-          required
-        />
+<div class="view-container">
+  <div class="wizard-container">
+    <!-- Header -->
+    <div class="wizard-header bg-primary text-white py-3 shadow-sm">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="fas fa-plus-circle me-2"></i>
+            Crear Nueva Actividad Académica
+          </h4>
+          <button
+            type="button"
+            class="btn btn-outline-light btn-sm"
+            (click)="cancelar()"
+            [disabled]="enviandoDatos()"
+          >
+            <i class="fas fa-times me-2"></i>
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
 
-    <button
-      type="submit"
-      [disabled]="loading || !form.valid"
-      class="btn-submit"
-    >
-      {{ loading ? "Creando..." : "Crear Actividad" }}
-    </button>
-  </form>
+    <!-- Indicador de Paso -->
+    <div class="wizard-step-indicator bg-light py-3 border-bottom">
+      <div class="container">
+        <div class="text-center">
+          <h5 class="mb-1">
+            Paso {{ pasoActual() }} de {{ TOTAL_PASOS }}:
+            {{ TITULOS_PASOS[pasoActual() - 1] }}
+          </h5>
+          <p class="text-muted small mb-0">
+            Complete todos los campos para continuar
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Progreso -->
+    <div class="wizard-progress-bar">
+      <div class="container py-3">
+        <div class="progress" style="height: 10px">
+          <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            [style.width.%]="(pasoActual() / TOTAL_PASOS) * 100"
+            [attr.aria-valuenow]="(pasoActual() / TOTAL_PASOS) * 100"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+
+        <!-- Steps indicator -->
+        <div class="steps-indicator mt-4">
+          <div class="row g-2 text-center">
+            <div
+              *ngFor="let titulo of TITULOS_PASOS; let i = index"
+              class="col"
+              [class.step-active]="pasoActual() === i + 1"
+              [class.step-completed]="datosWizard().stepsCompleted[i]"
+            >
+              <div class="step-circle mx-auto">
+                <i
+                  *ngIf="datosWizard().stepsCompleted[i]"
+                  class="fas fa-check text-white"
+                ></i>
+                <span
+                  *ngIf="!datosWizard().stepsCompleted[i]"
+                  [class.text-white]="pasoActual() === i + 1"
+                >
+                  {{ i + 1 }}
+                </span>
+              </div>
+              <small
+                class="d-block mt-2"
+                [class.text-primary]="pasoActual() === i + 1"
+                [class.fw-bold]="pasoActual() === i + 1"
+              >
+                {{ titulo }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido de los Pasos -->
+    <div class="wizard-content bg-white">
+      <div class="container py-4">
+        <!-- PASO 1: Información Básica -->
+        <app-step-info-basica
+          *ngIf="pasoActual() === 1"
+          [datos]="datosWizard().infoBasica"
+          (cambio)="alCambiarInfoBasica($event)"
+          (validezCambiada)="alCambiarValidezPaso1($event)"
+        ></app-step-info-basica>
+
+        <!-- PASO 2 (Próximamente) -->
+        <div *ngIf="pasoActual() === 2" class="text-center py-5">
+          <i class="fas fa-clock fa-4x text-muted mb-3"></i>
+          <h5 class="text-muted">Paso 2: Detalles Temporales</h5>
+          <p class="text-muted">En desarrollo...</p>
+        </div>
+
+        <!-- PASO 3 (Próximamente) -->
+        <div *ngIf="pasoActual() === 3" class="text-center py-5">
+          <i class="fas fa-list-ul fa-4x text-muted mb-3"></i>
+          <h5 class="text-muted">Paso 3: Atributos Dinámicos</h5>
+          <p class="text-muted">En desarrollo...</p>
+        </div>
+
+        <!-- PASO 4 (Próximamente) -->
+        <div *ngIf="pasoActual() === 4" class="text-center py-5">
+          <i class="fas fa-users fa-4x text-muted mb-3"></i>
+          <h5 class="text-muted">Paso 4: Asignar Usuarios</h5>
+          <p class="text-muted">En desarrollo...</p>
+        </div>
+
+        <!-- PASO 5 (Próximamente) -->
+        <div *ngIf="pasoActual() === 5" class="text-center py-5">
+          <i class="fas fa-check-circle fa-4x text-muted mb-3"></i>
+          <h5 class="text-muted">Paso 5: Revisión y Confirmación</h5>
+          <p class="text-muted">En desarrollo...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer con Botones -->
+    <div class="wizard-footer bg-light border-top py-3 sticky-bottom">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <!-- Botón Anterior -->
+          <button
+            *ngIf="!esPrimerPaso()"
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="pasoAnterior()"
+            [disabled]="enviandoDatos()"
+          >
+            <i class="fas fa-arrow-left me-2"></i>
+            Anterior
+          </button>
+          <div *ngIf="esPrimerPaso()"></div>
+
+          <!-- Botones de Acción -->
+          <div class="d-flex gap-2">
+            <!-- Guardar y Salir (solo Paso 1) -->
+            <button
+              *ngIf="pasoActual() === 1"
+              type="button"
+              class="btn btn-warning"
+              (click)="guardarYSalir()"
+              [disabled]="!paso1Valido() || enviandoDatos()"
+            >
+              <i class="fas fa-save me-2"></i>
+              Guardar y Salir
+            </button>
+
+            <!-- Siguiente -->
+            <button
+              *ngIf="!esUltimoPaso()"
+              type="button"
+              class="btn btn-primary"
+              (click)="siguientePaso()"
+              [disabled]="enviandoDatos()"
+            >
+              Siguiente
+              <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+
+            <!-- Crear Actividad (Paso 5) -->
+            <button
+              *ngIf="esUltimoPaso()"
+              type="button"
+              class="btn btn-success"
+              (click)="enviar()"
+              [disabled]="enviandoDatos()"
+            >
+              <span *ngIf="!enviandoDatos()">
+                <i class="fas fa-check me-2"></i>
+                Crear Actividad
+              </span>
+              <span *ngIf="enviandoDatos()">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Creando...
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div *ngIf="enviandoDatos()" class="loading-overlay">
+      <div class="text-center">
+        <div
+          class="spinner-border text-primary mb-3"
+          style="width: 3rem; height: 3rem"
+        ></div>
+        <h5 class="text-white">Creando actividad...</h5>
+        <p class="text-white-50">Por favor espere</p>
+      </div>
+    </div>
+  </div>
 </div>
