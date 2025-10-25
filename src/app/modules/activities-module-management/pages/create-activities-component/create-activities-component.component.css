@@ -5,18 +5,18 @@
   background-color: #f8f9fa;
 }
 
-.wizard-header {
+/* .wizard-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-}
+} */
 
-.wizard-progress-bar {
+/* .wizard-progress-bar {
   background-color: white;
   position: sticky;
   top: 60px;
   z-index: 999;
-}
+} */
 
 .steps-indicator {
   max-width: 900px;

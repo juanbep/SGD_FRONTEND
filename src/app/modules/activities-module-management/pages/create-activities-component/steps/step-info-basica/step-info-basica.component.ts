@@ -160,9 +160,8 @@ export class StepInfoBasicaComponent implements OnInit {
     this.cargandoCargos.set(true);
     try {
       const todosCargos = await this.cargoActividadHelper.getAllForDropdown();
-      // Aquí deberías tener un método que filtre por tipo o hacerlo manual
-      // Si no tienes filtro en el backend, usa getAll() y filtra:
-      const cargosFiltrados = todosCargos; // TODO: Implementar filtro si es necesario
+      // TODO: Implementar servicio que traiga los cargos por el oid de la actividad 
+      const cargosFiltrados = todosCargos; 
       this.cargos.set(cargosFiltrados);
     } catch (error) {
       console.error('Error al cargar cargos:', error);
