@@ -160,8 +160,8 @@ export class StepInfoBasicaComponent implements OnInit {
     this.cargandoCargos.set(true);
     try {
       const todosCargos = await this.cargoActividadHelper.getAllForDropdown();
-      // TODO: Implementar servicio que traiga los cargos por el oid de la actividad 
-      const cargosFiltrados = todosCargos; 
+      // TODO: Implementar servicio que traiga los cargos por el oid de la actividad
+      const cargosFiltrados = todosCargos;
       this.cargos.set(cargosFiltrados);
     } catch (error) {
       console.error('Error al cargar cargos:', error);
@@ -213,6 +213,45 @@ export class StepInfoBasicaComponent implements OnInit {
 
   alCambiarCalendario(): void {
     this.marcarComoTocado('oidCalendario');
+  }
+
+  onTipoChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const value =
+      select.value === 'null' || !select.value ? null : Number(select.value);
+
+    this.formData.update((data) => ({
+      ...data,
+      oidTipoActividad: value,
+    }));
+
+    this.alCambiarTipoActividad();
+  }
+
+  onCargoChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const value =
+      select.value === 'null' || !select.value ? null : Number(select.value);
+
+    this.formData.update((data) => ({
+      ...data,
+      oidCargoActividad: value,
+    }));
+
+    this.alCambiarCargo();
+  }
+
+  onCalendarioChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const value =
+      select.value === 'null' || !select.value ? null : Number(select.value);
+
+    this.formData.update((data) => ({
+      ...data,
+      oidCalendario: value,
+    }));
+
+    this.alCambiarCalendario();
   }
 
   // ===== VALIDACIÓN =====

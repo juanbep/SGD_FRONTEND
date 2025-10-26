@@ -14,16 +14,23 @@ import { ActividadHelperService } from '../../services/actividades/actividad-hel
 import { StepInfoBasicaComponent } from './steps/step-info-basica/step-info-basica.component';
 import {
   CreateActividadWizardData,
+  DetallesTemporalesData,
   InfoBasicaData,
   INITIAL_WIZARD_DATA,
 } from '../../models/create-actividad-wizard.model';
 import { CreateActividadDTO } from '../../models';
 import { StepperComponent } from './steps/stepper/stepper/stepper.component';
+import { StepDetallesTemporalesComponent } from './steps/step-detalles-temporales/step-detalles-temporales.component';
 
 @Component({
   selector: 'app-create-activities-component',
   standalone: true,
-  imports: [CommonModule, StepInfoBasicaComponent, StepperComponent],
+  imports: [
+    CommonModule,
+    StepInfoBasicaComponent,
+    StepDetallesTemporalesComponent,
+    StepperComponent,
+  ],
   templateUrl: './create-activities-component.component.html',
   styleUrl: './create-activities-component.component.css',
 })
@@ -33,6 +40,8 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   private readonly actividadHelper = inject(ActividadHelperService);
 
   @ViewChild(StepInfoBasicaComponent) stepInfoBasica!: StepInfoBasicaComponent;
+  @ViewChild(StepDetallesTemporalesComponent)
+  stepDetallesTemporales!: StepDetallesTemporalesComponent;
 
   // ===== SIGNALS =====
   readonly datosWizard = signal<CreateActividadWizardData>(
@@ -76,8 +85,21 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
     this.guardarBorradorEnStorage();
   }
 
+  alCambiarDetallesTemporales(datos: DetallesTemporalesData): void {
+    const datosActuales = this.datosWizard();
+    this.datosWizard.set({
+      ...datosActuales,
+      detallesTemporales: datos,
+    });
+    this.guardarBorradorEnStorage();
+  }
+
   alCambiarValidezPaso1(valido: boolean): void {
     this.paso1Valido.set(valido);
+  }
+
+  alCambiarValidezPaso2(valido: boolean): void {
+    this.paso2Valido.set(valido);
   }
 
   // ===== NAVEGACIÓN =====
@@ -88,6 +110,14 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
       if (!this.paso1Valido()) {
         this.stepInfoBasica.marcarTodoComoTocado();
         this.toastr.warning('Por favor, completa todos los campos requeridos');
+        return;
+      }
+    }
+
+    if (this.pasoActual() === 2) {
+      if (!this.paso2Valido()) {
+        this.stepDetallesTemporales.marcarTodoComoTocado();
+        this.toastr.warning('Por favor, verifica los datos ingresados');
         return;
       }
     }

@@ -1,1 +1,212 @@
-<p>step-detalles-temporales works!</p>
+<div class="step-container">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <!-- Header Alert -->
+      <div class="alert alert-info d-flex align-items-start mb-4" role="alert">
+        <i class="fas fa-clock fa-2x me-3"></i>
+        <div>
+          <strong>Detalles Temporales (Opcional)</strong>
+          <ul class="mb-0 mt-2">
+            <li>Este paso es opcional, puede completarlo ahora o después</li>
+            <li>Configure las horas y duración de la actividad</li>
+            <li>Seleccione el estado inicial de la actividad</li>
+            <li>Si omite este paso, la actividad quedará como INCOMPLETA</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <form>
+        <!-- Horas Asignadas -->
+        <div class="mb-4">
+          <label for="horas" class="form-label fw-bold">
+            <i class="fas fa-hourglass-half me-2 text-primary"></i>
+            Horas Asignadas
+            <span class="badge bg-secondary ms-2">Opcional</span>
+          </label>
+
+          <input
+            type="number"
+            id="horas"
+            class="form-control form-control-lg"
+            [class.is-invalid]="mostrarError('horas')"
+            [value]="formData().horas"
+            name="horas"
+            (input)="onHorasChange($event)"
+            (blur)="marcarComoTocado('horas')"
+            placeholder="Ej: 100"
+            min="1"
+            max="500"
+          />
+
+          <div class="invalid-feedback" *ngIf="mostrarError('horas')">
+            <i class="fas fa-exclamation-circle me-1"></i>
+            {{ obtenerMensajeError("horas") }}
+          </div>
+
+          <small class="form-text text-muted d-flex align-items-start mt-2">
+            <i class="fas fa-info-circle me-2 mt-1"></i>
+            <span>Cantidad total de horas dedicadas a esta actividad</span>
+          </small>
+        </div>
+
+        <hr class="my-4" />
+
+        <!-- Semanas de Duración -->
+        <div class="mb-4">
+          <label for="semanas" class="form-label fw-bold">
+            <i class="fas fa-calendar-week me-2 text-primary"></i>
+            Semanas de Duración
+            <span class="badge bg-secondary ms-2">Opcional</span>
+          </label>
+
+          <input
+            type="number"
+            id="semanas"
+            class="form-control form-control-lg"
+            [class.is-invalid]="mostrarError('semanas')"
+            [value]="formData().semanas"
+            name="semanas"
+            (input)="onSemanasChange($event)"
+            (blur)="marcarComoTocado('semanas')"
+            placeholder="Ej: 16"
+            min="1"
+            max="52"
+          />
+
+          <div class="invalid-feedback" *ngIf="mostrarError('semanas')">
+            <i class="fas fa-exclamation-circle me-1"></i>
+            {{ obtenerMensajeError("semanas") }}
+          </div>
+
+          <small class="form-text text-muted d-flex align-items-start mt-2">
+            <i class="fas fa-info-circle me-2 mt-1"></i>
+            <span>Duración estimada de la actividad en semanas</span>
+          </small>
+        </div>
+
+        <!-- Cálculo Automático -->
+        <div
+          *ngIf="horasPorSemana()"
+          class="alert alert-success mt-3 mb-4 animate-fade-in"
+        >
+          <div class="d-flex align-items-center">
+            <i class="fas fa-calculator fa-2x me-3 text-success"></i>
+            <div>
+              <strong class="d-block">Cálculo Automático</strong>
+              <p class="mb-0">
+                Horas por semana: <strong>{{ horasPorSemana() }} horas</strong>
+                <small class="text-muted d-block">
+                  ({{ formData().horas }} horas ÷
+                  {{ formData().semanas }} semanas)
+                </small>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <!-- Estado de la Actividad -->
+        <div class="mb-4">
+          <label class="form-label fw-bold">
+            <i class="fas fa-flag me-2 text-primary"></i>
+            Estado de la Actividad
+          </label>
+
+          <div class="estado-radio-group">
+            <div
+              *ngFor="let estado of estadosActividad"
+              class="form-check estado-option"
+              [class.estado-selected]="
+                formData().oidEstadoActividad === estado.oid
+              "
+            >
+              <input
+                class="form-check-input"
+                type="radio"
+                [id]="'estado-' + estado.oid"
+                [value]="estado.oid"
+                [checked]="formData().oidEstadoActividad === estado.oid"
+                name="oidEstadoActividad"
+                (change)="onEstadoChange(estado.oid)"
+              />
+              <label
+                class="form-check-label w-100"
+                [for]="'estado-' + estado.oid"
+              >
+                <div class="d-flex align-items-center">
+                  <span
+                    class="badge me-3"
+                    [class.bg-success]="estado.color === 'success'"
+                    [class.bg-warning]="estado.color === 'warning'"
+                    [class.bg-secondary]="estado.color === 'secondary'"
+                  >
+                    {{ estado.nombre }}
+                  </span>
+                  <span class="text-muted">{{ estado.descripcion }}</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <small class="form-text text-muted d-flex align-items-start mt-3">
+            <i class="fas fa-info-circle me-2 mt-1"></i>
+            <span>
+              Si omite horas y semanas, la actividad quedará automáticamente
+              como INCOMPLETA
+            </span>
+          </small>
+        </div>
+
+        <hr class="my-4" />
+
+        <!-- Resumen -->
+        <div
+          *ngIf="formularioValido()"
+          class="alert alert-success border-success animate-fade-in"
+        >
+          <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-check-circle fa-2x me-3 text-success"></i>
+            <div>
+              <h6 class="mb-0">Configuración Completada</h6>
+              <small class="text-muted"
+                >Los detalles temporales están listos</small
+              >
+            </div>
+          </div>
+          <hr class="my-3" />
+          <div class="row g-3">
+            <div class="col-md-4">
+              <small class="text-muted d-block mb-1">
+                <i class="fas fa-hourglass me-1"></i> Horas
+              </small>
+              <strong>{{ formData().horas || "No especificado" }}</strong>
+            </div>
+            <div class="col-md-4">
+              <small class="text-muted d-block mb-1">
+                <i class="fas fa-calendar me-1"></i> Semanas
+              </small>
+              <strong>{{ formData().semanas || "No especificado" }}</strong>
+            </div>
+            <div class="col-md-4">
+              <small class="text-muted d-block mb-1">
+                <i class="fas fa-flag me-1"></i> Estado
+              </small>
+              <span
+                class="badge"
+                [class.bg-success]="estadoSeleccionado()?.color === 'success'"
+                [class.bg-warning]="estadoSeleccionado()?.color === 'warning'"
+                [class.bg-secondary]="
+                  estadoSeleccionado()?.color === 'secondary'
+                "
+              >
+                {{ estadoSeleccionado()?.nombre }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
