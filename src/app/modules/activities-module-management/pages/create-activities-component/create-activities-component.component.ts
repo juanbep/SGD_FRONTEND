@@ -18,11 +18,12 @@ import {
   INITIAL_WIZARD_DATA,
 } from '../../models/create-actividad-wizard.model';
 import { CreateActividadDTO } from '../../models';
+import { StepperComponent } from './steps/stepper/stepper/stepper.component';
 
 @Component({
   selector: 'app-create-activities-component',
   standalone: true,
-  imports: [CommonModule, StepInfoBasicaComponent],
+  imports: [CommonModule, StepInfoBasicaComponent, StepperComponent],
   templateUrl: './create-activities-component.component.html',
   styleUrl: './create-activities-component.component.css',
 })
@@ -281,6 +282,11 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
 
   limpiarBorrador(): void {
     localStorage.removeItem('actividad_draft');
+  }
+
+  guardarBorradorManual(): void {
+    this.guardarBorradorEnStorage();
+    this.toastr.success('Borrador guardado correctamente', 'Guardado');
   }
 
   // ===== ACCIONES =====

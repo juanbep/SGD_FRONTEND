@@ -1,21 +1,25 @@
 <div class="step-container">
   <div class="card shadow-sm border-0">
     <div class="card-body p-4">
-      
-      <!-- Header -->
-      <div class="step-header mb-4 pb-3 border-bottom">
-        <h5 class="mb-2">
-          <i class="fas fa-clipboard-list me-2 text-primary"></i>
-          Información Básica
-        </h5>
-        <p class="text-muted mb-0 small">
-          Complete los datos principales de la actividad académica. Todos los campos son obligatorios.
-        </p>
+      <!-- Header Estilo Alert -->
+      <div class="alert alert-info d-flex align-items-start mb-4" role="alert">
+        <i class="fas fa-clipboard-list fa-2x me-3"></i>
+        <div>
+          <strong>Información Básica</strong>
+          <ul class="mb-0 mt-2">
+            <li>Complete los datos principales de la actividad académica</li>
+            <li>Todos los campos son obligatorios para continuar</li>
+            <li>
+              El nombre de la actividad se asigna automáticamente según el tipo
+              seleccionado
+            </li>
+            <li>Los cambios se guardan automáticamente mientras trabajas</li>
+          </ul>
+        </div>
       </div>
 
       <!-- Formulario -->
       <form>
-        
         <!-- Tipo de Actividad -->
         <div class="mb-4">
           <label for="tipoActividad" class="form-label fw-bold">
@@ -23,7 +27,7 @@
             Tipo de Actividad
             <span class="text-danger ms-1">*</span>
           </label>
-          
+
           <select
             id="tipoActividad"
             class="form-select form-select-lg"
@@ -35,21 +39,25 @@
             [disabled]="cargandoTipos()"
           >
             <option [value]="null">
-              {{ cargandoTipos() ? 'Cargando tipos...' : 'Seleccione el tipo de actividad...' }}
+              {{
+                cargandoTipos()
+                  ? "Cargando tipos..."
+                  : "Seleccione el tipo de actividad..."
+              }}
             </option>
-            <option
-              *ngFor="let tipo of tiposActividad()"
-              [value]="tipo.value"
-            >
+            <option *ngFor="let tipo of tiposActividad()" [value]="tipo.value">
               {{ tipo.label }}
             </option>
           </select>
-          
-          <div class="invalid-feedback" *ngIf="mostrarError('oidTipoActividad')">
+
+          <div
+            class="invalid-feedback"
+            *ngIf="mostrarError('oidTipoActividad')"
+          >
             <i class="fas fa-exclamation-circle me-1"></i>
-            {{ obtenerMensajeError('oidTipoActividad') }}
+            {{ obtenerMensajeError("oidTipoActividad") }}
           </div>
-          
+
           <small class="form-text text-muted d-flex align-items-start mt-2">
             <i class="fas fa-info-circle me-2 mt-1"></i>
             <span>Categoría principal de la actividad académica</span>
@@ -70,7 +78,7 @@
           </div>
         </div>
 
-        <hr class="my-4">
+        <hr class="my-4" />
 
         <!-- Cargo de Actividad -->
         <div class="mb-4">
@@ -79,7 +87,7 @@
             Cargo de Actividad
             <span class="text-danger ms-1">*</span>
           </label>
-          
+
           <select
             id="cargo"
             class="form-select form-select-lg"
@@ -93,25 +101,25 @@
             <option [value]="null">
               {{
                 !formData().oidTipoActividad
-                  ? 'Primero seleccione el tipo de actividad'
+                  ? "Primero seleccione el tipo de actividad"
                   : cargandoCargos()
-                  ? 'Cargando cargos...'
-                  : 'Seleccione el cargo...'
+                  ? "Cargando cargos..."
+                  : "Seleccione el cargo..."
               }}
             </option>
-            <option
-              *ngFor="let cargo of cargos()"
-              [value]="cargo.value"
-            >
+            <option *ngFor="let cargo of cargos()" [value]="cargo.value">
               {{ cargo.label }} - Máx: {{ cargo.maxHoras }}h/semana
             </option>
           </select>
-          
-          <div class="invalid-feedback" *ngIf="mostrarError('oidCargoActividad')">
+
+          <div
+            class="invalid-feedback"
+            *ngIf="mostrarError('oidCargoActividad')"
+          >
             <i class="fas fa-exclamation-circle me-1"></i>
-            {{ obtenerMensajeError('oidCargoActividad') }}
+            {{ obtenerMensajeError("oidCargoActividad") }}
           </div>
-          
+
           <small class="form-text text-muted d-flex align-items-start mt-2">
             <i class="fas fa-info-circle me-2 mt-1"></i>
             <span>Rol o categoría asociada al tipo de actividad</span>
@@ -119,11 +127,16 @@
 
           <!-- Advertencia: No hay cargos -->
           <div
-            *ngIf="formData().oidTipoActividad && !cargandoCargos() && !hayCargosDisponibles()"
+            *ngIf="
+              formData().oidTipoActividad &&
+              !cargandoCargos() &&
+              !hayCargosDisponibles()
+            "
             class="alert alert-warning mt-3 mb-0 animate-fade-in"
           >
             <i class="fas fa-exclamation-triangle me-2"></i>
-            <strong>Advertencia:</strong> No hay cargos disponibles para el tipo seleccionado.
+            <strong>Advertencia:</strong> No hay cargos disponibles para el tipo
+            seleccionado.
           </div>
 
           <!-- Info del cargo seleccionado -->
@@ -134,17 +147,21 @@
             <div class="row text-center g-3">
               <div class="col-6">
                 <small class="text-muted d-block">Cargo</small>
-                <strong class="text-primary">{{ cargoSeleccionado()?.label }}</strong>
+                <strong class="text-primary">{{
+                  cargoSeleccionado()?.label
+                }}</strong>
               </div>
               <div class="col-6">
                 <small class="text-muted d-block">Horas Máximas</small>
-                <strong class="text-success">{{ cargoSeleccionado()?.maxHoras }}h/semana</strong>
+                <strong class="text-success"
+                  >{{ cargoSeleccionado()?.maxHoras }}h/semana</strong
+                >
               </div>
             </div>
           </div>
         </div>
 
-        <hr class="my-4">
+        <hr class="my-4" />
 
         <!-- Calendario Académico -->
         <div class="mb-4">
@@ -153,7 +170,7 @@
             Calendario Académico
             <span class="text-danger ms-1">*</span>
           </label>
-          
+
           <select
             id="calendario"
             class="form-select form-select-lg"
@@ -165,7 +182,11 @@
             [disabled]="cargandoCalendarios()"
           >
             <option [value]="null">
-              {{ cargandoCalendarios() ? 'Cargando calendarios...' : 'Seleccione el calendario académico...' }}
+              {{
+                cargandoCalendarios()
+                  ? "Cargando calendarios..."
+                  : "Seleccione el calendario académico..."
+              }}
             </option>
             <option
               *ngFor="let calendario of calendarios()"
@@ -174,12 +195,12 @@
               {{ calendario.label }}
             </option>
           </select>
-          
+
           <div class="invalid-feedback" *ngIf="mostrarError('oidCalendario')">
             <i class="fas fa-exclamation-circle me-1"></i>
-            {{ obtenerMensajeError('oidCalendario') }}
+            {{ obtenerMensajeError("oidCalendario") }}
           </div>
-          
+
           <small class="form-text text-muted d-flex align-items-start mt-2">
             <i class="fas fa-info-circle me-2 mt-1"></i>
             <span>Periodo académico activo para la actividad</span>
@@ -193,28 +214,37 @@
             <div class="row text-center g-3">
               <div class="col-6">
                 <small class="text-muted d-block">Calendario</small>
-                <strong class="text-primary">{{ calendarioSeleccionado()?.label }}</strong>
+                <strong class="text-primary">{{
+                  calendarioSeleccionado()?.label
+                }}</strong>
               </div>
               <div class="col-6">
                 <small class="text-muted d-block">Estado</small>
-                <span class="badge bg-success">{{ calendarioSeleccionado()?.estado }}</span>
+                <span class="badge bg-success">{{
+                  calendarioSeleccionado()?.estado
+                }}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <hr class="my-4">
+        <hr class="my-4" />
 
         <!-- Resumen de Selección -->
-        <div *ngIf="formularioValido()" class="alert alert-success border-success animate-fade-in">
+        <div
+          *ngIf="formularioValido()"
+          class="alert alert-success border-success animate-fade-in"
+        >
           <div class="d-flex align-items-center mb-3">
             <i class="fas fa-check-circle fa-2x me-3 text-success"></i>
             <div>
               <h6 class="mb-0">¡Información Básica Completa!</h6>
-              <small class="text-muted">Todos los campos obligatorios están completos</small>
+              <small class="text-muted"
+                >Todos los campos obligatorios están completos</small
+              >
             </div>
           </div>
-          <hr class="my-3">
+          <hr class="my-3" />
           <div class="row g-3">
             <div class="col-md-4">
               <small class="text-muted d-block mb-1">
@@ -236,9 +266,7 @@
             </div>
           </div>
         </div>
-
       </form>
-
     </div>
   </div>
 </div>
