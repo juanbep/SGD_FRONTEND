@@ -1,0 +1,96 @@
+.step-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Alertas */
+.alert {
+  border-radius: 8px;
+  border-left: 4px solid;
+}
+
+.alert-info {
+  background-color: #e7f3ff;
+  border-left-color: #0dcaf0;
+  color: #055160;
+}
+
+.alert-success {
+  background-color: #d1e7dd;
+  border-left-color: #198754;
+  color: #0f5132;
+}
+
+/* Grid de Atributos */
+.atributos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1rem;
+}
+
+/* .atributo-card {
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.atributo-card:hover {
+  border-color: #0d6efd;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+  transform: translateY(-2px);
+} */
+
+.atributo-header h6 {
+  margin-bottom: 0;
+  color: #495057;
+}
+
+/* Botones de selección */
+.btn-outline-primary {
+  transition: all 0.3s ease;
+  border-width: 2px;
+}
+
+.btn-outline-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+}
+
+/* Inputs */
+.form-control {
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* Badges */
+.badge {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.5rem;
+}
+
+/* Animaciones */
+/* @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.atributo-card {
+  animation: fadeIn 0.3s ease;
+} */
+
+/* Responsive */
+@media (max-width: 768px) {
+  .atributos-grid {
+    grid-template-columns: 1fr;
+  }
+}

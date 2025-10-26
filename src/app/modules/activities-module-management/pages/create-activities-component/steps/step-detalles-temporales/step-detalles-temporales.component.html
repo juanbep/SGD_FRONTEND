@@ -121,6 +121,7 @@
               [class.estado-selected]="
                 formData().oidEstadoActividad === estado.oid
               "
+              (click)="onEstadoChange(estado.oid)"
             >
               <input
                 class="form-check-input"

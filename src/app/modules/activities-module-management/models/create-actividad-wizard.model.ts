@@ -23,6 +23,13 @@ export interface CreateActividadWizardData {
   stepsCompleted: boolean[];
 }
 
+// Definición de atributo predefinido (constante del front)
+export interface AtributoPredefinido {
+  oideatributo: number;
+  nombre: string;
+  tipoAtributo: 'VARCHAR' | 'DATE' | 'FLOAT' | 'INTEGER';
+}
+
 export const INITIAL_WIZARD_DATA: CreateActividadWizardData = {
   infoBasica: {
     oidTipoActividad: null,

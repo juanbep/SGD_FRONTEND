@@ -18,9 +18,10 @@ import {
   InfoBasicaData,
   INITIAL_WIZARD_DATA,
 } from '../../models/create-actividad-wizard.model';
-import { CreateActividadDTO } from '../../models';
+import { CreateActividadDTO, CreateAtributoDTO } from '../../models';
 import { StepperComponent } from './steps/stepper/stepper/stepper.component';
 import { StepDetallesTemporalesComponent } from './steps/step-detalles-temporales/step-detalles-temporales.component';
+import { StepAtributosComponent } from './steps/step-atributos/step-atributos.component';
 
 @Component({
   selector: 'app-create-activities-component',
@@ -29,6 +30,7 @@ import { StepDetallesTemporalesComponent } from './steps/step-detalles-temporale
     CommonModule,
     StepInfoBasicaComponent,
     StepDetallesTemporalesComponent,
+    StepAtributosComponent,
     StepperComponent,
   ],
   templateUrl: './create-activities-component.component.html',
@@ -42,6 +44,7 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   @ViewChild(StepInfoBasicaComponent) stepInfoBasica!: StepInfoBasicaComponent;
   @ViewChild(StepDetallesTemporalesComponent)
   stepDetallesTemporales!: StepDetallesTemporalesComponent;
+  @ViewChild(StepAtributosComponent) stepAtributos!: StepAtributosComponent;
 
   // ===== SIGNALS =====
   readonly datosWizard = signal<CreateActividadWizardData>(
@@ -52,7 +55,7 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   readonly esPrimerPaso = computed(() => this.pasoActual() === 1);
   readonly paso1Valido = signal<boolean>(false);
   readonly paso2Valido = signal<boolean>(false);
-  readonly paso3Valido = signal<boolean>(false);
+  readonly paso3Valido = signal<boolean>(true); // Siempre válido (opcional)
   readonly paso4Valido = signal<boolean>(false);
   readonly enviandoDatos = signal<boolean>(false);
 
@@ -94,12 +97,25 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
     this.guardarBorradorEnStorage();
   }
 
+  alCambiarAtributos(atributos: CreateAtributoDTO[]): void {
+    const datosActuales = this.datosWizard();
+    this.datosWizard.set({
+      ...datosActuales,
+      atributos: atributos,
+    });
+    this.guardarBorradorEnStorage();
+  }
+
   alCambiarValidezPaso1(valido: boolean): void {
     this.paso1Valido.set(valido);
   }
 
   alCambiarValidezPaso2(valido: boolean): void {
     this.paso2Valido.set(valido);
+  }
+
+  alCambiarValidezPaso3(valido: boolean): void {
+    this.paso3Valido.set(valido);
   }
 
   // ===== NAVEGACIÓN =====
