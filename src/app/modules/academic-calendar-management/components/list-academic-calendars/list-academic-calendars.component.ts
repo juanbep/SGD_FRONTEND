@@ -59,7 +59,7 @@ export class ListAcademicCalendarsComponent implements OnInit {
       })
       .subscribe({
         next: (response) => {
-          if (response.codigo === 200) {
+          if (response.codigo >= 200 && response.codigo < 300) {
             this.calendarios = response.data.content;
             this.totalElements = response.data.totalElements;
             this.toastr.success(

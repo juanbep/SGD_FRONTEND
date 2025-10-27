@@ -2,11 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { ActividadesService } from './actividades.service';
 import { BaseHelperService } from '../base-helper.service';
 import {
+  Actividad,
+  ActividadFilters,
   ActividadResponse,
   CreateActividadDTO,
   UpdateActividadDTO,
 } from '../../models';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +29,24 @@ export class ActividadHelperService {
     );
   }
 
+  async getAll(filters: ActividadFilters = {}): Promise<ActividadResponse[]> {
+    const response = await this.baseHelper.getDataFromResponse(
+      this.actividadService.getActividades(filters)
+    );
+    return response?.content || [];
+  }
+
+  getAllObservable(
+    filters: ActividadFilters = {}
+  ): Observable<ActividadResponse[]> {
+    return this.baseHelper
+      .getDataFromResponseObservable(
+        this.actividadService.getActividades(filters)
+      )
+      .pipe(map((response) => response?.content || []));
+  }
+
+  // CRUD helpers
   async create(data: CreateActividadDTO): Promise<ActividadResponse | null> {
     return this.baseHelper.getDataFromResponse(
       this.actividadService.createActividad(data)
@@ -43,7 +63,7 @@ export class ActividadHelperService {
     const result = await this.baseHelper.getDataFromResponse(
       this.actividadService.deleteActividad({ oidActividad: id })
     );
-     return result === true || result === null; // trampita mientras se acomoda por parte del backend
+    return result === true || result === null; // trampita mientras se acomoda por parte del backend
   }
 
   async getMultipleByIds(ids: number[]): Promise<(ActividadResponse | null)[]> {

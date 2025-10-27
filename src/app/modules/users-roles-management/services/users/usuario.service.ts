@@ -113,8 +113,6 @@ export class UsuarioService {
 
   private handleError(error: any): Observable<never> {
     console.error('Error en UsuarioService:', error);
-    return throwError(
-      () => new Error(error.mensaje || 'Error en el servicio de usuarios')
-    );
+    return throwError(() => error);
   }
 }
