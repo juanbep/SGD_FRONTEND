@@ -22,6 +22,7 @@ import { CreateActividadDTO, CreateAtributoDTO } from '../../models';
 import { StepperComponent } from './steps/stepper/stepper/stepper.component';
 import { StepDetallesTemporalesComponent } from './steps/step-detalles-temporales/step-detalles-temporales.component';
 import { StepAtributosComponent } from './steps/step-atributos/step-atributos.component';
+import { StepAsignarUsuariosComponent } from './steps/step-asignar-usuarios/step-asignar-usuarios.component';
 
 @Component({
   selector: 'app-create-activities-component',
@@ -31,6 +32,7 @@ import { StepAtributosComponent } from './steps/step-atributos/step-atributos.co
     StepInfoBasicaComponent,
     StepDetallesTemporalesComponent,
     StepAtributosComponent,
+    StepAsignarUsuariosComponent,
     StepperComponent,
   ],
   templateUrl: './create-activities-component.component.html',
@@ -45,6 +47,8 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   @ViewChild(StepDetallesTemporalesComponent)
   stepDetallesTemporales!: StepDetallesTemporalesComponent;
   @ViewChild(StepAtributosComponent) stepAtributos!: StepAtributosComponent;
+  @ViewChild(StepAsignarUsuariosComponent)
+  stepAsignarUsuarios!: StepAsignarUsuariosComponent;
 
   // ===== SIGNALS =====
   readonly datosWizard = signal<CreateActividadWizardData>(
@@ -56,7 +60,7 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   readonly paso1Valido = signal<boolean>(false);
   readonly paso2Valido = signal<boolean>(false);
   readonly paso3Valido = signal<boolean>(true); // Siempre válido (opcional)
-  readonly paso4Valido = signal<boolean>(false);
+  readonly paso4Valido = signal<boolean>(true); // Siempre válido (opcional)
   readonly enviandoDatos = signal<boolean>(false);
 
   // ===== CONSTANTES =====
@@ -106,6 +110,14 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
     this.guardarBorradorEnStorage();
   }
 
+  alCambiarUsuarios(idsUsuarios: number[]): void {
+    this.datosWizard.update((datos) => ({
+      ...datos,
+      usuarios: idsUsuarios,
+    }));
+    this.guardarBorradorEnStorage();
+  }
+
   alCambiarValidezPaso1(valido: boolean): void {
     this.paso1Valido.set(valido);
   }
@@ -116,6 +128,10 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
 
   alCambiarValidezPaso3(valido: boolean): void {
     this.paso3Valido.set(valido);
+  }
+
+  alCambiarValidezPaso4(valido: boolean): void {
+    this.paso4Valido.set(valido);
   }
 
   // ===== NAVEGACIÓN =====
@@ -136,6 +152,16 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
         this.toastr.warning('Por favor, verifica los datos ingresados');
         return;
       }
+    }
+
+    // Paso 3: Atributos (Opcional, siempre válido)
+    if (this.pasoActual() === 3) {
+      this.stepAtributos.marcarTodoComoTocado();
+    }
+
+    // Paso 4: Asignar Usuarios (Opcional, siempre válido)
+    if (this.pasoActual() === 4) {
+      this.stepAsignarUsuarios.marcarTodoComoTocado();
     }
 
     // Avanzar paso

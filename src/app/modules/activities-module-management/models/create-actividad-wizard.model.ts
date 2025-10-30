@@ -1,4 +1,4 @@
-import { CreateAtributoDTO } from "./actividad.model";
+import { CreateAtributoDTO } from './actividad.model';
 
 // ==================== WIZARD DATA ====================
 export interface InfoBasicaData {

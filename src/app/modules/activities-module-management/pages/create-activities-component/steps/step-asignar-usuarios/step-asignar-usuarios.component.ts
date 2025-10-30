@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   Input,
   Output,
   EventEmitter,
@@ -8,7 +9,6 @@ import {
   computed,
   inject,
   effect,
-  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -37,7 +37,7 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
   @Output() validezCambiada = new EventEmitter<boolean>();
 
   // ===== CONSTANTES =====
-  readonly MAX_USUARIOS = 50;
+  readonly MAX_USUARIOS = 4;
   readonly MIN_USUARIOS = 0;
   readonly USUARIOS_POR_PAGINA = 10;
 
@@ -45,6 +45,7 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
   readonly tabActual = signal<'buscar' | 'seleccionados'>('buscar');
   readonly usuariosDisponibles = signal<Usuario[]>([]);
   readonly idsSeleccionados = signal<number[]>([]);
+  readonly usuariosSeleccionadosCache = signal<Usuario[]>([]);
   readonly cargando = signal<boolean>(false);
 
   // Paginación
@@ -70,8 +71,7 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
   });
 
   readonly usuariosSeleccionadosCompletos = computed(() => {
-    const ids = this.idsSeleccionados();
-    return this.usuariosDisponibles().filter((u) => ids.includes(u.oidUsuario));
+    return this.usuariosSeleccionadosCache();
   });
 
   readonly puedeSeleccionarMas = computed(() => {
@@ -94,6 +94,7 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     // Cargar usuarios seleccionados del wizard
     if (this.usuariosSeleccionados && this.usuariosSeleccionados.length > 0) {
       this.idsSeleccionados.set([...this.usuariosSeleccionados]);
+      // TODO: Si hay usuarios pre-seleccionados, necesitamos cargarlos del backend
     }
 
     // Cargar primera página
@@ -105,7 +106,6 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ===== CARGA DE DATOS =====
   // ===== CARGA DE DATOS =====
   cargarUsuarios(): void {
     this.cargando.set(true);
@@ -147,13 +147,29 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     const ids = this.idsSeleccionados();
 
     if (ids.includes(oidUsuario)) {
+      // DESELECCIONAR
       this.idsSeleccionados.set(ids.filter((id) => id !== oidUsuario));
+
+      // Quitar del cache
+      this.usuariosSeleccionadosCache.update((cache) =>
+        cache.filter((u) => u.oidUsuario !== oidUsuario)
+      );
     } else {
+      // SELECCIONAR
       if (!this.puedeSeleccionarMas()) {
         this.toastr.warning(`Máximo ${this.MAX_USUARIOS} usuarios permitidos`);
         return;
       }
+
       this.idsSeleccionados.set([...ids, oidUsuario]);
+
+      // Agregar al cache (buscar en usuariosDisponibles)
+      const usuario = this.usuariosDisponibles().find(
+        (u) => u.oidUsuario === oidUsuario
+      );
+      if (usuario) {
+        this.usuariosSeleccionadosCache.update((cache) => [...cache, usuario]);
+      }
     }
   }
 
@@ -165,11 +181,17 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     this.idsSeleccionados.set(
       this.idsSeleccionados().filter((id) => id !== oidUsuario)
     );
+
+    // Quitar del cache
+    this.usuariosSeleccionadosCache.update((cache) =>
+      cache.filter((u) => u.oidUsuario !== oidUsuario)
+    );
   }
 
   limpiarSeleccion(): void {
     if (confirm('¿Estás seguro de limpiar toda la selección?')) {
       this.idsSeleccionados.set([]);
+      this.usuariosSeleccionadosCache.set([]); // Limpiar cache
       this.toastr.success('Selección limpiada');
     }
   }
