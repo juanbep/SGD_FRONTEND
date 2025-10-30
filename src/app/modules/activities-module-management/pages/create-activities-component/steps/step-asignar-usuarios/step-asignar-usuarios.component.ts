@@ -39,7 +39,6 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
   // ===== CONSTANTES =====
   readonly MAX_USUARIOS = 4;
   readonly MIN_USUARIOS = 0;
-  readonly USUARIOS_POR_PAGINA = 10;
 
   // ===== SIGNALS =====
   readonly tabActual = signal<'buscar' | 'seleccionados'>('buscar');
@@ -47,6 +46,7 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
   readonly idsSeleccionados = signal<number[]>([]);
   readonly usuariosSeleccionadosCache = signal<Usuario[]>([]);
   readonly cargando = signal<boolean>(false);
+  readonly usuariosPorPagina = signal<number>(10);
 
   // Paginación
   readonly paginaActual = signal<number>(1);
@@ -113,7 +113,7 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     const filtrosActuales: UsuarioFilters = {
       ...this.filtros(),
       page: this.paginaActual() - 1,
-      size: this.USUARIOS_POR_PAGINA,
+      size: this.usuariosPorPagina(),
     };
 
     this.usuarioService
@@ -219,6 +219,16 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     if (this.paginaActual() < this.totalPaginas()) {
       this.irAPagina(this.paginaActual() + 1);
     }
+  }
+
+  // ===== CAMBIO DE TAMAÑO DE PÁGINA =====
+  onPageSizeChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const nuevoTamanio = parseInt(select.value, 10);
+
+    this.usuariosPorPagina.set(nuevoTamanio);
+    this.paginaActual.set(1); // Volver a primera página
+    this.cargarUsuarios();
   }
 
   // ===== BÚSQUEDA =====
