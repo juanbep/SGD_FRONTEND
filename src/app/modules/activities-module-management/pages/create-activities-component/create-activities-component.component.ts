@@ -59,7 +59,7 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   readonly esPrimerPaso = computed(() => this.pasoActual() === 1);
   readonly paso1Valido = signal<boolean>(false);
   readonly paso2Valido = signal<boolean>(false);
-  readonly paso3Valido = signal<boolean>(true); // Siempre válido (opcional)
+  readonly paso3Valido = signal<boolean>(false);
   readonly paso4Valido = signal<boolean>(true); // Siempre válido (opcional)
   readonly enviandoDatos = signal<boolean>(false);
 
@@ -154,9 +154,15 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Paso 3: Atributos (Opcional, siempre válido)
+    // Paso 3: Atributos (Opcional, pero si hay atributos deben llenarse)
     if (this.pasoActual() === 3) {
-      this.stepAtributos.marcarTodoComoTocado();
+      if (!this.paso3Valido()) {
+        this.stepAtributos.marcarTodoComoTocado();
+        this.toastr.warning(
+          'Por favor, completa los valores de los atributos agregados'
+        );
+        return;
+      }
     }
 
     // Paso 4: Asignar Usuarios (Opcional, siempre válido)

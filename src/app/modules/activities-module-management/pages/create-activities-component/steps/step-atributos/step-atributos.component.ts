@@ -47,10 +47,19 @@ export class StepAtributosComponent implements OnInit {
 
   // ===== SIGNALS =====
   readonly valoresAtributos = signal<ValorAtributo[]>([]);
+  readonly tocado = signal<boolean>(false);
 
   // ===== COMPUTED =====
   readonly formularioValido = computed(() => {
-    return true; // Opcional
+    const valores = this.valoresAtributos();
+
+    // Si no hay atributos, es válido (opcional)
+    if (valores.length === 0) {
+      return true;
+    }
+
+    // Si hay atributos, todos deben tener valor no vacío
+    return valores.every((v) => v.valor.trim() !== '');
   });
 
   readonly hayAtributos = computed(() => {
@@ -98,6 +107,9 @@ export class StepAtributosComponent implements OnInit {
       ...lista,
       { atributo, valor: '' },
     ]);
+
+    // Resetear el estado tocado cuando se agrega un nuevo atributo
+    this.tocado.set(false);
   }
 
   // ===== ACTUALIZAR VALOR =====
@@ -122,6 +134,11 @@ export class StepAtributosComponent implements OnInit {
       );
       this.toastr.success('Atributo eliminado correctamente');
     }
+
+    // Resetear el estado tocado solo si el formulario es válido
+    if (this.formularioValido()) {
+      this.tocado.set(false);
+    }
   }
 
   // ===== MANEJO DE INPUTS =====
@@ -141,6 +158,6 @@ export class StepAtributosComponent implements OnInit {
   }
 
   marcarTodoComoTocado(): void {
-    // Opcional
+    this.tocado.set(true);
   }
 }

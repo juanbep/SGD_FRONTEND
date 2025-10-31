@@ -15,6 +15,10 @@
               Seleccione los atributos que desea agregar y llene sus valores
             </li>
             <li>
+              Los atributos son opcionales, pero
+              <strong>si agrega un atributo, debe llenarlo</strong>
+            </li>
+            <li>
               Los atributos se adaptan según su tipo de dato (texto, número,
               fecha)
             </li>
@@ -126,49 +130,88 @@
                 </label>
 
                 <!-- Input para VARCHAR -->
-                <input
+                <ng-container
                   *ngIf="valorAtributo.atributo.tipoAtributo === 'VARCHAR'"
-                  type="text"
-                  [id]="'atributo-' + i"
-                  class="form-control"
-                  [value]="valorAtributo.valor"
-                  (input)="onValorChange(i, $event)"
-                  [placeholder]="
-                    obtenerPlaceholder(
-                      valorAtributo.atributo.tipoAtributo,
-                      valorAtributo.atributo.nombre
-                    )
-                  "
-                  maxlength="200"
-                />
+                >
+                  <input
+                    type="text"
+                    [id]="'atributo-' + i"
+                    class="form-control"
+                    [class.is-invalid]="
+                      tocado() && valorAtributo.valor.trim() === ''
+                    "
+                    [value]="valorAtributo.valor"
+                    (input)="onValorChange(i, $event)"
+                    [placeholder]="
+                      obtenerPlaceholder(
+                        valorAtributo.atributo.tipoAtributo,
+                        valorAtributo.atributo.nombre
+                      )
+                    "
+                    maxlength="200"
+                    required
+                  />
+                  <div
+                    *ngIf="tocado() && valorAtributo.valor.trim() === ''"
+                    class="invalid-feedback"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </ng-container>
 
                 <!-- Input para FLOAT -->
-                <input
+                <ng-container
                   *ngIf="valorAtributo.atributo.tipoAtributo === 'FLOAT'"
-                  type="number"
-                  [id]="'atributo-' + i"
-                  class="form-control"
-                  [value]="valorAtributo.valor"
-                  (input)="onValorChange(i, $event)"
-                  [placeholder]="
-                    obtenerPlaceholder(
-                      valorAtributo.atributo.tipoAtributo,
-                      valorAtributo.atributo.nombre
-                    )
-                  "
-                  step="0.01"
-                  min="0"
-                />
+                >
+                  <input
+                    type="number"
+                    [id]="'atributo-' + i"
+                    class="form-control"
+                    [class.is-invalid]="
+                      tocado() && valorAtributo.valor.trim() === ''
+                    "
+                    [value]="valorAtributo.valor"
+                    (input)="onValorChange(i, $event)"
+                    [placeholder]="
+                      obtenerPlaceholder(
+                        valorAtributo.atributo.tipoAtributo,
+                        valorAtributo.atributo.nombre
+                      )
+                    "
+                    step="0.01"
+                    min="0"
+                    required
+                  />
+                  <div
+                    *ngIf="tocado() && valorAtributo.valor.trim() === ''"
+                    class="invalid-feedback"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </ng-container>
 
                 <!-- Input para DATE -->
-                <input
+                <ng-container
                   *ngIf="valorAtributo.atributo.tipoAtributo === 'DATE'"
-                  type="date"
-                  [id]="'atributo-' + i"
-                  class="form-control"
-                  [value]="valorAtributo.valor"
-                  (input)="onValorChange(i, $event)"
-                />
+                >
+                  <input
+                    type="date"
+                    [id]="'atributo-' + i"
+                    class="form-control"
+                    [class.is-invalid]="
+                      tocado() && valorAtributo.valor.trim() === ''
+                    "
+                    [value]="valorAtributo.valor"
+                    (input)="onValorChange(i, $event)"
+                    required
+                  />
+                  <div
+                    *ngIf="tocado() && valorAtributo.valor.trim() === ''"
+                    class="invalid-feedback"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </ng-container>
 
                 <small class="text-muted mt-1 d-block">
                   <i class="fas fa-info-circle me-1"></i>
