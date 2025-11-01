@@ -207,7 +207,9 @@ export class StepAtributosComponent implements OnInit {
       valorAtributo.atributo.nombre === ATRIBUTO_REPETIBLE &&
       valorAtributo.indice
     ) {
-      return `${this.formatearNombre(valorAtributo.atributo.nombre)} ${valorAtributo.indice}`;
+      return `${this.formatearNombre(valorAtributo.atributo.nombre)} ${
+        valorAtributo.indice
+      }`;
     }
     return this.formatearNombre(valorAtributo.atributo.nombre);
   }

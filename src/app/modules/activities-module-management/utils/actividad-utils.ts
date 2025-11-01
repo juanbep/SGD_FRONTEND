@@ -3,7 +3,7 @@ import { AtributoPredefinido } from '../models/create-actividad-wizard.model';
 /**
  * Límite máximo de estudiantes que se pueden agregar
  */
-export const MAX_ESTUDIANTES = 10;
+export const MAX_ESTUDIANTES = 3;
 
 /**
  * Nombre del atributo que se puede repetir
@@ -15,8 +15,8 @@ export const ATRIBUTO_REPETIBLE = 'NOMBREESTUDIANTE';
  * TODO: En el futuro, reemplazar por un endpoint del backend
  */
 export const ATRIBUTOS_DISPONIBLES: AtributoPredefinido[] = [
-  { oideatributo: 1, nombre: 'ACTOADMINISTRATIVO', tipoAtributo: 'VARCHAR' },
-  { oideatributo: 2, nombre: 'NOMBREPROYECTO', tipoAtributo: 'VARCHAR' },
+  { oideatributo: 1, nombre: 'ACTO ADMINISTRATIVO', tipoAtributo: 'VARCHAR' },
+  { oideatributo: 2, nombre: 'NOMBRE PROYECTO', tipoAtributo: 'VARCHAR' },
   { oideatributo: 3, nombre: 'ACTIVIDAD', tipoAtributo: 'VARCHAR' },
   { oideatributo: 4, nombre: 'CODIGO', tipoAtributo: 'VARCHAR' },
   { oideatributo: 5, nombre: 'GRUPO', tipoAtributo: 'VARCHAR' },
@@ -25,13 +25,13 @@ export const ATRIBUTOS_DISPONIBLES: AtributoPredefinido[] = [
   { oideatributo: 8, nombre: 'PROGRAMA', tipoAtributo: 'VARCHAR' },
   { oideatributo: 9, nombre: 'SEMESTRE', tipoAtributo: 'VARCHAR' },
   { oideatributo: 10, nombre: 'SEMILLERO', tipoAtributo: 'VARCHAR' },
-  { oideatributo: 11, nombre: 'NOMBREESTUDIANTE', tipoAtributo: 'VARCHAR' },
-  { oideatributo: 12, nombre: 'F_INICIAL', tipoAtributo: 'DATE' },
-  { oideatributo: 13, nombre: 'F_FINAL', tipoAtributo: 'DATE' },
+  { oideatributo: 11, nombre: 'NOMBRE ESTUDIANTE', tipoAtributo: 'VARCHAR' },
+  { oideatributo: 12, nombre: 'FECHA INICIAL', tipoAtributo: 'DATE' },
+  { oideatributo: 13, nombre: 'FECHA FINAL', tipoAtributo: 'DATE' },
   { oideatributo: 14, nombre: 'AREA', tipoAtributo: 'VARCHAR' },
-  { oideatributo: 15, nombre: 'H_APROB', tipoAtributo: 'FLOAT' },
-  { oideatributo: 16, nombre: 'H_LABOR', tipoAtributo: 'FLOAT' },
-  { oideatributo: 17, nombre: 'UNIDAD_ACADEMICA', tipoAtributo: 'VARCHAR' },
+  { oideatributo: 15, nombre: 'HORAS APROBADAS', tipoAtributo: 'FLOAT' },
+  { oideatributo: 16, nombre: 'HORAS LABOR', tipoAtributo: 'FLOAT' },
+  { oideatributo: 17, nombre: 'UNIDAD ACADEMICA', tipoAtributo: 'VARCHAR' },
 ];
 
 /**

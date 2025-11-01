@@ -62,7 +62,7 @@
                   *ngIf="atributo.nombre === ATRIBUTO_REPETIBLE"
                   class="badge bg-info ms-2"
                 >
-                  {{ cantidadEstudiantes() + 1 }}
+                  {{ MAX_ESTUDIANTES - cantidadEstudiantes() }}
                 </span>
                 <small class="d-block text-muted mt-1">
                   <i class="fas fa-tag me-1"></i>{{ atributo.tipoAtributo }}
@@ -75,25 +75,12 @@
 
       <!-- Sin atributos disponibles -->
       <div
-        *ngIf="atributosDisponibles().length === 0 && !hayAtributos()"
+        *ngIf="atributosDisponibles().length === 0 && hayAtributos()"
         class="text-center py-5"
       >
         <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
         <h5 class="text-success">Todos los atributos han sido agregados</h5>
         <p class="text-muted">Has utilizado todos los atributos disponibles</p>
-      </div>
-
-      <!-- Mensaje de límite de estudiantes -->
-      <div
-        *ngIf="
-          !puedeAgregarEstudiante() &&
-          atributosDisponibles().length === 0 &&
-          hayAtributos()
-        "
-        class="alert alert-warning"
-      >
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        Has alcanzado el límite máximo de {{ MAX_ESTUDIANTES }} estudiantes
       </div>
 
       <hr class="my-4" *ngIf="hayAtributos()" />
