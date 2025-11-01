@@ -1,6 +1,16 @@
 import { AtributoPredefinido } from '../models/create-actividad-wizard.model';
 
 /**
+ * Límite máximo de estudiantes que se pueden agregar
+ */
+export const MAX_ESTUDIANTES = 10;
+
+/**
+ * Nombre del atributo que se puede repetir
+ */
+export const ATRIBUTO_REPETIBLE = 'NOMBREESTUDIANTE';
+
+/**
  * Lista predefinida de atributos disponibles para actividades
  * TODO: En el futuro, reemplazar por un endpoint del backend
  */
@@ -30,7 +40,7 @@ export const ATRIBUTOS_DISPONIBLES: AtributoPredefinido[] = [
 export function obtenerTipoInput(tipo: string): string {
   switch (tipo) {
     case 'DATE':
-      return 'date'; 
+      return 'date';
     case 'FLOAT':
     case 'INTEGER':
       return 'number';

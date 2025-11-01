@@ -22,6 +22,7 @@
               Los atributos se adaptan según su tipo de dato (texto, número,
               fecha)
             </li>
+            <li>Puede agregar hasta {{ MAX_ESTUDIANTES }} estudiantes</li>
             <li>Puede agregar o quitar atributos en cualquier momento</li>
           </ul>
         </div>
@@ -42,6 +43,7 @@
           <p class="text-muted mb-3">
             Seleccione uno o más atributos para agregar a la actividad:
           </p>
+
           <div class="row g-2">
             <div
               *ngFor="let atributo of atributosDisponibles()"
@@ -56,6 +58,12 @@
                   class="fas {{ obtenerIcono(atributo.tipoAtributo) }} me-2"
                 ></i>
                 {{ formatearNombre(atributo.nombre) }}
+                <span
+                  *ngIf="atributo.nombre === ATRIBUTO_REPETIBLE"
+                  class="badge bg-info ms-2"
+                >
+                  {{ cantidadEstudiantes() + 1 }}
+                </span>
                 <small class="d-block text-muted mt-1">
                   <i class="fas fa-tag me-1"></i>{{ atributo.tipoAtributo }}
                 </small>
@@ -73,6 +81,19 @@
         <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
         <h5 class="text-success">Todos los atributos han sido agregados</h5>
         <p class="text-muted">Has utilizado todos los atributos disponibles</p>
+      </div>
+
+      <!-- Mensaje de límite de estudiantes -->
+      <div
+        *ngIf="
+          !puedeAgregarEstudiante() &&
+          atributosDisponibles().length === 0 &&
+          hayAtributos()
+        "
+        class="alert alert-warning"
+      >
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Has alcanzado el límite máximo de {{ MAX_ESTUDIANTES }} estudiantes
       </div>
 
       <hr class="my-4" *ngIf="hayAtributos()" />
@@ -104,7 +125,7 @@
                         obtenerIcono(valorAtributo.atributo.tipoAtributo)
                       }} me-2 text-primary"
                     ></i>
-                    {{ formatearNombre(valorAtributo.atributo.nombre) }}
+                    {{ obtenerNombreConIndice(valorAtributo) }}
                   </h6>
                   <small class="text-muted">
                     <span class="badge bg-secondary">
@@ -243,6 +264,9 @@
             >
             <p class="mb-0 small text-muted">
               Los atributos se guardarán con la actividad
+              <span *ngIf="cantidadEstudiantes() > 0">
+                ({{ cantidadEstudiantes() }} estudiante(s))
+              </span>
             </p>
           </div>
         </div>

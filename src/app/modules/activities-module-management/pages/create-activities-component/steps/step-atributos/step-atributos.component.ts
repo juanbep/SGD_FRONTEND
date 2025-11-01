@@ -20,12 +20,15 @@ import {
   obtenerPlaceholder,
   obtenerIconoAtributo,
   formatearNombreAtributo,
+  MAX_ESTUDIANTES,
+  ATRIBUTO_REPETIBLE,
 } from '../../../../utils/actividad-utils';
 
 // Valor ingresado por el usuario
 interface ValorAtributo {
   atributo: AtributoPredefinido;
   valor: string;
+  indice?: number; // Para atributos repetibles (ej: Estudiante 1, 2, 3...)
 }
 
 @Component({
@@ -44,6 +47,8 @@ export class StepAtributosComponent implements OnInit {
 
   // ===== CONSTANTES IMPORTADAS =====
   readonly ATRIBUTOS_DISPONIBLES = ATRIBUTOS_DISPONIBLES;
+  readonly MAX_ESTUDIANTES = MAX_ESTUDIANTES;
+  readonly ATRIBUTO_REPETIBLE = ATRIBUTO_REPETIBLE;
 
   // ===== SIGNALS =====
   readonly valoresAtributos = signal<ValorAtributo[]>([]);
@@ -66,9 +71,27 @@ export class StepAtributosComponent implements OnInit {
     return this.valoresAtributos().length > 0;
   });
 
+  readonly cantidadEstudiantes = computed(() => {
+    return this.valoresAtributos().filter(
+      (v) => v.atributo.nombre === ATRIBUTO_REPETIBLE
+    ).length;
+  });
+
+  readonly puedeAgregarEstudiante = computed(() => {
+    return this.cantidadEstudiantes() < this.MAX_ESTUDIANTES;
+  });
+
   readonly atributosDisponibles = computed(() => {
     const agregados = this.valoresAtributos().map((v) => v.atributo.nombre);
-    return ATRIBUTOS_DISPONIBLES.filter((a) => !agregados.includes(a.nombre));
+
+    return ATRIBUTOS_DISPONIBLES.filter((a) => {
+      // El atributo repetible siempre está disponible (hasta el límite)
+      if (a.nombre === ATRIBUTO_REPETIBLE) {
+        return this.puedeAgregarEstudiante();
+      }
+      // Los demás solo si no han sido agregados
+      return !agregados.includes(a.nombre);
+    });
   });
 
   constructor() {
@@ -88,14 +111,27 @@ export class StepAtributosComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.atributos && this.atributos.length > 0) {
-      const valores: ValorAtributo[] = this.atributos
-        .map((dto) => {
-          const atributo = ATRIBUTOS_DISPONIBLES.find(
-            (a) => a.nombre === dto.nombre
-          );
-          return atributo ? { atributo, valor: dto.valor } : null;
-        })
-        .filter((v): v is ValorAtributo => v !== null);
+      const valores: ValorAtributo[] = [];
+      let contadorEstudiantes = 0;
+
+      this.atributos.forEach((dto) => {
+        const atributo = ATRIBUTOS_DISPONIBLES.find(
+          (a) => a.nombre === dto.nombre
+        );
+
+        if (atributo) {
+          if (atributo.nombre === ATRIBUTO_REPETIBLE) {
+            contadorEstudiantes++;
+            valores.push({
+              atributo,
+              valor: dto.valor,
+              indice: contadorEstudiantes,
+            });
+          } else {
+            valores.push({ atributo, valor: dto.valor });
+          }
+        }
+      });
 
       this.valoresAtributos.set(valores);
     }
@@ -103,10 +139,20 @@ export class StepAtributosComponent implements OnInit {
 
   // ===== AGREGAR ATRIBUTO =====
   agregarAtributo(atributo: AtributoPredefinido): void {
-    this.valoresAtributos.update((lista) => [
-      ...lista,
-      { atributo, valor: '' },
-    ]);
+    // Si es el atributo repetible, calcular el índice
+    if (atributo.nombre === ATRIBUTO_REPETIBLE) {
+      const indice = this.cantidadEstudiantes() + 1;
+
+      this.valoresAtributos.update((lista) => [
+        ...lista,
+        { atributo, valor: '', indice },
+      ]);
+    } else {
+      this.valoresAtributos.update((lista) => [
+        ...lista,
+        { atributo, valor: '' },
+      ]);
+    }
 
     // Resetear el estado tocado cuando se agrega un nuevo atributo
     this.tocado.set(false);
@@ -124,19 +170,27 @@ export class StepAtributosComponent implements OnInit {
   // ===== ELIMINAR ATRIBUTO =====
   eliminarAtributo(index: number): void {
     const valor = this.valoresAtributos()[index];
-    if (
-      confirm(
-        `¿Estás seguro de eliminar el atributo "${valor.atributo.nombre}"?`
-      )
-    ) {
-      this.valoresAtributos.update((lista) =>
-        lista.filter((_, i) => i !== index)
-      );
-      this.toastr.success('Atributo eliminado correctamente');
-    }
+    const nombreMostrar = this.obtenerNombreConIndice(valor);
 
-    // Resetear el estado tocado solo si el formulario es válido
-    if (this.formularioValido()) {
+    if (confirm(`¿Estás seguro de eliminar el atributo "${nombreMostrar}"?`)) {
+      this.valoresAtributos.update((lista) => {
+        const nueva = lista.filter((_, i) => i !== index);
+
+        // Recalcular índices de estudiantes
+        return nueva.map((v) => {
+          if (v.atributo.nombre === ATRIBUTO_REPETIBLE) {
+            const estudiantesAnteriores = nueva.filter(
+              (item) =>
+                item.atributo.nombre === ATRIBUTO_REPETIBLE &&
+                nueva.indexOf(item) <= nueva.indexOf(v)
+            );
+            return { ...v, indice: estudiantesAnteriores.length };
+          }
+          return v;
+        });
+      });
+
+      this.toastr.success('Atributo eliminado correctamente');
       this.tocado.set(false);
     }
   }
@@ -147,7 +201,17 @@ export class StepAtributosComponent implements OnInit {
     this.actualizarValor(index, input.value);
   }
 
-  // ===== UTILIDADES (Delegadas a funciones importadas) =====
+  // ===== UTILIDADES =====
+  obtenerNombreConIndice(valorAtributo: ValorAtributo): string {
+    if (
+      valorAtributo.atributo.nombre === ATRIBUTO_REPETIBLE &&
+      valorAtributo.indice
+    ) {
+      return `${this.formatearNombre(valorAtributo.atributo.nombre)} ${valorAtributo.indice}`;
+    }
+    return this.formatearNombre(valorAtributo.atributo.nombre);
+  }
+
   obtenerTipoInput = obtenerTipoInput;
   obtenerPlaceholder = obtenerPlaceholder;
   obtenerIcono = obtenerIconoAtributo;
