@@ -59,7 +59,7 @@
                 ></i>
                 {{ formatearNombre(atributo.nombre) }}
                 <span
-                  *ngIf="atributo.nombre === ATRIBUTO_REPETIBLE"
+                  *ngIf="atributo.oideatributo === OID_ATRIBUTO_REPETIBLE"
                   class="badge bg-info ms-2"
                 >
                   {{ MAX_ESTUDIANTES - cantidadEstudiantes() }}

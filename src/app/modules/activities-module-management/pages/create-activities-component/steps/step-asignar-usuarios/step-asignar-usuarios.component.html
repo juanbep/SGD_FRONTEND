@@ -222,9 +222,7 @@
                           type="button"
                           class="btn btn-sm btn-outline-success"
                           title="Ver detalles"
-                          [attr.aria-label]="
-                            'Ver detalles del usuario ' + usuario.oidUsuario
-                          "
+                          (click)="abrirModalDetalles(usuario.oidUsuario)"
                         >
                           <i class="fas fa-eye"></i>
                         </button>
@@ -455,6 +453,7 @@
                     type="button"
                     class="btn btn-sm btn-outline-primary w-100"
                     title="Ver información completa"
+                    (click)="abrirModalDetalles(usuario.oidUsuario)"
                   >
                     <i class="fas fa-eye me-2"></i>
                     Ver Detalles Completos
@@ -507,4 +506,63 @@
       </div>
     </div>
   </div>
+
+  <!-- MODAL DE DETALLES DEL USUARIO -->
+  <div
+    class="modal fade"
+    [class.show]="modalAbierto()"
+    [style.display]="modalAbierto() ? 'block' : 'none'"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalDetallesUsuarioLabel"
+    [attr.aria-hidden]="!modalAbierto()"
+  >
+    <div
+      class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+    >
+      <div class="modal-content">
+        <!-- Header -->
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalDetallesUsuarioLabel">
+            <i class="fas fa-user-circle me-2"></i>
+            Detalles del Usuario
+          </h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            (click)="cerrarModalDetalles()"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+
+        <!-- Body con el componente reutilizado -->
+        <div class="modal-body p-0" style="max-height: 70vh; overflow-y: auto">
+          <app-usuario-carousel
+            *ngIf="usuarioIdModal()"
+            [usuariosIds]="[usuarioIdModal()!]"
+          ></app-usuario-carousel>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cerrarModalDetalles()"
+          >
+            <i class="fas fa-times me-2"></i>
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backdrop del modal -->
+  <div
+    class="modal-backdrop fade"
+    [class.show]="modalAbierto()"
+    *ngIf="modalAbierto()"
+    (click)="cerrarModalDetalles()"
+  ></div>
 </div>

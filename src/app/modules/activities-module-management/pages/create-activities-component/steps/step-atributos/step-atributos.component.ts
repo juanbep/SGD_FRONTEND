@@ -21,7 +21,7 @@ import {
   obtenerIconoAtributo,
   formatearNombreAtributo,
   MAX_ESTUDIANTES,
-  ATRIBUTO_REPETIBLE,
+  OID_ATRIBUTO_REPETIBLE,
 } from '../../../../utils/actividad-utils';
 
 // Valor ingresado por el usuario
@@ -48,7 +48,7 @@ export class StepAtributosComponent implements OnInit {
   // ===== CONSTANTES IMPORTADAS =====
   readonly ATRIBUTOS_DISPONIBLES = ATRIBUTOS_DISPONIBLES;
   readonly MAX_ESTUDIANTES = MAX_ESTUDIANTES;
-  readonly ATRIBUTO_REPETIBLE = ATRIBUTO_REPETIBLE;
+  readonly OID_ATRIBUTO_REPETIBLE = OID_ATRIBUTO_REPETIBLE;
 
   // ===== SIGNALS =====
   readonly valoresAtributos = signal<ValorAtributo[]>([]);
@@ -73,7 +73,7 @@ export class StepAtributosComponent implements OnInit {
 
   readonly cantidadEstudiantes = computed(() => {
     return this.valoresAtributos().filter(
-      (v) => v.atributo.nombre === ATRIBUTO_REPETIBLE
+      (v) => v.atributo.oideatributo === this.OID_ATRIBUTO_REPETIBLE
     ).length;
   });
 
@@ -86,7 +86,7 @@ export class StepAtributosComponent implements OnInit {
 
     return ATRIBUTOS_DISPONIBLES.filter((a) => {
       // El atributo repetible siempre está disponible (hasta el límite)
-      if (a.nombre === ATRIBUTO_REPETIBLE) {
+      if (a.oideatributo === this.OID_ATRIBUTO_REPETIBLE) {
         return this.puedeAgregarEstudiante();
       }
       // Los demás solo si no han sido agregados
@@ -120,7 +120,7 @@ export class StepAtributosComponent implements OnInit {
         );
 
         if (atributo) {
-          if (atributo.nombre === ATRIBUTO_REPETIBLE) {
+          if (atributo.oideatributo === this.OID_ATRIBUTO_REPETIBLE) {
             contadorEstudiantes++;
             valores.push({
               atributo,
@@ -140,7 +140,7 @@ export class StepAtributosComponent implements OnInit {
   // ===== AGREGAR ATRIBUTO =====
   agregarAtributo(atributo: AtributoPredefinido): void {
     // Si es el atributo repetible, calcular el índice
-    if (atributo.nombre === ATRIBUTO_REPETIBLE) {
+    if (atributo.oideatributo === this.OID_ATRIBUTO_REPETIBLE) {
       const indice = this.cantidadEstudiantes() + 1;
 
       this.valoresAtributos.update((lista) => [
@@ -178,10 +178,10 @@ export class StepAtributosComponent implements OnInit {
 
         // Recalcular índices de estudiantes
         return nueva.map((v) => {
-          if (v.atributo.nombre === ATRIBUTO_REPETIBLE) {
+          if (v.atributo.oideatributo === this.OID_ATRIBUTO_REPETIBLE) {
             const estudiantesAnteriores = nueva.filter(
               (item) =>
-                item.atributo.nombre === ATRIBUTO_REPETIBLE &&
+                item.atributo.oideatributo === this.OID_ATRIBUTO_REPETIBLE &&
                 nueva.indexOf(item) <= nueva.indexOf(v)
             );
             return { ...v, indice: estudiantesAnteriores.length };
@@ -204,7 +204,7 @@ export class StepAtributosComponent implements OnInit {
   // ===== UTILIDADES =====
   obtenerNombreConIndice(valorAtributo: ValorAtributo): string {
     if (
-      valorAtributo.atributo.nombre === ATRIBUTO_REPETIBLE &&
+      valorAtributo.atributo.oideatributo === this.OID_ATRIBUTO_REPETIBLE &&
       valorAtributo.indice
     ) {
       return `${this.formatearNombre(valorAtributo.atributo.nombre)} ${

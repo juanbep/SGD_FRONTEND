@@ -6,9 +6,9 @@ import { AtributoPredefinido } from '../models/create-actividad-wizard.model';
 export const MAX_ESTUDIANTES = 3;
 
 /**
- * Nombre del atributo que se puede repetir
+ * OID del atributo que se puede repetir (NOMBREESTUDIANTE)
  */
-export const ATRIBUTO_REPETIBLE = 'NOMBREESTUDIANTE';
+export const OID_ATRIBUTO_REPETIBLE = 11;
 
 /**
  * Lista predefinida de atributos disponibles para actividades

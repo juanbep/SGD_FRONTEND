@@ -13,17 +13,18 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, forkJoin, of, catchError } from 'rxjs';
 import {
   Usuario,
   UsuarioFilters,
 } from '../../../../../users-roles-management/models';
 import { UsuarioService } from '../../../../../users-roles-management/services';
+import { UsuarioCarouselComponent } from '../../../../components/activities-component/explore-activities-component/usuario-carousel/usuario-carousel.component';
 
 @Component({
   selector: 'app-step-asignar-usuarios',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UsuarioCarouselComponent],
   templateUrl: './step-asignar-usuarios.component.html',
   styleUrl: './step-asignar-usuarios.component.css',
 })
@@ -47,6 +48,9 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
   readonly usuariosSeleccionadosCache = signal<Usuario[]>([]);
   readonly cargando = signal<boolean>(false);
   readonly usuariosPorPagina = signal<number>(10);
+  // Modal de detalles
+  readonly usuarioIdModal = signal<number | null>(null);
+  readonly modalAbierto = signal<boolean>(false);
 
   // Paginación
   readonly paginaActual = signal<number>(1);
@@ -94,7 +98,9 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     // Cargar usuarios seleccionados del wizard
     if (this.usuariosSeleccionados && this.usuariosSeleccionados.length > 0) {
       this.idsSeleccionados.set([...this.usuariosSeleccionados]);
-      // TODO: Si hay usuarios pre-seleccionados, necesitamos cargarlos del backend
+
+      // Cargar información completa de usuarios pre-seleccionados
+      this.cargarUsuariosSeleccionados(this.usuariosSeleccionados);
     }
 
     // Cargar primera página
@@ -140,6 +146,66 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
           this.cargando.set(false);
         },
       });
+  }
+
+  /**
+   * Carga la información completa de usuarios pre-seleccionados desde el backend
+   */
+  private cargarUsuariosSeleccionados(oidUsuarios: number[]): void {
+    if (!oidUsuarios || oidUsuarios.length === 0) {
+      return;
+    }
+
+    this.cargando.set(true);
+
+    // Crear array de observables para cargar todos los usuarios
+    const requests = oidUsuarios.map((oid) =>
+      this.usuarioService.getUsuarioById(oid).pipe(
+        takeUntil(this.destroy$),
+        catchError((error) => {
+          console.error(`Error al cargar usuario ${oid}:`, error);
+          // Continuar con los demás usuarios aunque uno falle
+          return of(null);
+        })
+      )
+    );
+
+    // Ejecutar todas las peticiones en paralelo
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        const usuariosCargados: Usuario[] = [];
+
+        responses.forEach((response) => {
+          if (
+            response &&
+            response.codigo >= 200 &&
+            response.codigo < 300 &&
+            response.data
+          ) {
+            usuariosCargados.push(response.data);
+          }
+        });
+
+        // Actualizar el cache con los usuarios cargados
+        this.usuariosSeleccionadosCache.set(usuariosCargados);
+
+        if (usuariosCargados.length < oidUsuarios.length) {
+          this.toastr.warning(
+            'Algunos usuarios seleccionados no pudieron ser cargados',
+            'Advertencia'
+          );
+        }
+
+        this.cargando.set(false);
+      },
+      error: (error) => {
+        console.error('Error al cargar usuarios seleccionados:', error);
+        this.toastr.error(
+          'Error al cargar información de usuarios seleccionados'
+        );
+        this.cargando.set(false);
+      },
+    });
   }
 
   // ===== SELECCIÓN =====
@@ -251,6 +317,19 @@ export class StepAsignarUsuariosComponent implements OnInit, OnDestroy {
     this.filtros.set({});
     this.paginaActual.set(1);
     this.cargarUsuarios();
+  }
+
+  // ===== MODAL DE DETALLES =====
+  abrirModalDetalles(oidUsuario: number): void {
+    this.usuarioIdModal.set(oidUsuario);
+    this.modalAbierto.set(true);
+  }
+
+  cerrarModalDetalles(): void {
+    this.modalAbierto.set(false);
+    setTimeout(() => {
+      this.usuarioIdModal.set(null);
+    }, 300);
   }
 
   // ===== UTILIDADES =====
