@@ -83,13 +83,19 @@ export class NombreFechaHelperService {
   // Helpers para dropdowns y selecciones
 
   async getAllForDropdown(): Promise<
-    { value: number; label: string; tieneTemplate: boolean }[]
+    {
+      value: number;
+      label: string;
+      tieneTemplate: boolean;
+      uniqueDate: boolean;
+    }[]
   > {
     const nombresFecha = await this.getAll({ size: 200 });
     return nombresFecha.map((nf) => ({
       value: nf.oidNombreFecha,
       label: nf.nombre,
       tieneTemplate: this.tieneTemplate(nf.nombre),
+      uniqueDate: nf.uniqueDate,
     }));
   }
 

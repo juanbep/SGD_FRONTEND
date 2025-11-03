@@ -49,7 +49,12 @@ export class StepFechasComponent implements OnInit {
   readonly modalSeleccionarVisible = signal<boolean>(false);
   readonly fechaAEditar = signal<Fecha | null>(null); // ✅ Simplificado
   readonly catalogoNombresFecha = signal<
-    { value: number; label: string; tieneTemplate: boolean }[]
+    {
+      value: number;
+      label: string;
+      tieneTemplate: boolean;
+      uniqueDate: boolean;
+    }[]
   >([]);
   readonly calendariosDisponibles = signal<Calendario[]>([]);
   readonly cargandoCalendarios = signal<boolean>(false);

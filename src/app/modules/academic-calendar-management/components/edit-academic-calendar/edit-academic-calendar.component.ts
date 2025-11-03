@@ -49,7 +49,12 @@ export class EditAcademicCalendarComponent implements OnInit {
   readonly fechaAEliminar = signal<Fecha | null>(null);
   readonly modalAgregarVisible = signal<boolean>(false);
   readonly listaNombreFechas = signal<
-    { value: number; label: string; tieneTemplate: boolean }[]
+    {
+      value: number;
+      label: string;
+      tieneTemplate: boolean;
+      uniqueDate: boolean;
+    }[]
   >([]);
   readonly guardandoFecha = signal<boolean>(false);
   readonly cargandoListaFechas = signal<boolean>(false);

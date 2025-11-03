@@ -42,6 +42,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     value: number;
     label: string;
     tieneTemplate: boolean;
+    uniqueDate: boolean;
   }[] = [];
   @Input() oidCalendario: number = 0;
   @Input() guardando: boolean = false;
@@ -50,9 +51,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   @Output() onConfirmarEdicion = new EventEmitter<UpdateFechaDto>();
   @Output() onCancelar = new EventEmitter<void>();
 
-  // ===== CONSTANTES =====
-  readonly OIDS_FECHA_UNICA = [1, 6, 7, 8, 10, 12, 14, 15, 16, 18, 19];
-
   // ===== SIGNALS =====
   readonly tipoFechaSeleccionado = signal<number | null>(null);
   readonly fechaActual = signal<Fecha | null>(null);
@@ -60,7 +58,19 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   // ===== COMPUTED =====
   readonly esFechaUnica = computed(() => {
     const oid = this.tipoFechaSeleccionado();
-    return oid !== null && this.OIDS_FECHA_UNICA.includes(oid);
+    if (oid === null) return false;
+
+    // En modo edición, usar el uniqueDate de la fecha actual
+    const fechaEdicion = this.fechaActual();
+    if (fechaEdicion) {
+      return fechaEdicion.uniqueDate;
+    }
+
+    // En modo creación, buscar en la lista de nombres
+    const nombreFecha = this.listaNombreFechas.find(
+      (item) => item.value === oid
+    );
+    return nombreFecha?.uniqueDate ?? false;
   });
   readonly modoEdicion = computed(() => this.fechaActual() !== null);
   readonly tituloModal = computed(() => {
@@ -135,7 +145,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   private ajustarValidacionesFecha(oid: number | null): void {
     const fechaFinControl = this.fechaForm.get('fechaFin');
 
-    if (oid !== null && this.OIDS_FECHA_UNICA.includes(oid)) {
+    if (oid !== null && this.esFechaUnica()) {
       // Fecha única: fechaFin no es necesaria
       fechaFinControl?.clearValidators();
       fechaFinControl?.setValue(null);
@@ -155,6 +165,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     }
 
     const formValues = this.fechaForm.value;
+    const esUnica = this.esFechaUnica();
 
     if (this.modoEdicion()) {
       // Modo edición
@@ -162,23 +173,23 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
         oidFecha: this.fechaAEditar!.oidFecha,
         oidCalendario: this.oidCalendario,
         oidNombreFecha: Number(formValues.oidNombreFecha),
+        uniqueDate: esUnica,
         tipo: 'RESALTADAS',
         fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
-        fechaFin: this.esFechaUnica()
+        fechaFin: esUnica
           ? null
           : Utils.convertirFechaADateTime(formValues.fechaFin)!,
       };
       this.onConfirmarEdicion.emit(updateDto);
     } else {
       // Modo crear
-      // TODO: REALIZAR AJUSTE PARA CAPTURAR SI ES FECHA UNICA O FECHA RANGO -> OJO
       const createDto: CreateFechaDto = {
         oidCalendario: this.oidCalendario,
         oidNombreFecha: Number(formValues.oidNombreFecha),
-        uniqueDate: false, 
+        uniqueDate: esUnica,
         tipo: 'RESALTADAS',
         fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
-        fechaFin: this.esFechaUnica()
+        fechaFin: esUnica
           ? null
           : Utils.convertirFechaADateTime(formValues.fechaFin)!,
       };

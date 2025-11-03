@@ -45,8 +45,18 @@ export class Utils {
   }
 
   static ordenarListaNombresFecha(
-    catalogo: { value: number; label: string; tieneTemplate: boolean }[]
-  ): { value: number; label: string; tieneTemplate: boolean }[] {
+    catalogo: {
+      value: number;
+      label: string;
+      tieneTemplate: boolean;
+      uniqueDate: boolean;
+    }[]
+  ): {
+    value: number;
+    label: string;
+    tieneTemplate: boolean;
+    uniqueDate: boolean;
+  }[] {
     if (!catalogo || catalogo.length === 0) return [];
 
     return [...catalogo].sort((a, b) => a.value - b.value);
