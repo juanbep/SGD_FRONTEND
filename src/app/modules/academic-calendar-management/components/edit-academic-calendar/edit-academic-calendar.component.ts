@@ -238,6 +238,7 @@ export class EditAcademicCalendarComponent implements OnInit {
     return Utils.formatearFecha(
       fecha.fechaInicial,
       fecha.fechaFin,
+      fecha.uniqueDate,
       fecha.oidNombreFecha
     );
   };

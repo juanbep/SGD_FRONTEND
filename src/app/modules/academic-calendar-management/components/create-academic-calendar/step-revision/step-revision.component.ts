@@ -22,11 +22,17 @@ export class StepRevisionComponent {
   }
 
   formatearFecha(
-    fechaInicial: string,
-    fechaFin: string | null,
+    fechaInicial: Date | string | null,
+    fechaFin: Date | string | null,
+    uniqueDate: boolean,
     oidNombreFecha: number
   ): string {
-    return Utils.formatearFecha(fechaInicial, fechaFin, oidNombreFecha);
+    return Utils.formatearFecha(
+      fechaInicial,
+      fechaFin,
+      uniqueDate,
+      oidNombreFecha
+    );
   }
 
   obtenerBadgeClass(estado: string): string {

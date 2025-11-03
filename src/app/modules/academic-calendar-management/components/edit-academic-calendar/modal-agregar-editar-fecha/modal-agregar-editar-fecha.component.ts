@@ -171,9 +171,11 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       this.onConfirmarEdicion.emit(updateDto);
     } else {
       // Modo crear
+      // TODO: REALIZAR AJUSTE PARA CAPTURAR SI ES FECHA UNICA O FECHA RANGO -> OJO
       const createDto: CreateFechaDto = {
         oidCalendario: this.oidCalendario,
         oidNombreFecha: Number(formValues.oidNombreFecha),
+        uniqueDate: false, 
         tipo: 'RESALTADAS',
         fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
         fechaFin: this.esFechaUnica()

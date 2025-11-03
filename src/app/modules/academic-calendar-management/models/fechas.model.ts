@@ -5,6 +5,7 @@ export interface Fecha {
   oidFecha: number;
   oidNombreFecha: number;
   nombre: string;
+  uniqueDate: boolean;
   fechaInicial: string;
   fechaFin: string;
   tipo: TipoFecha;
@@ -55,6 +56,7 @@ export interface FechaFilters {
 export interface CreateFechaDto {
   oidCalendario: number;
   oidNombreFecha: number;
+  uniqueDate: boolean;
   fechaInicial: string;
   fechaFin: string | null;
   tipo: TipoFecha;

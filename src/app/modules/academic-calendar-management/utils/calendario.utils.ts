@@ -56,20 +56,19 @@ export class Utils {
    * Formatea una fecha según si es única o rango
    * @param fechaInicial Fecha inicial
    * @param fechaFin Fecha final (opcional)
-   * @param oidNombreFecha ID del tipo de fecha
+   * @param uniqueDate Indica si es fecha única (true) o rango (false)
+   * @param oidNombreFecha ID del tipo de fecha (para determinar prefijos)
    * @returns String formateado según el tipo de fecha
    */
   static formatearFecha(
     fechaInicial: Date | string | null,
     fechaFin: Date | string | null,
+    uniqueDate: boolean,
     oidNombreFecha: number
   ): string {
     if (!fechaInicial) return '-';
 
     const fechaInicio = new Date(fechaInicial);
-
-    // Id de nombres de fechas unicas
-    const oidsFechaUnica = [1, 6, 7, 8, 10, 12, 14, 15, 16, 18, 19];
 
     // Array de nombres de meses en español
     const meses = [
@@ -87,7 +86,7 @@ export class Utils {
       'diciembre',
     ];
 
-    // ✅ OIDs que requieren el prefijo "Hasta el"
+    // OIDs que requieren el prefijo "Hasta el"
     const OIDS_CON_PREFIJO_HASTA = [4, 5, 8, 12, 14];
 
     // Formato para fecha única: "7 de julio de 2025"
@@ -98,7 +97,7 @@ export class Utils {
       return `${dia} de ${mes} de ${anio}`;
     };
 
-    // ✅ Formato para fecha única con prefijo "Hasta el"
+    // Formato para fecha única con prefijo "Hasta el"
     const formatearFechaHasta = (date: Date): string => {
       const dia = date.getDate();
       const mes = meses[date.getMonth()];
@@ -130,11 +129,8 @@ export class Utils {
       return `Del ${diaInicio} de ${mesInicio} de ${anioInicio} al ${diaFin} de ${mesFin} de ${anioFin}`;
     };
 
-    // Verificar si es fecha única según su oidNombreFecha
-    const esFechaUnica = oidsFechaUnica.includes(oidNombreFecha);
-
-    if (esFechaUnica) {
-      // ✅ Verificar si requiere el prefijo "Hasta el"
+    if (uniqueDate) {
+      // Verificar si requiere el prefijo "Hasta el"
       if (OIDS_CON_PREFIJO_HASTA.includes(oidNombreFecha)) {
         return formatearFechaHasta(fechaInicio);
       }

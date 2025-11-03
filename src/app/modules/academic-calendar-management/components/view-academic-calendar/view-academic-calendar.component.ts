@@ -54,9 +54,15 @@ export class ViewAcademicCalendarComponent implements OnInit {
   formatearFecha(
     fechaInicial: Date | string | null,
     fechaFin: Date | string | null,
+    uniqueDate: boolean,
     oidNombreFecha: number
   ): string {
-    return Utils.formatearFecha(fechaInicial, fechaFin, oidNombreFecha);
+    return Utils.formatearFecha(
+      fechaInicial,
+      fechaFin,
+      uniqueDate,
+      oidNombreFecha
+    );
   }
 
   obtenerCalendarioPorId(id: number): void {

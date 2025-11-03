@@ -198,6 +198,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
       const createDto: CreateFechaDto = {
         oidCalendario: oidCalendario, // ID del calendario creado
         oidNombreFecha: fecha.oidNombreFecha,
+        uniqueDate: fecha.uniqueDate,
         fechaInicial: fecha.fechaInicial,
         fechaFin: fecha.fechaFin,
         tipo: 'RESALTADAS', // Valor por defecto

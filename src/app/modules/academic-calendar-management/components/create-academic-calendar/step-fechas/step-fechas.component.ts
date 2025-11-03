@@ -117,6 +117,7 @@ export class StepFechasComponent implements OnInit {
       oidFecha: this.generarOidTemporal(), // ID temporal único
       oidNombreFecha: dto.oidNombreFecha,
       nombre: this.obtenerNombreFecha(dto.oidNombreFecha),
+      uniqueDate: dto.uniqueDate,
       fechaInicial: dto.fechaInicial,
       fechaFin: dto.fechaFin || '',
       tipo: 'NO_RESALTADAS', // Placeholder
@@ -253,6 +254,7 @@ export class StepFechasComponent implements OnInit {
       (f) => ({
         oidCalendario: f.oidCalendario,
         oidNombreFecha: f.oidNombreFecha,
+        uniqueDate: f.uniqueDate,
         fechaInicial: f.fechaInicial,
         fechaFin: f.fechaFin || null,
         tipo: f.tipo,
@@ -266,6 +268,7 @@ export class StepFechasComponent implements OnInit {
     return Utils.formatearFecha(
       fecha.fechaInicial,
       fecha.fechaFin,
+      fecha.uniqueDate,
       fecha.oidNombreFecha
     );
   }
