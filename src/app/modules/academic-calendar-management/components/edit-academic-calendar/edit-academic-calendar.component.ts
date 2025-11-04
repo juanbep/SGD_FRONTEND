@@ -1,5 +1,3 @@
-// edit-academic-calendar.component.ts (SIMPLIFICADO)
-
 import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -12,6 +10,7 @@ import {
 import {
   Calendario,
   CreateFechaDto,
+  CreateNombreFechaDto,
   Fecha,
   UpdateFechaDto,
 } from '../../models';
@@ -236,6 +235,47 @@ export class EditAcademicCalendarComponent implements OnInit {
   // ===== HANDLER PARA ACTUALIZACIÓN CALENDARIO DESDE COMPONENTE HIJO =====
   onCalendarioActualizado(calendarioActualizado: Calendario): void {
     this.calendario.set(calendarioActualizado);
+  }
+
+  // ===== HANDLER PARA CREAR UN FECHA DE CALENDARIO DESDE COMPONENTE HIJO =====
+  async handleCrearNombreFecha(dto: CreateNombreFechaDto): Promise<void> {
+    console.log('DTO recibido en componente padre:', dto); // ✅ DEBUG
+    console.log('Tipo de uniqueDate:', typeof dto.uniqueDate); // ✅ DEBUG
+
+    this.guardandoFecha.set(true);
+
+    try {
+      const nuevoNombre = await this.nombreFechaHelper.create(dto);
+
+      if (nuevoNombre) {
+        // Agregar el nuevo nombre a la lista
+        const nuevaLista = [
+          ...this.listaNombreFechas(),
+          {
+            value: nuevoNombre.oidNombreFecha,
+            label: nuevoNombre.nombre,
+            tieneTemplate: false,
+            uniqueDate: nuevoNombre.uniqueDate,
+          },
+        ];
+
+        // Ordenar la lista actualizada
+        const listaOrdenada = Utils.ordenarListaNombresFecha(nuevaLista);
+        this.listaNombreFechas.set(listaOrdenada);
+
+        this.toastr.success('Tipo de fecha creado correctamente');
+
+        // El modal se mantiene abierto y vuelve automáticamente a la vista de fecha
+      } else {
+        this.toastr.error('No se pudo crear el tipo de fecha');
+      }
+    } catch (error: any) {
+      const mensaje =
+        error?.error?.mensaje || 'Error al crear el tipo de fecha';
+      this.toastr.error(mensaje);
+    } finally {
+      this.guardandoFecha.set(false);
+    }
   }
 
   // ===== MÉTODOS DE UTILIDAD =====

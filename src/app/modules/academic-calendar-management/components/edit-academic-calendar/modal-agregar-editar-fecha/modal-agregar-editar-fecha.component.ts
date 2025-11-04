@@ -22,9 +22,11 @@ import {
   Fecha,
   NombreFecha,
   UpdateFechaDto,
+  CreateNombreFechaDto,
 } from '../../../models';
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from '../../../utils/calendario.utils';
+
 @Component({
   selector: 'app-modal-agregar-fecha',
   standalone: true,
@@ -50,41 +52,51 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   @Output() onConfirmar = new EventEmitter<CreateFechaDto>();
   @Output() onConfirmarEdicion = new EventEmitter<UpdateFechaDto>();
   @Output() onCancelar = new EventEmitter<void>();
+  @Output() onCrearNombreFecha = new EventEmitter<CreateNombreFechaDto>();
 
   // ===== SIGNALS =====
   readonly tipoFechaSeleccionado = signal<number | null>(null);
   readonly fechaActual = signal<Fecha | null>(null);
+  readonly vistaActual = signal<'fecha' | 'crearNombre'>('fecha');
 
   // ===== COMPUTED =====
   readonly esFechaUnica = computed(() => {
     const oid = this.tipoFechaSeleccionado();
     if (oid === null) return false;
 
-    // En modo edición, usar el uniqueDate de la fecha actual
     const fechaEdicion = this.fechaActual();
     if (fechaEdicion) {
       return fechaEdicion.uniqueDate;
     }
 
-    // En modo creación, buscar en la lista de nombres
     const nombreFecha = this.listaNombreFechas.find(
       (item) => item.value === oid
     );
     return nombreFecha?.uniqueDate ?? false;
   });
+
   readonly modoEdicion = computed(() => this.fechaActual() !== null);
+
   readonly tituloModal = computed(() => {
+    if (this.vistaActual() === 'crearNombre') {
+      return 'Crear Nuevo Tipo de Fecha';
+    }
     return this.modoEdicion() ? 'Editar Fecha' : 'Agregar Nueva Fecha';
   });
+
   readonly iconoModal = computed(() => {
+    if (this.vistaActual() === 'crearNombre') {
+      return 'fa-plus-circle';
+    }
     return this.modoEdicion() ? 'fa-edit' : 'fa-calendar-plus';
   });
 
-  // ===== FORMULARIO =====
+  // ===== FORMULARIOS =====
   fechaForm!: FormGroup;
+  nombreFechaForm!: FormGroup;
 
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarFormularios();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
@@ -105,24 +117,60 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     if (changes['visible'] && !this.visible) {
       this.resetearFormulario();
     }
+
+    // Controlar disabled state cuando cambia guardando
+    if (changes['guardando']) {
+      this.actualizarEstadoDisabled();
+    }
   }
 
-  private inicializarFormulario(): void {
+  // Método para actualizar estado disabled de los FormControls
+  private actualizarEstadoDisabled(): void {
+    // Verificar que los formularios estén inicializados
+    if (!this.fechaForm || !this.nombreFechaForm) {
+      return;
+    }
+
+    if (this.guardando) {
+      // Deshabilitar controles del formulario de fecha
+      this.fechaForm.get('fechaInicial')?.disable({ emitEvent: false });
+      this.fechaForm.get('fechaFin')?.disable({ emitEvent: false });
+
+      // Deshabilitar controles del formulario de nombre de fecha
+      this.nombreFechaForm.get('nombre')?.disable({ emitEvent: false });
+      this.nombreFechaForm.get('uniqueDate')?.disable({ emitEvent: false });
+    } else {
+      // Habilitar controles del formulario de fecha
+      this.fechaForm.get('fechaInicial')?.enable({ emitEvent: false });
+      this.fechaForm.get('fechaFin')?.enable({ emitEvent: false });
+
+      // Habilitar controles del formulario de nombre de fecha
+      this.nombreFechaForm.get('nombre')?.enable({ emitEvent: false });
+      this.nombreFechaForm.get('uniqueDate')?.enable({ emitEvent: false });
+    }
+  }
+
+  private inicializarFormularios(): void {
+    // Formulario para agregar/editar fecha
     this.fechaForm = this.fb.group({
       oidNombreFecha: [null, Validators.required],
       fechaInicial: [null, Validators.required],
       fechaFin: [null],
     });
 
-    // Observar cambios en oidNombreFecha
     this.fechaForm.get('oidNombreFecha')?.valueChanges.subscribe((oid) => {
       this.tipoFechaSeleccionado.set(oid ? Number(oid) : null);
       this.ajustarValidacionesFecha(oid ? Number(oid) : null);
     });
+
+    // Formulario para crear nombre de fecha
+    this.nombreFechaForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      uniqueDate: ['true', Validators.required],
+    });
   }
 
   private cargarDatosFecha(fecha: Fecha): void {
-    // Convertir fechas de DateTime a formato date input (YYYY-MM-DD)
     const fechaInicial = fecha.fechaInicial
       ? this.extraerSoloFecha(fecha.fechaInicial.toString())
       : null;
@@ -138,7 +186,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   }
 
   private extraerSoloFecha(fechaDateTime: string): string {
-    // Extrae "2025-08-07" de "2025-08-07T00:00:00"
     return fechaDateTime.split('T')[0];
   }
 
@@ -146,29 +193,35 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     const fechaFinControl = this.fechaForm.get('fechaFin');
 
     if (oid !== null && this.esFechaUnica()) {
-      // Fecha única: fechaFin no es necesaria
       fechaFinControl?.clearValidators();
       fechaFinControl?.setValue(null);
     } else if (oid !== null) {
-      // Rango: fechaFin es requerida
       fechaFinControl?.setValidators([Validators.required]);
     }
 
     fechaFinControl?.updateValueAndValidity();
   }
 
-  // ===== MÉTODO CONFIRMAR =====
+  cambiarAVistaCrearNombre(): void {
+    this.nombreFechaForm.reset({ uniqueDate: 'true' });
+    this.vistaActual.set('crearNombre');
+  }
+
+  volverAVistaFecha(): void {
+    this.vistaActual.set('fecha');
+    this.nombreFechaForm.reset({ uniqueDate: 'true' });
+  }
+
   confirmar(): void {
     if (this.fechaForm.invalid) {
       this.fechaForm.markAllAsTouched();
       return;
     }
 
-    const formValues = this.fechaForm.value;
+    const formValues = this.fechaForm.getRawValue();
     const esUnica = this.esFechaUnica();
 
     if (this.modoEdicion()) {
-      // Modo edición
       const updateDto: UpdateFechaDto = {
         oidFecha: this.fechaAEditar!.oidFecha,
         oidCalendario: this.oidCalendario,
@@ -182,7 +235,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       };
       this.onConfirmarEdicion.emit(updateDto);
     } else {
-      // Modo crear
       const createDto: CreateFechaDto = {
         oidCalendario: this.oidCalendario,
         oidNombreFecha: Number(formValues.oidNombreFecha),
@@ -195,6 +247,25 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       };
       this.onConfirmar.emit(createDto);
     }
+  }
+
+  confirmarCrearNombre(): void {
+    if (this.nombreFechaForm.invalid) {
+      this.nombreFechaForm.markAllAsTouched();
+      return;
+    }
+
+    // Conversión de string a boolean
+    const uniqueDateValue = this.nombreFechaForm.value.uniqueDate;
+    const uniqueDateBoolean =
+      uniqueDateValue === 'true' || uniqueDateValue === true;
+
+    const createDto: CreateNombreFechaDto = {
+      nombre: this.nombreFechaForm.value.nombre.trim(),
+      uniqueDate: uniqueDateBoolean,
+    };
+
+    this.onCrearNombreFecha.emit(createDto);
   }
 
   selectTipoFecha(value: number): void {
@@ -212,16 +283,24 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   }
 
   private resetearFormulario(): void {
-    //this.fechaForm.reset();
     this.tipoFechaSeleccionado.set(null);
     this.fechaActual.set(null);
+    this.vistaActual.set('fecha');
+    //this.fechaForm.reset();
+    //this.nombreFechaForm.reset({ uniqueDate: 'true' });
   }
 
   cancelar(): void {
+    if (this.vistaActual() === 'crearNombre') {
+      this.volverAVistaFecha();
+      return;
+    }
+
     this.fechaForm.reset();
     this.onCancelar.emit();
   }
 
+  // ===== GETTERS =====
   get nombreFechaControl() {
     return this.fechaForm.get('oidNombreFecha');
   }
@@ -232,5 +311,13 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
   get fechaFinControl() {
     return this.fechaForm.get('fechaFin');
+  }
+
+  get nombreControl() {
+    return this.nombreFechaForm.get('nombre');
+  }
+
+  get uniqueDateControl() {
+    return this.nombreFechaForm.get('uniqueDate');
   }
 }

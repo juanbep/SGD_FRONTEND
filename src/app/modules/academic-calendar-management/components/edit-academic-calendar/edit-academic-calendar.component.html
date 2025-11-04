@@ -53,7 +53,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let fecha of fechasCalendario()">
-              <td>{{ fecha.nombre }}</td>
+              <td [ngClass]="{ 'fw-bold': fecha.tipo === 'RESALTADAS' }">
+                {{ fecha.nombre }}
+              </td>
               <td class="text-center align-middle">
                 {{ formatoFecha(fecha) }}
               </td>
@@ -118,5 +120,6 @@
     (onConfirmar)="confirmarAgregarFecha($event)"
     (onConfirmarEdicion)="confirmarEditarFecha($event)"
     (onCancelar)="cerrarModalAgregar()"
+    (onCrearNombreFecha)="handleCrearNombreFecha($event)"
   ></app-modal-agregar-fecha>
 </div>

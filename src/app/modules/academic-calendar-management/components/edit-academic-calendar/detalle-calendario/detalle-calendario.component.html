@@ -125,7 +125,11 @@
             </ng-template>
           </td>
           <td>
-            {{ calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm" }}
+            {{
+              calendario.fechaActualizacion
+                ? (calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm")
+                : "-"
+            }}
           </td>
         </tr>
 

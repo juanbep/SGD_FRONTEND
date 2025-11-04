@@ -4,7 +4,7 @@ import { BaseResponse, PaginatedResponse } from '../shared/shared.model';
 export interface NombreFecha {
   oidNombreFecha: number;
   nombre: string;
-  uniqueDate: boolean,
+  uniqueDate: boolean;
   fechaCreacion: string;
   usuarioCreacion: string;
   fechaActualizacion: string | null;
@@ -40,6 +40,7 @@ export interface NombreFechaFilters {
 // DTOs para CRUD
 export interface CreateNombreFechaDto {
   nombre: string;
+  uniqueDate: boolean;
 }
 
 export interface UpdateNombreFechaDto extends Partial<CreateNombreFechaDto> {
