@@ -19,10 +19,10 @@ import {
   INITIAL_WIZARD_DATA,
 } from '../../models/create-actividad-wizard.model';
 import { CreateActividadDTO, CreateAtributoDTO } from '../../models';
-import { StepperComponent } from './steps/stepper/stepper/stepper.component';
 import { StepDetallesTemporalesComponent } from './steps/step-detalles-temporales/step-detalles-temporales.component';
 import { StepAtributosComponent } from './steps/step-atributos/step-atributos.component';
 import { StepAsignarUsuariosComponent } from './steps/step-asignar-usuarios/step-asignar-usuarios.component';
+import { StepperActivitiesComponent } from './steps/stepper-activities/stepper-activities.component';
 
 @Component({
   selector: 'app-create-activities-component',
@@ -33,7 +33,7 @@ import { StepAsignarUsuariosComponent } from './steps/step-asignar-usuarios/step
     StepDetallesTemporalesComponent,
     StepAtributosComponent,
     StepAsignarUsuariosComponent,
-    StepperComponent,
+    StepperActivitiesComponent,
   ],
   templateUrl: './create-activities-component.component.html',
   styleUrl: './create-activities-component.component.css',

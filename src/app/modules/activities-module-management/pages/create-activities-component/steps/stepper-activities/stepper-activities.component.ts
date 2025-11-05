@@ -2,13 +2,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-stepper',
+  selector: 'app-stepper-activities',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './stepper.component.html',
-  styleUrl: './stepper.component.css',
+  templateUrl: './stepper-activities.component.html',
+  styleUrl: './stepper-activities.component.css',
 })
-export class StepperComponent {
+export class StepperActivitiesComponent {
   @Input() pasoActual: number = 1;
   @Input() pasosCompletados: boolean[] = [];
   @Input() titulosPasos: string[] = [];

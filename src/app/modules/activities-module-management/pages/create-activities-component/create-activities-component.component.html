@@ -11,13 +11,13 @@
   </div>
 
   <!-- Stepper Component -->
-  <app-stepper
+  <app-stepper-activities
     class="mb-4"
     [pasoActual]="pasoActual()"
     [pasosCompletados]="datosWizard().stepsCompleted"
     [titulosPasos]="TITULOS_PASOS"
     (irAPaso)="irAPaso($event)"
-  ></app-stepper>
+  ></app-stepper-activities>
 
   <!-- Contenido del paso actual -->
   <div class="wizard-content card shadow-sm p-4 mb-4">

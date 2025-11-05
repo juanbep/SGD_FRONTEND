@@ -133,6 +133,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
     if (this.guardando) {
       // Deshabilitar controles del formulario de fecha
+      this.fechaForm.get('oidNombreFecha')?.disable({ emitEvent: false });
       this.fechaForm.get('fechaInicial')?.disable({ emitEvent: false });
       this.fechaForm.get('fechaFin')?.disable({ emitEvent: false });
 
@@ -141,6 +142,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       this.nombreFechaForm.get('uniqueDate')?.disable({ emitEvent: false });
     } else {
       // Habilitar controles del formulario de fecha
+      this.fechaForm.get('oidNombreFecha')?.enable({ emitEvent: false });
       this.fechaForm.get('fechaInicial')?.enable({ emitEvent: false });
       this.fechaForm.get('fechaFin')?.enable({ emitEvent: false });
 
