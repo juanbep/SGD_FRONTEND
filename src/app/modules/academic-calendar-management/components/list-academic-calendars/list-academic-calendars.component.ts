@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Calendario } from '../../models';
+import { Calendario, EstadoCalendario } from '../../models';
 import { Utils } from '../../utils/calendario.utils';
 import { CalendarioService } from '../../services';
 
@@ -29,6 +29,21 @@ export class ListAcademicCalendarsComponent implements OnInit {
   //Servicios
   private calendarioService = inject(CalendarioService);
   private toastr = inject(ToastrService);
+
+  // ===== ESTADOS =====
+  readonly estadosDisponibles: EstadoCalendario[] = [
+    'ACTIVO',
+    'DESHABILITADO',
+    'APROBADO',
+    'PENDIENTE',
+  ];
+  readonly periodosDisponibles = [1, 2];
+
+  // ===== FILTROS =====
+  filtroEstado: EstadoCalendario | '' = '';
+  filtroAnio: string | '' = '';
+  aniosDisponibles: string[] = [];
+  filtroPeriodo: number | '' = '';
 
   // Paginación
   page = 0;
@@ -52,41 +67,81 @@ export class ListAcademicCalendarsComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.calendarioService
-      .getCalendariosAcademicos({
-        page: this.page,
-        size: this.size,
-      })
-      .subscribe({
-        next: (response) => {
-          if (response.codigo >= 200 && response.codigo < 300) {
-            this.calendarios = response.data.content;
-            this.totalElements = response.data.totalElements;
-            this.toastr.success(
-              response.mensaje || 'Calendarios cargados correctamente'
-            );
-          } else {
-            this.toastr.warning(
-              response.mensaje || 'Respuesta inesperada del servidor'
-            );
-          }
-          this.loading = false;
-        },
-        error: (error) => {
-          this.handleError(error, 'cargar calendarios');
-          this.loading = false;
-        },
-      });
+    const filtros: any = {
+      page: this.page,
+      size: this.size,
+    };
+
+    if (this.filtroEstado) {
+      filtros.estado = this.filtroEstado;
+    }
+
+    if (this.filtroAnio) {
+      filtros.anioCalendario = this.filtroAnio;
+    }
+
+    if (this.filtroPeriodo) {
+      filtros.numeroCalendario = this.filtroPeriodo;
+    }
+
+    this.calendarioService.getCalendariosAcademicos(filtros).subscribe({
+      next: (response) => {
+        if (response.codigo >= 200 && response.codigo < 300) {
+          this.calendarios = response.data.content;
+          this.totalElements = response.data.totalElements;
+          this.cargarAniosDisponibles();
+          this.toastr.success(
+            response.mensaje || 'Calendarios cargados correctamente'
+          );
+        } else {
+          this.toastr.warning(
+            response.mensaje || 'Respuesta inesperada del servidor'
+          );
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.handleError(error, 'cargar calendarios');
+        this.loading = false;
+      },
+    });
   }
 
-  irAPagina(nuevaPagina: number): void {
-    this.page = nuevaPagina;
+  // ===== MANEJADORES DE FILTROS =====
+  onEstadoChange(nuevoEstado: EstadoCalendario | ''): void {
+    this.filtroEstado = nuevoEstado;
+    this.page = 0; // Resetear a página 1 al cambiar filtro
+    this.cargarCalendarios();
+  }
+
+  onPeriodoChange(nuevoPeriodo: number | ''): void {
+    this.filtroPeriodo = nuevoPeriodo;
+    this.page = 0;
+    this.cargarCalendarios();
+  }
+
+  onAnioChange(nuevoAnio: string | ''): void {
+    this.filtroAnio = nuevoAnio;
+    this.page = 0;
     this.cargarCalendarios();
   }
 
   onPageSizeChange(event: any): void {
     this.size = parseInt(event.target.value);
     this.page = 0; // Resetear a primera página
+    this.cargarCalendarios();
+  }
+
+  limpiarFiltros(): void {
+    this.filtroEstado = '';
+    this.filtroAnio = '';
+    this.filtroPeriodo = '';
+    this.page = 0;
+    this.cargarCalendarios();
+  }
+
+  irAPagina(nuevaPagina: number): void {
+    this.page = nuevaPagina;
     this.cargarCalendarios();
   }
 
@@ -107,6 +162,23 @@ export class ListAcademicCalendarsComponent implements OnInit {
     }
 
     return paginas;
+  }
+
+  // ===== CARGAR AÑOS DISPONIBLES =====
+  private cargarAniosDisponibles(): void {
+    // Obtener años únicos de los calendarios ya cargados
+    const anios = [
+      ...new Set(this.calendarios.map((c) => String(c.anioCalendario))),
+    ];
+    this.aniosDisponibles = anios.sort((a, b) => Number(b) - Number(a)); // Descendente
+
+    // Si no hay calendarios aún, generar un rango dinámico
+    if (this.aniosDisponibles.length === 0) {
+      const anioActual = new Date().getFullYear();
+      this.aniosDisponibles = Array.from({ length: 5 }, (_, i) =>
+        String(anioActual - i)
+      );
+    }
   }
 
   getInfoPaginacion(): string {

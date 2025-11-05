@@ -5,10 +5,12 @@
       <h6 class="mb-0 d-flex align-items-center">
         <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
       </h6>
+      <!-- Botón Limpiar -->
       <button
         type="button"
         class="btn btn-outline-secondary d-flex align-items-center"
-        disabled
+        (click)="limpiarFiltros()"
+        [disabled]="!filtroEstado && !filtroAnio && !filtroPeriodo"
       >
         <i class="fas fa-times"></i>
         <span class="d-none d-lg-inline ms-1">Limpiar</span>
@@ -18,35 +20,59 @@
       <div class="row g-3">
         <!-- Filtro por Estados -->
         <div class="col-xl-3 col-lg-4 col-md-6">
-          <label class="form-label fw-bold">
+          <label for="filtroEstado" class="form-label fw-bold">
             <i class="fas fa-tags me-1"></i>Estados:
           </label>
-          <select class="form-select" disabled>
-            <option>Seleccionar estados (Próximamente)</option>
+          <select
+            id="filtroEstado"
+            class="form-select"
+            [(ngModel)]="filtroEstado"
+            (change)="onEstadoChange(filtroEstado)"
+          >
+            <option value="">TODOS</option>
+            <option *ngFor="let estado of estadosDisponibles" [value]="estado">
+              {{ estado }}
+            </option>
           </select>
-          <small class="text-muted">Filtrar por uno o múltiples estados</small>
+          <small class="text-muted">Filtrar por estado del calendario</small>
         </div>
 
-        <!-- Filtro por Año -->
         <div class="col-xl-2 col-lg-3 col-md-6">
-          <label class="form-label fw-bold">
+          <label for="filtroAnio" class="form-label fw-bold">
             <i class="fas fa-calendar-alt me-1"></i>Año:
           </label>
-          <select class="form-select" disabled>
-            <option>Todos los años</option>
+          <select
+            id="filtroAnio"
+            class="form-select"
+            [(ngModel)]="filtroAnio"
+            (change)="onAnioChange(filtroAnio)"
+          >
+            <option value="">TODOS</option>
+            <option *ngFor="let anio of aniosDisponibles" [value]="anio">
+              {{ anio }}
+            </option>
           </select>
           <small class="text-muted">Filtrar por año académico</small>
         </div>
 
         <!-- Filtro por Periodo -->
         <div class="col-xl-2 col-lg-3 col-md-6">
-          <label class="form-label fw-bold">
+          <label for="filtroPeriodo" class="form-label fw-bold">
             <i class="fas fa-clock me-1"></i>Periodo:
           </label>
-          <select class="form-select" disabled>
-            <option>Todos los periodos</option>
-            <option>Periodo 1</option>
-            <option>Periodo 2</option>
+          <select
+            id="filtroPeriodo"
+            class="form-select"
+            [(ngModel)]="filtroPeriodo"
+            (change)="onPeriodoChange(filtroPeriodo)"
+          >
+            <option value="">TODOS</option>
+            <option
+              *ngFor="let periodo of periodosDisponibles"
+              [value]="periodo"
+            >
+              Periodo {{ periodo }}
+            </option>
           </select>
           <small class="text-muted">Semestre académico</small>
         </div>
