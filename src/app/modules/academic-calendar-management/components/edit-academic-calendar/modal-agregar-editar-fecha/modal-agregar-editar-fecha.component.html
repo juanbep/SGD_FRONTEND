@@ -41,7 +41,7 @@
               </button>
             </div>
 
-            <!-- SELECT en lugar de dropdown -->
+            <!-- SELECT para el tipo fecha -->
             <select
               id="oidNombreFecha"
               class="form-select"
@@ -49,7 +49,6 @@
               [class.is-invalid]="
                 nombreFechaControl?.invalid && nombreFechaControl?.touched
               "
-              [attr.disabled]="modoEdicion() ? true : null"
             >
               <option value="" disabled selected>
                 Seleccione un tipo de fecha
