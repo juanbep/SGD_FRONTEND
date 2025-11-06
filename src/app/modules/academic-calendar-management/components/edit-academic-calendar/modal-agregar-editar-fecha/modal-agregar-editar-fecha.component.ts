@@ -20,7 +20,6 @@ import {
 import {
   CreateFechaDto,
   Fecha,
-  NombreFecha,
   UpdateFechaDto,
   CreateNombreFechaDto,
 } from '../../../models';
