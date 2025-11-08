@@ -8,7 +8,7 @@ import {
   CalendarioFilters,
   EstadoCalendario,
 } from '../../models';
-import { Observable, map } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +62,63 @@ export class CalendarioHelperService {
       this.calendarioService.deleteCalendarioAcademico({ oidcalendario: id })
     );
     return result === true;
+  }
+
+  // Descargar PDF del calendario
+  async downloadPdf(
+    calendarioId: number,
+    nombreArchivo?: string
+  ): Promise<void> {
+    try {
+      const blob = await firstValueFrom(
+        this.calendarioService.downloadCalendarioPdf(calendarioId)
+      );
+
+      // Crear un enlace temporal para descargar el archivo
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+
+      // Nombre del archivo (si no se proporciona, usar uno por defecto)
+      link.download = nombreArchivo || `calendario_${calendarioId}.pdf`;
+
+      // Simular clic para descargar
+      document.body.appendChild(link);
+      link.click();
+
+      // Limpiar
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      console.log('PDF descargado correctamente');
+    } catch (error) {
+      console.error('Error al descargar PDF:', error);
+      throw error;
+    }
+  }
+
+  // Obtener blob sin descargar automáticamente
+  async getPdfBlob(calendarioId: number): Promise<Blob> {
+    return firstValueFrom(
+      this.calendarioService.downloadCalendarioPdf(calendarioId)
+    );
+  }
+
+  //Abrir PDF en nueva pestaña
+  async openPdfInNewTab(calendarioId: number): Promise<void> {
+    try {
+      const blob = await this.getPdfBlob(calendarioId);
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+
+      // Limpiar después de un tiempo
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 100);
+    } catch (error) {
+      console.error('Error al abrir PDF:', error);
+      throw error;
+    }
   }
 
   // Métodos auxiliares

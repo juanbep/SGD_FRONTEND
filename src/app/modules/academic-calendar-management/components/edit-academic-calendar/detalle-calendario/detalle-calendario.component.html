@@ -44,20 +44,46 @@
       style="table-layout: fixed"
     >
       <tbody>
-        <!-- Fila 1: Headers -->
+        <!-- Fila 1: Año | Periodo | Estado -->
         <tr class="table-light fw-bold">
-          <td style="width: 25%">Año</td>
-          <td style="width: 25%">Periodo</td>
-          <td style="width: 25%">Estado</td>
-          <td style="width: 25%">Fecha Creación</td>
+          <td style="width: 33.33%">Año</td>
+          <td style="width: 33.33%">Periodo</td>
+          <td style="width: 33.33%">Estado</td>
         </tr>
-        <!-- Fila 1: Datos -->
-        <tr>
-          <td>{{ calendario.anioCalendario }}</td>
-          <td>{{ calendario.numeroCalendario }}</td>
-          <td [formGroup]="calendarioForm">
-            <ng-container *ngIf="!modoEdicion(); else editarEstado">
-              {{ calendario.estado }}
+        <tr [formGroup]="calendarioForm">
+          <td>
+            <ng-container
+              *ngIf="!esCampoEditable('anioCalendario'); else editarAnio"
+            >
+              {{ calendario.anioCalendario || "-" }}
+            </ng-container>
+            <ng-template #editarAnio>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="anioCalendario"
+                min="2000"
+              />
+            </ng-template>
+          </td>
+          <td>
+            <ng-container
+              *ngIf="!esCampoEditable('numeroCalendario'); else editarPeriodo"
+            >
+              {{ calendario.numeroCalendario || "-" }}
+            </ng-container>
+            <ng-template #editarPeriodo>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="numeroCalendario"
+                min="1"
+              />
+            </ng-template>
+          </td>
+          <td>
+            <ng-container *ngIf="!esCampoEditable('estado'); else editarEstado">
+              {{ calendario.estado || "-" }}
             </ng-container>
             <ng-template #editarEstado>
               <select
@@ -73,21 +99,20 @@
               </select>
             </ng-template>
           </td>
-          <td>{{ calendario.fechaCreacion | date : "yyyy-MM-dd HH:mm" }}</td>
         </tr>
 
-        <!-- Fila 2: Headers -->
+        <!-- Fila 2: Semanas clase | Semanas preparación | Horas planta -->
         <tr class="table-light fw-bold">
           <td>Semanas clase</td>
           <td>Semanas preparación</td>
           <td>Horas Planta</td>
-          <td>Última actualización</td>
         </tr>
-        <!-- Fila 2: Datos -->
         <tr [formGroup]="calendarioForm">
           <td>
-            <ng-container *ngIf="!modoEdicion(); else editarSemanasClase">
-              {{ calendario.semanasClase }}
+            <ng-container
+              *ngIf="!esCampoEditable('semanasClase'); else editarSemanasClase"
+            >
+              {{ calendario.semanasClase ?? "-" }}
             </ng-container>
             <ng-template #editarSemanasClase>
               <input
@@ -99,8 +124,13 @@
             </ng-template>
           </td>
           <td>
-            <ng-container *ngIf="!modoEdicion(); else editarSemanasPreparacion">
-              {{ calendario.semanasPreparacion }}
+            <ng-container
+              *ngIf="
+                !esCampoEditable('semanasPreparacion');
+                else editarSemanasPreparacion
+              "
+            >
+              {{ calendario.semanasPreparacion ?? "-" }}
             </ng-container>
             <ng-template #editarSemanasPreparacion>
               <input
@@ -112,8 +142,10 @@
             </ng-template>
           </td>
           <td>
-            <ng-container *ngIf="!modoEdicion(); else editarHorasPlanta">
-              {{ calendario.horasPlanta }}
+            <ng-container
+              *ngIf="!esCampoEditable('horasPlanta'); else editarHorasPlanta"
+            >
+              {{ calendario.horasPlanta ?? "-" }}
             </ng-container>
             <ng-template #editarHorasPlanta>
               <input
@@ -124,39 +156,23 @@
               />
             </ng-template>
           </td>
-          <td>
-            {{
-              calendario.fechaActualizacion
-                ? (calendario.fechaActualizacion | date : "yyyy-MM-dd HH:mm")
-                : "-"
-            }}
-          </td>
         </tr>
 
-        <!-- Fila 3: Headers -->
+        <!-- Fila 3: Horas ocasionales | Fecha creación | Última actualización -->
         <tr class="table-light fw-bold">
-          <td>Horas Cátedra</td>
           <td>Horas Ocasionales</td>
-          <td colspan="2">Horas Becario/Practicante</td>
+          <td>Fecha Creación</td>
+          <td>Última actualización</td>
         </tr>
-        <!-- Fila 3: Datos -->
         <tr [formGroup]="calendarioForm">
           <td>
-            <ng-container *ngIf="!modoEdicion(); else editarHorasCatedra">
-              {{ calendario.horasCatedra }}
-            </ng-container>
-            <ng-template #editarHorasCatedra>
-              <input
-                type="number"
-                class="form-control form-control-sm text-center"
-                formControlName="horasCatedra"
-                min="0"
-              />
-            </ng-template>
-          </td>
-          <td>
-            <ng-container *ngIf="!modoEdicion(); else editarHorasOcasionales">
-              {{ calendario.horasOcasionales }}
+            <ng-container
+              *ngIf="
+                !esCampoEditable('horasOcasionales');
+                else editarHorasOcasionales
+              "
+            >
+              {{ calendario.horasOcasionales ?? "-" }}
             </ng-container>
             <ng-template #editarHorasOcasionales>
               <input
@@ -167,9 +183,53 @@
               />
             </ng-template>
           </td>
+          <td>
+            <ng-container>
+              {{
+                calendario.fechaCreacion
+                  ? (calendario.fechaCreacion | date : "yyyy-MM-dd")
+                  : "-"
+              }}
+            </ng-container>
+          </td>
+          <td>
+            <ng-container
+              *ngIf="calendario!.fechaActualizacion; else sinActualizacion"
+            >
+              {{ calendario!.fechaActualizacion | date : "yyyy-MM-dd"
+              }}{{
+                calendario!.usuarioActualizacion
+                  ? ": " + calendario!.usuarioActualizacion
+                  : ""
+              }}
+            </ng-container>
+            <ng-template #sinActualizacion>-</ng-template>
+          </td>
+        </tr>
+
+        <!-- ========== CAMPOS OCULTOS (MANTENER PARA USO FUTURO) ========== -->
+        <!-- 
+        <tr class="table-light fw-bold">
+          <td>Horas Cátedra</td>
+          <td colspan="2">Horas Becario/Practicante</td>
+        </tr>
+        <tr [formGroup]="calendarioForm">
+          <td>
+            <ng-container *ngIf="!esCampoEditable('horasCatedra'); else editarHorasCatedra">
+              {{ calendario.horasCatedra ?? "-" }}
+            </ng-container>
+            <ng-template #editarHorasCatedra>
+              <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                formControlName="horasCatedra"
+                min="0"
+              />
+            </ng-template>
+          </td>
           <td colspan="2">
-            <ng-container *ngIf="!modoEdicion(); else editarHorasBecario">
-              {{ calendario.horasBecarioPracticante }}
+            <ng-container *ngIf="!esCampoEditable('horasBecarioPracticante'); else editarHorasBecario">
+              {{ calendario.horasBecarioPracticante ?? "-" }}
             </ng-container>
             <ng-template #editarHorasBecario>
               <input
@@ -181,14 +241,18 @@
             </ng-template>
           </td>
         </tr>
+        -->
+        <!-- ============================================================== -->
 
         <!-- Fila 4: Observación -->
         <tr class="table-light fw-bold text-start">
-          <td colspan="4">Observación</td>
+          <td colspan="3">Observación</td>
         </tr>
         <tr [formGroup]="calendarioForm">
-          <td colspan="4" class="text-start" style="white-space: pre-line">
-            <ng-container *ngIf="!modoEdicion(); else editarObservacion">
+          <td colspan="3" class="text-start" style="white-space: pre-line">
+            <ng-container
+              *ngIf="!esCampoEditable('observacion'); else editarObservacion"
+            >
               {{ calendario.observacion || "-" }}
             </ng-container>
             <ng-template #editarObservacion>

@@ -24,6 +24,7 @@ export class ViewAcademicCalendarComponent implements OnInit {
   readonly calendarioId = signal<number | null>(null);
   readonly isLoading = signal<boolean>(false);
   readonly error = signal<string | null>(null);
+  readonly descargandoPdf = signal<boolean>(false);
 
   // ===== COMPUTED =====
   readonly fechasOrdenadas = computed(() => {
@@ -85,6 +86,37 @@ export class ViewAcademicCalendarComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
+  }
+
+  // ===== Método para descargar o abrir PDF =====
+  async descargarOAbrirPdf(): Promise<void> {
+    const id = this.calendarioId();
+    const cal = this.calendario();
+
+    if (!id || !cal) {
+      this.toastr.warning('No hay calendario para descargar');
+      return;
+    }
+
+    this.descargandoPdf.set(true);
+
+    try {
+      // Intentar abrir en nueva pestaña
+      await this.calendarioHelper.openPdfInNewTab(id);
+      this.toastr.success('Calendario abierto en nueva pestaña');
+    } catch (error) {
+      // Si falla, descargar
+      try {
+        const nombreArchivo = `Calendario_${cal.anioCalendario}_${cal.numeroCalendario}.pdf`;
+        await this.calendarioHelper.downloadPdf(id, nombreArchivo);
+        this.toastr.success('Calendario descargado correctamente');
+      } catch (downloadError) {
+        this.toastr.error('Error al procesar el calendario');
+        console.error('Error:', downloadError);
+      }
+    } finally {
+      this.descargandoPdf.set(false);
+    }
   }
 
   private handleError(error: any): void {

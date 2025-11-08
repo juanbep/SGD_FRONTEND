@@ -13,11 +13,20 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <button
       class="btn btn-outline-secondary btn-sm"
-      aria-label="Descargar calendario (deshabilitado)"
-      disabled
+      [disabled]="isLoading() || descargandoPdf() || !calendario()"
+      (click)="descargarOAbrirPdf()"
+      aria-label="Descargar o abrir calendario"
     >
-      <i class="fas fa-file-download me-2" aria-hidden="true"></i>
-      Descargar calendario
+      <i
+        [class]="
+          descargandoPdf()
+            ? 'fas fa-spinner fa-spin me-2'
+            : 'fas fa-file-download me-2'
+        "
+        aria-hidden="true"
+      >
+      </i>
+      {{ descargandoPdf() ? "Cargando PDF..." : "Descargar calendario" }}
     </button>
     <a
       class="btn btn-secondary"
@@ -41,16 +50,38 @@
         style="table-layout: fixed"
       >
         <tbody>
-          <!-- Fila 1 -->
+          <!-- Fila 1: Año | Periodo | Estado -->
           <tr class="table-light fw-bold">
-            <td style="width: 25%">Año</td>
-            <td style="width: 25%">Periodo</td>
-            <td style="width: 25%">Fecha Creación</td>
-            <td style="width: 25%">Última actualización</td>
+            <td style="width: 33.33%">Año</td>
+            <td style="width: 33.33%">Periodo</td>
+            <td style="width: 33.33%">Estado</td>
           </tr>
           <tr>
-            <td>{{ calendario()!.anioCalendario || "—" }}</td>
-            <td>{{ calendario()!.numeroCalendario || "—" }}</td>
+            <td>{{ calendario()!.anioCalendario || "-" }}</td>
+            <td>{{ calendario()!.numeroCalendario || "-" }}</td>
+            <td>{{ calendario()!.estado || "-" }}</td>
+          </tr>
+
+          <!-- Fila 2: Semanas clase | Semanas preparación | Horas planta -->
+          <tr class="table-light fw-bold">
+            <td>Semanas clase</td>
+            <td>Semanas preparación</td>
+            <td>Horas Planta</td>
+          </tr>
+          <tr>
+            <td>{{ calendario()!.semanasClase ?? "-" }}</td>
+            <td>{{ calendario()!.semanasPreparacion ?? "-" }}</td>
+            <td>{{ calendario()!.horasPlanta ?? "-" }}</td>
+          </tr>
+
+          <!-- Fila 3: Horas ocasionales | Fecha creación | Última actualización -->
+          <tr class="table-light fw-bold">
+            <td>Horas Ocasionales</td>
+            <td>Fecha Creación</td>
+            <td>Última actualización</td>
+          </tr>
+          <tr>
+            <td>{{ calendario()!.horasOcasionales ?? "-" }}</td>
             <td>
               {{
                 calendario()!.fechaCreacion
@@ -59,52 +90,49 @@
               }}
             </td>
             <td>
-              {{
-                calendario()!.fechaActualizacion
-                  ? (calendario()!.fechaActualizacion
-                    | date : "yyyy-MM-dd HH:mm")
-                  : "-"
-              }}
+              <ng-container
+                *ngIf="calendario()!.fechaActualizacion; else sinActualizacion"
+              >
+                {{ calendario()!.fechaActualizacion | date : "yyyy-MM-dd"
+                }}{{
+                  calendario()!.usuarioActualizacion
+                    ? ": " + calendario()!.usuarioActualizacion
+                    : ""
+                }}
+              </ng-container>
+              <ng-template #sinActualizacion>-</ng-template>
             </td>
           </tr>
 
-          <!-- Fila 2 -->
+          <!-- ========== CAMPOS OCULTOS (MANTENER PARA USO FUTURO) ========== -->
+          <!-- 
           <tr class="table-light fw-bold">
-            <td>Semanas clase</td>
-            <td>Semanas preparación</td>
-            <td>Horas Planta</td>
-            <td>Horas Catedra</td>
-          </tr>
-          <tr>
-            <td>{{ calendario()!.semanasClase || "—" }}</td>
-            <td>{{ calendario()!.semanasPreparacion || "—" }}</td>
-            <td>{{ calendario()!.horasPlanta || "—" }}</td>
-            <td>{{ calendario()!.horasCatedra || "—" }}</td>
-          </tr>
-
-          <!-- Fila 3 -->
-          <tr class="table-light fw-bold">
-            <td>Horas Ocasionales</td>
+            <td>Horas Cátedra</td>
             <td>Horas Becario/Practicante</td>
             <td>Usuario Creación</td>
-            <td>Usuario Actualización</td>
           </tr>
           <tr>
-            <td>{{ calendario()!.horasOcasionales || "—" }}</td>
-            <td>{{ calendario()!.horasBecarioPracticante || "—" }}</td>
-            <td>{{ calendario()!.usuarioCreacion || "—" }}</td>
-            <td>{{ calendario()!.usuarioActualizacion || "-" }}</td>
+            <td>{{ calendario()!.horasCatedra ?? "-" }}</td>
+            <td>{{ calendario()!.horasBecarioPracticante ?? "-" }}</td>
+            <td>{{ calendario()!.usuarioCreacion || "-" }}</td>
           </tr>
-
-          <!-- Fila 4 -->
+          
           <tr class="table-light fw-bold">
-            <td>Estado</td>
-            <td colspan="4">Observación</td>
+            <td colspan="3">Usuario Actualización</td>
           </tr>
           <tr>
-            <td>{{ calendario()!.estado || "—" }}</td>
-            <td colspan="4" class="text-start" style="white-space: pre-line">
-              {{ calendario()!.observacion || "—" }}
+            <td colspan="3">{{ calendario()!.usuarioActualizacion || "-" }}</td>
+          </tr>
+          -->
+          <!-- ============================================================== -->
+
+          <!-- Fila 4: Observación -->
+          <tr class="table-light fw-bold text-start">
+            <td colspan="3">Observación</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-start" style="white-space: pre-line">
+              {{ calendario()!.observacion || "-" }}
             </td>
           </tr>
         </tbody>

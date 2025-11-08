@@ -50,6 +50,20 @@ export class DetalleCalendarioComponent implements OnInit {
     'DESHABILITADO',
   ];
 
+  // Configuración completa de campos editables
+  readonly CAMPOS_EDITABLES = {
+    anioCalendario: false, // Año
+    numeroCalendario: false, // Periodo
+    estado: false, // Estado
+    semanasClase: false, // Semanas clase
+    semanasPreparacion: false, // Semanas preparación
+    horasPlanta: false, // Horas Planta
+    horasCatedra: false, // Horas Cátedra
+    horasOcasionales: false, // Horas Ocasionales
+    horasBecarioPracticante: false, // Horas Becario/Practicante
+    observacion: true, // Observación
+  };
+
   // ===== FORMULARIO =====
   calendarioForm!: FormGroup;
   private backupCalendario: Calendario | null = null;
@@ -60,6 +74,8 @@ export class DetalleCalendarioComponent implements OnInit {
 
   private inicializarFormulario(): void {
     this.calendarioForm = this.fb.group({
+      anioCalendario: [null, [Validators.required, Validators.min(2000)]],
+      numeroCalendario: [null, [Validators.required, Validators.min(1)]],
       semanasClase: [null, [Validators.min(0)]],
       semanasPreparacion: [null, [Validators.min(0)]],
       horasPlanta: [null, [Validators.min(0)]],
@@ -68,7 +84,14 @@ export class DetalleCalendarioComponent implements OnInit {
       horasBecarioPracticante: [null, [Validators.min(0)]],
       estado: ['', Validators.required],
       observacion: [''],
+      fechaCreacion: [''],
+      fechaActualizacion: [''],
     });
+  }
+
+  // ===== HELPERS =====
+  esCampoEditable(campo: keyof typeof this.CAMPOS_EDITABLES): boolean {
+    return this.CAMPOS_EDITABLES[campo] && this.modoEdicion();
   }
 
   // ===== MODO EDICIÓN =====
@@ -80,6 +103,8 @@ export class DetalleCalendarioComponent implements OnInit {
 
     // Cargar valores en el formulario
     this.calendarioForm.patchValue({
+      anioCalendario: this.calendario.anioCalendario,
+      numeroCalendario: this.calendario.numeroCalendario,
       semanasClase: this.calendario.semanasClase,
       semanasPreparacion: this.calendario.semanasPreparacion,
       horasPlanta: this.calendario.horasPlanta,
@@ -88,6 +113,8 @@ export class DetalleCalendarioComponent implements OnInit {
       horasBecarioPracticante: this.calendario.horasBecarioPracticante,
       estado: this.calendario.estado,
       observacion: this.calendario.observacion || '',
+      fechaCreacion: this.calendario.fechaCreacion,
+      fechaActualizacion: this.calendario.fechaActualizacion,
     });
 
     this.modoEdicion.set(true);
@@ -110,37 +137,54 @@ export class DetalleCalendarioComponent implements OnInit {
       return;
     }
 
-    // Prevención de doble clic
     if (this.guardando()) return;
 
     this.guardando.set(true);
 
     const formValues = this.calendarioForm.value;
 
+    // Construir DTO con todos los campos editables
     const updateDto: UpdateCalendarioDTO = {
       oidcalendario: this.calendario.oidcalendario,
-      anioCalendario: this.calendario.anioCalendario,
-      numeroCalendario: this.calendario.numeroCalendario,
-      semanasClase: formValues.semanasClase,
-      semanasPreparacion: formValues.semanasPreparacion,
-      horasPlanta: formValues.horasPlanta,
-      horasCatedra: formValues.horasCatedra,
-      horasOcasionales: formValues.horasOcasionales,
-      horasBecarioPracticante: formValues.horasBecarioPracticante,
-      estado: formValues.estado,
-      observacion: formValues.observacion || '',
+      // Incluir campos base o desde formulario si son editables
+      anioCalendario: this.CAMPOS_EDITABLES.anioCalendario
+        ? formValues.anioCalendario
+        : this.calendario.anioCalendario,
+      numeroCalendario: this.CAMPOS_EDITABLES.numeroCalendario
+        ? formValues.numeroCalendario
+        : this.calendario.numeroCalendario,
+      ...(this.CAMPOS_EDITABLES.semanasClase && {
+        semanasClase: formValues.semanasClase,
+      }),
+      ...(this.CAMPOS_EDITABLES.semanasPreparacion && {
+        semanasPreparacion: formValues.semanasPreparacion,
+      }),
+      ...(this.CAMPOS_EDITABLES.horasPlanta && {
+        horasPlanta: formValues.horasPlanta,
+      }),
+      ...(this.CAMPOS_EDITABLES.horasCatedra && {
+        horasCatedra: formValues.horasCatedra,
+      }),
+      ...(this.CAMPOS_EDITABLES.horasOcasionales && {
+        horasOcasionales: formValues.horasOcasionales,
+      }),
+      ...(this.CAMPOS_EDITABLES.horasBecarioPracticante && {
+        horasBecarioPracticante: formValues.horasBecarioPracticante,
+      }),
+      ...(this.CAMPOS_EDITABLES.estado && { estado: formValues.estado }),
+      ...(this.CAMPOS_EDITABLES.observacion && {
+        observacion: formValues.observacion || '',
+      }),
     };
 
     this.calendarioService.updateCalendarioAcademico(updateDto).subscribe({
       next: (response) => {
         if (response.codigo === 200 && response.data) {
-          // Preservar las fechas del calendario original
           const calendarioActualizado = {
             ...response.data,
             fechas: this.calendario?.fechas || [],
           };
 
-          // Emitir el calendario actualizado al componente padre
           this.calendarioActualizado.emit(calendarioActualizado);
 
           const mensaje =

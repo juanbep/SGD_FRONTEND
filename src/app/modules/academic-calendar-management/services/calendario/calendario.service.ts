@@ -78,6 +78,16 @@ export class CalendarioService {
       .pipe(catchError(this.handleError));
   }
 
+  // Descargar calendario en PDF
+  downloadCalendarioPdf(oidCalendario: number): Observable<Blob> {
+    return this.http
+      .get(`${this.apiUrl}/${oidCalendario}/pdf`, {
+        responseType: 'blob', // Especificar que esperamos un blob
+        observe: 'body',
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   private buildHttpParams(filters: CalendarioFilters): HttpParams {
     let params = new HttpParams();
 
