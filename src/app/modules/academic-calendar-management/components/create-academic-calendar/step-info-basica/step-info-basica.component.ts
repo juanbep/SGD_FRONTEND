@@ -5,6 +5,7 @@ import {
   EventEmitter,
   OnInit,
   inject,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -23,6 +24,13 @@ export interface InfoBasicaData {
   observacion: string;
 }
 
+// DTO para crear calendario (solo paso 1)
+export interface CreateCalendarioPaso1DTO {
+  anioCalendario: number;
+  numeroCalendario: number;
+  observacion: string;
+}
+
 @Component({
   selector: 'app-step-info-basica',
   standalone: true,
@@ -38,10 +46,18 @@ export class StepInfoBasicaComponent implements OnInit {
   @Input() datosIniciales: InfoBasicaData | null = null;
   @Output() cambioFormulario = new EventEmitter<InfoBasicaData>();
   @Output() formularioValido = new EventEmitter<boolean>();
+  @Output() crearCalendario = new EventEmitter<CreateCalendarioPaso1DTO>(); // Nuevo evento
 
   // ===== CONSTANTES PARA LÍMITES DE AÑO =====
   readonly ANIO_MINIMO = new Date().getFullYear(); // Año actual como mínimo
   readonly ANIO_MAXIMO = 2100; // Límite superior fijo
+
+  // ===== SIGNALS PARA MODAL =====
+  readonly mostrarModalCalendarios = signal<boolean>(false);
+  readonly calendariosExistentes = signal<{ anio: number; periodo: number }[]>(
+    []
+  );
+  readonly cargandoCalendarios = signal<boolean>(false);
 
   formulario!: FormGroup;
   validandoCalendario = false;
@@ -111,6 +127,39 @@ export class StepInfoBasicaComponent implements OnInit {
     }
   }
 
+  // ===== MODAL DE CALENDARIOS EXISTENTES =====
+  async abrirModalCalendarios(): Promise<void> {
+    this.mostrarModalCalendarios.set(true);
+    this.cargandoCalendarios.set(true);
+
+    try {
+      const calendarios = await this.calendarioHelper.getAll({ size: 1000 });
+
+      const calendariosSimplificados = calendarios
+        .map((c) => ({
+          anio: c.anioCalendario,
+          periodo: c.numeroCalendario,
+        }))
+        .sort((a, b) => {
+          if (b.anio !== a.anio) {
+            return b.anio - a.anio;
+          }
+          return b.periodo - a.periodo;
+        });
+
+      this.calendariosExistentes.set(calendariosSimplificados);
+    } catch (error) {
+      console.error('Error al cargar calendarios:', error);
+      this.toastr.error('Error al cargar los calendarios existentes');
+    } finally {
+      this.cargandoCalendarios.set(false);
+    }
+  }
+
+  cerrarModalCalendarios(): void {
+    this.mostrarModalCalendarios.set(false);
+  }
+
   sugerirAnioActual(): void {
     this.formulario.patchValue({
       anioCalendario: this.ANIO_MINIMO,
@@ -125,12 +174,8 @@ export class StepInfoBasicaComponent implements OnInit {
     return this.formulario.valid;
   }
 
-  // ===== DTO PARA CREAR CALENDARIO (preparado para uso futuro) =====
-  obtenerDatosParaCreacion(): {
-    anioCalendario: number;
-    numeroCalendario: number;
-    observacion: string;
-  } {
+  // ===== OBTENER DTO PARA CREAR CALENDARIO =====
+  obtenerDatosParaCreacion(): CreateCalendarioPaso1DTO {
     return {
       anioCalendario: this.formulario.get('anioCalendario')?.value,
       numeroCalendario: this.formulario.get('numeroCalendario')?.value,

@@ -13,10 +13,10 @@ import { StepperComponent } from '../../components/create-academic-calendar/step
 import {
   StepInfoBasicaComponent,
   InfoBasicaData,
+  CreateCalendarioPaso1DTO,
 } from '../../components/create-academic-calendar/step-info-basica/step-info-basica.component';
 import {
   Calendario,
-  CreateCalendarioDTO,
   CreateCalendarioWizardData,
   CreateFechaDto,
   INITIAL_WIZARD_DATA,
@@ -74,6 +74,15 @@ export class CreateAcademicCalendarComponent implements OnInit {
     { value: number; label: string; tieneTemplate: boolean }[]
   >([]);
 
+  // ===== NUEVO: Signal para guardar el OID del calendario creado =====
+  readonly oidCalendarioCreado = signal<number | null>(null);
+  readonly creandoCalendario = signal<boolean>(false);
+
+  // ===== COMPUTED: Habilitar botón "Siguiente" solo si calendario fue creado =====
+  readonly puedeAvanzarPaso1 = computed(() => {
+    return this.oidCalendarioCreado() !== null;
+  });
+
   // ===== CONSTANTES =====
   readonly TOTAL_PASOS = 4;
   readonly TITULOS_PASOS = [
@@ -88,7 +97,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
     this.cargarCatalogoNombresFechas();
   }
 
-  // Escuchar eventos de "Editar" desde el paso 4
   ngAfterViewInit(): void {
     window.addEventListener('goToStep', (event: any) => {
       this.irAPaso(event.detail);
@@ -98,7 +106,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
   ngOnDestroy(): void {
     window.removeEventListener('goToStep', () => {});
   }
-
 
   private async cargarCatalogoNombresFechas(): Promise<void> {
     try {
@@ -110,114 +117,63 @@ export class CreateAcademicCalendarComponent implements OnInit {
     }
   }
 
+  // ===== NUEVO: CREAR CALENDARIO EN PASO 1 =====
+  async alCrearCalendarioPaso1(dto: CreateCalendarioPaso1DTO): Promise<void> {
+    // Validar que no exista calendario duplicado
+    const valido = await this.stepInfoBasica.validarCalendarioExistente();
+    if (!valido) return;
 
-  // ===== ENVIAR DATOS =====
-  async enviar(): Promise<void> {
-    if (this.enviandoDatos()) return;
-
-    // Confirmar antes de enviar
-    if (!confirm('¿Estás seguro de crear este calendario académico?')) {
-      return;
-    }
-
-    this.enviandoDatos.set(true);
+    this.creandoCalendario.set(true);
 
     try {
-      // Crear el calendario
-      const calendarioCreado = await this.crearCalendario();
+      // Crear calendario con los datos del paso 1
+      const calendarioCreado = await this.calendarioHelper.create({
+        anioCalendario: dto.anioCalendario,
+        numeroCalendario: dto.numeroCalendario,
+        observacion: dto.observacion,
+        // Los demás campos se establecerán en el paso 2
+        semanasClase: 0,
+        semanasPreparacion: 0,
+        horasPlanta: 0,
+        horasCatedra: 0,
+        horasOcasionales: 0,
+        horasBecarioPracticante: 0,
+      });
 
-      if (!calendarioCreado) {
-        throw new Error('No se pudo crear el calendario');
+      if (calendarioCreado && calendarioCreado.oidcalendario) {
+        // Guardar OID en signal
+        this.oidCalendarioCreado.set(calendarioCreado.oidcalendario);
+
+        this.toastr.success(
+          `Calendario ${dto.anioCalendario}-${dto.numeroCalendario} creado exitosamente`,
+          '¡Éxito!'
+        );
+
+        // Actualizar datos del wizard
+        const datosActuales = this.datosWizard();
+        this.datosWizard.set({
+          ...datosActuales,
+          infoBasica: dto,
+        });
+
+        console.log(
+          'Calendario creado con OID:',
+          calendarioCreado.oidcalendario
+        );
+      } else {
+        throw new Error('No se recibió el OID del calendario creado');
       }
-
-      // Crear las fechas con el ID del calendario
-      if (this.datosWizard().fechas.length > 0) {
-        await this.crearFechas(calendarioCreado.oidcalendario);
-      }
-
-      // Limpiar borrador y redirigir
-      this.limpiarBorrador();
-      this.toastr.success(
-        'El calendario ha sido creado exitosamente',
-        '¡Éxito!',
-        { timeOut: 5000 }
-      );
-
-      // Redirigir después de 1 segundo
-      setTimeout(() => {
-        this.router.navigate(['/app/gestion-calendario-academico']);
-      }, 1500);
     } catch (error: any) {
       console.error('Error al crear calendario:', error);
       const mensaje = error?.error?.mensaje || 'Error al crear el calendario';
       this.toastr.error(mensaje, 'Error');
+      this.oidCalendarioCreado.set(null);
     } finally {
-      this.enviandoDatos.set(false);
-    }
-  }
-
-  // ===== CREAR CALENDARIO =====
-  private async crearCalendario(): Promise<Calendario | null> {
-    const datos = this.datosWizard();
-
-    const createDto: CreateCalendarioDTO = {
-      anioCalendario: datos.infoBasica.anioCalendario!,
-      numeroCalendario: datos.infoBasica.numeroCalendario!,
-      observacion: datos.infoBasica.observacion || '',
-      semanasClase: datos.configAcademica.semanasClase!,
-      semanasPreparacion: datos.configAcademica.semanasPreparacion!,
-      horasPlanta: datos.configAcademica.horasPlanta!,
-      horasCatedra: datos.configAcademica.horasCatedra!,
-      horasOcasionales: datos.configAcademica.horasOcasionales!,
-      horasBecarioPracticante: datos.configAcademica.horasBecarioPracticante!,
-    };
-
-    console.log('Creando calendario:', createDto);
-
-    try {
-      const calendario = await this.calendarioHelper.create(createDto);
-      console.log('Calendario creado:', calendario);
-      return calendario;
-    } catch (error) {
-      console.error('Error al crear calendario:', error);
-      throw error;
-    }
-  }
-
-  // ===== CREAR FECHAS =====
-  private async crearFechas(oidCalendario: number): Promise<void> {
-    const fechas = this.datosWizard().fechas;
-
-    console.log(
-      `Creando ${fechas.length} fechas para calendario ${oidCalendario}`
-    );
-
-    // Crear fechas en paralelo
-    const promesas = fechas.map((fecha) => {
-      const createDto: CreateFechaDto = {
-        oidCalendario: oidCalendario, // ID del calendario creado
-        oidNombreFecha: fecha.oidNombreFecha,
-        uniqueDate: fecha.uniqueDate,
-        fechaInicial: fecha.fechaInicial,
-        fechaFin: fecha.fechaFin,
-        tipo: 'RESALTADAS', // Valor por defecto
-      };
-
-      return this.fechaHelper.create(createDto);
-    });
-
-    try {
-      const resultados = await Promise.all(promesas);
-      console.log(`${resultados.length} fechas creadas exitosamente`);
-    } catch (error) {
-      console.error('Error al crear fechas:', error);
-      throw error;
+      this.creandoCalendario.set(false);
     }
   }
 
   // ===== MANEJADOR DE EVENTOS =====
-
-  // Manejador de eventos paso 1
   alCambiarInfoBasica(datos: InfoBasicaData): void {
     const datosActuales = this.datosWizard();
     this.datosWizard.set({
@@ -227,7 +183,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
     this.guardarBorradorEnStorage();
   }
 
-  // Manejador de eventos paso 2
   alCambiarConfigAcademica(datos: ConfigAcademicaData): void {
     const datosActuales = this.datosWizard();
     this.datosWizard.set({
@@ -260,16 +215,12 @@ export class CreateAcademicCalendarComponent implements OnInit {
 
   // ===== NAVEGACIÓN =====
   async siguientePaso(): Promise<void> {
-    // Validar paso actual antes de avanzar
+    // Paso 1: Validar que el calendario haya sido creado
     if (this.pasoActual() === 1) {
-      if (!this.paso1Valido()) {
-        this.stepInfoBasica.marcarTodoComoTocado();
-        this.toastr.warning('Por favor, completa todos los campos requeridos');
+      if (!this.puedeAvanzarPaso1()) {
+        this.toastr.warning('Debes crear el calendario antes de continuar');
         return;
       }
-
-      const valido = await this.stepInfoBasica.validarCalendarioExistente();
-      if (!valido) return;
     }
 
     if (this.pasoActual() === 2) {
@@ -362,12 +313,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
     localStorage.removeItem('calendario_draft');
   }
 
-  // ===== ACCIONES =====
-  guardarBorrador(): void {
-    this.guardarBorradorEnStorage();
-    this.toastr.success('Borrador guardado correctamente');
-  }
-
   cancel(): void {
     if (
       confirm(
@@ -379,8 +324,5 @@ export class CreateAcademicCalendarComponent implements OnInit {
     }
   }
 
-  submit(): void {
-    console.log('Datos a enviar:', this.datosWizard());
-    this.toastr.info('Funcionalidad de envío próximamente');
-  }
+  enviar(): void {}
 }

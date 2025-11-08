@@ -27,9 +27,10 @@
       [datosIniciales]="datosWizard().infoBasica"
       (cambioFormulario)="alCambiarInfoBasica($event)"
       (formularioValido)="alCambiarValidezPaso1($event)"
+      (crearCalendario)="alCrearCalendarioPaso1($event)"
     ></app-step-info-basica>
 
-    <!-- Paso 2: TODO -->
+    <!-- Paso 2: Configuración Académica -->
     <app-step-config-academica
       *ngIf="pasoActual() === 2"
       [datosIniciales]="datosWizard().configAcademica"
@@ -37,7 +38,7 @@
       (formularioValido)="alCambiarValidezPaso2($event)"
     ></app-step-config-academica>
 
-    <!-- Paso 3: TODO -->
+    <!-- Paso 3: Fechas -->
     <app-step-fechas
       *ngIf="pasoActual() === 3"
       [fechasIniciales]="datosWizard().fechas"
@@ -45,7 +46,7 @@
       (formularioValido)="alCambiarValidezPaso3($event)"
     ></app-step-fechas>
 
-    <!-- Paso 4: TODO -->
+    <!-- Paso 4: Revisión -->
     <app-step-revision
       *ngIf="pasoActual() === 4"
       [datosWizard]="datosWizard()"
@@ -64,21 +65,46 @@
       Anterior
     </button>
 
-    <button class="btn btn-outline-secondary" (click)="guardarBorrador()">
-      <i class="fas fa-save me-2"></i>
-      Guardar borrador
+    <!-- NUEVO: Botón "Crear Calendario" (solo visible en paso 1) -->
+    <button
+      *ngIf="pasoActual() === 1"
+      class="btn btn-success"
+      (click)="
+        alCrearCalendarioPaso1(stepInfoBasica.obtenerDatosParaCreacion())
+      "
+      [disabled]="
+        !paso1Valido() || creandoCalendario() || oidCalendarioCreado() !== null
+      "
+    >
+      <span [hidden]="creandoCalendario()">
+        <i class="fas fa-check-circle me-2"></i>
+        {{
+          oidCalendarioCreado() !== null
+            ? "Calendario Creado ✓"
+            : "Crear Calendario"
+        }}
+      </span>
+      <span [hidden]="!creandoCalendario()">
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+        ></span>
+        Creando...
+      </span>
     </button>
 
+    <!-- Botón "Siguiente" (deshabilitado en paso 1 hasta que se cree el calendario) -->
     <button
       *ngIf="!esUltimoPaso()"
       class="btn btn-primary"
       (click)="siguientePaso()"
+      [disabled]="pasoActual() === 1 && !puedeAvanzarPaso1()"
     >
       Siguiente
       <i class="fas fa-arrow-right ms-2"></i>
     </button>
 
-    <!-- Enviar Datos -->
+    <!-- Enviar Datos (paso 4) -->
     <button
       *ngIf="esUltimoPaso()"
       class="btn btn-success"
@@ -87,14 +113,14 @@
     >
       <span [hidden]="enviandoDatos()">
         <i class="fas fa-check me-2"></i>
-        Crear Calendario
+        Finalizar
       </span>
       <span [hidden]="!enviandoDatos()">
         <span
           class="spinner-border spinner-border-sm me-2"
           role="status"
         ></span>
-        Creando...
+        Finalizando...
       </span>
     </button>
   </div>

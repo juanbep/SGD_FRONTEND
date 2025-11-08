@@ -23,7 +23,7 @@
         Verifica que no exista ya un calendario con el mismo año y periodo
       </li>
       <li>
-        El backend agregará fechas predeterminadas al calendario automáticamente
+        Las fechas predeterminadas se agregan al calendario automáticamente
       </li>
     </ul>
   </div>
@@ -52,7 +52,7 @@
           [max]="ANIO_MAXIMO"
         />
         <button
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-primary"
           type="button"
           (click)="sugerirAnioActual()"
           title="Usar año actual"
@@ -190,6 +190,23 @@
       </div>
     </div>
   </div>
+  <!-- Botón para consultar calendarios existentes -->
+  <div class="row">
+    <div class="col-12 mb-3">
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+        (click)="abrirModalCalendarios()"
+      >
+        <i class="fas fa-list me-2"></i>
+        Consultar calendarios existentes
+      </button>
+      <small class="form-text text-muted d-block mt-1">
+        <i class="fas fa-info-circle me-1"></i>
+        Verifica qué calendarios ya están creados en el sistema
+      </small>
+    </div>
+  </div>
 
   <!-- Indicador de validación -->
   <div
@@ -200,3 +217,90 @@
     <span>Verificando que no exista un calendario duplicado...</span>
   </div>
 </form>
+
+<!-- Modal de Calendarios Existentes -->
+<div
+  *ngIf="mostrarModalCalendarios()"
+  class="modal fade show d-block"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header" style="background-color: #000066">
+        <h5 class="modal-title text-white">
+          <i class="fas fa-calendar-alt me-2"></i>
+          Calendarios Existentes
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cerrarModalCalendarios()"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body" style="max-height: 400px; overflow-y: auto">
+        <!-- Loading -->
+        <div *ngIf="cargandoCalendarios()" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="text-muted mt-2 mb-0">Cargando calendarios...</p>
+        </div>
+
+        <!-- Sin calendarios -->
+        <div
+          *ngIf="!cargandoCalendarios() && calendariosExistentes().length === 0"
+          class="text-center py-4"
+        >
+          <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+          <p class="text-muted mb-0">No hay calendarios creados aún</p>
+        </div>
+
+        <!-- Lista de calendarios -->
+        <div
+          *ngIf="!cargandoCalendarios() && calendariosExistentes().length > 0"
+        >
+          <p class="text-muted mb-3">
+            <i class="fas fa-info-circle me-1"></i>
+            Total de calendarios:
+            <strong>{{ calendariosExistentes().length }}</strong>
+          </p>
+
+          <div class="list-group">
+            <div
+              *ngFor="let calendario of calendariosExistentes()"
+              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <i class="fas fa-calendar me-2 text-primary"></i>
+                <strong
+                  >Calendario {{ calendario.anio }}-{{
+                    calendario.periodo
+                  }}</strong
+                >
+              </div>
+              <span class="badge bg-secondary">
+                Periodo {{ calendario.periodo }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cerrarModalCalendarios()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="mostrarModalCalendarios()" class="modal-backdrop fade show"></div>
