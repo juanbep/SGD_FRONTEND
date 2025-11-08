@@ -17,13 +17,14 @@
     <strong>Información importante:</strong>
     <ul class="mb-0 mt-2">
       <li>
-        El calendario se creará con estado <strong>PENDIENTE</strong> por
-        defecto
+        Al avanzar al siguiente paso, el calendario será creado automáticamente
       </li>
       <li>
         Verifica que no exista ya un calendario con el mismo año y periodo
       </li>
-      <li>Los cambios se guardan automáticamente mientras trabajas</li>
+      <li>
+        El backend agregará fechas predeterminadas al calendario automáticamente
+      </li>
     </ul>
   </div>
 </div>
@@ -46,9 +47,9 @@
           [class.is-invalid]="
             anioCalendarioControl?.invalid && anioCalendarioControl?.touched
           "
-          placeholder="Ej: 2025"
-          min="2000"
-          max="2100"
+          placeholder="Ej: {{ ANIO_MINIMO }}"
+          [min]="ANIO_MINIMO"
+          [max]="ANIO_MAXIMO"
         />
         <button
           class="btn btn-outline-secondary"
@@ -59,29 +60,46 @@
           <i class="fas fa-magic"></i>
         </button>
       </div>
+
+      <!-- Mensajes de validación debajo del input -->
       <div
-        class="invalid-feedback"
         *ngIf="anioCalendarioControl?.invalid && anioCalendarioControl?.touched"
       >
-        <span *ngIf="anioCalendarioControl?.hasError('required')">
-          El año académico es requerido
-        </span>
-        <span
-          *ngIf="
-            anioCalendarioControl?.hasError('min') ||
-            anioCalendarioControl?.hasError('max')
-          "
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="anioCalendarioControl?.hasError('required')"
         >
-          El año debe estar entre 2000 y 2100
-        </span>
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El año académico es requerido
+        </small>
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="anioCalendarioControl?.hasError('min')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El año no puede ser menor a {{ ANIO_MINIMO }}
+        </small>
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="anioCalendarioControl?.hasError('max')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El año no puede ser mayor a {{ ANIO_MAXIMO }}
+        </small>
       </div>
-      <small class="form-text text-muted">
+
+      <small
+        class="form-text text-muted d-block mt-1"
+        *ngIf="
+          !anioCalendarioControl?.invalid || !anioCalendarioControl?.touched
+        "
+      >
         <i class="fas fa-info-circle me-1"></i>
         Año al que corresponde el calendario académico
       </small>
     </div>
 
-    <!-- Periodo Académico -->
+    <!-- Periodo Académico (solo 2 opciones) -->
     <div class="col-md-6 mb-3">
       <label for="numeroCalendario" class="form-label fw-bold">
         <i class="fas fa-list-ol me-2 text-primary"></i>
@@ -98,7 +116,6 @@
         <option [value]="null" disabled>Seleccione un periodo</option>
         <option [value]="1">Periodo 1</option>
         <option [value]="2">Periodo 2</option>
-        <option [value]="3">Periodo 3</option>
       </select>
       <div
         class="invalid-feedback"
@@ -110,50 +127,51 @@
       </div>
       <small class="form-text text-muted">
         <i class="fas fa-info-circle me-1"></i>
-        Periodo dentro del año académico (1, 2 o 3)
+        Periodo dentro del año académico (1 o 2)
       </small>
     </div>
   </div>
 
+  <!-- Observación / Acuerdo académico (toda la fila) -->
   <div class="row">
-    <!-- Estado -->
-    <div class="col-md-6 mb-3">
-      <label for="estado" class="form-label fw-bold">
-        <i class="fas fa-toggle-on me-2 text-primary"></i>
-        Estado inicial *
+    <div class="col-12 mb-3">
+      <label for="observacion" class="form-label fw-bold">
+        <i class="fas fa-comment-alt me-2 text-primary"></i>
+        Observación / Acuerdo académico
       </label>
-      <select
-        id="estado"
-        class="form-select"
-        formControlName="estado"
-        [class.is-invalid]="estadoControl?.invalid && estadoControl?.touched"
-      >
-        <option *ngFor="let estado of ESTADOS_DISPONIBLES" [value]="estado">
-          {{ estado }}
-        </option>
-      </select>
-      <div
-        class="invalid-feedback"
-        *ngIf="estadoControl?.invalid && estadoControl?.touched"
-      >
-        El estado es requerido
+      <textarea
+        id="observacion"
+        class="form-control"
+        formControlName="observacion"
+        rows="4"
+        [class.is-invalid]="
+          observacionControl?.invalid && observacionControl?.touched
+        "
+        placeholder="Ej: Calendario aprobado según Acuerdo N° 123 del Consejo Académico..."
+        maxlength="500"
+      ></textarea>
+      <div class="d-flex justify-content-between">
+        <small class="form-text text-muted">
+          <i class="fas fa-info-circle me-1"></i>
+          Información adicional o referencia al acuerdo académico
+        </small>
+        <small class="text-muted">
+          {{ observacionControl?.value?.length || 0 }} / 500
+        </small>
       </div>
-      <small class="form-text text-muted">
-        <i class="fas fa-info-circle me-1"></i>
-        El calendario se creará con el estado seleccionado
-      </small>
     </div>
-
-    <!-- Vista previa del identificador -->
-    <div class="col-md-6 mb-3">
-      <label class="form-label fw-bold">
-        <i class="fas fa-tag me-2 text-primary"></i>
-        Vista previa
-      </label>
-      <div
-        class="form-control bg-light"
-        style="font-size: 1.1rem; font-weight: 600"
-      >
+  </div>
+  <!-- Vista previa minimalista (esquina superior derecha) -->
+  <div class="position-relative">
+    <div
+      class="position-absolute top-0 end-0 bg-light border rounded px-3 py-2 shadow-sm"
+      style="z-index: 10"
+    >
+      <small class="text-muted d-block mb-1">
+        <i class="fas fa-tag me-1"></i>
+        Vista previa:
+      </small>
+      <div style="font-size: 0.95rem; font-weight: 600; color: #000066">
         <span
           *ngIf="anioCalendarioControl?.value && numeroCalendarioControl?.value"
         >
@@ -170,38 +188,6 @@
           Calendario XXXX-X
         </span>
       </div>
-      <small class="form-text text-muted">
-        <i class="fas fa-eye me-1"></i>
-        Así se identificará el calendario
-      </small>
-    </div>
-  </div>
-
-  <!-- Observación -->
-  <div class="mb-3">
-    <label for="observacion" class="form-label fw-bold">
-      <i class="fas fa-comment-alt me-2 text-primary"></i>
-      Observación / Acuerdo académico
-    </label>
-    <textarea
-      id="observacion"
-      class="form-control"
-      formControlName="observacion"
-      rows="4"
-      [class.is-invalid]="
-        observacionControl?.invalid && observacionControl?.touched
-      "
-      placeholder="Ej: Calendario aprobado según Acuerdo N° 123 del Consejo Académico..."
-      maxlength="500"
-    ></textarea>
-    <div class="d-flex justify-content-between">
-      <small class="form-text text-muted">
-        <i class="fas fa-info-circle me-1"></i>
-        Información adicional o referencia al acuerdo académico
-      </small>
-      <small class="text-muted">
-        {{ observacionControl?.value?.length || 0 }} / 500
-      </small>
     </div>
   </div>
 

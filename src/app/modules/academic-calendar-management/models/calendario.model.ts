@@ -56,7 +56,6 @@ export interface CalendarioFilters {
 export interface CreateCalendarioDTO {
   anioCalendario: number;
   numeroCalendario: number;
-  estado: EstadoCalendario;
   observacion?: string; // Opcional para creación
   semanasClase: number;
   semanasPreparacion: number;

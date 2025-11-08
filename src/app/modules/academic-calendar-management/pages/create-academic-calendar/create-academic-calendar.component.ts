@@ -163,7 +163,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
     const createDto: CreateCalendarioDTO = {
       anioCalendario: datos.infoBasica.anioCalendario!,
       numeroCalendario: datos.infoBasica.numeroCalendario!,
-      estado: datos.infoBasica.estado,
       observacion: datos.infoBasica.observacion || '',
       semanasClase: datos.configAcademica.semanasClase!,
       semanasPreparacion: datos.configAcademica.semanasPreparacion!,

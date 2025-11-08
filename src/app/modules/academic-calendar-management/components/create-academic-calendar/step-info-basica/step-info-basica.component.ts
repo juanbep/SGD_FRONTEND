@@ -14,13 +14,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { EstadoCalendario } from '../../../models';
 import { CalendarioHelperService } from '../../../services';
 
+// Interfaz actualizada (sin estado)
 export interface InfoBasicaData {
   anioCalendario: number | null;
   numeroCalendario: number | null;
-  estado: EstadoCalendario;
   observacion: string;
 }
 
@@ -40,12 +39,9 @@ export class StepInfoBasicaComponent implements OnInit {
   @Output() cambioFormulario = new EventEmitter<InfoBasicaData>();
   @Output() formularioValido = new EventEmitter<boolean>();
 
-  readonly ESTADOS_DISPONIBLES: EstadoCalendario[] = [
-    'PENDIENTE',
-    'ACTIVO',
-    'APROBADO',
-    'DESHABILITADO',
-  ];
+  // ===== CONSTANTES PARA LÍMITES DE AÑO =====
+  readonly ANIO_MINIMO = new Date().getFullYear(); // Año actual como mínimo
+  readonly ANIO_MAXIMO = 2100; // Límite superior fijo
 
   formulario!: FormGroup;
   validandoCalendario = false;
@@ -57,14 +53,17 @@ export class StepInfoBasicaComponent implements OnInit {
   private inicializarFormulario(): void {
     this.formulario = this.fb.group({
       anioCalendario: [
-        this.datosIniciales?.anioCalendario || new Date().getFullYear(),
-        [Validators.required, Validators.min(2000), Validators.max(2100)],
+        this.datosIniciales?.anioCalendario || this.ANIO_MINIMO,
+        [
+          Validators.required,
+          Validators.min(this.ANIO_MINIMO),
+          Validators.max(this.ANIO_MAXIMO),
+        ],
       ],
       numeroCalendario: [
         this.datosIniciales?.numeroCalendario || null,
-        [Validators.required, Validators.min(1), Validators.max(3)],
+        [Validators.required, Validators.min(1), Validators.max(2)],
       ],
-      estado: [this.datosIniciales?.estado || 'PENDIENTE', Validators.required],
       observacion: [
         this.datosIniciales?.observacion || '',
         Validators.maxLength(500),
@@ -114,7 +113,7 @@ export class StepInfoBasicaComponent implements OnInit {
 
   sugerirAnioActual(): void {
     this.formulario.patchValue({
-      anioCalendario: new Date().getFullYear(),
+      anioCalendario: this.ANIO_MINIMO,
     });
   }
 
@@ -126,16 +125,25 @@ export class StepInfoBasicaComponent implements OnInit {
     return this.formulario.valid;
   }
 
+  // ===== DTO PARA CREAR CALENDARIO (preparado para uso futuro) =====
+  obtenerDatosParaCreacion(): {
+    anioCalendario: number;
+    numeroCalendario: number;
+    observacion: string;
+  } {
+    return {
+      anioCalendario: this.formulario.get('anioCalendario')?.value,
+      numeroCalendario: this.formulario.get('numeroCalendario')?.value,
+      observacion: this.formulario.get('observacion')?.value || '',
+    };
+  }
+
   get anioCalendarioControl() {
     return this.formulario.get('anioCalendario');
   }
 
   get numeroCalendarioControl() {
     return this.formulario.get('numeroCalendario');
-  }
-
-  get estadoControl() {
-    return this.formulario.get('estado');
   }
 
   get observacionControl() {

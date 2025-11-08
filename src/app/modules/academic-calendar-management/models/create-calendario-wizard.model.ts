@@ -6,7 +6,6 @@ export interface CreateCalendarioWizardData {
   infoBasica: {
     anioCalendario: number | null;
     numeroCalendario: number | null;
-    estado: EstadoCalendario;
     observacion: string;
   };
 
@@ -33,7 +32,6 @@ export const INITIAL_WIZARD_DATA: CreateCalendarioWizardData = {
   infoBasica: {
     anioCalendario: null,
     numeroCalendario: null,
-    estado: 'PENDIENTE',
     observacion: '',
   },
   configAcademica: {
