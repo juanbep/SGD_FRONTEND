@@ -58,3 +58,15 @@
 .dropdown-toggle::after {
   content: none;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.form-check-label {
+  user-select: none; /* Evita selección de texto al hacer doble clic */
+}
+
+.form-check:hover .form-check-label {
+  color: #0d6efd;
+}

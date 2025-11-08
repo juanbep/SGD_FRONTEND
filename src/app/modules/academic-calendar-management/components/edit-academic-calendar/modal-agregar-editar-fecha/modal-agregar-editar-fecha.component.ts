@@ -26,6 +26,13 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from '../../../utils/calendario.utils';
 
+// Tipo para las opciones de tipo de fecha
+export type TipoFecha =
+  | 'TODAS'
+  | 'RESALTADAS'
+  | 'NO_RESALTADAS'
+  | 'ADMINISTRATIVAS';
+
 @Component({
   selector: 'app-modal-agregar-fecha',
   standalone: true,
@@ -44,6 +51,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     label: string;
     tieneTemplate: boolean;
     uniqueDate: boolean;
+    tipo?: TipoFecha; // Agregar tipo al modelo (opcional por compatibilidad)
   }[] = [];
   @Input() oidCalendario: number = 0;
   @Input() guardando: boolean = false;
@@ -53,14 +61,40 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   @Output() onCancelar = new EventEmitter<void>();
   @Output() onCrearNombreFecha = new EventEmitter<CreateNombreFechaDto>();
 
+  // ===== CONSTANTES =====
+  readonly TIPOS_FECHA: { value: TipoFecha; label: string }[] = [
+    { value: 'TODAS', label: 'Todas' },
+    { value: 'RESALTADAS', label: 'Resaltadas' },
+    { value: 'NO_RESALTADAS', label: 'No Resaltadas' },
+    { value: 'ADMINISTRATIVAS', label: 'Administrativas' },
+  ];
+
   // ===== SIGNALS =====
-  readonly tipoFechaSeleccionado = signal<number | null>(null);
+  readonly nombreFechaSeleccionado = signal<number | null>(null);
+  readonly tipoFechaFiltro = signal<TipoFecha>('TODAS');
   readonly fechaActual = signal<Fecha | null>(null);
   readonly vistaActual = signal<'fecha' | 'crearNombre'>('fecha');
 
   // ===== COMPUTED =====
+  // Filtrar nombres de fecha según el tipo seleccionado
+  readonly nombresFechaFiltrados = computed(() => {
+    const tipoFiltro = this.tipoFechaFiltro();
+
+    // Si es 'TODAS', mostrar todos
+    if (tipoFiltro === 'TODAS') {
+      return this.listaNombreFechas;
+    }
+
+    // TODO: Cuando el backend esté listo, esta lógica se reemplazará
+    // por una llamada al endpoint con el parámetro de tipo
+    // Por ahora filtramos localmente si existe la propiedad 'tipo'
+    return this.listaNombreFechas.filter(
+      (item) => !item.tipo || item.tipo === tipoFiltro
+    );
+  });
+
   readonly esFechaUnica = computed(() => {
-    const oid = this.tipoFechaSeleccionado();
+    const oid = this.nombreFechaSeleccionado();
     if (oid === null) return false;
 
     const fechaEdicion = this.fechaActual();
@@ -68,7 +102,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       return fechaEdicion.uniqueDate;
     }
 
-    const nombreFecha = this.listaNombreFechas.find(
+    const nombreFecha = this.nombresFechaFiltrados().find(
       (item) => item.value === oid
     );
     return nombreFecha?.uniqueDate ?? false;
@@ -134,6 +168,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
     if (this.guardando) {
       // Deshabilitar controles del formulario de fecha
+      this.fechaForm.get('tipoFecha')?.disable({ emitEvent: false });
       this.fechaForm.get('oidNombreFecha')?.disable({ emitEvent: false });
       this.fechaForm.get('fechaInicial')?.disable({ emitEvent: false });
       this.fechaForm.get('fechaFin')?.disable({ emitEvent: false });
@@ -142,10 +177,12 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       this.nombreFechaForm.get('nombre')?.disable({ emitEvent: false });
       this.nombreFechaForm.get('uniqueDate')?.disable({ emitEvent: false });
     } else {
-      // Si está en modo edición, oidNombreFecha siempre deshabilitado
+      // Si está en modo edición, tipoFecha y oidNombreFecha siempre deshabilitados
       if (this.modoEdicion()) {
+        this.fechaForm.get('tipoFecha')?.disable({ emitEvent: false });
         this.fechaForm.get('oidNombreFecha')?.disable({ emitEvent: false });
       } else {
+        this.fechaForm.get('tipoFecha')?.enable({ emitEvent: false });
         this.fechaForm.get('oidNombreFecha')?.enable({ emitEvent: false });
       }
 
@@ -161,13 +198,27 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   private inicializarFormularios(): void {
     // Formulario para agregar/editar fecha
     this.fechaForm = this.fb.group({
+      tipoFecha: ['TODAS', Validators.required],
       oidNombreFecha: [null, Validators.required],
       fechaInicial: [null, Validators.required],
       fechaFin: [null],
     });
 
+    // Observar cambios en el tipo de fecha para filtrar
+    this.fechaForm
+      .get('tipoFecha')
+      ?.valueChanges.subscribe((tipo: TipoFecha) => {
+        this.tipoFechaFiltro.set(tipo);
+        // Resetear nombre de fecha cuando cambia el filtro
+        this.fechaForm.patchValue(
+          { oidNombreFecha: null },
+          { emitEvent: false }
+        );
+        this.nombreFechaSeleccionado.set(null);
+      });
+
     this.fechaForm.get('oidNombreFecha')?.valueChanges.subscribe((oid) => {
-      this.tipoFechaSeleccionado.set(oid ? Number(oid) : null);
+      this.nombreFechaSeleccionado.set(oid ? Number(oid) : null);
       this.ajustarValidacionesFecha(oid ? Number(oid) : null);
     });
 
@@ -186,11 +237,17 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       ? this.extraerSoloFecha(fecha.fechaFin.toString())
       : null;
 
+    // Cargar tipo de fecha si existe
+    const tipoFecha = (fecha as any).tipo || 'RESALTADAS';
+
     this.fechaForm.patchValue({
+      tipoFecha: tipoFecha,
       oidNombreFecha: fecha.oidNombreFecha,
       fechaInicial: fechaInicial,
       fechaFin: fechaFin,
     });
+
+    this.tipoFechaFiltro.set(tipoFecha);
   }
 
   private extraerSoloFecha(fechaDateTime: string): string {
@@ -228,6 +285,8 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
     const formValues = this.fechaForm.getRawValue();
     const esUnica = this.esFechaUnica();
+    const tipoFecha =
+      formValues.tipoFecha === 'TODAS' ? 'RESALTADAS' : formValues.tipoFecha;
 
     if (this.modoEdicion()) {
       const updateDto: UpdateFechaDto = {
@@ -235,7 +294,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
         oidCalendario: this.oidCalendario,
         oidNombreFecha: Number(formValues.oidNombreFecha),
         uniqueDate: esUnica,
-        tipo: 'RESALTADAS',
+        tipo: tipoFecha,
         fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
         fechaFin: esUnica
           ? null
@@ -247,7 +306,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
         oidCalendario: this.oidCalendario,
         oidNombreFecha: Number(formValues.oidNombreFecha),
         uniqueDate: esUnica,
-        tipo: 'RESALTADAS',
+        tipo: tipoFecha,
         fechaInicial: Utils.convertirFechaADateTime(formValues.fechaInicial)!,
         fechaFin: esUnica
           ? null
@@ -284,14 +343,15 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     const value = this.nombreFechaControl?.value;
     if (!value) return '';
 
-    const selected = this.listaNombreFechas.find(
+    const selected = this.nombresFechaFiltrados().find(
       (item) => item.value === Number(value)
     );
     return selected?.label || '';
   }
 
   private resetearFormulario(): void {
-    this.tipoFechaSeleccionado.set(null);
+    this.nombreFechaSeleccionado.set(null);
+    this.tipoFechaFiltro.set('TODAS');
     this.fechaActual.set(null);
     this.vistaActual.set('fecha');
     //this.fechaForm.reset();
@@ -304,11 +364,15 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.fechaForm.reset();
+    this.fechaForm.reset({ tipoFecha: 'TODAS' });
     this.onCancelar.emit();
   }
 
   // ===== GETTERS =====
+  get tipoFechaControl() {
+    return this.fechaForm.get('tipoFecha');
+  }
+
   get nombreFechaControl() {
     return this.fechaForm.get('oidNombreFecha');
   }

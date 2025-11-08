@@ -22,12 +22,44 @@
       <div class="modal-body p-4">
         <!-- ========== VISTA: AGREGAR/EDITAR FECHA ========== -->
         <form [formGroup]="fechaForm" *ngIf="vistaActual() === 'fecha'">
-          <!-- Selector de tipo de fecha -->
+          <!-- Selector de tipo de fecha (solo visible en modo CREAR) -->
+          <div class="mb-3" *ngIf="!modoEdicion()">
+            <label for="tipoFecha" class="form-label fw-bold">
+              <i class="fas fa-filter me-2 text-primary"></i>
+              Tipo de fecha *
+            </label>
+            <select
+              id="tipoFecha"
+              class="form-select"
+              formControlName="tipoFecha"
+              [class.is-invalid]="
+                tipoFechaControl?.invalid && tipoFechaControl?.touched
+              "
+            >
+              <option *ngFor="let tipo of TIPOS_FECHA" [value]="tipo.value">
+                {{ tipo.label }}
+              </option>
+            </select>
+
+            <small class="form-text text-muted">
+              <i class="fas fa-info-circle me-1"></i>
+              Filtra los nombres de fecha disponibles según el tipo seleccionado
+            </small>
+
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="tipoFechaControl?.invalid && tipoFechaControl?.touched"
+            >
+              Debe seleccionar un tipo de fecha
+            </div>
+          </div>
+
+          <!-- Selector de nombre de fecha -->
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <label for="oidNombreFecha" class="form-label fw-bold mb-0">
                 <i class="fas fa-tag me-2 text-primary"></i>
-                Tipo de fecha *
+                Nombre fecha *
               </label>
               <button
                 type="button"
@@ -37,11 +69,11 @@
                 *ngIf="!modoEdicion()"
               >
                 <i class="fas fa-plus me-1"></i>
-                Crear nuevo tipo
+                Crear nombre fecha
               </button>
             </div>
 
-            <!-- SELECT para el tipo fecha -->
+            <!-- SELECT para el nombre de fecha -->
             <select
               id="oidNombreFecha"
               class="form-select"
@@ -51,10 +83,10 @@
               "
             >
               <option value="" disabled selected>
-                Seleccione un tipo de fecha
+                Seleccione un nombre de fecha
               </option>
               <option
-                *ngFor="let item of listaNombreFechas"
+                *ngFor="let item of nombresFechaFiltrados()"
                 [value]="item.value"
               >
                 {{ item.label }}
@@ -63,14 +95,14 @@
 
             <small class="form-text text-muted" *ngIf="modoEdicion()">
               <i class="fas fa-info-circle me-1"></i>
-              El tipo de fecha no se puede modificar al editar
+              El nombre de fecha no se puede modificar al editar
             </small>
 
             <div
               class="invalid-feedback d-block"
               *ngIf="nombreFechaControl?.invalid && nombreFechaControl?.touched"
             >
-              Debe seleccionar un tipo de fecha
+              Debe seleccionar un nombre de fecha
             </div>
           </div>
 
@@ -106,7 +138,7 @@
           <!-- Fecha Final -->
           <div
             class="mb-3"
-            *ngIf="!esFechaUnica() && tipoFechaSeleccionado() !== null"
+            *ngIf="!esFechaUnica() && nombreFechaSeleccionado() !== null"
           >
             <label for="fechaFin" class="form-label fw-bold">
               <i class="fas fa-calendar-check me-2 text-primary"></i>
@@ -133,7 +165,7 @@
           <div
             class="alert alert-info d-flex align-items-start"
             role="alert"
-            *ngIf="tipoFechaSeleccionado() !== null"
+            *ngIf="nombreFechaSeleccionado() !== null"
           >
             <i class="fas fa-info-circle me-2 mt-1"></i>
             <div>
@@ -159,7 +191,7 @@
           <div class="mb-3">
             <label for="nombre" class="form-label fw-bold">
               <i class="fas fa-tag me-2 text-primary"></i>
-              Nombre del tipo de fecha *
+              Ingrese del nombre de fecha *
             </label>
             <input
               type="text"
@@ -184,12 +216,13 @@
             </div>
           </div>
 
-          <!-- Tipo de fecha (Única o Rango) -->
+          <!-- Nombre de fecha (Única o Rango) -->
           <div class="mb-3">
             <label class="form-label fw-bold">
               <i class="fas fa-calendar-alt me-2 text-primary"></i>
-              Tipo de fecha *
+              Formato de fecha *
             </label>
+
             <div class="form-check">
               <input
                 class="form-check-input"
@@ -199,13 +232,17 @@
                 value="true"
                 formControlName="uniqueDate"
               />
-              <label class="form-check-label" for="uniqueDateTrue">
+              <label
+                class="form-check-label cursor-pointer"
+                for="uniqueDateTrue"
+              >
                 <strong>Fecha única</strong>
                 <small class="d-block text-muted">
                   Solo necesita una fecha (Ej: Inicio de clases)
                 </small>
               </label>
             </div>
+
             <div class="form-check mt-2">
               <input
                 class="form-check-input"
@@ -215,7 +252,10 @@
                 value="false"
                 formControlName="uniqueDate"
               />
-              <label class="form-check-label" for="uniqueDateFalse">
+              <label
+                class="form-check-label cursor-pointer"
+                for="uniqueDateFalse"
+              >
                 <strong>Fecha de rango</strong>
                 <small class="d-block text-muted">
                   Requiere fecha inicial y final (Ej: Periodo de matrícula)
@@ -229,7 +269,7 @@
             <i class="fas fa-info-circle me-2 mt-1"></i>
             <div>
               <strong>Nota:</strong>
-              Una vez creado, este tipo de fecha estará disponible en el
+              Una vez creado, este nombre de fecha estará disponible en el
               selector para agregar fechas al calendario.
             </div>
           </div>
@@ -271,7 +311,7 @@
           </button>
         </ng-container>
 
-        <!-- ========== BOTONES PARA VISTA DE CREAR NOMBRE ========== -->
+        <!-- ========== BOTONES PARA VISTA DE CREAR NOMBRE FECHA ========== -->
         <ng-container *ngIf="vistaActual() === 'crearNombre'">
           <button
             type="button"
@@ -290,7 +330,7 @@
           >
             <span [hidden]="guardando">
               <i class="fas fa-plus me-2"></i>
-              Crear tipo de fecha
+              Crear nombre de fecha
             </span>
             <span [hidden]="!guardando">
               <span
