@@ -36,6 +36,7 @@ export class AsAuthServiceService {
 
   private apiUrl = environments.baseUrlAuth;
   private baseUrl = environments.baseUrl;
+  private baseUrlUserInfo = environments.baseUrlLoguin; //
 
   constructor(private http: HttpClient) { }
 

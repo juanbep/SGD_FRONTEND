@@ -15,12 +15,19 @@ import {
   InfoBasicaData,
   CreateCalendarioPaso1DTO,
 } from '../../components/create-academic-calendar/step-info-basica/step-info-basica.component';
+import { StepFechasComponent } from '../../components/create-academic-calendar/step-fechas/step-fechas.component';
 import { CalendarioHelperService } from '../../services';
+import { CreateFechaDto } from '../../models';
 
 @Component({
   selector: 'app-create-academic-calendar',
   standalone: true,
-  imports: [CommonModule, StepperComponent, StepInfoBasicaComponent],
+  imports: [
+    CommonModule,
+    StepperComponent,
+    StepInfoBasicaComponent,
+    StepFechasComponent, // ← AGREGADO
+  ],
   templateUrl: './create-academic-calendar.component.html',
   styleUrl: './create-academic-calendar.component.css',
 })
@@ -30,14 +37,17 @@ export class CreateAcademicCalendarComponent implements OnInit {
   private readonly calendarioHelper = inject(CalendarioHelperService);
 
   @ViewChild(StepInfoBasicaComponent) stepInfoBasica!: StepInfoBasicaComponent;
+  @ViewChild(StepFechasComponent) stepFechas!: StepFechasComponent; // ← AGREGADO
 
   // ===== SIGNALS =====
   readonly pasoActual = signal<number>(1);
-  readonly pasosCompletados = signal<boolean[]>([false, false]); // 2 pasos
+  readonly pasosCompletados = signal<boolean[]>([false, false]);
   readonly paso1Valido = signal<boolean>(false);
+  readonly paso2Valido = signal<boolean>(false); // ← AGREGADO
   readonly oidCalendarioCreado = signal<number | null>(null);
   readonly creandoCalendario = signal<boolean>(false);
   readonly datosCalendarioCreado = signal<InfoBasicaData | null>(null);
+  readonly fechasDelCalendario = signal<CreateFechaDto[]>([]); // ← AGREGADO
 
   // ===== COMPUTED =====
   readonly puedeAvanzarPaso1 = computed(
@@ -78,7 +88,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
       if (calendarioCreado && calendarioCreado.oidcalendario) {
         this.oidCalendarioCreado.set(calendarioCreado.oidcalendario);
 
-        // Guardar datos del calendario creado
         const datosCreado: InfoBasicaData = {
           anioCalendario: dto.anioCalendario,
           numeroCalendario: dto.numeroCalendario,
@@ -88,11 +97,8 @@ export class CreateAcademicCalendarComponent implements OnInit {
         };
         this.datosCalendarioCreado.set(datosCreado);
 
-        // Guardar en localStorage
         this.guardarOidEnStorage(calendarioCreado.oidcalendario);
         this.guardarDatosCalendarioEnStorage(datosCreado);
-
-        // Limpiar borrador del paso 1 (ya se creó)
         this.stepInfoBasica.limpiarBorrador();
 
         this.toastr.success(
@@ -117,9 +123,19 @@ export class CreateAcademicCalendarComponent implements OnInit {
     }
   }
 
-  // ===== MANEJADOR DE EVENTOS PASO 1 =====
+  // ===== MANEJADORES DE EVENTOS =====
   alCambiarValidezPaso1(valido: boolean): void {
     this.paso1Valido.set(valido);
+  }
+
+  // ← NUEVO: Manejadores para Paso 2
+  alCambiarValidezPaso2(valido: boolean): void {
+    this.paso2Valido.set(valido);
+  }
+
+  alCambiarFechas(fechas: CreateFechaDto[]): void {
+    this.fechasDelCalendario.set(fechas);
+    console.log('Fechas actualizadas:', fechas);
   }
 
   // ===== NAVEGACIÓN =====
@@ -129,12 +145,9 @@ export class CreateAcademicCalendarComponent implements OnInit {
         this.toastr.warning('Debes crear el calendario antes de continuar');
         return;
       }
-      // Marcar paso 1 como completado
       const completados = this.pasosCompletados();
       completados[0] = true;
       this.pasosCompletados.set([...completados]);
-
-      // Avanzar al paso 2
       this.pasoActual.set(2);
     }
   }
@@ -146,7 +159,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
   }
 
   irAPaso(paso: number): void {
-    // Solo permitir ir a pasos completados
     if (paso === 1) {
       this.pasoActual.set(1);
     } else if (paso === 2 && this.pasosCompletados()[0]) {
@@ -156,7 +168,21 @@ export class CreateAcademicCalendarComponent implements OnInit {
     }
   }
 
-  // ===== STORAGE (solo OID) =====
+  // ===== FINALIZAR =====
+  finalizar(): void {
+    this.limpiarStorage();
+    this.toastr.success(
+      'El calendario ha sido creado exitosamente',
+      '¡Proceso completado!',
+      { timeOut: 3000 }
+    );
+
+    setTimeout(() => {
+      this.router.navigate(['/app/gestion-calendario-academico']);
+    }, 1000);
+  }
+
+  // ===== STORAGE =====
   private guardarOidEnStorage(oid: number): void {
     try {
       localStorage.setItem(
@@ -183,7 +209,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
         const { oidCalendario } = JSON.parse(stored);
         if (oidCalendario) {
           this.oidCalendarioCreado.set(oidCalendario);
-          this.toastr.info('Se ha recuperado un calendario en progreso');
         }
       }
     } catch (error) {
@@ -210,7 +235,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
     localStorage.removeItem('paso1_borrador');
   }
 
-  // ===== CANCELAR =====
   cancel(): void {
     if (confirm('¿Estás seguro de cancelar? Se perderán los cambios.')) {
       this.limpiarStorage();

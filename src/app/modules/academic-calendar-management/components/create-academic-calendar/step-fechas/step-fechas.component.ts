@@ -19,8 +19,8 @@ import {
 import { Utils } from '../../../utils/calendario.utils';
 
 export interface FechaLocal extends CreateFechaDto {
-  id: string; // ID temporal para manejar edición/eliminación
-  nombre?: string; // Nombre del tipo de fecha para mostrar
+  id: string;
+  nombre?: string;
 }
 
 @Component({
@@ -47,7 +47,7 @@ export class StepFechasComponent implements OnInit {
   readonly fechasLocales = signal<Fecha[]>([]);
   readonly modalAgregarVisible = signal<boolean>(false);
   readonly modalSeleccionarVisible = signal<boolean>(false);
-  readonly fechaAEditar = signal<Fecha | null>(null); // ✅ Simplificado
+  readonly fechaAEditar = signal<Fecha | null>(null);
   readonly catalogoNombresFecha = signal<
     {
       value: number;
@@ -66,6 +66,9 @@ export class StepFechasComponent implements OnInit {
     });
     this.cargarCalendariosDisponibles();
     this.cargarFechasIniciales();
+
+    // ✅ Emitir siempre true (sin validación obligatoria)
+    this.formularioValido.emit(true);
   }
 
   private async cargarCatalogoNombresFechas(): Promise<void> {
@@ -113,26 +116,24 @@ export class StepFechasComponent implements OnInit {
       );
       this.fechasLocales.set(fechasComoModelo);
       this.emitirCambios();
-      this.validarFechaInicioObligatoria();
     }
   }
 
   private convertirCreateDtoAFecha(dto: CreateFechaDto): Fecha {
     return {
-      oidFecha: this.generarOidTemporal(), // ID temporal único
+      oidFecha: this.generarOidTemporal(),
       oidNombreFecha: dto.oidNombreFecha,
       nombre: this.obtenerNombreFecha(dto.oidNombreFecha),
       uniqueDate: dto.uniqueDate,
       fechaInicial: dto.fechaInicial,
       fechaFin: dto.fechaFin || '',
-      tipo: 'NO_RESALTADAS', // Placeholder
-      oidCalendario: 0, // Placeholder
-      nombreCalendario: '', // Placeholder
+      tipo: 'NO_RESALTADAS',
+      oidCalendario: 0,
+      nombreCalendario: '',
     };
   }
 
   private generarOidTemporal(): number {
-    // Generar ID temporal negativo para distinguirlos de IDs reales
     return -(Date.now() + Math.floor(Math.random() * 1000));
   }
 
@@ -164,7 +165,6 @@ export class StepFechasComponent implements OnInit {
     const nuevaFecha = this.convertirCreateDtoAFecha(createDto);
     this.fechasLocales.update((fechas) => [...fechas, nuevaFecha]);
     this.emitirCambios();
-    this.validarFechaInicioObligatoria();
     this.toastr.success('Fecha agregada correctamente');
     this.cerrarModalAgregar();
   }
@@ -174,7 +174,7 @@ export class StepFechasComponent implements OnInit {
     if (!fechaEditada) return;
 
     const fechaActualizada: Fecha = {
-      ...fechaEditada, // Mantener campos existentes
+      ...fechaEditada,
       oidNombreFecha: updateDto.oidNombreFecha,
       nombre: this.obtenerNombreFecha(updateDto.oidNombreFecha),
       fechaInicial: updateDto.fechaInicial,
@@ -187,25 +187,17 @@ export class StepFechasComponent implements OnInit {
       )
     );
     this.emitirCambios();
-    this.validarFechaInicioObligatoria();
     this.toastr.success('Fecha actualizada correctamente');
     this.cerrarModalAgregar();
   }
 
+  // ✅ ELIMINADA VALIDACIÓN: Ahora se puede eliminar cualquier fecha
   eliminarFecha(fecha: Fecha): void {
-    if (fecha.oidNombreFecha === 1) {
-      this.toastr.error(
-        'No puedes eliminar la fecha de Inicio del periodo (es obligatoria)'
-      );
-      return;
-    }
-
     if (confirm(`¿Estás seguro de eliminar la fecha "${fecha.nombre}"?`)) {
       this.fechasLocales.update((fechas) =>
         fechas.filter((f) => f.oidFecha !== fecha.oidFecha)
       );
       this.emitirCambios();
-      this.validarFechaInicioObligatoria();
       this.toastr.success('Fecha eliminada correctamente');
     }
   }
@@ -228,7 +220,6 @@ export class StepFechasComponent implements OnInit {
       return;
     }
 
-    // Copiar fechas y asignar nuevos IDs temporales
     const fechasCopiadas: Fecha[] = calendario.fechas.map((f: Fecha) => ({
       ...f,
       oidFecha: this.generarOidTemporal(),
@@ -238,20 +229,11 @@ export class StepFechasComponent implements OnInit {
 
     this.fechasLocales.set(fechasCopiadas);
     this.emitirCambios();
-    this.validarFechaInicioObligatoria();
     this.toastr.success(
       `${fechasCopiadas.length} fechas copiadas correctamente`,
       'Fechas copiadas'
     );
     this.cerrarModalSeleccionar();
-  }
-
-  // ===== VALIDACIÓN =====
-  private validarFechaInicioObligatoria(): void {
-    const tieneFechaInicio = this.fechasLocales().some(
-      (f) => f.oidNombreFecha === 1
-    );
-    this.formularioValido.emit(tieneFechaInicio);
   }
 
   private emitirCambios(): void {
@@ -282,7 +264,8 @@ export class StepFechasComponent implements OnInit {
     // No hay campos que tocar
   }
 
+  // ✅ VALIDACIÓN ELIMINADA: Siempre válido
   esValido(): boolean {
-    return this.fechasLocales().some((f) => f.oidNombreFecha === 1);
+    return true;
   }
 }

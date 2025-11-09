@@ -1,22 +1,22 @@
 <div class="step-header mb-4">
   <h5 class="mb-2">
     <i class="fas fa-calendar-alt me-2 text-primary"></i>
-    Paso 3: Fechas del Calendario
+    Paso 2: Fechas del Calendario
   </h5>
   <p class="text-muted mb-0">
-    Agrega las fechas importantes del calendario. La fecha de
-    <strong>Inicio del periodo</strong> es obligatoria.
+    Agrega las fechas importantes del calendario. Todas las fechas son
+    opcionales.
   </p>
 </div>
 
-<!-- Mensaje informativo -->
-<div class="alert alert-warning d-flex align-items-start" role="alert">
-  <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+<!-- Mensaje informativo actualizado -->
+<div class="alert alert-info d-flex align-items-start" role="alert">
+  <i class="fas fa-info-circle fa-2x me-3"></i>
   <div>
-    <strong>Fecha obligatoria:</strong>
+    <strong>Información:</strong>
     <p class="mb-0 mt-1">
-      Debes agregar al menos la fecha de <strong>Inicio del periodo</strong>.
-      Las demás fechas son opcionales y pueden agregarse ahora o después.
+      Puedes agregar fechas ahora o saltarte este paso y agregarlas después
+      desde la vista de edición del calendario.
     </p>
   </div>
 </div>
@@ -43,22 +43,6 @@
       Cargando...
     </span>
   </button>
-</div>
-
-<!-- Estado: Sin fecha obligatoria -->
-<div
-  *ngIf="!esValido()"
-  class="alert alert-danger d-flex align-items-center"
-  role="alert"
->
-  <i class="fas fa-times-circle fa-2x me-3"></i>
-  <div>
-    <strong>Fecha obligatoria faltante</strong>
-    <p class="mb-0">
-      Debes agregar la fecha de <strong>Inicio del periodo</strong> para
-      continuar.
-    </p>
-  </div>
 </div>
 
 <!-- Lista de fechas -->
@@ -108,18 +92,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let fecha of fechasLocales()"
-            [class.table-warning]="fecha.oidNombreFecha === 1"
-          >
-            <td>
-              <i
-                class="fas fa-star text-warning me-2"
-                *ngIf="fecha.oidNombreFecha === 1"
-                title="Fecha obligatoria"
-              ></i>
-              {{ fecha.nombre }}
-            </td>
+          <tr *ngFor="let fecha of fechasLocales()">
+            <td>{{ fecha.nombre }}</td>
             <td class="text-center">
               {{ formatearFecha(fecha) }}
             </td>
@@ -136,12 +110,7 @@
                 type="button"
                 class="btn btn-outline-danger btn-sm"
                 (click)="eliminarFecha(fecha)"
-                [disabled]="fecha.oidNombreFecha === 1"
-                [title]="
-                  fecha.oidNombreFecha === 1
-                    ? 'No se puede eliminar (obligatoria)'
-                    : 'Eliminar'
-                "
+                title="Eliminar"
               >
                 <i class="fas fa-trash"></i>
               </button>
