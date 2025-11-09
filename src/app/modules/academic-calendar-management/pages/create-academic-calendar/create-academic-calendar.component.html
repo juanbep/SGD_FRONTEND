@@ -14,7 +14,7 @@
   <app-stepper
     class="mb-4"
     [pasoActual]="pasoActual()"
-    [pasosCompletados]="datosWizard().stepsCompleted"
+    [pasosCompletados]="pasosCompletados()"
     [titulosPasos]="TITULOS_PASOS"
     (irAPaso)="irAPaso($event)"
   ></app-stepper>
@@ -24,34 +24,20 @@
     <!-- Paso 1: Información Básica -->
     <app-step-info-basica
       *ngIf="pasoActual() === 1"
-      [datosIniciales]="datosWizard().infoBasica"
-      (cambioFormulario)="alCambiarInfoBasica($event)"
+      [datosIniciales]="datosCalendarioCreado()"
+      [calendarioYaCreado]="calendarioYaCreado()"
       (formularioValido)="alCambiarValidezPaso1($event)"
-      (crearCalendario)="alCrearCalendarioPaso1($event)"
     ></app-step-info-basica>
 
-    <!-- Paso 2: Configuración Académica -->
-    <app-step-config-academica
-      *ngIf="pasoActual() === 2"
-      [datosIniciales]="datosWizard().configAcademica"
-      (cambioFormulario)="alCambiarConfigAcademica($event)"
-      (formularioValido)="alCambiarValidezPaso2($event)"
-    ></app-step-config-academica>
-
-    <!-- Paso 3: Fechas -->
-    <app-step-fechas
-      *ngIf="pasoActual() === 3"
-      [fechasIniciales]="datosWizard().fechas"
-      (cambioFechas)="alCambiarFechas($event)"
-      (formularioValido)="alCambiarValidezPaso3($event)"
-    ></app-step-fechas>
-
-    <!-- Paso 4: Revisión -->
-    <app-step-revision
-      *ngIf="pasoActual() === 4"
-      [datosWizard]="datosWizard()"
-      [catalogoNombresFecha]="catalogoNombresFecha()"
-    ></app-step-revision>
+    <!-- Paso 2: TODO - Construir desde cero -->
+    <div *ngIf="pasoActual() === 2" class="text-center py-5">
+      <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+      <h5 class="text-muted">Paso 2: Fechas del Calendario</h5>
+      <p class="text-muted">Este paso se construirá próximamente</p>
+      <p class="text-muted">
+        <strong>OID del calendario:</strong> {{ oidCalendarioCreado() }}
+      </p>
+    </div>
   </div>
 
   <!-- Footer de navegación -->
@@ -59,13 +45,13 @@
     <button
       class="btn btn-secondary"
       (click)="pasoAnterior()"
-      [disabled]="esPrimerPaso()"
+      [disabled]="pasoActual() === 1"
     >
       <i class="fas fa-arrow-left me-2"></i>
       Anterior
     </button>
 
-    <!-- NUEVO: Botón "Crear Calendario" (solo visible en paso 1) -->
+    <!-- Botón "Crear Calendario" (solo visible en paso 1) -->
     <button
       *ngIf="pasoActual() === 1"
       class="btn btn-success"
@@ -93,9 +79,9 @@
       </span>
     </button>
 
-    <!-- Botón "Siguiente" (deshabilitado en paso 1 hasta que se cree el calendario) -->
+    <!-- Botón "Siguiente" -->
     <button
-      *ngIf="!esUltimoPaso()"
+      *ngIf="pasoActual() < 2"
       class="btn btn-primary"
       (click)="siguientePaso()"
       [disabled]="pasoActual() === 1 && !puedeAvanzarPaso1()"
@@ -104,24 +90,10 @@
       <i class="fas fa-arrow-right ms-2"></i>
     </button>
 
-    <!-- Enviar Datos (paso 4) -->
-    <button
-      *ngIf="esUltimoPaso()"
-      class="btn btn-success"
-      (click)="enviar()"
-      [disabled]="enviandoDatos()"
-    >
-      <span [hidden]="enviandoDatos()">
-        <i class="fas fa-check me-2"></i>
-        Finalizar
-      </span>
-      <span [hidden]="!enviandoDatos()">
-        <span
-          class="spinner-border spinner-border-sm me-2"
-          role="status"
-        ></span>
-        Finalizando...
-      </span>
+    <!-- Placeholder para botón final (paso 2) -->
+    <button *ngIf="pasoActual() === 2" class="btn btn-success" disabled>
+      <i class="fas fa-check me-2"></i>
+      Finalizar (próximamente)
     </button>
   </div>
 </div>

@@ -6,6 +6,8 @@ import {
   OnInit,
   inject,
   signal,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -17,17 +19,21 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { CalendarioHelperService } from '../../../services';
 
-// Interfaz actualizada (sin estado)
+// Interfaz actualizada (con horas)
 export interface InfoBasicaData {
   anioCalendario: number | null;
   numeroCalendario: number | null;
+  horasPlanta: number | null;
+  horasOcasionales: number | null;
   observacion: string;
 }
 
-// DTO para crear calendario (solo paso 1)
+// DTO para crear calendario (actualizado)
 export interface CreateCalendarioPaso1DTO {
   anioCalendario: number;
   numeroCalendario: number;
+  horasPlanta: number;
+  horasOcasionales: number;
   observacion: string;
 }
 
@@ -38,19 +44,20 @@ export interface CreateCalendarioPaso1DTO {
   templateUrl: './step-info-basica.component.html',
   styleUrl: './step-info-basica.component.css',
 })
-export class StepInfoBasicaComponent implements OnInit {
+export class StepInfoBasicaComponent implements OnInit, OnChanges {
   private readonly fb = inject(FormBuilder);
   private readonly toastr = inject(ToastrService);
   private readonly calendarioHelper = inject(CalendarioHelperService);
 
   @Input() datosIniciales: InfoBasicaData | null = null;
+  @Input() calendarioYaCreado: boolean = false;
   @Output() cambioFormulario = new EventEmitter<InfoBasicaData>();
   @Output() formularioValido = new EventEmitter<boolean>();
-  @Output() crearCalendario = new EventEmitter<CreateCalendarioPaso1DTO>(); // Nuevo evento
+  @Output() crearCalendario = new EventEmitter<CreateCalendarioPaso1DTO>();
 
   // ===== CONSTANTES PARA LÍMITES DE AÑO =====
-  readonly ANIO_MINIMO = new Date().getFullYear(); // Año actual como mínimo
-  readonly ANIO_MAXIMO = 2100; // Límite superior fijo
+  readonly ANIO_MINIMO = new Date().getFullYear();
+  readonly ANIO_MAXIMO = 2100;
 
   // ===== SIGNALS PARA MODAL =====
   readonly mostrarModalCalendarios = signal<boolean>(false);
@@ -59,11 +66,42 @@ export class StepInfoBasicaComponent implements OnInit {
   );
   readonly cargandoCalendarios = signal<boolean>(false);
 
+  // ===== CONSTANTES PARA LÍMITES HORAS PLANTA =====
+  readonly HORAS_P_MINIMO = 10;
+  readonly HORAS_P_MAXIMO = 60;
+
+  // ===== CONSTANTES PARA LÍMITES HORAS OCASIONALES =====
+  readonly HORAS_O_MINIMO = 10;
+  readonly HORAS_O_MAXIMO = 60;
+
   formulario!: FormGroup;
   validandoCalendario = false;
 
+  // Clave para localStorage
+  private readonly STORAGE_KEY = 'paso1_borrador';
+
   ngOnInit(): void {
     this.inicializarFormulario();
+    this.cargarBorradorDeStorage();
+    this.actualizarEstadoFormulario();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Cuando cambia calendarioYaCreado, actualizar estado del formulario
+    if (changes['calendarioYaCreado'] && this.formulario) {
+      this.actualizarEstadoFormulario();
+    }
+
+    // Cuando cambian datosIniciales, cargar en formulario
+    if (changes['datosIniciales'] && this.datosIniciales && this.formulario) {
+      this.formulario.patchValue({
+        anioCalendario: this.datosIniciales.anioCalendario,
+        numeroCalendario: this.datosIniciales.numeroCalendario,
+        horasPlanta: this.datosIniciales.horasPlanta,
+        horasOcasionales: this.datosIniciales.horasOcasionales,
+        observacion: this.datosIniciales.observacion,
+      });
+    }
   }
 
   private inicializarFormulario(): void {
@@ -80,20 +118,116 @@ export class StepInfoBasicaComponent implements OnInit {
         this.datosIniciales?.numeroCalendario || null,
         [Validators.required, Validators.min(1), Validators.max(2)],
       ],
+      horasPlanta: [
+        this.datosIniciales?.horasPlanta || null,
+        [
+          Validators.required,
+          Validators.min(this.HORAS_P_MINIMO),
+          Validators.max(this.HORAS_P_MAXIMO),
+        ],
+      ],
+      horasOcasionales: [
+        this.datosIniciales?.horasOcasionales || null,
+        [
+          Validators.required,
+          Validators.min(this.HORAS_O_MINIMO),
+          Validators.max(this.HORAS_O_MAXIMO),
+        ],
+      ],
       observacion: [
         this.datosIniciales?.observacion || '',
         Validators.maxLength(500),
       ],
     });
 
-    // Emitir cambios y validez
+    // Emitir cambios y validez + Guardar en localStorage
     this.formulario.valueChanges.subscribe(() => {
       this.cambioFormulario.emit(this.formulario.value);
       this.formularioValido.emit(this.formulario.valid);
+
+      // Auto-guardar en localStorage mientras escribe (solo si no está creado)
+      if (!this.calendarioYaCreado) {
+        this.guardarBorradorEnStorage();
+      }
     });
 
     // Emitir estado inicial
     this.formularioValido.emit(this.formulario.valid);
+  }
+
+  // ===== NUEVO: Actualizar estado del formulario (habilitar/deshabilitar) =====
+  private actualizarEstadoFormulario(): void {
+    if (!this.formulario) return;
+
+    if (this.calendarioYaCreado) {
+      // Deshabilitar todos los controles
+      this.formulario.get('anioCalendario')?.disable({ emitEvent: false });
+      this.formulario.get('numeroCalendario')?.disable({ emitEvent: false });
+      this.formulario.get('horasPlanta')?.disable({ emitEvent: false });
+      this.formulario.get('horasOcasionales')?.disable({ emitEvent: false });
+      this.formulario.get('observacion')?.disable({ emitEvent: false });
+    } else {
+      // Habilitar todos los controles
+      this.formulario.get('anioCalendario')?.enable({ emitEvent: false });
+      this.formulario.get('numeroCalendario')?.enable({ emitEvent: false });
+      this.formulario.get('horasPlanta')?.enable({ emitEvent: false });
+      this.formulario.get('horasOcasionales')?.enable({ emitEvent: false });
+      this.formulario.get('observacion')?.enable({ emitEvent: false });
+    }
+  }
+
+  // ===== STORAGE - BORRADOR DEL PASO 1 =====
+  private guardarBorradorEnStorage(): void {
+    try {
+      const borrador: InfoBasicaData = {
+        anioCalendario: this.formulario.get('anioCalendario')?.value,
+        numeroCalendario: this.formulario.get('numeroCalendario')?.value,
+        horasPlanta: this.formulario.get('horasPlanta')?.value,
+        horasOcasionales: this.formulario.get('horasOcasionales')?.value,
+        observacion: this.formulario.get('observacion')?.value || '',
+      };
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(borrador));
+    } catch (error) {
+      console.error('Error al guardar borrador paso 1:', error);
+    }
+  }
+
+  private cargarBorradorDeStorage(): void {
+    try {
+      // Si ya hay datos iniciales (calendario creado), no cargar borrador
+      if (this.datosIniciales || this.calendarioYaCreado) {
+        return;
+      }
+
+      const borradorStr = localStorage.getItem(this.STORAGE_KEY);
+      if (borradorStr) {
+        const borrador: InfoBasicaData = JSON.parse(borradorStr);
+
+        // Cargar datos en el formulario
+        this.formulario.patchValue({
+          anioCalendario: borrador.anioCalendario,
+          numeroCalendario: borrador.numeroCalendario,
+          horasPlanta: borrador.horasPlanta,
+          horasOcasionales: borrador.horasOcasionales,
+          observacion: borrador.observacion,
+        });
+
+        this.toastr.info(
+          'Se ha recuperado un borrador guardado',
+          'Borrador encontrado'
+        );
+      }
+    } catch (error) {
+      console.error('Error al cargar borrador paso 1:', error);
+    }
+  }
+
+  limpiarBorrador(): void {
+    try {
+      localStorage.removeItem(this.STORAGE_KEY);
+    } catch (error) {
+      console.error('Error al limpiar borrador paso 1:', error);
+    }
   }
 
   async validarCalendarioExistente(): Promise<boolean> {
@@ -176,9 +310,17 @@ export class StepInfoBasicaComponent implements OnInit {
 
   // ===== OBTENER DTO PARA CREAR CALENDARIO =====
   obtenerDatosParaCreacion(): CreateCalendarioPaso1DTO {
+    // Redondear a 1 decimal
+    const horasPlanta = parseFloat(this.formulario.get('horasPlanta')?.value);
+    const horasOcasionales = parseFloat(
+      this.formulario.get('horasOcasionales')?.value
+    );
+
     return {
       anioCalendario: this.formulario.get('anioCalendario')?.value,
       numeroCalendario: this.formulario.get('numeroCalendario')?.value,
+      horasPlanta: Math.round(horasPlanta * 10) / 10,
+      horasOcasionales: Math.round(horasOcasionales * 10) / 10,
       observacion: this.formulario.get('observacion')?.value || '',
     };
   }
@@ -189,6 +331,14 @@ export class StepInfoBasicaComponent implements OnInit {
 
   get numeroCalendarioControl() {
     return this.formulario.get('numeroCalendario');
+  }
+
+  get horasPlantaControl() {
+    return this.formulario.get('horasPlanta');
+  }
+
+  get horasOcasionalesControl() {
+    return this.formulario.get('horasOcasionales');
   }
 
   get observacionControl() {

@@ -10,15 +10,33 @@
   </p>
 </div>
 
-<!-- Mensaje informativo -->
-<div class="alert alert-info d-flex align-items-start" role="alert">
+<!-- Mensaje cuando el calendario ya está creado -->
+<div
+  *ngIf="calendarioYaCreado"
+  class="alert alert-success d-flex align-items-center mb-4"
+  role="alert"
+>
+  <i class="fas fa-check-circle fa-2x me-3"></i>
+  <div>
+    <strong>Calendario creado exitosamente</strong>
+    <p class="mb-0 mt-1">
+      El calendario ya ha sido creado. Puedes avanzar al siguiente paso para
+      gestionar las fechas.
+    </p>
+  </div>
+</div>
+
+<!-- Mensaje informativo (solo si NO está creado) -->
+<div
+  *ngIf="!calendarioYaCreado"
+  class="alert alert-info d-flex align-items-start"
+  role="alert"
+>
   <i class="fas fa-lightbulb fa-2x me-3"></i>
   <div>
     <strong>Información importante:</strong>
     <ul class="mb-0 mt-2">
-      <li>
-        Al avanzar al siguiente paso, el calendario será creado automáticamente
-      </li>
+      <li>Al crear el calendario, podrás avanzar al siguiente paso</li>
       <li>
         Verifica que no exista ya un calendario con el mismo año y periodo
       </li>
@@ -51,14 +69,6 @@
           [min]="ANIO_MINIMO"
           [max]="ANIO_MAXIMO"
         />
-        <button
-          class="btn btn-outline-primary"
-          type="button"
-          (click)="sugerirAnioActual()"
-          title="Usar año actual"
-        >
-          <i class="fas fa-magic"></i>
-        </button>
       </div>
 
       <!-- Mensajes de validación debajo del input -->
@@ -132,6 +142,95 @@
     </div>
   </div>
 
+  <!-- NUEVA FILA: Horas Planta y Horas Ocasionales -->
+  <div class="row">
+    <!-- Horas Planta -->
+    <div class="col-md-6 mb-3">
+      <label for="horasPlanta" class="form-label fw-bold">
+        <i class="fas fa-clock me-2 text-primary"></i>
+        Horas Planta *
+      </label>
+      <input
+        type="number"
+        id="horasPlanta"
+        class="form-control"
+        formControlName="horasPlanta"
+        [class.is-invalid]="
+          horasPlantaControl?.invalid && horasPlantaControl?.touched
+        "
+        placeholder="Ej: 25"
+        [min]="HORAS_P_MINIMO"
+        [max]="HORAS_P_MAXIMO"
+        step="0.1"
+      />
+      <div
+        class="invalid-feedback"
+        *ngIf="horasPlantaControl?.invalid && horasPlantaControl?.touched"
+      >
+        <span *ngIf="horasPlantaControl?.hasError('required')">
+          Las horas planta son requeridas
+        </span>
+        <span
+          *ngIf="
+            horasPlantaControl?.hasError('min') ||
+            horasPlantaControl?.hasError('max')
+          "
+        >
+          Las horas planta deben estar entre {{ HORAS_P_MINIMO }} y
+          {{ HORAS_P_MAXIMO }}
+        </span>
+      </div>
+      <small class="form-text text-muted">
+        <i class="fas fa-info-circle me-1"></i>
+        Horas asignadas a docentes de planta
+      </small>
+    </div>
+
+    <!-- Horas Ocasionales -->
+    <div class="col-md-6 mb-3">
+      <label for="horasOcasionales" class="form-label fw-bold">
+        <i class="fas fa-user-clock me-2 text-primary"></i>
+        Horas Ocasionales *
+      </label>
+      <input
+        type="number"
+        id="horasOcasionales"
+        class="form-control"
+        formControlName="horasOcasionales"
+        [class.is-invalid]="
+          horasOcasionalesControl?.invalid && horasOcasionalesControl?.touched
+        "
+        placeholder="Ej: 20.8"
+        [min]="HORAS_O_MINIMO"
+        [max]="HORAS_O_MAXIMO"
+        step="0.1"
+      />
+      <div
+        class="invalid-feedback"
+        *ngIf="
+          horasOcasionalesControl?.invalid && horasOcasionalesControl?.touched
+        "
+      >
+        <span *ngIf="horasOcasionalesControl?.hasError('required')">
+          Las horas ocasionales son requeridas
+        </span>
+        <span
+          *ngIf="
+            horasOcasionalesControl?.hasError('min') ||
+            horasOcasionalesControl?.hasError('max')
+          "
+        >
+          Las horas ocasionales deben estar entre {{ HORAS_O_MINIMO }} y
+          {{ HORAS_O_MAXIMO }}
+        </span>
+      </div>
+      <small class="form-text text-muted">
+        <i class="fas fa-info-circle me-1"></i>
+        Horas asignadas a docentes ocasionales
+      </small>
+    </div>
+  </div>
+
   <!-- Observación / Acuerdo académico (toda la fila) -->
   <div class="row">
     <div class="col-12 mb-3">
@@ -161,6 +260,7 @@
       </div>
     </div>
   </div>
+
   <!-- Vista previa minimalista (esquina superior derecha) -->
   <div class="position-relative">
     <div
@@ -190,6 +290,7 @@
       </div>
     </div>
   </div>
+
   <!-- Botón para consultar calendarios existentes -->
   <div class="row">
     <div class="col-12 mb-3">
@@ -226,7 +327,6 @@
 >
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
-      <!-- Header -->
       <div class="modal-header" style="background-color: #000066">
         <h5 class="modal-title text-white">
           <i class="fas fa-calendar-alt me-2"></i>
@@ -239,9 +339,7 @@
         ></button>
       </div>
 
-      <!-- Body -->
       <div class="modal-body" style="max-height: 400px; overflow-y: auto">
-        <!-- Loading -->
         <div *ngIf="cargandoCalendarios()" class="text-center py-4">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
@@ -249,7 +347,6 @@
           <p class="text-muted mt-2 mb-0">Cargando calendarios...</p>
         </div>
 
-        <!-- Sin calendarios -->
         <div
           *ngIf="!cargandoCalendarios() && calendariosExistentes().length === 0"
           class="text-center py-4"
@@ -258,7 +355,6 @@
           <p class="text-muted mb-0">No hay calendarios creados aún</p>
         </div>
 
-        <!-- Lista de calendarios -->
         <div
           *ngIf="!cargandoCalendarios() && calendariosExistentes().length > 0"
         >
@@ -289,7 +385,6 @@
         </div>
       </div>
 
-      <!-- Footer -->
       <div class="modal-footer">
         <button
           type="button"
