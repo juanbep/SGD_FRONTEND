@@ -73,8 +73,18 @@
               </button>
             </div>
 
-            <!-- SELECT para el nombre de fecha -->
+            <!-- Modo EDICIÓN: Mostrar nombre directamente (readonly) -->
+            <input
+              *ngIf="modoEdicion()"
+              type="text"
+              class="form-control bg-light"
+              [value]="fechaActual()?.nombre"
+              readonly
+            />
+
+            <!-- Modo CREAR: SELECT normal -->
             <select
+              *ngIf="!modoEdicion()"
               id="oidNombreFecha"
               class="form-select"
               formControlName="oidNombreFecha"
@@ -100,7 +110,11 @@
 
             <div
               class="invalid-feedback d-block"
-              *ngIf="nombreFechaControl?.invalid && nombreFechaControl?.touched"
+              *ngIf="
+                nombreFechaControl?.invalid &&
+                nombreFechaControl?.touched &&
+                !modoEdicion()
+              "
             >
               Debe seleccionar un nombre de fecha
             </div>

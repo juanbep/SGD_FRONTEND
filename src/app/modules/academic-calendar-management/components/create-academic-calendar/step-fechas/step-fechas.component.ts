@@ -9,7 +9,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { Fecha, Calendario } from '../../../models';
+import {
+  Fecha,
+  Calendario,
+  CreateFechaDto,
+  UpdateFechaDto,
+} from '../../../models';
 import { ModalAgregarEditarFechaComponent } from '../../edit-academic-calendar/modal-agregar-editar-fecha/modal-agregar-editar-fecha.component';
 import { ModalSeleccionarCalendarioComponent } from '../modal-seleccionar-calendario/modal-seleccionar-calendario.component';
 import {
@@ -66,8 +71,10 @@ export class StepFechasComponent implements OnInit, OnChanges {
 
     this.cargandoFechas.set(true);
     try {
-      const calendario = await this.calendarioHelper.getById(this.oidCalendario);
-      console.log(calendario)
+      const calendario = await this.calendarioHelper.getById(
+        this.oidCalendario
+      );
+      console.log(calendario);
       this.fechas.set(calendario?.fechas || []);
     } catch (error) {
       console.error('Error al cargar fechas:', error);
@@ -121,17 +128,51 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.guardandoFecha.set(false);
   }
 
-  // ===== EL MODAL YA GUARDA, SOLO REFRESCAMOS =====
-  confirmarAgregarFecha(event: any): void {
-    // El modal ya guardó en backend, solo refrescamos
-    this.cargarFechas();
-    this.cerrarModalAgregar();
+  // ===== AGREGAR FECHA (RECIBE DTO Y GUARDA EN BACKEND) =====
+  async confirmarAgregarFecha(createDto: CreateFechaDto): Promise<void> {
+    if (!this.oidCalendario) {
+      this.toastr.error('No se puede agregar fecha sin calendario');
+      return;
+    }
+
+    this.guardandoFecha.set(true);
+
+    try {
+      // Crear fecha en el backend
+      await this.fechaHelper.create(createDto);
+
+      // Refrescar lista desde el backend
+      await this.cargarFechas();
+
+      this.toastr.success('Fecha agregada correctamente');
+      this.cerrarModalAgregar();
+    } catch (error) {
+      console.error('Error al agregar fecha:', error);
+      this.toastr.error('Error al agregar la fecha');
+    } finally {
+      this.guardandoFecha.set(false);
+    }
   }
 
-  confirmarEditarFecha(event: any): void {
-    // El modal ya actualizó en backend, solo refrescamos
-    this.cargarFechas();
-    this.cerrarModalAgregar();
+  // ===== EDITAR FECHA (RECIBE DTO Y ACTUALIZA EN BACKEND) =====
+  async confirmarEditarFecha(updateDto: UpdateFechaDto): Promise<void> {
+    this.guardandoFecha.set(true);
+
+    try {
+      // Actualizar fecha en el backend
+      await this.fechaHelper.update(updateDto);
+
+      // Refrescar lista desde el backend
+      await this.cargarFechas();
+
+      this.toastr.success('Fecha actualizada correctamente');
+      this.cerrarModalAgregar();
+    } catch (error) {
+      console.error('Error al actualizar fecha:', error);
+      this.toastr.error('Error al actualizar la fecha');
+    } finally {
+      this.guardandoFecha.set(false);
+    }
   }
 
   // ===== ELIMINAR FECHA =====
