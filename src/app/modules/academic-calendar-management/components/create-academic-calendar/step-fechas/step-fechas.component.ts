@@ -202,7 +202,9 @@ export class StepFechasComponent implements OnInit, OnChanges {
 
   async copiarFechas(calendarioOrigen: Calendario): Promise<void> {
     if (!calendarioOrigen.fechas || calendarioOrigen.fechas.length === 0) {
-      this.toastr.warning('El calendario seleccionado no tiene fechas');
+      this.toastr.warning(
+        'El calendario seleccionado no tiene fechas registradas'
+      );
       this.cerrarModalSeleccionar();
       return;
     }
@@ -210,21 +212,42 @@ export class StepFechasComponent implements OnInit, OnChanges {
     if (!this.oidCalendario) return;
 
     this.guardandoFecha.set(true);
-    try {
-      const promesas = calendarioOrigen.fechas.map((f) =>
-        this.fechaHelper.create({
-          oidCalendario: this.oidCalendario!,
-          oidNombreFecha: f.oidNombreFecha,
-          uniqueDate: f.uniqueDate,
-          fechaInicial: f.fechaInicial,
-          fechaFin: f.fechaFin || null,
-          tipo: f.tipo,
-        })
-      );
 
-      await Promise.all(promesas);
-      this.cargarFechas(); // Refrescar lista
-      this.toastr.success(`${promesas.length} fechas copiadas correctamente`);
+    try {
+      const fechasActuales = this.fechas();
+      let mapeadas = 0;
+
+      // Crear NUEVAS instancias de TODOS los objetos (inmutabilidad completa)
+      const fechasActualizadas = fechasActuales.map((fechaActual) => {
+        const fechaOrigen = calendarioOrigen.fechas!.find(
+          (f) => f.oidNombreFecha === fechaActual.oidNombreFecha
+        );
+
+        if (fechaOrigen) {
+          mapeadas++;
+          // Crear NUEVO objeto con todas las propiedades
+          return {
+            ...fechaActual, // Copiar todas las propiedades
+            fechaInicial: fechaOrigen.fechaInicial,
+            fechaFin: fechaOrigen.fechaFin || '',
+          } as Fecha;
+        }
+
+        // Importante: Crear NUEVO objeto incluso si no cambió
+        return { ...fechaActual } as Fecha;
+      });
+
+      console.log('Fechas antes:', fechasActuales);
+      console.log('Fechas después:', fechasActualizadas);
+      console.log('Mapeadas:', mapeadas);
+
+      // Forzar actualización del signal con nuevo array
+      this.fechas.set([...fechasActualizadas]);
+
+      this.toastr.success(
+        `${mapeadas} fechas mapeadas correctamente`,
+        'Fechas copiadas'
+      );
       this.cerrarModalSeleccionar();
     } catch (error) {
       console.error('Error al copiar fechas:', error);
