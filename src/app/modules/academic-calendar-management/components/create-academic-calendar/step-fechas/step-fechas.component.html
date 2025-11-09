@@ -4,25 +4,29 @@
     Paso 2: Fechas del Calendario
   </h5>
   <p class="text-muted mb-0">
-    Agrega las fechas importantes del calendario. Todas las fechas son
-    opcionales.
+    En esta sesión puede agregar las fechas importantes del calendario. 
   </p>
 </div>
 
-<!-- Mensaje informativo actualizado -->
+<!-- Mensaje informativo -->
 <div class="alert alert-info d-flex align-items-start" role="alert">
   <i class="fas fa-info-circle fa-2x me-3"></i>
   <div>
     <strong>Información:</strong>
     <p class="mb-0 mt-1">
-      Puedes agregar fechas ahora o saltarte este paso y agregarlas después
-      desde la vista de edición del calendario.
+      Puedes agregar fechas ahora o saltarte este paso y agregarlas después desde la vista de edición del calendario.
     </p>
   </div>
 </div>
 
+<!-- Indicador de carga inicial -->
+<div *ngIf="cargandoFechas()" class="alert alert-warning d-flex align-items-center mb-4">
+  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+  <span>Cargando fechas del calendario...</span>
+</div>
+
 <!-- Botones de acción -->
-<div class="d-flex gap-2 mb-4">
+<div class="d-flex gap-2 mb-4" *ngIf="!cargandoFechas()">
   <button type="button" class="btn btn-primary" (click)="abrirModalAgregar()">
     <i class="fas fa-plus me-2"></i>
     Agregar fecha
@@ -46,26 +50,25 @@
 </div>
 
 <!-- Lista de fechas -->
-<div class="card shadow-sm">
+<div class="card shadow-sm" *ngIf="!cargandoFechas()">
   <div
     class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
     style="background-color: #000066"
   >
     <span>
       <i class="fas fa-list me-2"></i>
-      Fechas Agregadas ({{ fechasLocales().length }})
+      Fechas Agregadas ({{ fechas().length }})
     </span>
   </div>
 
   <!-- Sin fechas -->
-  <div class="card-body" *ngIf="fechasLocales().length === 0; else tablaFechas">
+  <div class="card-body" *ngIf="fechas().length === 0; else tablaFechas">
     <div class="alert alert-info d-flex align-items-center mb-0" role="alert">
       <i class="fas fa-info-circle fa-2x me-3"></i>
       <div>
         <h6 class="alert-heading mb-1">No hay fechas agregadas</h6>
         <p class="mb-0">
-          Haz clic en "Agregar fecha" para comenzar o copia las fechas de un
-          calendario anterior.
+          Haz clic en "Agregar fecha" para comenzar o copia las fechas de un calendario anterior.
         </p>
       </div>
     </div>
@@ -92,7 +95,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let fecha of fechasLocales()">
+          <tr *ngFor="let fecha of fechas()">
             <td>{{ fecha.nombre }}</td>
             <td class="text-center">
               {{ formatearFecha(fecha) }}
@@ -126,7 +129,7 @@
 <app-modal-agregar-fecha
   [visible]="modalAgregarVisible()"
   [listaNombreFechas]="catalogoNombresFecha()"
-  [oidCalendario]="0"
+  [oidCalendario]="oidCalendario || 0"
   [guardando]="guardandoFecha()"
   [fechaAEditar]="fechaAEditar()"
   (onConfirmar)="confirmarAgregarFecha($event)"

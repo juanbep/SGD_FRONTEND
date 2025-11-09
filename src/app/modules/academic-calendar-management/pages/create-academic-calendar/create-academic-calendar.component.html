@@ -32,9 +32,7 @@
     <!-- Paso 2: Fechas del Calendario -->
     <app-step-fechas
       *ngIf="pasoActual() === 2"
-      [fechasIniciales]="fechasDelCalendario()"
-      (cambioFechas)="alCambiarFechas($event)"
-      (formularioValido)="alCambiarValidezPaso2($event)"
+      [oidCalendario]="oidCalendarioCreado()"
     ></app-step-fechas>
   </div>
 
@@ -88,12 +86,11 @@
       <i class="fas fa-arrow-right ms-2"></i>
     </button>
 
-    <!-- Botón "Finalizar" (paso 2) -->
+    <!-- Botón "Finalizar" (paso 2 - siempre habilitado) -->
     <button
       *ngIf="pasoActual() === 2"
       class="btn btn-success"
       (click)="finalizar()"
-      [disabled]="!paso2Valido()"
     >
       <i class="fas fa-check me-2"></i>
       Finalizar

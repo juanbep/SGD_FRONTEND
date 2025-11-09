@@ -17,7 +17,6 @@ import {
 } from '../../components/create-academic-calendar/step-info-basica/step-info-basica.component';
 import { StepFechasComponent } from '../../components/create-academic-calendar/step-fechas/step-fechas.component';
 import { CalendarioHelperService } from '../../services';
-import { CreateFechaDto } from '../../models';
 
 @Component({
   selector: 'app-create-academic-calendar',
@@ -26,7 +25,7 @@ import { CreateFechaDto } from '../../models';
     CommonModule,
     StepperComponent,
     StepInfoBasicaComponent,
-    StepFechasComponent, // ← AGREGADO
+    StepFechasComponent,
   ],
   templateUrl: './create-academic-calendar.component.html',
   styleUrl: './create-academic-calendar.component.css',
@@ -37,28 +36,24 @@ export class CreateAcademicCalendarComponent implements OnInit {
   private readonly calendarioHelper = inject(CalendarioHelperService);
 
   @ViewChild(StepInfoBasicaComponent) stepInfoBasica!: StepInfoBasicaComponent;
-  @ViewChild(StepFechasComponent) stepFechas!: StepFechasComponent; // ← AGREGADO
 
   // ===== SIGNALS =====
   readonly pasoActual = signal<number>(1);
   readonly pasosCompletados = signal<boolean[]>([false, false]);
   readonly paso1Valido = signal<boolean>(false);
-  readonly paso2Valido = signal<boolean>(false); // ← AGREGADO
   readonly oidCalendarioCreado = signal<number | null>(null);
   readonly creandoCalendario = signal<boolean>(false);
   readonly datosCalendarioCreado = signal<InfoBasicaData | null>(null);
-  readonly fechasDelCalendario = signal<CreateFechaDto[]>([]); // ← AGREGADO
 
   // ===== COMPUTED =====
-  readonly puedeAvanzarPaso1 = computed(
-    () => this.oidCalendarioCreado() !== null
-  );
-  readonly calendarioYaCreado = computed(
-    () => this.oidCalendarioCreado() !== null
-  );
+  readonly puedeAvanzarPaso1 = computed(() => this.oidCalendarioCreado() !== null);
+  readonly calendarioYaCreado = computed(() => this.oidCalendarioCreado() !== null);
 
   // ===== CONSTANTES =====
-  readonly TITULOS_PASOS = ['Información Básica', 'Fechas del Calendario'];
+  readonly TITULOS_PASOS = [
+    'Información Básica',
+    'Fechas del Calendario',
+  ];
 
   ngOnInit(): void {
     this.cargarOidDeStorage();
@@ -87,7 +82,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
 
       if (calendarioCreado && calendarioCreado.oidcalendario) {
         this.oidCalendarioCreado.set(calendarioCreado.oidcalendario);
-
+        
         const datosCreado: InfoBasicaData = {
           anioCalendario: dto.anioCalendario,
           numeroCalendario: dto.numeroCalendario,
@@ -96,7 +91,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
           observacion: dto.observacion,
         };
         this.datosCalendarioCreado.set(datosCreado);
-
+        
         this.guardarOidEnStorage(calendarioCreado.oidcalendario);
         this.guardarDatosCalendarioEnStorage(datosCreado);
         this.stepInfoBasica.limpiarBorrador();
@@ -106,10 +101,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
           '¡Éxito!'
         );
 
-        console.log(
-          'Calendario creado con OID:',
-          calendarioCreado.oidcalendario
-        );
+        console.log('Calendario creado con OID:', calendarioCreado.oidcalendario);
       } else {
         throw new Error('No se recibió el OID del calendario creado');
       }
@@ -126,16 +118,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
   // ===== MANEJADORES DE EVENTOS =====
   alCambiarValidezPaso1(valido: boolean): void {
     this.paso1Valido.set(valido);
-  }
-
-  // ← NUEVO: Manejadores para Paso 2
-  alCambiarValidezPaso2(valido: boolean): void {
-    this.paso2Valido.set(valido);
-  }
-
-  alCambiarFechas(fechas: CreateFechaDto[]): void {
-    this.fechasDelCalendario.set(fechas);
-    console.log('Fechas actualizadas:', fechas);
   }
 
   // ===== NAVEGACIÓN =====
@@ -185,10 +167,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
   // ===== STORAGE =====
   private guardarOidEnStorage(oid: number): void {
     try {
-      localStorage.setItem(
-        'calendario_en_progreso',
-        JSON.stringify({ oidCalendario: oid })
-      );
+      localStorage.setItem('calendario_en_progreso', JSON.stringify({ oidCalendario: oid }));
     } catch (error) {
       console.error('Error al guardar OID:', error);
     }
