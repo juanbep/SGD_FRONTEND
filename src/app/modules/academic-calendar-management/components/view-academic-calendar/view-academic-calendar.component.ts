@@ -14,7 +14,11 @@ import { Utils } from '../../utils/calendario.utils';
   styleUrl: './view-academic-calendar.component.css',
 })
 export class ViewAcademicCalendarComponent implements OnInit {
-  // ===== SERVICES (patrón inject) =====
+  // ===== CONSTANTES =====
+  private readonly OIDS_FECHAS_ESPECIALES = [22, 23, 24, 25];
+  private readonly OIDS_FECHAS_OCULTAS = [26, 27, 28];
+
+  // ===== SERVICES =====
   private readonly route = inject(ActivatedRoute);
   private readonly calendarioHelper = inject(CalendarioHelperService);
   private readonly toastr = inject(ToastrService);
@@ -30,10 +34,40 @@ export class ViewAcademicCalendarComponent implements OnInit {
   readonly fechasOrdenadas = computed(() => {
     const cal = this.calendario();
     if (!cal?.fechas) return [];
-    return Utils.ordenarFechasPorOid(cal.fechas);
+
+    // Filtrar fechas ocultas desde el inicio
+    const fechasVisibles = cal.fechas.filter(
+      (f) => !this.OIDS_FECHAS_OCULTAS.includes(f.oidNombreFecha)
+    );
+
+    return Utils.ordenarFechasPorOid(fechasVisibles);
+  });
+
+  // Fechas especiales
+  readonly fechasEspeciales = computed(() => {
+    const todasOrdenadas = this.fechasOrdenadas();
+    return todasOrdenadas.filter((f) =>
+      this.OIDS_FECHAS_ESPECIALES.includes(f.oidNombreFecha)
+    );
+  });
+
+  // Fechas normales - se muestran en la tabla principal
+  readonly fechasNormales = computed(() => {
+    const todasOrdenadas = this.fechasOrdenadas();
+    return todasOrdenadas.filter(
+      (f) => !this.OIDS_FECHAS_ESPECIALES.includes(f.oidNombreFecha)
+    );
   });
 
   readonly tieneFechas = computed(() => this.fechasOrdenadas().length > 0);
+
+  readonly tieneFechasNormales = computed(
+    () => this.fechasNormales().length > 0
+  );
+
+  readonly tieneFechasEspeciales = computed(
+    () => this.fechasEspeciales().length > 0
+  );
 
   readonly tituloCalendario = computed(() => {
     const cal = this.calendario();
