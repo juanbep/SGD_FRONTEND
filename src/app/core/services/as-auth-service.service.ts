@@ -60,7 +60,7 @@ export class AsAuthServiceService {
    * @returns Observable<UserInfo>
    */
   getUserInfo(): Observable<SimpleResponse<UsuarioResponse>> {
-    return this.http.get<SimpleResponse<UsuarioResponse>>(`${this.baseUrl}/api/usuarios/logueado`);
+    return this.http.get<SimpleResponse<UsuarioResponse>>(`${this.baseUrlUserInfo}/sgd-back/api/usuarios/logueado`);
   }
 
   loginGoogle(token: string): Observable<any> {
