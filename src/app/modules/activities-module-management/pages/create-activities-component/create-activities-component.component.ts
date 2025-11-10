@@ -57,20 +57,22 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   readonly pasoActual = computed(() => this.datosWizard().currentStep);
   readonly esUltimoPaso = computed(() => this.pasoActual() === 5);
   readonly esPrimerPaso = computed(() => this.pasoActual() === 1);
-  readonly paso1Valido = signal<boolean>(false);
-  readonly paso2Valido = signal<boolean>(false);
-  readonly paso3Valido = signal<boolean>(false);
-  readonly paso4Valido = signal<boolean>(true); // Siempre válido (opcional)
+
+  // Todos los pasos son opcionales temporalmente
+  readonly paso1Valido = signal<boolean>(true); // Asignar Usuarios (opcional)
+  readonly paso2Valido = signal<boolean>(true); // Info Básica (opcional temporalmente)
+  readonly paso3Valido = signal<boolean>(true); // Detalles Temporales (opcional temporalmente)
+  readonly paso4Valido = signal<boolean>(true); // Atributos (opcional)
   readonly enviandoDatos = signal<boolean>(false);
 
   // ===== CONSTANTES =====
   readonly TOTAL_PASOS = 5;
   readonly TITULOS_PASOS = [
-    'Información Básica',
-    'Detalles Temporales',
-    'Atributos Dinámicos',
-    'Asignar Usuarios',
-    'Revisión y Confirmación',
+    'Asignar Usuarios', // Paso 1 (antes era paso 4)
+    'Información Básica', // Paso 2 (antes era paso 1)
+    'Detalles Temporales', // Paso 3 (antes era paso 2)
+    'Atributos Dinámicos', // Paso 4 (antes era paso 3)
+    'Revisión y Confirmación', // Paso 5 (sin cambios)
   ];
 
   ngOnInit(): void {
@@ -137,37 +139,23 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   // ===== NAVEGACIÓN =====
 
   async siguientePaso(): Promise<void> {
-    // Validar paso actual antes de avanzar
+    // Temporalmente: Sin validaciones, todos los pasos son opcionales
+
+    // Marcar como tocado para efectos visuales
     if (this.pasoActual() === 1) {
-      if (!this.paso1Valido()) {
-        this.stepInfoBasica.marcarTodoComoTocado();
-        this.toastr.warning('Por favor, completa todos los campos requeridos');
-        return;
-      }
+      this.stepAsignarUsuarios.marcarTodoComoTocado();
     }
 
     if (this.pasoActual() === 2) {
-      if (!this.paso2Valido()) {
-        this.stepDetallesTemporales.marcarTodoComoTocado();
-        this.toastr.warning('Por favor, verifica los datos ingresados');
-        return;
-      }
+      this.stepInfoBasica.marcarTodoComoTocado();
     }
 
-    // Paso 3: Atributos (Opcional, pero si hay atributos deben llenarse)
     if (this.pasoActual() === 3) {
-      if (!this.paso3Valido()) {
-        this.stepAtributos.marcarTodoComoTocado();
-        this.toastr.warning(
-          'Por favor, completa los valores de los atributos agregados'
-        );
-        return;
-      }
+      this.stepDetallesTemporales.marcarTodoComoTocado();
     }
 
-    // Paso 4: Asignar Usuarios (Opcional, siempre válido)
     if (this.pasoActual() === 4) {
-      this.stepAsignarUsuarios.marcarTodoComoTocado();
+      this.stepAtributos.marcarTodoComoTocado();
     }
 
     // Avanzar paso
@@ -277,8 +265,9 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
   // ===== GUARDAR Y SALIR (Creación Rápida) =====
 
   async guardarYSalir(): Promise<void> {
-    if (!this.paso1Valido()) {
-      this.toastr.warning('Debes completar el paso 1 para guardar');
+    // Ahora el paso 2 es Info Básica
+    if (!this.paso2Valido()) {
+      this.toastr.warning('Debes completar la información básica para guardar');
       return;
     }
 
@@ -304,7 +293,7 @@ export class CreateActivitiesComponentComponent implements OnInit, OnDestroy {
         oidEstadoActividad: 3, // INCOMPLETA
         horas: 0,
         semanas: 0,
-        oidsUsuarios: [],
+        oidsUsuarios: datos.usuarios, // Incluir usuarios del paso 1
         atributos: [],
       };
 

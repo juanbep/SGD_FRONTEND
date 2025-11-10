@@ -21,37 +21,37 @@
 
   <!-- Contenido del paso actual -->
   <div class="wizard-content card shadow-sm p-4 mb-4">
-    <!-- Paso 1: Información Básica -->
-    <app-step-info-basica
-      *ngIf="pasoActual() === 1"
-      [datos]="datosWizard().infoBasica"
-      (cambio)="alCambiarInfoBasica($event)"
-      (validezCambiada)="alCambiarValidezPaso1($event)"
-    ></app-step-info-basica>
-
-    <!-- Paso 2: Detalles Temporales -->
-    <app-step-detalles-temporales
-      *ngIf="pasoActual() === 2"
-      [datos]="datosWizard().detallesTemporales"
-      (cambio)="alCambiarDetallesTemporales($event)"
-      (validezCambiada)="alCambiarValidezPaso2($event)"
-    ></app-step-detalles-temporales>
-
-    <!-- Paso 3: Atributos Dinámicos -->
-    <app-step-atributos
-      *ngIf="pasoActual() === 3"
-      [atributos]="datosWizard().atributos"
-      (cambio)="alCambiarAtributos($event)"
-      (validezCambiada)="alCambiarValidezPaso3($event)"
-    ></app-step-atributos>
-
-    <!-- Paso 4: Asignar Usuarios -->
+    <!-- Paso 1: Asignar Usuarios (antes era paso 4) -->
     <app-step-asignar-usuarios
-      *ngIf="pasoActual() === 4"
+      *ngIf="pasoActual() === 1"
       [usuariosSeleccionados]="datosWizard().usuarios"
       (cambio)="alCambiarUsuarios($event)"
-      (validezCambiada)="alCambiarValidezPaso4($event)"
+      (validezCambiada)="alCambiarValidezPaso1($event)"
     ></app-step-asignar-usuarios>
+
+    <!-- Paso 2: Información Básica (antes era paso 1) -->
+    <app-step-info-basica
+      *ngIf="pasoActual() === 2"
+      [datos]="datosWizard().infoBasica"
+      (cambio)="alCambiarInfoBasica($event)"
+      (validezCambiada)="alCambiarValidezPaso2($event)"
+    ></app-step-info-basica>
+
+    <!-- Paso 3: Detalles Temporales (antes era paso 2) -->
+    <app-step-detalles-temporales
+      *ngIf="pasoActual() === 3"
+      [datos]="datosWizard().detallesTemporales"
+      (cambio)="alCambiarDetallesTemporales($event)"
+      (validezCambiada)="alCambiarValidezPaso3($event)"
+    ></app-step-detalles-temporales>
+
+    <!-- Paso 4: Atributos Dinámicos (antes era paso 3) -->
+    <app-step-atributos
+      *ngIf="pasoActual() === 4"
+      [atributos]="datosWizard().atributos"
+      (cambio)="alCambiarAtributos($event)"
+      (validezCambiada)="alCambiarValidezPaso4($event)"
+    ></app-step-atributos>
 
     <!-- Paso 5: Revisión y Confirmación -->
     <div *ngIf="pasoActual() === 5" class="text-center py-5">
@@ -84,12 +84,12 @@
         Guardar borrador
       </button>
 
-      <!-- Guardar y Salir (solo paso 1) -->
+      <!-- Guardar y Salir (ahora en paso 2, que es Info Básica) -->
       <button
-        *ngIf="pasoActual() === 1"
+        *ngIf="pasoActual() === 2"
         class="btn btn-warning"
         (click)="guardarYSalir()"
-        [disabled]="!paso1Valido() || enviandoDatos()"
+        [disabled]="!paso2Valido() || enviandoDatos()"
       >
         <i class="fas fa-check-circle me-2"></i>
         Guardar y Salir
