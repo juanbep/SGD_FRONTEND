@@ -54,7 +54,7 @@ export class DetalleCalendarioComponent implements OnInit {
   readonly CAMPOS_EDITABLES = {
     anioCalendario: false, // Año
     numeroCalendario: false, // Periodo
-    estado: false, // Estado
+    estado: true, // Estado
     semanasClase: false, // Semanas clase
     semanasPreparacion: false, // Semanas preparación
     horasPlanta: false, // Horas Planta

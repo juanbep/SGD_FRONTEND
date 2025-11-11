@@ -14,7 +14,6 @@ import { ButtonProvidersComponent } from '../../component/button-providers/butto
   styleUrl: './login-page.component.css',
 })
 export class LoginPageComponent implements OnInit {
-
   private router: Router = inject(Router);
   private authServicesService: AuthServiceService = inject(AuthServiceService);
   private messagesInfoService: MessagesInfoService =
@@ -66,10 +65,15 @@ export class LoginPageComponent implements OnInit {
     (await this.authServicesService.getUserInfoFromBackend()).subscribe({
       next: (response) => {
         this.authServicesService.currentUserValue = response.data;
+        
         this.authServicesService.updateLoginSuccess = true;
 
+        // Guardar los roles
         const roles = response.data.roles.map((role) => role.nombre);
         localStorage.setItem('userRoles', JSON.stringify(roles));
+
+        // Guardar toda la información del usuario
+        localStorage.setItem('userData', JSON.stringify(response.data));
 
         this.router.navigate(['/app/home']);
       },

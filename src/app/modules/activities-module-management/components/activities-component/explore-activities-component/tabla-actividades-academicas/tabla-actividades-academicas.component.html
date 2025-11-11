@@ -26,7 +26,6 @@
             [(ngModel)]="filters.oidCalendario"
             [disabled]="loadingCalendarios"
           >
-            <option value="">Todos los calendarios</option>
             <option *ngIf="loadingCalendarios" disabled>
               Cargando calendarios...
             </option>
@@ -74,17 +73,13 @@
           <label class="form-label fw-bold">
             <i class="fas fa-info-circle me-1"></i>Estado:
           </label>
-          <select
-            class="form-select"
-            [(ngModel)]="filters.oidEstadoActividad"
-            disabled
-          >
+          <select class="form-select" [(ngModel)]="filters.oidEstadoActividad">
             <option value="">Todos los estados</option>
             <option value="1">ACTIVA</option>
             <option value="2">INACTIVA</option>
             <option value="3">INCOMPLETA</option>
           </select>
-          <small class="text-muted">Próximamente</small>
+          <small class="text-muted">Filtrar por estado de la actividad</small>
         </div>
 
         <!-- Filtro por Fecha creación (deshabilitado por ahora) -->

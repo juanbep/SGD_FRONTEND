@@ -24,6 +24,12 @@ import {
 import { EstadoCalendario } from '../../../../../academic-calendar-management/models';
 import { ModalDetalleActividadComponent } from '../modal-detalle-actividad/modal-detalle-actividad.component';
 import { ModalUsuariosComponent } from '../modal-usuarios/modal-usuarios.component';
+import { UserData } from '../../../../../auth/models';
+import {
+  getUserData,
+  getUserDepartmentId,
+  isUserDataAvailable,
+} from '../../../../../auth/utils/user-storage.utils';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
@@ -43,16 +49,14 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   @Output() onEliminar = new EventEmitter<ActividadResponse>();
 
   private actividadesService = inject(ActividadesService);
-  //private actividadHelper = inject(ActividadHelperService);
   private calendarioHelper = inject(CalendarioHelperService);
   private usuarioHelper = inject(UsuarioHelperService);
   private tiposActividadHelper = inject(TiposActividadHelperService);
   private toastr = inject(ToastrService);
 
-  usuario: Usuario | null = null;
+  usuario: UserData | null = null;
 
   actividades: ActividadResponse[] = [];
-  //actividadData!: ActividadResponse;
   loading: boolean = false;
   error: string = '';
   pagination: PaginationConfig = { ...DEFAULT_PAGINATION_CONFIG };
@@ -75,15 +79,15 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   tiposActividadDropdown: { value: number; label: string }[] = [];
   loadingTiposActividad = false;
 
-  // Filtros y paginación
+  // Filtros y paginación - oidCalendario y oidDepartamento son obligatorios
   filters: ActividadFilters = {
     page: 0,
     size: 10,
     searchTerm: '',
-    oidEstadoActividad: '', //validar la asignación
-    oidCalendario: 1,
-    oidDepartamento: 4, //obtener del token del usuario
-    oidTipoActividad: 2,
+    oidEstadoActividad: '',
+    oidCalendario: '',
+    oidDepartamento: undefined,
+    oidTipoActividad: '',
     fechaCreacionDesde: '',
   };
 
@@ -95,15 +99,47 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.loadActividades();
+    this.cargarDatosUsuario(); // Cargar los datos del usuario
     this.loadCalendarios();
     this.loadTiposActividad();
-    //this.getActividadByID(14);
-    //this.cargarUsuario(9);
-    //this.onSomeAction(2);
+
+    // No cargar actividades automáticamente
+    // Solo se cargarán cuando se seleccione un calendario
   }
 
+  // Método para cargar datos del usuario desde localStorage
+  cargarDatosUsuario(): void {
+    if (!isUserDataAvailable()) {
+      this.toastr.error(
+        'No se encontró información del usuario. Por favor, inicie sesión nuevamente.'
+      );
+      return;
+    }
+
+    const oidDepartamento = getUserDepartmentId();
+
+    if (oidDepartamento) {
+      this.filters.oidDepartamento = oidDepartamento;
+      this.usuario = getUserData();
+      console.log('oidDepartamento obtenido:', oidDepartamento);
+    } else {
+      this.toastr.warning('No se pudo obtener el departamento del usuario');
+    }
+  }
+
+  // loadActividades con validación obligatoria
   loadActividades(): void {
+    // Validar que existan los campos obligatorios
+    if (!this.filters.oidCalendario) {
+      this.toastr.warning('Debe seleccionar un calendario');
+      return;
+    }
+
+    if (!this.filters.oidDepartamento) {
+      this.toastr.error('No se pudo obtener el departamento del usuario');
+      return;
+    }
+
     this.loading = true;
     this.error = '';
 
@@ -136,8 +172,31 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   async loadCalendarios(): Promise<void> {
     try {
       this.loadingCalendarios = true;
-      this.calendariosDropdown =
+      const calendariosCompletos =
         await this.calendarioHelper.getAllForDropdown();
+
+      // Filtrar para excluir calendarios con estado DESHABILITADO
+      const calendariosFiltrados = calendariosCompletos.filter(
+        (calendario) => calendario.estado !== 'DESHABILITADO'
+      );
+
+      // Ordenar calendarios por año (de mayor a menor)
+      this.calendariosDropdown =
+        this.ordenarCalendariosPorAnio(calendariosFiltrados);
+
+      // Seleccionar automáticamente el calendario más reciente
+      if (this.calendariosDropdown.length > 0) {
+        this.filters.oidCalendario = this.calendariosDropdown[0].value;
+        console.log(
+          'Calendario seleccionado automáticamente:',
+          this.calendariosDropdown[0].label
+        );
+
+        // Cargar actividades automáticamente si ya tenemos departamento
+        if (this.filters.oidDepartamento) {
+          this.loadActividades();
+        }
+      }
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
       this.toastr.error('Error al cargar la lista de calendarios');
@@ -147,12 +206,48 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
   }
 
+  /**
+   * Función para ordenar calendarios por año (de mayor a menor)
+   * Extrae el año del label y ordena descendentemente
+   * @param calendarios - Array de calendarios a ordenar
+   * @returns Array ordenado por año descendente
+   */
+  private ordenarCalendariosPorAnio(
+    calendarios: { value: number; label: string; estado: EstadoCalendario }[]
+  ): { value: number; label: string; estado: EstadoCalendario }[] {
+    return calendarios.sort((a, b) => {
+      // Extraer el año del label (asume formato como "Calendario 2025", "2025-A", etc.)
+      const anioA = this.extraerAnioDeLabel(a.label);
+      const anioB = this.extraerAnioDeLabel(b.label);
+
+      // Ordenar de mayor a menor (descendente)
+      return anioB - anioA;
+    });
+  }
+
+  /**
+   * Función auxiliar para extraer el año de un string
+   * Busca el primer número de 4 dígitos en el label
+   * @param label - String del que extraer el año
+   * @returns Año encontrado o 0 si no se encuentra
+   */
+  private extraerAnioDeLabel(label: string): number {
+    // Buscar un número de 4 dígitos (patrón de año)
+    const match = label.match(/\b(20\d{2}|19\d{2})\b/);
+    return match ? parseInt(match[0], 10) : 0;
+  }
+
   // Método para cargar tipos de actividad en el dropdown
   async loadTiposActividad(): Promise<void> {
     try {
       this.loadingTiposActividad = true;
-      this.tiposActividadDropdown =
+      const tiposCompletos =
         await this.tiposActividadHelper.getAllForDropdown();
+
+      // Filtrar para excluir el tipo con oid = 9
+      this.tiposActividadDropdown = tiposCompletos.filter(
+        (tipo) => tipo.value !== 9
+      );
     } catch (error) {
       console.error('Error al cargar tipos de actividad:', error);
       this.toastr.error('Error al cargar la lista de tipos de actividad');
@@ -163,7 +258,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   }
 
   eliminarActividad(actividadData: ActividadResponse): void {
-    this.onEliminar.emit(actividadData); // ← Emite el evento con los datos
+    this.onEliminar.emit(actividadData);
   }
 
   // FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES
@@ -173,40 +268,44 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loadActividades();
   }
 
+  // limpiarFiltros modificado para mantener oidDepartamento
   limpiarFiltros(): void {
+    const oidDepartamento = this.filters.oidDepartamento; // ← Guardar departamento
+
     this.filters = {
       page: 0,
       size: this.filters.size,
       oidCalendario: '',
       oidTipoActividad: '',
-      oidEstadoActividad: '', //validar la asignación
+      oidEstadoActividad: '',
       fechaCreacionDesde: '',
       searchTerm: '',
+      oidDepartamento: oidDepartamento,
     };
-    this.loadActividades();
+
+    this.actividades = [];
+    this.toastr.info(
+      'Filtros limpiados. Seleccione un calendario para buscar.'
+    );
   }
 
   // MODALES
 
-  // Método par abrir el modal de vista detallada
   abrirModalDetalles(actividad: ActividadResponse): void {
     this.actividadSeleccionada = actividad;
     this.mostrarModalDetalles = true;
   }
 
-  // Método para cerrar el modal de vista detallada
   cerrarModalDetalles(): void {
     this.mostrarModalDetalles = false;
     this.actividadSeleccionada = null;
   }
 
-  // Método para abrir el modal de usuarios
   abrirModalUsuarios(usuarios: any[]): void {
     this.usuariosSeleccionados = usuarios.map((u) => u.oidUsuario);
     this.mostrarModalUsuarios = true;
   }
 
-  // Método para cerrar el modal de usuarios
   cerrarModalUsuarios(): void {
     this.mostrarModalUsuarios = false;
     this.usuariosSeleccionados = [];
@@ -265,7 +364,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     return item.actividad.oidActividad;
   }
 
-  // Método para obtener el badge class del estado del calendario
   getCalendarioEstadoBadgeClass(estado: EstadoCalendario): string {
     switch (estado) {
       case 'ACTIVO':
@@ -279,13 +377,11 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
   }
 
-  // Método para obetener el estado de una actividad según su ID
   getEstadoNombre(oidEstado: number): string {
     const estado = this.estados.find((e) => e.oid === oidEstado);
     return estado ? estado.nombre : 'DESCONOCIDO';
   }
 
-  // Método para aplicar estilos según el estado de una actividad
   getEstadoBadgeClass(oidEstado: number): string {
     const estado = this.estados.find((e) => e.oid === oidEstado);
     return estado ? estado.class : 'bg-secondary';

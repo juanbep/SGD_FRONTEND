@@ -65,6 +65,7 @@ export class AuthServiceService {
       localStorage.removeItem('loggedInUser');
       localStorage.removeItem('token');
       localStorage.removeItem('userRoles');
+      localStorage.removeItem('userData');
       localStorage.removeItem('originalToken');
       this._currentUser.set(null);
       this.loginSuccess$.update(() => false);
