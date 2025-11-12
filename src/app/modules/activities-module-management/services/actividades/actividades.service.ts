@@ -100,7 +100,10 @@ export class ActividadesService {
       filters.oidEstadoActividad !== null &&
       filters.oidEstadoActividad !== ''
     ) {
-      params = params.set('estado', filters.oidEstadoActividad.toString());
+      params = params.set(
+        'oidEstadoActividad',
+        filters.oidEstadoActividad.toString()
+      );
     }
     if (
       filters.oidCalendario !== undefined &&

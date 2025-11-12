@@ -17,8 +17,8 @@ import { Subject, takeUntil, forkJoin, of, catchError } from 'rxjs';
 import {
   Usuario,
   UsuarioFilters,
-} from '../../../../../users-roles-management/models';
-import { UsuarioService } from '../../../../../users-roles-management/services';
+} from '../../../../../sgd-users-management/models';
+import { UsuarioService } from '../../../../../sgd-users-management//services';
 import { UsuarioCarouselComponent } from '../../../../components/activities-component/explore-activities-component/usuario-carousel/usuario-carousel.component';
 
 @Component({

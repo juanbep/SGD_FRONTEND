@@ -11,10 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../../../services/actividades/actividades.service';
 import { ActividadHelperService } from '../../../../services/actividades/actividad-helper.service';
 import { CalendarioHelperService } from '../../../../../academic-calendar-management/services/calendario/calendario-helper.service';
-import { UsuarioHelperService } from '../../../../../users-roles-management/services/users/usuario-helper.service';
+import { UsuarioHelperService } from '../../../../../sgd-users-management//services/users/usuario-helper.service';
 import { TiposActividadHelperService } from '../../../../services/tiposActividades/tipos-actividad-helper.service';
 import { ToastrService } from 'ngx-toastr';
-import { Usuario } from '../../../../../users-roles-management/models';
+import { Usuario } from '../../../../../sgd-users-management//models';
 import {
   ActividadFilters,
   PaginationConfig,
