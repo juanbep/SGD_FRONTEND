@@ -238,7 +238,7 @@ export class SideBarV2Component implements OnInit, OnChanges {
           ],
           icon: 'fas fa-lock',
           label: 'Gestionar Necesidades',
-          url: '#',
+          url: '/app/gestion-necesidades',
         },
         {
           role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
