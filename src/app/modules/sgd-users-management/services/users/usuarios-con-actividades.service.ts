@@ -12,7 +12,7 @@ import { environment } from '../../../../../environments/environments_sgd';
   providedIn: 'root',
 })
 export class UsuariosConActividadesService {
-  private readonly apiUrl = `${environment.baseUrl}/usuarios-con-actividades`;
+  private readonly apiUrl = `${environment.baseUrl}/departamentos/usuarios/actividades`;
 
   constructor(private http: HttpClient) {}
 
@@ -60,6 +60,10 @@ export class UsuariosConActividadesService {
       );
     }
 
+    if (filters.filtro?.trim()) {
+      params = params.set('filtro', filters.filtro.trim());
+    }
+
     // Filtros por detalles
     if (filters.facultad?.trim()) {
       params = params.set('facultad', filters.facultad.trim());
@@ -88,14 +92,6 @@ export class UsuariosConActividadesService {
     }
     if (filters.maxHorasActividades !== undefined) {
       params = params.set('maxHoras', filters.maxHorasActividades.toString());
-    }
-
-    // Ordenamiento
-    if (filters.sortBy) {
-      params = params.set('sort', filters.sortBy);
-    }
-    if (filters.sortDirection) {
-      params = params.set('direction', filters.sortDirection);
     }
 
     return params;

@@ -80,6 +80,7 @@ export interface ActividadFilters {
   oidTipoActividad?: string | number;
   oidCalendario?: string | number;
   oidDepartamento?: string | number;
+  oidUsuarioResponsable?: number | string; 
 
   // Filtros por rangos numéricos
   horasMin?: number;

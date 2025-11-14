@@ -9,12 +9,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../../../services/actividades/actividades.service';
-import { ActividadHelperService } from '../../../../services/actividades/actividad-helper.service';
 import { CalendarioHelperService } from '../../../../../academic-calendar-management/services/calendario/calendario-helper.service';
 import { UsuarioHelperService } from '../../../../../sgd-users-management//services/users/usuario-helper.service';
 import { TiposActividadHelperService } from '../../../../services/tiposActividades/tipos-actividad-helper.service';
 import { ToastrService } from 'ngx-toastr';
-import { Usuario } from '../../../../../sgd-users-management//models';
 import {
   ActividadFilters,
   PaginationConfig,
@@ -30,6 +28,8 @@ import {
   getUserDepartmentId,
   isUserDataAvailable,
 } from '../../../../../auth/utils/user-storage.utils';
+import { UsuariosConActividadesHelperService } from '../../../../../sgd-users-management/services';
+import { UsuariosConActividadesFilters } from '../../../../../sgd-users-management/models';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
@@ -50,8 +50,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
   private actividadesService = inject(ActividadesService);
   private calendarioHelper = inject(CalendarioHelperService);
-  private usuarioHelper = inject(UsuarioHelperService);
   private tiposActividadHelper = inject(TiposActividadHelperService);
+  private usuariosConActividadesHelper = inject(
+    UsuariosConActividadesHelperService
+  );
   private toastr = inject(ToastrService);
 
   usuario: UserData | null = null;
@@ -79,6 +81,12 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   tiposActividadDropdown: { value: number; label: string }[] = [];
   loadingTiposActividad = false;
 
+  // Lista de usuarios para el dropdown filtro responsables
+  usuariosDropdown: { value: number; label: string }[] = [];
+  loadingUsuarios = false;
+
+  filtroResponsable: string = '';
+
   // Filtros y paginación - oidCalendario y oidDepartamento son obligatorios
   filters: ActividadFilters = {
     page: 0,
@@ -99,12 +107,14 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.cargarDatosUsuario(); // Cargar los datos del usuario
+    this.cargarDatosUsuario();
     this.loadCalendarios();
     this.loadTiposActividad();
 
-    // No cargar actividades automáticamente
-    // Solo se cargarán cuando se seleccione un calendario
+    // Cargar usuarios solo si se obtuvo el departamento
+    if (this.filters.oidDepartamento) {
+      this.loadUsuarios();
+    }
   }
 
   // Método para cargar datos del usuario desde localStorage
@@ -129,7 +139,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
   // loadActividades con validación obligatoria
   loadActividades(): void {
-    // Validar que existan los campos obligatorios
     if (!this.filters.oidCalendario) {
       this.toastr.warning('Debe seleccionar un calendario');
       return;
@@ -143,7 +152,16 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.actividadesService.getActividades(this.filters).subscribe({
+    const filtrosCompletos = {
+      ...this.filters,
+      ...(this.filtroResponsable
+        ? { oidUsuarioResponsable: this.filtroResponsable }
+        : {}),
+    };
+
+    console.log('Filtros enviados al servicio:', filtrosCompletos);
+
+    this.actividadesService.getActividades(filtrosCompletos).subscribe({
       next: (response) => {
         if (response.codigo === 200) {
           this.actividades = response.data.content;
@@ -203,6 +221,44 @@ export class TablaActividadesAcademicasComponent implements OnInit {
       this.calendariosDropdown = [];
     } finally {
       this.loadingCalendarios = false;
+    }
+  }
+
+  /**
+   * Carga los usuarios con actividades del departamento para el dropdown
+   */
+  async loadUsuarios(): Promise<void> {
+    try {
+      this.loadingUsuarios = true;
+
+      const oidDepartamento = this.filters.oidDepartamento;
+
+      if (!oidDepartamento) {
+        console.warn('No se puede cargar usuarios: falta oidDepartamento');
+        this.usuariosDropdown = [];
+        return;
+      }
+
+      const filtros: UsuariosConActividadesFilters = {
+        oidDepartamento,
+        filtro: 'NO_DOCENCIA',
+      };
+
+      const usuariosDepartamento =
+        await this.usuariosConActividadesHelper.getAll(filtros);
+
+      this.usuariosDropdown = usuariosDepartamento.map((ud) => ({
+        value: ud.usuario.oidUsuario,
+        label: `${ud.usuario.nombres} ${ud.usuario.apellidos}`.trim(),
+      }));
+
+      console.log(`Usuarios cargados: ${this.usuariosDropdown.length}`);
+    } catch (error) {
+      console.error('Error al cargar usuarios del departamento:', error);
+      this.toastr.error('Error al cargar la lista de usuarios responsables');
+      this.usuariosDropdown = [];
+    } finally {
+      this.loadingUsuarios = false;
     }
   }
 
@@ -270,7 +326,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
   // limpiarFiltros modificado para mantener oidDepartamento
   limpiarFiltros(): void {
-    const oidDepartamento = this.filters.oidDepartamento; // ← Guardar departamento
+    const oidDepartamento = this.filters.oidDepartamento;
 
     this.filters = {
       page: 0,
@@ -282,6 +338,9 @@ export class TablaActividadesAcademicasComponent implements OnInit {
       searchTerm: '',
       oidDepartamento: oidDepartamento,
     };
+
+    // Limpiar filtro local de responsable
+    this.filtroResponsable = '';
 
     this.actividades = [];
     this.toastr.info(

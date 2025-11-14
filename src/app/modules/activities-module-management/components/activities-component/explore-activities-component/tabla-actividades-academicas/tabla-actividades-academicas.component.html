@@ -82,6 +82,36 @@
           <small class="text-muted">Filtrar por estado de la actividad</small>
         </div>
 
+        <!-- Filtro por Responsable -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label class="form-label fw-bold">
+            <i class="fas fa-user me-1"></i>Responsable:
+          </label>
+          <select
+            class="form-select"
+            [(ngModel)]="filtroResponsable"
+            [disabled]="loadingUsuarios || !filters.oidDepartamento"
+          >
+            <option value="">Todos los responsables</option>
+            <option *ngIf="loadingUsuarios" disabled>
+              Cargando usuarios...
+            </option>
+            <option
+              *ngIf="!loadingUsuarios && usuariosDropdown.length === 0"
+              disabled
+            >
+              No hay usuarios disponibles
+            </option>
+            <option
+              *ngFor="let usuario of usuariosDropdown"
+              [value]="usuario.value"
+            >
+              {{ usuario.label }}
+            </option>
+          </select>
+          <small class="text-muted">Filtrar por usuario responsable</small>
+        </div>
+
         <!-- Filtro por Fecha creación (deshabilitado por ahora) -->
         <div class="col-xl-2 col-lg-3 col-md-6">
           <label class="form-label fw-bold">
@@ -125,13 +155,17 @@
             <button
               type="button"
               class="btn btn-outline-secondary"
-              (click)="loadCalendarios(); loadTiposActividad()"
-              [disabled]="loadingCalendarios || loadingTiposActividad"
+              (click)="loadCalendarios(); loadTiposActividad(); loadUsuarios()"
+              [disabled]="
+                loadingCalendarios || loadingTiposActividad || loadingUsuarios
+              "
               title="Recargar filtros"
             >
               <i
                 class="fas fa-sync-alt"
-                [class.fa-spin]="loadingCalendarios || loadingTiposActividad"
+                [class.fa-spin]="
+                  loadingCalendarios || loadingTiposActividad || loadingUsuarios
+                "
               ></i>
             </button>
           </div>
@@ -141,9 +175,9 @@
       <!-- Mensaje informativo para tipos -->
       <div class="alert alert-info mt-3 mb-0" role="alert">
         <i class="fas fa-info-circle me-2"></i>
-        <strong>Disponibles:</strong> Filtros por Calendario y Tipo de
-        Actividad. <strong>Próximamente:</strong> Estado, Fecha de Creación y
-        Búsqueda por nombre.
+        <strong>Disponibles:</strong> Filtros por Calendario, Tipo de Actividad
+        y Responsable. <strong>Próximamente:</strong> Estado, Fecha de Creación
+        y Búsqueda por nombre.
       </div>
     </div>
   </div>

@@ -14,8 +14,11 @@ export interface UsuariosConActividadesFilters {
   apellidos?: string;
 
   // Filtros por departamento
-  oidDepartamento?: number;
+  oidDepartamento?: string | number;
   nombreDepartamento?: string;
+
+  // Filtro específico
+  filtro?: string;
 
   // Filtros por detalles de usuario
   facultad?: string;
@@ -30,11 +33,9 @@ export interface UsuariosConActividadesFilters {
   // Filtros por horas
   minHorasActividades?: number;
   maxHorasActividades?: number;
-
-  // Ordenamiento
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
 }
 
 // Tipo de respuesta API (sin paginación)
-export type UsuariosConActividadesResponse = BaseResponse<UsuarioDepartamento[]>;
+export type UsuariosConActividadesResponse = BaseResponse<
+  UsuarioDepartamento[]
+>;

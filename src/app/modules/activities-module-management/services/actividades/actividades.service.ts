@@ -74,7 +74,6 @@ export class ActividadesService {
       .pipe(catchError(this.handleError));
   }
 
-  // FILTROS
   private buildHttpParams(filters: ActividadFilters): HttpParams {
     let params = new HttpParams();
 
@@ -130,6 +129,18 @@ export class ActividadesService {
       params = params.set(
         'oidTipoActividad',
         filters.oidTipoActividad.toString()
+      );
+    }
+
+    // Filtro por Usuario Responsable
+    if (
+      filters.oidUsuarioResponsable !== undefined &&
+      filters.oidUsuarioResponsable !== null &&
+      filters.oidUsuarioResponsable !== ''
+    ) {
+      params = params.set(
+        'oidUsuarioResponsable',
+        filters.oidUsuarioResponsable.toString()
       );
     }
 
