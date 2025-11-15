@@ -154,8 +154,9 @@
   font-weight: 700;
 }
 
+/* Ícono del título en amarillo */
 .modal-header .modal-title i {
-  color: #ffffff !important;
+  color: #f8ae15 !important;
 }
 
 .btn-close-white {
@@ -168,7 +169,6 @@
 
 .modal-body .list-group-item {
   border-color: #dee2e6;
-  transition: all 0.3s ease;
 }
 
 .modal-body .list-group-item:hover {
