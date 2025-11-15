@@ -26,7 +26,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from '../../../utils/calendario.utils';
 
-// Tipo para las opciones de tipo de fecha
 export type TipoFecha =
   | 'TODAS'
   | 'RESALTADAS'
@@ -44,14 +43,13 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
 
-  // ===== INPUTS/OUTPUTS =====
   @Input() visible: boolean = false;
   @Input() listaNombreFechas: {
     value: number;
     label: string;
     tieneTemplate: boolean;
     uniqueDate: boolean;
-    tipo?: TipoFecha; // Agregar tipo al modelo (opcional por compatibilidad)
+    tipo?: TipoFecha;
   }[] = [];
   @Input() oidCalendario: number = 0;
   @Input() guardando: boolean = false;
@@ -61,7 +59,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   @Output() onCancelar = new EventEmitter<void>();
   @Output() onCrearNombreFecha = new EventEmitter<CreateNombreFechaDto>();
 
-  // ===== CONSTANTES =====
   readonly TIPOS_FECHA: { value: TipoFecha; label: string }[] = [
     { value: 'TODAS', label: 'Todas' },
     { value: 'RESALTADAS', label: 'Resaltadas' },
@@ -69,25 +66,17 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     { value: 'ADMINISTRATIVAS', label: 'Administrativas' },
   ];
 
-  // ===== SIGNALS =====
   readonly nombreFechaSeleccionado = signal<number | null>(null);
   readonly tipoFechaFiltro = signal<TipoFecha>('TODAS');
   readonly fechaActual = signal<Fecha | null>(null);
   readonly vistaActual = signal<'fecha' | 'crearNombre'>('fecha');
+  readonly nombreFechaSeleccionadoLabel = signal<string>('');
 
-  // ===== COMPUTED =====
-  // Filtrar nombres de fecha según el tipo seleccionado
   readonly nombresFechaFiltrados = computed(() => {
     const tipoFiltro = this.tipoFechaFiltro();
-
-    // Si es 'TODAS', mostrar todos
     if (tipoFiltro === 'TODAS') {
       return this.listaNombreFechas;
     }
-
-    // TODO: Cuando el backend esté listo, esta lógica se reemplazará
-    // por una llamada al endpoint con el parámetro de tipo
-    // Por ahora filtramos localmente si existe la propiedad 'tipo'
     return this.listaNombreFechas.filter(
       (item) => !item.tipo || item.tipo === tipoFiltro
     );
@@ -124,9 +113,9 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     return this.modoEdicion() ? 'fa-edit' : 'fa-calendar-plus';
   });
 
-  // ===== FORMULARIOS =====
   fechaForm!: FormGroup;
   nombreFechaForm!: FormGroup;
+  mostrarDropdownNombre = false;
 
   ngOnInit(): void {
     this.inicializarFormularios();
@@ -153,31 +142,24 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       this.resetearFormulario();
     }
 
-    // Controlar disabled state cuando cambia guardando
     if (changes['guardando']) {
       this.actualizarEstadoDisabled();
     }
   }
 
-  // Método para actualizar estado disabled de los FormControls
   private actualizarEstadoDisabled(): void {
-    // Verificar que los formularios estén inicializados
     if (!this.fechaForm || !this.nombreFechaForm) {
       return;
     }
 
     if (this.guardando) {
-      // Deshabilitar controles del formulario de fecha
       this.fechaForm.get('tipoFecha')?.disable({ emitEvent: false });
       this.fechaForm.get('oidNombreFecha')?.disable({ emitEvent: false });
       this.fechaForm.get('fechaInicial')?.disable({ emitEvent: false });
       this.fechaForm.get('fechaFin')?.disable({ emitEvent: false });
-
-      // Deshabilitar controles del formulario de nombre de fecha
       this.nombreFechaForm.get('nombre')?.disable({ emitEvent: false });
       this.nombreFechaForm.get('uniqueDate')?.disable({ emitEvent: false });
     } else {
-      // Si está en modo edición, tipoFecha y oidNombreFecha siempre deshabilitados
       if (this.modoEdicion()) {
         this.fechaForm.get('tipoFecha')?.disable({ emitEvent: false });
         this.fechaForm.get('oidNombreFecha')?.disable({ emitEvent: false });
@@ -188,15 +170,12 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
       this.fechaForm.get('fechaInicial')?.enable({ emitEvent: false });
       this.fechaForm.get('fechaFin')?.enable({ emitEvent: false });
-
-      // Habilitar controles del formulario de nombre de fecha
       this.nombreFechaForm.get('nombre')?.enable({ emitEvent: false });
       this.nombreFechaForm.get('uniqueDate')?.enable({ emitEvent: false });
     }
   }
 
   private inicializarFormularios(): void {
-    // Formulario para agregar/editar fecha
     this.fechaForm = this.fb.group({
       tipoFecha: ['TODAS', Validators.required],
       oidNombreFecha: [null, Validators.required],
@@ -204,17 +183,16 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       fechaFin: [null],
     });
 
-    // Observar cambios en el tipo de fecha para filtrar
     this.fechaForm
       .get('tipoFecha')
       ?.valueChanges.subscribe((tipo: TipoFecha) => {
         this.tipoFechaFiltro.set(tipo);
-        // Resetear nombre de fecha cuando cambia el filtro
         this.fechaForm.patchValue(
           { oidNombreFecha: null },
           { emitEvent: false }
         );
         this.nombreFechaSeleccionado.set(null);
+        this.nombreFechaSeleccionadoLabel.set('');
       });
 
     this.fechaForm.get('oidNombreFecha')?.valueChanges.subscribe((oid) => {
@@ -222,7 +200,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       this.ajustarValidacionesFecha(oid ? Number(oid) : null);
     });
 
-    // Formulario para crear nombre de fecha
     this.nombreFechaForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       uniqueDate: ['true', Validators.required],
@@ -237,7 +214,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       ? this.extraerSoloFecha(fecha.fechaFin.toString())
       : null;
 
-    // Cargar tipo de fecha si existe
     const tipoFecha = (fecha as any).tipo || 'RESALTADAS';
 
     this.fechaForm.patchValue({
@@ -248,6 +224,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     });
 
     this.tipoFechaFiltro.set(tipoFecha);
+    this.nombreFechaSeleccionadoLabel.set(fecha.nombre);
   }
 
   private extraerSoloFecha(fechaDateTime: string): string {
@@ -265,6 +242,12 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     }
 
     fechaFinControl?.updateValueAndValidity();
+  }
+
+  seleccionarNombreFecha(item: any): void {
+    this.nombreFechaControl?.setValue(item.value);
+    this.nombreFechaSeleccionadoLabel.set(item.label);
+    this.mostrarDropdownNombre = false;
   }
 
   cambiarAVistaCrearNombre(): void {
@@ -322,7 +305,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       return;
     }
 
-    // Conversión de string a boolean
     const uniqueDateValue = this.nombreFechaForm.value.uniqueDate;
     const uniqueDateBoolean =
       uniqueDateValue === 'true' || uniqueDateValue === true;
@@ -335,27 +317,12 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     this.onCrearNombreFecha.emit(createDto);
   }
 
-  selectTipoFecha(value: number): void {
-    this.fechaForm.patchValue({ oidNombreFecha: value });
-  }
-
-  getSelectedLabel(): string {
-    const value = this.nombreFechaControl?.value;
-    if (!value) return '';
-
-    const selected = this.nombresFechaFiltrados().find(
-      (item) => item.value === Number(value)
-    );
-    return selected?.label || '';
-  }
-
   private resetearFormulario(): void {
     this.nombreFechaSeleccionado.set(null);
+    this.nombreFechaSeleccionadoLabel.set('');
     this.tipoFechaFiltro.set('TODAS');
     this.fechaActual.set(null);
     this.vistaActual.set('fecha');
-    //this.fechaForm.reset();
-    //this.nombreFechaForm.reset({ uniqueDate: 'true' });
   }
 
   cancelar(): void {
@@ -368,7 +335,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     this.onCancelar.emit();
   }
 
-  // ===== GETTERS =====
   get tipoFechaControl() {
     return this.fechaForm.get('tipoFecha');
   }

@@ -1,72 +1,250 @@
-/* Custom dropdown styles */
-.custom-dropdown-menu {
-  max-height: 300px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  width: 100% !important;
+.btn i,
+.btn .spinner-border {
+  color: inherit !important;
 }
 
-.custom-dropdown-item {
-  white-space: normal;
-  word-wrap: break-word;
-  line-height: 1.5;
-  padding: 10px 16px;
-  cursor: pointer;
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
-.custom-dropdown-item:hover {
+.modal-content {
+  animation: slideDown 0.3s ease-out;
+  border: none !important;
+  border-radius: 0.5rem;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  background-color: #001282 !important;
+  border-bottom: 2px solid #0051c6;
+}
+
+.modal-header .modal-title {
+  color: white !important;
+  font-weight: 700;
+}
+
+.modal-header .modal-title i {
+  color: #f8ae15 !important;
+}
+
+.btn-close-white {
+  filter: brightness(0) invert(1);
+}
+
+.modal-body {
   background-color: #f8f9fa;
 }
 
-.custom-dropdown-item.active {
-  background-color: #0d6efd;
-  color: white;
+.form-label.fw-bold {
+  color: #001282 !important;
+  font-weight: 600;
 }
 
-.custom-dropdown-menu::-webkit-scrollbar {
-  width: 8px;
+.form-label i {
+  color: #0051c6 !important;
 }
 
-.custom-dropdown-menu::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+.form-control:focus,
+.form-select:focus {
+  border-color: #f8ae15 !important;
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
 }
 
-.custom-dropdown-menu::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+  border-color: #ad0000 !important;
+  box-shadow: 0 0 0 0.25rem rgba(173, 0, 0, 0.25) !important;
 }
 
-.custom-dropdown-menu::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.form-control.bg-light {
+  background-color: #e9ecef !important;
+  cursor: not-allowed;
 }
 
-.custom-dropdown-menu {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
+.invalid-feedback {
+  color: #ad0000 !important;
+  font-size: 0.875rem;
 }
 
-.dropdown-toggle {
-  min-height: 38px;
+.form-text.text-muted {
+  font-size: 0.875rem;
 }
 
-.dropdown-toggle.is-invalid {
-  border-color: #dc3545;
+.alert-info {
+  background-color: rgba(22, 168, 225, 0.08) !important;
+  border-left: 4px solid #16a8e1 !important;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  color: #004085 !important;
 }
 
-/* Estilo para dropdown deshabilitado */
-.dropdown-toggle::after {
-  content: none;
+.alert-info i {
+  color: #16a8e1 !important;
+  flex-shrink: 0;
 }
 
-.cursor-pointer {
-  cursor: pointer;
+.alert-info strong {
+  color: #001282 !important;
 }
 
-.form-check-label {
-  user-select: none; /* Evita selección de texto al hacer doble clic */
+.btn-outline-success {
+  border-color: #249337 !important;
+  color: #249337 !important;
+  background-color: transparent !important;
+  font-weight: 600;
+}
+
+.btn-outline-success:hover:not(:disabled) {
+  background-color: #249337 !important;
+  border-color: #249337 !important;
+  color: white !important;
+}
+
+.btn-outline-success:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-check-input:checked {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+}
+
+.form-check-input:focus {
+  border-color: #f8ae15 !important;
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
 }
 
 .form-check:hover .form-check-label {
-  color: #0d6efd;
+  color: #0051c6 !important;
+}
+
+.form-check-label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem 1.5rem;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.modal-footer .btn-secondary:hover:not(:disabled) {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+}
+
+.modal-footer .btn-primary {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.modal-footer .btn-primary:hover:not(:disabled) {
+  background-color: #003d99 !important;
+  border-color: #003d99 !important;
+}
+
+.modal-footer .btn-primary:disabled,
+.modal-footer .btn-success:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modal-footer .btn-success {
+  background-color: #249337 !important;
+  border-color: #249337 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.modal-footer .btn-success:hover:not(:disabled) {
+  background-color: #1e7a2d !important;
+  border-color: #1e7a2d !important;
+}
+
+.modal-backdrop.show {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content.shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 18, 130, 0.3) !important;
+}
+
+.custom-select-container {
+  position: relative;
+}
+
+.custom-select-container .form-select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+.dropdown-opciones {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 250px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #0051c6;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  z-index: 1050;
+  margin-top: 0.25rem;
+}
+
+.dropdown-opciones .opcion {
+  padding: 0.75rem;
+  cursor: pointer;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.dropdown-opciones .opcion:hover {
+  background-color: rgba(0, 81, 198, 0.1);
+}
+
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-body {
+    padding: 1rem !important;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
 }
