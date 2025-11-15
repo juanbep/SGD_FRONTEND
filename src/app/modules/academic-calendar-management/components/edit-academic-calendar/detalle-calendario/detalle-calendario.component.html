@@ -1,9 +1,9 @@
-<div class="card shadow-sm" *ngIf="calendario">
-  <div
-    class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
-    style="background-color: #000066"
-  >
-    <span>Información general del calendario</span>
+<div class="card shadow-sm detalle-calendario-card" *ngIf="calendario">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fw-bold d-flex align-items-center">
+      <i class="fas fa-info-circle me-2"></i>
+      Información general del calendario
+    </h5>
 
     <ng-container *ngIf="!modoEdicion(); else botonesEdicion">
       <button class="btn btn-light btn-sm" (click)="activarModoEdicion()">
@@ -38,7 +38,7 @@
     </ng-template>
   </div>
 
-  <div class="card-body table-responsive">
+  <div class="card-body table-responsive p-0">
     <table
       class="table table-bordered text-center align-middle mb-0"
       style="table-layout: fixed"
@@ -206,43 +206,6 @@
             <ng-template #sinActualizacion>-</ng-template>
           </td>
         </tr>
-
-        <!-- ========== CAMPOS OCULTOS (MANTENER PARA USO FUTURO) ========== -->
-        <!-- 
-        <tr class="table-light fw-bold">
-          <td>Horas Cátedra</td>
-          <td colspan="2">Horas Becario/Practicante</td>
-        </tr>
-        <tr [formGroup]="calendarioForm">
-          <td>
-            <ng-container *ngIf="!esCampoEditable('horasCatedra'); else editarHorasCatedra">
-              {{ calendario.horasCatedra ?? "-" }}
-            </ng-container>
-            <ng-template #editarHorasCatedra>
-              <input
-                type="number"
-                class="form-control form-control-sm text-center"
-                formControlName="horasCatedra"
-                min="0"
-              />
-            </ng-template>
-          </td>
-          <td colspan="2">
-            <ng-container *ngIf="!esCampoEditable('horasBecarioPracticante'); else editarHorasBecario">
-              {{ calendario.horasBecarioPracticante ?? "-" }}
-            </ng-container>
-            <ng-template #editarHorasBecario>
-              <input
-                type="number"
-                class="form-control form-control-sm text-center"
-                formControlName="horasBecarioPracticante"
-                min="0"
-              />
-            </ng-template>
-          </td>
-        </tr>
-        -->
-        <!-- ============================================================== -->
 
         <!-- Fila 4: Observación -->
         <tr class="table-light fw-bold text-start">

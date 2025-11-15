@@ -1,91 +1,78 @@
-/* =====================================================
-   COLORES INSTITUCIONALES - UNIVERSIDAD DEL CAUCA
-   Personalización sobre Bootstrap 5
-   ===================================================== */
+.btn i,
+.btn .spinner-border {
+  color: inherit !important;
+}
 
-/* ===== CARD HEADERS ===== */
 .card-header {
-  background-color: #001282 !important; /* Azul Principal */
+  background-color: #001282 !important;
   color: white !important;
 }
 
 .card-header h6,
-.card-header .btn {
-  color: white !important;
-}
-
-/* Texto auxiliar en header (por página) */
+.card-header .btn,
 .card-header .text-muted,
 .card-header .small.text-muted {
   color: white !important;
 }
 
-/* ===== BADGES ===== */
-/* Badge de contador principal - más visible */
 .badge.bg-primary {
-  background-color: #f8ae15 !important; /* Amarillo - alta visibilidad */
+  background-color: #f8ae15 !important;
   color: #212529 !important;
   font-weight: 700;
   padding: 0.4em 0.65em;
 }
 
-/* Badges de estado */
 .badge.bg-warning {
-  background-color: #f8ae15 !important; /* Amarillo - PENDIENTE */
+  background-color: #f8ae15 !important;
   color: #212529 !important;
 }
 
 .badge.bg-success {
-  background-color: #249337 !important; /* Verde Agua - ACTIVO */
+  background-color: #249337 !important;
   color: white !important;
 }
 
 .badge.bg-info {
-  background-color: #16a8e1 !important; /* Cian Claro - APROBADO */
+  background-color: #16a8e1 !important;
   color: white !important;
 }
 
 .badge.bg-secondary {
-  background-color: #6c757d !important; /* Gris - DESHABILITADO */
+  background-color: #6c757d !important;
   color: white !important;
 }
 
-/* Badge de periodo - mejor contraste */
 .badge.bg-light.text-dark {
-  background-color: #0051c6 !important; /* Azul Medio */
+  background-color: #0051c6 !important;
   color: white !important;
   border: none;
   font-weight: 600;
 }
 
-/* ===== BOTONES ===== */
-/* Botón Limpiar - Contraste claro */
 .btn-outline-secondary {
-  border-color: #0051c6 !important; /* Azul Medio */
+  border-color: #0051c6 !important;
   color: #0051c6 !important;
   background-color: transparent !important;
 }
 
 .btn-outline-secondary:hover:not(:disabled) {
-  background-color: #f8ae15 !important; /* Amarillo - contraste fuerte */
+  background-color: #f8ae15 !important;
   border-color: #f8ae15 !important;
   color: #212529 !important;
 }
 
-/* Botón Actualizar en header - Contraste blanco sobre azul */
 .btn-link.text-primary {
-  color: white !important; /* Blanco sobre fondo azul */
+  color: white !important;
   text-decoration: none !important;
 }
 
 .btn-link.text-primary:hover {
-  color: #f8ae15 !important; /* Amarillo - contraste claro con azul */
+  color: #f8ae15 !important;
   text-decoration: none !important;
 }
 
-/* Botones de acción en tabla */
 .btn-outline-success {
-  border-color: #249337 !important; /* Verde Agua */
+  border-color: #249337 !important;
   color: #249337 !important;
   background-color: transparent !important;
 }
@@ -97,7 +84,7 @@
 }
 
 .btn-outline-primary {
-  border-color: #0051c6 !important; /* Azul Medio */
+  border-color: #0051c6 !important;
   color: #0051c6 !important;
   background-color: transparent !important;
 }
@@ -108,9 +95,8 @@
   color: white !important;
 }
 
-/* Botón eliminar */
 .btn-outline-danger {
-  border-color: #ad0000 !important; /* Rojo Secundario */
+  border-color: #ad0000 !important;
   color: #ad0000 !important;
   background-color: transparent !important;
 }
@@ -121,64 +107,51 @@
   color: white !important;
 }
 
-/* ===== ALERTAS ===== */
-.alert-info {
-  background-color: rgba(22, 168, 225, 0.1) !important; /* Cian Claro suave */
-  border-color: #16a8e1 !important;
-  color: #004085 !important;
-  border-left: 4px solid #16a8e1 !important;
-}
-
-.alert-info .fas.fa-info-circle {
-  color: #16a8e1 !important;
-}
-
-.alert-info strong {
-  color: #001282 !important; /* Azul Principal */
-}
-
-/* ===== TABLA ===== */
 .table thead th {
-  color: #001282 !important; /* Azul Principal */
+  color: #001282 !important;
 }
 
 .table thead th .fas {
-  color: #0051c6 !important; /* Azul Medio */
+  color: #0051c6 !important;
 }
 
 .table-hover tbody tr:hover {
-  background-color: rgba(0, 81, 198, 0.08) !important; /* Azul Medio suave */
+  background-color: rgba(0, 81, 198, 0.08) !important;
 }
 
-/* ===== FORMULARIOS ===== */
+.table tbody td:last-child {
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
 .form-label.fw-bold {
-  color: #001282 !important; /* Azul Principal */
+  color: #001282 !important;
 }
 
 .form-label .fas {
-  color: #0051c6 !important; /* Azul Medio */
+  color: #0051c6 !important;
 }
 
 .form-select:focus,
 .form-control:focus {
-  border-color: #f8ae15 !important; /* Amarillo - contraste alto */
+  border-color: #f8ae15 !important;
   box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
 }
 
-/* ===== PAGINACIÓN ===== */
 .pagination .page-link {
-  color: #001282 !important; /* Azul Principal */
+  color: #001282 !important;
   background-color: white !important;
 }
 
 .pagination .page-link:hover:not(:disabled) {
-  background-color: #ad0000 !important; /* Rojo Institucional */
+  background-color: #ad0000 !important;
   border-color: #ad0000 !important;
   color: white !important;
 }
 
 .pagination .page-item.active .page-link {
-  background-color: #001282 !important; /* Azul Principal */
+  background-color: #001282 !important;
   border-color: #001282 !important;
   color: white !important;
 }
@@ -188,17 +161,14 @@
   background-color: #f8f9fa !important;
 }
 
-/* ===== SPINNER ===== */
 .spinner-border {
-  color: #001282 !important; /* Azul Principal */
+  color: #001282 !important;
 }
 
-/* ===== MENSAJES DE ERROR ===== */
 .text-danger .fas {
-  color: #e52724 !important; /* Rojo Brillante */
+  color: #e52724 !important;
 }
 
-/* ===== ESTILOS EXISTENTES MANTENIDOS ===== */
 .sticky-top {
   position: sticky;
   top: 0;
@@ -215,13 +185,42 @@
   border-radius: 0.375rem;
 }
 
-/* Responsividad para botones pequeños */
+.action-buttons-wrapper {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
 @media (max-width: 768px) {
-  .btn-group .btn {
-    padding: 0.375rem 0.5rem;
+  .action-buttons-wrapper {
+    gap: 0.25rem;
+  }
+
+  .action-buttons-wrapper .btn-sm {
+    padding: 0.3rem 0.45rem;
+  }
+
+  .action-buttons-wrapper .btn-sm i {
+    font-size: 0.85rem;
   }
 
   .pagination-sm .page-link {
     padding: 0.25rem 0.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .action-buttons-wrapper {
+    gap: 0.15rem;
+  }
+
+  .action-buttons-wrapper .btn-sm {
+    padding: 0.25rem 0.4rem;
+  }
+
+  .action-buttons-wrapper .btn-sm i {
+    font-size: 0.8rem;
   }
 }
