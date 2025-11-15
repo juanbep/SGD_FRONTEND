@@ -1,35 +1,35 @@
 <div class="step-header mb-4">
   <h5 class="mb-2">
-    <i class="fas fa-calendar-alt me-2 text-primary"></i>
+    <i class="fas fa-calendar-alt me-2"></i>
     Paso 2: Fechas del Calendario
   </h5>
   <p class="text-muted mb-0">
-    En esta sesión puede agregar las fechas importantes del calendario. 
+    En esta sesión puede agregar las fechas importantes del calendario.
   </p>
 </div>
 
-<!-- Mensaje informativo -->
 <div class="alert alert-info d-flex align-items-start" role="alert">
   <i class="fas fa-info-circle fa-2x me-3"></i>
   <div>
     <strong>Información:</strong>
     <p class="mb-0 mt-1">
-      Puedes agregar fechas ahora o saltarte este paso y agregarlas después desde la vista de edición del calendario.
+      Puedes agregar fechas ahora o saltarte este paso y agregarlas después
+      desde la vista de edición del calendario.
     </p>
   </div>
 </div>
 
-<!-- Indicador de carga inicial -->
-<div *ngIf="cargandoFechas()" class="alert alert-warning d-flex align-items-center mb-4">
+<div
+  *ngIf="cargandoFechas()"
+  class="alert alert-warning d-flex align-items-center mb-4"
+>
   <span class="spinner-border spinner-border-sm me-2" role="status"></span>
   <span>Cargando fechas del calendario...</span>
 </div>
 
-<!-- Botones de acción -->
 <div class="d-flex gap-2 mb-4" *ngIf="!cargandoFechas()">
   <button type="button" class="btn btn-primary" (click)="abrirModalAgregar()">
-    <i class="fas fa-plus me-2"></i>
-    Agregar fecha
+    <i class="fas fa-plus me-2"></i>Agregar fecha
   </button>
 
   <button
@@ -39,8 +39,7 @@
     [disabled]="cargandoCalendarios()"
   >
     <span *ngIf="!cargandoCalendarios()">
-      <i class="fas fa-copy me-2"></i>
-      Copiar fechas de calendario anterior
+      <i class="fas fa-copy me-2"></i>Copiar fechas de calendario anterior
     </span>
     <span *ngIf="cargandoCalendarios()">
       <span class="spinner-border spinner-border-sm me-2" role="status"></span>
@@ -49,74 +48,64 @@
   </button>
 </div>
 
-<!-- Lista de fechas -->
 <div class="card shadow-sm" *ngIf="!cargandoFechas()">
-  <div
-    class="card-header d-flex justify-content-between align-items-center text-white fw-bold"
-    style="background-color: #000066"
-  >
-    <span>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h6 class="mb-0 fw-bold d-flex align-items-center">
       <i class="fas fa-list me-2"></i>
       Fechas Agregadas ({{ fechas().length }})
-    </span>
+    </h6>
   </div>
 
-  <!-- Sin fechas -->
   <div class="card-body" *ngIf="fechas().length === 0; else tablaFechas">
     <div class="alert alert-info d-flex align-items-center mb-0" role="alert">
       <i class="fas fa-info-circle fa-2x me-3"></i>
       <div>
         <h6 class="alert-heading mb-1">No hay fechas agregadas</h6>
         <p class="mb-0">
-          Haz clic en "Agregar fecha" para comenzar o copia las fechas de un calendario anterior.
+          Haz clic en "Agregar fecha" para comenzar o copia las fechas de un
+          calendario anterior.
         </p>
       </div>
     </div>
   </div>
 
-  <!-- Con fechas -->
   <ng-template #tablaFechas>
-    <div class="card-body table-responsive">
+    <div class="card-body table-responsive p-0">
       <table class="table table-bordered table-hover mb-0">
         <thead class="table-light">
           <tr>
-            <th style="width: 50%">
-              <i class="fas fa-tag me-2"></i>
-              Nombre
-            </th>
+            <th style="width: 50%"><i class="fas fa-tag me-2"></i>Nombre</th>
             <th class="text-center" style="width: 40%">
-              <i class="fas fa-calendar me-2"></i>
-              Fecha
+              <i class="fas fa-calendar me-2"></i>Fecha
             </th>
             <th class="text-center" style="width: 10%">
-              <i class="fas fa-cog me-2"></i>
-              Acciones
+              <i class="fas fa-cog me-2"></i>Acciones
             </th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let fecha of fechas()">
             <td>{{ fecha.nombre }}</td>
+            <td class="text-center">{{ formatearFecha(fecha) }}</td>
             <td class="text-center">
-              {{ formatearFecha(fecha) }}
-            </td>
-            <td class="text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary btn-sm me-2"
-                (click)="abrirModalEditar(fecha)"
-                title="Editar"
-              >
-                <i class="fas fa-edit"></i>
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger btn-sm"
-                (click)="eliminarFecha(fecha)"
-                title="Eliminar"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
+              <div class="action-buttons-wrapper">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  (click)="abrirModalEditar(fecha)"
+                  title="Editar"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="abrirModalEliminar(fecha)"
+                  title="Eliminar"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -136,6 +125,14 @@
   (onConfirmarEdicion)="confirmarEditarFecha($event)"
   (onCancelar)="cerrarModalAgregar()"
 ></app-modal-agregar-fecha>
+
+<app-modal-eliminar-fecha
+  [fecha]="fechaAEliminar()"
+  [visible]="modalEliminarVisible()"
+  [eliminando]="eliminandoFecha()"
+  (onConfirmar)="confirmarEliminarFecha()"
+  (onCancelar)="cerrarModalEliminar()"
+></app-modal-eliminar-fecha>
 
 <app-modal-seleccionar-calendario
   [visible]="modalSeleccionarVisible()"

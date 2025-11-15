@@ -1,6 +1,21 @@
+.btn i,
+.btn .spinner-border {
+  color: inherit !important;
+}
+
 .step-header h5 {
-  color: #000066;
-  font-weight: 600;
+  color: #001282 !important;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.step-header h5 i {
+  color: #0051c6 !important;
+}
+
+.step-header .text-muted {
+  color: #6c757d !important;
+  font-size: 0.9375rem;
 }
 
 .wizard-form {
@@ -9,23 +24,85 @@
 
 .wizard-form .form-label {
   margin-bottom: 0.5rem;
+  color: #001282 !important;
+  font-weight: 600;
+}
+
+.wizard-form .form-label i {
+  color: #0051c6 !important;
 }
 
 .wizard-form .form-text {
   margin-top: 0.25rem;
   display: block;
+  font-size: 0.875rem;
 }
 
-.input-group .btn {
-  border-color: #ced4da;
+.form-control:focus,
+.form-select:focus {
+  border-color: #f8ae15 !important;
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
 }
 
-.input-group .btn:hover {
-  background-color: rgb(0, 42, 158);
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+  border-color: #ad0000 !important;
+  box-shadow: 0 0 0 0.25rem rgba(173, 0, 0, 0.25) !important;
 }
 
-.form-control.bg-light {
-  cursor: default;
+.invalid-feedback,
+.text-danger {
+  color: #ad0000 !important;
+  font-size: 0.875rem;
+}
+
+.alert-success {
+  background-color: rgba(36, 147, 55, 0.1) !important;
+  border-left: 4px solid #249337 !important;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  color: #155724 !important;
+}
+
+.alert-success i {
+  color: #249337 !important;
+  flex-shrink: 0;
+}
+
+.alert-success strong {
+  color: #249337 !important;
+}
+
+.alert-info {
+  background-color: rgba(22, 168, 225, 0.08) !important;
+  border-left: 4px solid #16a8e1 !important;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  color: #004085 !important;
+}
+
+.alert-info i {
+  color: #16a8e1 !important;
+  flex-shrink: 0;
+}
+
+.alert-info strong {
+  color: #001282 !important;
+}
+
+.alert-warning {
+  background-color: #fff3cd !important;
+  border-left: 4px solid #f8ae15 !important;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  color: #664d03 !important;
+}
+
+.alert-warning .spinner-border {
+  color: #f8ae15 !important;
 }
 
 .alert ul {
@@ -35,4 +112,110 @@
 
 .alert ul li {
   margin-bottom: 0.25rem;
+}
+
+.btn-outline-primary {
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+  color: white !important;
+}
+
+.position-absolute.top-0.end-0 {
+  background-color: rgba(0, 81, 198, 0.05) !important;
+  border: 1px solid #0051c6 !important;
+}
+
+.position-absolute.top-0.end-0 small {
+  color: #6c757d !important;
+}
+
+.position-absolute.top-0.end-0 div[style*="color"] {
+  color: #001282 !important;
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  background-color: #001282 !important;
+  border-bottom: 2px solid #0051c6;
+}
+
+.modal-header .modal-title {
+  color: white !important;
+  font-weight: 700;
+}
+
+.modal-header .modal-title i {
+  color: #ffffff !important;
+}
+
+.btn-close-white {
+  filter: brightness(0) invert(1);
+}
+
+.modal-body .spinner-border {
+  color: #001282 !important;
+}
+
+.modal-body .list-group-item {
+  border-color: #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.modal-body .list-group-item:hover {
+  background-color: rgba(0, 81, 198, 0.05);
+  border-left: 3px solid #0051c6;
+}
+
+.modal-body .list-group-item i {
+  color: #0051c6 !important;
+}
+
+.modal-body .badge.bg-secondary {
+  background-color: #0051c6 !important;
+  color: white !important;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+}
+
+.modal-backdrop.show {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .step-header h5 {
+    font-size: 1.125rem;
+  }
+
+  .wizard-form .form-label {
+    font-size: 0.9375rem;
+  }
+
+  .position-absolute.top-0.end-0 {
+    position: relative !important;
+    margin-bottom: 1rem;
+  }
 }

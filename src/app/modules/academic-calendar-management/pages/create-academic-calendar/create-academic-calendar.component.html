@@ -1,7 +1,6 @@
 <div class="view-container">
-  <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 style="color: #000066">
+    <h3 class="page-title">
       <i class="fas fa-calendar-plus me-2"></i>
       Crear Nuevo Calendario Académico
     </h3>
@@ -10,7 +9,6 @@
     </button>
   </div>
 
-  <!-- Stepper Component -->
   <app-stepper
     class="mb-4"
     [pasoActual]="pasoActual()"
@@ -19,9 +17,7 @@
     (irAPaso)="irAPaso($event)"
   ></app-stepper>
 
-  <!-- Contenido del paso actual -->
   <div class="wizard-content card shadow-sm p-4 mb-4">
-    <!-- Paso 1: Información Básica -->
     <app-step-info-basica
       *ngIf="pasoActual() === 1"
       [datosIniciales]="datosCalendarioCreado()"
@@ -29,25 +25,21 @@
       (formularioValido)="alCambiarValidezPaso1($event)"
     ></app-step-info-basica>
 
-    <!-- Paso 2: Fechas del Calendario -->
     <app-step-fechas
       *ngIf="pasoActual() === 2"
       [oidCalendario]="oidCalendarioCreado()"
     ></app-step-fechas>
   </div>
 
-  <!-- Footer de navegación -->
   <div class="wizard-footer d-flex justify-content-between">
     <button
       class="btn btn-secondary"
       (click)="pasoAnterior()"
       [disabled]="pasoActual() === 1"
     >
-      <i class="fas fa-arrow-left me-2"></i>
-      Anterior
+      <i class="fas fa-arrow-left me-2"></i>Anterior
     </button>
 
-    <!-- Botón "Crear Calendario" (solo visible en paso 1) -->
     <button
       *ngIf="pasoActual() === 1"
       class="btn btn-success"
@@ -75,7 +67,6 @@
       </span>
     </button>
 
-    <!-- Botón "Siguiente" (paso 1) -->
     <button
       *ngIf="pasoActual() === 1"
       class="btn btn-primary"
@@ -86,14 +77,12 @@
       <i class="fas fa-arrow-right ms-2"></i>
     </button>
 
-    <!-- Botón "Finalizar" (paso 2 - siempre habilitado) -->
     <button
       *ngIf="pasoActual() === 2"
       class="btn btn-success"
       (click)="finalizar()"
     >
-      <i class="fas fa-check me-2"></i>
-      Finalizar
+      <i class="fas fa-check me-2"></i>Finalizar
     </button>
   </div>
 </div>

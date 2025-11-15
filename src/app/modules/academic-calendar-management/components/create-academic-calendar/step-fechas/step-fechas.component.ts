@@ -17,6 +17,7 @@ import {
 } from '../../../models';
 import { ModalAgregarEditarFechaComponent } from '../../edit-academic-calendar/modal-agregar-editar-fecha/modal-agregar-editar-fecha.component';
 import { ModalSeleccionarCalendarioComponent } from '../modal-seleccionar-calendario/modal-seleccionar-calendario.component';
+import { ModalEliminarFechaComponent } from '../../edit-academic-calendar/modal-eliminar-fecha/modal-eliminar-fecha.component';
 import {
   CalendarioHelperService,
   NombreFechaHelperService,
@@ -31,6 +32,7 @@ import { Utils } from '../../../utils/calendario.utils';
     CommonModule,
     ModalAgregarEditarFechaComponent,
     ModalSeleccionarCalendarioComponent,
+    ModalEliminarFechaComponent,
   ],
   templateUrl: './step-fechas.component.html',
   styleUrl: './step-fechas.component.css',
@@ -43,16 +45,18 @@ export class StepFechasComponent implements OnInit, OnChanges {
 
   @Input() oidCalendario: number | null = null;
 
-  // ===== SIGNALS =====
   readonly fechas = signal<Fecha[]>([]);
   readonly modalAgregarVisible = signal<boolean>(false);
   readonly modalSeleccionarVisible = signal<boolean>(false);
+  readonly modalEliminarVisible = signal<boolean>(false);
   readonly fechaAEditar = signal<Fecha | null>(null);
+  readonly fechaAEliminar = signal<Fecha | null>(null);
   readonly catalogoNombresFecha = signal<any[]>([]);
   readonly calendariosDisponibles = signal<Calendario[]>([]);
   readonly cargandoCalendarios = signal<boolean>(false);
   readonly cargandoFechas = signal<boolean>(false);
   readonly guardandoFecha = signal<boolean>(false);
+  readonly eliminandoFecha = signal<boolean>(false);
 
   ngOnInit(): void {
     this.cargarCatalogoNombresFechas();
@@ -65,7 +69,6 @@ export class StepFechasComponent implements OnInit, OnChanges {
     }
   }
 
-  // ===== CARGAR FECHAS DEL CALENDARIO =====
   private async cargarFechas(): Promise<void> {
     if (!this.oidCalendario) return;
 
@@ -111,7 +114,6 @@ export class StepFechasComponent implements OnInit, OnChanges {
     }
   }
 
-  // ===== MODALES =====
   abrirModalAgregar(): void {
     this.fechaAEditar.set(null);
     this.modalAgregarVisible.set(true);
@@ -128,7 +130,6 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.guardandoFecha.set(false);
   }
 
-  // ===== AGREGAR FECHA (RECIBE DTO Y GUARDA EN BACKEND) =====
   async confirmarAgregarFecha(createDto: CreateFechaDto): Promise<void> {
     if (!this.oidCalendario) {
       this.toastr.error('No se puede agregar fecha sin calendario');
@@ -138,12 +139,8 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.guardandoFecha.set(true);
 
     try {
-      // Crear fecha en el backend
       await this.fechaHelper.create(createDto);
-
-      // Refrescar lista desde el backend
       await this.cargarFechas();
-
       this.toastr.success('Fecha agregada correctamente');
       this.cerrarModalAgregar();
     } catch (error) {
@@ -154,17 +151,12 @@ export class StepFechasComponent implements OnInit, OnChanges {
     }
   }
 
-  // ===== EDITAR FECHA (RECIBE DTO Y ACTUALIZA EN BACKEND) =====
   async confirmarEditarFecha(updateDto: UpdateFechaDto): Promise<void> {
     this.guardandoFecha.set(true);
 
     try {
-      // Actualizar fecha en el backend
       await this.fechaHelper.update(updateDto);
-
-      // Refrescar lista desde el backend
       await this.cargarFechas();
-
       this.toastr.success('Fecha actualizada correctamente');
       this.cerrarModalAgregar();
     } catch (error) {
@@ -175,23 +167,45 @@ export class StepFechasComponent implements OnInit, OnChanges {
     }
   }
 
-  // ===== ELIMINAR FECHA =====
-  async eliminarFecha(fecha: Fecha): Promise<void> {
-    if (!confirm(`¿Estás seguro de eliminar la fecha "${fecha.nombre}"?`)) {
-      return;
-    }
+  abrirModalEliminar(fecha: Fecha): void {
+    this.fechaAEliminar.set(fecha);
+    this.modalEliminarVisible.set(true);
+  }
+
+  cerrarModalEliminar(): void {
+    this.modalEliminarVisible.set(false);
+    this.fechaAEliminar.set(null);
+    this.eliminandoFecha.set(false);
+  }
+
+  async confirmarEliminarFecha(): Promise<void> {
+    const fecha = this.fechaAEliminar();
+    if (!fecha) return;
+
+    this.eliminandoFecha.set(true);
 
     try {
-      await this.fechaHelper.delete(fecha.oidFecha);
-      this.cargarFechas(); // Refrescar lista
-      this.toastr.success('Fecha eliminada correctamente');
-    } catch (error) {
-      console.error('Error al eliminar fecha:', error);
-      this.toastr.error('Error al eliminar la fecha');
+      const resultado = await this.fechaHelper.delete(fecha.oidFecha);
+
+      if (resultado) {
+        // Recargar las fechas desde el backend para mantener sincronización
+        await this.cargarFechas();
+
+        this.toastr.success('Fecha eliminada con éxito');
+        this.cerrarModalEliminar();
+      }
+    } catch (error: any) {
+      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
+      this.cerrarModalEliminar();
+
+      // Mostrar el mensaje que viene del backend
+      const mensaje = error?.error?.mensaje || 'Error al eliminar la fecha';
+      this.toastr.error(mensaje);
+    } finally {
+      this.eliminandoFecha.set(false);
     }
   }
 
-  // ===== COPIAR FECHAS =====
   abrirModalSeleccionar(): void {
     this.modalSeleccionarVisible.set(true);
   }
@@ -217,7 +231,6 @@ export class StepFechasComponent implements OnInit, OnChanges {
       const fechasActuales = this.fechas();
       let mapeadas = 0;
 
-      // Crear NUEVAS instancias de TODOS los objetos (inmutabilidad completa)
       const fechasActualizadas = fechasActuales.map((fechaActual) => {
         const fechaOrigen = calendarioOrigen.fechas!.find(
           (f) => f.oidNombreFecha === fechaActual.oidNombreFecha
@@ -225,23 +238,16 @@ export class StepFechasComponent implements OnInit, OnChanges {
 
         if (fechaOrigen) {
           mapeadas++;
-          // Crear NUEVO objeto con todas las propiedades
           return {
-            ...fechaActual, // Copiar todas las propiedades
+            ...fechaActual,
             fechaInicial: fechaOrigen.fechaInicial,
             fechaFin: fechaOrigen.fechaFin || '',
           } as Fecha;
         }
 
-        // Importante: Crear NUEVO objeto incluso si no cambió
         return { ...fechaActual } as Fecha;
       });
 
-      console.log('Fechas antes:', fechasActuales);
-      console.log('Fechas después:', fechasActualizadas);
-      console.log('Mapeadas:', mapeadas);
-
-      // Forzar actualización del signal con nuevo array
       this.fechas.set([...fechasActualizadas]);
 
       this.toastr.success(
