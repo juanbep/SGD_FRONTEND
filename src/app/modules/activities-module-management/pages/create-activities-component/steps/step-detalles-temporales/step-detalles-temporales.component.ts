@@ -75,7 +75,7 @@ export class StepDetallesTemporalesComponent implements OnInit {
     const semanas = this.formData().semanas;
 
     if (horas && semanas && semanas > 0) {
-      return (horas / semanas).toFixed(2);
+      return (horas * semanas).toFixed(2);
     }
     return null;
   });

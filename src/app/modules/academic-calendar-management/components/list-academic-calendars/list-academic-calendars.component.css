@@ -1,7 +1,209 @@
+/* =====================================================
+   COLORES INSTITUCIONALES - UNIVERSIDAD DEL CAUCA
+   Personalización sobre Bootstrap 5
+   ===================================================== */
+
+/* ===== CARD HEADERS ===== */
+.card-header {
+  background-color: #001282 !important; /* Azul Principal */
+  color: white !important;
+}
+
+.card-header h6,
+.card-header .btn {
+  color: white !important;
+}
+
+/* Texto auxiliar en header (por página) */
+.card-header .text-muted,
+.card-header .small.text-muted {
+  color: white !important;
+}
+
+/* ===== BADGES ===== */
+/* Badge de contador principal - más visible */
+.badge.bg-primary {
+  background-color: #f8ae15 !important; /* Amarillo - alta visibilidad */
+  color: #212529 !important;
+  font-weight: 700;
+  padding: 0.4em 0.65em;
+}
+
+/* Badges de estado */
+.badge.bg-warning {
+  background-color: #f8ae15 !important; /* Amarillo - PENDIENTE */
+  color: #212529 !important;
+}
+
+.badge.bg-success {
+  background-color: #249337 !important; /* Verde Agua - ACTIVO */
+  color: white !important;
+}
+
+.badge.bg-info {
+  background-color: #16a8e1 !important; /* Cian Claro - APROBADO */
+  color: white !important;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important; /* Gris - DESHABILITADO */
+  color: white !important;
+}
+
+/* Badge de periodo - mejor contraste */
+.badge.bg-light.text-dark {
+  background-color: #0051c6 !important; /* Azul Medio */
+  color: white !important;
+  border: none;
+  font-weight: 600;
+}
+
+/* ===== BOTONES ===== */
+/* Botón Limpiar - Contraste claro */
+.btn-outline-secondary {
+  border-color: #0051c6 !important; /* Azul Medio */
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background-color: #f8ae15 !important; /* Amarillo - contraste fuerte */
+  border-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+/* Botón Actualizar en header - Contraste blanco sobre azul */
+.btn-link.text-primary {
+  color: white !important; /* Blanco sobre fondo azul */
+  text-decoration: none !important;
+}
+
+.btn-link.text-primary:hover {
+  color: #f8ae15 !important; /* Amarillo - contraste claro con azul */
+  text-decoration: none !important;
+}
+
+/* Botones de acción en tabla */
+.btn-outline-success {
+  border-color: #249337 !important; /* Verde Agua */
+  color: #249337 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-success:hover {
+  background-color: #249337 !important;
+  border-color: #249337 !important;
+  color: white !important;
+}
+
+.btn-outline-primary {
+  border-color: #0051c6 !important; /* Azul Medio */
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+  color: white !important;
+}
+
+/* Botón eliminar */
+.btn-outline-danger {
+  border-color: #ad0000 !important; /* Rojo Secundario */
+  color: #ad0000 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: #ad0000 !important;
+  border-color: #ad0000 !important;
+  color: white !important;
+}
+
+/* ===== ALERTAS ===== */
+.alert-info {
+  background-color: rgba(22, 168, 225, 0.1) !important; /* Cian Claro suave */
+  border-color: #16a8e1 !important;
+  color: #004085 !important;
+  border-left: 4px solid #16a8e1 !important;
+}
+
+.alert-info .fas.fa-info-circle {
+  color: #16a8e1 !important;
+}
+
+.alert-info strong {
+  color: #001282 !important; /* Azul Principal */
+}
+
+/* ===== TABLA ===== */
+.table thead th {
+  color: #001282 !important; /* Azul Principal */
+}
+
+.table thead th .fas {
+  color: #0051c6 !important; /* Azul Medio */
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 81, 198, 0.08) !important; /* Azul Medio suave */
+}
+
+/* ===== FORMULARIOS ===== */
+.form-label.fw-bold {
+  color: #001282 !important; /* Azul Principal */
+}
+
+.form-label .fas {
+  color: #0051c6 !important; /* Azul Medio */
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: #f8ae15 !important; /* Amarillo - contraste alto */
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
+}
+
+/* ===== PAGINACIÓN ===== */
+.pagination .page-link {
+  color: #001282 !important; /* Azul Principal */
+  background-color: white !important;
+}
+
+.pagination .page-link:hover:not(:disabled) {
+  background-color: #ad0000 !important; /* Rojo Institucional */
+  border-color: #ad0000 !important;
+  color: white !important;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #001282 !important; /* Azul Principal */
+  border-color: #001282 !important;
+  color: white !important;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d !important;
+  background-color: #f8f9fa !important;
+}
+
+/* ===== SPINNER ===== */
+.spinner-border {
+  color: #001282 !important; /* Azul Principal */
+}
+
+/* ===== MENSAJES DE ERROR ===== */
+.text-danger .fas {
+  color: #e52724 !important; /* Rojo Brillante */
+}
+
+/* ===== ESTILOS EXISTENTES MANTENIDOS ===== */
 .sticky-top {
   position: sticky;
   top: 0;
   z-index: 10;
+  background-color: #f8f9fa;
 }
 
 .container {
@@ -11,14 +213,6 @@
 
 .table-responsive {
   border-radius: 0.375rem;
-}
-
-.badge.bg-warning {
-  color: #212529 !important;
-}
-
-.badge.bg-info {
-  color: #212529 !important;
 }
 
 /* Responsividad para botones pequeños */

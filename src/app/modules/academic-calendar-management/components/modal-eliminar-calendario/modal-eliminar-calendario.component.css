@@ -1,0 +1,198 @@
+/* Modal Header - Rojo institucional para advertencia crítica */
+.modal-header.bg-danger {
+  background-color: #ad0000 !important; /* Rojo Institucional */
+  border-bottom: none;
+}
+
+.modal-header.bg-danger .modal-title {
+  color: white !important;
+}
+
+/* Ícono SVG en el header del modal - más grande */
+.modal-header-icon {
+  width: 32px; /* Aumentado de 24px a 32px */
+  height: 32px;
+  filter: brightness(0) invert(1); /* Convierte el SVG a blanco */
+  flex-shrink: 0;
+}
+
+/* Modal Content */
+.modal-content {
+  border: none !important;
+  border-radius: 0.5rem;
+}
+
+/* Modal Body */
+.modal-body {
+  background-color: #f8f9fa;
+}
+
+/* Alert de peligro - más compacta */
+.modal-body .alert-danger {
+  background-color: rgba(173, 0, 0, 0.08) !important;
+  border-left: 3px solid #ad0000 !important;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  color: #721c24 !important;
+  padding: 0.75rem 1rem;
+}
+
+.modal-body .alert-danger i {
+  color: #ad0000 !important;
+  flex-shrink: 0;
+}
+
+.modal-body .alert-danger strong {
+  color: #ad0000 !important;
+}
+
+/* Pregunta principal destacada */
+.modal-body > p.text-center {
+  color: #001282 !important; /* Azul Principal */
+  font-size: 1rem;
+  padding: 0.5rem 0;
+}
+
+/* Card de información del calendario */
+.modal-body .card.border-primary {
+  border-color: #001282 !important; /* Azul Principal */
+  box-shadow: 0 2px 4px rgba(0, 18, 130, 0.1);
+  border-radius: 0.5rem !important; /* Border radius en todas las esquinas */
+  overflow: hidden; /* Asegura que el contenido respete el border radius */
+}
+
+.modal-body .card-header.bg-primary-subtle {
+  background-color: rgba(0, 18, 130, 0.05) !important;
+  border-bottom-color: #001282 !important;
+  border-top-left-radius: 0.5rem !important; /* Esquinas superiores redondeadas */
+  border-top-right-radius: 0.5rem !important;
+}
+
+.modal-body .card-header h6 {
+  color: #001282 !important; /* Azul Principal */
+  font-size: 0.95rem;
+}
+
+.modal-body .card-body {
+  background-color: white;
+  border-bottom-left-radius: 0.5rem !important; /* Esquinas inferiores redondeadas */
+  border-bottom-right-radius: 0.5rem !important;
+}
+
+/* Íconos de información */
+.modal-body .card-body i.fas {
+  color: #0051c6 !important; /* Azul Medio */
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.modal-body .card-body small.text-muted {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-body .card-body strong {
+  color: #212529;
+  font-size: 0.9rem;
+}
+
+/* Badge de estado */
+.modal-body .badge.bg-secondary {
+  background-color: #6c757d !important;
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+}
+
+/* Alert de advertencia final - más compacta */
+.modal-body .alert-warning {
+  background-color: #fff3cd !important;
+  border-left: 3px solid #f8ae15 !important;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  color: #664d03 !important;
+  padding: 0.75rem 1rem;
+}
+
+.modal-body .alert-warning i {
+  color: #f8ae15 !important;
+  flex-shrink: 0;
+}
+
+.modal-body .alert-warning strong {
+  color: #ad0000 !important; /* Rojo para "permanentemente" */
+}
+
+/* Footer del modal */
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem 1.5rem;
+}
+
+/* Botón Cancelar */
+.modal-footer .btn-secondary {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+  color: white !important;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #5a6268 !important;
+  border-color: #545b62 !important;
+}
+
+/* Botón Eliminar - Rojo institucional */
+.modal-footer .btn-danger {
+  background-color: #ad0000 !important; /* Rojo Institucional */
+  border-color: #ad0000 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.modal-footer .btn-danger:hover {
+  background-color: #8a0000 !important; /* Rojo más oscuro */
+  border-color: #8a0000 !important;
+}
+
+/* Botón cerrar (X) */
+.btn-close-white {
+  filter: brightness(0) invert(1);
+}
+
+/* Modal backdrop */
+.modal-backdrop.show {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Shadow del modal */
+.modal-content.shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 18, 130, 0.3) !important; /* Sombra con azul institucional */
+}
+
+/* Responsividad */
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+
+  .modal-body {
+    padding: 1rem !important;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+
+  /* Ícono ligeramente más pequeño en móvil */
+  .modal-header-icon {
+    width: 28px;
+    height: 28px;
+  }
+}

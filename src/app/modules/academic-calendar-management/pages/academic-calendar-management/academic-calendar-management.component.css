@@ -1,39 +1,64 @@
-/* Configuración general de la tabla */
-.calendario-table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-}
-
-.modal.show {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
+/* Título principal */
 .title-two {
+  color: #001282 !important; /* Azul Principal */
+  font-weight: 700;
   font-size: 1.75rem;
-  font-weight: 600;
   margin-bottom: 1.5rem;
-  color: #2c3e50;
+  border-bottom: 3px solid #001282;
+  padding-bottom: 0.5rem;
 }
 
+/* Contenedores de mensajes informativos */
 .messages-container {
+  background-color: rgba(22, 168, 225, 0.08) !important; /* Cian Claro suave */
+  border-left: 4px solid #16A8E1 !important; /* Cian Claro */
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 0.5rem;
-  border-left: 4px solid #007bff;
+  margin-bottom: 1rem;
 }
 
 .messages-container img {
   width: 48px;
   height: 48px;
+  flex-shrink: 0;
 }
 
-.text-body-heavy {
+.messages-container .text-body-heavy {
+  color: #001282 !important; /* Azul Principal */
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Mensaje de advertencia - estilo especial con contraste lógico */
+.messages-container .text-warning {
+  color: #001282 !important; /* Texto oscuro con buen contraste sobre fondo amarillo */
   font-weight: 500;
-  color: #495057;
+}
+
+
+/* Contenedor de advertencia con borde amarillo */
+.messages-container:has(.text-warning) {
+  background-color: #fff3cd !important; /* Amarillo claro sólido - mejor contraste */
+  border-left-color: #F8AE15 !important; /* Amarillo institucional */
+  border-left-width: 4px;
+}
+
+/* ===================================================== */
+
+/* Modal */
+.modal.show {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Configuración general de la tabla */
+.calendario-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
 /* Anchos de las columnas */
@@ -72,23 +97,32 @@
   text-align: center;
 }
 
+/* Botones y enlaces */
 .btn-link {
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
+  color: #001282 !important; /* Azul Principal */
+}
+
+.btn-link:hover {
+  color: #0051C6 !important; /* Azul Medio */
 }
 
 .btn-link:focus {
-  outline: 2px solid #007bff;
+  outline: 2px solid #F8AE15; /* Amarillo */
   outline-offset: 2px;
 }
 
 a:focus {
-  outline: 2px solid #007bff;
+  outline: 2px solid #F8AE15; /* Amarillo */
   outline-offset: 2px;
 }
 
+/* ===================================================== */
+
+/* Responsividad */
 @media (max-width: 768px) {
   .col-acuerdo {
     width: 30%;
@@ -112,5 +146,21 @@ a:focus {
 
   .col-acciones {
     width: 28%;
+  }
+  
+  /* Ajustes para título en móvil */
+  .title-two {
+    font-size: 1.5rem;
+  }
+  
+  /* Ajustes para mensajes en móvil */
+  .messages-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .messages-container img {
+    width: 40px;
+    height: 40px;
   }
 }
