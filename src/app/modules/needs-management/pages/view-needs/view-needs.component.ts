@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
@@ -7,21 +7,8 @@ import {
   CampoFiltro,
   ValoresFiltros,
 } from '../../../../shared/components/filter-modal/filter-modal.component';
-
-interface NeedRow {
-  oid: string;
-  codigo: string;
-  nombre: string;
-  semestre: string;
-  grupo: string;
-  cupo: number;
-  horasPreparacion: number;
-  horasDocencia: number;
-  horasSemanales: number;
-  periodoOid?: string;
-  departamentoOid?: string;
-  programaOid?: string;
-}
+import { NecesidadesService } from '../../services/necesidades.service';
+import { Necesidad } from '../../models/necesidad.interface';
 
 @Component({
   selector: 'app-view-needs',
@@ -35,49 +22,35 @@ interface NeedRow {
   templateUrl: './view-needs.component.html',
   styleUrls: ['./view-needs.component.css'],
 })
-export class ViewNeedsComponent {
-  // Datos mock para visualización
-  allNeeds: NeedRow[] = [];
-  needs: NeedRow[] = [];
+export class ViewNeedsComponent implements OnInit {
+  private readonly necesidadesService = inject(NecesidadesService);
+  private readonly TAMANIO_PAGINA = 20;
 
-  // Opciones mock para filtros
-  periodos = [
-    { oid: 'P-2025-1', label: '2025 - I' },
-    { oid: 'P-2025-2', label: '2025 - II' },
-  ];
+  necesidades: Necesidad[] = [];
+  necesidadesFiltradas: Necesidad[] = [];
 
-  departamentos = [
-    { oid: 'D-01', label: 'Departamento de Matemáticas' },
-    { oid: 'D-02', label: 'Departamento de Física' },
-    { oid: 'D-03', label: 'Departamento de Ciencias Sociales' },
-  ];
+  cargando = false;
+  mensajeError = '';
 
-  programas = [
-    { oid: 'PR-01', label: 'Ingeniería' },
-    { oid: 'PR-02', label: 'Ciencias' },
-  ];
+  filtroPeriodo = '';
+  filtroDepartamento = '';
+  filtroPrograma = '';
+  filtroNombre = '';
+  filtroSemestre = '';
+  filtroCodigo = '';
 
-  // Filtros seleccionados (bindings)
-  filtroPeriodo: string = '';
-  filtroDepartamento: string = '';
-  filtroPrograma: string = '';
-
-  // Control del modal de filtros
-  mostrarModalFiltros: boolean = false;
+  mostrarModalFiltros = false;
   camposFiltroModal: CampoFiltro[] = [];
 
-  // Filtros del modal
-  filtroNombre: string = '';
-  filtroSemestre: string = '';
-  filtroCodigo: string = '';
-
-  // Paginación simple (mock) - currentPage es 1-based para shared-paginator
-  currentPage = 1;
-  pageSize = 5;
+  paginaActual = 1;
+  totalElementos = 0;
 
   constructor() {
-    this.loadMockData();
     this.configurarCamposModal();
+  }
+
+  ngOnInit(): void {
+    this.cargarNecesidades();
   }
 
   configurarCamposModal(): void {
@@ -93,14 +66,7 @@ export class ViewNeedsComponent {
         nombre: 'semestre',
         etiqueta: 'Semestre',
         tipo: 'select',
-        opciones: [
-          { valor: '1', etiqueta: 'Semestre 1' },
-          { valor: '2', etiqueta: 'Semestre 2' },
-          { valor: '3', etiqueta: 'Semestre 3' },
-          { valor: '4', etiqueta: 'Semestre 4' },
-          { valor: '5', etiqueta: 'Semestre 5' },
-          { valor: '6', etiqueta: 'Semestre 6' },
-        ],
+        opciones: [], // TODO: Reemplazar con servicio de catálogos
         icono: 'fas fa-list-ol',
       },
       {
@@ -113,125 +79,67 @@ export class ViewNeedsComponent {
     ];
   }
 
-  loadMockData() {
-    this.allNeeds = [
-      {
-        oid: 'N-0001',
-        codigo: 'MAT101',
-        nombre: 'Matemáticas I',
-        semestre: '1',
-        grupo: 'A',
-        cupo: 30,
-        horasPreparacion: 10,
-        horasDocencia: 48,
-        horasSemanales: 4,
-        periodoOid: 'P-2025-1',
-        departamentoOid: 'D-01',
-        programaOid: 'PR-01',
+  cargarNecesidades(): void {
+    this.cargando = true;
+    this.mensajeError = '';
+
+    this.necesidadesService.listar().subscribe({
+      next: (pageResponse) => {
+        this.necesidades = pageResponse.content;
+        this.totalElementos = pageResponse.totalElements;
+        this.aplicarFiltrosLocales();
+        this.cargando = false;
       },
-      {
-        oid: 'N-0002',
-        codigo: 'FIS201',
-        nombre: 'Física II',
-        semestre: '2',
-        grupo: 'B',
-        cupo: 25,
-        horasPreparacion: 12,
-        horasDocencia: 56,
-        horasSemanales: 4,
-        periodoOid: 'P-2025-1',
-        departamentoOid: 'D-02',
-        programaOid: 'PR-02',
+      error: (error) => {
+        console.error('Error al cargar necesidades:', error);
+        this.mensajeError =
+          'Error al cargar las necesidades. Por favor, intente nuevamente.';
+        this.cargando = false;
       },
-      {
-        oid: 'N-0003',
-        codigo: 'CS105',
-        nombre: 'Programación I',
-        semestre: '1',
-        grupo: 'C',
-        cupo: 40,
-        horasPreparacion: 8,
-        horasDocencia: 64,
-        horasSemanales: 6,
-        periodoOid: 'P-2025-2',
-        departamentoOid: 'D-01',
-        programaOid: 'PR-01',
-      },
-      {
-        oid: 'N-0004',
-        codigo: 'HIS300',
-        nombre: 'Historia Universal',
-        semestre: '3',
-        grupo: 'A',
-        cupo: 20,
-        horasPreparacion: 5,
-        horasDocencia: 32,
-        horasSemanales: 2,
-        periodoOid: 'P-2025-2',
-        departamentoOid: 'D-03',
-        programaOid: 'PR-02',
-      },
-      {
-        oid: 'N-0005',
-        codigo: 'QUI150',
-        nombre: 'Química Básica',
-        semestre: '2',
-        grupo: 'D',
-        cupo: 28,
-        horasPreparacion: 9,
-        horasDocencia: 48,
-        horasSemanales: 4,
-        periodoOid: 'P-2025-1',
-        departamentoOid: 'D-02',
-        programaOid: 'PR-02',
-      },
-    ];
-
-    // Inicializar lista activa y paginación
-    this.needs = [...this.allNeeds];
-  }
-
-  trackByOid(index: number, item: NeedRow) {
-    return item.oid;
-  }
-
-  // Computed
-  get totalPages(): number {
-    return Math.max(1, Math.ceil(this.needs.length / this.pageSize));
-  }
-
-  get visibleNeeds(): NeedRow[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.needs.slice(start, start + this.pageSize);
-  }
-
-  onPageChange(page: number) {
-    this.currentPage = page;
-  }
-
-  aplicarFiltros() {
-    // Filtrado simple por OID exacto de periodo, departamento y programa
-    this.currentPage = 1;
-    this.needs = this.allNeeds.filter((n) => {
-      if (this.filtroPeriodo && n.periodoOid !== this.filtroPeriodo)
-        return false;
-      if (
-        this.filtroDepartamento &&
-        n.departamentoOid !== this.filtroDepartamento
-      )
-        return false;
-      if (this.filtroPrograma && n.programaOid !== this.filtroPrograma)
-        return false;
-      return true;
     });
   }
 
-  limpiarFiltros() {
+  trackByOid(index: number, item: Necesidad): number {
+    return item.oidNecesidad;
+  }
+
+  get totalPaginas(): number {
+    return Math.max(
+      1,
+      Math.ceil(this.necesidadesFiltradas.length / this.TAMANIO_PAGINA)
+    );
+  }
+
+  get necesidadesVisibles(): Necesidad[] {
+    const inicio = (this.paginaActual - 1) * this.TAMANIO_PAGINA;
+    return this.necesidadesFiltradas.slice(
+      inicio,
+      inicio + this.TAMANIO_PAGINA
+    );
+  }
+
+  cambiarPagina(pagina: number): void {
+    this.paginaActual = pagina;
+  }
+
+  aplicarFiltros(): void {
+    this.paginaActual = 1;
+    this.aplicarFiltrosLocales();
+  }
+
+  limpiarFiltros(): void {
+    this.reiniciarFiltros();
+    this.paginaActual = 1;
+    this.aplicarFiltrosLocales();
+  }
+
+  private reiniciarFiltros(): void {
     this.filtroPeriodo = '';
     this.filtroDepartamento = '';
     this.filtroPrograma = '';
-    this.needs = [...this.allNeeds];
-    this.currentPage = 1;
+    this.filtroNombre = '';
+    this.filtroSemestre = '';
+    this.filtroCodigo = '';
   }
 
   abrirModalFiltros(): void {
@@ -246,46 +154,56 @@ export class ViewNeedsComponent {
     this.filtroNombre = (valores['nombre'] as string) || '';
     this.filtroSemestre = (valores['semestre'] as string) || '';
     this.filtroCodigo = (valores['codigo'] as string) || '';
-
-    this.aplicarTodosFiltros();
+    this.aplicarFiltros();
   }
 
   limpiarFiltrosModal(): void {
     this.filtroNombre = '';
     this.filtroSemestre = '';
     this.filtroCodigo = '';
-    this.aplicarTodosFiltros();
+    this.aplicarFiltros();
   }
 
-  aplicarTodosFiltros(): void {
-    this.currentPage = 1;
-    this.needs = this.allNeeds.filter((n) => {
-      // Filtros por OID (exactos)
-      if (this.filtroPeriodo && n.periodoOid !== this.filtroPeriodo)
-        return false;
-      if (
-        this.filtroDepartamento &&
-        n.departamentoOid !== this.filtroDepartamento
-      )
-        return false;
-      if (this.filtroPrograma && n.programaOid !== this.filtroPrograma)
-        return false;
+  private aplicarFiltrosLocales(): void {
+    this.necesidadesFiltradas = this.necesidades.filter((necesidad) =>
+      this.cumpleFiltros(necesidad)
+    );
+  }
 
-      // Filtros del modal (parciales)
-      if (
-        this.filtroNombre &&
-        !n.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
-      )
-        return false;
-      if (this.filtroSemestre && n.semestre !== this.filtroSemestre)
-        return false;
-      if (
-        this.filtroCodigo &&
-        !n.codigo.toLowerCase().includes(this.filtroCodigo.toLowerCase())
-      )
-        return false;
+  private cumpleFiltros(necesidad: Necesidad): boolean {
+    return (
+      this.cumpleFiltroCalendario(necesidad) &&
+      this.cumpleFiltroNombre(necesidad) &&
+      this.cumpleFiltroSemestre(necesidad) &&
+      this.cumpleFiltroCodigo(necesidad)
+    );
+  }
 
-      return true;
-    });
+  private cumpleFiltroCalendario(necesidad: Necesidad): boolean {
+    return (
+      !this.filtroPeriodo ||
+      necesidad.oidCalendario.toString() === this.filtroPeriodo
+    );
+  }
+
+  private cumpleFiltroNombre(necesidad: Necesidad): boolean {
+    if (!this.filtroNombre) return true;
+    return necesidad.nombreMateria
+      .toLowerCase()
+      .includes(this.filtroNombre.toLowerCase());
+  }
+
+  private cumpleFiltroSemestre(necesidad: Necesidad): boolean {
+    return (
+      !this.filtroSemestre ||
+      necesidad.semestreMateria.toString() === this.filtroSemestre
+    );
+  }
+
+  private cumpleFiltroCodigo(necesidad: Necesidad): boolean {
+    if (!this.filtroCodigo) return true;
+    return necesidad.codigoMateria
+      .toLowerCase()
+      .includes(this.filtroCodigo.toLowerCase());
   }
 }

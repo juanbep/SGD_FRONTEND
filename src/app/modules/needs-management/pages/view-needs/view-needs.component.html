@@ -34,7 +34,6 @@
                                 class="fas fa-calendar me-1"></i>Periodo:</label>
                         <select id="filtroPeriodo" class="form-select" [(ngModel)]="filtroPeriodo">
                             <option value="">Todos los periodos</option>
-                            <option *ngFor="let p of periodos" [value]="p.oid">{{ p.label }}</option>
                         </select>
                         <small class="text-muted">Filtrar por período académico</small>
                     </div>
@@ -44,7 +43,6 @@
                                 class="fas fa-building me-1"></i>Departamento:</label>
                         <select id="filtroDepartamento" class="form-select" [(ngModel)]="filtroDepartamento">
                             <option value="">Todos los departamentos</option>
-                            <option *ngFor="let d of departamentos" [value]="d.oid">{{ d.label }}</option>
                         </select>
                         <small class="text-muted">Filtrar por departamento</small>
                     </div>
@@ -54,17 +52,16 @@
                                 class="fas fa-graduation-cap me-1"></i>Programa:</label>
                         <select id="filtroPrograma" class="form-select" [(ngModel)]="filtroPrograma">
                             <option value="">Todos los programas</option>
-                            <option *ngFor="let pr of programas" [value]="pr.oid">{{ pr.label }}</option>
                         </select>
                         <small class="text-muted">Filtrar por programa</small>
                     </div>
 
                     <div class="col-xl-3 d-flex justify-content-end align-items-end">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary" (click)="aplicarTodosFiltros()"><i
+                            <button type="button" class="btn btn-primary" (click)="aplicarFiltros()"><i
                                     class="fas fa-search me-1"></i>Buscar</button>
-                            <button type="button" class="btn btn-outline-secondary" title="Recargar filtros"
-                                (click)="loadMockData()"><i class="fas fa-sync-alt"></i></button>
+                            <button type="button" class="btn btn-outline-secondary" title="Recargar"
+                                (click)="cargarNecesidades()"><i class="fas fa-sync-alt"></i></button>
                         </div>
                     </div>
                 </div>
@@ -75,11 +72,30 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 d-flex align-items-center"><i class="fas fa-tasks me-2"></i>Necesidades</h6>
-                <button type="button"
+                <button type="button" (click)="cargarNecesidades()"
                     class="btn btn-link text-decoration-none text-primary ms-auto d-flex align-items-center"><i
                         class="fas fa-sync-alt me-1"></i><span class="d-none d-lg-inline">Actualizar</span></button>
             </div>
 
+            @if (cargando) {
+            <div class="card-body text-center py-5">
+                <div class="spinner-border text-primary">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="text-muted mt-2">Cargando necesidades...</p>
+            </div>
+            }
+
+            @if (mensajeError) {
+            <div class="card-body">
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <span>{{ mensajeError }}</span>
+                </div>
+            </div>
+            }
+
+            @if (!cargando && !mensajeError) {
             <div class="card-body p-0">
                 <div class="table-responsive" style="max-height: 600px">
                     <table class="table table-hover mb-0">
@@ -87,38 +103,40 @@
                             <tr>
                                 <th>OID</th>
                                 <th>Código</th>
-                                <th>Nombre</th>
+                                <th>Nombre Materia</th>
                                 <th>Semestre</th>
                                 <th>Grupo</th>
                                 <th>Cupo</th>
-                                <th>Horas Preparación</th>
-                                <th>Horas Docencia</th>
-                                <th>Horas Semanales</th>
+                                <th>Estado</th>
+                                <th>Año</th>
+                                <th>Calendario</th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="needs && needs.length > 0; else noData">
-                            <tr *ngFor="let n of visibleNeeds; trackBy: trackByOid">
-                                <td class="text-center align-middle">{{ n.oid }}</td>
-                                <td class="align-middle">{{ n.codigo }}</td>
-                                <td class="align-middle">{{ n.nombre }}</td>
-                                <td class="text-center align-middle">{{ n.semestre }}</td>
+                        <tbody>
+                            @if (necesidadesVisibles && necesidadesVisibles.length > 0) {
+                            @for (n of necesidadesVisibles; track trackByOid($index, n)) {
+                            <tr>
+                                <td class="text-center align-middle">{{ n.oidNecesidad }}</td>
+                                <td class="align-middle">{{ n.codigoMateria }}</td>
+                                <td class="align-middle">{{ n.nombreMateria }}</td>
+                                <td class="text-center align-middle">{{ n.semestreMateria }}</td>
                                 <td class="text-center align-middle">{{ n.grupo }}</td>
                                 <td class="text-center align-middle">{{ n.cupo }}</td>
-                                <td class="text-center align-middle">{{ n.horasPreparacion }}</td>
-                                <td class="text-center align-middle">{{ n.horasDocencia }}</td>
-                                <td class="text-center align-middle">{{ n.horasSemanales }}</td>
+                                <td class="text-center align-middle">
+                                    <span class="badge bg-secondary">{{ n.estadoDescripcion }}</span>
+                                </td>
+                                <td class="text-center align-middle">{{ n.anioCalendario }}</td>
+                                <td class="text-center align-middle">{{ n.numeroCalendario }}</td>
                             </tr>
+                            }
+                            } @else {
+                            <tr>
+                                <td colspan="9" class="text-center py-5 align-middle text-muted">
+                                    No hay datos para mostrar
+                                </td>
+                            </tr>
+                            }
                         </tbody>
-
-                        <ng-template #noData>
-                            <tbody>
-                                <tr>
-                                    <td colspan="9" class="text-center py-5 align-middle text-muted">
-                                        No hay datos para mostrar
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </ng-template>
                     </table>
                 </div>
             </div>
@@ -126,12 +144,15 @@
             <!-- Footer de paginación: usar shared-paginator del proyecto -->
             <div class="card-footer">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="text-muted small">{{ needs.length }} registros</div>
+                    <div class="text-muted small">
+                        {{ necesidadesFiltradas.length }} de {{ totalElementos }} registros
+                    </div>
 
-                    <shared-paginator [currentPage]="currentPage" [totalPages]="totalPages"
-                        (pageChange)="onPageChange($event)"></shared-paginator>
+                    <shared-paginator [currentPage]="paginaActual" [totalPages]="totalPaginas"
+                        (pageChange)="cambiarPagina($event)"></shared-paginator>
                 </div>
             </div>
+            }
         </div>
     </div>
 
