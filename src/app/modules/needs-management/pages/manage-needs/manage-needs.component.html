@@ -114,8 +114,68 @@
         </div>
     </div>
 
-    <!-- Modal de Filtros Reutilizable -->
+    <!-- Modal de Filtros -->
     <shared-filter-modal [visible]="mostrarModalFiltros" [titulo]="'Filtros Avanzados'" [campos]="camposFiltroModal"
         (aplicar)="aplicarFiltrosModal($event)" (cerrar)="cerrarModalFiltros()">
     </shared-filter-modal>
+
+    <!-- Modal de Edición (inline en este componente) -->
+    <div class="modal fade" [class.show]="editarModalVisible" [style.display]="editarModalVisible ? 'block' : 'none'"
+        tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Necesidad</h5>
+                    <button type="button" class="btn-close" aria-label="Cerrar" (click)="cancelarEdicion()"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form [formGroup]="editFormulario">
+                        <div class="mb-3">
+                            <label for="grupo" class="form-label">Grupo</label>
+                            <input id="grupo" type="text" class="form-control" formControlName="grupo" />
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label for="cupo" class="form-label">Cupo</label>
+                                <input id="cupo" type="number" class="form-control" formControlName="cupo" />
+                            </div>
+                            <div class="col-6">
+                                <label for="horasSemanales" class="form-label">Horas Semanales</label>
+                                <input id="horasSemanales" type="number" class="form-control"
+                                    formControlName="horasSemanales" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" [disabled]="!editFormulario.valid"
+                        (click)="aceptarEdicion()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="editarModalVisible" class="modal-backdrop fade show"></div>
+    <!-- Modal de Confirmación de Eliminación -->
+    <div class="modal fade" [class.show]="deleteConfirmVisible"
+        [style.display]="deleteConfirmVisible ? 'block' : 'none'" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <p class="mb-4">¿Está seguro de eliminar la necesidad <strong>{{ deleteTargetOid }}</strong>?</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button type="button" class="btn btn-primary"
+                            (click)="confirmarEliminarNecesidad()">Aceptar</button>
+                        <button type="button" class="btn btn-secondary" (click)="cancelarEliminar()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="deleteConfirmVisible" class="modal-backdrop fade show"></div>
 </div>

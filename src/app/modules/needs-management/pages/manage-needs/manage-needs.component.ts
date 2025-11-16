@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import {
   FilterModalComponent,
@@ -25,6 +31,7 @@ interface NeedRow {
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     PaginatorComponent,
     FilterModalComponent,
   ],
@@ -54,6 +61,11 @@ export class ManageNeedsComponent {
   filtroSemestre: string = '';
   filtroCodigo: string = '';
 
+  // Edición
+  editarModalVisible: boolean = false;
+  editFormulario: FormGroup;
+  editingOid: string | null = null;
+
   // Paginación
   currentPage = 1;
   pageSize = 10;
@@ -61,7 +73,13 @@ export class ManageNeedsComponent {
   // Selección de filas
   selectedNeeds: Set<string> = new Set();
 
-  constructor() {
+  constructor(private readonly fb: FormBuilder) {
+    this.editFormulario = this.fb.group({
+      grupo: ['', Validators.required],
+      cupo: [0, [Validators.required, Validators.min(0)]],
+      horasSemanales: [0, [Validators.required, Validators.min(0)]],
+    });
+
     this.loadMockData();
     this.configurarCamposModal();
   }
@@ -256,12 +274,64 @@ export class ManageNeedsComponent {
   }
 
   editarNecesidad(oid: string): void {
-    console.log('Editando necesidad:', oid);
-    // Implementar lógica de edición
+    const necesidad = this.allNeeds.find((n) => n.oid === oid);
+    if (!necesidad) return;
+    this.editingOid = oid;
+    this.editFormulario.patchValue({
+      grupo: necesidad.grupo,
+      cupo: necesidad.cupo,
+      horasSemanales: necesidad.horasSemanales,
+    });
+    this.editarModalVisible = true;
   }
 
   eliminarNecesidad(oid: string): void {
-    console.log('Eliminando necesidad:', oid);
-    // Implementar lógica de eliminación
+    // Abrir modal de confirmación
+    this.deleteTargetOid = oid;
+    this.deleteConfirmVisible = true;
+  }
+
+  // Confirmación de eliminación
+  deleteConfirmVisible: boolean = false;
+  deleteTargetOid: string | null = null;
+
+  confirmarEliminarNecesidad(): void {
+    if (!this.deleteTargetOid) return;
+    // Eliminar de allNeeds
+    this.allNeeds = this.allNeeds.filter((n) => n.oid !== this.deleteTargetOid);
+    // Reaplicar filtros para actualizar la lista
+    this.aplicarTodosFiltros();
+    this.cancelarEliminar();
+  }
+
+  cancelarEliminar(): void {
+    this.deleteTargetOid = null;
+    this.deleteConfirmVisible = false;
+  }
+
+  aceptarEdicion(): void {
+    if (!this.editFormulario.valid || !this.editingOid) return;
+    const valores = this.editFormulario.value;
+    // Actualizar en allNeeds
+    this.allNeeds = this.allNeeds.map((n) => {
+      if (n.oid === this.editingOid) {
+        return {
+          ...n,
+          grupo: valores.grupo,
+          cupo: +valores.cupo,
+          horasSemanales: +valores.horasSemanales,
+        } as NeedRow;
+      }
+      return n;
+    });
+    // Reaplicar filtros para actualizar lista visible
+    this.aplicarTodosFiltros();
+    this.cancelarEdicion();
+  }
+
+  cancelarEdicion(): void {
+    this.editFormulario.reset({ grupo: '', cupo: 0, horasSemanales: 0 });
+    this.editingOid = null;
+    this.editarModalVisible = false;
   }
 }
