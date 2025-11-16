@@ -25,57 +25,5 @@
         </div>
       </div>
     </ng-container>
-
-    <div class="col d-flex justify-content-end">
-      <div class="user-section">
-        <!-- Nombre usuario (visible en desktop) -->
-        <span class="user-name d-none d-md-inline">
-          {{ this.currentUser?.nombres }} {{ this.currentUser?.apellidos }}
-        </span>
-
-        <!-- Dropdown del usuario -->
-        <div class="user-dropdown">
-          <button
-            class="user-btn"
-            (click)="toggleUserDropdown()"
-            [class.active]="isUserDropdownOpen"
-          >
-            <img [src]="'assets/icons/header/icon-user.svg'" alt="icon-user" />
-          </button>
-
-          <!-- Menú desplegable -->
-          <div class="user-menu" [class.show]="isUserDropdownOpen">
-            <!-- Info usuario (solo móvil) -->
-            <div class="user-info-mobile d-md-none">
-              <strong
-                >{{ this.currentUser?.nombres }}
-                {{ this.currentUser?.apellidos }}</strong
-              >
-            </div>
-
-            <!-- Submenu Roles -->
-            <div class="submenu-container">
-              <div class="submenu-trigger" (click)="toggleRolesSubmenu()">
-                <span>Roles</span>
-                <i class="arrow fas fa-chevron-right" [class.fa-chevron-down]="isRolesSubmenuOpen"></i>
-              </div>
-
-              <!-- Lista de roles -->
-              <div class="submenu-content" [class.show]="isRolesSubmenuOpen">
-                <div class="role-item" *ngFor="let role of currentUser?.roles">
-                  {{ role.nombre }}
-                </div>
-              </div>
-            </div>
-
-            <!-- Separador -->
-            <hr class="menu-divider" />
-
-            <!-- Cerrar sesión -->
-            <button class="logout-btn" (click)="logOut()">Cerrar sesión</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </header>

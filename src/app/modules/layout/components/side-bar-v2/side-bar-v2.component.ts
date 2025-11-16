@@ -3,19 +3,22 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  inject,
+  OnChanges,
+  SimpleChanges,
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthServiceService } from '../../../auth/service/auth-service.service';
-import { UsuarioResponse } from '../../../../core/models/response/usuario-response.model';
+import { UserProfileModalComponent } from '../user-profile-modal/user-profile-modal.component';
+import { getUserData } from '../../../auth/utils/user-storage.utils';
+import { UserData } from '../../../auth/models';
+
 
 interface MenuItem {
   role: string[];
   icon: string;
   label: string;
-  url?: string; // solo existe en subitems
+  url?: string;
   children?: MenuItem[];
   isOpen?: boolean;
 }
@@ -23,14 +26,14 @@ interface MenuItem {
 @Component({
   selector: 'app-side-bar-v2',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, UserProfileModalComponent],
   templateUrl: './side-bar-v2.component.html',
   styleUrl: './side-bar-v2.component.scss',
 })
-export class SideBarV2Component implements OnInit {
-  private authServicesService: AuthServiceService = inject(AuthServiceService);
-  public currentUser: UsuarioResponse | null = null;
+export class SideBarV2Component implements OnInit, OnChanges {
+  public currentUser: UserData | null = null;
   public userRoles: string[] = [];
+  public isUserModalOpen = false;
 
   @Input() isSidebarCollapsed = false;
   @Output() sidebarToggle = new EventEmitter<void>();
@@ -263,8 +266,18 @@ export class SideBarV2Component implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.currentUser = this.authServicesService.currentUserValue;
-    this.userRoles = this.currentUser?.roles.map((role) => role.nombre) || [];
+    // Usa la utilidad para obtener los datos del usuario
+    this.currentUser = getUserData();
+    this.userRoles =
+      this.currentUser?.roles.map((role: { nombre: any }) => role.nombre) || [];
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isSidebarCollapsed']) {
+      if (this.isUserModalOpen) {
+        this.isUserModalOpen = false;
+      }
+    }
   }
 
   hasRole(roles: string[]): boolean {
@@ -283,8 +296,22 @@ export class SideBarV2Component implements OnInit {
           menuItem.isOpen = false;
         }
       });
-
       item.isOpen = !item.isOpen;
     }
+  }
+
+  toggleUserModal() {
+    this.isUserModalOpen = !this.isUserModalOpen;
+  }
+
+  closeUserModal() {
+    this.isUserModalOpen = false;
+  }
+
+  getUserInitials(): string {
+    if (!this.currentUser) return 'U';
+    const nombres = this.currentUser.nombres?.charAt(0) || '';
+    const apellidos = this.currentUser.apellidos?.charAt(0) || '';
+    return `${nombres}${apellidos}`.toUpperCase();
   }
 }

@@ -1,0 +1,157 @@
+<!-- Overlay -->
+<div 
+  class="modal-overlay" 
+  *ngIf="isOpen"
+  (click)="closeModal()"
+></div>
+
+<!-- Popover flotante -->
+<div 
+  class="user-profile-popover" 
+  *ngIf="isOpen"
+  [ngClass]="{ 'popover-from-collapsed': isSidebarCollapsed }"
+>
+  <!-- Header con avatar e info básica -->
+  <div class="popover-header">
+    <div class="user-avatar">
+      <span>{{ getUserInitials() }}</span>
+    </div>
+    <div class="user-info">
+      <h3>{{ currentUser?.nombres }} {{ currentUser?.apellidos }}</h3>
+      <p>ID: {{ currentUser?.identificacion }}</p>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider"></div>
+
+  <!-- Body con scroll -->
+  <div class="popover-body">
+    <!-- Información institucional -->
+    <div class="info-section">
+      <div class="info-item">
+        <i class="fas fa-building"></i>
+        <div class="info-text">
+          <span class="label">Departamento</span>
+          <span class="value">{{ currentUser?.departamento?.nombre }}</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <i class="fas fa-university"></i>
+        <div class="info-text">
+          <span class="label">Facultad</span>
+          <span class="value">{{ currentUser?.departamento?.facultad }}</span>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="currentUser?.departamento?.jefeNombre">
+        <i class="fas fa-user-tie"></i>
+        <div class="info-text">
+          <span class="label">Jefe de departamento</span>
+          <span class="value">{{ currentUser?.departamento?.jefeNombre }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información laboral -->
+    <div class="divider-small"></div>
+    
+    <div class="info-section" *ngIf="currentUser?.usuarioDetalle">
+      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.departamento">
+        <i class="fas fa-sitemap"></i>
+        <div class="info-text">
+          <span class="label">Departamento (Detalle)</span>
+          <span class="value">{{ currentUser?.usuarioDetalle?.departamento }}</span>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.programa">
+        <i class="fas fa-book"></i>
+        <div class="info-text">
+          <span class="label">Programa</span>
+          <span class="value">{{ currentUser?.usuarioDetalle?.programa }}</span>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.categoria">
+        <i class="fas fa-id-badge"></i>
+        <div class="info-text">
+          <span class="label">Categoría</span>
+          <span class="value">{{ currentUser?.usuarioDetalle?.categoria }}</span>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.contratacion">
+        <i class="fas fa-briefcase"></i>
+        <div class="info-text">
+          <span class="label">Contratación</span>
+          <span class="value">{{ currentUser?.usuarioDetalle?.contratacion }}</span>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.dedicacion">
+        <i class="fas fa-clock"></i>
+        <div class="info-text">
+          <span class="label">Dedicación</span>
+          <span class="value">{{ currentUser?.usuarioDetalle?.dedicacion }}</span>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.estudios">
+        <i class="fas fa-graduation-cap"></i>
+        <div class="info-text">
+          <span class="label">Nivel de estudios</span>
+          <span class="value">{{ currentUser?.usuarioDetalle?.estudios }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="divider-small" *ngIf="currentUser?.programaCoordinador || currentUser?.departamentoJefatura"></div>
+
+    <div class="info-section" *ngIf="currentUser?.programaCoordinador || currentUser?.departamentoJefatura">
+      <div class="info-item" *ngIf="currentUser?.programaCoordinador">
+        <i class="fas fa-user-graduate"></i>
+        <div class="info-text">
+          <span class="label">Programa coordinador</span>
+          <span class="value">{{ currentUser?.programaCoordinador }}</span>
+        </div>
+      </div>
+
+      <div class="info-item" *ngIf="currentUser?.departamentoJefatura">
+        <i class="fas fa-user-shield"></i>
+        <div class="info-text">
+          <span class="label">Departamento jefatura</span>
+          <span class="value">{{ currentUser?.departamentoJefatura }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Roles -->
+    <div class="divider-small"></div>
+
+    <div class="roles-section">
+      <div class="roles-header">
+        <i class="fas fa-user-tag"></i>
+        <span class="label">Roles</span>
+      </div>
+      <div class="roles-list">
+        <span class="role-tag" *ngFor="let role of currentUser?.roles">
+          {{ role.nombre }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider"></div>
+
+  <!-- Footer -->
+  <div class="popover-footer">
+    <button class="logout-btn" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Cerrar sesión</span>
+    </button>
+  </div>
+</div>

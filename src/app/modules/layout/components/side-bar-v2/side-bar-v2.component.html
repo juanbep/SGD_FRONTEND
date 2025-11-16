@@ -54,4 +54,23 @@
       </ng-container>
     </ul>
   </div>
+  <div class="sidebar-user-profile">
+    <div class="user-profile-trigger" (click)="toggleUserModal()">
+      <div class="user-avatar">
+        <span>{{ getUserInitials() }}</span>
+      </div>
+      <ng-container *ngIf="!isSidebarCollapsed">
+        <span class="user-name"
+          >{{ currentUser?.nombres }} {{ currentUser?.apellidos }}</span
+        >
+      </ng-container>
+    </div>
+  </div>
 </div>
+
+<app-user-profile-modal
+  [currentUser]="currentUser"
+  [isOpen]="isUserModalOpen"
+  [isSidebarCollapsed]="isSidebarCollapsed"
+  (close)="closeUserModal()"
+></app-user-profile-modal>
