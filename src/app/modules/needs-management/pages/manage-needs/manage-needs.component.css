@@ -1,0 +1,27 @@
+/* Estilos coherentes con el patrón visual del proyecto */
+
+.view-container {
+  background-color: var(--white);
+  padding: 24px 112px 50px 112px;
+}
+
+.table-active {
+  background-color: rgba(13, 110, 253, 0.05) !important;
+}
+
+.form-check-input {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 900px) {
+  .view-container {
+    padding: 24px 24px 50px 24px;
+  }
+}

@@ -13,6 +13,13 @@ const routes: Routes = [
             (m) => m.ViewNeedsComponent
           ),
       },
+      {
+        path: 'gestionar',
+        loadComponent: () =>
+          import('./pages/manage-needs/manage-needs.component').then(
+            (m) => m.ManageNeedsComponent
+          ),
+      },
     ],
   },
 ];
