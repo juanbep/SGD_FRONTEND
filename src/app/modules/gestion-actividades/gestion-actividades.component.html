@@ -1,0 +1,26 @@
+<div class="view-container">
+  <div class="page-header mb-4">
+    <h3 class="page-title">
+      <i class="fas fa-tasks me-2"></i>
+      Gestión de Actividades
+    </h3>
+  </div>
+
+  <!-- Pestañas Principales -->
+  <nav class="tabs-principales mb-4">
+    <div class="tabs-wrapper">
+      <a
+        *ngFor="let tab of tabsPrincipales"
+        [routerLink]="[tab.route]"
+        routerLinkActive="active"
+        class="tab-item"
+      >
+        <i class="fas {{ tab.icon }} me-2"></i>
+        {{ tab.label }}
+      </a>
+    </div>
+  </nav>
+
+  <!-- Contenido dinámico -->
+  <router-outlet></router-outlet>
+</div>

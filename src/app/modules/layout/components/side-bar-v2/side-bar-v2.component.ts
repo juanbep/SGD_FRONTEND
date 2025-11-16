@@ -13,7 +13,6 @@ import { UserProfileModalComponent } from '../user-profile-modal/user-profile-mo
 import { getUserData } from '../../../auth/utils/user-storage.utils';
 import { UserData } from '../../../auth/models';
 
-
 interface MenuItem {
   role: string[];
   icon: string;
@@ -188,6 +187,18 @@ export class SideBarV2Component implements OnInit, OnChanges {
           icon: 'fas fa-lock',
           label: 'Crear actividades',
           url: '/app/gestion-actividades-docente/create',
+        },
+        {
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'ESTUDIANTE',
+            'COORDINADOR',
+            'DECANO',
+            'DOCENTE',
+          ],
+          icon: 'fas fa-lock',
+          label: 'Crear actividades v2',
+          url: '/app/gestion-actividades-docente/create2',
         },
         {
           role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
