@@ -1,0 +1,224 @@
+<div *ngIf="visible" class="modal fade show d-block" tabindex="-1">
+  <div
+    class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas {{ modoEdicion() ? 'fa-edit' : 'fa-plus' }} me-2"></i>
+          {{ modoEdicion() ? "Editar" : "Agregar" }} {{ metadata.nombreTipo }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cancelar()"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="actividadForm">
+          <!-- Nombre Actividad -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-tag me-2"></i>
+              Nombre de la Actividad *
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="nombreActividad"
+              placeholder="Ej: Trabajo de Grado - Análisis de Sistemas"
+              [class.is-invalid]="
+                getControl('nombreActividad')?.invalid &&
+                getControl('nombreActividad')?.touched
+              "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                getControl('nombreActividad')?.invalid &&
+                getControl('nombreActividad')?.touched
+              "
+            >
+              <span *ngIf="getControl('nombreActividad')?.errors?.['required']">
+                El nombre es requerido
+              </span>
+              <span
+                *ngIf="getControl('nombreActividad')?.errors?.['minlength']"
+              >
+                El nombre debe tener al menos 3 caracteres
+              </span>
+            </div>
+          </div>
+
+          <!-- Semanas -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-calendar-week me-2"></i>
+              Semanas *
+            </label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="semanas"
+              placeholder="16"
+              [class.is-invalid]="
+                getControl('semanas')?.invalid && getControl('semanas')?.touched
+              "
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                getControl('semanas')?.invalid && getControl('semanas')?.touched
+              "
+            >
+              Debe ingresar un número válido de semanas
+            </div>
+          </div>
+
+          <!-- Estado -->
+          <div class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-toggle-on me-2"></i>
+              Estado *
+            </label>
+            <select class="form-select" formControlName="oidEstadoActividad">
+              <option
+                *ngFor="let estado of estadosActividad"
+                [value]="estado.oid"
+              >
+                {{ estado.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <hr class="my-4" />
+
+          <!-- Atributos Dinámicos -->
+          <h6 class="mb-3 text-muted">
+            <i class="fas fa-info-circle me-2"></i>
+            Información Específica
+          </h6>
+
+          <div *ngFor="let atributo of metadata.atributos" class="mb-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-pen me-2"></i>
+              {{ atributo.label }} {{ atributo.requerido ? "*" : "" }}
+            </label>
+
+            <!-- Input de texto -->
+            <input
+              *ngIf="atributo.tipoCampo === 'text'"
+              type="text"
+              class="form-control"
+              [formControlName]="atributo.nombre"
+              [placeholder]="atributo.placeholder || ''"
+              [class.is-invalid]="
+                getControl(atributo.nombre)?.invalid &&
+                getControl(atributo.nombre)?.touched
+              "
+            />
+
+            <!-- Input de número -->
+            <input
+              *ngIf="atributo.tipoCampo === 'number'"
+              type="number"
+              class="form-control"
+              [formControlName]="atributo.nombre"
+              [placeholder]="atributo.placeholder || ''"
+              [class.is-invalid]="
+                getControl(atributo.nombre)?.invalid &&
+                getControl(atributo.nombre)?.touched
+              "
+            />
+
+            <!-- Input de fecha -->
+            <input
+              *ngIf="atributo.tipoCampo === 'date'"
+              type="date"
+              class="form-control"
+              [formControlName]="atributo.nombre"
+              [class.is-invalid]="
+                getControl(atributo.nombre)?.invalid &&
+                getControl(atributo.nombre)?.touched
+              "
+            />
+
+            <!-- Select -->
+            <select
+              *ngIf="atributo.tipoCampo === 'select'"
+              class="form-select"
+              [formControlName]="atributo.nombre"
+              [class.is-invalid]="
+                getControl(atributo.nombre)?.invalid &&
+                getControl(atributo.nombre)?.touched
+              "
+            >
+              <option value="">Seleccione una opción</option>
+              <option
+                *ngFor="let opcion of atributo.opcionesSelect?.estatico"
+                [value]="opcion.value"
+              >
+                {{ opcion.label }}
+              </option>
+            </select>
+
+            <!-- Textarea -->
+            <textarea
+              *ngIf="atributo.tipoCampo === 'textarea'"
+              class="form-control"
+              [formControlName]="atributo.nombre"
+              [placeholder]="atributo.placeholder || ''"
+              rows="3"
+              [class.is-invalid]="
+                getControl(atributo.nombre)?.invalid &&
+                getControl(atributo.nombre)?.touched
+              "
+            ></textarea>
+
+            <div
+              class="invalid-feedback"
+              *ngIf="
+                getControl(atributo.nombre)?.invalid &&
+                getControl(atributo.nombre)?.touched
+              "
+            >
+              Este campo es requerido
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <div class="form-check me-auto" *ngIf="!modoEdicion()">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="agregarOtra"
+            [checked]="agregarOtra()"
+            (change)="agregarOtra.set($any($event.target).checked)"
+          />
+          <label class="form-check-label" for="agregarOtra">
+            Agregar otra después de guardar
+          </label>
+        </div>
+
+        <button type="button" class="btn btn-secondary" (click)="cancelar()">
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="actividadForm.invalid"
+          (click)="confirmar()"
+        >
+          <i class="fas {{ modoEdicion() ? 'fa-save' : 'fa-plus' }} me-2"></i>
+          {{ modoEdicion() ? "Actualizar" : "Agregar" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="visible" class="modal-backdrop fade show"></div>
