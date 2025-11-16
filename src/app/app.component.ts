@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SideBarV2Component } from '../app/modules/layout/components/side-bar-v2/side-bar-v2.component';
+import { AuthServiceService } from './modules/auth/service/auth-service.service';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,9 @@ import { SideBarV2Component } from '../app/modules/layout/components/side-bar-v2
 })
 export class AppComponent {
   title = 'sed-frontend';
-
   isSidebarCollapsed = false;
+
+  public authService = inject(AuthServiceService);
 
   onSidebarToggle() {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;

@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-administracion',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './administracion.component.html',
-  styleUrl: './administracion.component.css'
+  styleUrl: './administracion.component.css',
 })
-export class AdministracionComponent {
-
-}
+export class AdministracionComponent {}

@@ -1,0 +1,12 @@
+.actividad-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.375rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 18, 130, 0.075);
+}
+.content-placeholder {
+  padding: 3rem;
+}
+.content-placeholder i {
+  color: #0051c6;
+}

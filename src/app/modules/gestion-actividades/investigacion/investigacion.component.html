@@ -1,1 +1,30 @@
-<p>investigacion works!</p>
+<div class="actividad-container">
+  <!-- Sub-pestañas -->
+  <nav class="sub-tabs mb-4">
+    <div class="sub-tabs-wrapper">
+      <button
+        *ngFor="let tab of subTabs"
+        type="button"
+        class="sub-tab-item"
+        [class.active]="subTabActiva() === tab.id"
+        (click)="seleccionarSubTab(tab.id)"
+      >
+        <i class="fas {{ tab.icon }} me-2"></i>
+        {{ tab.label }}
+      </button>
+    </div>
+  </nav>
+
+  <!-- Contenido de cada sub-pestaña -->
+  <div class="sub-tab-content">
+    <app-proyectos-investigacion
+      *ngIf="subTabActiva() === 'proyectos'"
+    ></app-proyectos-investigacion>
+    <app-semilleros-investigacion
+      *ngIf="subTabActiva() === 'semilleros'"
+    ></app-semilleros-investigacion>
+    <app-trabajos-investigacion
+      *ngIf="subTabActiva() === 'trabajos'"
+    ></app-trabajos-investigacion>
+  </div>
+</div>

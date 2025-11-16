@@ -15,6 +15,10 @@ export class AuthServiceService {
 
   private _currentUser = signal<UsuarioResponse | null>(null);
 
+  public isAuthenticated = computed(() => {
+    return this.loginSuccess$() && this._currentUser() !== null;
+  });
+
   public loginSuccess$ = signal<boolean>(false);
 
   public currentUser = computed(() => this._currentUser());

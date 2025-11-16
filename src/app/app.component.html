@@ -1,4 +1,5 @@
 <div class="app-container">
+  @if (authService.isAuthenticated()) {
   <div class="position-relative">
     <app-side-bar-v2
       [isSidebarCollapsed]="isSidebarCollapsed"
@@ -17,8 +18,14 @@
       ></i>
     </button>
   </div>
+  }
 
-  <main class="content" [ngClass]="{ 'content-expanded': isSidebarCollapsed }">
+  <main
+    class="content"
+    [ngClass]="{
+      'content-expanded': isSidebarCollapsed || !authService.isAuthenticated()
+    }"
+  >
     <div class="content-inner"><router-outlet></router-outlet></div>
   </main>
 </div>
