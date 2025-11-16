@@ -14,17 +14,25 @@
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 d-flex align-items-center"><i class="fas fa-filter me-2"></i>Filtros de Búsqueda</h6>
-                <button type="button" class="btn btn-outline-secondary d-flex align-items-center"
-                    (click)="limpiarFiltros()">
-                    <i class="fas fa-times"></i>
-                    <span class="d-none d-lg-inline ms-1">Limpiar</span>
-                </button>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary d-flex align-items-center"
+                        (click)="abrirModalFiltros()">
+                        <i class="fas fa-filter"></i>
+                        <span class="d-none d-lg-inline ms-1">Filtros</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary d-flex align-items-center"
+                        (click)="limpiarFiltros()">
+                        <i class="fas fa-times"></i>
+                        <span class="d-none d-lg-inline ms-1">Limpiar</span>
+                    </button>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-xl-3 col-lg-4 col-md-6">
-                        <label class="form-label fw-bold"><i class="fas fa-calendar me-1"></i>Periodo:</label>
-                        <select class="form-select" [(ngModel)]="filtroPeriodo">
+                        <label for="filtroPeriodo" class="form-label fw-bold"><i
+                                class="fas fa-calendar me-1"></i>Periodo:</label>
+                        <select id="filtroPeriodo" class="form-select" [(ngModel)]="filtroPeriodo">
                             <option value="">Todos los periodos</option>
                             <option *ngFor="let p of periodos" [value]="p.oid">{{ p.label }}</option>
                         </select>
@@ -32,8 +40,9 @@
                     </div>
 
                     <div class="col-xl-3 col-lg-4 col-md-6">
-                        <label class="form-label fw-bold"><i class="fas fa-building me-1"></i>Departamento:</label>
-                        <select class="form-select" [(ngModel)]="filtroDepartamento">
+                        <label for="filtroDepartamento" class="form-label fw-bold"><i
+                                class="fas fa-building me-1"></i>Departamento:</label>
+                        <select id="filtroDepartamento" class="form-select" [(ngModel)]="filtroDepartamento">
                             <option value="">Todos los departamentos</option>
                             <option *ngFor="let d of departamentos" [value]="d.oid">{{ d.label }}</option>
                         </select>
@@ -41,8 +50,9 @@
                     </div>
 
                     <div class="col-xl-3 col-lg-4 col-md-6">
-                        <label class="form-label fw-bold"><i class="fas fa-graduation-cap me-1"></i>Programa:</label>
-                        <select class="form-select" [(ngModel)]="filtroPrograma">
+                        <label for="filtroPrograma" class="form-label fw-bold"><i
+                                class="fas fa-graduation-cap me-1"></i>Programa:</label>
+                        <select id="filtroPrograma" class="form-select" [(ngModel)]="filtroPrograma">
                             <option value="">Todos los programas</option>
                             <option *ngFor="let pr of programas" [value]="pr.oid">{{ pr.label }}</option>
                         </select>
@@ -50,8 +60,8 @@
                     </div>
 
                     <div class="col-xl-3 d-flex justify-content-end align-items-end">
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-primary" (click)="aplicarFiltros()"><i
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" (click)="aplicarTodosFiltros()"><i
                                     class="fas fa-search me-1"></i>Buscar</button>
                             <button type="button" class="btn btn-outline-secondary" title="Recargar filtros"
                                 (click)="loadMockData()"><i class="fas fa-sync-alt"></i></button>
@@ -124,4 +134,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Filtros Reutilizable -->
+    <shared-filter-modal [visible]="mostrarModalFiltros" [titulo]="'Filtros Avanzados'" [campos]="camposFiltroModal"
+        (aplicar)="aplicarFiltrosModal($event)" (limpiar)="limpiarFiltrosModal()" (cerrar)="cerrarModalFiltros()">
+    </shared-filter-modal>
 </div>

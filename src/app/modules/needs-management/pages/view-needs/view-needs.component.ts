@@ -2,6 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
+import {
+  FilterModalComponent,
+  CampoFiltro,
+  ValoresFiltros,
+} from '../../../../shared/components/filter-modal/filter-modal.component';
 
 interface NeedRow {
   oid: string;
@@ -21,7 +26,12 @@ interface NeedRow {
 @Component({
   selector: 'app-view-needs',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginatorComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    PaginatorComponent,
+    FilterModalComponent,
+  ],
   templateUrl: './view-needs.component.html',
   styleUrls: ['./view-needs.component.css'],
 })
@@ -52,12 +62,55 @@ export class ViewNeedsComponent {
   filtroDepartamento: string = '';
   filtroPrograma: string = '';
 
+  // Control del modal de filtros
+  mostrarModalFiltros: boolean = false;
+  camposFiltroModal: CampoFiltro[] = [];
+
+  // Filtros del modal
+  filtroNombre: string = '';
+  filtroSemestre: string = '';
+  filtroCodigo: string = '';
+
   // Paginación simple (mock) - currentPage es 1-based para shared-paginator
   currentPage = 1;
   pageSize = 5;
 
   constructor() {
     this.loadMockData();
+    this.configurarCamposModal();
+  }
+
+  configurarCamposModal(): void {
+    this.camposFiltroModal = [
+      {
+        nombre: 'nombre',
+        etiqueta: 'Nombre',
+        tipo: 'texto',
+        placeholder: 'Ingrese el nombre de la necesidad',
+        icono: 'fas fa-font',
+      },
+      {
+        nombre: 'semestre',
+        etiqueta: 'Semestre',
+        tipo: 'select',
+        opciones: [
+          { valor: '1', etiqueta: 'Semestre 1' },
+          { valor: '2', etiqueta: 'Semestre 2' },
+          { valor: '3', etiqueta: 'Semestre 3' },
+          { valor: '4', etiqueta: 'Semestre 4' },
+          { valor: '5', etiqueta: 'Semestre 5' },
+          { valor: '6', etiqueta: 'Semestre 6' },
+        ],
+        icono: 'fas fa-list-ol',
+      },
+      {
+        nombre: 'codigo',
+        etiqueta: 'Código',
+        tipo: 'texto',
+        placeholder: 'Ingrese el código',
+        icono: 'fas fa-code',
+      },
+    ];
   }
 
   loadMockData() {
@@ -179,5 +232,60 @@ export class ViewNeedsComponent {
     this.filtroPrograma = '';
     this.needs = [...this.allNeeds];
     this.currentPage = 1;
+  }
+
+  abrirModalFiltros(): void {
+    this.mostrarModalFiltros = true;
+  }
+
+  cerrarModalFiltros(): void {
+    this.mostrarModalFiltros = false;
+  }
+
+  aplicarFiltrosModal(valores: ValoresFiltros): void {
+    this.filtroNombre = (valores['nombre'] as string) || '';
+    this.filtroSemestre = (valores['semestre'] as string) || '';
+    this.filtroCodigo = (valores['codigo'] as string) || '';
+
+    this.aplicarTodosFiltros();
+  }
+
+  limpiarFiltrosModal(): void {
+    this.filtroNombre = '';
+    this.filtroSemestre = '';
+    this.filtroCodigo = '';
+    this.aplicarTodosFiltros();
+  }
+
+  aplicarTodosFiltros(): void {
+    this.currentPage = 1;
+    this.needs = this.allNeeds.filter((n) => {
+      // Filtros por OID (exactos)
+      if (this.filtroPeriodo && n.periodoOid !== this.filtroPeriodo)
+        return false;
+      if (
+        this.filtroDepartamento &&
+        n.departamentoOid !== this.filtroDepartamento
+      )
+        return false;
+      if (this.filtroPrograma && n.programaOid !== this.filtroPrograma)
+        return false;
+
+      // Filtros del modal (parciales)
+      if (
+        this.filtroNombre &&
+        !n.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
+      )
+        return false;
+      if (this.filtroSemestre && n.semestre !== this.filtroSemestre)
+        return false;
+      if (
+        this.filtroCodigo &&
+        !n.codigo.toLowerCase().includes(this.filtroCodigo.toLowerCase())
+      )
+        return false;
+
+      return true;
+    });
   }
 }
