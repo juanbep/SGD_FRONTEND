@@ -11,24 +11,19 @@
 .modal-header {
   background-color: #001282;
   color: white;
-  border-bottom: 2px solid #0051c6;
-  padding: 1.5rem;
+  border-bottom: none;
+  padding: 1.25rem 1.5rem;
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .modal-header .modal-title {
   font-weight: 700;
   margin: 0;
+  font-size: 1.125rem;
 }
 
 .modal-header .modal-title i {
   color: #f8ae15;
-}
-
-.modal-body {
-  padding: 2rem;
-  background-color: white;
-  min-height: 300px;
 }
 
 .btn-close-white {
@@ -40,95 +35,77 @@
   cursor: not-allowed;
 }
 
+.modal-body {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
 /* Loading State */
 .loading-state .spinner-border {
-  width: 3rem;
-  height: 3rem;
-  border-width: 0.3rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 0.25rem;
   color: #0051c6;
 }
 
-/* Error State */
-.error-state i {
-  color: #ad0000;
-}
-
-/* Calendarios Grid */
-.calendarios-container {
-  max-height: 500px;
-  overflow-y: auto;
-}
-
+/* Grid de Calendarios */
 .calendarios-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 
 .calendario-card {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 1.25rem;
+  justify-content: center;
+  padding: 1.5rem 1rem;
   border: 2px solid #dee2e6;
   border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
   background-color: white;
+  text-align: center;
+  min-height: 140px;
 }
 
 .calendario-card:hover {
   border-color: #0051c6;
   background-color: rgba(0, 81, 198, 0.05);
-  transform: translateX(5px);
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 81, 198, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 81, 198, 0.15);
 }
 
-.calendario-icono {
-  flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 81, 198, 0.1);
-  border-radius: 0.5rem;
-  margin-right: 1rem;
-}
-
-.calendario-icono i {
+.calendario-card i {
   color: #0051c6;
-}
-
-.calendario-info {
-  flex: 1;
 }
 
 .calendario-nombre {
-  margin: 0 0 0.25rem 0;
-  color: #001282;
   font-weight: 600;
-  font-size: 1rem;
+  color: #001282;
+  font-size: 0.9375rem;
+  margin-bottom: 0.25rem;
 }
 
-.calendario-arrow {
-  flex-shrink: 0;
-  color: #0051c6;
-  font-size: 1.25rem;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.calendario-card:hover .calendario-arrow {
-  opacity: 1;
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
 }
 
 .modal-backdrop.show {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 576px) {
   .modal-dialog {
     margin: 0.5rem;
+  }
+
+  .calendarios-grid {
+    grid-template-columns: 1fr;
   }
 
   .modal-body {
@@ -136,11 +113,7 @@
   }
 
   .calendario-card {
-    padding: 1rem;
-  }
-
-  .calendario-icono {
-    width: 50px;
-    height: 50px;
+    padding: 1.25rem 1rem;
+    min-height: 120px;
   }
 }
