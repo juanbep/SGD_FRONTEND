@@ -119,13 +119,27 @@
               "
             />
 
-            <!-- Input de número -->
+            <!-- Input de número entero -->
             <input
               *ngIf="atributo.tipoCampo === 'number'"
               type="number"
               class="form-control"
               [formControlName]="atributo.nombre"
               [placeholder]="atributo.placeholder || ''"
+              [class.is-invalid]="
+                getControl(atributo.nombre)?.invalid &&
+                getControl(atributo.nombre)?.touched
+              "
+            />
+
+            <!-- Input de número decimal -->
+            <input
+              *ngIf="atributo.tipoCampo === 'decimal'"
+              type="number"
+              class="form-control"
+              [formControlName]="atributo.nombre"
+              [placeholder]="atributo.placeholder || ''"
+              step="0.1"
               [class.is-invalid]="
                 getControl(atributo.nombre)?.invalid &&
                 getControl(atributo.nombre)?.touched

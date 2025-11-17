@@ -1,4 +1,10 @@
-export type TipoCampo = 'text' | 'number' | 'date' | 'select' | 'textarea';
+export type TipoCampo =
+  | 'text'
+  | 'number'
+  | 'decimal'
+  | 'date'
+  | 'select'
+  | 'textarea';
 
 export interface AtributoMetadata {
   nombre: string;
@@ -30,7 +36,7 @@ export interface SubtipoActividadConfig {
 
 export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
   TRABAJOS_DOCENCIA: {
-    oidTipoActividad: 1, // Ajusta el ID correcto según el backend
+    oidTipoActividad: 1, // ID que se envía al backend
     nombreTipo: 'Trabajos de Docencia',
     atributos: [
       {
@@ -65,18 +71,19 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       },
       {
         nombre: 'HORAS',
-        tipoValor: 'NUMBER',
+        tipoValor: 'INT',
         label: 'Horas',
         tipoCampo: 'number',
         requerido: true,
         mostrarEnTabla: true,
         orden: 4,
         placeholder: 'Ej: 4',
+        validaciones: { min: 1 },
       },
     ],
   },
   PROYECTOS_INVESTIGACION: {
-    oidTipoActividad: 2, // Ajusta el ID correcto según el backend
+    oidTipoActividad: 2, // ID que se envía al backend
     nombreTipo: 'Proyectos de Investigación',
     atributos: [
       {
@@ -120,9 +127,9 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       },
       {
         nombre: 'HAPROB',
-        tipoValor: 'INT',
+        tipoValor: 'FLOAT',
         label: 'H. APROB',
-        tipoCampo: 'number',
+        tipoCampo: 'decimal',
         requerido: true,
         mostrarEnTabla: true,
         orden: 5,
@@ -131,9 +138,9 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       },
       {
         nombre: 'HLABOR',
-        tipoValor: 'INT',
+        tipoValor: 'FLOAT',
         label: 'H. LABOR',
-        tipoCampo: 'number',
+        tipoCampo: 'decimal',
         requerido: true,
         mostrarEnTabla: true,
         orden: 6,
@@ -143,7 +150,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
     ],
   },
   SEMILLEROS_INVESTIGACION: {
-    oidTipoActividad: 3, // Ajusta el ID correcto según el backend
+    oidTipoActividad: 3, // ID que se envía al backend
     nombreTipo: 'Semilleros de Investigación',
     atributos: [
       {
@@ -203,7 +210,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
     ],
   },
   TRABAJOS_INVESTIGACION: {
-    oidTipoActividad: 4, // Ajusta el ID correcto según el backend
+    oidTipoActividad: 4, // ID que se envía al backend
     nombreTipo: 'Trabajos de Investigación',
     atributos: [
       {
@@ -259,6 +266,252 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         orden: 5,
         placeholder: 'Ingrese observaciones relevantes',
         validaciones: { minLength: 5, maxLength: 500 },
+      },
+    ],
+  },
+  ADMINISTRACION: {
+    oidTipoActividad: 5, // ID que se envía al backend
+    nombreTipo: 'Administración',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'CARGO',
+        tipoValor: 'VARCHAR',
+        label: 'Cargo',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Ej: Director de Departamento',
+        validaciones: { minLength: 3, maxLength: 200 },
+      },
+      {
+        nombre: 'AREA',
+        tipoValor: 'VARCHAR',
+        label: 'Área',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 3,
+        placeholder: 'Ej: Departamento de Sistemas',
+        validaciones: { minLength: 3, maxLength: 200 },
+      },
+      {
+        nombre: 'HORAS',
+        tipoValor: 'INT',
+        label: 'Horas',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 4,
+        placeholder: 'Número de horas',
+        validaciones: { min: 1 },
+      },
+    ],
+  },
+  ASESORIA: {
+    oidTipoActividad: 6, // ID que se envía al backend
+    nombreTipo: 'Asesoría',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'UNIDADACADEMICA',
+        tipoValor: 'VARCHAR',
+        label: 'Unidad Académica',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Ej: Facultad de Ingeniería',
+        validaciones: { minLength: 3, maxLength: 200 },
+      },
+      {
+        nombre: 'HORAS',
+        tipoValor: 'INT',
+        label: 'Horas',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 3,
+        placeholder: 'Número de horas',
+        validaciones: { min: 1 },
+      },
+    ],
+  },
+  SERVICIOS: {
+    oidTipoActividad: 7, // ID que se envía al backend
+    nombreTipo: 'Servicios',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'HORAS',
+        tipoValor: 'INT',
+        label: 'Horas',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Número de horas',
+        validaciones: { min: 1 },
+      },
+    ],
+  },
+  EXTENSION: {
+    oidTipoActividad: 8, // ID que se envía al backend
+    nombreTipo: 'Extensión',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'NOMBREPROYECTO',
+        tipoValor: 'VARCHAR',
+        label: 'Nombre del Proyecto',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Ej: Proyecto de Extensión Comunitaria',
+        validaciones: { minLength: 3, maxLength: 200 },
+      },
+      {
+        nombre: 'FECHAINICIAL',
+        tipoValor: 'DATE',
+        label: 'Fecha Inicial',
+        tipoCampo: 'date',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 3,
+      },
+      {
+        nombre: 'FECHAFINAL',
+        tipoValor: 'DATE',
+        label: 'Fecha Final',
+        tipoCampo: 'date',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 4,
+      },
+      {
+        nombre: 'HORAS',
+        tipoValor: 'INT',
+        label: 'Horas',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 5,
+        placeholder: 'Número de horas',
+        validaciones: { min: 1 },
+      },
+      {
+        nombre: 'OBSERVACION',
+        tipoValor: 'VARCHAR',
+        label: 'Observación',
+        tipoCampo: 'textarea',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 6,
+        placeholder: 'Ingrese observaciones relevantes',
+        validaciones: { minLength: 5, maxLength: 500 },
+      },
+    ],
+  },
+  CAPACITACION: {
+    oidTipoActividad: 9, // ID que se envía al backend
+    nombreTipo: 'Capacitación',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'ANIOCOMISION',
+        tipoValor: 'INT',
+        label: 'Año Comisión',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Ej: 2024',
+        validaciones: { min: 2000, max: 2100 },
+      },
+      {
+        nombre: 'HORAS',
+        tipoValor: 'INT',
+        label: 'Horas',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 3,
+        placeholder: 'Número de horas',
+        validaciones: { min: 1 },
+      },
+    ],
+  },
+  OTROS_SERVICIOS: {
+    oidTipoActividad: 10, // ID que se envía al backend
+    nombreTipo: 'Otros Servicios',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'HORAS',
+        tipoValor: 'INT',
+        label: 'Horas',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Número de horas',
+        validaciones: { min: 1 },
       },
     ],
   },

@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
+import { ACTIVIDADES_METADATA } from '../../config/actividades-metadata.config';
+import { GestionActividadBaseComponent } from '../../shared/modal-actividad/gestion-actividad-base/gestion-actividad-base.component';
 
 @Component({
   selector: 'app-otros-servicios',
   standalone: true,
-  imports: [],
-  templateUrl: './otros-servicios.component.html',
-  styleUrl: './otros-servicios.component.css'
+  imports: [GestionActividadBaseComponent],
+  template: `
+    <app-gestion-actividad-base
+      [metadata]="metadata"
+    ></app-gestion-actividad-base>
+  `,
 })
 export class OtrosServiciosComponent {
-
+  readonly metadata = ACTIVIDADES_METADATA['OTROS_SERVICIOS'];
 }
