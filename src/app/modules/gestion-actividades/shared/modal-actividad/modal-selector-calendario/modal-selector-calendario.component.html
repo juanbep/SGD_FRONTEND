@@ -1,0 +1,87 @@
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-calendar-alt me-2"></i>
+          Seleccione el Calendario Académico
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cerrar()"
+          [disabled]="cargando()"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Loading State -->
+        <div *ngIf="cargando()" class="loading-state text-center py-5">
+          <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="text-muted mb-0">Cargando calendarios disponibles...</p>
+        </div>
+
+        <!-- Error State -->
+        <div
+          *ngIf="error() && !cargando()"
+          class="error-state text-center py-5"
+        >
+          <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+          <p class="text-danger fw-bold mb-2">{{ error() }}</p>
+          <button class="btn btn-outline-primary btn-sm" (click)="reintentar()">
+            <i class="fas fa-redo me-2"></i>
+            Reintentar
+          </button>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="!cargando() && !error() && calendarios().length === 0"
+          class="empty-state text-center py-5"
+        >
+          <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+          <p class="text-muted mb-0">No hay calendarios disponibles</p>
+        </div>
+
+        <!-- Calendarios Grid -->
+        <div
+          *ngIf="!cargando() && !error() && calendarios().length > 0"
+          class="calendarios-container"
+        >
+          <p class="text-muted mb-3">
+            <i class="fas fa-info-circle me-1"></i>
+            Seleccione el calendario para el cual desea crear actividades
+          </p>
+
+          <div class="calendarios-grid">
+            <div
+              *ngFor="let calendario of calendarios()"
+              class="calendario-card"
+              (click)="seleccionarCalendario(calendario)"
+            >
+              <div class="calendario-icono">
+                <i class="fas fa-calendar fa-2x"></i>
+              </div>
+              <div class="calendario-info">
+                <h6 class="calendario-nombre">{{ calendario.label }}</h6>
+                <small
+                  class="badge"
+                  [class.bg-success]="calendario.estado === 'ACTIVO'"
+                  [class.bg-secondary]="calendario.estado !== 'ACTIVO'"
+                >
+                  {{ calendario.estado }}
+                </small>
+              </div>
+              <div class="calendario-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" (click)="cerrar()"></div>

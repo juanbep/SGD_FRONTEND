@@ -7,19 +7,29 @@ import {
   CreateActividadDto,
 } from '../../models/actividad.model';
 import { ModalActividadComponent } from '../../shared/modal-actividad/modal-actividad/modal-actividad.component';
+import { ModalSelectorCalendarioComponent } from '../../shared/modal-actividad/modal-selector-calendario/modal-selector-calendario.component';
+
+export interface Calendario {
+  value: number;
+  label: string;
+  estado: string;
+}
 
 @Component({
   selector: 'app-trabajos-docencia',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalActividadComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ModalActividadComponent,
+    ModalSelectorCalendarioComponent,
+  ],
   templateUrl: './trabajos-docencia.component.html',
   styleUrl: './trabajos-docencia.component.css',
 })
 export class TrabajosDocenciaComponent {
-  // Metadata del subtipo
   readonly metadata = ACTIVIDADES_METADATA['TRABAJOS_DOCENCIA'];
 
-  // Atributos que se muestran en la tabla
   readonly atributosTabla = computed(() =>
     this.metadata.atributos
       .filter((attr) => attr.mostrarEnTabla)
@@ -27,29 +37,33 @@ export class TrabajosDocenciaComponent {
   );
 
   // Estados
-  readonly calendarioSeleccionado = signal<number | null>(null);
+  readonly calendarioSeleccionado = signal<Calendario | null>(null);
+  readonly mostrarModalCalendario = signal(false); // CAMBIAR A FALSE
   readonly actividadesEnMemoria = signal<ActividadEnMemoria[]>([]);
   readonly modalVisible = signal(false);
   readonly actividadAEditar = signal<ActividadEnMemoria | null>(null);
   readonly guardandoTodas = signal(false);
 
   readonly nombreCalendarioSeleccionado = computed(() => {
-    const oid = this.calendarioSeleccionado();
-    if (!oid) return '';
-    const calendario = this.calendarios.find((c) => c.oid === oid);
-    return calendario?.nombre || '';
+    const calendario = this.calendarioSeleccionado();
+    return calendario?.label || '';
   });
 
-  // Datos de ejemplo para calendario (reemplazar con el servicio)
-  readonly calendarios = [
-    { oid: 1, nombre: '2024-2 - Calendario Principal' },
-    { oid: 2, nombre: '2025-1 - Calendario Académico' },
-  ];
-
-  seleccionarCalendario(oidCalendario: number): void {
-    this.calendarioSeleccionado.set(oidCalendario);
+  // Modal Calendario
+  abrirModalCalendario(): void {
+    this.mostrarModalCalendario.set(true);
   }
 
+  onSeleccionarCalendario(calendario: Calendario): void {
+    this.calendarioSeleccionado.set(calendario);
+    this.mostrarModalCalendario.set(false);
+  }
+
+  cerrarModalCalendario(): void {
+    this.mostrarModalCalendario.set(false);
+  }
+
+  // Modal Actividad
   abrirModalAgregar(): void {
     this.actividadAEditar.set(null);
     this.modalVisible.set(true);
@@ -65,12 +79,13 @@ export class TrabajosDocenciaComponent {
     this.actividadAEditar.set(null);
   }
 
+  // CRUD Actividades
   agregarActividad(actividad: ActividadEnMemoria): void {
     const actividades = this.actividadesEnMemoria();
     const nuevaActividad = {
       ...actividad,
       id: `temp_${Date.now()}_${Math.random()}`,
-      oidCalendario: this.calendarioSeleccionado()!,
+      oidCalendario: this.calendarioSeleccionado()!.value,
     };
     this.actividadesEnMemoria.set([...actividades, nuevaActividad]);
   }
@@ -114,7 +129,6 @@ export class TrabajosDocenciaComponent {
     this.guardandoTodas.set(true);
 
     try {
-      // Transformar actividades al formato del backend (quitar IDs temporales)
       const payload: CreateActividadDto[] = actividades.map(
         ({ id, ...actividad }) => actividad
       );
@@ -124,7 +138,6 @@ export class TrabajosDocenciaComponent {
       // Aquí llamarías a tu servicio
       // await this.actividadService.crearMultiples(payload);
 
-      // Simulación de éxito
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       alert('¡Actividades guardadas exitosamente!');

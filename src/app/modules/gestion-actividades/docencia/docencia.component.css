@@ -1,6 +1,6 @@
 .sub-tabs {
   background-color: white;
-  border-bottom: 2px solid #dee2e6;
+  border-bottom: 2px solid #001282;
   border-radius: 0.375rem 0.375rem 0 0;
 }
 
@@ -52,7 +52,7 @@
   background: white;
   padding: 1.5rem;
   border-radius: 0 0 0.375rem 0.375rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 18, 130, 0.075);
+  box-shadow: 0 0.125rem 0.75rem rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
