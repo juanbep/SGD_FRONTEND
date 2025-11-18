@@ -226,7 +226,7 @@ export class SideBarV2Component implements OnInit, OnChanges {
           role: ['DOCENTE'],
           icon: 'fas fa-user',
           label: 'Gestionar Planes',
-          url: '#',
+          url: '/app/gestion-planes/management',
         },
         {
           role: [

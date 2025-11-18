@@ -67,6 +67,14 @@ const routes: Routes = [
           ).then((m) => m.ActivitiesManagementRoutingModule),
         title: 'Gestión de Activades Docente',
       },
+      {
+        path: 'gestion-planes',
+        loadChildren: () =>
+          import('../gestion-planes/planes-management-routing-module').then(
+            (m) => m.PlanesManagementRoutingModule
+          ),
+        title: 'Gestión de Planes',
+      },
     ],
   },
 ];
