@@ -1,13 +1,13 @@
-import { Component, Input, signal, computed } from '@angular/core';
+import { Component, Input, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalActividadComponent } from '../modal-actividad/modal-actividad.component';
-import { ModalSelectorCalendarioComponent } from '../modal-selector-calendario/modal-selector-calendario.component';
 import {
   ActividadEnMemoria,
   CreateActividadDto,
 } from '../../../models/actividad.model';
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
+import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
 
 export interface Calendario {
   value: number;
@@ -18,16 +18,13 @@ export interface Calendario {
 @Component({
   selector: 'app-gestion-actividad-base',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ModalActividadComponent,
-    ModalSelectorCalendarioComponent,
-  ],
+  imports: [CommonModule, FormsModule, ModalActividadComponent],
   templateUrl: './gestion-actividad-base.component.html',
   styleUrl: './gestion-actividad-base.component.css',
 })
 export class GestionActividadBaseComponent {
+  private readonly calendarioService = inject(CalendarioHelperService);
+
   @Input({ required: true }) metadata!: SubtipoActividadConfig;
 
   readonly atributosTabla = computed(() =>
@@ -37,34 +34,59 @@ export class GestionActividadBaseComponent {
   );
 
   // Estados
-  readonly calendarioSeleccionado = signal<Calendario | null>(null);
-  readonly mostrarModalCalendario = signal(false);
+  readonly calendarios = signal<Calendario[]>([]);
+  readonly calendarioSeleccionado = signal<number | null>(null);
+  readonly cargandoCalendarios = signal(true);
   readonly actividadesEnMemoria = signal<ActividadEnMemoria[]>([]);
   readonly modalVisible = signal(false);
   readonly actividadAEditar = signal<ActividadEnMemoria | null>(null);
   readonly guardandoTodas = signal(false);
 
   readonly nombreCalendarioSeleccionado = computed(() => {
-    const calendario = this.calendarioSeleccionado();
+    const oid = this.calendarioSeleccionado();
+    if (!oid) return '';
+    const calendario = this.calendarios().find((c) => c.value === oid);
     return calendario?.label || '';
   });
 
-  // Modal Calendario
-  abrirModalCalendario(): void {
-    this.mostrarModalCalendario.set(true);
+  readonly estadoCalendarioSeleccionado = computed(() => {
+    const oid = this.calendarioSeleccionado();
+    if (!oid) return null;
+    const calendario = this.calendarios().find((c) => c.value === oid);
+    return calendario?.estado || null;
+  });
+
+  readonly puedeAgregarActividades = computed(
+    () => this.calendarioSeleccionado() !== null
+  );
+
+  async ngOnInit() {
+    await this.cargarCalendarios();
   }
 
-  onSeleccionarCalendario(calendario: Calendario): void {
-    this.calendarioSeleccionado.set(calendario);
-    this.mostrarModalCalendario.set(false);
+  private async cargarCalendarios(): Promise<void> {
+    this.cargandoCalendarios.set(true);
+    try {
+      const calendarios = await this.calendarioService.getAllForDropdown();
+      this.calendarios.set(calendarios);
+    } catch (error) {
+      console.error('Error al cargar calendarios:', error);
+    } finally {
+      this.cargandoCalendarios.set(false);
+    }
   }
 
-  cerrarModalCalendario(): void {
-    this.mostrarModalCalendario.set(false);
+  onCalendarioChange(oidCalendario: number | null): void {
+    this.calendarioSeleccionado.set(oidCalendario);
+    // Limpiar actividades al cambiar de calendario
+    if (oidCalendario) {
+      this.actividadesEnMemoria.set([]);
+    }
   }
 
   // Modal Actividad
   abrirModalAgregar(): void {
+    if (!this.puedeAgregarActividades()) return;
     this.actividadAEditar.set(null);
     this.modalVisible.set(true);
   }
@@ -85,7 +107,7 @@ export class GestionActividadBaseComponent {
     const nuevaActividad = {
       ...actividad,
       id: `temp_${Date.now()}_${Math.random()}`,
-      oidCalendario: this.calendarioSeleccionado()!.value,
+      oidCalendario: this.calendarioSeleccionado()!,
     };
     this.actividadesEnMemoria.set([...actividades, nuevaActividad]);
   }
@@ -135,7 +157,7 @@ export class GestionActividadBaseComponent {
 
       console.log('Payload a enviar:', JSON.stringify(payload, null, 2));
 
-      // Implementar servicio
+      // Aquí llamarías a tu servicio
       // await this.actividadService.crearMultiples(payload);
 
       await new Promise((resolve) => setTimeout(resolve, 1000));

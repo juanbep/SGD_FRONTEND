@@ -3,6 +3,73 @@
   padding: 1rem;
 }
 
+/* Header con Calendario y Acciones en línea */
+.header-acciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 18, 130, 0.075);
+}
+
+.calendario-inline {
+  display: flex;
+  align-items: center;
+}
+
+.calendario-inline label {
+  margin: 0;
+  font-weight: 600;
+  color: #001282;
+  white-space: nowrap;
+}
+
+/* Select de Calendario con hover amarillo */
+.calendario-inline .form-select {
+  border: 1px solid #dee2e6;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.calendario-inline .form-select:focus {
+  border-color: #f8ae15 !important;
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
+  outline: none;
+}
+
+/* Badge del calendario */
+.calendario-inline .badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+}
+
+.acciones-inline {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.empty-state i {
+  color: #6c757d;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  margin-bottom: 0.5rem;
+}
+
 /* Header Info */
 .header-info h5 {
   color: #001282;
@@ -122,11 +189,26 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .acciones-container {
+  .header-acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calendario-inline {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .calendario-inline .form-select {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  .acciones-inline {
     flex-direction: column;
   }
 
-  .acciones-container button {
+  .acciones-inline button {
     width: 100%;
   }
 }

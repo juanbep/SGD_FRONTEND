@@ -1,112 +1,143 @@
 <div class="gestion-actividad-container">
-  <!-- Modal Selector de Calendario -->
-  <app-modal-selector-calendario
-    *ngIf="mostrarModalCalendario()"
-    (onSeleccionar)="onSeleccionarCalendario($event)"
-    (onCerrar)="cerrarModalCalendario()"
-  ></app-modal-selector-calendario>
+  <!-- Header con Calendario y Acciones en una sola línea -->
+  <div class="header-acciones mb-3">
+    <div class="calendario-inline">
+      <label for="calendarioSelect" class="me-2">Calendario:</label>
+      <select
+        id="calendarioSelect"
+        class="form-select form-select-sm d-inline-block"
+        style="width: auto; min-width: 250px"
+        [value]="calendarioSeleccionado() ?? ''"
+        (change)="
+          onCalendarioChange(
+            $any($event.target).value ? +$any($event.target).value : null
+          )
+        "
+      >
+        <option value="" selected>Seleccione un calendario...</option>
+        <option
+          *ngFor="let calendario of calendarios()"
+          [value]="calendario.value"
+        >
+          {{ calendario.label }}
+        </option>
+      </select>
 
-  <!-- Botón para abrir modal (solo cuando NO hay calendario seleccionado) -->
-  <div *ngIf="!calendarioSeleccionado()" class="mb-3 text-center">
-    <button class="btn btn-primary" (click)="abrirModalCalendario()">
-      <i class="fas fa-calendar-plus me-2"></i>
-      Seleccionar Calendario
-    </button>
-  </div>
-
-  <!-- Vista Principal (solo si hay calendario seleccionado) -->
-  <div *ngIf="calendarioSeleccionado()">
-    <!-- Header con info del calendario -->
-    <div class="header-info mb-3">
-      <h5>
-        <i class="fas fa-calendar-alt me-2 text-primary"></i>
-        {{ nombreCalendarioSeleccionado() }}
-      </h5>
+      <!-- Badge de estado del calendario seleccionado -->
+      <span
+        *ngIf="estadoCalendarioSeleccionado()"
+        class="badge ms-2"
+        [ngClass]="{
+          'bg-success': estadoCalendarioSeleccionado() === 'ACTIVO',
+          'bg-primary': estadoCalendarioSeleccionado() === 'APROBADO',
+          'bg-warning': estadoCalendarioSeleccionado() === 'PENDIENTE',
+          'bg-secondary': estadoCalendarioSeleccionado() === 'DESHABILITADO'
+        }"
+      >
+        {{ estadoCalendarioSeleccionado() }}
+      </span>
     </div>
 
-    <!-- Botones de Acción -->
-    <div class="acciones-container mb-3">
-      <button class="btn btn-primary" (click)="abrirModalAgregar()">
-        <i class="fas fa-plus me-2"></i>
+    <div class="acciones-inline">
+      <button
+        class="btn btn-primary btn-sm me-2"
+        (click)="abrirModalAgregar()"
+        [disabled]="!puedeAgregarActividades()"
+      >
+        <i class="fas fa-plus me-1"></i>
         Agregar Actividad
       </button>
 
       <button
-        class="btn btn-success"
+        class="btn btn-success btn-sm"
         [disabled]="actividadesEnMemoria().length === 0 || guardandoTodas()"
         (click)="guardarTodas()"
       >
         <span *ngIf="!guardandoTodas()">
-          <i class="fas fa-save me-2"></i>
+          <i class="fas fa-save me-1"></i>
           Guardar Todas ({{ actividadesEnMemoria().length }})
         </span>
         <span *ngIf="guardandoTodas()">
-          <span class="spinner-border spinner-border-sm me-2"></span>
+          <span class="spinner-border spinner-border-sm me-1"></span>
           Guardando...
         </span>
       </button>
     </div>
+  </div>
 
-    <!-- Tabla de Actividades -->
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nombre Actividad</th>
-            <th>Semanas</th>
-            <th>Estado</th>
-            <th *ngFor="let attr of atributosTabla()">{{ attr.label }}</th>
-            <th class="text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="actividadesEnMemoria().length === 0">
-            <td
-              [attr.colspan]="5 + atributosTabla().length"
-              class="text-center text-muted py-4"
+  <!-- Tabla de Actividades -->
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre Actividad</th>
+          <th>Semanas</th>
+          <th>Estado</th>
+          <th *ngFor="let attr of atributosTabla()">{{ attr.label }}</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="actividadesEnMemoria().length === 0">
+          <td
+            [attr.colspan]="5 + atributosTabla().length"
+            class="text-center text-muted py-5"
+          >
+            <div class="empty-state">
+              <i class="fas fa-inbox fa-3x mb-3"></i>
+              <p class="mb-1 fw-bold">
+                {{
+                  calendarioSeleccionado()
+                    ? "No hay actividades agregadas"
+                    : "Seleccione un calendario para comenzar"
+                }}
+              </p>
+              <small>
+                {{
+                  calendarioSeleccionado()
+                    ? 'Haz clic en "Agregar Actividad" para comenzar'
+                    : ""
+                }}
+              </small>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let actividad of actividadesEnMemoria(); let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ actividad.nombreActividad }}</td>
+          <td>{{ actividad.semanas }}</td>
+          <td>
+            <span
+              class="badge"
+              [class.bg-success]="actividad.oidEstadoActividad === 2"
+              [class.bg-secondary]="actividad.oidEstadoActividad === 1"
             >
-              <i class="fas fa-inbox fa-2x mb-2"></i>
-              <p class="mb-0">No hay actividades agregadas</p>
-              <small>Haz clic en "Agregar Actividad" para comenzar</small>
-            </td>
-          </tr>
-          <tr *ngFor="let actividad of actividadesEnMemoria(); let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ actividad.nombreActividad }}</td>
-            <td>{{ actividad.semanas }}</td>
-            <td>
-              <span
-                class="badge"
-                [class.bg-success]="actividad.oidEstadoActividad === 2"
-                [class.bg-secondary]="actividad.oidEstadoActividad === 1"
-              >
-                {{ obtenerNombreEstado(actividad.oidEstadoActividad) }}
-              </span>
-            </td>
-            <td *ngFor="let attr of atributosTabla()">
-              {{ obtenerValorAtributo(actividad, attr.nombre) }}
-            </td>
-            <td class="text-center">
-              <button
-                class="btn btn-sm btn-outline-primary me-1"
-                (click)="abrirModalEditar(actividad)"
-                title="Editar"
-              >
-                <i class="fas fa-edit"></i>
-              </button>
-              <button
-                class="btn btn-sm btn-outline-danger"
-                (click)="eliminarActividad(actividad.id!)"
-                title="Eliminar"
-              >
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              {{ obtenerNombreEstado(actividad.oidEstadoActividad) }}
+            </span>
+          </td>
+          <td *ngFor="let attr of atributosTabla()">
+            {{ obtenerValorAtributo(actividad, attr.nombre) }}
+          </td>
+          <td class="text-center">
+            <button
+              class="btn btn-sm btn-outline-primary me-1"
+              (click)="abrirModalEditar(actividad)"
+              title="Editar"
+            >
+              <i class="fas fa-edit"></i>
+            </button>
+            <button
+              class="btn btn-sm btn-outline-danger"
+              (click)="eliminarActividad(actividad.id!)"
+              title="Eliminar"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Modal de agregar/editar actividad -->
