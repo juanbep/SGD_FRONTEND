@@ -89,6 +89,13 @@ export class CargosActividadService {
     }
 
     // Filtros de búsqueda
+    if (filters.oidTipoActividad !== undefined) {
+      params = params.set(
+        'oidTipoActividad',
+        filters.oidTipoActividad.toString()
+      );
+    }
+
     if (filters.searchTerm?.trim()) {
       params = params.set('search', filters.searchTerm.trim());
     }
@@ -100,9 +107,7 @@ export class CargosActividadService {
     if (filters.tipo?.trim()) {
       params = params.set('tipo', filters.tipo.trim());
     }
-    if (filters.oidTipoActividad !== undefined) {
-      params = params.set('tipoActividad', filters.oidTipoActividad.toString());
-    }
+
     if (filters.nombreTipoActividad?.trim()) {
       params = params.set(
         'nombreTipoActividad',

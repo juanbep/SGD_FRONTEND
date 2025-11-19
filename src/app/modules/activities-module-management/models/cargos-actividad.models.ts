@@ -18,6 +18,7 @@ export interface CargoActividadFilters {
   // Paginación
   page?: number;
   size?: number;
+  oidTipoActividad?: number;
 
   // Búsqueda general
   searchTerm?: string;
@@ -25,7 +26,6 @@ export interface CargoActividadFilters {
 
   // Filtros específicos
   tipo?: string;
-  oidTipoActividad?: number;
   nombreTipoActividad?: string;
 
   // Filtros por rango de horas

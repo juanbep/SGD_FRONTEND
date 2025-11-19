@@ -23,11 +23,11 @@ export function getUserData(): UserData | null {
 
 /**
  * Obtiene el OID del departamento del usuario logueado
- * @returns number | null
+ * @returns number | 0
  */
-export function getUserDepartmentId(): number | null {
+export function getUserDepartmentId(): number | 0 {
   const userData = getUserData();
-  return userData?.departamento?.oidDepartamento || null;
+  return userData?.departamento?.oidDepartamento || 0;
 }
 
 /**

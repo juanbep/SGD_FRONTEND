@@ -24,11 +24,17 @@ import {
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
 import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
 import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
+import { CargosActividadHelperService } from '../../../../activities-module-management/services';
 
 interface UsuarioSelect {
   oid: number;
   label: string;
   identificacion: string;
+}
+
+interface CargoSelect {
+  oid: number;
+  nombre: string;
 }
 
 @Component({
@@ -54,12 +60,18 @@ export class ModalActividadComponent implements OnInit {
     { oid: 2, nombre: 'Activa' },
   ];
 
-  // ========== NUEVOS: Usuarios ==========
+  // ========== SERVICIOS ==========
   private usuarioService = inject(UsuarioDepartamentoHelperService);
+  private cargoService = inject(CargosActividadHelperService);
 
+  // Usuarios
   readonly usuariosDisponibles = signal<UsuarioSelect[]>([]);
   readonly cargandoUsuarios = signal(true);
   readonly usuariosAsignados = signal<UsuarioActividad[]>([]);
+
+  //Cargos
+  readonly cargosDisponibles = signal<CargoSelect[]>([]);
+  readonly cargandoCargos = signal(true);
 
   usuarioSeleccionado: number | null = null;
   cargoSeleccionado: number | null = null;
@@ -78,7 +90,8 @@ export class ModalActividadComponent implements OnInit {
 
   ngOnInit(): void {
     this.inicializarFormulario();
-    this.cargarUsuarios(); // NUEVO
+    this.cargarUsuarios();
+    this.cargarCargos();
 
     if (this.actividadAEditar) {
       this.modoEdicion.set(true);
@@ -90,7 +103,7 @@ export class ModalActividadComponent implements OnInit {
   private async cargarUsuarios(): Promise<void> {
     this.cargandoUsuarios.set(true);
     try {
-      const oidDepartamentoActual = getUserDepartmentId(); // TODO: Reemplazar con usuario logueado
+      const oidDepartamentoActual = getUserDepartmentId();
 
       const usuarios = await this.usuarioService.getAll({
         page: 0,
@@ -109,6 +122,28 @@ export class ModalActividadComponent implements OnInit {
       console.error('Error al cargar usuarios:', error);
     } finally {
       this.cargandoUsuarios.set(false);
+    }
+  }
+
+  private async cargarCargos(): Promise<void> {
+    this.cargandoCargos.set(true);
+    try {
+      const cargos = await this.cargoService.getAll({
+        page: 0,
+        size: 1000,
+        oidTipoActividad: this.metadata.oidTipoActividad,
+      });
+
+      const cargosFormateados = cargos.map((c) => ({
+        oid: c.oidCargoActividad,
+        nombre: c.nombre,
+      }));
+
+      this.cargosDisponibles.set(cargosFormateados);
+    } catch (error) {
+      console.error('Error al cargar cargos:', error);
+    } finally {
+      this.cargandoCargos.set(false);
     }
   }
 
