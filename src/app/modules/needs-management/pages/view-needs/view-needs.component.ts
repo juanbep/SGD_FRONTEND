@@ -1,5 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import {
@@ -14,36 +13,50 @@ import { Necesidad } from '../../models/necesidad.interface';
   selector: 'app-view-needs',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     PaginatorComponent,
     FilterModalComponent,
   ],
   templateUrl: './view-needs.component.html',
-  styleUrls: ['./view-needs.component.css'],
+  styleUrl: './view-needs.component.css',
 })
 export class ViewNeedsComponent implements OnInit {
   private readonly necesidadesService = inject(NecesidadesService);
   private readonly TAMANIO_PAGINA = 20;
 
-  necesidades: Necesidad[] = [];
-  necesidadesFiltradas: Necesidad[] = [];
+  necesidades = signal<Necesidad[]>([]);
+  necesidadesFiltradas = signal<Necesidad[]>([]);
 
-  cargando = false;
-  mensajeError = '';
+  cargando = signal(false);
+  mensajeError = signal('');
 
-  filtroPeriodo = '';
-  filtroDepartamento = '';
-  filtroPrograma = '';
-  filtroNombre = '';
-  filtroSemestre = '';
-  filtroCodigo = '';
+  filtroPeriodo = signal('');
+  filtroDepartamento = signal('');
+  filtroPrograma = signal('');
+  filtroNombre = signal('');
+  filtroSemestre = signal('');
+  filtroCodigo = signal('');
 
-  mostrarModalFiltros = false;
+  mostrarModalFiltros = signal(false);
   camposFiltroModal: CampoFiltro[] = [];
 
-  paginaActual = 1;
-  totalElementos = 0;
+  paginaActual = signal(1);
+  totalElementos = signal(0);
+
+  totalPaginas = computed(() =>
+    Math.max(
+      1,
+      Math.ceil(this.necesidadesFiltradas().length / this.TAMANIO_PAGINA)
+    )
+  );
+
+  necesidadesVisibles = computed(() => {
+    const inicio = (this.paginaActual() - 1) * this.TAMANIO_PAGINA;
+    return this.necesidadesFiltradas().slice(
+      inicio,
+      inicio + this.TAMANIO_PAGINA
+    );
+  });
 
   constructor() {
     this.configurarCamposModal();
@@ -80,21 +93,22 @@ export class ViewNeedsComponent implements OnInit {
   }
 
   cargarNecesidades(): void {
-    this.cargando = true;
-    this.mensajeError = '';
+    this.cargando.set(true);
+    this.mensajeError.set('');
 
     this.necesidadesService.listar().subscribe({
       next: (pageResponse) => {
-        this.necesidades = pageResponse.content;
-        this.totalElementos = pageResponse.totalElements;
+        this.necesidades.set(pageResponse.content);
+        this.totalElementos.set(pageResponse.totalElements);
         this.aplicarFiltrosLocales();
-        this.cargando = false;
+        this.cargando.set(false);
       },
       error: (error) => {
         console.error('Error al cargar necesidades:', error);
-        this.mensajeError =
-          'Error al cargar las necesidades. Por favor, intente nuevamente.';
-        this.cargando = false;
+        this.mensajeError.set(
+          'Error al cargar las necesidades. Por favor, intente nuevamente.'
+        );
+        this.cargando.set(false);
       },
     });
   }
@@ -103,71 +117,57 @@ export class ViewNeedsComponent implements OnInit {
     return item.oidNecesidad;
   }
 
-  get totalPaginas(): number {
-    return Math.max(
-      1,
-      Math.ceil(this.necesidadesFiltradas.length / this.TAMANIO_PAGINA)
-    );
-  }
-
-  get necesidadesVisibles(): Necesidad[] {
-    const inicio = (this.paginaActual - 1) * this.TAMANIO_PAGINA;
-    return this.necesidadesFiltradas.slice(
-      inicio,
-      inicio + this.TAMANIO_PAGINA
-    );
-  }
-
   cambiarPagina(pagina: number): void {
-    this.paginaActual = pagina;
+    this.paginaActual.set(pagina);
   }
 
   aplicarFiltros(): void {
-    this.paginaActual = 1;
+    this.paginaActual.set(1);
     this.aplicarFiltrosLocales();
   }
 
   limpiarFiltros(): void {
     this.reiniciarFiltros();
-    this.paginaActual = 1;
+    this.paginaActual.set(1);
     this.aplicarFiltrosLocales();
   }
 
   private reiniciarFiltros(): void {
-    this.filtroPeriodo = '';
-    this.filtroDepartamento = '';
-    this.filtroPrograma = '';
-    this.filtroNombre = '';
-    this.filtroSemestre = '';
-    this.filtroCodigo = '';
+    this.filtroPeriodo.set('');
+    this.filtroDepartamento.set('');
+    this.filtroPrograma.set('');
+    this.filtroNombre.set('');
+    this.filtroSemestre.set('');
+    this.filtroCodigo.set('');
   }
 
   abrirModalFiltros(): void {
-    this.mostrarModalFiltros = true;
+    this.mostrarModalFiltros.set(true);
   }
 
   cerrarModalFiltros(): void {
-    this.mostrarModalFiltros = false;
+    this.mostrarModalFiltros.set(false);
   }
 
   aplicarFiltrosModal(valores: ValoresFiltros): void {
-    this.filtroNombre = (valores['nombre'] as string) || '';
-    this.filtroSemestre = (valores['semestre'] as string) || '';
-    this.filtroCodigo = (valores['codigo'] as string) || '';
+    this.filtroNombre.set((valores['nombre'] as string) || '');
+    this.filtroSemestre.set((valores['semestre'] as string) || '');
+    this.filtroCodigo.set((valores['codigo'] as string) || '');
     this.aplicarFiltros();
   }
 
   limpiarFiltrosModal(): void {
-    this.filtroNombre = '';
-    this.filtroSemestre = '';
-    this.filtroCodigo = '';
+    this.filtroNombre.set('');
+    this.filtroSemestre.set('');
+    this.filtroCodigo.set('');
     this.aplicarFiltros();
   }
 
   private aplicarFiltrosLocales(): void {
-    this.necesidadesFiltradas = this.necesidades.filter((necesidad) =>
+    const filtradas = this.necesidades().filter((necesidad) =>
       this.cumpleFiltros(necesidad)
     );
+    this.necesidadesFiltradas.set(filtradas);
   }
 
   private cumpleFiltros(necesidad: Necesidad): boolean {
@@ -181,29 +181,29 @@ export class ViewNeedsComponent implements OnInit {
 
   private cumpleFiltroCalendario(necesidad: Necesidad): boolean {
     return (
-      !this.filtroPeriodo ||
-      necesidad.oidCalendario.toString() === this.filtroPeriodo
+      !this.filtroPeriodo() ||
+      necesidad.oidCalendario.toString() === this.filtroPeriodo()
     );
   }
 
   private cumpleFiltroNombre(necesidad: Necesidad): boolean {
-    if (!this.filtroNombre) return true;
+    if (!this.filtroNombre()) return true;
     return necesidad.nombreMateria
       .toLowerCase()
-      .includes(this.filtroNombre.toLowerCase());
+      .includes(this.filtroNombre().toLowerCase());
   }
 
   private cumpleFiltroSemestre(necesidad: Necesidad): boolean {
     return (
-      !this.filtroSemestre ||
-      necesidad.semestreMateria.toString() === this.filtroSemestre
+      !this.filtroSemestre() ||
+      necesidad.semestreMateria.toString() === this.filtroSemestre()
     );
   }
 
   private cumpleFiltroCodigo(necesidad: Necesidad): boolean {
-    if (!this.filtroCodigo) return true;
+    if (!this.filtroCodigo()) return true;
     return necesidad.codigoMateria
       .toLowerCase()
-      .includes(this.filtroCodigo.toLowerCase());
+      .includes(this.filtroCodigo().toLowerCase());
   }
 }

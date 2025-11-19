@@ -22,7 +22,7 @@
                     </button>
                     <button type="button" class="btn btn-outline-secondary d-flex align-items-center"
                         (click)="limpiarFiltros()">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times"></i>|
                         <span class="d-none d-lg-inline ms-1">Limpiar</span>
                     </button>
                 </div>
@@ -32,7 +32,9 @@
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <label for="filtroPeriodo" class="form-label fw-bold"><i
                                 class="fas fa-calendar me-1"></i>Periodo:</label>
-                        <select id="filtroPeriodo" class="form-select" [(ngModel)]="filtroPeriodo">
+                        <select id="filtroPeriodo" class="form-select" 
+                            [ngModel]="filtroPeriodo()"
+                            (ngModelChange)="filtroPeriodo.set($event)">
                             <option value="">Todos los periodos</option>
                         </select>
                         <small class="text-muted">Filtrar por período académico</small>
@@ -41,7 +43,9 @@
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <label for="filtroDepartamento" class="form-label fw-bold"><i
                                 class="fas fa-building me-1"></i>Departamento:</label>
-                        <select id="filtroDepartamento" class="form-select" [(ngModel)]="filtroDepartamento">
+                        <select id="filtroDepartamento" class="form-select" 
+                            [ngModel]="filtroDepartamento()"
+                            (ngModelChange)="filtroDepartamento.set($event)">
                             <option value="">Todos los departamentos</option>
                         </select>
                         <small class="text-muted">Filtrar por departamento</small>
@@ -50,7 +54,9 @@
                     <div class="col-xl-3 col-lg-4 col-md-6">
                         <label for="filtroPrograma" class="form-label fw-bold"><i
                                 class="fas fa-graduation-cap me-1"></i>Programa:</label>
-                        <select id="filtroPrograma" class="form-select" [(ngModel)]="filtroPrograma">
+                        <select id="filtroPrograma" class="form-select" 
+                            [ngModel]="filtroPrograma()"
+                            (ngModelChange)="filtroPrograma.set($event)">
                             <option value="">Todos los programas</option>
                         </select>
                         <small class="text-muted">Filtrar por programa</small>
@@ -77,7 +83,7 @@
                         class="fas fa-sync-alt me-1"></i><span class="d-none d-lg-inline">Actualizar</span></button>
             </div>
 
-            @if (cargando) {
+            @if (cargando()) {
             <div class="card-body text-center py-5">
                 <div class="spinner-border text-primary">
                     <span class="visually-hidden">Cargando...</span>
@@ -86,16 +92,16 @@
             </div>
             }
 
-            @if (mensajeError) {
+            @if (mensajeError()) {
             <div class="card-body">
                 <div class="alert alert-danger d-flex align-items-center" role="alert">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    <span>{{ mensajeError }}</span>
+                    <span>{{ mensajeError() }}</span>
                 </div>
             </div>
             }
 
-            @if (!cargando && !mensajeError) {
+            @if (!cargando() && !mensajeError()) {
             <div class="card-body p-0">
                 <div class="table-responsive" style="max-height: 600px">
                     <table class="table table-hover mb-0">
@@ -113,8 +119,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if (necesidadesVisibles && necesidadesVisibles.length > 0) {
-                            @for (n of necesidadesVisibles; track trackByOid($index, n)) {
+                            @if (necesidadesVisibles() && necesidadesVisibles().length > 0) {
+                            @for (n of necesidadesVisibles(); track trackByOid($index, n)) {
                             <tr>
                                 <td class="text-center align-middle">{{ n.oidNecesidad }}</td>
                                 <td class="align-middle">{{ n.codigoMateria }}</td>
@@ -145,10 +151,10 @@
             <div class="card-footer">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="text-muted small">
-                        {{ necesidadesFiltradas.length }} de {{ totalElementos }} registros
+                        {{ necesidadesFiltradas().length }} de {{ totalElementos() }} registros
                     </div>
 
-                    <shared-paginator [currentPage]="paginaActual" [totalPages]="totalPaginas"
+                    <shared-paginator [currentPage]="paginaActual()" [totalPages]="totalPaginas()"
                         (pageChange)="cambiarPagina($event)"></shared-paginator>
                 </div>
             </div>
@@ -157,7 +163,7 @@
     </div>
 
     <!-- Modal de Filtros Reutilizable -->
-    <shared-filter-modal [visible]="mostrarModalFiltros" [titulo]="'Filtros Avanzados'" [campos]="camposFiltroModal"
+    <shared-filter-modal [visible]="mostrarModalFiltros()" [titulo]="'Filtros Avanzados'" [campos]="camposFiltroModal"
         (aplicar)="aplicarFiltrosModal($event)" (limpiar)="limpiarFiltrosModal()" (cerrar)="cerrarModalFiltros()">
     </shared-filter-modal>
 </div>

@@ -16,10 +16,12 @@
                     <!-- Selector de Periodo -->
                     <div class="col-auto">
                         <label for="filtroPeriodo" class="form-label fw-bold">Periodo #</label>
-                        <select id="filtroPeriodo" class="form-select" [(ngModel)]="filtroPeriodo"
-                            (change)="aplicarTodosFiltros()" style="min-width: 200px;">
+                        <select id="filtroPeriodo" class="form-select" [ngModel]="filtroPeriodo()"
+                            (ngModelChange)="filtroPeriodo.set($event); aplicarTodosFiltros()" style="min-width: 200px;">
                             <option value="">Seleccione periodo</option>
-                            <option *ngFor="let p of periodos" [value]="p.oid">{{ p.label }}</option>
+                            @for (p of periodos(); track p.oid) {
+                                <option [value]="p.oid">{{ p.label }}</option>
+                            }
                         </select>
                     </div>
 
@@ -55,31 +57,33 @@
                                 <th style="width: 120px;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="needs && needs.length > 0; else noData">
-                            <tr *ngFor="let n of visibleNeeds; trackBy: trackByOid">
-                                <td class="text-center align-middle">{{ n.oid }}</td>
-                                <td class="align-middle">{{ n.codigo }}</td>
-                                <td class="align-middle">{{ n.nombre }}</td>
-                                <td class="text-center align-middle">{{ n.semestre }}</td>
-                                <td class="text-center align-middle">{{ n.grupo }}</td>
-                                <td class="text-center align-middle">{{ n.cupo }}</td>
-                                <td class="text-center align-middle">{{ n.horasSemanales }}</td>
-                                <td class="text-center align-middle">
-                                    <div class="d-flex gap-1 justify-content-center">
-                                        <button type="button" class="btn btn-sm btn-outline-primary"
-                                            (click)="editarNecesidad(n.oid)" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger"
-                                            (click)="eliminarNecesidad(n.oid)" title="Eliminar">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                        <ng-template #noData>
+                        @if (needs() && needs().length > 0) {
+                            <tbody>
+                                @for (n of visibleNeeds(); track n.oid) {
+                                    <tr>
+                                        <td class="text-center align-middle">{{ n.oid }}</td>
+                                        <td class="align-middle">{{ n.codigo }}</td>
+                                        <td class="align-middle">{{ n.nombre }}</td>
+                                        <td class="text-center align-middle">{{ n.semestre }}</td>
+                                        <td class="text-center align-middle">{{ n.grupo }}</td>
+                                        <td class="text-center align-middle">{{ n.cupo }}</td>
+                                        <td class="text-center align-middle">{{ n.horasSemanales }}</td>
+                                        <td class="text-center align-middle">
+                                            <div class="d-flex gap-1 justify-content-center">
+                                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    (click)="editarNecesidad(n.oid)" title="Editar">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger"
+                                                    (click)="eliminarNecesidad(n.oid)" title="Eliminar">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        } @else {
                             <tbody>
                                 <tr>
                                     <td colspan="8" class="text-center py-5 align-middle text-muted">
@@ -87,7 +91,7 @@
                                     </td>
                                 </tr>
                             </tbody>
-                        </ng-template>
+                        }
                     </table>
                 </div>
             </div>
@@ -95,9 +99,9 @@
             <!-- Footer con paginación -->
             <div class="card-footer">
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="text-muted small">{{ needs.length }} registros</div>
+                    <div class="text-muted small">{{ needs().length }} registros</div>
 
-                    <shared-paginator [currentPage]="currentPage" [totalPages]="totalPages"
+                    <shared-paginator [currentPage]="currentPage()" [totalPages]="totalPages()"
                         (pageChange)="onPageChange($event)"></shared-paginator>
                 </div>
             </div>
@@ -108,65 +112,24 @@
             <button type="button" class="btn btn-outline-secondary" (click)="cargarNecesidades()">
                 Cargar Necesidades
             </button>
-            <button type="button" class="btn btn-primary" [disabled]="!hasSelection" (click)="enviarARevision()">
+            <button type="button" class="btn btn-primary" [disabled]="!hasSelection()" (click)="enviarARevision()">
                 Enviar a Revisión
             </button>
         </div>
     </div>
 
     <!-- Modal de Filtros -->
-    <shared-filter-modal [visible]="mostrarModalFiltros" [titulo]="'Filtros Avanzados'" [campos]="camposFiltroModal"
+    <shared-filter-modal [visible]="mostrarModalFiltros()" [titulo]="'Filtros Avanzados'" [campos]="camposFiltroModal"
         (aplicar)="aplicarFiltrosModal($event)" (cerrar)="cerrarModalFiltros()">
     </shared-filter-modal>
 
-    <!-- Modal de Edición (inline en este componente) -->
-    <div class="modal fade" [class.show]="editarModalVisible" [style.display]="editarModalVisible ? 'block' : 'none'"
-        tabindex="-1" aria-hidden="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Editar Necesidad</h5>
-                    <button type="button" class="btn-close" aria-label="Cerrar" (click)="cancelarEdicion()"></button>
-                </div>
-
-                <div class="modal-body">
-                    <form [formGroup]="editFormulario">
-                        <div class="mb-3">
-                            <label for="grupo" class="form-label">Grupo</label>
-                            <input id="grupo" type="text" class="form-control" formControlName="grupo" />
-                        </div>
-
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <label for="cupo" class="form-label">Cupo</label>
-                                <input id="cupo" type="number" class="form-control" formControlName="cupo" />
-                            </div>
-                            <div class="col-6">
-                                <label for="horasSemanales" class="form-label">Horas Semanales</label>
-                                <input id="horasSemanales" type="number" class="form-control"
-                                    formControlName="horasSemanales" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
-                    <button type="button" class="btn btn-primary" [disabled]="!editFormulario.valid"
-                        (click)="aceptarEdicion()">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div *ngIf="editarModalVisible" class="modal-backdrop fade show"></div>
     <!-- Modal de Confirmación de Eliminación -->
-    <div class="modal fade" [class.show]="deleteConfirmVisible"
-        [style.display]="deleteConfirmVisible ? 'block' : 'none'" tabindex="-1" aria-hidden="false">
+    <div class="modal fade" [class.show]="deleteConfirmVisible()"
+        [style.display]="deleteConfirmVisible() ? 'block' : 'none'" tabindex="-1" aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body text-center py-4">
-                    <p class="mb-4">¿Está seguro de eliminar la necesidad <strong>{{ deleteTargetOid }}</strong>?</p>
+                    <p class="mb-4">¿Está seguro de eliminar la necesidad <strong>{{ deleteTargetOid() }}</strong>?</p>
                     <div class="d-flex justify-content-center gap-3">
                         <button type="button" class="btn btn-primary"
                             (click)="confirmarEliminarNecesidad()">Aceptar</button>
@@ -177,5 +140,29 @@
         </div>
     </div>
 
-    <div *ngIf="deleteConfirmVisible" class="modal-backdrop fade show"></div>
+    @if (deleteConfirmVisible()) {
+        <div class="modal-backdrop fade show"></div>
+    }
+
+    <!-- Modales Independientes -->
+    <app-load-needs-modal 
+        [visible]="cargarModalVisible()"
+        [periodos]="periodos()"
+        (cerrar)="onCerrarModalCargar()"
+        (cargar)="onNecesidadesCargadas($event)"
+        (abrirAjusteCargue)="onAbrirAjusteCargue()">
+    </app-load-needs-modal>
+
+    <app-adjust-load-modal
+        [visible]="ajusteCargueVisible()"
+        (cerrar)="onCerrarAjusteCargue()"
+        (aplicar)="onAplicarAjusteCargue($event)">
+    </app-adjust-load-modal>
+
+    <app-edit-need-modal
+        [visible]="editarModalVisible()"
+        [necesidad]="necesidadEditando()"
+        (cerrar)="onCerrarEdicion()"
+        (guardar)="onGuardarEdicion($event)">
+    </app-edit-need-modal>
 </div>
