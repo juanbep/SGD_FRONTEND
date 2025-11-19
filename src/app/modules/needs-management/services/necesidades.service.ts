@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { environments } from '../../../../environments/environments';
 import { ApiResponse } from '../models/api-response.interface';
 import { PageResponse } from '../models/page-response.interface';
@@ -25,24 +25,37 @@ export class NecesidadesService {
    * Lista necesidades con paginación y filtros opcionales
    */
   listar(filtros?: FiltrosNecesidad): Observable<PageResponse<Necesidad>> {
-    let params = new HttpParams();
-
-    if (filtros) {
-      if (filtros.periodoOid)
-        params = params.set('periodoOid', filtros.periodoOid);
-      if (filtros.departamentoOid)
-        params = params.set('departamentoOid', filtros.departamentoOid);
-      if (filtros.programaOid)
-        params = params.set('programaOid', filtros.programaOid);
-      if (filtros.page !== undefined)
-        params = params.set('page', filtros.page.toString());
-      if (filtros.size !== undefined)
-        params = params.set('size', filtros.size.toString());
-    }
+    const params = this.buildParams(filtros);
 
     return this.http
       .get<ApiResponse<PageResponse<Necesidad>>>(this.baseUrl, { params })
-      .pipe(map((response) => response.data));
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => {
+          console.error('Error al listar necesidades', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Construye los parámetros de consulta para las necesidades
+   */
+  private buildParams(filtros?: FiltrosNecesidad): HttpParams {
+    let params = new HttpParams();
+
+    if (filtros) {
+      const { periodoOid, departamentoOid, programaOid, page, size } = filtros;
+
+      if (periodoOid) params = params.set('periodoOid', periodoOid);
+      if (departamentoOid)
+        params = params.set('departamentoOid', departamentoOid);
+      if (programaOid) params = params.set('programaOid', programaOid);
+      if (page !== undefined) params = params.set('page', page.toString());
+      if (size !== undefined) params = params.set('size', size.toString());
+    }
+
+    return params;
   }
 
   /**
@@ -52,6 +65,12 @@ export class NecesidadesService {
     const url = `${this.baseUrl}/${oid}`;
     return this.http
       .get<ApiResponse<Necesidad>>(url)
-      .pipe(map((response) => response.data));
+      .pipe(
+        map((response) => response.data),
+        catchError((error) => {
+          console.error(`Error al obtener necesidad ${oid}`, error);
+          return throwError(() => error);
+        })
+      );
   }
 }
