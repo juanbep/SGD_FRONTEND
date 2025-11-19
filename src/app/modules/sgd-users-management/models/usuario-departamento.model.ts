@@ -54,7 +54,7 @@ export interface UsuarioDepartamentoFilters {
   apellidos?: string;
 
   // Filtros por departamento
-  oidDepartamento?: number;
+  oidDepartamento?: number | null;
   nombreDepartamento?: string;
 
   // Filtros por detalles de usuario

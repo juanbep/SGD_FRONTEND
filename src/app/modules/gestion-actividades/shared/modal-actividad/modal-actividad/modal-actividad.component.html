@@ -94,6 +94,97 @@
 
           <hr class="my-4" />
 
+          <!-- Sección de Usuarios (NUEVO) -->
+          <h6 class="mb-3 text-muted">
+            <i class="fas fa-users me-2"></i>
+            Asignar Usuario
+          </h6>
+
+          <!-- Usuario - Fila completa -->
+          <div class="row mb-3">
+            <div class="col-12">
+              <label class="form-label fw-bold">
+                <i class="fas fa-user me-2"></i>
+                Usuario
+              </label>
+              <select
+                class="form-select"
+                [(ngModel)]="usuarioSeleccionado"
+                [ngModelOptions]="{ standalone: true }"
+                [disabled]="cargandoUsuarios()"
+              >
+                <option [value]="null">
+                  {{
+                    cargandoUsuarios()
+                      ? "Cargando usuarios..."
+                      : "Seleccione usuario"
+                  }}
+                </option>
+                <option
+                  *ngFor="let usuario of usuariosDisponibles()"
+                  [value]="usuario.oid"
+                >
+                  {{ usuario.label }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Cargo y Horas - Segunda fila -->
+          <div class="row mb-3">
+            <div class="col-md-8">
+              <label class="form-label fw-bold">
+                <i class="fas fa-briefcase me-2"></i>
+                Cargo
+              </label>
+              <select
+                class="form-select"
+                [(ngModel)]="cargoSeleccionado"
+                [ngModelOptions]="{ standalone: true }"
+                disabled
+              >
+                <option [value]="null">Seleccione cargo</option>
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">
+                <i class="fas fa-clock me-2"></i>
+                Horas
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="horasUsuario"
+                [ngModelOptions]="{ standalone: true }"
+                placeholder="Ej: 8"
+                min="1"
+              />
+            </div>
+          </div>
+
+          <!-- Botón Agregar Usuario -->
+          <div class="mb-3">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary"
+              (click)="agregarUsuario()"
+              [disabled]="
+                !usuarioSeleccionado || !cargoSeleccionado || !horasUsuario
+              "
+            >
+              <i class="fas fa-plus me-1"></i>
+              Agregar Usuario
+            </button>
+
+            <span *ngIf="contadorUsuarios()" class="ms-3 badge bg-success">
+              <i class="fas fa-check-circle me-1"></i>
+              {{ contadorUsuarios() }}
+            </span>
+          </div>
+
+          <hr class="my-4" />
+
           <!-- Atributos Dinámicos -->
           <h6 class="mb-3 text-muted">
             <i class="fas fa-info-circle me-2"></i>

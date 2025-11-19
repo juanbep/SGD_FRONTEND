@@ -5,6 +5,8 @@ import {
   EventEmitter,
   OnInit,
   signal,
+  computed,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -12,17 +14,27 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
+  FormsModule,
 } from '@angular/forms';
 import {
   ActividadEnMemoria,
   AtributoActividad,
+  UsuarioActividad,
 } from '../../../models/actividad.model';
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
+import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
+import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
+
+interface UsuarioSelect {
+  oid: number;
+  label: string;
+  identificacion: string;
+}
 
 @Component({
   selector: 'app-modal-actividad',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './modal-actividad.component.html',
   styleUrl: './modal-actividad.component.css',
 })
@@ -42,15 +54,101 @@ export class ModalActividadComponent implements OnInit {
     { oid: 2, nombre: 'Activa' },
   ];
 
+  // ========== NUEVOS: Usuarios ==========
+  private usuarioService = inject(UsuarioDepartamentoHelperService);
+
+  readonly usuariosDisponibles = signal<UsuarioSelect[]>([]);
+  readonly cargandoUsuarios = signal(true);
+  readonly usuariosAsignados = signal<UsuarioActividad[]>([]);
+
+  usuarioSeleccionado: number | null = null;
+  cargoSeleccionado: number | null = null;
+  horasUsuario: number | null = null;
+
+  readonly contadorUsuarios = computed(() => {
+    const count = this.usuariosAsignados().length;
+    if (count === 0) return '';
+    return `${count} usuario${count > 1 ? 's' : ''} agregado${
+      count > 1 ? 's' : ''
+    }`;
+  });
+  // ========================================
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.inicializarFormulario();
+    this.cargarUsuarios(); // NUEVO
+
     if (this.actividadAEditar) {
       this.modoEdicion.set(true);
       this.cargarDatosActividad(this.actividadAEditar);
     }
   }
+
+  // ========== NUEVO MÉTODO ==========
+  private async cargarUsuarios(): Promise<void> {
+    this.cargandoUsuarios.set(true);
+    try {
+      const oidDepartamentoActual = getUserDepartmentId(); // TODO: Reemplazar con usuario logueado
+
+      const usuarios = await this.usuarioService.getAll({
+        page: 0,
+        size: 1000, // Traer todos los usuarios
+        oidDepartamento: oidDepartamentoActual,
+      });
+
+      const usuariosFormateados = usuarios.map((u) => ({
+        oid: u.usuario.oidUsuario,
+        label: `${u.usuario.nombres} ${u.usuario.apellidos} (ID: ${u.usuario.identificacion})`,
+        identificacion: u.usuario.identificacion,
+      }));
+
+      this.usuariosDisponibles.set(usuariosFormateados);
+    } catch (error) {
+      console.error('Error al cargar usuarios:', error);
+    } finally {
+      this.cargandoUsuarios.set(false);
+    }
+  }
+
+  // ========== NUEVO MÉTODO ==========
+  agregarUsuario(): void {
+    if (
+      !this.usuarioSeleccionado ||
+      !this.cargoSeleccionado ||
+      !this.horasUsuario
+    ) {
+      alert('Por favor complete todos los campos del usuario');
+      return;
+    }
+
+    if (this.horasUsuario <= 0) {
+      alert('Las horas deben ser mayor a 0');
+      return;
+    }
+
+    const usuariosActuales = this.usuariosAsignados();
+    if (
+      usuariosActuales.some((u) => u.oidUsuario === this.usuarioSeleccionado)
+    ) {
+      alert('Este usuario ya ha sido agregado a la actividad');
+      return;
+    }
+
+    const nuevoUsuario: UsuarioActividad = {
+      oidUsuario: this.usuarioSeleccionado,
+      oidCargoActividad: this.cargoSeleccionado,
+      horas: this.horasUsuario,
+    };
+
+    this.usuariosAsignados.set([...usuariosActuales, nuevoUsuario]);
+
+    this.usuarioSeleccionado = null;
+    this.cargoSeleccionado = null;
+    this.horasUsuario = null;
+  }
+  // ===================================
 
   private inicializarFormulario(): void {
     const formConfig: any = {
@@ -59,7 +157,6 @@ export class ModalActividadComponent implements OnInit {
       oidEstadoActividad: [2, Validators.required],
     };
 
-    // Agregar controles dinámicos para cada atributo
     this.metadata.atributos.forEach((attr) => {
       const validators = [];
       if (attr.requerido) {
@@ -94,13 +191,17 @@ export class ModalActividadComponent implements OnInit {
       oidEstadoActividad: actividad.oidEstadoActividad,
     });
 
-    // Cargar atributos
     actividad.atributos.forEach((attr) => {
       const control = this.actividadForm.get(attr.nombre);
       if (control) {
         control.setValue(attr.valor);
       }
     });
+
+    // NUEVO: Cargar usuarios si está editando
+    if (actividad.usuarios) {
+      this.usuariosAsignados.set([...actividad.usuarios]);
+    }
   }
 
   confirmar(): void {
@@ -111,7 +212,6 @@ export class ModalActividadComponent implements OnInit {
 
     const formValues = this.actividadForm.value;
 
-    // Construir array de atributos
     const atributos: AtributoActividad[] = this.metadata.atributos.map(
       (attr) => ({
         nombre: attr.nombre,
@@ -127,7 +227,7 @@ export class ModalActividadComponent implements OnInit {
       nombreActividad: formValues.nombreActividad,
       semanas: formValues.semanas,
       oidCalendario: this.actividadAEditar?.oidCalendario || 0,
-      usuarios: this.actividadAEditar?.usuarios || [],
+      usuarios: this.usuariosAsignados(), // MODIFICADO: Usar usuarios asignados
       atributos: atributos,
     };
 
@@ -149,6 +249,12 @@ export class ModalActividadComponent implements OnInit {
       semanas: 16,
       oidEstadoActividad: 2,
     });
+
+    // NUEVO: Limpiar usuarios
+    this.usuariosAsignados.set([]);
+    this.usuarioSeleccionado = null;
+    this.cargoSeleccionado = null;
+    this.horasUsuario = null;
   }
 
   getControl(nombre: string) {
