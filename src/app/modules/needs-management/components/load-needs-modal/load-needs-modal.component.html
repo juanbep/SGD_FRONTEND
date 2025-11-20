@@ -36,10 +36,6 @@
                     <table class="table table-hover table-sm mb-0">
                         <thead class="table-light sticky-top">
                             <tr>
-                                <th style="width: 40px;">
-                                    <input type="checkbox" class="form-check-input" [checked]="todasSeleccionadas()"
-                                        (change)="toggleTodas($event)" />
-                                </th>
                                 <th>OID</th>
                                 <th>Código</th>
                                 <th>Nombre</th>
@@ -47,16 +43,17 @@
                                 <th class="text-center">Horas Sem</th>
                                 <th class="text-center">Cupos</th>
                                 <th class="text-center">Grupos</th>
+                                <th class="text-center" style="width: 100px;">
+                                    <input type="checkbox" class="form-check-input" [checked]="todasSeleccionadas()"
+                                        (change)="toggleTodas($event)" />
+                                    Seleccionar
+                                </th>
                             </tr>
                         </thead>
                         @if (necesidadesDisponibles() && necesidadesDisponibles().length > 0) {
                             <tbody>
                                 @for (n of necesidadesDisponibles(); track n.oid) {
                                     <tr>
-                                        <td class="align-middle">
-                                            <input type="checkbox" class="form-check-input" [checked]="isSeleccionada(n.oid)"
-                                                (change)="toggleSeleccion(n.oid)" />
-                                        </td>
                                         <td class="align-middle">{{ n.oid }}</td>
                                         <td class="align-middle">{{ n.codigo }}</td>
                                         <td class="align-middle">{{ n.nombre }}</td>
@@ -64,6 +61,10 @@
                                         <td class="text-center align-middle">{{ n.horasSemanales }}</td>
                                         <td class="text-center align-middle">{{ n.cupo }}</td>
                                         <td class="text-center align-middle">{{ n.grupo }}</td>
+                                        <td class="text-center align-middle">
+                                            <input type="checkbox" class="form-check-input" [checked]="isSeleccionada(n.oid)"
+                                                (change)="toggleSeleccion(n.oid)" />
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

@@ -5,6 +5,7 @@ export interface AjusteCargueData {
   cupo: number;
   cantidadGrupos: number;
   cuposPorGrupo: number;
+  aplicarSoloCamposVacios: boolean;
 }
 
 @Component({
@@ -26,12 +27,13 @@ export class AdjustLoadModalComponent implements OnInit {
     this.ajusteForm = this.fb.group({
       cupo: [0],
       cantidadGrupos: [''],
+      aplicarSoloCamposVacios: [false],
     });
 
     // Efecto para resetear form cuando el modal se cierre
     effect(() => {
       if (!this.visible()) {
-        this.ajusteForm.reset({ cupo: 0, cantidadGrupos: '' });
+        this.ajusteForm.reset({ cupo: 0, cantidadGrupos: '', aplicarSoloCamposVacios: false });
         this.cuposPorGrupo.set(0);
       }
     }, { allowSignalWrites: true });
@@ -55,7 +57,7 @@ export class AdjustLoadModalComponent implements OnInit {
   }
 
   onCerrar(): void {
-    this.ajusteForm.reset({ cupo: 0, cantidadGrupos: '' });
+    this.ajusteForm.reset({ cupo: 0, cantidadGrupos: '', aplicarSoloCamposVacios: false });
     this.cuposPorGrupo.set(0);
     this.cerrar.emit();
   }
@@ -66,6 +68,7 @@ export class AdjustLoadModalComponent implements OnInit {
       cupo: valores.cupo,
       cantidadGrupos: parseInt(valores.cantidadGrupos),
       cuposPorGrupo: this.cuposPorGrupo(),
+      aplicarSoloCamposVacios: valores.aplicarSoloCamposVacios,
     });
     this.onCerrar();
   }

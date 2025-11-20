@@ -3,9 +3,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header border-0 pb-2">
-                <h5 class="modal-title d-flex align-items-center">
-                    <img src="assets/icons/forms/folder.svg" alt="Ajustes" class="me-2"
-                        style="width: 24px; height: 24px;" />
+                <h5 class="modal-title">
                     Ajustes generales
                 </h5>
                 <button type="button" class="btn-close" aria-label="Cerrar" (click)="onCerrar()"></button>
@@ -13,6 +11,15 @@
 
             <div class="modal-body pt-2">
                 <form [formGroup]="ajusteForm">
+                    <!-- Checkbox para aplicar solo a campos vacíos -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="aplicarSoloCamposVacios" 
+                            formControlName="aplicarSoloCamposVacios">
+                        <label class="form-check-label" for="aplicarSoloCamposVacios">
+                            Aplicar ajustes solo a materias con campos vacíos
+                        </label>
+                    </div>
+
                     <!-- Cupos -->
                     <div class="mb-3">
                         <label for="cupoAjuste" class="form-label fw-semibold">Cupos:</label>
