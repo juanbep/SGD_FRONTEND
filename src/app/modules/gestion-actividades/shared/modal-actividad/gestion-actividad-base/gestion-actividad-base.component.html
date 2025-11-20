@@ -75,13 +75,15 @@
           <th>Semanas</th>
           <th>Estado</th>
           <th *ngFor="let attr of atributosTabla()">{{ attr.label }}</th>
+          <th class="text-center">Usuarios</th>
+          <!-- NUEVO -->
           <th class="text-center">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngIf="actividadesEnMemoria().length === 0">
           <td
-            [attr.colspan]="5 + atributosTabla().length"
+            [attr.colspan]="6 + atributosTabla().length"
             class="text-center text-muted py-5"
           >
             <div class="empty-state">
@@ -119,6 +121,27 @@
           <td *ngFor="let attr of atributosTabla()">
             {{ obtenerValorAtributo(actividad, attr.nombre) }}
           </td>
+
+          <!-- NUEVO: Columna de Usuarios -->
+          <td class="text-center align-middle">
+            <span
+              *ngIf="obtenerIdsUsuarios(actividad).length > 0"
+              class="badge text-dark usuario-badge-clickable"
+              style="background: #ffb000; cursor: pointer"
+              [title]="'Clic para ver detalles de los usuarios asociados'"
+              (click)="abrirModalUsuarios(obtenerIdsUsuarios(actividad))"
+            >
+              <i class="fas fa-users me-1"></i>
+              {{ obtenerIdsUsuarios(actividad).length }} usuario(s)
+            </span>
+            <span
+              *ngIf="obtenerIdsUsuarios(actividad).length === 0"
+              class="text-muted"
+            >
+              -
+            </span>
+          </td>
+
           <td class="text-center">
             <button
               class="btn btn-sm btn-outline-primary me-1"
@@ -153,4 +176,12 @@
     "
     (onCancelar)="cerrarModal()"
   ></app-modal-actividad>
+
+
+  <!-- Modal de usuarios -->
+<app-modal-usuarios
+  [usuariosIds]="usuariosSeleccionados()"
+  [visible]="mostrarModalUsuarios()"
+  (onCerrar)="cerrarModalUsuarios()"
+></app-modal-usuarios>
 </div>

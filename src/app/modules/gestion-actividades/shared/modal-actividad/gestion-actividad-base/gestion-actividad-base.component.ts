@@ -8,6 +8,7 @@ import {
 } from '../../../models/actividad.model';
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
 import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
+import { ModalUsuariosComponent } from '../../../../activities-module-management/components/activities-component/explore-activities-component/modal-usuarios/modal-usuarios.component';
 
 export interface Calendario {
   value: number;
@@ -18,7 +19,12 @@ export interface Calendario {
 @Component({
   selector: 'app-gestion-actividad-base',
   standalone: true,
-  imports: [CommonModule, FormsModule, ModalActividadComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ModalActividadComponent,
+    ModalUsuariosComponent,
+  ],
   templateUrl: './gestion-actividad-base.component.html',
   styleUrl: './gestion-actividad-base.component.css',
 })
@@ -41,6 +47,10 @@ export class GestionActividadBaseComponent {
   readonly modalVisible = signal(false);
   readonly actividadAEditar = signal<ActividadEnMemoria | null>(null);
   readonly guardandoTodas = signal(false);
+
+  // Modal de usuarios
+  readonly mostrarModalUsuarios = signal(false);
+  readonly usuariosSeleccionados = signal<number[]>([]);
 
   readonly nombreCalendarioSeleccionado = computed(() => {
     const oid = this.calendarioSeleccionado();
@@ -101,6 +111,17 @@ export class GestionActividadBaseComponent {
     this.actividadAEditar.set(null);
   }
 
+  // Modal de Usuarios
+  abrirModalUsuarios(usuarios: number[]): void {
+    this.usuariosSeleccionados.set(usuarios);
+    this.mostrarModalUsuarios.set(true);
+  }
+
+  cerrarModalUsuarios(): void {
+    this.mostrarModalUsuarios.set(false);
+    this.usuariosSeleccionados.set([]);
+  }
+
   // CRUD Actividades
   agregarActividad(actividad: ActividadEnMemoria): void {
     const actividades = this.actividadesEnMemoria();
@@ -141,6 +162,10 @@ export class GestionActividadBaseComponent {
     return oid === 1 ? 'Inactiva' : 'Activa';
   }
 
+  obtenerIdsUsuarios(actividad: ActividadEnMemoria): number[] {
+    return actividad.usuarios?.map((u) => u.oidUsuario) || [];
+  }
+
   async guardarTodas(): Promise<void> {
     const actividades = this.actividadesEnMemoria();
     if (actividades.length === 0) {
@@ -157,7 +182,7 @@ export class GestionActividadBaseComponent {
 
       console.log('Payload a enviar:', JSON.stringify(payload, null, 2));
 
-      // Aquí llamarías a tu servicio
+      // Aquí se llama al servicio
       // await this.actividadService.crearMultiples(payload);
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
