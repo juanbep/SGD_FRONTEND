@@ -144,6 +144,19 @@
 
           <td class="text-center">
             <button
+              class="btn btn-sm btn-success me-1"
+              (click)="guardarActividad(actividad)"
+              [disabled]="estaGuardando(actividad.id!)"
+              title="Guardar actividad"
+            >
+              <span *ngIf="!estaGuardando(actividad.id!)">
+                <i class="fas fa-save"></i>
+              </span>
+              <span *ngIf="estaGuardando(actividad.id!)">
+                <span class="spinner-border spinner-border-sm"></span>
+              </span>
+            </button>
+            <button
               class="btn btn-sm btn-outline-primary me-1"
               (click)="abrirModalEditar(actividad)"
               title="Editar"
@@ -177,11 +190,10 @@
     (onCancelar)="cerrarModal()"
   ></app-modal-actividad>
 
-
   <!-- Modal de usuarios -->
-<app-modal-usuarios
-  [usuariosIds]="usuariosSeleccionados()"
-  [visible]="mostrarModalUsuarios()"
-  (onCerrar)="cerrarModalUsuarios()"
-></app-modal-usuarios>
+  <app-modal-usuarios
+    [usuariosIds]="usuariosSeleccionados()"
+    [visible]="mostrarModalUsuarios()"
+    (onCerrar)="cerrarModalUsuarios()"
+  ></app-modal-usuarios>
 </div>

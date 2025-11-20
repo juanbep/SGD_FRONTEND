@@ -47,6 +47,7 @@ export class GestionActividadBaseComponent {
   readonly modalVisible = signal(false);
   readonly actividadAEditar = signal<ActividadEnMemoria | null>(null);
   readonly guardandoTodas = signal(false);
+  readonly guardandoIndividual = signal<string | null>(null);
 
   // Modal de usuarios
   readonly mostrarModalUsuarios = signal(false);
@@ -195,5 +196,45 @@ export class GestionActividadBaseComponent {
     } finally {
       this.guardandoTodas.set(false);
     }
+  }
+
+  // Guardar actividad individual
+  async guardarActividad(actividad: ActividadEnMemoria): Promise<void> {
+    if (!actividad.id) return;
+
+    // Confirmar antes de guardar
+    const confirmar = window.confirm(
+      `¿Desea guardar la actividad "${actividad.nombreActividad}"?`
+    );
+    if (!confirmar) return;
+
+    this.guardandoIndividual.set(actividad.id);
+
+    try {
+      const { id, ...actividadSinId } = actividad;
+      const payload: CreateActividadDto = actividadSinId;
+
+      console.log('Payload individual:', JSON.stringify(payload, null, 2));
+
+      // TODO: Llamar al servicio para guardar individual
+      // await this.actividadService.crear(payload);
+
+      // Simular llamada API
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      alert('¡Actividad guardada exitosamente!');
+
+      // Eliminar de la lista local después de guardar
+      this.eliminarActividad(actividad.id);
+    } catch (error) {
+      console.error('Error al guardar actividad:', error);
+      alert('Error al guardar la actividad');
+    } finally {
+      this.guardandoIndividual.set(null);
+    }
+  }
+
+  estaGuardando(id: string): boolean {
+    return this.guardandoIndividual() === id;
   }
 }
