@@ -51,6 +51,7 @@ export class ModalActividadComponent implements OnInit {
   @Output() onGuardar = new EventEmitter<ActividadEnMemoria>();
   @Output() onCancelar = new EventEmitter<void>();
 
+  mostrarDropdownCargo = false;
   actividadForm!: FormGroup;
   readonly agregarOtra = signal(true);
   readonly modoEdicion = signal(false);
@@ -74,7 +75,7 @@ export class ModalActividadComponent implements OnInit {
   readonly cargandoCargos = signal(true);
 
   usuarioSeleccionado: number | null = null;
-  cargoSeleccionado: number | null = null;
+  readonly cargoSeleccionado = signal<number | null>(null);
   horasUsuario: number | null = null;
 
   readonly contadorUsuarios = computed(() => {
@@ -173,14 +174,14 @@ export class ModalActividadComponent implements OnInit {
 
     const nuevoUsuario: UsuarioActividad = {
       oidUsuario: this.usuarioSeleccionado,
-      oidCargoActividad: this.cargoSeleccionado,
+      oidCargoActividad: this.cargoSeleccionado()!,
       horas: this.horasUsuario,
     };
 
     this.usuariosAsignados.set([...usuariosActuales, nuevoUsuario]);
 
     this.usuarioSeleccionado = null;
-    this.cargoSeleccionado = null;
+    this.cargoSeleccionado.set(null);
     this.horasUsuario = null;
   }
   // ===================================
@@ -288,11 +289,26 @@ export class ModalActividadComponent implements OnInit {
     // NUEVO: Limpiar usuarios
     this.usuariosAsignados.set([]);
     this.usuarioSeleccionado = null;
-    this.cargoSeleccionado = null;
+    this.cargoSeleccionado.set(null);
     this.horasUsuario = null;
   }
 
   getControl(nombre: string) {
     return this.actividadForm.get(nombre);
+  }
+
+  // Función para obtener el label del cargo seleccionado
+  cargoSeleccionadoLabel = computed(() => {
+    if (!this.cargoSeleccionado()) return null;
+    const cargo = this.cargosDisponibles().find(
+      (c) => c.oid === this.cargoSeleccionado()
+    );
+    return cargo?.nombre || null;
+  });
+
+  // Función para seleccionar un cargo
+  seleccionarCargo(cargo: any) {
+    this.cargoSeleccionado.set(cargo.oid);
+    this.mostrarDropdownCargo = false;
   }
 }

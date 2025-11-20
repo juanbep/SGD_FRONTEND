@@ -137,24 +137,34 @@
                 <i class="fas fa-briefcase me-2"></i>
                 Cargo
               </label>
-              <select
-                class="form-select"
-                [(ngModel)]="cargoSeleccionado"
-                [ngModelOptions]="{ standalone: true }"
-                [disabled]="cargandoCargos()"
-              >
-                <option [value]="null">
-                  {{
-                    cargandoCargos() ? "Cargando cargos..." : "Seleccione cargo"
-                  }}
-                </option>
-                <option
-                  *ngFor="let cargo of cargosDisponibles()"
-                  [value]="cargo.oid"
+
+              <div class="custom-select-container">
+                <button
+                  type="button"
+                  class="form-select text-start"
+                  (click)="mostrarDropdownCargo = !mostrarDropdownCargo"
+                  [disabled]="cargandoCargos()"
                 >
-                  {{ cargo.nombre }}
-                </option>
-              </select>
+                  {{
+                    cargandoCargos()
+                      ? "Cargando cargos..."
+                      : cargoSeleccionadoLabel() || "Seleccione cargo"
+                  }}
+                </button>
+
+                <div
+                  class="dropdown-opciones"
+                  *ngIf="mostrarDropdownCargo && !cargandoCargos()"
+                >
+                  <div
+                    *ngFor="let cargo of cargosDisponibles()"
+                    class="opcion"
+                    (click)="seleccionarCargo(cargo)"
+                  >
+                    {{ cargo.nombre }}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="col-md-4">
