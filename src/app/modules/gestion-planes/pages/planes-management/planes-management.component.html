@@ -1,3 +1,28 @@
 <div class="view-container">
-  <p>planes-management works!</p>
+  <header class="title-two">Gestión de Planes de Estudio</header>
+
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/plan-info.svg'" alt="Icono del plan" />
+    <span class="text-body-heavy">
+      A continuación encontrará todos los planes de estudio organizados por
+      programa, con opciones de filtrado, búsqueda y gestión completa.
+    </span>
+  </section>
+
+  <section class="messages-container mt-4">
+    <img
+      [src]="'assets/icons/messages/plan-actions.svg'"
+      alt="Icono de acciones"
+    />
+    <span class="text-body-heavy">
+      Utilice "Ver detalles" para consultar las materias del plan, "Modificar"
+      para editar información, o "Cambiar estado" para activar/desactivar un
+      plan.
+    </span>
+  </section>
+
+  <div><br /></div>
+
+  <!-- Componente de lista -->
+ <app-listar-planes [modo]="'gestionar'"></app-listar-planes>
 </div>

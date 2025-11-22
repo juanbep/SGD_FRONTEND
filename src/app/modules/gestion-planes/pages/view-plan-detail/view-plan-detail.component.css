@@ -1,0 +1,111 @@
+/* Título principal */
+.title-two {
+  color: #001282 !important;
+  font-weight: 700;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #001282;
+  padding-bottom: 0.5rem;
+}
+
+/* Contenedores de mensajes informativos */
+.messages-container {
+  background-color: rgba(22, 168, 225, 0.08) !important;
+  border-left: 4px solid #16a8e1 !important;
+  padding: 1rem 1.25rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.messages-container img {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.messages-container .text-body-heavy {
+  color: #001282 !important;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Card de información del plan */
+.card-header {
+  background-color: #001282 !important;
+  color: white !important;
+}
+
+.card-header h6 {
+  color: white !important;
+}
+
+.form-label.fw-bold {
+  color: #001282 !important;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.form-label .fas {
+  color: #0051c6 !important;
+}
+
+.form-control-plaintext {
+  padding: 0.375rem 0;
+  color: #212529;
+  font-size: 1rem;
+}
+
+/* Badges */
+.badge.bg-success {
+  background-color: #249337 !important;
+  color: white !important;
+}
+
+.badge.bg-info {
+  background-color: #16a8e1 !important;
+  color: white !important;
+}
+
+.badge.bg-warning {
+  background-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+/* Botón volver */
+.btn-outline-secondary {
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+  color: white !important;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .title-two {
+    font-size: 1.5rem;
+  }
+
+  .messages-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .messages-container img {
+    width: 32px;
+    height: 32px;
+  }
+}
