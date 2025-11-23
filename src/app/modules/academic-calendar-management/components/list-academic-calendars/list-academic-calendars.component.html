@@ -1,7 +1,8 @@
 <div class="card mb-4">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-filter me-2" style="color: #f8ae15;"></i>Filtros de Búsqueda
+      <i class="fas fa-filter me-2" style="color: #f8ae15"></i>Filtros de
+      Búsqueda
     </h6>
     <button
       type="button"
@@ -19,17 +20,16 @@
         <label for="filtroEstado" class="form-label fw-bold">
           <i class="fas fa-tags me-1"></i>Estados:
         </label>
-        <select
+        <ng-select
           id="filtroEstado"
-          class="form-select"
+          [items]="estadosDisponibles"
           [(ngModel)]="filtroEstado"
           (change)="onEstadoChange(filtroEstado)"
+          placeholder="TODOS"
+          [clearable]="true"
+          [searchable]="false"
         >
-          <option value="">TODOS</option>
-          <option *ngFor="let estado of estadosDisponibles" [value]="estado">
-            {{ estado }}
-          </option>
-        </select>
+        </ng-select>
         <small class="text-muted">Filtrar por estado del calendario</small>
       </div>
 
@@ -37,17 +37,16 @@
         <label for="filtroAnio" class="form-label fw-bold">
           <i class="fas fa-calendar-alt me-1"></i>Año:
         </label>
-        <select
+        <ng-select
           id="filtroAnio"
-          class="form-select"
+          [items]="aniosDisponibles"
           [(ngModel)]="filtroAnio"
           (change)="onAnioChange(filtroAnio)"
+          placeholder="TODOS"
+          [clearable]="true"
+          [searchable]="false"
         >
-          <option value="">TODOS</option>
-          <option *ngFor="let anio of aniosDisponibles" [value]="anio">
-            {{ anio }}
-          </option>
-        </select>
+        </ng-select>
         <small class="text-muted">Filtrar por año académico</small>
       </div>
 
@@ -55,17 +54,19 @@
         <label for="filtroPeriodo" class="form-label fw-bold">
           <i class="fas fa-clock me-1"></i>Periodo:
         </label>
-        <select
+        <ng-select
           id="filtroPeriodo"
-          class="form-select"
+          [items]="periodosDisponibles"
+          bindLabel="nombre"
+          bindValue="id"
           [(ngModel)]="filtroPeriodo"
           (change)="onPeriodoChange(filtroPeriodo)"
+          placeholder="TODOS"
+          [clearable]="true"
+          [searchable]="false"
         >
-          <option value="">TODOS</option>
-          <option *ngFor="let periodo of periodosDisponibles" [value]="periodo">
-            Periodo {{ periodo }}
-          </option>
-        </select>
+        </ng-select>
+
         <small class="text-muted">Semestre académico</small>
       </div>
 
@@ -94,7 +95,8 @@
     class="card-header d-flex justify-content-between align-items-center flex-wrap"
   >
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-table me-2" style="color: #f8ae15;"></i>Calendarios Académicos
+      <i class="fas fa-table me-2" style="color: #f8ae15"></i>Calendarios
+      Académicos
       <span class="badge bg-primary ms-2">{{ totalElements }}</span>
     </h6>
 

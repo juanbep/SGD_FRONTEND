@@ -111,6 +111,8 @@
     [visible]="modalAgregarVisible()"
     [listaNombreFechas]="listaNombreFechas()"
     [oidCalendario]="calendario()?.oidcalendario || 0"
+    [anioCalendario]="calendario()?.anioCalendario || 0"
+    [numeroCalendario]="calendario()?.numeroCalendario || 0"
     [guardando]="guardandoFecha()"
     [fechaAEditar]="fechaAEditar()"
     (onConfirmar)="confirmarAgregarFecha($event)"

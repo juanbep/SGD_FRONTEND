@@ -21,11 +21,12 @@ import {
   EstadoCalendario,
   UpdateCalendarioDTO,
 } from '../../../models';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-detalle-calendario',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './detalle-calendario.component.html',
   styleUrl: './detalle-calendario.component.css',
 })

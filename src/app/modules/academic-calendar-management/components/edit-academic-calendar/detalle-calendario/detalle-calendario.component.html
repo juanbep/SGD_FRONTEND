@@ -81,22 +81,19 @@
               />
             </ng-template>
           </td>
-          <td>
+          <td [class.text-start]="esCampoEditable('estado')">
             <ng-container *ngIf="!esCampoEditable('estado'); else editarEstado">
               {{ calendario.estado || "-" }}
             </ng-container>
             <ng-template #editarEstado>
-              <select
-                class="form-select form-select-sm"
+              <ng-select
+                [items]="ESTADOS_DISPONIBLES"
                 formControlName="estado"
+                placeholder="Selecciona un estado"
+                [clearable]="false"
+                [searchable]="false"
               >
-                <option
-                  *ngFor="let estado of ESTADOS_DISPONIBLES"
-                  [value]="estado"
-                >
-                  {{ estado }}
-                </option>
-              </select>
+              </ng-select>
             </ng-template>
           </td>
         </tr>

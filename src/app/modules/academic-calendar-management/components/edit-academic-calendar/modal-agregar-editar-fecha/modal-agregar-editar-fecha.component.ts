@@ -25,6 +25,7 @@ import {
 } from '../../../models';
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from '../../../utils/calendario.utils';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export type TipoFecha =
   | 'TODAS'
@@ -35,7 +36,7 @@ export type TipoFecha =
 @Component({
   selector: 'app-modal-agregar-fecha',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './modal-agregar-editar-fecha.component.html',
   styleUrl: './modal-agregar-editar-fecha.component.css',
 })
@@ -54,6 +55,8 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   @Input() oidCalendario: number = 0;
   @Input() guardando: boolean = false;
   @Input() fechaAEditar: Fecha | null = null;
+  @Input() anioCalendario: number = 0;
+  @Input() numeroCalendario: number = 0;
   @Output() onConfirmar = new EventEmitter<CreateFechaDto>();
   @Output() onConfirmarEdicion = new EventEmitter<UpdateFechaDto>();
   @Output() onCancelar = new EventEmitter<void>();
@@ -74,12 +77,20 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
   readonly nombresFechaFiltrados = computed(() => {
     const tipoFiltro = this.tipoFechaFiltro();
-    if (tipoFiltro === 'TODAS') {
-      return this.listaNombreFechas;
-    }
-    return this.listaNombreFechas.filter(
-      (item) => !item.tipo || item.tipo === tipoFiltro
-    );
+    const calendarioTexto = `${this.anioCalendario}-${this.numeroCalendario}`;
+
+    let fechasFiltradas =
+      tipoFiltro === 'TODAS'
+        ? this.listaNombreFechas
+        : this.listaNombreFechas.filter(
+            (item) => !item.tipo || item.tipo === tipoFiltro
+          );
+
+    // Reemplazar {calendar} en los labels
+    return fechasFiltradas.map((item) => ({
+      ...item,
+      label: item.label.replace(/{calendar}/g, calendarioTexto),
+    }));
   });
 
   readonly esFechaUnica = computed(() => {
@@ -115,7 +126,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
   fechaForm!: FormGroup;
   nombreFechaForm!: FormGroup;
-  mostrarDropdownNombre = false;
 
   ngOnInit(): void {
     this.inicializarFormularios();
@@ -242,12 +252,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
     }
 
     fechaFinControl?.updateValueAndValidity();
-  }
-
-  seleccionarNombreFecha(item: any): void {
-    this.nombreFechaControl?.setValue(item.value);
-    this.nombreFechaSeleccionadoLabel.set(item.label);
-    this.mostrarDropdownNombre = false;
   }
 
   cambiarAVistaCrearNombre(): void {
