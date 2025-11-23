@@ -149,7 +149,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
     } else if (paso === 2 && this.pasosCompletados()[0]) {
       this.pasoActual.set(2);
     } else {
-      this.toastr.info('Debes completar los pasos anteriores primero');
+      this.toastr.warning('Debes completar los pasos anteriores primero');
     }
   }
 
