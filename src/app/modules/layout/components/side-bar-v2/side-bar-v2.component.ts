@@ -38,20 +38,20 @@ export class SideBarV2Component implements OnInit, OnChanges {
   @Output() sidebarToggle = new EventEmitter<void>();
 
   menuItems: MenuItem[] = [
-    {
-      role: ['SECRETARIA/O FACULTAD'],
-      icon: 'assets/icons/sidebar/icon-calendar.svg',
-      label: 'Periodo académico',
-      isOpen: false,
-      children: [
-        {
-          role: ['SECRETARIA/O FACULTAD'],
-          icon: 'fas fa-chart-pie',
-          label: 'Gestión periodo académico',
-          url: '/app/gestion-periodo-academico',
-        },
-      ],
-    },
+    // {
+    //   role: ['SECRETARIA/O FACULTAD'],
+    //   icon: 'assets/icons/sidebar/icon-calendar.svg',
+    //   label: 'Periodo académico',
+    //   isOpen: false,
+    //   children: [
+    //     {
+    //       role: ['SECRETARIA/O FACULTAD'],
+    //       icon: 'fas fa-chart-pie',
+    //       label: 'Gestión periodo académico',
+    //       url: '/app/gestion-periodo-academico',
+    //     },
+    //   ],
+    // },
     {
       role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
       icon: 'assets/icons/sidebar/icon-user.svg',
@@ -78,58 +78,58 @@ export class SideBarV2Component implements OnInit, OnChanges {
         },
       ],
     },
-    {
-      role: [
-        'JEFE DE DEPARTAMENTO',
-        'COORDINADOR',
-        'DOCENTE',
-        'ESTUDIANTE',
-        'DECANO',
-        'SECRETARIA/O FACULTAD',
-        'CPD',
-      ],
-      icon: 'assets/icons/sidebar/icon-evaluation.svg',
-      label: 'Evaluación Docente',
-      isOpen: false,
-      children: [
-        {
-          role: ['DOCENTE'],
-          icon: 'fas fa-user',
-          label: 'Mis actividades',
-          url: '/app/gestion-soportes/actividades',
-        },
-        {
-          role: [
-            'JEFE DE DEPARTAMENTO',
-            'ESTUDIANTE',
-            'COORDINADOR',
-            'DECANO',
-            'DOCENTE',
-          ],
-          icon: 'fas fa-lock',
-          label: 'Mis responsabilidades',
-          url: '/app/gestion-soportes/responsabilidades',
-        },
-        {
-          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
-          icon: 'fas fa-lock',
-          label: 'Consolidado',
-          url: '/app/gestion-soportes/consolidado/lista-docentes',
-        },
-        {
-          role: ['CPD', 'SECRETARIA/O FACULTAD', 'DECANO'],
-          icon: 'fas fa-lock',
-          label: 'CPD',
-          url: '/app/gestion-soportes/cpd/lista-docentes',
-        },
-        {
-          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR', 'CPD'],
-          icon: 'fas fa-lock',
-          label: 'Histórico consolidado',
-          url: '/app/gestion-soportes/historico-consolidados',
-        },
-      ],
-    },
+    // {
+    //   role: [
+    //     'JEFE DE DEPARTAMENTO',
+    //     'COORDINADOR',
+    //     'DOCENTE',
+    //     'ESTUDIANTE',
+    //     'DECANO',
+    //     'SECRETARIA/O FACULTAD',
+    //     'CPD',
+    //   ],
+    //   icon: 'assets/icons/sidebar/icon-evaluation.svg',
+    //   label: 'Evaluación Docente',
+    //   isOpen: false,
+    //   children: [
+    //     {
+    //       role: ['DOCENTE'],
+    //       icon: 'fas fa-user',
+    //       label: 'Mis actividades',
+    //       url: '/app/gestion-soportes/actividades',
+    //     },
+    //     {
+    //       role: [
+    //         'JEFE DE DEPARTAMENTO',
+    //         'ESTUDIANTE',
+    //         'COORDINADOR',
+    //         'DECANO',
+    //         'DOCENTE',
+    //       ],
+    //       icon: 'fas fa-lock',
+    //       label: 'Mis responsabilidades',
+    //       url: '/app/gestion-soportes/responsabilidades',
+    //     },
+    //     {
+    //       role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
+    //       icon: 'fas fa-lock',
+    //       label: 'Consolidado',
+    //       url: '/app/gestion-soportes/consolidado/lista-docentes',
+    //     },
+    //     {
+    //       role: ['CPD', 'SECRETARIA/O FACULTAD', 'DECANO'],
+    //       icon: 'fas fa-lock',
+    //       label: 'CPD',
+    //       url: '/app/gestion-soportes/cpd/lista-docentes',
+    //     },
+    //     {
+    //       role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR', 'CPD'],
+    //       icon: 'fas fa-lock',
+    //       label: 'Histórico consolidado',
+    //       url: '/app/gestion-soportes/historico-consolidados',
+    //     },
+    //   ],
+    // },
     {
       role: ['SECRETARIA/O FACULTAD'],
       icon: 'assets/icons/sidebar/icon-calendar-management.svg',
@@ -218,7 +218,7 @@ export class SideBarV2Component implements OnInit, OnChanges {
         'SECRETARIA/O FACULTAD',
         'CPD',
       ],
-      icon: 'assets/icons/sidebar/icon-activities-management.svg',
+      icon: 'assets/icons/sidebar/icon-necesidades-management.svg',
       label: 'Gestión Necesidades',
       isOpen: false,
       children: [
