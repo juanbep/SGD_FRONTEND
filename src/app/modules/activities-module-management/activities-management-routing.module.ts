@@ -15,12 +15,12 @@ const routes: Routes = [
         path: 'list',
         component: ViewActivitiesComponentComponent,
       },
+      // {
+      //   path: 'create',
+      //   component: CreateActivitiesComponentComponent,
+      // },
       {
         path: 'create',
-        component: CreateActivitiesComponentComponent,
-      },
-      {
-        path: 'create2',
         component: GestionActividadesComponent,
         children: [
           {

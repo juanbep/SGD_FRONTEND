@@ -176,6 +176,18 @@ export class SideBarV2Component implements OnInit, OnChanges {
           label: 'Explorar actividades',
           url: '/app/gestion-actividades-docente/list',
         },
+        // {
+        //   role: [
+        //     'JEFE DE DEPARTAMENTO',
+        //     'ESTUDIANTE',
+        //     'COORDINADOR',
+        //     'DECANO',
+        //     'DOCENTE',
+        //   ],
+        //   icon: 'fas fa-lock',
+        //   label: 'Crear actividades',
+        //   url: '/app/gestion-actividades-docente/create',
+        // },
         {
           role: [
             'JEFE DE DEPARTAMENTO',
@@ -187,18 +199,6 @@ export class SideBarV2Component implements OnInit, OnChanges {
           icon: 'fas fa-lock',
           label: 'Crear actividades',
           url: '/app/gestion-actividades-docente/create',
-        },
-        {
-          role: [
-            'JEFE DE DEPARTAMENTO',
-            'ESTUDIANTE',
-            'COORDINADOR',
-            'DECANO',
-            'DOCENTE',
-          ],
-          icon: 'fas fa-lock',
-          label: 'Crear actividades v2',
-          url: '/app/gestion-actividades-docente/create2',
         },
         {
           role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
@@ -285,8 +285,18 @@ export class SideBarV2Component implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['isSidebarCollapsed']) {
+      // Cerrar modal de usuario si está abierto
       if (this.isUserModalOpen) {
         this.isUserModalOpen = false;
+      }
+
+      // Cerrar todos los submenús cuando se colapsa el sidebar
+      if (this.isSidebarCollapsed) {
+        this.menuItems.forEach((item) => {
+          if (item.isOpen) {
+            item.isOpen = false;
+          }
+        });
       }
     }
   }
