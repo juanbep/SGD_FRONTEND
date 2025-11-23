@@ -19,39 +19,6 @@
 
       <div class="modal-body p-4">
         <form [formGroup]="fechaForm" *ngIf="vistaActual() === 'fecha'">
-          <div class="mb-3" *ngIf="!modoEdicion()">
-            <label for="tipoFecha" class="form-label fw-bold">
-              <i class="fas fa-filter me-2 text-primary"></i>
-              Tipo de fecha *
-            </label>
-            <ng-select
-              id="tipoFecha"
-              [items]="TIPOS_FECHA"
-              bindLabel="label"
-              bindValue="value"
-              formControlName="tipoFecha"
-              placeholder="Seleccione un tipo"
-              [clearable]="false"
-              [searchable]="false"
-              [class.is-invalid]="
-                tipoFechaControl?.invalid && tipoFechaControl?.touched
-              "
-            >
-            </ng-select>
-
-            <small class="form-text text-muted">
-              <i class="fas fa-info-circle me-1"></i>
-              Filtra los nombres de fecha disponibles según el tipo seleccionado
-            </small>
-
-            <div
-              class="invalid-feedback d-block"
-              *ngIf="tipoFechaControl?.invalid && tipoFechaControl?.touched"
-            >
-              Debe seleccionar un tipo de fecha
-            </div>
-          </div>
-
           <!-- Selector de nombre de fecha -->
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -113,6 +80,39 @@
               "
             >
               Debe seleccionar un nombre de fecha
+            </div>
+          </div>
+
+          <div class="mb-3" *ngIf="!modoEdicion()">
+            <label for="tipoFecha" class="form-label fw-bold">
+              <i class="fas fa-filter me-2 text-primary"></i>
+              Tipo de fecha *
+            </label>
+            <ng-select
+              id="tipoFecha"
+              [items]="TIPOS_FECHA"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="tipoFecha"
+              placeholder="Seleccione un tipo"
+              [clearable]="false"
+              [searchable]="false"
+              [class.is-invalid]="
+                tipoFechaControl?.invalid && tipoFechaControl?.touched
+              "
+            >
+            </ng-select>
+
+            <small class="form-text text-muted">
+              <i class="fas fa-info-circle me-1"></i>
+              Debe seleccionar el tipo de fecha que quiere agregar
+            </small>
+
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="tipoFechaControl?.invalid && tipoFechaControl?.touched"
+            >
+              Debe seleccionar un tipo de fecha
             </div>
           </div>
 

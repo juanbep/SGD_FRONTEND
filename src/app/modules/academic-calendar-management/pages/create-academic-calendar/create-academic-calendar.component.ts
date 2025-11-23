@@ -46,14 +46,15 @@ export class CreateAcademicCalendarComponent implements OnInit {
   readonly datosCalendarioCreado = signal<InfoBasicaData | null>(null);
 
   // ===== COMPUTED =====
-  readonly puedeAvanzarPaso1 = computed(() => this.oidCalendarioCreado() !== null);
-  readonly calendarioYaCreado = computed(() => this.oidCalendarioCreado() !== null);
+  readonly puedeAvanzarPaso1 = computed(
+    () => this.oidCalendarioCreado() !== null
+  );
+  readonly calendarioYaCreado = computed(
+    () => this.oidCalendarioCreado() !== null
+  );
 
   // ===== CONSTANTES =====
-  readonly TITULOS_PASOS = [
-    'Información Básica',
-    'Fechas del Calendario',
-  ];
+  readonly TITULOS_PASOS = ['Información Básica', 'Fechas del Calendario'];
 
   ngOnInit(): void {
     this.cargarOidDeStorage();
@@ -82,7 +83,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
 
       if (calendarioCreado && calendarioCreado.oidcalendario) {
         this.oidCalendarioCreado.set(calendarioCreado.oidcalendario);
-        
+
         const datosCreado: InfoBasicaData = {
           anioCalendario: dto.anioCalendario,
           numeroCalendario: dto.numeroCalendario,
@@ -91,17 +92,19 @@ export class CreateAcademicCalendarComponent implements OnInit {
           observacion: dto.observacion,
         };
         this.datosCalendarioCreado.set(datosCreado);
-        
+
         this.guardarOidEnStorage(calendarioCreado.oidcalendario);
         this.guardarDatosCalendarioEnStorage(datosCreado);
-        this.stepInfoBasica.limpiarBorrador();
 
         this.toastr.success(
           `Calendario ${dto.anioCalendario}-${dto.numeroCalendario} creado exitosamente`,
           '¡Éxito!'
         );
 
-        console.log('Calendario creado con OID:', calendarioCreado.oidcalendario);
+        console.log(
+          'Calendario creado con OID:',
+          calendarioCreado.oidcalendario
+        );
       } else {
         throw new Error('No se recibió el OID del calendario creado');
       }
@@ -167,7 +170,10 @@ export class CreateAcademicCalendarComponent implements OnInit {
   // ===== STORAGE =====
   private guardarOidEnStorage(oid: number): void {
     try {
-      localStorage.setItem('calendario_en_progreso', JSON.stringify({ oidCalendario: oid }));
+      localStorage.setItem(
+        'calendario_en_progreso',
+        JSON.stringify({ oidCalendario: oid })
+      );
     } catch (error) {
       console.error('Error al guardar OID:', error);
     }

@@ -27,11 +27,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Utils } from '../../../utils/calendario.utils';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-export type TipoFecha =
-  | 'TODAS'
-  | 'RESALTADAS'
-  | 'NO_RESALTADAS'
-  | 'ADMINISTRATIVAS';
+export type TipoFecha = 'RESALTADAS' | 'NO_RESALTADAS' | 'ADMINISTRATIVAS';
 
 @Component({
   selector: 'app-modal-agregar-fecha',
@@ -63,31 +59,20 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   @Output() onCrearNombreFecha = new EventEmitter<CreateNombreFechaDto>();
 
   readonly TIPOS_FECHA: { value: TipoFecha; label: string }[] = [
-    { value: 'TODAS', label: 'Todas' },
     { value: 'RESALTADAS', label: 'Resaltadas' },
     { value: 'NO_RESALTADAS', label: 'No Resaltadas' },
     { value: 'ADMINISTRATIVAS', label: 'Administrativas' },
   ];
 
   readonly nombreFechaSeleccionado = signal<number | null>(null);
-  readonly tipoFechaFiltro = signal<TipoFecha>('TODAS');
   readonly fechaActual = signal<Fecha | null>(null);
   readonly vistaActual = signal<'fecha' | 'crearNombre'>('fecha');
   readonly nombreFechaSeleccionadoLabel = signal<string>('');
 
   readonly nombresFechaFiltrados = computed(() => {
-    const tipoFiltro = this.tipoFechaFiltro();
     const calendarioTexto = `${this.anioCalendario}-${this.numeroCalendario}`;
 
-    let fechasFiltradas =
-      tipoFiltro === 'TODAS'
-        ? this.listaNombreFechas
-        : this.listaNombreFechas.filter(
-            (item) => !item.tipo || item.tipo === tipoFiltro
-          );
-
-    // Reemplazar {calendar} en los labels
-    return fechasFiltradas.map((item) => ({
+    return this.listaNombreFechas.map((item) => ({
       ...item,
       label: item.label.replace(/{calendar}/g, calendarioTexto),
     }));
@@ -187,23 +172,11 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
   private inicializarFormularios(): void {
     this.fechaForm = this.fb.group({
-      tipoFecha: ['TODAS', Validators.required],
+      tipoFecha: [null, Validators.required],
       oidNombreFecha: [null, Validators.required],
       fechaInicial: [null, Validators.required],
       fechaFin: [null],
     });
-
-    this.fechaForm
-      .get('tipoFecha')
-      ?.valueChanges.subscribe((tipo: TipoFecha) => {
-        this.tipoFechaFiltro.set(tipo);
-        this.fechaForm.patchValue(
-          { oidNombreFecha: null },
-          { emitEvent: false }
-        );
-        this.nombreFechaSeleccionado.set(null);
-        this.nombreFechaSeleccionadoLabel.set('');
-      });
 
     this.fechaForm.get('oidNombreFecha')?.valueChanges.subscribe((oid) => {
       this.nombreFechaSeleccionado.set(oid ? Number(oid) : null);
@@ -233,7 +206,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       fechaFin: fechaFin,
     });
 
-    this.tipoFechaFiltro.set(tipoFecha);
     this.nombreFechaSeleccionadoLabel.set(fecha.nombre);
   }
 
@@ -272,8 +244,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
     const formValues = this.fechaForm.getRawValue();
     const esUnica = this.esFechaUnica();
-    const tipoFecha =
-      formValues.tipoFecha === 'TODAS' ? 'RESALTADAS' : formValues.tipoFecha;
+    const tipoFecha = formValues.tipoFecha;
 
     if (this.modoEdicion()) {
       const updateDto: UpdateFechaDto = {
@@ -324,7 +295,6 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   private resetearFormulario(): void {
     this.nombreFechaSeleccionado.set(null);
     this.nombreFechaSeleccionadoLabel.set('');
-    this.tipoFechaFiltro.set('TODAS');
     this.fechaActual.set(null);
     this.vistaActual.set('fecha');
   }
@@ -335,7 +305,7 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
       return;
     }
 
-    this.fechaForm.reset({ tipoFecha: 'TODAS' });
+    this.fechaForm.reset({ tipoFecha: null });
     this.onCancelar.emit();
   }
 
