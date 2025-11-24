@@ -21,38 +21,28 @@
 
   <div class="container-fluid py-4 px-0">
     <!-- Tabs de Bootstrap -->
-    <ul class="nav nav-tabs mb-4" id="actividadesTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button
-          class="nav-link"
+    <nav class="tabs-principales mb-4">
+      <div class="tabs-wrapper">
+        <a
+          class="tab-item"
           [class.active]="activeTab === 'academicas'"
-          id="academicas-tab"
-          type="button"
-          role="tab"
-          aria-controls="academicas"
-          [attr.aria-selected]="activeTab === 'academicas'"
           (click)="selectTab('academicas')"
+          role="tab"
         >
           <i class="fas fa-graduation-cap me-2"></i>
           Actividades Académicas
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button
-          class="nav-link"
+        </a>
+        <a
+          class="tab-item"
           [class.active]="activeTab === 'docencia'"
-          id="docencia-tab"
-          type="button"
-          role="tab"
-          aria-controls="docencia"
-          [attr.aria-selected]="activeTab === 'docencia'"
           (click)="selectTab('docencia')"
+          role="tab"
         >
           <i class="fas fa-chalkboard-teacher me-2"></i>
           Actividades de Docencia
-        </button>
-      </li>
-    </ul>
+        </a>
+      </div>
+    </nav>
 
     <!-- Contenido de las Tabs -->
     <div class="tab-content" id="actividadesTabContent">

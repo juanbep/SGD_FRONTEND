@@ -1,35 +1,98 @@
-/* Estilos de las tabs */
-.nav-tabs {
-  border-bottom: 2px solid #dee2e6;
+/* =====================================================
+   ESTILOS PARA SECCIÓN SUPERIOR 
+   ===================================================== */
+
+/* Título principal */
+.title-two {
+  color: #001282 !important;
+  font-weight: 700;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #001282;
+  padding-bottom: 0.5rem;
 }
 
-.nav-tabs .nav-link {
-  border: none;
-  color: #6c757d;
-  font-weight: 500;
-  padding: 1rem 1.5rem;
-  transition: all 0.3s ease;
-  border-bottom: 3px solid transparent;
+/* Contenedores de mensajes informativos */
+.messages-container {
+  background-color: rgba(22, 168, 225, 0.08) !important;
+  border-left: 4px solid #16a8e1 !important;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.nav-tabs .nav-link:hover {
-  border-color: transparent;
-  color: #0d6efd;
-  background-color: #f8f9fa;
+.messages-container img {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
 }
 
-.nav-tabs .nav-link.active {
-  color: #0d6efd;
-  background-color: transparent;
-  border-bottom: 3px solid #0d6efd;
+.messages-container .text-body-heavy {
+  color: #001282 !important;
   font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
 }
 
-.nav-tabs .nav-link i {
-  font-size: 1.1rem;
+/* ===================================================== 
+   ESTILOS DE LAS TABS 
+   ===================================================== */
+
+.tabs-principales {
+  border-bottom: 2px solid #001282;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem 0.375rem 0 0;
 }
 
-/* Contenido de tabs */
+.tabs-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+}
+
+.tab-item {
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.tab-item i {
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+.tab-item:hover {
+  background-color: rgba(0, 81, 198, 0.1);
+  color: #0051c6;
+}
+
+.tab-item:hover i {
+  color: #0051c6;
+}
+
+.tab-item.active {
+  background-color: #001282;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 18, 130, 0.2);
+}
+
+.tab-item.active i {
+  color: #f8ae15;
+}
+
 .tab-content {
   animation: fadeIn 0.3s ease;
 }
@@ -45,23 +108,27 @@
   }
 }
 
-/* Alert del placeholder */
 .alert-info {
-  background-color: #e7f3ff;
-  border-color: #b3d7ff;
-  color: #004085;
+  background-color: rgba(22, 168, 225, 0.08);
+  border-left: 4px solid #16a8e1;
+  border-color: transparent;
+  color: #001282;
   padding: 1.5rem;
   border-radius: 8px;
 }
 
 .alert-info .fa-info-circle {
-  color: #0d6efd;
+  color: #16a8e1;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .nav-tabs .nav-link {
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+  .tabs-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tab-item {
+    width: 100%;
+    justify-content: flex-start;
   }
 }

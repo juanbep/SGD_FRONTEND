@@ -21,26 +21,52 @@
           <label class="form-label fw-bold">
             <i class="fas fa-calendar me-1"></i>Calendario:
           </label>
-          <select
-            class="form-select"
+          <ng-select
+            [items]="calendariosDropdown"
+            bindLabel="label"
+            bindValue="value"
             [(ngModel)]="filters.oidCalendario"
+            [loading]="loadingCalendarios"
             [disabled]="loadingCalendarios"
+            placeholder="Seleccione un calendario"
+            [clearable]="false"
+            notFoundText="No hay calendarios disponibles"
+            loadingText="Cargando calendarios..."
           >
-            <option *ngIf="loadingCalendarios" disabled>
-              Cargando calendarios...
-            </option>
-            <option
-              *ngFor="let calendario of calendariosDropdown"
-              [value]="calendario.value"
-            >
-              {{ calendario.label }}
-              <span
-                [ngClass]="getCalendarioEstadoBadgeClass(calendario.estado)"
-              >
-                ({{ calendario.estado }})
-              </span>
-            </option>
-          </select>
+            <!-- Template cuando está seleccionado (se ve en el input) -->
+            <ng-template ng-label-tmp let-item="item">
+              <div class="d-flex align-items-center">
+                <span>{{ item.label }}</span>
+                <span
+                  class="badge ms-2"
+                  [ngClass]="{
+                    'bg-success': item.estado === 'ACTIVO',
+                    'bg-warning text-dark': item.estado === 'PENDIENTE',
+                    'bg-danger': item.estado === 'DESHABILITADO'
+                  }"
+                >
+                  {{ item.estado }}
+                </span>
+              </div>
+            </ng-template>
+
+            <!-- Template de las opciones en el dropdown -->
+            <ng-template ng-option-tmp let-item="item">
+              <div class="d-flex justify-content-between align-items-center">
+                <span>{{ item.label }}</span>
+                <span
+                  class="badge badge-sm"
+                  [ngClass]="{
+                    'bg-success': item.estado === 'ACTIVO',
+                    'bg-warning text-dark': item.estado === 'PENDIENTE',
+                    'bg-danger': item.estado === 'DESHABILITADO'
+                  }"
+                >
+                  {{ item.estado }}
+                </span>
+              </div>
+            </ng-template>
+          </ng-select>
           <small class="text-muted">Filtrar por calendario académico</small>
         </div>
 
@@ -49,36 +75,38 @@
           <label class="form-label fw-bold">
             <i class="fas fa-tags me-1"></i>Tipo de Actividad:
           </label>
-          <select
-            class="form-select"
+          <ng-select
+            [items]="tiposActividadDropdown"
+            bindLabel="label"
+            bindValue="value"
             [(ngModel)]="filters.oidTipoActividad"
+            [loading]="loadingTiposActividad"
             [disabled]="loadingTiposActividad"
+            placeholder="Seleccione un tipo"
+            [clearable]="false"
+            notFoundText="No hay tipos de actividad disponibles"
+            loadingText="Cargando tipos..."
           >
-            <option value="">Todos los tipos</option>
-            <option *ngIf="loadingTiposActividad" disabled>
-              Cargando tipos...
-            </option>
-            <option
-              *ngFor="let tipo of tiposActividadDropdown"
-              [value]="tipo.value"
-            >
-              {{ tipo.label }}
-            </option>
-          </select>
+          </ng-select>
           <small class="text-muted">Filtrar por tipo específico</small>
         </div>
 
-        <!-- Filtro por Estado (deshabilitado por ahora) -->
+        <!-- Filtro por Estado -->
         <div class="col-xl-2 col-lg-3 col-md-6">
           <label class="form-label fw-bold">
             <i class="fas fa-info-circle me-1"></i>Estado:
           </label>
-          <select class="form-select" [(ngModel)]="filters.oidEstadoActividad">
-            <option value="">Todos los estados</option>
-            <option value="1">ACTIVA</option>
-            <option value="2">INACTIVA</option>
-            <option value="3">INCOMPLETA</option>
-          </select>
+          <ng-select
+            [items]="estadosDropdown"
+            bindLabel="label"
+            bindValue="value"
+            [(ngModel)]="filters.oidEstadoActividad"
+            placeholder="Seleccione un estado"
+            [clearable]="false"
+            [searchable]="false"
+            notFoundText="No hay estados disponibles"
+          >
+          </ng-select>
           <small class="text-muted">Filtrar por estado de la actividad</small>
         </div>
 
@@ -87,28 +115,20 @@
           <label class="form-label fw-bold">
             <i class="fas fa-user me-1"></i>Responsable:
           </label>
-          <select
-            class="form-select"
+          <ng-select
+            [items]="usuariosDropdown"
+            bindLabel="label"
+            bindValue="value"
             [(ngModel)]="filtroResponsable"
+            [loading]="loadingUsuarios"
             [disabled]="loadingUsuarios || !filters.oidDepartamento"
+            placeholder="Buscar responsable..."
+            [clearable]="false"
+            notFoundText="No se encontraron usuarios"
+            loadingText="Cargando usuarios..."
+            [searchable]="true"
           >
-            <option value="">Todos los responsables</option>
-            <option *ngIf="loadingUsuarios" disabled>
-              Cargando usuarios...
-            </option>
-            <option
-              *ngIf="!loadingUsuarios && usuariosDropdown.length === 0"
-              disabled
-            >
-              No hay usuarios disponibles
-            </option>
-            <option
-              *ngFor="let usuario of usuariosDropdown"
-              [value]="usuario.value"
-            >
-              {{ usuario.label }}
-            </option>
-          </select>
+          </ng-select>
           <small class="text-muted">Filtrar por usuario responsable</small>
         </div>
 

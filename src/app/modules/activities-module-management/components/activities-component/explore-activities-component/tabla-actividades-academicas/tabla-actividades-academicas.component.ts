@@ -30,6 +30,7 @@ import {
 } from '../../../../../auth/utils/user-storage.utils';
 import { UsuariosConActividadesHelperService } from '../../../../../sgd-users-management/services';
 import { UsuariosConActividadesFilters } from '../../../../../sgd-users-management/models';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
@@ -39,6 +40,7 @@ import { UsuariosConActividadesFilters } from '../../../../../sgd-users-manageme
     FormsModule,
     ModalDetalleActividadComponent,
     ModalUsuariosComponent,
+    NgSelectModule,
   ],
   templateUrl: './tabla-actividades-academicas.component.html',
   styleUrl: './tabla-actividades-academicas.component.css',
@@ -78,11 +80,11 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   loadingCalendarios = false;
 
   // Lista de tipos de actividad para el dropdown
-  tiposActividadDropdown: { value: number; label: string }[] = [];
+  tiposActividadDropdown: { value: number | string; label: string }[] = [];
   loadingTiposActividad = false;
 
   // Lista de usuarios para el dropdown filtro responsables
-  usuariosDropdown: { value: number; label: string }[] = [];
+  usuariosDropdown: { value: number | string; label: string }[] = [];
   loadingUsuarios = false;
 
   filtroResponsable: string = '';
@@ -104,6 +106,14 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     { oid: 1, nombre: 'ACTIVA', class: 'bg-success' },
     { oid: 2, nombre: 'INACTIVA', class: 'bg-danger' },
     { oid: 3, nombre: 'INCOMPLETA', class: 'bg-warning' },
+  ];
+
+  // Dropdown de estados para ng-select
+  estadosDropdown: { value: number | string; label: string }[] = [
+    { value: '', label: 'TODOS' },
+    { value: 1, label: 'ACTIVA' },
+    { value: 2, label: 'INACTIVA' },
+    { value: 3, label: 'INCOMPLETA' },
   ];
 
   ngOnInit(): void {
@@ -241,16 +251,22 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
       const filtros: UsuariosConActividadesFilters = {
         oidDepartamento,
-        filtro: 'NO_DOCENCIA',
+        filtro: 'DOCENCIA',
       };
 
       const usuariosDepartamento =
         await this.usuariosConActividadesHelper.getAll(filtros);
 
-      this.usuariosDropdown = usuariosDepartamento.map((ud) => ({
+      const usuariosMapeados = usuariosDepartamento.map((ud) => ({
         value: ud.usuario.oidUsuario,
         label: `${ud.usuario.nombres} ${ud.usuario.apellidos}`.trim(),
       }));
+
+      // Agregar opción "Todos los responsables" al inicio
+      this.usuariosDropdown = [
+        { value: '', label: 'TODOS' },
+        ...usuariosMapeados,
+      ];
 
       console.log(`Usuarios cargados: ${this.usuariosDropdown.length}`);
     } catch (error) {
@@ -301,9 +317,13 @@ export class TablaActividadesAcademicasComponent implements OnInit {
         await this.tiposActividadHelper.getAllForDropdown();
 
       // Filtrar para excluir el tipo con oid = 9
-      this.tiposActividadDropdown = tiposCompletos.filter(
-        (tipo) => tipo.value !== 9
-      );
+      const tiposFiltrados = tiposCompletos.filter((tipo) => tipo.value !== 9);
+
+      // Agregar opción "Todos los tipos" al inicio
+      this.tiposActividadDropdown = [
+        { value: '', label: 'TODAS' },
+        ...tiposFiltrados,
+      ];
     } catch (error) {
       console.error('Error al cargar tipos de actividad:', error);
       this.toastr.error('Error al cargar la lista de tipos de actividad');
