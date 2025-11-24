@@ -1,24 +1,22 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TablaActividadesAcademicasComponent } from '../../components/activities-component/explore-activities-component/tabla-actividades-academicas/tabla-actividades-academicas.component';
 import { ModalEliminarActividadComponent } from '../../components/activities-component/manage-activities-component/modal-eliminar-actividad/modal-eliminar-actividad.component';
 import { ActividadResponse } from '../../models';
-import { ActividadesService } from '../../services/actividades/actividades.service';
 import { ActividadHelperService } from '../../services/actividades/actividad-helper.service';
+import { ActivitiesBaseComponent } from '../../components/activities-component/manage-activities-component/activities-base/activities-base.component';
 
 @Component({
   selector: 'app-management-activities-component',
   standalone: true,
   imports: [
     CommonModule,
-    TablaActividadesAcademicasComponent,
+    ActivitiesBaseComponent,
     ModalEliminarActividadComponent,
   ],
   templateUrl: './management-activities-component.component.html',
   styleUrl: './management-activities-component.component.css',
 })
 export class ManagementActivitiesComponentComponent {
-  activeTab: string = 'academicas';
   private actividadHelperService = inject(ActividadHelperService);
 
   // Estados del modal de eliminación
@@ -30,11 +28,6 @@ export class ManagementActivitiesComponentComponent {
   mensajeExito: string = '';
   mensajeError: string = '';
 
-  selectTab(tab: string): void {
-    this.activeTab = tab;
-    this.limpiarMensajes();
-  }
-
   // ============= EDITAR =============
   handleEditar(actividadData: ActividadResponse): void {
     console.log('Editar actividad:', actividadData);
@@ -44,6 +37,13 @@ export class ManagementActivitiesComponentComponent {
     );
   }
 
+  // ============= ELIMINAR =============
+  handleEliminar(actividadData: ActividadResponse): void {
+    this.actividadAEliminar = actividadData;
+    this.mostrarModalEliminar = true;
+    this.limpiarMensajes();
+  }
+
   async confirmarEliminacion(): Promise<void> {
     if (!this.actividadAEliminar) return;
 
@@ -51,18 +51,13 @@ export class ManagementActivitiesComponentComponent {
     this.limpiarMensajes();
 
     try {
-      // Llamar al servicio para eliminar
       await this.actividadHelperService.delete(
         this.actividadAEliminar.actividad.oidActividad
       );
 
-      // Mostrar mensaje de éxito
       this.mensajeExito = `Actividad "${this.actividadAEliminar.actividad.nombreActividad}" eliminada exitosamente.`;
-
-      // Cerrar modal
       this.cerrarModalEliminar();
 
-      // Auto-ocultar mensaje después de 5 segundos
       setTimeout(() => {
         this.mensajeExito = '';
       }, 5000);
@@ -73,20 +68,12 @@ export class ManagementActivitiesComponentComponent {
         'Error al eliminar la actividad. Por favor, intente nuevamente.';
       this.cerrarModalEliminar();
 
-      // Auto-ocultar mensaje de error después de 8 segundos
       setTimeout(() => {
         this.mensajeError = '';
       }, 8000);
     } finally {
       this.eliminando = false;
     }
-  }
-
-  // ============= ELIMINAR =============
-  handleEliminar(actividadData: ActividadResponse): void {
-    this.actividadAEliminar = actividadData;
-    this.mostrarModalEliminar = true;
-    this.limpiarMensajes();
   }
 
   cerrarModalEliminar(): void {

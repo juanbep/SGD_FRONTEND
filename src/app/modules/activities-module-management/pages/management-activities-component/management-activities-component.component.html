@@ -1,7 +1,7 @@
 <div class="view-container">
-  <div class="container-fluid py-4">
-    <!-- Mensajes de Feedback -->
-    <div class="row mb-3" *ngIf="mensajeExito || mensajeError">
+  <!-- Mensajes de Feedback -->
+  <div class="container-fluid py-4" *ngIf="mensajeExito || mensajeError">
+    <div class="row mb-3">
       <div class="col-12">
         <!-- Mensaje de Éxito -->
         <div
@@ -38,84 +38,15 @@
         </div>
       </div>
     </div>
-
-    <!-- Card contenedor principal -->
-    <div class="card shadow-sm">
-      <div class="card-header bg-warning text-dark py-3">
-        <h4 class="mb-0">
-          <i class="fas fa-cogs me-2"></i>
-          Gestión de Actividades
-        </h4>
-      </div>
-    </div>
-    <!-- Tabs dentro del card-body -->
-    <div class="card-body p-0">
-      <!-- Tabs de Bootstrap -->
-      <ul
-        class="nav nav-tabs px-3 pt-3 mb-0"
-        id="actividadesTabs"
-        role="tablist"
-      >
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            [class.active]="activeTab === 'academicas'"
-            (click)="selectTab('academicas')"
-          >
-            <i class="fas fa-graduation-cap me-2"></i>
-            Actividades Académicas
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            [class.active]="activeTab === 'docencia'"
-            (click)="selectTab('docencia')"
-          >
-            <i class="fas fa-chalkboard-teacher me-2"></i>
-            Actividades de Docencia
-          </button>
-        </li>
-      </ul>
-
-      <!-- Contenido de las Tabs -->
-      <div class="tab-content">
-        <!-- Tab: Actividades Académicas -->
-        <div
-          class="tab-pane fade"
-          [class.show]="activeTab === 'academicas'"
-          [class.active]="activeTab === 'academicas'"
-        >
-          <app-tabla-actividades-academicas
-            *ngIf="activeTab === 'academicas'"
-            [modo]="'gestionar'"
-            (onEditar)="handleEditar($event)"
-            (onEliminar)="handleEliminar($event)"
-          ></app-tabla-actividades-academicas>
-        </div>
-
-        <!-- Tab: Actividades de Docencia -->
-        <div
-          class="tab-pane fade"
-          [class.show]="activeTab === 'docencia'"
-          [class.active]="activeTab === 'docencia'"
-        >
-          <div class="p-4">
-            <div class="alert alert-info d-flex align-items-center mb-0">
-              <i class="fas fa-info-circle fa-2x me-3"></i>
-              <div>
-                <h5 class="alert-heading mb-1">Próximamente</h5>
-                <p class="mb-0">
-                  La funcionalidad de Actividades de Docencia estará disponible
-                  próximamente.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
+
+  <!-- Componente Base con modo gestionar -->
+  <app-activities-base
+    [modo]="'gestionar'"
+    (onEditar)="handleEditar($event)"
+    (onEliminar)="handleEliminar($event)"
+  >
+  </app-activities-base>
 
   <!-- Modal de Confirmación de Eliminación -->
   <app-modal-eliminar-actividad

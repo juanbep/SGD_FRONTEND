@@ -1,85 +1,33 @@
 <div class="view-container">
-  <header class="title-two">Gestión de Actividades Académicas</header>
+  <!-- Componente Base con modo visualizar -->
+  <app-activities-base [modo]="'visualizar'">
+    <!-- Contenido personalizado antes de las tabs -->
+    <div header-content>
+      <header class="title-two">Explorar Actividades Académicas</header>
 
-  <section class="messages-container">
-    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
-    <span class="text-body-heavy">
-      A continuación encontrará todas las actividades académicas con opciones de
-      filtrado y búsqueda avanzada.
-    </span>
-  </section>
+      <section class="messages-container">
+        <img
+          [src]="'assets/icons/messages/teacher.svg'"
+          alt="Icono de profesor"
+        />
+        <span class="text-body-heavy">
+          A continuación encontrará todas las actividades académicas con
+          opciones de filtrado y búsqueda avanzada.
+        </span>
+      </section>
 
-  <section class="messages-container mt-4">
-    <img [src]="'assets/icons/messages/teacher.svg'" alt="Icono de profesor" />
-    <span class="text-body-heavy">
-      Utilice los filtros para refinar su búsqueda y consulte los detalles
-      completos de cada actividad incluyendo usuarios asociados y atributos.
-    </span>
-  </section>
+      <section class="messages-container mt-4">
+        <img
+          [src]="'assets/icons/messages/teacher.svg'"
+          alt="Icono de profesor"
+        />
+        <span class="text-body-heavy">
+          Utilice los filtros para refinar su búsqueda y consulte los detalles
+          completos de cada actividad incluyendo usuarios asociados y atributos.
+        </span>
+      </section>
 
-  <div><br /></div>
-
-  <div class="container-fluid py-4 px-0">
-    <!-- Tabs de Bootstrap -->
-    <nav class="tabs-principales mb-4">
-      <div class="tabs-wrapper">
-        <a
-          class="tab-item"
-          [class.active]="activeTab === 'academicas'"
-          (click)="selectTab('academicas')"
-          role="tab"
-        >
-          <i class="fas fa-graduation-cap me-2"></i>
-          Actividades Académicas
-        </a>
-        <a
-          class="tab-item"
-          [class.active]="activeTab === 'docencia'"
-          (click)="selectTab('docencia')"
-          role="tab"
-        >
-          <i class="fas fa-chalkboard-teacher me-2"></i>
-          Actividades de Docencia
-        </a>
-      </div>
-    </nav>
-
-    <!-- Contenido de las Tabs -->
-    <div class="tab-content" id="actividadesTabContent">
-      <!-- Tab: Actividades Académicas -->
-      <div
-        class="tab-pane fade"
-        [class.show]="activeTab === 'academicas'"
-        [class.active]="activeTab === 'academicas'"
-        id="academicas"
-        role="tabpanel"
-        aria-labelledby="academicas-tab"
-      >
-        <app-tabla-actividades-academicas
-          *ngIf="activeTab === 'academicas'"
-        ></app-tabla-actividades-academicas>
-      </div>
-
-      <!-- Tab: Actividades de Docencia -->
-      <div
-        class="tab-pane fade"
-        [class.show]="activeTab === 'docencia'"
-        [class.active]="activeTab === 'docencia'"
-        id="docencia"
-        role="tabpanel"
-        aria-labelledby="docencia-tab"
-      >
-        <div class="alert alert-info d-flex align-items-center" role="alert">
-          <i class="fas fa-info-circle fa-2x me-3"></i>
-          <div>
-            <h5 class="alert-heading mb-1">Próximamente</h5>
-            <p class="mb-0">
-              La funcionalidad de Actividades de Docencia estará disponible en
-              una próxima actualización.
-            </p>
-          </div>
-        </div>
-      </div>
+      <div><br /></div>
     </div>
-  </div>
+  </app-activities-base>
 </div>
