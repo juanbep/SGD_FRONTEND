@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivitiesBaseComponent } from '../../components/activities-component/manage-activities-component/activities-base/activities-base.component';
+import { ActivitiesBaseComponent } from '../../components/manage-activities-component/activities-base/activities-base.component';
 
 @Component({
   selector: 'app-view-activities-component',

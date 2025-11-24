@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ModalEliminarActividadComponent } from '../../components/activities-component/manage-activities-component/modal-eliminar-actividad/modal-eliminar-actividad.component';
+import { ModalEliminarActividadComponent } from '../../components/manage-activities-component/modal-eliminar-actividad/modal-eliminar-actividad.component';
 import { ActividadResponse } from '../../models';
 import { ActividadHelperService } from '../../services/actividades/actividad-helper.service';
-import { ActivitiesBaseComponent } from '../../components/activities-component/manage-activities-component/activities-base/activities-base.component';
+import { ActivitiesBaseComponent } from '../../components/manage-activities-component/activities-base/activities-base.component';
 
 @Component({
   selector: 'app-management-activities-component',

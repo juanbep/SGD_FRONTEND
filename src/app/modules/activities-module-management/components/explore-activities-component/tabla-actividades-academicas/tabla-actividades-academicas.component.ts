@@ -8,28 +8,28 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActividadesService } from '../../../../services/actividades/actividades.service';
-import { CalendarioHelperService } from '../../../../../academic-calendar-management/services/calendario/calendario-helper.service';
-import { UsuarioHelperService } from '../../../../../sgd-users-management//services/users/usuario-helper.service';
-import { TiposActividadHelperService } from '../../../../services/tiposActividades/tipos-actividad-helper.service';
+import { ActividadesService } from '../../../services/actividades/actividades.service';
+import { CalendarioHelperService } from '../../../../academic-calendar-management/services/calendario/calendario-helper.service';
+import { UsuarioHelperService } from '../../../../sgd-users-management//services/users/usuario-helper.service';
+import { TiposActividadHelperService } from '../../../services/tiposActividades/tipos-actividad-helper.service';
 import { ToastrService } from 'ngx-toastr';
 import {
   ActividadFilters,
   PaginationConfig,
   DEFAULT_PAGINATION_CONFIG,
   ActividadResponse,
-} from '../../../../models';
-import { EstadoCalendario } from '../../../../../academic-calendar-management/models';
+} from '../../../models';
+import { EstadoCalendario } from '../../../../academic-calendar-management/models';
 import { ModalDetalleActividadComponent } from '../modal-detalle-actividad/modal-detalle-actividad.component';
 import { ModalUsuariosComponent } from '../modal-usuarios/modal-usuarios.component';
-import { UserData } from '../../../../../auth/models';
+import { UserData } from '../../../../auth/models';
 import {
   getUserData,
   getUserDepartmentId,
   isUserDataAvailable,
-} from '../../../../../auth/utils/user-storage.utils';
-import { UsuariosConActividadesHelperService } from '../../../../../sgd-users-management/services';
-import { UsuariosConActividadesFilters } from '../../../../../sgd-users-management/models';
+} from '../../../../auth/utils/user-storage.utils';
+import { UsuariosConActividadesHelperService } from '../../../../sgd-users-management/services';
+import { UsuariosConActividadesFilters } from '../../../../sgd-users-management/models';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({

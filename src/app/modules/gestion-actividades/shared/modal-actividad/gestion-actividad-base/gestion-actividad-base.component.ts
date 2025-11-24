@@ -8,7 +8,7 @@ import {
 } from '../../../models/actividad.model';
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
 import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
-import { ModalUsuariosComponent } from '../../../../activities-module-management/components/activities-component/explore-activities-component/modal-usuarios/modal-usuarios.component';
+import { ModalUsuariosComponent } from '../../../../activities-module-management/components/explore-activities-component/modal-usuarios/modal-usuarios.component';
 
 export interface Calendario {
   value: number;

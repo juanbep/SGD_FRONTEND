@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role.guard';
 import { ViewActivitiesComponentComponent } from './pages/view-activities-component/view-activities-component.component';
-import { CreateActivitiesComponentComponent } from './pages/create-activities-component/create-activities-component.component';
 import { ManagementActivitiesComponentComponent } from './pages/management-activities-component/management-activities-component.component';
 import { GestionActividadesComponent } from '../gestion-actividades/gestion-actividades.component';
 
