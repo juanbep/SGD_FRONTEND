@@ -251,8 +251,13 @@
               <th class="fw-bold text-center align-middle">
                 <i class="fas fa-tags me-1"></i>Tipo Actividad
               </th>
+              <!-- COLUMNA SEPARADA: NOMBRE -->
               <th class="fw-bold align-middle">
-                <i class="fas fa-file-alt me-1"></i>Información Actividad
+                <i class="fas fa-heading me-1"></i>Nombre
+              </th>
+              <!-- COLUMNA SEPARADA: DESCRIPCIÓN -->
+              <th class="fw-bold align-middle">
+                <i class="fas fa-file-alt me-1"></i>Descripción
               </th>
               <th class="fw-bold text-center align-middle">
                 <i class="fas fa-info-circle me-1"></i>Estado
@@ -300,22 +305,21 @@
                 </div>
               </td>
 
-              <!-- Actividad -->
+              <!-- COLUMNA NOMBRE -->
               <td class="align-middle">
-                <small class="text-muted d-block mb-1">
-                  <strong>Nombre:</strong>
-                </small>
-                <small class="text-primary descripcion-actividad">
+                <small class="descripcion-actividad">
                   {{ actividadData.actividad.nombreActividad || "Sin nombre" }}
                 </small>
-                <div class="mt-2">
-                  <small class="text-muted d-block mb-1">
-                    <strong>Descripción:</strong>
-                  </small>
-                  <small class="text-primary descripcion-tipo-actividad">
-                    {{ actividadData.actividad.tipoActividad.descripcion }}
-                  </small>
-                </div>
+              </td>
+
+              <!-- COLUMNA DESCRIPCIÓN -->
+              <td class="align-middle">
+                <small class="descripcion-tipo-actividad">
+                  {{
+                    actividadData.actividad.tipoActividad.descripcion ||
+                      "Sin descripción"
+                  }}
+                </small>
               </td>
 
               <!-- Estado -->
@@ -409,11 +413,8 @@
           <ng-template #noData>
             <tbody>
               <tr>
-                <!-- COLSPAN DINÁMICO SEGÚN MODO -->
-                <td
-                  [attr.colspan]="modo === 'gestionar' ? 8 : 8"
-                  class="text-center py-5 align-middle"
-                >
+                <!-- COLSPAN ACTUALIZADO: ahora son 9 columnas -->
+                <td [attr.colspan]="9" class="text-center py-5 align-middle">
                   <div
                     *ngIf="loading"
                     class="d-flex justify-content-center align-items-center"

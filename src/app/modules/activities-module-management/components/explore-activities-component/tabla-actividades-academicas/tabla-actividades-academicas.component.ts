@@ -212,18 +212,12 @@ export class TablaActividadesAcademicasComponent implements OnInit {
       this.calendariosDropdown =
         this.ordenarCalendariosPorAnio(calendariosFiltrados);
 
-      // Seleccionar automáticamente el calendario más reciente
-      if (this.calendariosDropdown.length > 0) {
-        this.filters.oidCalendario = this.calendariosDropdown[0].value;
-        console.log(
-          'Calendario seleccionado automáticamente:',
-          this.calendariosDropdown[0].label
-        );
+      // Seleccionar automáticamente el calendario ACTIVO más reciente
+      this.seleccionarCalendarioAutomatico();
 
-        // Cargar actividades automáticamente si ya tenemos departamento
-        if (this.filters.oidDepartamento) {
-          this.loadActividades();
-        }
+      // Cargar actividades automáticamente si ya tenemos departamento
+      if (this.filters.oidCalendario && this.filters.oidDepartamento) {
+        this.loadActividades();
       }
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
@@ -335,6 +329,27 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
   eliminarActividad(actividadData: ActividadResponse): void {
     this.onEliminar.emit(actividadData);
+  }
+
+  /**
+   * Selecciona automáticamente el calendario ACTIVO más reciente
+   * Prioridad: 1) ACTIVO del año más reciente, 2) Cualquiera del año más reciente
+   */
+  private seleccionarCalendarioAutomatico(): void {
+    if (this.calendariosDropdown.length === 0) {
+      console.warn('No hay calendarios disponibles para seleccionar');
+      return;
+    }
+
+    const calendarioActivo = this.calendariosDropdown.find(
+      (calendario) => calendario.estado === 'ACTIVO'
+    );
+
+    if (calendarioActivo) {
+      this.filters.oidCalendario = calendarioActivo.value;
+    } else {
+      this.filters.oidCalendario = this.calendariosDropdown[0].value;
+    }
   }
 
   // FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES
