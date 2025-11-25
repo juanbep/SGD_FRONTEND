@@ -3,7 +3,8 @@
   <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h6 class="mb-0 d-flex align-items-center">
-        <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+        <i class="fas fa-filter me-2" style="color: #f8ae15"></i>Filtros de
+        Búsqueda
       </h6>
       <button
         type="button"
@@ -40,9 +41,10 @@
                 <span
                   class="badge ms-2"
                   [ngClass]="{
-                    'bg-success': item.estado === 'ACTIVO',
-                    'bg-warning text-dark': item.estado === 'PENDIENTE',
-                    'bg-danger': item.estado === 'DESHABILITADO'
+                    'badge-activo': item.estado === 'ACTIVO',
+                    'badge-pendiente': item.estado === 'PENDIENTE',
+                    'badge-deshabilitado': item.estado === 'DESHABILITADO',
+                    'badge-aprobado': item.estado === 'APROBADO'
                   }"
                 >
                   {{ item.estado }}
@@ -55,11 +57,12 @@
               <div class="d-flex justify-content-between align-items-center">
                 <span>{{ item.label }}</span>
                 <span
-                  class="badge badge-sm"
+                  class="badge"
                   [ngClass]="{
-                    'bg-success': item.estado === 'ACTIVO',
-                    'bg-warning text-dark': item.estado === 'PENDIENTE',
-                    'bg-danger': item.estado === 'DESHABILITADO'
+                    'badge-activo': item.estado === 'ACTIVO',
+                    'badge-pendiente': item.estado === 'PENDIENTE',
+                    'badge-deshabilitado': item.estado === 'DESHABILITADO',
+                    'badge-aprobado': item.estado === 'APROBADO'
                   }"
                 >
                   {{ item.estado }}
@@ -191,14 +194,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Mensaje informativo para tipos -->
-      <div class="alert alert-info mt-3 mb-0" role="alert">
-        <i class="fas fa-info-circle me-2"></i>
-        <strong>Disponibles:</strong> Filtros por Calendario, Tipo de Actividad
-        y Responsable. <strong>Próximamente:</strong> Estado, Fecha de Creación
-        y Búsqueda por nombre.
-      </div>
     </div>
   </div>
 
@@ -209,8 +204,9 @@
     >
       <!-- Título -->
       <h6 class="mb-0 d-flex align-items-center">
-        <i class="fas fa-tasks me-2"></i>Actividades Académicas
-        <span class="badge bg-primary ms-2">{{
+        <i class="fas fa-tasks me-2" style="color: #f8ae15"></i>Actividades
+        Académicas
+        <span class="badge ms-2" style="background: #f8ae15; color: black">{{
           pagination.totalElements
         }}</span>
       </h6>

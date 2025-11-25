@@ -114,26 +114,32 @@ export class ListAcademicCalendarsComponent implements OnInit {
   // ===== MANEJADORES DE FILTROS =====
   onEstadoChange(nuevoEstado: EstadoCalendario | null): void {
     this.filtroEstado = nuevoEstado;
-    this.page = 0;
-    this.cargarCalendarios();
   }
 
   onPeriodoChange(nuevoPeriodo: number | null): void {
     this.filtroPeriodo = nuevoPeriodo;
-    this.page = 0;
-    this.cargarCalendarios();
   }
 
   onAnioChange(nuevoAnio: string | null): void {
     this.filtroAnio = nuevoAnio;
-    this.page = 0;
-    this.cargarCalendarios();
   }
 
   onPageSizeChange(event: any): void {
     this.size = parseInt(event.target.value);
     this.page = 0; // Resetear a primera página
     this.cargarCalendarios();
+  }
+
+  // ===== BOTÓN BUSCAR =====
+  aplicarFiltros(): void {
+    this.page = 0; // Resetear a primera página
+    this.cargarCalendarios();
+  }
+
+  // ===== BOTÓN RECARGAR FILTROS =====
+  recargarFiltros(): void {
+    this.cargarCalendarios();
+    this.toastr.info('Filtros recargados', 'Información');
   }
 
   limpiarFiltros(): void {
