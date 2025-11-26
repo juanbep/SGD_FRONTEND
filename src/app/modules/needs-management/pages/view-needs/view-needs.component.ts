@@ -1,28 +1,37 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import {
   FilterModalComponent,
   CampoFiltro,
   ValoresFiltros,
 } from '../../../../shared/components/filter-modal/filter-modal.component';
+import { environment } from '../../../../../environments/environments_sgd';
 import { NecesidadesService } from '../../services/necesidades.service';
 import { Necesidad } from '../../models/necesidad.interface';
+import { AsAuthServiceService } from '../../../../core/services/as-auth-service.service';
 
 @Component({
   selector: 'app-view-needs',
   standalone: true,
-  imports: [
-    FormsModule,
-    PaginatorComponent,
-    FilterModalComponent,
-  ],
+  imports: [FormsModule, PaginatorComponent, FilterModalComponent],
   templateUrl: './view-needs.component.html',
   styleUrl: './view-needs.component.css',
 })
 export class ViewNeedsComponent implements OnInit {
   private readonly necesidadesService = inject(NecesidadesService);
-  private readonly TAMANIO_PAGINA = 20;
+  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AsAuthServiceService);
+
+  private readonly PAGE_SIZE = 20;
+  private readonly TOKEN_STORAGE_KEYS = [
+    'token',
+    'authToken',
+    'accessToken',
+    'authorization',
+    'Authorization',
+  ];
 
   necesidades = signal<Necesidad[]>([]);
   necesidadesFiltradas = signal<Necesidad[]>([]);
@@ -43,27 +52,100 @@ export class ViewNeedsComponent implements OnInit {
   paginaActual = signal(1);
   totalElementos = signal(0);
 
+  private userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  private userRoles = JSON.parse(localStorage.getItem('userRoles') || '[]');
+  private oidPrograma = this.userData?.programaCoordinador?.oidPrograma || null;
+
   totalPaginas = computed(() =>
-    Math.max(
-      1,
-      Math.ceil(this.necesidadesFiltradas().length / this.TAMANIO_PAGINA)
-    )
+    Math.max(1, Math.ceil(this.necesidadesFiltradas().length / this.PAGE_SIZE))
   );
 
   necesidadesVisibles = computed(() => {
-    const inicio = (this.paginaActual() - 1) * this.TAMANIO_PAGINA;
-    return this.necesidadesFiltradas().slice(
-      inicio,
-      inicio + this.TAMANIO_PAGINA
-    );
+    const inicio = (this.paginaActual() - 1) * this.PAGE_SIZE;
+    return this.necesidadesFiltradas().slice(inicio, inicio + this.PAGE_SIZE);
   });
 
   constructor() {
+    this.validarDatosUsuario();
     this.configurarCamposModal();
   }
 
   ngOnInit(): void {
-    this.cargarNecesidades();
+    this.cargarCalendariosYNecesidades();
+  }
+
+  private validarDatosUsuario(): void {
+    if (!this.userData?.programaCoordinador?.oidPrograma) {
+      console.error(
+        'Estructura de userData inválida o incompleta en localStorage'
+      );
+    }
+  }
+
+  private obtenerToken(): string {
+    for (const key of this.TOKEN_STORAGE_KEYS) {
+      const token = localStorage.getItem(key);
+      if (token) {
+        return token;
+      }
+    }
+
+    if (this.userData && typeof this.userData === 'object') {
+      return this.userData.token || this.userData.accessToken || '';
+    }
+
+    return '';
+  }
+
+  private cargarCalendariosYNecesidades(): void {
+    const token = this.obtenerToken();
+
+    if (!token) {
+      console.warn(
+        'Token no encontrado. Cargando necesidades sin filtro de calendario.'
+      );
+      this.cargarNecesidades();
+      return;
+    }
+
+    this.obtenerCalendariosActivos(token);
+  }
+
+  private obtenerCalendariosActivos(token: string): void {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const params = new HttpParams().set('estado', 'ACTIVO');
+    const url = `${environment.baseUrl}/calendarios`;
+
+    this.http.get(url, { headers, params }).subscribe({
+      next: (response: any) => {
+        const calendarioId = this.extraerPrimerCalendarioId(response);
+        this.cargarNecesidadesConCalendario(calendarioId);
+      },
+      error: (error) => {
+        console.error('Error al obtener calendarios:', error);
+        this.cargarNecesidades();
+      },
+    });
+  }
+
+  private extraerPrimerCalendarioId(response: any): number | null {
+    const content = response?.data?.content;
+
+    if (!Array.isArray(content) || content.length === 0) {
+      return null;
+    }
+
+    const firstCalendar = content[0];
+    return firstCalendar?.oidcalendario ?? firstCalendar?.oidCalendario ?? null;
+  }
+
+  private cargarNecesidadesConCalendario(calendarioId: number | null): void {
+    if (calendarioId) {
+      this.filtroPeriodo.set(String(calendarioId));
+      this.cargarNecesidades(calendarioId);
+    } else {
+      this.cargarNecesidades();
+    }
   }
 
   configurarCamposModal(): void {
@@ -79,7 +161,7 @@ export class ViewNeedsComponent implements OnInit {
         nombre: 'semestre',
         etiqueta: 'Semestre',
         tipo: 'select',
-        opciones: [], // TODO: Reemplazar con servicio de catálogos
+        opciones: [],
         icono: 'fas fa-list-ol',
       },
       {
@@ -92,11 +174,40 @@ export class ViewNeedsComponent implements OnInit {
     ];
   }
 
-  cargarNecesidades(): void {
+  cargarNecesidades(oidCalendario?: number): void {
+    if (!this.tieneRolCoordinador()) {
+      this.mensajeError.set('No tiene permisos para cargar las necesidades.');
+      return;
+    }
+
+    const filtros = this.construirFiltros(oidCalendario);
+    this.ejecutarCargaNecesidades(filtros);
+  }
+
+  private tieneRolCoordinador(): boolean {
+    return this.userRoles.includes('COORDINADOR');
+  }
+
+  private construirFiltros(oidCalendario?: number): any {
+    const filtros: any = {};
+
+    if (this.oidPrograma) {
+      filtros.programaOid = this.oidPrograma;
+    }
+
+    if (oidCalendario !== undefined && oidCalendario !== null) {
+      filtros.oidCalendario = oidCalendario;
+      filtros.calendarioOid = oidCalendario;
+    }
+
+    return filtros;
+  }
+
+  private ejecutarCargaNecesidades(filtros: any): void {
     this.cargando.set(true);
     this.mensajeError.set('');
 
-    this.necesidadesService.listar().subscribe({
+    this.necesidadesService.listar(filtros).subscribe({
       next: (pageResponse) => {
         this.necesidades.set(pageResponse.content);
         this.totalElementos.set(pageResponse.totalElements);
