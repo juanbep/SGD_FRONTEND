@@ -359,7 +359,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loadActividades();
   }
 
-  // limpiarFiltros modificado para mantener oidDepartamento
   limpiarFiltros(): void {
     const oidDepartamento = this.filters.oidDepartamento;
 
@@ -377,10 +376,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     // Limpiar filtro local de responsable
     this.filtroResponsable = '';
 
-    this.actividades = [];
-    this.toastr.info(
-      'Filtros limpiados. Seleccione un calendario para buscar.'
-    );
+    // Restablecer el calendario al valor por defecto (ACTIVO más reciente)
+    this.seleccionarCalendarioAutomatico();
+
+    //this.actividades = [];
   }
 
   // MODALES

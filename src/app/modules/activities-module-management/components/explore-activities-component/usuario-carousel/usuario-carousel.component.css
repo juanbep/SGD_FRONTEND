@@ -14,6 +14,11 @@
   padding: 2rem;
 }
 
+/* Spinner corporativo */
+.spinner-border {
+  color: #001282 !important;
+}
+
 /* Lista de usuarios con scroll */
 .usuarios-list {
   height: 100%;
@@ -35,7 +40,11 @@
   opacity: 0.7;
   text-align: center;
   position: sticky;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.8)
+  );
   z-index: 10;
 }
 
@@ -53,12 +62,13 @@
 
 .scroll-hint i {
   font-size: 1.2rem;
-  color: #0d6efd;
+  color: #0051c6 !important;
   animation: bounce 2s infinite;
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -109,18 +119,6 @@
   }
 }
 
-/* Contador de usuario */
-.usuario-numero {
-  text-align: center;
-  margin-bottom: 0.75rem;
-}
-
-.usuario-numero .badge {
-  font-size: 0.9rem;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 /* Tarjeta de usuario */
 .usuario-card {
   width: 100%;
@@ -131,17 +129,20 @@
   transition: box-shadow 0.3s ease;
 }
 
-.usuario-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-.bg-gradient-primary {
-  background: linear-gradient(135deg, #000066 0%, #000080 50%, #000099 100%);
-}
-
+/* Header corporativo */
 .usuario-card .card-header {
+  background-color: #001282 !important;
+  color: white !important;
   padding: 1rem 1.5rem;
   font-size: 1.1rem;
+}
+
+/* Badge contador */
+.badge-contador {
+  background-color: #f8ae15 !important;
+  color: #001282 !important;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .usuario-card .card-body {
@@ -152,10 +153,14 @@
 .section-subtitle {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #495057;
+  color: #001282 !important;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #e9ecef;
+}
+
+.section-subtitle i {
+  color: #0051c6 !important;
 }
 
 /* Grupos de información */
@@ -184,13 +189,8 @@
   padding: 0.5rem;
   background: #f8f9fa;
   border-radius: 6px;
-  border-left: 3px solid #667eea;
+  border-left: 3px solid #0051c6;
   transition: all 0.2s ease;
-}
-
-.info-item span:hover {
-  background: #e9ecef;
-  border-left-color: #764ba2;
 }
 
 /* Sección de roles */
@@ -205,7 +205,35 @@
   gap: 0.5rem;
 }
 
-/* Custom scrollbar */
+/* Badge de roles corporativo */
+.badge-rol {
+  background-color: #6c757d !important;
+  color: white !important;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+
+/* Alert info corporativo */
+.alert-info {
+  background-color: rgba(22, 168, 225, 0.1) !important;
+  border-color: #16a8e1 !important;
+  color: #001282 !important;
+}
+
+.alert-info .fas {
+  color: #0051c6 !important;
+}
+
+/* Alert danger corporativo */
+.alert-danger {
+  background-color: rgba(173, 0, 0, 0.1) !important;
+  border-color: #ad0000 !important;
+  color: #ad0000 !important;
+}
+
+/* Custom scrollbar corporativo */
 .usuarios-list::-webkit-scrollbar {
   width: 8px;
 }
@@ -216,12 +244,12 @@
 }
 
 .usuarios-list::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #001282 0%, #0051c6 100%);
   border-radius: 10px;
 }
 
 .usuarios-list::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(135deg, #f8ae15 0%, #ffb000 100%);
 }
 
 /* Responsive */
@@ -246,5 +274,10 @@
 
   .scroll-hint i {
     font-size: 1rem;
+  }
+
+  .badge-contador {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem !important;
   }
 }

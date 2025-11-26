@@ -27,28 +27,13 @@
       class="usuario-card-wrapper"
     >
       <div class="usuario-card">
-        <!-- Contador de usuario -->
-        <!-- <div class="usuario-numero">
-          <span class="badge bg-primary">
-            <i class="fas fa-user me-1"></i>
-            Usuario {{ i + 1 }} de {{ totalUsuarios }}
-          </span>
-        </div> -->
-
         <!-- Header de la tarjeta -->
-        <div
-          class="card-header bg-gradient-primary text-white d-flex justify-content-between align-items-center"
-        >
+        <div class="card-header text-white d-flex justify-content-between align-items-center">
           <div class="d-flex align-items-center">
-            <i class="fas fa-user-circle me-2"></i>
-            <span class="fw-bold"
-              >{{ usuario.nombres }} {{ usuario.apellidos }}</span
-            >
+            <i class="fas fa-user-circle me-2" style="color: #f8ae15"></i>
+            <span class="fw-bold">{{ usuario.nombres }} {{ usuario.apellidos }}</span>
           </div>
-          <span
-            class="badge rounded-pill px-3 py-2 text-dark"
-            style="background: white; font-weight: 500"
-          >
+          <span class="badge rounded-pill px-3 py-2 badge-contador">
             <i class="fas fa-user me-1"></i>
             Usuario {{ i + 1 }} de {{ totalUsuarios }}
           </span>
@@ -60,7 +45,7 @@
             <!-- Columna 1: Información Personal -->
             <div class="col-md-6">
               <h6 class="section-subtitle">
-                <i class="fas fa-id-card me-2 text-primary"></i>
+                <i class="fas fa-id-card me-2"></i>
                 Información Personal
               </h6>
               <div class="info-group">
@@ -88,7 +73,7 @@
             <!-- Columna 2: Información Académica -->
             <div class="col-md-6">
               <h6 class="section-subtitle">
-                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                <i class="fas fa-graduation-cap me-2"></i>
                 Información Académica
               </h6>
               <div class="info-group">
@@ -98,9 +83,7 @@
                 </div>
                 <div class="info-item">
                   <label>Programa:</label>
-                  <span>{{
-                    usuario.usuarioDetalle.programa || "No asignado"
-                  }}</span>
+                  <span>{{ usuario.usuarioDetalle.programa || "No asignado" }}</span>
                 </div>
                 <div class="info-item">
                   <label>Categoría:</label>
@@ -128,13 +111,13 @@
             *ngIf="usuario.roles && usuario.roles.length > 0"
           >
             <h6 class="section-subtitle">
-              <i class="fas fa-user-tag me-2 text-primary"></i>
+              <i class="fas fa-user-tag me-2"></i>
               Roles Asignados
             </h6>
             <div class="roles-container">
               <span
                 *ngFor="let rol of usuario.roles"
-                class="badge bg-secondary text-white me-2 mb-2"
+                class="badge badge-rol text-white me-2 mb-2"
               >
                 {{ rol.nombre }}
               </span>
