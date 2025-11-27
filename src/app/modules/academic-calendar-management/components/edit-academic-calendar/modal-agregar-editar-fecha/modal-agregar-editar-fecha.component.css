@@ -142,15 +142,15 @@
 }
 
 .modal-footer .btn-secondary {
-  background-color: #6c757d !important;
-  border-color: #6c757d !important;
-  color: white !important;
-  font-weight: 600;
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
 }
 
 .modal-footer .btn-secondary:hover:not(:disabled) {
-  background-color: #5a6268 !important;
-  border-color: #545b62 !important;
+  background-color: #f8ae15 !important;
+  border-color: #f8ae15 !important;
+  color: #212529 !important;
 }
 
 .modal-footer .btn-primary {

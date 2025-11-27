@@ -64,11 +64,6 @@
   transition: all 0.2s ease;
 }
 
-.info-value:hover {
-  border-left-color: #f8ae15;
-  background: #f8f9fa;
-}
-
 /* Tabla de atributos */
 .table-responsive {
   border-radius: 0.375rem;
