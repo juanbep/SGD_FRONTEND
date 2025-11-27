@@ -3,9 +3,9 @@
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content border-0 shadow-lg">
       <!-- Header -->
-      <div class="modal-header bg-dark-blue text-white border-0 py-3">
+      <div class="modal-header text-white border-0 py-3">
         <h5 class="modal-title fw-bold mb-0">
-          <i class="fas fa-file-alt me-2"></i>
+          <i class="fas fa-file-alt me-2" style="color: #f8ae15"></i>
           Detalles de Actividad
         </h5>
         <button
@@ -23,7 +23,7 @@
           <div class="col-12">
             <div class="info-section">
               <h6 class="section-title mb-3">
-                <i class="fas fa-info-circle me-2 text-primary"></i>
+                <i class="fas fa-info-circle me-2"></i>
                 Información General
               </h6>
 
@@ -149,14 +149,14 @@
         <div *ngIf="actividad.actividad.atributos.length > 0" class="mt-4">
           <div class="info-section">
             <h6 class="section-title mb-3">
-              <i class="fas fa-list-ul me-2 text-primary"></i>
+              <i class="fas fa-list-ul me-2"></i>
               Información Adicional
             </h6>
             <div class="table-responsive">
               <table class="table table-hover table-bordered mb-0">
                 <tbody>
                   <tr *ngFor="let atributo of actividad.actividad.atributos">
-                    <td class="text-muted">{{ atributo.codigoAtributo }}</td>
+                    <td class="text-muted fw-bold">{{ atributo.codigoAtributo }}</td>
                     <td>{{ atributo.valor }}</td>
                   </tr>
                 </tbody>
@@ -167,8 +167,8 @@
       </div>
 
       <!-- Footer -->
-      <div class="modal-footer bg-light border-0 py-3">
-        <button type="button" class="btn btn-secondary px-4" (click)="cerrar()">
+      <div class="modal-footer border-0 py-3">
+        <button type="button" class="btn btn-outline-secondary px-4" (click)="cerrar()">
           <i class="fas fa-times me-2"></i>
           Cerrar
         </button>
