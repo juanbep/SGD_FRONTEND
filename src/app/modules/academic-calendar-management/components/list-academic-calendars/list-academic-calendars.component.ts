@@ -13,11 +13,12 @@ import { ToastrService } from 'ngx-toastr';
 import { Calendario, EstadoCalendario } from '../../models';
 import { Utils } from '../../utils/calendario.utils';
 import { CalendarioService } from '../../services';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-list-academic-calendars',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, NgSelectModule],
   templateUrl: './list-academic-calendars.component.html',
   styleUrl: './list-academic-calendars.component.css',
 })
@@ -37,13 +38,16 @@ export class ListAcademicCalendarsComponent implements OnInit {
     'APROBADO',
     'PENDIENTE',
   ];
-  readonly periodosDisponibles = [1, 2];
+  readonly periodosDisponibles = [
+    { id: 1, nombre: 'Periodo 1' },
+    { id: 2, nombre: 'Periodo 2' },
+  ];
 
   // ===== FILTROS =====
-  filtroEstado: EstadoCalendario | '' = '';
-  filtroAnio: string | '' = '';
+  filtroEstado: EstadoCalendario | null = null;
+  filtroAnio: string | null = null;
   aniosDisponibles: string[] = [];
-  filtroPeriodo: number | '' = '';
+  filtroPeriodo: number | null = null;
 
   // Paginación
   page = 0;
@@ -108,22 +112,16 @@ export class ListAcademicCalendarsComponent implements OnInit {
   }
 
   // ===== MANEJADORES DE FILTROS =====
-  onEstadoChange(nuevoEstado: EstadoCalendario | ''): void {
+  onEstadoChange(nuevoEstado: EstadoCalendario | null): void {
     this.filtroEstado = nuevoEstado;
-    this.page = 0; // Resetear a página 1 al cambiar filtro
-    this.cargarCalendarios();
   }
 
-  onPeriodoChange(nuevoPeriodo: number | ''): void {
+  onPeriodoChange(nuevoPeriodo: number | null): void {
     this.filtroPeriodo = nuevoPeriodo;
-    this.page = 0;
-    this.cargarCalendarios();
   }
 
-  onAnioChange(nuevoAnio: string | ''): void {
+  onAnioChange(nuevoAnio: string | null): void {
     this.filtroAnio = nuevoAnio;
-    this.page = 0;
-    this.cargarCalendarios();
   }
 
   onPageSizeChange(event: any): void {
@@ -132,10 +130,22 @@ export class ListAcademicCalendarsComponent implements OnInit {
     this.cargarCalendarios();
   }
 
+  // ===== BOTÓN BUSCAR =====
+  aplicarFiltros(): void {
+    this.page = 0; // Resetear a primera página
+    this.cargarCalendarios();
+  }
+
+  // ===== BOTÓN RECARGAR FILTROS =====
+  recargarFiltros(): void {
+    this.cargarCalendarios();
+    this.toastr.info('Filtros recargados', 'Información');
+  }
+
   limpiarFiltros(): void {
-    this.filtroEstado = '';
-    this.filtroAnio = '';
-    this.filtroPeriodo = '';
+    this.filtroEstado = null;
+    this.filtroAnio = null;
+    this.filtroPeriodo = null;
     this.page = 0;
     this.cargarCalendarios();
   }

@@ -1,10 +1,12 @@
 .toast-container {
   margin-top: 137px !important;
   margin-right: 3px !important;
-  transition: all .25s ease-in-out !important;
+  transition: all 0.25s ease-in-out !important;
 }
 
-.toast-error, .toast-success, .toast-warning {
+.toast-error,
+.toast-success,
+.toast-warning {
   min-width: 532px !important;
   min-height: 98px !important;
   padding-left: 54px !important;
@@ -15,6 +17,11 @@
   border-bottom-left-radius: 10px !important;
   box-shadow: none !important;
   background-image: none !important;
+
+  /* Centrado vertical */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
 }
 
 .toast-container .toast-close-button {

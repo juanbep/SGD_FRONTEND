@@ -77,12 +77,8 @@ export class StepInfoBasicaComponent implements OnInit, OnChanges {
   formulario!: FormGroup;
   validandoCalendario = false;
 
-  // Clave para localStorage
-  private readonly STORAGE_KEY = 'paso1_borrador';
-
   ngOnInit(): void {
     this.inicializarFormulario();
-    this.cargarBorradorDeStorage();
     this.actualizarEstadoFormulario();
   }
 
@@ -116,7 +112,7 @@ export class StepInfoBasicaComponent implements OnInit, OnChanges {
       ],
       numeroCalendario: [
         this.datosIniciales?.numeroCalendario || null,
-        [Validators.required, Validators.min(1), Validators.max(2)],
+        [Validators.required, Validators.min(1)],
       ],
       horasPlanta: [
         this.datosIniciales?.horasPlanta || null,
@@ -144,11 +140,6 @@ export class StepInfoBasicaComponent implements OnInit, OnChanges {
     this.formulario.valueChanges.subscribe(() => {
       this.cambioFormulario.emit(this.formulario.value);
       this.formularioValido.emit(this.formulario.valid);
-
-      // Auto-guardar en localStorage mientras escribe (solo si no está creado)
-      if (!this.calendarioYaCreado) {
-        this.guardarBorradorEnStorage();
-      }
     });
 
     // Emitir estado inicial
@@ -173,60 +164,6 @@ export class StepInfoBasicaComponent implements OnInit, OnChanges {
       this.formulario.get('horasPlanta')?.enable({ emitEvent: false });
       this.formulario.get('horasOcasionales')?.enable({ emitEvent: false });
       this.formulario.get('observacion')?.enable({ emitEvent: false });
-    }
-  }
-
-  // ===== STORAGE - BORRADOR DEL PASO 1 =====
-  private guardarBorradorEnStorage(): void {
-    try {
-      const borrador: InfoBasicaData = {
-        anioCalendario: this.formulario.get('anioCalendario')?.value,
-        numeroCalendario: this.formulario.get('numeroCalendario')?.value,
-        horasPlanta: this.formulario.get('horasPlanta')?.value,
-        horasOcasionales: this.formulario.get('horasOcasionales')?.value,
-        observacion: this.formulario.get('observacion')?.value || '',
-      };
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(borrador));
-    } catch (error) {
-      console.error('Error al guardar borrador paso 1:', error);
-    }
-  }
-
-  private cargarBorradorDeStorage(): void {
-    try {
-      // Si ya hay datos iniciales (calendario creado), no cargar borrador
-      if (this.datosIniciales || this.calendarioYaCreado) {
-        return;
-      }
-
-      const borradorStr = localStorage.getItem(this.STORAGE_KEY);
-      if (borradorStr) {
-        const borrador: InfoBasicaData = JSON.parse(borradorStr);
-
-        // Cargar datos en el formulario
-        this.formulario.patchValue({
-          anioCalendario: borrador.anioCalendario,
-          numeroCalendario: borrador.numeroCalendario,
-          horasPlanta: borrador.horasPlanta,
-          horasOcasionales: borrador.horasOcasionales,
-          observacion: borrador.observacion,
-        });
-
-        this.toastr.info(
-          'Se ha recuperado un borrador guardado',
-          'Borrador encontrado'
-        );
-      }
-    } catch (error) {
-      console.error('Error al cargar borrador paso 1:', error);
-    }
-  }
-
-  limpiarBorrador(): void {
-    try {
-      localStorage.removeItem(this.STORAGE_KEY);
-    } catch (error) {
-      console.error('Error al limpiar borrador paso 1:', error);
     }
   }
 

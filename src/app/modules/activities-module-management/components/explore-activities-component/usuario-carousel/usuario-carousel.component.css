@@ -1,0 +1,283 @@
+.scroll-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Overlay de carga */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 2rem;
+}
+
+/* Spinner corporativo */
+.spinner-border {
+  color: #001282 !important;
+}
+
+/* Lista de usuarios con scroll */
+.usuarios-list {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  padding: 1rem;
+}
+
+/* Scroll hints */
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  text-align: center;
+  position: sticky;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.8)
+  );
+  z-index: 10;
+}
+
+.scroll-hint-top {
+  top: 0;
+  border-bottom: 1px solid #e9ecef;
+  animation: fadeInDown 0.5s ease;
+}
+
+.scroll-hint-bottom {
+  bottom: 0;
+  border-top: 1px solid #e9ecef;
+  animation: fadeInUp 0.5s ease;
+}
+
+.scroll-hint i {
+  font-size: 1.2rem;
+  color: #0051c6 !important;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+/* Wrapper de cada tarjeta */
+.usuario-card-wrapper {
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.usuario-card-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tarjeta de usuario */
+.usuario-card {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Header corporativo */
+.usuario-card .card-header {
+  background-color: #001282 !important;
+  color: white !important;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+/* Badge contador */
+.badge-contador {
+  background-color: #f8ae15 !important;
+  color: #001282 !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.usuario-card .card-body {
+  padding: 1.5rem;
+}
+
+/* Subtítulos de sección */
+.section-subtitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #001282 !important;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.section-subtitle i {
+  color: #0051c6 !important;
+}
+
+/* Grupos de información */
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.info-item label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6c757d;
+  margin: 0;
+}
+
+.info-item span {
+  font-size: 0.95rem;
+  color: #212529;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border-left: 3px solid #0051c6;
+  transition: all 0.2s ease;
+}
+
+/* Sección de roles */
+.roles-section {
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.roles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Badge de roles corporativo */
+.badge-rol {
+  background-color: #6c757d !important;
+  color: white !important;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+}
+
+/* Alert info corporativo */
+.alert-info {
+  background-color: rgba(22, 168, 225, 0.1) !important;
+  border-color: #16a8e1 !important;
+  color: #001282 !important;
+}
+
+.alert-info .fas {
+  color: #0051c6 !important;
+}
+
+/* Alert danger corporativo */
+.alert-danger {
+  background-color: rgba(173, 0, 0, 0.1) !important;
+  border-color: #ad0000 !important;
+  color: #ad0000 !important;
+}
+
+/* Custom scrollbar corporativo */
+.usuarios-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.usuarios-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.usuarios-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #001282 0%, #0051c6 100%);
+  border-radius: 10px;
+}
+
+.usuarios-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #f8ae15 0%, #ffb000 100%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .usuarios-list {
+    padding: 0.5rem;
+  }
+
+  .usuario-card .card-body {
+    padding: 1rem;
+  }
+
+  .info-item span {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+  }
+
+  .scroll-hint {
+    font-size: 0.8rem;
+    padding: 0.75rem;
+  }
+
+  .scroll-hint i {
+    font-size: 1rem;
+  }
+
+  .badge-contador {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem !important;
+  }
+}

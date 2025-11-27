@@ -4,12 +4,16 @@
       <ng-container *ngIf="isSidebarCollapsed; else expandedLogo">
         <img
           src="assets/icons/logo_unicauca.svg"
-          alt="Logo reducido"
+          alt="Logo Unicauca"
           class="logo-collapsed"
         />
       </ng-container>
       <ng-template #expandedLogo>
-        <span>UNICAUCA</span>
+        <img
+          src="assets/icons/logo_unicauca_horizontal.svg"
+          alt="Logo Unicauca Horizontal"
+          class="logo-expanded"
+        />
       </ng-template>
     </a>
   </div>
@@ -24,6 +28,7 @@
               'has-children': item.children,
               'menu-item-active': item.isOpen
             }"
+            [title]="isSidebarCollapsed ? item.label : ''"
             (click)="toggleMenuItem(item); $event.preventDefault()"
           >
             <img [src]="item.icon" class="icon-svg" />

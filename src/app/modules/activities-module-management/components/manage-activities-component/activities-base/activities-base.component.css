@@ -1,0 +1,80 @@
+/* Tabs Principales */
+.tabs-principales {
+  border-bottom: 2px solid #001282;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.tabs-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+}
+
+.tab-item {
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tab-item i {
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+.tab-item:hover {
+  background-color: rgba(0, 81, 198, 0.1);
+  color: #0051c6;
+}
+
+.tab-item:hover i {
+  color: #0051c6;
+}
+
+.tab-item.active {
+  background-color: #001282;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 18, 130, 0.2);
+}
+
+.tab-item.active i {
+  color: #f8ae15;
+}
+
+/* Contenido de tabs */
+.tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tabs-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tab-item {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

@@ -19,7 +19,7 @@
   <div class="card shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0 fw-bold d-flex align-items-center">
-        <i class="fas fa-calendar-check me-2"></i>
+        <i class="fas fa-calendar-check me-2" style="color: #f8ae15"></i>
         Fechas del calendario
       </h5>
       <button
@@ -111,6 +111,8 @@
     [visible]="modalAgregarVisible()"
     [listaNombreFechas]="listaNombreFechas()"
     [oidCalendario]="calendario()?.oidcalendario || 0"
+    [anioCalendario]="calendario()?.anioCalendario || 0"
+    [numeroCalendario]="calendario()?.numeroCalendario || 0"
     [guardando]="guardandoFecha()"
     [fechaAEditar]="fechaAEditar()"
     (onConfirmar)="confirmarAgregarFecha($event)"

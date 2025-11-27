@@ -1,7 +1,7 @@
 <div class="card shadow-sm detalle-calendario-card" *ngIf="calendario">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0 fw-bold d-flex align-items-center">
-      <i class="fas fa-info-circle me-2"></i>
+      <i class="fas fa-info-circle me-2" style="color: #f8ae15"></i>
       Información general del calendario
     </h5>
 
@@ -81,22 +81,19 @@
               />
             </ng-template>
           </td>
-          <td>
+          <td [class.text-start]="esCampoEditable('estado')">
             <ng-container *ngIf="!esCampoEditable('estado'); else editarEstado">
               {{ calendario.estado || "-" }}
             </ng-container>
             <ng-template #editarEstado>
-              <select
-                class="form-select form-select-sm"
+              <ng-select
+                [items]="ESTADOS_DISPONIBLES"
                 formControlName="estado"
+                placeholder="Selecciona un estado"
+                [clearable]="false"
+                [searchable]="false"
               >
-                <option
-                  *ngFor="let estado of ESTADOS_DISPONIBLES"
-                  [value]="estado"
-                >
-                  {{ estado }}
-                </option>
-              </select>
+              </ng-select>
             </ng-template>
           </td>
         </tr>

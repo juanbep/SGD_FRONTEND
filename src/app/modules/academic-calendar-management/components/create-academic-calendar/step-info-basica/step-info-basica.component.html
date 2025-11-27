@@ -109,35 +109,55 @@
       </small>
     </div>
 
-    <!-- Periodo Académico (solo 2 opciones) -->
+    <!-- Periodo Académico -->
     <div class="col-md-6 mb-3">
       <label for="numeroCalendario" class="form-label fw-bold">
         <i class="fas fa-list-ol me-2 text-primary"></i>
         Periodo académico *
       </label>
-      <select
+      <input
+        type="number"
         id="numeroCalendario"
-        class="form-select"
+        class="form-control"
         formControlName="numeroCalendario"
         [class.is-invalid]="
           numeroCalendarioControl?.invalid && numeroCalendarioControl?.touched
         "
-      >
-        <option [value]="null" disabled>Seleccione un periodo</option>
-        <option [value]="1">Periodo 1</option>
-        <option [value]="2">Periodo 2</option>
-      </select>
+        placeholder="Ej: 1"
+        [min]="1"
+        step="1"
+      />
+
+      <!-- Mensajes de validación -->
       <div
-        class="invalid-feedback"
         *ngIf="
           numeroCalendarioControl?.invalid && numeroCalendarioControl?.touched
         "
       >
-        El periodo académico es requerido
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="numeroCalendarioControl?.hasError('required')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El periodo académico es requerido
+        </small>
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="numeroCalendarioControl?.hasError('min')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El periodo debe ser mayor o igual a 1
+        </small>
       </div>
-      <small class="form-text text-muted">
+
+      <small
+        class="form-text text-muted d-block mt-1"
+        *ngIf="
+          !numeroCalendarioControl?.invalid || !numeroCalendarioControl?.touched
+        "
+      >
         <i class="fas fa-info-circle me-1"></i>
-        Periodo dentro del año académico (1 o 2)
+        Número del periodo académico (1, 2, 3, etc.)
       </small>
     </div>
   </div>

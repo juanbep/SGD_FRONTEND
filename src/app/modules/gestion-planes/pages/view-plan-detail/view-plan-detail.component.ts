@@ -58,6 +58,6 @@ export class ViewPlanDetailComponent implements OnInit {
   }
 
   volverALista(): void {
-    this.router.navigate(['/planes']); // Ajustar ruta
+    this.router.navigate(['app/gestion-planes/management']); 
   }
 }

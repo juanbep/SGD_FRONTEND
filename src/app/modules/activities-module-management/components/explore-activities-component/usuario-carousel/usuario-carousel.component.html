@@ -1,0 +1,145 @@
+<div class="scroll-container">
+  <!-- Spinner de carga -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando información de los usuarios...</p>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error && !loading" class="alert alert-danger m-3" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+  </div>
+
+  <!-- Lista de usuarios con scroll continuo -->
+  <div *ngIf="!loading && !error && usuarios.length > 0" class="usuarios-list">
+    <!-- Indicador superior -->
+    <div class="scroll-hint scroll-hint-top" *ngIf="totalUsuarios > 1">
+      <i class="fas fa-chevron-down"></i>
+      <span>Desplázate para ver todos los usuarios</span>
+    </div>
+
+    <!-- Tarjetas de usuarios -->
+    <div
+      *ngFor="let usuario of usuarios; let i = index"
+      class="usuario-card-wrapper"
+    >
+      <div class="usuario-card">
+        <!-- Header de la tarjeta -->
+        <div class="card-header text-white d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-user-circle me-2" style="color: #f8ae15"></i>
+            <span class="fw-bold">{{ usuario.nombres }} {{ usuario.apellidos }}</span>
+          </div>
+          <span class="badge rounded-pill px-3 py-2 badge-contador">
+            <i class="fas fa-user me-1"></i>
+            Usuario {{ i + 1 }} de {{ totalUsuarios }}
+          </span>
+        </div>
+
+        <!-- Body de la tarjeta -->
+        <div class="card-body">
+          <div class="row g-3">
+            <!-- Columna 1: Información Personal -->
+            <div class="col-md-6">
+              <h6 class="section-subtitle">
+                <i class="fas fa-id-card me-2"></i>
+                Información Personal
+              </h6>
+              <div class="info-group">
+                <div class="info-item">
+                  <label>Identificación:</label>
+                  <span>{{ usuario.identificacion }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Username:</label>
+                  <span>{{ usuario.username }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Correo:</label>
+                  <span class="text-break">{{ usuario.correo }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Estado:</label>
+                  <span class="text-break">
+                    {{ usuario.estadoUsuario.nombre }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna 2: Información Académica -->
+            <div class="col-md-6">
+              <h6 class="section-subtitle">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Información Académica
+              </h6>
+              <div class="info-group">
+                <div class="info-item">
+                  <label>Departamento:</label>
+                  <span>{{ usuario.usuarioDetalle.departamento }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Programa:</label>
+                  <span>{{ usuario.usuarioDetalle.programa || "No asignado" }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Categoría:</label>
+                  <span>{{ usuario.usuarioDetalle.categoria }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Contratación:</label>
+                  <span>{{ usuario.usuarioDetalle.contratacion }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Dedicación:</label>
+                  <span>{{ usuario.usuarioDetalle.dedicacion }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Estudios:</label>
+                  <span>{{ usuario.usuarioDetalle.estudios }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección de Roles -->
+          <div
+            class="roles-section mt-3"
+            *ngIf="usuario.roles && usuario.roles.length > 0"
+          >
+            <h6 class="section-subtitle">
+              <i class="fas fa-user-tag me-2"></i>
+              Roles Asignados
+            </h6>
+            <div class="roles-container">
+              <span
+                *ngFor="let rol of usuario.roles"
+                class="badge badge-rol text-white me-2 mb-2"
+              >
+                {{ rol.nombre }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Indicador inferior -->
+    <div class="scroll-hint scroll-hint-bottom" *ngIf="totalUsuarios > 1">
+      <span>Desplázate para ver todos los usuarios</span>
+      <i class="fas fa-chevron-up"></i>
+    </div>
+  </div>
+
+  <!-- Mensaje cuando no hay usuarios -->
+  <div
+    *ngIf="!loading && !error && usuarios.length === 0"
+    class="alert alert-info m-3"
+  >
+    <i class="fas fa-info-circle me-2"></i>
+    No hay usuarios asociados a esta actividad
+  </div>
+</div>
