@@ -149,6 +149,32 @@
   padding: 1.5rem;
 }
 
+/* Badge-botón desasignar (rojo) - NUEVO */
+.badge-desasignar {
+  background-color: #ad0000 !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.badge-desasignar:hover {
+  background-color: #8a0000 !important;
+  /* transform: scale(1.05); */
+  box-shadow: 0 4px 8px rgba(173, 0, 0, 0.3);
+}
+
+/* .badge-desasignar:active {
+  transform: scale(0.98);
+} */
+
+.badge-desasignar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Subtítulos de sección */
 .section-subtitle {
   font-size: 0.95rem;
@@ -156,7 +182,7 @@
   color: #001282 !important;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e9ecef;
+  /* border-bottom: 2px solid #e9ecef; */
 }
 
 .section-subtitle i {
@@ -250,6 +276,26 @@
 
 .usuarios-list::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #f8ae15 0%, #ffb000 100%);
+}
+
+/* Botón confirmar desasignación */
+.btn-confirmar-desasignar {
+  background-color: #ad0000 !important;
+  border-color: #ad0000 !important;
+  color: white !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-confirmar-desasignar:hover {
+  background-color: #8a0000 !important;
+  border-color: #8a0000 !important;
+  color: white !important;
+  box-shadow: 0 4px 8px rgba(173, 0, 0, 0.3);
+}
+
+.btn-confirmar-desasignar:active {
+  box-shadow: 0 2px 4px rgba(173, 0, 0, 0.3);
 }
 
 /* Responsive */

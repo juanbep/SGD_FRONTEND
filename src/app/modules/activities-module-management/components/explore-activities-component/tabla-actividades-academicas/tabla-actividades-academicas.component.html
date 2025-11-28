@@ -368,7 +368,7 @@
                   class="badge text-dark usuario-badge-clickable"
                   style="background: #ffb000"
                   [title]="'Clic para ver detalles de los usuarios asociados'"
-                  (click)="abrirModalUsuarios(actividadData.usuarios)"
+                  (click)="abrirModalUsuarios(actividadData)"
                 >
                   <i class="fas fa-users me-1"></i>
                   {{ actividadData.usuarios.length }} usuario(s)
@@ -550,6 +550,10 @@
   <app-modal-usuarios
     [usuariosIds]="usuariosSeleccionados"
     [visible]="mostrarModalUsuarios"
+    [oidActividad]="oidActividadParaUsuarios"
+    [oidCalendario]="oidCalendarioParaUsuarios"
+    [modo]="modo"
     (onCerrar)="cerrarModalUsuarios()"
+    (onUsuarioDesasignado)="loadActividades()"
   ></app-modal-usuarios>
 </div>

@@ -23,9 +23,9 @@
   font-size: 1.1rem;
 }
 
-.detalle-calendario-card .card-header i.fas {
-  color: #f8ae15 !important; /* Amarillo */
-}
+/* .detalle-calendario-card .card-header i.fas {
+  color: #f8ae15 !important; 
+} */
 
 /* Botón Editar */
 .detalle-calendario-card .btn-light {

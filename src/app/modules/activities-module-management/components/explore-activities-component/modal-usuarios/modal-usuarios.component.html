@@ -19,14 +19,16 @@
       <div class="modal-body p-0">
         <app-usuario-carousel
           [usuariosIds]="usuariosIds"
+          [modo]="modo"
+          (onDesasignarUsuario)="desasignarUsuario($event)"
         ></app-usuario-carousel>
       </div>
 
       <!-- Footer -->
       <div class="modal-footer border-0 py-3">
-        <button 
-          type="button" 
-          class="btn btn-outline-secondary px-4" 
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
           (click)="cerrar()"
         >
           <i class="fas fa-times me-2"></i>

@@ -71,6 +71,9 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   mostrarModalUsuarios: boolean = false;
   usuariosSeleccionados: number[] = [];
 
+  oidActividadParaUsuarios: number | null = null;
+  oidCalendarioParaUsuarios: number | null = null;
+
   // Lista de calendarios para el dropdown filtro calendarios
   calendariosDropdown: {
     value: number;
@@ -398,14 +401,20 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.actividadSeleccionada = null;
   }
 
-  abrirModalUsuarios(usuarios: any[]): void {
-    this.usuariosSeleccionados = usuarios.map((u) => u.oidUsuario);
+  abrirModalUsuarios(actividadData: ActividadResponse): void {
+    this.usuariosSeleccionados = actividadData.usuarios.map(
+      (u) => u.oidUsuario
+    );
+    this.oidActividadParaUsuarios = actividadData.actividad.oidActividad;
+    this.oidCalendarioParaUsuarios = actividadData.oidCalendario;
     this.mostrarModalUsuarios = true;
   }
 
   cerrarModalUsuarios(): void {
     this.mostrarModalUsuarios = false;
     this.usuariosSeleccionados = [];
+    this.oidActividadParaUsuarios = null;
+    this.oidCalendarioParaUsuarios = null;
   }
 
   // PAGINACIÓN

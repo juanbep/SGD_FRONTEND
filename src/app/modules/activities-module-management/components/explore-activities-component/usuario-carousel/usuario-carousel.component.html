@@ -27,103 +27,196 @@
       class="usuario-card-wrapper"
     >
       <div class="usuario-card">
-        <!-- Header de la tarjeta -->
-        <div class="card-header text-white d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center">
-            <i class="fas fa-user-circle me-2" style="color: #f8ae15"></i>
-            <span class="fw-bold">{{ usuario.nombres }} {{ usuario.apellidos }}</span>
-          </div>
-          <span class="badge rounded-pill px-3 py-2 badge-contador">
-            <i class="fas fa-user me-1"></i>
-            Usuario {{ i + 1 }} de {{ totalUsuarios }}
-          </span>
-        </div>
-
-        <!-- Body de la tarjeta -->
-        <div class="card-body">
-          <div class="row g-3">
-            <!-- Columna 1: Información Personal -->
-            <div class="col-md-6">
-              <h6 class="section-subtitle">
-                <i class="fas fa-id-card me-2"></i>
-                Información Personal
-              </h6>
-              <div class="info-group">
-                <div class="info-item">
-                  <label>Identificación:</label>
-                  <span>{{ usuario.identificacion }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Username:</label>
-                  <span>{{ usuario.username }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Correo:</label>
-                  <span class="text-break">{{ usuario.correo }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Estado:</label>
-                  <span class="text-break">
-                    {{ usuario.estadoUsuario.nombre }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Columna 2: Información Académica -->
-            <div class="col-md-6">
-              <h6 class="section-subtitle">
-                <i class="fas fa-graduation-cap me-2"></i>
-                Información Académica
-              </h6>
-              <div class="info-group">
-                <div class="info-item">
-                  <label>Departamento:</label>
-                  <span>{{ usuario.usuarioDetalle.departamento }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Programa:</label>
-                  <span>{{ usuario.usuarioDetalle.programa || "No asignado" }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Categoría:</label>
-                  <span>{{ usuario.usuarioDetalle.categoria }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Contratación:</label>
-                  <span>{{ usuario.usuarioDetalle.contratacion }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Dedicación:</label>
-                  <span>{{ usuario.usuarioDetalle.dedicacion }}</span>
-                </div>
-                <div class="info-item">
-                  <label>Estudios:</label>
-                  <span>{{ usuario.usuarioDetalle.estudios }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sección de Roles -->
+        <!-- ========== VISTA NORMAL ========== -->
+        <ng-container *ngIf="usuarioEnConfirmacion !== usuario.oidUsuario">
+          <!-- Header de la tarjeta -->
           <div
-            class="roles-section mt-3"
-            *ngIf="usuario.roles && usuario.roles.length > 0"
+            class="card-header text-white d-flex justify-content-between align-items-center"
           >
-            <h6 class="section-subtitle">
-              <i class="fas fa-user-tag me-2"></i>
-              Roles Asignados
-            </h6>
-            <div class="roles-container">
-              <span
-                *ngFor="let rol of usuario.roles"
-                class="badge badge-rol text-white me-2 mb-2"
+            <div class="d-flex align-items-center">
+              <i class="fas fa-user-circle me-2" style="color: #f8ae15"></i>
+              <span class="fw-bold"
+                >{{ usuario.nombres }} {{ usuario.apellidos }}</span
               >
-                {{ rol.nombre }}
-              </span>
+            </div>
+
+            <span class="badge rounded-pill px-3 py-2 badge-contador">
+              <i class="fas fa-user me-1"></i>
+              Usuario {{ i + 1 }} de {{ totalUsuarios }}
+            </span>
+          </div>
+
+          <!-- Body con toda la información -->
+          <div class="card-body">
+            <div class="row g-3">
+              <!-- Columna izquierda: Información Personal -->
+              <div class="col-md-6">
+                <h6 class="section-subtitle">
+                  <i class="fas fa-id-card me-2"></i>
+                  Información Personal
+                </h6>
+                <div class="info-group">
+                  <div class="info-item">
+                    <label>Identificación:</label>
+                    <span>{{ usuario.identificacion }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Username:</label>
+                    <span>{{ usuario.username }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Correo:</label>
+                    <span class="text-break">{{ usuario.correo }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Estado:</label>
+                    <span class="text-break">
+                      {{ usuario.estadoUsuario.nombre }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Columna derecha: Información Académica -->
+              <div class="col-md-6">
+                <h6 class="section-subtitle">
+                  <i class="fas fa-graduation-cap me-2"></i>
+                  Información Académica
+                </h6>
+                <div class="info-group">
+                  <div class="info-item">
+                    <label>Departamento:</label>
+                    <span>{{ usuario.usuarioDetalle.departamento }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Programa:</label>
+                    <span>{{
+                      usuario.usuarioDetalle.programa || "No asignado"
+                    }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Categoría:</label>
+                    <span>{{ usuario.usuarioDetalle.categoria }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Contratación:</label>
+                    <span>{{ usuario.usuarioDetalle.contratacion }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Dedicación:</label>
+                    <span>{{ usuario.usuarioDetalle.dedicacion }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Estudios:</label>
+                    <span>{{ usuario.usuarioDetalle.estudios }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sección de Roles -->
+            <div
+              class="roles-section mt-3"
+              *ngIf="usuario.roles && usuario.roles.length > 0"
+            >
+              <h6 class="section-subtitle">
+                <i class="fas fa-user-tag me-2"></i>
+                Roles Asignados
+              </h6>
+              <div class="roles-container">
+                <span
+                  *ngFor="let rol of usuario.roles"
+                  class="badge badge-rol text-white me-2 mb-2"
+                >
+                  {{ rol.nombre }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Botón desasignar (solo en modo gestionar) -->
+            <div
+              *ngIf="modo === 'gestionar'"
+              class="card-footer-actions mt-3 pt-3 border-top d-flex justify-content-end"
+            >
+              <button
+                type="button"
+                class="badge rounded-pill px-3 py-2 badge-desasignar"
+                title="Desasignar usuario de esta actividad"
+                (click)="mostrarConfirmacion(usuario.oidUsuario)"
+              >
+                <i class="fas fa-user-times me-1"></i>
+                Desasignar
+              </button>
             </div>
           </div>
-        </div>
+        </ng-container>
+
+        <!-- ========== VISTA DE CONFIRMACIÓN ========== -->
+
+        <ng-container *ngIf="usuarioEnConfirmacion === usuario.oidUsuario">
+          <!-- Header con alerta -->
+          <div
+            class="card-header bg-danger text-white d-flex align-items-center"
+          >
+            <i
+              class="fas fa-exclamation-triangle me-2"
+              style="font-size: 1.2rem"
+            ></i>
+            <span class="fw-bold">Confirmar Desasignación</span>
+          </div>
+
+          <!-- Body con mensaje de confirmación -->
+          <div class="card-body confirmacion-body">
+            <div class="text-center py-4">
+              <!-- Icono grande en rojo corporativo -->
+              <i
+                class="fas fa-user-times fa-3x mb-3"
+                style="color: #ad0000"
+              ></i>
+
+              <h6 class="fw-bold mb-3">
+                ¿Está seguro que desea desasignar al siguiente usuario?
+              </h6>
+
+              <div class="alert alert-warning d-flex align-items-center mb-4">
+                <i class="fas fa-info-circle me-2"></i>
+                <div class="text-start">
+                  <strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong
+                  ><br />
+                  <small
+                    >{{ usuario.identificacion }} - {{ usuario.correo }}</small
+                  >
+                </div>
+              </div>
+
+              <p class="text-muted small mb-0">
+                Esta acción eliminará al usuario de esta actividad académica.
+              </p>
+            </div>
+
+            <!-- Botones de confirmación -->
+            <div class="d-flex justify-content-center gap-3 mt-3">
+              <button
+                type="button"
+                class="btn btn-outline-secondary px-4"
+                (click)="cancelarConfirmacion()"
+              >
+                <i class="fas fa-times me-2"></i>
+                Cancelar
+              </button>
+
+              <!-- Botón con clase personalizada -->
+              <button
+                type="button"
+                class="btn btn-confirmar-desasignar px-4"
+                (click)="confirmarDesasignacion(usuario.oidUsuario)"
+              >
+                <i class="fas fa-user-times me-2"></i>
+                Confirmar Desasignación
+              </button>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
 
