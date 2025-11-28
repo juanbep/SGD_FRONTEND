@@ -56,4 +56,16 @@
     (onConfirmar)="confirmarEliminacion()"
     (onCancelar)="cerrarModalEliminar()"
   ></app-modal-eliminar-actividad>
+
+  <app-modal-editar-actividad
+    *ngIf="actividadAEditar"
+    [visible]="mostrarModalEditar"
+    [actividad]="actividadAEditar"
+    [calendariosDropdown]="calendariosDropdown"
+    [tiposActividadDropdown]="tiposActividadDropdown"
+    [estadosDropdown]="estadosDropdown"
+    [cargosDropdown]="cargosDropdown"
+    (onCerrar)="cerrarModalEditar()"
+    (onGuardar)="confirmarEdicion($event)"
+  ></app-modal-editar-actividad>
 </div>

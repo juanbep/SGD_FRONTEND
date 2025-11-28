@@ -331,6 +331,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.onEliminar.emit(actividadData);
   }
 
+  editarActividad(actividadData: ActividadResponse): void {
+    this.onEditar.emit(actividadData);
+  }
+
   /**
    * Selecciona automáticamente el calendario ACTIVO más reciente
    * Prioridad: 1) ACTIVO del año más reciente, 2) Cualquiera del año más reciente
