@@ -10,6 +10,7 @@ import {
   CreateActividadDTO,
   UpdateActividadDTO,
   DeleteActividadDTO,
+  DesasignarUsuarioActividadResponse,
   ActividadFilters,
 } from '../../models';
 import { environment } from '../../../../../environments/environments_sgd';
@@ -70,6 +71,24 @@ export class ActividadesService {
     return this.http
       .delete<DeleteActividadResponse>(
         `${this.apiUrl}/${deleteData.oidActividad}`
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  // DESASIGNAR USUARIO DE ACTIVIDAD
+  desasignarUsuarioDeActividad(
+    oidActividad: number,
+    oidCalendario: number,
+    oidUsuario: number
+  ): Observable<DesasignarUsuarioActividadResponse> {
+    const params = new HttpParams()
+      .set('oidUsuario', oidUsuario.toString())
+      .set('oidCalendario', oidCalendario.toString());
+
+    return this.http
+      .delete<DesasignarUsuarioActividadResponse>(
+        `${this.apiUrl}/${oidActividad}/relacion`,
+        { params }
       )
       .pipe(catchError(this.handleError));
   }

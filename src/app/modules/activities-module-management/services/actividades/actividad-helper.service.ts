@@ -6,6 +6,7 @@ import {
   ActividadFilters,
   ActividadResponse,
   CreateActividadDTO,
+  DesasignarUsuarioResponse,
   UpdateActividadDTO,
 } from '../../models';
 import { map, Observable } from 'rxjs';
@@ -84,5 +85,33 @@ export class ActividadHelperService {
   async checkActividadExists(id: number): Promise<boolean> {
     const actividad = await this.getById(id);
     return actividad !== null;
+  }
+
+  async desasignarUsuario(
+    oidActividad: number,
+    oidCalendario: number,
+    oidUsuario: number
+  ): Promise<DesasignarUsuarioResponse | null> {
+    return this.baseHelper.getDataFromResponse(
+      this.actividadService.desasignarUsuarioDeActividad(
+        oidActividad,
+        oidCalendario,
+        oidUsuario
+      )
+    );
+  }
+
+  desasignarUsuarioObservable(
+    oidActividad: number,
+    oidCalendario: number,
+    oidUsuario: number
+  ): Observable<DesasignarUsuarioResponse | null> {
+    return this.baseHelper.getDataFromResponseObservable(
+      this.actividadService.desasignarUsuarioDeActividad(
+        oidActividad,
+        oidCalendario,
+        oidUsuario
+      )
+    );
   }
 }

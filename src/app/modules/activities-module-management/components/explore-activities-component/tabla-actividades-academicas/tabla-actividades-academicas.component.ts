@@ -417,6 +417,14 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.oidCalendarioParaUsuarios = null;
   }
 
+  /**
+   * Maneja la desasignación de un usuario y recarga la tabla
+   */
+  onUsuarioDesasignadoHandler(): void {
+    console.log('Usuario desasignado, recargando tabla...');
+    this.loadActividades();
+  }
+
   // PAGINACIÓN
   onPageChange(page: number): void {
     if (page >= 0 && page < this.pagination.totalPages) {

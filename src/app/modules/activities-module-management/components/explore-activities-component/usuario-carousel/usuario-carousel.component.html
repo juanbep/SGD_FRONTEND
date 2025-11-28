@@ -25,6 +25,7 @@
     <div
       *ngFor="let usuario of usuarios; let i = index"
       class="usuario-card-wrapper"
+      [attr.data-usuario-id]="usuario.oidUsuario"
     >
       <div class="usuario-card">
         <!-- ========== VISTA NORMAL ========== -->
@@ -142,6 +143,7 @@
                 type="button"
                 class="badge rounded-pill px-3 py-2 badge-desasignar"
                 title="Desasignar usuario de esta actividad"
+                [disabled]="desasignando"
                 (click)="mostrarConfirmacion(usuario.oidUsuario)"
               >
                 <i class="fas fa-user-times me-1"></i>
@@ -209,10 +211,20 @@
               <button
                 type="button"
                 class="btn btn-confirmar-desasignar px-4"
+                [disabled]="desasignando"
                 (click)="confirmarDesasignacion(usuario.oidUsuario)"
               >
-                <i class="fas fa-user-times me-2"></i>
-                Confirmar Desasignación
+                <span *ngIf="!desasignando">
+                  <i class="fas fa-user-times me-2"></i>
+                  Confirmar Desasignación
+                </span>
+                <span *ngIf="desasignando">
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                  ></span>
+                  Desasignando...
+                </span>
               </button>
             </div>
           </div>

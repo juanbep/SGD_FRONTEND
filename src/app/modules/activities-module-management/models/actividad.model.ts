@@ -66,6 +66,13 @@ export interface DeleteActividadDTO {
   oidActividad: number;
 }
 
+export interface DesasignarUsuarioResponse {
+  mensaje: string;
+  oidCalendario: number;
+  oidUsuario: number;
+  oidActividad: number;
+}
+
 export interface ActividadFilters {
   // Paginación
   page?: number;
@@ -114,4 +121,5 @@ export type ActividadesListResponse = BaseResponse<
 export type GetActividadResponse = BaseResponse<ActividadResponse>;
 export type CreateActividadResponse = BaseResponse<ActividadResponse>;
 export type UpdateActividadResponse = BaseResponse<ActividadResponse>;
+export type DesasignarUsuarioActividadResponse = BaseResponse<DesasignarUsuarioResponse>;
 export type DeleteActividadResponse = BaseResponse<boolean>;
