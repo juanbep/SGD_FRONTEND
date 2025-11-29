@@ -27,63 +27,64 @@
             <div class="row g-3">
               <!-- Nombre -->
               <div class="col-12">
-                <label class="info-label">Nombre</label>
+                <label class="info-label">Nombre *</label>
                 <input
                   type="text"
                   class="form-control"
                   formControlName="nombreActividad"
+                  [readonly]="!camposEditables.nombreActividad"
                 />
               </div>
 
-              <!-- Tipo y Calendario -->
+              <!-- Tipo de actividad (SOLO LECTURA) -->
               <div class="col-md-6">
                 <label class="info-label">Tipo de actividad</label>
-                <ng-select
-                  [items]="tiposActividadDropdown"
-                  bindLabel="label"
-                  bindValue="value"
-                  formControlName="oidTipoActividad"
-                  [clearable]="false"
-                  placeholder="Seleccione..."
-                >
-                </ng-select>
+                <input
+                  type="text"
+                  class="form-control"
+                  [value]="actividad.actividad.tipoActividad.nombre"
+                  readonly
+                  disabled
+                />
               </div>
 
+              <!-- Calendario (SOLO LECTURA) -->
               <div class="col-md-6">
                 <label class="info-label">Calendario</label>
-                <ng-select
-                  [items]="calendariosDropdown"
-                  bindLabel="label"
-                  bindValue="value"
-                  formControlName="oidCalendario"
-                  [clearable]="false"
-                  placeholder="Seleccione..."
-                >
-                </ng-select>
+                <input
+                  type="text"
+                  class="form-control"
+                  [value]="actividad.nombreCalendario"
+                  readonly
+                  disabled
+                />
               </div>
 
-              <!-- Cargo y Estado -->
-              <div class="col-md-6">
-                <label class="info-label">Cargo actividad</label>
+              <!-- Cargo actividad -->
+              <!-- <div class="col-md-6">
+                <label class="info-label">Cargo actividad *</label>
                 <ng-select
                   [items]="cargosDropdown"
                   bindLabel="label"
                   bindValue="value"
                   formControlName="oidCargoActividad"
                   [clearable]="false"
+                  [disabled]="!camposEditables.cargoActividad"
                   placeholder="Seleccione..."
                 >
                 </ng-select>
-              </div>
+              </div> -->
 
+              <!-- Estado -->
               <div class="col-md-6">
-                <label class="info-label">Estado</label>
+                <label class="info-label">Estado *</label>
                 <ng-select
                   [items]="estadosDropdown"
                   bindLabel="label"
                   bindValue="value"
                   formControlName="oidEstadoActividad"
                   [clearable]="false"
+                  [disabled]="!camposEditables.estado"
                   placeholder="Seleccione..."
                 >
                 </ng-select>
@@ -91,12 +92,13 @@
 
               <!-- Semanas -->
               <div class="col-md-4">
-                <label class="info-label">Semanas</label>
+                <label class="info-label">Semanas *</label>
                 <input
                   type="number"
                   class="form-control"
                   formControlName="semanas"
                   min="1"
+                  [readonly]="!camposEditables.semanas"
                 />
               </div>
             </div>
@@ -129,6 +131,7 @@
                   type="text"
                   class="form-control"
                   formControlName="valor"
+                  [readonly]="!camposEditables.atributos"
                 />
               </div>
             </div>

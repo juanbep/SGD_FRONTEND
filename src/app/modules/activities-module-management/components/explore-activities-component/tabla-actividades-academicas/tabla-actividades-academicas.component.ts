@@ -31,6 +31,10 @@ import {
 import { UsuariosConActividadesHelperService } from '../../../../sgd-users-management/services';
 import { UsuariosConActividadesFilters } from '../../../../sgd-users-management/models';
 import { NgSelectModule } from '@ng-select/ng-select';
+import {
+  ESTADOS_ACTIVIDAD,
+  ESTADOS_ACTIVIDAD_FILTRO,
+} from '../../../utils/actividad-utils';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
@@ -104,20 +108,8 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     fechaCreacionDesde: '',
   };
 
-  // Estados de las actividades
-  estados = [
-    { oid: 1, nombre: 'ACTIVA', class: 'bg-success' },
-    { oid: 2, nombre: 'INACTIVA', class: 'bg-danger' },
-    { oid: 3, nombre: 'INCOMPLETA', class: 'bg-warning' },
-  ];
-
-  // Dropdown de estados para ng-select
-  estadosDropdown: { value: number | string; label: string }[] = [
-    { value: '', label: 'TODOS' },
-    { value: 1, label: 'ACTIVA' },
-    { value: 2, label: 'INACTIVA' },
-    { value: 3, label: 'INCOMPLETA' },
-  ];
+  readonly estados = ESTADOS_ACTIVIDAD;
+  readonly estadosDropdown = ESTADOS_ACTIVIDAD_FILTRO;
 
   ngOnInit(): void {
     this.cargarDatosUsuario();

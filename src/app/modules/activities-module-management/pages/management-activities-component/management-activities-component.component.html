@@ -61,11 +61,20 @@
     *ngIf="actividadAEditar"
     [visible]="mostrarModalEditar"
     [actividad]="actividadAEditar"
+    (onCerrar)="cerrarModalEditar()"
+    (onGuardar)="confirmarEdicion($event)"
+  ></app-modal-editar-actividad>
+
+  <!-- EN QUE CASO QUE SE PUEDDA EDITAR EL TIPO DE ACTIVIDAD Y EL CALENDARIO, SE LE PASAN LA INFORMACIÓN -->
+  <!-- <app-modal-editar-actividad
+    *ngIf="actividadAEditar"
+    [visible]="mostrarModalEditar"
+    [actividad]="actividadAEditar"
     [calendariosDropdown]="calendariosDropdown"
     [tiposActividadDropdown]="tiposActividadDropdown"
     [estadosDropdown]="estadosDropdown"
     [cargosDropdown]="cargosDropdown"
     (onCerrar)="cerrarModalEditar()"
     (onGuardar)="confirmarEdicion($event)"
-  ></app-modal-editar-actividad>
+  ></app-modal-editar-actividad> -->
 </div>

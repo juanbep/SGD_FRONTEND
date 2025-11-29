@@ -25,6 +25,7 @@ import { SubtipoActividadConfig } from '../../../config/actividades-metadata.con
 import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
 import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
 import { CargosActividadHelperService } from '../../../../activities-module-management/services';
+import { ESTADOS_ACTIVIDAD_DROPDOWN } from '../../../../activities-module-management/utils/actividad-utils';
 
 interface UsuarioSelect {
   oid: number;
@@ -55,11 +56,7 @@ export class ModalActividadComponent implements OnInit {
   actividadForm!: FormGroup;
   readonly agregarOtra = signal(true);
   readonly modoEdicion = signal(false);
-
-  readonly estadosActividad = [
-    { oid: 1, nombre: 'Inactiva' },
-    { oid: 2, nombre: 'Activa' },
-  ];
+  readonly estadosActividad = ESTADOS_ACTIVIDAD_DROPDOWN;
 
   // ========== SERVICIOS ==========
   private usuarioService = inject(UsuarioDepartamentoHelperService);

@@ -21,6 +21,8 @@ import {
   CreateAtributoDTO,
   UpdateActividadDTO,
 } from '../../../models';
+import { ESTADOS_ACTIVIDAD_DROPDOWN } from '../../../utils/actividad-utils';
+
 @Component({
   selector: 'app-modal-editar-actividad',
   standalone: true,
@@ -31,16 +33,30 @@ import {
 export class ModalEditarActividadComponent implements OnChanges {
   @Input() visible = false;
   @Input() actividad!: ActividadResponse;
-
-  @Input() calendariosDropdown: { value: number; label: string }[] = [];
-  @Input() tiposActividadDropdown: { value: number; label: string }[] = [];
-  @Input() estadosDropdown: { value: number | string; label: string }[] = [];
-  @Input() cargosDropdown: { value: number | string; label: string }[] = [];
+  //@Input() calendariosDropdown: { value: number; label: string }[] = [];
+  //@Input() tiposActividadDropdown: { value: number; label: string }[] = [];
+  //@Input() estadosDropdown: { value: number | string; label: string }[] = [];
+  //@Input() cargosDropdown: { value: number | string; label: string }[] = [];
 
   @Output() onCerrar = new EventEmitter<void>();
   @Output() onGuardar = new EventEmitter<UpdateActividadDTO>();
 
   private fb = inject(FormBuilder);
+
+  // ========== CONFIGURACIÓN DE CAMPOS EDITABLES ==========
+  camposEditables = {
+    nombreActividad: true,
+    tipoActividad: false,
+    calendario: false,
+    estado: true,
+    semanas: true,
+    atributos: true,
+  };
+  // ======================================================
+
+  // ========== ESTADOS (DEFINIDOS LOCALMENTE) ==========
+  readonly estadosDropdown = ESTADOS_ACTIVIDAD_DROPDOWN;
+  // ====================================================
 
   form: FormGroup = this.fb.group({
     oidCargoActividad: [null, Validators.required],
@@ -71,15 +87,13 @@ export class ModalEditarActividadComponent implements OnChanges {
       oidEstadoActividad: a.oidEstadoActividad,
       nombreActividad: a.nombreActividad,
       semanas: a.semanas,
-      // el oidCalendario viene en el wrapper ActividadResponse
       oidCalendario: this.actividad.oidCalendario,
     });
 
-    // Mapear Atributo (codigoAtributo, valor) -> CreateAtributoDTO (nombre, tipo, valor)
+    // Mapear atributos
     const attrsFG = (a.atributos ?? []).map((attr: any) =>
       this.fb.group({
         nombre: [attr.codigoAtributo],
-        // si tienes el tipo real, cámbialo aquí
         tipo: ['VARCHAR'],
         valor: [attr.valor, Validators.required],
       })
@@ -102,15 +116,13 @@ export class ModalEditarActividadComponent implements OnChanges {
 
     const dto: UpdateActividadDTO = {
       oidActividad: this.actividad.actividad.oidActividad,
-      oidCargoActividad: raw.oidCargoActividad,
       oidTipoActividad: raw.oidTipoActividad,
       oidEstadoActividad: raw.oidEstadoActividad,
       nombreActividad: raw.nombreActividad,
       semanas: raw.semanas,
-      //horas: this.actividad.actividad.horas,
+      horas: this.actividad.actividad.horas,
       oidCalendario: raw.oidCalendario,
       atributos: raw.atributos as CreateAtributoDTO[],
-      // oidsUsuarios se deja opcional; este modal no los modifica.
     };
 
     this.onGuardar.emit(dto);

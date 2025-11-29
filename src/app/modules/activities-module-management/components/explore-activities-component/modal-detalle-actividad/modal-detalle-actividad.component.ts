@@ -1,6 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActividadResponse } from '../../../models';
+import {
+  getEstadoBadgeClass,
+  getEstadoNombre,
+} from '../../../utils/actividad-utils';
 
 @Component({
   selector: 'app-modal-detalle-actividad',
@@ -18,21 +22,6 @@ export class ModalDetalleActividadComponent {
     this.onCerrar.emit();
   }
 
-  getEstadoNombre(oidEstado: number): string {
-    const estados: { [key: number]: string } = {
-      1: 'ACTIVA',
-      2: 'INACTIVA',
-      3: 'INCOMPLETA',
-    };
-    return estados[oidEstado] || 'DESCONOCIDO';
-  }
-
-  getEstadoBadgeClass(oidEstado: number): string {
-    const clases: { [key: number]: string } = {
-      1: 'bg-success',
-      2: 'bg-danger',
-      3: 'bg-warning',
-    };
-    return clases[oidEstado] || 'bg-secondary';
-  }
+  getEstadoNombre = getEstadoNombre;
+  getEstadoBadgeClass = getEstadoBadgeClass;
 }
