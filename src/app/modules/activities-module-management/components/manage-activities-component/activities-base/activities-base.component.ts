@@ -1,8 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TablaActividadesAcademicasComponent } from '../../explore-activities-component/tabla-actividades-academicas/tabla-actividades-academicas.component';
 import { ActividadResponse } from '../../../models';
-
 
 @Component({
   selector: 'app-activities-base',
@@ -16,6 +21,10 @@ export class ActivitiesBaseComponent {
   @Output() onEditar = new EventEmitter<ActividadResponse>();
   @Output() onEliminar = new EventEmitter<ActividadResponse>();
 
+  // ViewChild para acceder a la tabla
+  @ViewChild(TablaActividadesAcademicasComponent)
+  tabla!: TablaActividadesAcademicasComponent;
+
   activeTab: string = 'academicas';
 
   selectTab(tab: string): void {
@@ -28,5 +37,12 @@ export class ActivitiesBaseComponent {
 
   handleEliminar(actividadData: ActividadResponse): void {
     this.onEliminar.emit(actividadData);
+  }
+
+  // Método público para recargar tabla
+  recargarTabla(): void {
+    if (this.tabla) {
+      this.tabla.loadActividades();
+    }
   }
 }
