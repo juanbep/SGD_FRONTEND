@@ -61,18 +61,20 @@ export class ManagementActivitiesComponentComponent {
     this.editando = true;
 
     try {
-      await this.actividadHelperService.update(dto);
+      console.log('📡 Enviando al backend:', dto);
+
+      const resultado = await this.actividadHelperService.update(dto);
+
+      console.log('✅ Respuesta del backend:', resultado);
 
       this.toastr.success(
         `Actividad "${this.actividadAEditar.actividad.nombreActividad}" actualizada correctamente`,
         'Actualización exitosa'
       );
       this.cerrarModalEditar();
-
-      // Llamar método para recargar
       this.activitiesBase.recargarTabla();
     } catch (error: any) {
-      console.error('Error al actualizar actividad:', error);
+      console.error('❌ Error al actualizar:', error);
       const mensajeError =
         error?.error?.mensaje ||
         error?.message ||

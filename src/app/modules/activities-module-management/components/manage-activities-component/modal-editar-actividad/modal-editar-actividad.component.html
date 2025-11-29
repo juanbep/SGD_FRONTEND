@@ -32,7 +32,6 @@
                   type="text"
                   class="form-control"
                   formControlName="nombreActividad"
-                  [readonly]="!camposEditables.nombreActividad"
                 />
               </div>
 
@@ -60,21 +59,6 @@
                 />
               </div>
 
-              <!-- Cargo actividad -->
-              <!-- <div class="col-md-6">
-                <label class="info-label">Cargo actividad *</label>
-                <ng-select
-                  [items]="cargosDropdown"
-                  bindLabel="label"
-                  bindValue="value"
-                  formControlName="oidCargoActividad"
-                  [clearable]="false"
-                  [disabled]="!camposEditables.cargoActividad"
-                  placeholder="Seleccione..."
-                >
-                </ng-select>
-              </div> -->
-
               <!-- Estado -->
               <div class="col-md-6">
                 <label class="info-label">Estado *</label>
@@ -84,21 +68,19 @@
                   bindValue="value"
                   formControlName="oidEstadoActividad"
                   [clearable]="false"
-                  [disabled]="!camposEditables.estado"
                   placeholder="Seleccione..."
                 >
                 </ng-select>
               </div>
 
               <!-- Semanas -->
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <label class="info-label">Semanas *</label>
                 <input
                   type="number"
                   class="form-control"
                   formControlName="semanas"
                   min="1"
-                  [readonly]="!camposEditables.semanas"
                 />
               </div>
             </div>
@@ -131,7 +113,6 @@
                   type="text"
                   class="form-control"
                   formControlName="valor"
-                  [readonly]="!camposEditables.atributos"
                 />
               </div>
             </div>

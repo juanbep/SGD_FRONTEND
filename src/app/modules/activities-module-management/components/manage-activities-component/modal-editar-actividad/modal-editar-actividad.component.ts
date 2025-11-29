@@ -59,7 +59,6 @@ export class ModalEditarActividadComponent implements OnChanges {
   // ====================================================
 
   form: FormGroup = this.fb.group({
-    oidCargoActividad: [null, Validators.required],
     oidTipoActividad: [null, Validators.required],
     oidEstadoActividad: [null, Validators.required],
     nombreActividad: ['', [Validators.required, Validators.maxLength(255)]],
@@ -82,7 +81,6 @@ export class ModalEditarActividadComponent implements OnChanges {
     const a = this.actividad.actividad as any;
 
     this.form.patchValue({
-      oidCargoActividad: a.oidCargoActividad ?? null,
       oidTipoActividad: a.oidTipoActividad,
       oidEstadoActividad: a.oidEstadoActividad,
       nombreActividad: a.nombreActividad,
@@ -90,12 +88,32 @@ export class ModalEditarActividadComponent implements OnChanges {
       oidCalendario: this.actividad.oidCalendario,
     });
 
+    // Deshabilitar campos según configuración
+    if (!this.camposEditables.tipoActividad) {
+      this.form.get('oidTipoActividad')?.disable();
+    }
+    if (!this.camposEditables.calendario) {
+      this.form.get('oidCalendario')?.disable();
+    }
+    if (!this.camposEditables.nombreActividad) {
+      this.form.get('nombreActividad')?.disable();
+    }
+    if (!this.camposEditables.estado) {
+      this.form.get('oidEstadoActividad')?.disable();
+    }
+    if (!this.camposEditables.semanas) {
+      this.form.get('semanas')?.disable();
+    }
+
     // Mapear atributos
     const attrsFG = (a.atributos ?? []).map((attr: any) =>
       this.fb.group({
         nombre: [attr.codigoAtributo],
         tipo: ['VARCHAR'],
-        valor: [attr.valor, Validators.required],
+        valor: [
+          { value: attr.valor, disabled: !this.camposEditables.atributos },
+          Validators.required,
+        ],
       })
     );
 
@@ -116,6 +134,7 @@ export class ModalEditarActividadComponent implements OnChanges {
 
     const dto: UpdateActividadDTO = {
       oidActividad: this.actividad.actividad.oidActividad,
+      // REMOVIDO: oidCargoActividad
       oidTipoActividad: raw.oidTipoActividad,
       oidEstadoActividad: raw.oidEstadoActividad,
       nombreActividad: raw.nombreActividad,
@@ -125,6 +144,7 @@ export class ModalEditarActividadComponent implements OnChanges {
       atributos: raw.atributos as CreateAtributoDTO[],
     };
 
+    console.log('📤 DTO a enviar:', dto);
     this.onGuardar.emit(dto);
   }
 }
