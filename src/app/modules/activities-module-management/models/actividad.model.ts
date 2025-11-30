@@ -1,5 +1,7 @@
 import { BaseResponse, PaginatedResponse } from '../shared/shared.model';
 
+// ========== ENTIDADES BASE ==========
+
 export interface TipoActividad {
   oidTipoActividad: number;
   nombre: string;
@@ -38,33 +40,75 @@ export interface Atributo {
   valor: string;
 }
 
-export interface CreateAtributoDTO {
+// ========== DTOs PARA CREAR/ACTUALIZAR ==========
+// Resultado individual del procesamiento batch
+export interface BatchActividadResult {
+  indice: number;
+  exito: boolean;
+  mensaje: string;
+  actividad: ActividadResponse | null; // null si hubo error
+}
+
+// Atributo simple (como ya lo tenías)
+export interface AtributoActividad {
   nombre: string;
   tipo: string;
   valor: string;
 }
 
+// Usuario con cargo y horas
+export interface UsuarioActividad {
+  oidUsuario: number;
+  oidCargoActividad: number;
+  horas: number;
+}
+
+// Atributos repetibles (grupos)
+export interface AtributoRepetible {
+  grupo: string; // 'ESTUDIANTES', 'DOCUMENTOS', etc.
+  items: AtributoActividad[][]; // Array de arrays
+}
+
+// DTO para crear actividad (ACTUALIZADO)
 export interface CreateActividadDTO {
   oidTipoActividad: number;
-  oidCargoActividad: number;
   oidEstadoActividad: number;
   nombreActividad: string;
-  horas: number;
   semanas: number;
   oidCalendario: number;
-  oidsUsuarios: number[];
-  atributos: CreateAtributoDTO[];
+  usuarios: UsuarioActividad[]; // CAMBIADO: de oidsUsuarios a usuarios con detalle
+  atributos: AtributoActividad[]; // Atributos simples
+  atributosRepetibles?: AtributoRepetible[]; // Atributos repetibles
 }
 
+// DTO para actualizar actividad
 export interface UpdateActividadDTO
-  extends Partial<Omit<CreateActividadDTO, 'oidsUsuarios'>> {
+  extends Partial<Omit<CreateActividadDTO, 'usuarios'>> {
   oidActividad: number;
-  oidsUsuarios?: number[];
+  usuarios?: UsuarioActividad[];
 }
 
+// DTO para eliminar
 export interface DeleteActividadDTO {
   oidActividad: number;
 }
+
+// ========== MODELO DE MEMORIA (FRONTEND) ==========
+
+export interface ActividadEnMemoria {
+  id?: string; // ID temporal para manejar en memoria
+  oidActividad?: number; // ID real del backend (cuando se edita)
+  oidTipoActividad: number;
+  oidEstadoActividad: number;
+  nombreActividad: string;
+  semanas: number;
+  oidCalendario: number;
+  usuarios: UsuarioActividad[];
+  atributos: AtributoActividad[];
+  atributosRepetibles?: AtributoRepetible[];
+}
+
+// ========== RESPUESTAS DEL BACKEND ==========
 
 export interface DesasignarUsuarioResponse {
   mensaje: string;
@@ -72,6 +116,8 @@ export interface DesasignarUsuarioResponse {
   oidUsuario: number;
   oidActividad: number;
 }
+
+// ========== FILTROS ==========
 
 export interface ActividadFilters {
   // Paginación
@@ -87,7 +133,7 @@ export interface ActividadFilters {
   oidTipoActividad?: string | number;
   oidCalendario?: string | number;
   oidDepartamento?: string | number;
-  oidUsuarioResponsable?: number | string; 
+  oidUsuarioResponsable?: number | string;
 
   // Filtros por rangos numéricos
   horasMin?: number;
@@ -108,6 +154,8 @@ export interface ActividadFilters {
   sortDirection?: 'asc' | 'desc';
 }
 
+// ========== RESPONSE TYPES ==========
+
 export interface ActividadResponse {
   actividad: Actividad;
   oidCalendario: number;
@@ -121,5 +169,9 @@ export type ActividadesListResponse = BaseResponse<
 export type GetActividadResponse = BaseResponse<ActividadResponse>;
 export type CreateActividadResponse = BaseResponse<ActividadResponse>;
 export type UpdateActividadResponse = BaseResponse<ActividadResponse>;
-export type DesasignarUsuarioActividadResponse = BaseResponse<DesasignarUsuarioResponse>;
+export type CreateActividadesBatchResponse = BaseResponse<
+  BatchActividadResult[]
+>;
+export type DesasignarUsuarioActividadResponse =
+  BaseResponse<DesasignarUsuarioResponse>;
 export type DeleteActividadResponse = BaseResponse<boolean>;

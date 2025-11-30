@@ -12,6 +12,7 @@ import {
   DeleteActividadDTO,
   DesasignarUsuarioActividadResponse,
   ActividadFilters,
+  CreateActividadesBatchResponse,
 } from '../../models';
 import { environment } from '../../../../../environments/environments_sgd';
 
@@ -23,7 +24,7 @@ export class ActividadesService {
 
   constructor(private http: HttpClient) {}
 
-  // READ
+  // READ - Lista con filtros
   getActividades(
     filters: ActividadFilters = {}
   ): Observable<ActividadesListResponse> {
@@ -41,12 +42,25 @@ export class ActividadesService {
       .pipe(catchError(this.handleError));
   }
 
-  // CREATE
+  // CREATE - Actividad única
   createActividad(
     actividadData: CreateActividadDTO
   ): Observable<CreateActividadResponse> {
     return this.http
       .post<CreateActividadResponse>(this.apiUrl, actividadData)
+      .pipe(catchError(this.handleError));
+  }
+
+  // NUEVO: CREATE - Múltiples actividades en lote
+  createActividadesEnLote(
+    actividadesData: CreateActividadDTO[]
+  ): Observable<CreateActividadesBatchResponse> {
+    // Tipo actualizado
+    return this.http
+      .post<CreateActividadesBatchResponse>(
+        `${this.apiUrl}/batch`,
+        actividadesData
+      )
       .pipe(catchError(this.handleError));
   }
 
@@ -205,7 +219,7 @@ export class ActividadesService {
   }
 
   private handleError(error: any): Observable<never> {
-    console.error('Error en FechaService:', error);
+    console.error('Error en ActividadesService:', error);
     return throwError(() => error);
   }
 }

@@ -18,7 +18,6 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
   ActividadResponse,
-  CreateAtributoDTO,
   UpdateActividadDTO,
 } from '../../../models';
 import { ESTADOS_ACTIVIDAD_DROPDOWN } from '../../../utils/actividad-utils';
@@ -139,9 +138,9 @@ export class ModalEditarActividadComponent implements OnChanges {
       oidEstadoActividad: raw.oidEstadoActividad,
       nombreActividad: raw.nombreActividad,
       semanas: raw.semanas,
-      horas: this.actividad.actividad.horas,
+      //horas: this.actividad.actividad.horas,
       oidCalendario: raw.oidCalendario,
-      atributos: raw.atributos as CreateAtributoDTO[],
+      //atributos: raw.atributos as CreateAtributoDTO[],
     };
 
     console.log('📤 DTO a enviar:', dto);

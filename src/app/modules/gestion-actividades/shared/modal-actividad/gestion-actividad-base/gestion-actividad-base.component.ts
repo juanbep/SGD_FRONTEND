@@ -10,6 +10,8 @@ import { SubtipoActividadConfig } from '../../../config/actividades-metadata.con
 import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
 import { ModalUsuariosComponent } from '../../../../activities-module-management/components/explore-activities-component/modal-usuarios/modal-usuarios.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ActividadHelperService } from '../../../../activities-module-management/services';
+import { ToastrService } from 'ngx-toastr';
 
 export interface Calendario {
   value: number;
@@ -32,6 +34,8 @@ export interface Calendario {
 })
 export class GestionActividadBaseComponent {
   private readonly calendarioService = inject(CalendarioHelperService);
+  private readonly actividadHelperService = inject(ActividadHelperService);
+  private readonly toastr = inject(ToastrService);
 
   @Input({ required: true }) metadata!: SubtipoActividadConfig;
 
@@ -84,6 +88,10 @@ export class GestionActividadBaseComponent {
     const calendario = this.calendarios().find((c) => c.value === oid);
     return calendario?.estado || null;
   });
+
+  readonly calendariosDisponibles = computed(() =>
+    this.calendarios().filter((c) => c.estado !== 'DESHABILITADO')
+  );
 
   readonly puedeAgregarActividades = computed(
     () => this.calendarioSeleccionado() !== null
@@ -244,16 +252,41 @@ export class GestionActividadBaseComponent {
 
       console.log('Payload a enviar:', JSON.stringify(payload, null, 2));
 
-      // Aquí se llama al servicio
-      // await this.actividadService.crearMultiples(payload);
+      // Usar el helper con el nuevo retorno
+      const resultado = await this.actividadHelperService.createMultiple(
+        payload
+      );
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log('Respuesta del backend:', resultado);
 
-      alert('¡Actividades guardadas exitosamente!');
-      this.actividadesEnMemoria.set([]);
-    } catch (error) {
+      // Construir mensaje según resultados
+      let mensaje = '';
+      if (resultado.exitosas.length === resultado.total) {
+        // Todas exitosas
+        mensaje = `¡${resultado.total} actividades guardadas exitosamente!`;
+      } else if (resultado.exitosas.length === 0) {
+        // Todas fallaron
+        mensaje = `Error: No se pudo guardar ninguna actividad.\n\n${resultado.fallidas
+          .map((f) => `Actividad ${f.indice + 1}: ${f.mensaje}`)
+          .join('\n')}`;
+      } else {
+        // Algunas exitosas, algunas fallidas
+        mensaje = `Se guardaron ${resultado.exitosas.length} de ${resultado.total} actividades.\n\n`;
+        mensaje += `Fallidas:\n${resultado.fallidas
+          .map((f) => `Actividad ${f.indice + 1}: ${f.mensaje}`)
+          .join('\n')}`;
+      }
+
+      alert(mensaje);
+
+      // Limpiar solo si todas fueron exitosas
+      if (resultado.exitosas.length === resultado.total) {
+        this.actividadesEnMemoria.set([]);
+      }
+    } catch (error: any) {
       console.error('Error al guardar actividades:', error);
-      alert('Error al guardar las actividades');
+      const mensaje = error?.message || 'Error al guardar las actividades';
+      alert(mensaje);
     } finally {
       this.guardandoTodas.set(false);
     }
@@ -263,33 +296,32 @@ export class GestionActividadBaseComponent {
   async guardarActividad(actividad: ActividadEnMemoria): Promise<void> {
     if (!actividad.id) return;
 
-    // Confirmar antes de guardar
-    const confirmar = window.confirm(
-      `¿Desea guardar la actividad "${actividad.nombreActividad}"?`
-    );
-    if (!confirmar) return;
-
     this.guardandoIndividual.set(actividad.id);
 
     try {
       const { id, ...actividadSinId } = actividad;
       const payload: CreateActividadDto = actividadSinId;
 
-      console.log('Payload individual:', JSON.stringify(payload, null, 2));
+      console.log('Payload a enviar:', JSON.stringify(payload, null, 2));
 
-      // TODO: Llamar al servicio para guardar individual
-      // await this.actividadService.crear(payload);
+      const response = await this.actividadHelperService.create(payload);
+      console.log('Respuesta del backend:', response);
 
-      // Simular llamada API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      alert('¡Actividad guardada exitosamente!');
-
-      // Eliminar de la lista local después de guardar
-      this.eliminarActividad(actividad.id);
-    } catch (error) {
+      if (response) {
+        this.toastr.success('Actividad guardada exitosamente'); 
+        this.eliminarActividad(actividad.id);
+      } else {
+        this.toastr.error('No se recibió respuesta del servidor');
+      }
+    } catch (error: any) {
       console.error('Error al guardar actividad:', error);
-      alert('Error al guardar la actividad');
+
+      const mensajeBackend =
+        error?.error?.mensaje ||
+        error?.message ||
+        'Error al guardar la actividad';
+
+      this.toastr.error(mensajeBackend);
     } finally {
       this.guardandoIndividual.set(null);
     }

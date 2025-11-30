@@ -5,11 +5,11 @@ import {
   Actividad,
   ActividadFilters,
   ActividadResponse,
-  CreateActividadDTO,
+  CreateActividadDTO, // ACTUALIZADO: minúscula
+  UpdateActividadDTO, // ACTUALIZADO: minúscula
   DesasignarUsuarioResponse,
-  UpdateActividadDTO,
 } from '../../models';
-import { map, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +52,42 @@ export class ActividadHelperService {
     return this.baseHelper.getDataFromResponse(
       this.actividadService.createActividad(data)
     );
+  }
+
+  // Crear múltiples actividades en lote
+  async createMultiple(data: CreateActividadDTO[]): Promise<{
+    exitosas: ActividadResponse[];
+    fallidas: { indice: number; mensaje: string }[];
+    total: number;
+  }> {
+    const response = await this.baseHelper.getDataFromResponse(
+      this.actividadService.createActividadesEnLote(data)
+    );
+
+    if (!response || response.length === 0) {
+      return { exitosas: [], fallidas: [], total: 0 };
+    }
+
+    // Separar exitosas de fallidas
+    const exitosas: ActividadResponse[] = [];
+    const fallidas: { indice: number; mensaje: string }[] = [];
+
+    response.forEach((resultado) => {
+      if (resultado.exito && resultado.actividad) {
+        exitosas.push(resultado.actividad);
+      } else {
+        fallidas.push({
+          indice: resultado.indice,
+          mensaje: resultado.mensaje,
+        });
+      }
+    });
+
+    return {
+      exitosas,
+      fallidas,
+      total: response.length,
+    };
   }
 
   async update(data: UpdateActividadDTO): Promise<ActividadResponse | null> {
