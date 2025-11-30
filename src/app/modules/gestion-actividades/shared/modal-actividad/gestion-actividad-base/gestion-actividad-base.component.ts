@@ -9,6 +9,7 @@ import {
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
 import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
 import { ModalUsuariosComponent } from '../../../../activities-module-management/components/explore-activities-component/modal-usuarios/modal-usuarios.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export interface Calendario {
   value: number;
@@ -24,6 +25,7 @@ export interface Calendario {
     FormsModule,
     ModalActividadComponent,
     ModalUsuariosComponent,
+    NgSelectModule,
   ],
   templateUrl: './gestion-actividad-base.component.html',
   styleUrl: './gestion-actividad-base.component.css',

@@ -149,9 +149,9 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       // },
     ],
   },
-  SEMILLEROS_INVESTIGACION: {
+  CAPACITACION: {
     oidTipoActividad: 3, // ID que se envía al backend
-    nombreTipo: 'Semilleros de Investigación',
+    nombreTipo: 'Capacitación',
     atributos: [
       {
         nombre: 'ACTOADMINISTRATIVO',
@@ -164,37 +164,15 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         placeholder: 'Ej: Resolución 123 de 2024',
       },
       {
-        nombre: 'ID',
+        nombre: 'ANIOCOMISION',
         tipoValor: 'INT',
-        label: 'ID',
+        label: 'Año Comisión',
         tipoCampo: 'number',
         requerido: true,
         mostrarEnTabla: true,
         orden: 2,
-        placeholder: 'Número de identificación',
-        validaciones: { min: 1 },
-      },
-      {
-        nombre: 'SEMILLERO',
-        tipoValor: 'VARCHAR',
-        label: 'Semillero',
-        tipoCampo: 'text',
-        requerido: true,
-        mostrarEnTabla: true,
-        orden: 3,
-        placeholder: 'Ej: Semillero de Inteligencia Artificial',
-        validaciones: { minLength: 3, maxLength: 200 },
-      },
-      {
-        nombre: 'ROL',
-        tipoValor: 'VARCHAR',
-        label: 'Rol',
-        tipoCampo: 'text',
-        requerido: true,
-        mostrarEnTabla: true,
-        orden: 4,
-        placeholder: 'Ej: Director, Coordinador, Integrante',
-        validaciones: { minLength: 2, maxLength: 100 },
+        placeholder: 'Ej: 2024',
+        validaciones: { min: 2000, max: 2100 },
       },
       // {
       //   nombre: 'HORAS',
@@ -203,74 +181,14 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       //   tipoCampo: 'number',
       //   requerido: true,
       //   mostrarEnTabla: true,
-      //   orden: 5,
+      //   orden: 3,
       //   placeholder: 'Número de horas',
       //   validaciones: { min: 1 },
       // },
-    ],
-  },
-  TRABAJOS_INVESTIGACION: {
-    oidTipoActividad: 4, // ID que se envía al backend
-    nombreTipo: 'Trabajos de Investigación',
-    atributos: [
-      {
-        nombre: 'ACTOADMINISTRATIVO',
-        tipoValor: 'VARCHAR',
-        label: 'Acto Administrativo',
-        tipoCampo: 'text',
-        requerido: false,
-        mostrarEnTabla: false,
-        orden: 1,
-        placeholder: 'Ej: Resolución 123 de 2024',
-      },
-      {
-        nombre: 'IDESTUDIANTE',
-        tipoValor: 'INT',
-        label: 'ID Estudiante',
-        tipoCampo: 'number',
-        requerido: true,
-        mostrarEnTabla: true,
-        orden: 2,
-        placeholder: 'Ej: 123456789',
-        validaciones: { min: 1 },
-      },
-      {
-        nombre: 'NOMBREESTUDIANTE',
-        tipoValor: 'VARCHAR',
-        label: 'Nombre Estudiante',
-        tipoCampo: 'text',
-        requerido: true,
-        mostrarEnTabla: true,
-        orden: 3,
-        placeholder: 'Ej: Juan Pérez García',
-        validaciones: { minLength: 3, maxLength: 200 },
-      },
-      // {
-      //   nombre: 'HORAS',
-      //   tipoValor: 'INT',
-      //   label: 'Horas',
-      //   tipoCampo: 'number',
-      //   requerido: true,
-      //   mostrarEnTabla: true,
-      //   orden: 4,
-      //   placeholder: 'Número de horas',
-      //   validaciones: { min: 1 },
-      // },
-      {
-        nombre: 'OBSERVACIONES',
-        tipoValor: 'VARCHAR',
-        label: 'Observaciones',
-        tipoCampo: 'textarea',
-        requerido: true,
-        mostrarEnTabla: true,
-        orden: 5,
-        placeholder: 'Ingrese observaciones relevantes',
-        validaciones: { minLength: 5, maxLength: 500 },
-      },
     ],
   },
   ADMINISTRACION: {
-    oidTipoActividad: 5, // ID que se envía al backend
+    oidTipoActividad: 4, // ID que se envía al backend
     nombreTipo: 'Administración',
     atributos: [
       {
@@ -318,47 +236,9 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       // },
     ],
   },
-  ASESORIA: {
-    oidTipoActividad: 6, // ID que se envía al backend
-    nombreTipo: 'Asesoría',
-    atributos: [
-      {
-        nombre: 'ACTOADMINISTRATIVO',
-        tipoValor: 'VARCHAR',
-        label: 'Acto Administrativo',
-        tipoCampo: 'text',
-        requerido: false,
-        mostrarEnTabla: false,
-        orden: 1,
-        placeholder: 'Ej: Resolución 123 de 2024',
-      },
-      {
-        nombre: 'UNIDADACADEMICA',
-        tipoValor: 'VARCHAR',
-        label: 'Unidad Académica',
-        tipoCampo: 'text',
-        requerido: true,
-        mostrarEnTabla: true,
-        orden: 2,
-        placeholder: 'Ej: Facultad de Ingeniería',
-        validaciones: { minLength: 3, maxLength: 200 },
-      },
-      // {
-      //   nombre: 'HORAS',
-      //   tipoValor: 'INT',
-      //   label: 'Horas',
-      //   tipoCampo: 'number',
-      //   requerido: true,
-      //   mostrarEnTabla: true,
-      //   orden: 3,
-      //   placeholder: 'Número de horas',
-      //   validaciones: { min: 1 },
-      // },
-    ],
-  },
-  SERVICIOS: {
-    oidTipoActividad: 7, // ID que se envía al backend
-    nombreTipo: 'Servicios',
+  OTROS_SERVICIOS: {
+    oidTipoActividad: 5, // ID que se envía al backend
+    nombreTipo: 'Otros Servicios',
     atributos: [
       {
         nombre: 'ACTOADMINISTRATIVO',
@@ -384,7 +264,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
     ],
   },
   EXTENSION: {
-    oidTipoActividad: 8, // ID que se envía al backend
+    oidTipoActividad: 6, // ID que se envía al backend
     nombreTipo: 'Extensión',
     atributos: [
       {
@@ -450,9 +330,9 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       },
     ],
   },
-  CAPACITACION: {
-    oidTipoActividad: 9, // ID que se envía al backend
-    nombreTipo: 'Capacitación',
+  TRABAJOS_INVESTIGACION: {
+    oidTipoActividad: 7, // ID que se envía al backend
+    nombreTipo: 'Trabajos de Investigación',
     atributos: [
       {
         nombre: 'ACTOADMINISTRATIVO',
@@ -465,15 +345,75 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         placeholder: 'Ej: Resolución 123 de 2024',
       },
       {
-        nombre: 'ANIOCOMISION',
+        nombre: 'IDESTUDIANTE',
         tipoValor: 'INT',
-        label: 'Año Comisión',
+        label: 'ID Estudiante',
         tipoCampo: 'number',
         requerido: true,
         mostrarEnTabla: true,
         orden: 2,
-        placeholder: 'Ej: 2024',
-        validaciones: { min: 2000, max: 2100 },
+        placeholder: 'Ej: 123456789',
+        validaciones: { min: 1 },
+      },
+      {
+        nombre: 'NOMBREESTUDIANTE',
+        tipoValor: 'VARCHAR',
+        label: 'Nombre Estudiante',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 3,
+        placeholder: 'Ej: Juan Pérez García',
+        validaciones: { minLength: 3, maxLength: 200 },
+      },
+      // {
+      //   nombre: 'HORAS',
+      //   tipoValor: 'INT',
+      //   label: 'Horas',
+      //   tipoCampo: 'number',
+      //   requerido: true,
+      //   mostrarEnTabla: true,
+      //   orden: 4,
+      //   placeholder: 'Número de horas',
+      //   validaciones: { min: 1 },
+      // },
+      {
+        nombre: 'OBSERVACIONES',
+        tipoValor: 'VARCHAR',
+        label: 'Observaciones',
+        tipoCampo: 'textarea',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 5,
+        placeholder: 'Ingrese observaciones relevantes',
+        validaciones: { minLength: 5, maxLength: 500 },
+      },
+    ],
+  },
+  ASESORIA: {
+    oidTipoActividad: 8, // ID que se envía al backend
+    nombreTipo: 'Asesoría',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'UNIDADACADEMICA',
+        tipoValor: 'VARCHAR',
+        label: 'Unidad Académica',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Ej: Facultad de Ingeniería',
+        validaciones: { minLength: 3, maxLength: 200 },
       },
       // {
       //   nombre: 'HORAS',
@@ -488,9 +428,9 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       // },
     ],
   },
-  OTROS_SERVICIOS: {
+  SERVICIOS: {
     oidTipoActividad: 10, // ID que se envía al backend
-    nombreTipo: 'Otros Servicios',
+    nombreTipo: 'Servicios',
     atributos: [
       {
         nombre: 'ACTOADMINISTRATIVO',
@@ -510,6 +450,66 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
       //   requerido: true,
       //   mostrarEnTabla: true,
       //   orden: 2,
+      //   placeholder: 'Número de horas',
+      //   validaciones: { min: 1 },
+      // },
+    ],
+  },
+  SEMILLEROS_INVESTIGACION: {
+    oidTipoActividad: 11, // ID que se envía al backend
+    nombreTipo: 'Semilleros de Investigación',
+    atributos: [
+      {
+        nombre: 'ACTOADMINISTRATIVO',
+        tipoValor: 'VARCHAR',
+        label: 'Acto Administrativo',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 1,
+        placeholder: 'Ej: Resolución 123 de 2024',
+      },
+      {
+        nombre: 'ID',
+        tipoValor: 'INT',
+        label: 'ID',
+        tipoCampo: 'number',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 2,
+        placeholder: 'Número de identificación',
+        validaciones: { min: 1 },
+      },
+      {
+        nombre: 'SEMILLERO',
+        tipoValor: 'VARCHAR',
+        label: 'Semillero',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 3,
+        placeholder: 'Ej: Semillero de Inteligencia Artificial',
+        validaciones: { minLength: 3, maxLength: 200 },
+      },
+      {
+        nombre: 'ROL',
+        tipoValor: 'VARCHAR',
+        label: 'Rol',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: true,
+        orden: 4,
+        placeholder: 'Ej: Director, Coordinador, Integrante',
+        validaciones: { minLength: 2, maxLength: 100 },
+      },
+      // {
+      //   nombre: 'HORAS',
+      //   tipoValor: 'INT',
+      //   label: 'Horas',
+      //   tipoCampo: 'number',
+      //   requerido: true,
+      //   mostrarEnTabla: true,
+      //   orden: 5,
       //   placeholder: 'Número de horas',
       //   validaciones: { min: 1 },
       // },

@@ -76,95 +76,76 @@
             </div>
           </div>
 
-          <!-- Estado -->
+          <!-- Estado CON NG-SELECT -->
           <div class="mb-3">
             <label class="form-label fw-bold">
               <i class="fas fa-toggle-on me-2"></i>
               Estado *
             </label>
-            <select class="form-select" formControlName="oidEstadoActividad">
-              <option
-                *ngFor="let estado of estadosActividad"
-                [value]="estado.oid"
-              >
-                {{ estado.nombre }}
-              </option>
-            </select>
+            <ng-select
+              [items]="estadosActividad"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="oidEstadoActividad"
+              [clearable]="false"
+              [searchable]="false"
+              placeholder="Seleccione estado"
+            >
+            </ng-select>
           </div>
 
           <hr class="my-4" />
 
-          <!-- Sección de Usuarios (NUEVO) -->
+          <!-- Sección de Usuarios -->
           <h6 class="mb-3 text-muted">
             <i class="fas fa-users me-2"></i>
             Asignar Usuario
           </h6>
 
-          <!-- Usuario - Fila completa -->
+          <!-- Usuario CON NG-SELECT -->
           <div class="row mb-3">
             <div class="col-12">
               <label class="form-label fw-bold">
                 <i class="fas fa-user me-2"></i>
                 Usuario
               </label>
-              <select
-                class="form-select"
+              <ng-select
+                [items]="usuariosDisponibles()"
+                bindLabel="label"
+                bindValue="oid"
                 [(ngModel)]="usuarioSeleccionado"
                 [ngModelOptions]="{ standalone: true }"
-                [disabled]="cargandoUsuarios()"
+                [clearable]="true"
+                [searchable]="true"
+                placeholder="Seleccione usuario"
+                [loading]="cargandoUsuarios()"
+                notFoundText="No se encontraron usuarios"
               >
-                <option [value]="null">
-                  {{
-                    cargandoUsuarios()
-                      ? "Cargando usuarios..."
-                      : "Seleccione usuario"
-                  }}
-                </option>
-                <option
-                  *ngFor="let usuario of usuariosDisponibles()"
-                  [value]="usuario.oid"
-                >
-                  {{ usuario.label }}
-                </option>
-              </select>
+              </ng-select>
             </div>
           </div>
 
-          <!-- Cargo y Horas - Segunda fila -->
+          <!-- Cargo y Horas CON NG-SELECT -->
           <div class="row mb-3">
             <div class="col-md-8">
               <label class="form-label fw-bold">
                 <i class="fas fa-briefcase me-2"></i>
                 Cargo
               </label>
-
-              <div class="custom-select-container">
-                <button
-                  type="button"
-                  class="form-select text-start"
-                  (click)="mostrarDropdownCargo = !mostrarDropdownCargo"
-                  [disabled]="cargandoCargos()"
-                >
-                  {{
-                    cargandoCargos()
-                      ? "Cargando cargos..."
-                      : cargoSeleccionadoLabel() || "Seleccione cargo"
-                  }}
-                </button>
-
-                <div
-                  class="dropdown-opciones"
-                  *ngIf="mostrarDropdownCargo && !cargandoCargos()"
-                >
-                  <div
-                    *ngFor="let cargo of cargosDisponibles()"
-                    class="opcion"
-                    (click)="seleccionarCargo(cargo)"
-                  >
-                    {{ cargo.nombre }}
-                  </div>
-                </div>
-              </div>
+              <ng-select
+                [items]="cargosDisponibles()"
+                bindLabel="nombre"
+                bindValue="oid"
+                [ngModel]="cargoSeleccionado()"
+                (ngModelChange)="cargoSeleccionado.set($event)"
+                [ngModelOptions]="{ standalone: true }"
+                [clearable]="true"
+                [searchable]="true"
+                placeholder="Seleccione cargo"
+                [loading]="cargandoCargos()"
+                notFoundText="No se encontraron cargos"
+              >
+              </ng-select>
             </div>
 
             <div class="col-md-4">
@@ -190,7 +171,7 @@
               class="btn btn-sm btn-outline-primary"
               (click)="agregarUsuario()"
               [disabled]="
-                !usuarioSeleccionado || !cargoSeleccionado || !horasUsuario
+                !usuarioSeleccionado || !cargoSeleccionado() || !horasUsuario
               "
             >
               <i class="fas fa-plus me-1"></i>
@@ -269,24 +250,18 @@
               "
             />
 
-            <!-- Select -->
-            <select
+            <!-- Select CON NG-SELECT -->
+            <ng-select
               *ngIf="atributo.tipoCampo === 'select'"
-              class="form-select"
+              [items]="atributo.opcionesSelect?.estatico || []"
+              bindLabel="label"
+              bindValue="value"
               [formControlName]="atributo.nombre"
-              [class.is-invalid]="
-                getControl(atributo.nombre)?.invalid &&
-                getControl(atributo.nombre)?.touched
-              "
+              [clearable]="!atributo.requerido"
+              [searchable]="true"
+              placeholder="Seleccione una opción"
             >
-              <option value="">Seleccione una opción</option>
-              <option
-                *ngFor="let opcion of atributo.opcionesSelect?.estatico"
-                [value]="opcion.value"
-              >
-                {{ opcion.label }}
-              </option>
-            </select>
+            </ng-select>
 
             <!-- Textarea -->
             <textarea

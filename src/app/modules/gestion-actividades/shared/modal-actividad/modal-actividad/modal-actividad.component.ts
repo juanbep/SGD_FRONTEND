@@ -25,7 +25,11 @@ import { SubtipoActividadConfig } from '../../../config/actividades-metadata.con
 import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
 import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
 import { CargosActividadHelperService } from '../../../../activities-module-management/services';
-import { ESTADOS_ACTIVIDAD, ESTADOS_ACTIVIDAD_DROPDOWN } from '../../../../activities-module-management/utils/actividad-utils';
+import {
+  ESTADOS_ACTIVIDAD,
+  ESTADOS_ACTIVIDAD_DROPDOWN,
+} from '../../../../activities-module-management/utils/actividad-utils';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 interface UsuarioSelect {
   oid: number;
@@ -41,7 +45,7 @@ interface CargoSelect {
 @Component({
   selector: 'app-modal-actividad',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule],
   templateUrl: './modal-actividad.component.html',
   styleUrl: './modal-actividad.component.css',
 })
@@ -52,11 +56,10 @@ export class ModalActividadComponent implements OnInit {
   @Output() onGuardar = new EventEmitter<ActividadEnMemoria>();
   @Output() onCancelar = new EventEmitter<void>();
 
-  mostrarDropdownCargo = false;
   actividadForm!: FormGroup;
   readonly agregarOtra = signal(true);
   readonly modoEdicion = signal(false);
-  readonly estadosActividad = ESTADOS_ACTIVIDAD;
+  readonly estadosActividad = ESTADOS_ACTIVIDAD_DROPDOWN;
 
   // ========== SERVICIOS ==========
   private usuarioService = inject(UsuarioDepartamentoHelperService);
@@ -302,10 +305,4 @@ export class ModalActividadComponent implements OnInit {
     );
     return cargo?.nombre || null;
   });
-
-  // Función para seleccionar un cargo
-  seleccionarCargo(cargo: any) {
-    this.cargoSeleccionado.set(cargo.oid);
-    this.mostrarDropdownCargo = false;
-  }
 }
