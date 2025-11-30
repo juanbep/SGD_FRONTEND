@@ -145,6 +145,19 @@
                 [loading]="cargandoCargos()"
                 notFoundText="No se encontraron cargos"
               >
+                <!-- Template personalizado con tooltip -->
+                <ng-template ng-option-tmp let-item="item">
+                  <div [title]="item.nombre" class="text-truncate">
+                    {{ item.nombre }}
+                  </div>
+                </ng-template>
+
+                <!-- Template para el valor seleccionado (también con tooltip) -->
+                <ng-template ng-label-tmp let-item="item">
+                  <div [title]="item.nombre" class="text-truncate">
+                    {{ item.nombre }}
+                  </div>
+                </ng-template>
               </ng-select>
             </div>
 
