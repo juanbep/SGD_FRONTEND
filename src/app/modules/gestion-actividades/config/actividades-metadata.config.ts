@@ -50,7 +50,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
     nombreTipo: 'Trabajos de Docencia',
     atributos: [
       {
-        nombre: 'ACTOADMINISTRATIVO',
+        nombre: 'ACTO ADMINISTRATIVO',
         tipoValor: 'VARCHAR',
         label: 'Acto Administrativo',
         tipoCampo: 'text',
@@ -60,7 +60,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         placeholder: 'Ej: Resolución 123 de 2024',
       },
       {
-        nombre: 'IDESTUDIANTE',
+        nombre: 'ID ESTUDIANTE',
         tipoValor: 'INT',
         label: 'ID Estudiante',
         tipoCampo: 'number',
@@ -72,7 +72,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         grupoRepetible: 'ESTUDIANTES',
       },
       {
-        nombre: 'NOMBREESTUDIANTE',
+        nombre: 'NOMBRE ESTUDIANTE',
         tipoValor: 'VARCHAR',
         label: 'Nombre Estudiante',
         tipoCampo: 'text',

@@ -299,8 +299,30 @@ export class GestionActividadBaseComponent {
     this.guardandoIndividual.set(actividad.id);
 
     try {
-      const { id, ...actividadSinId } = actividad;
-      const payload: CreateActividadDto = actividadSinId;
+      const { id, atributosRepetibles, ...resto } = actividad;
+
+      const atributos = [...resto.atributos];
+
+      // 2. Si hay atributosRepetibles, los aplanamos
+      if (atributosRepetibles && atributosRepetibles.length > 0) {
+        for (const grupo of atributosRepetibles) {
+          grupo.items.forEach((item) => {
+            item.forEach((attr) => {
+              atributos.push({
+                nombre: attr.nombre,
+                tipo: attr.tipo,
+                valor: attr.valor,
+              });
+            });
+          });
+        }
+      }
+
+      const payload: CreateActividadDto = {
+        ...resto, // oidTipoActividad, oidEstadoActividad, nombreActividad, semanas, oidCalendario, usuarios
+        atributos, // atributos ya combinados (simples + repetibles)
+        // SIN atributosRepetibles
+      };
 
       console.log('Payload a enviar:', JSON.stringify(payload, null, 2));
 
@@ -308,7 +330,7 @@ export class GestionActividadBaseComponent {
       console.log('Respuesta del backend:', response);
 
       if (response) {
-        this.toastr.success('Actividad guardada exitosamente'); 
+        this.toastr.success('Actividad guardada exitosamente');
         this.eliminarActividad(actividad.id);
       } else {
         this.toastr.error('No se recibió respuesta del servidor');
