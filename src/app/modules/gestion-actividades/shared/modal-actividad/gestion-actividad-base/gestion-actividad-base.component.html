@@ -132,12 +132,12 @@
           <td>
             <span
               class="badge"
-              [class.bg-success]="actividad.oidEstadoActividad === 2"
-              [class.bg-secondary]="actividad.oidEstadoActividad === 1"
+              [ngClass]="getEstadoBadgeClassFn(actividad.oidEstadoActividad)"
             >
               {{ obtenerNombreEstado(actividad.oidEstadoActividad) }}
             </span>
           </td>
+
           <td *ngFor="let attr of atributosTabla()">
             {{ obtenerValorAtributo(actividad, attr.nombre) }}
           </td>

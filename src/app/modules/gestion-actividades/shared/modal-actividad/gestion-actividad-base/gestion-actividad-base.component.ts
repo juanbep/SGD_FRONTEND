@@ -12,6 +12,11 @@ import { ModalUsuariosComponent } from '../../../../activities-module-management
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ActividadHelperService } from '../../../../activities-module-management/services';
 import { ToastrService } from 'ngx-toastr';
+import {
+  ESTADOS_ACTIVIDAD,
+  getEstadoBadgeClass,
+  getEstadoNombre,
+} from '../../../../activities-module-management/utils/actividad-utils';
 
 export interface Calendario {
   value: number;
@@ -36,6 +41,8 @@ export class GestionActividadBaseComponent {
   private readonly calendarioService = inject(CalendarioHelperService);
   private readonly actividadHelperService = inject(ActividadHelperService);
   private readonly toastr = inject(ToastrService);
+
+  getEstadoBadgeClassFn = getEstadoBadgeClass;
 
   @Input({ required: true }) metadata!: SubtipoActividadConfig;
 
@@ -70,6 +77,7 @@ export class GestionActividadBaseComponent {
   readonly actividadAEditar = signal<ActividadEnMemoria | null>(null);
   readonly guardandoTodas = signal(false);
   readonly guardandoIndividual = signal<string | null>(null);
+  readonly estadosActividad = ESTADOS_ACTIVIDAD;
 
   // Modal de usuarios
   readonly mostrarModalUsuarios = signal(false);
@@ -229,7 +237,7 @@ export class GestionActividadBaseComponent {
   }
 
   obtenerNombreEstado(oid: number): string {
-    return oid === 1 ? 'Inactiva' : 'Activa';
+    return getEstadoNombre(oid);
   }
 
   obtenerIdsUsuarios(actividad: ActividadEnMemoria): number[] {
