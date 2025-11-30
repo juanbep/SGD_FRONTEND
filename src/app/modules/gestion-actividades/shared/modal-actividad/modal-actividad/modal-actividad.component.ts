@@ -19,9 +19,13 @@ import {
 import {
   ActividadEnMemoria,
   AtributoActividad,
+  AtributoRepetible,
   UsuarioActividad,
 } from '../../../models/actividad.model';
-import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
+import {
+  AtributoMetadata,
+  SubtipoActividadConfig,
+} from '../../../config/actividades-metadata.config';
 import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
 import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
 import { CargosActividadHelperService } from '../../../../activities-module-management/services';
@@ -70,6 +74,14 @@ export class ModalActividadComponent implements OnInit {
   readonly cargandoUsuarios = signal(true);
   readonly usuariosAsignados = signal<UsuarioActividad[]>([]);
 
+  // Estructura: { nombreGrupo: { campos: {nombreCampo: valor}[] } }
+  readonly gruposRepetiblesData = signal<{
+    [nombreGrupo: string]: { [nombreCampo: string]: string }[];
+  }>({});
+  camposTemporales: {
+    [nombreGrupo: string]: { [nombreCampo: string]: string };
+  } = {};
+
   //Cargos
   readonly cargosDisponibles = signal<CargoSelect[]>([]);
   readonly cargandoCargos = signal(true);
@@ -85,7 +97,29 @@ export class ModalActividadComponent implements OnInit {
       count > 1 ? 's' : ''
     }`;
   });
-  // ========================================
+
+  readonly gruposRepetiblesConfig = computed(() => {
+    const grupos: {
+      [nombreGrupo: string]: AtributoMetadata[];
+    } = {};
+
+    this.metadata.atributos
+      .filter((a) => a.esRepetible && a.grupoRepetible)
+      .forEach((attr) => {
+        const grupo = attr.grupoRepetible!;
+        if (!grupos[grupo]) {
+          grupos[grupo] = [];
+        }
+        grupos[grupo].push(attr);
+      });
+
+    return grupos;
+  });
+
+  // Verificar si tiene al menos un grupo repetible
+  readonly tieneGruposRepetibles = computed(() => {
+    return Object.keys(this.gruposRepetiblesConfig()).length > 0;
+  });
 
   constructor(private fb: FormBuilder) {}
 
@@ -193,29 +227,31 @@ export class ModalActividadComponent implements OnInit {
       oidEstadoActividad: [2, Validators.required],
     };
 
-    this.metadata.atributos.forEach((attr) => {
-      const validators = [];
-      if (attr.requerido) {
-        validators.push(Validators.required);
-      }
-      if (attr.validaciones?.minLength) {
-        validators.push(Validators.minLength(attr.validaciones.minLength));
-      }
-      if (attr.validaciones?.maxLength) {
-        validators.push(Validators.maxLength(attr.validaciones.maxLength));
-      }
-      if (attr.validaciones?.min) {
-        validators.push(Validators.min(attr.validaciones.min));
-      }
-      if (attr.validaciones?.max) {
-        validators.push(Validators.max(attr.validaciones.max));
-      }
-      if (attr.validaciones?.pattern) {
-        validators.push(Validators.pattern(attr.validaciones.pattern));
-      }
+    this.metadata.atributos
+      .filter((attr) => !attr.esRepetible)
+      .forEach((attr) => {
+        const validators = [];
+        if (attr.requerido) {
+          validators.push(Validators.required);
+        }
+        if (attr.validaciones?.minLength) {
+          validators.push(Validators.minLength(attr.validaciones.minLength));
+        }
+        if (attr.validaciones?.maxLength) {
+          validators.push(Validators.maxLength(attr.validaciones.maxLength));
+        }
+        if (attr.validaciones?.min) {
+          validators.push(Validators.min(attr.validaciones.min));
+        }
+        if (attr.validaciones?.max) {
+          validators.push(Validators.max(attr.validaciones.max));
+        }
+        if (attr.validaciones?.pattern) {
+          validators.push(Validators.pattern(attr.validaciones.pattern));
+        }
 
-      formConfig[attr.nombre] = ['', validators];
-    });
+        formConfig[attr.nombre] = ['', validators];
+      });
 
     this.actividadForm = this.fb.group(formConfig);
   }
@@ -227,6 +263,7 @@ export class ModalActividadComponent implements OnInit {
       oidEstadoActividad: actividad.oidEstadoActividad,
     });
 
+    // Cargar atributos simples
     actividad.atributos.forEach((attr) => {
       const control = this.actividadForm.get(attr.nombre);
       if (control) {
@@ -234,9 +271,28 @@ export class ModalActividadComponent implements OnInit {
       }
     });
 
-    // NUEVO: Cargar usuarios si está editando
+    // Cargar usuarios
     if (actividad.usuarios) {
       this.usuariosAsignados.set([...actividad.usuarios]);
+    }
+
+    // Cargar grupos repetibles - 100% GENÉRICO
+    if (actividad.atributosRepetibles) {
+      const datosGrupos: {
+        [nombreGrupo: string]: { [nombreCampo: string]: string }[];
+      } = {};
+
+      for (const grupoData of actividad.atributosRepetibles) {
+        datosGrupos[grupoData.grupo] = grupoData.items.map((item) => {
+          const itemObj: { [nombreCampo: string]: string } = {};
+          item.forEach((attr) => {
+            itemObj[attr.nombre] = attr.valor;
+          });
+          return itemObj;
+        });
+      }
+
+      this.gruposRepetiblesData.set(datosGrupos);
     }
   }
 
@@ -246,15 +302,59 @@ export class ModalActividadComponent implements OnInit {
       return;
     }
 
+    // Validar grupos repetibles requeridos
+    const gruposConfig = this.metadata.gruposRepetibles || [];
+    const datosGrupos = this.gruposRepetiblesData();
+
+    for (const configGrupo of gruposConfig) {
+      const items = datosGrupos[configGrupo.nombre] || [];
+      if (items.length === 0) {
+        // Si hay al menos un campo requerido en el grupo, el grupo es requerido
+        const tieneRequeridos = this.metadata.atributos
+          .filter((a) => a.grupoRepetible === configGrupo.nombre)
+          .some((a) => a.requerido);
+
+        if (tieneRequeridos) {
+          alert(`Debe agregar al menos un ${configGrupo.labelSingular}`);
+          return;
+        }
+      }
+    }
+
     const formValues = this.actividadForm.value;
 
-    const atributos: AtributoActividad[] = this.metadata.atributos.map(
-      (attr) => ({
+    // Atributos simples (no repetibles)
+    const atributos: AtributoActividad[] = this.metadata.atributos
+      .filter((attr) => !attr.esRepetible)
+      .map((attr) => ({
         nombre: attr.nombre,
         tipo: attr.tipoValor,
         valor: formValues[attr.nombre]?.toString() || '',
-      })
-    );
+      }));
+
+    // Atributos repetibles - 100% GENÉRICO
+    const atributosRepetibles: AtributoRepetible[] = [];
+
+    for (const nombreGrupo in datosGrupos) {
+      const items = datosGrupos[nombreGrupo];
+      if (items.length > 0) {
+        // Obtener los atributos que pertenecen a este grupo
+        const atributosDelGrupo = this.metadata.atributos.filter(
+          (a) => a.grupoRepetible === nombreGrupo
+        );
+
+        atributosRepetibles.push({
+          grupo: nombreGrupo,
+          items: items.map((item) =>
+            atributosDelGrupo.map((attr) => ({
+              nombre: attr.nombre,
+              tipo: attr.tipoValor,
+              valor: item[attr.nombre] || '',
+            }))
+          ),
+        });
+      }
+    }
 
     const actividad: ActividadEnMemoria = {
       ...this.actividadAEditar,
@@ -263,8 +363,10 @@ export class ModalActividadComponent implements OnInit {
       nombreActividad: formValues.nombreActividad,
       semanas: formValues.semanas,
       oidCalendario: this.actividadAEditar?.oidCalendario || 0,
-      usuarios: this.usuariosAsignados(), // MODIFICADO: Usar usuarios asignados
+      usuarios: this.usuariosAsignados(),
       atributos: atributos,
+      atributosRepetibles:
+        atributosRepetibles.length > 0 ? atributosRepetibles : undefined,
     };
 
     this.onGuardar.emit(actividad);
@@ -286,15 +388,105 @@ export class ModalActividadComponent implements OnInit {
       oidEstadoActividad: 2,
     });
 
-    // NUEVO: Limpiar usuarios
+    // Limpiar usuarios
     this.usuariosAsignados.set([]);
     this.usuarioSeleccionado = null;
     this.cargoSeleccionado.set(null);
     this.horasUsuario = null;
+
+    // Limpiar grupos repetibles - GENÉRICO
+    this.gruposRepetiblesData.set({});
+    this.camposTemporales = {};
   }
 
   getControl(nombre: string) {
     return this.actividadForm.get(nombre);
+  }
+
+  // Agregar item genérico a cualquier grupo
+  agregarItemGrupo(nombreGrupo: string): void {
+    const camposDelGrupo = this.gruposRepetiblesConfig()[nombreGrupo];
+    if (!camposDelGrupo) return;
+
+    // Validar que todos los campos requeridos estén llenos
+    const camposTemp = this.camposTemporales[nombreGrupo] || {};
+
+    for (const campo of camposDelGrupo) {
+      if (campo.requerido && !camposTemp[campo.nombre]?.trim()) {
+        alert(`El campo "${campo.label}" es requerido`);
+        return;
+      }
+    }
+
+    // Obtener datos actuales del grupo
+    const datosActuales = this.gruposRepetiblesData();
+    const itemsGrupo = datosActuales[nombreGrupo] || [];
+
+    // Agregar el nuevo item
+    const nuevoItem = { ...camposTemp };
+    this.gruposRepetiblesData.set({
+      ...datosActuales,
+      [nombreGrupo]: [...itemsGrupo, nuevoItem],
+    });
+
+    // Limpiar campos temporales
+    this.camposTemporales[nombreGrupo] = {};
+  }
+
+  // Eliminar item genérico de cualquier grupo
+  eliminarItemGrupo(nombreGrupo: string, index: number): void {
+    const datosActuales = this.gruposRepetiblesData();
+    const itemsGrupo = datosActuales[nombreGrupo] || [];
+
+    this.gruposRepetiblesData.set({
+      ...datosActuales,
+      [nombreGrupo]: itemsGrupo.filter((_, i) => i !== index),
+    });
+  }
+
+  // Obtener contador de items de un grupo
+  contadorItemsGrupo(nombreGrupo: string): string {
+    const datosActuales = this.gruposRepetiblesData();
+    const items = datosActuales[nombreGrupo] || [];
+    const count = items.length;
+
+    if (count === 0) return '';
+
+    const config = this.metadata.gruposRepetibles?.find(
+      (g) => g.nombre === nombreGrupo
+    );
+    const label = count === 1 ? config?.labelSingular : config?.labelPlural;
+
+    return `${count} ${label || 'item(s)'} agregado${count > 1 ? 's' : ''}`;
+  }
+
+  // Obtener valor temporal de un campo
+  obtenerValorTemporal(nombreGrupo: string, nombreCampo: string): string {
+    return this.camposTemporales[nombreGrupo]?.[nombreCampo] || '';
+  }
+
+  // Actualizar valor temporal
+  actualizarValorTemporal(
+    nombreGrupo: string,
+    nombreCampo: string,
+    valor: string
+  ): void {
+    if (!this.camposTemporales[nombreGrupo]) {
+      this.camposTemporales[nombreGrupo] = {};
+    }
+    this.camposTemporales[nombreGrupo][nombreCampo] = valor;
+  }
+
+  // Verificar si se puede agregar (todos los campos requeridos llenos)
+  puedeAgregarItem(nombreGrupo: string): boolean {
+    const camposDelGrupo = this.gruposRepetiblesConfig()[nombreGrupo];
+    if (!camposDelGrupo) return false;
+
+    const camposTemp = this.camposTemporales[nombreGrupo] || {};
+
+    return camposDelGrupo
+      .filter((c) => c.requerido)
+      .every((c) => camposTemp[c.nombre]?.trim());
   }
 
   // Función para obtener el label del cargo seleccionado

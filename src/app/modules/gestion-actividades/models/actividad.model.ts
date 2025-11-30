@@ -10,6 +10,11 @@ export interface UsuarioActividad {
   horas: number;
 }
 
+export interface AtributoRepetible {
+  grupo: string;
+  items: AtributoActividad[][];
+}
+
 export interface CreateActividadDto {
   oidTipoActividad: number;
   oidEstadoActividad: number;
@@ -18,10 +23,12 @@ export interface CreateActividadDto {
   oidCalendario: number;
   usuarios: UsuarioActividad[];
   atributos: AtributoActividad[];
+  atributosRepetibles?: AtributoRepetible[];
 }
 
 export interface ActividadEnMemoria extends CreateActividadDto {
   id?: string; // ID temporal para manejo en memoria
+  oidActividad?: number;
 }
 
 export interface UsuarioActividad {

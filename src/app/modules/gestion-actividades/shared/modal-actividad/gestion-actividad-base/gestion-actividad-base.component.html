@@ -90,15 +90,20 @@
           <th>Semanas</th>
           <th>Estado</th>
           <th *ngFor="let attr of atributosTabla()">{{ attr.label }}</th>
+          <th
+            *ngFor="let grupo of metadata.gruposRepetibles"
+            class="text-center"
+          >
+            {{ grupo.labelPlural | titlecase }}
+          </th>
           <th class="text-center">Usuarios</th>
-          <!-- NUEVO -->
           <th class="text-center">Acciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngIf="actividadesEnMemoria().length === 0">
           <td
-            [attr.colspan]="6 + atributosTabla().length"
+            [attr.colspan]="totalColumnas()"
             class="text-center text-muted py-5"
           >
             <div class="empty-state">
@@ -136,7 +141,12 @@
           <td *ngFor="let attr of atributosTabla()">
             {{ obtenerValorAtributo(actividad, attr.nombre) }}
           </td>
-
+          <td
+            *ngFor="let grupo of metadata.gruposRepetibles"
+            class="text-center align-middle"
+          >
+            {{ obtenerResumenGrupo(actividad, grupo.nombre) }}
+          </td>
           <!-- NUEVO: Columna de Usuarios -->
           <td class="text-center align-middle">
             <span

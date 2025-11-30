@@ -15,6 +15,8 @@ export interface AtributoMetadata {
   mostrarEnTabla: boolean;
   orden: number;
   placeholder?: string;
+  esRepetible?: boolean; // NUEVO
+  grupoRepetible?: string; // NUEVO
   opcionesSelect?: {
     endpoint?: string;
     estatico?: { value: string; label: string }[];
@@ -28,15 +30,23 @@ export interface AtributoMetadata {
   };
 }
 
+export interface GrupoRepetibleConfig {
+  nombre: string; // 'ESTUDIANTES'
+  labelSingular: string; // 'estudiante'
+  labelPlural: string; // 'estudiantes'
+  camposMostrar: string[]; // ['NOMBREESTUDIANTE', 'IDESTUDIANTE']
+}
+
 export interface SubtipoActividadConfig {
   oidTipoActividad: number;
   nombreTipo: string;
   atributos: AtributoMetadata[];
+  gruposRepetibles?: GrupoRepetibleConfig[];
 }
 
 export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
   TRABAJOS_DOCENCIA: {
-    oidTipoActividad: 1, // ID que se envía al backend
+    oidTipoActividad: 1,
     nombreTipo: 'Trabajos de Docencia',
     atributos: [
       {
@@ -49,15 +59,18 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         orden: 1,
         placeholder: 'Ej: Resolución 123 de 2024',
       },
+      // GRUPO: ESTUDIANTES
       {
         nombre: 'IDESTUDIANTE',
-        tipoValor: 'VARCHAR',
+        tipoValor: 'INT',
         label: 'ID Estudiante',
-        tipoCampo: 'text',
+        tipoCampo: 'number',
         requerido: true,
-        mostrarEnTabla: true,
+        mostrarEnTabla: false,
         orden: 2,
         placeholder: 'Ej: 123456789',
+        esRepetible: true,
+        grupoRepetible: 'ESTUDIANTES',
       },
       {
         nombre: 'NOMBREESTUDIANTE',
@@ -65,21 +78,64 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         label: 'Nombre Estudiante',
         tipoCampo: 'text',
         requerido: true,
-        mostrarEnTabla: true,
+        mostrarEnTabla: false,
         orden: 3,
         placeholder: 'Ej: Juan Pérez García',
+        esRepetible: true,
+        grupoRepetible: 'ESTUDIANTES',
       },
-      // {
-      //   nombre: 'HORAS',
-      //   tipoValor: 'INT',
-      //   label: 'Horas',
-      //   tipoCampo: 'number',
-      //   requerido: true,
-      //   mostrarEnTabla: true,
-      //   orden: 4,
-      //   placeholder: 'Ej: 4',
-      //   validaciones: { min: 1 },
-      // },
+      // GRUPO: DOCUMENTOS (NUEVO)
+      {
+        nombre: 'CODIGODOCUMENTO',
+        tipoValor: 'VARCHAR',
+        label: 'Código Documento',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: false,
+        orden: 4,
+        placeholder: 'Ej: DOC-2024-001',
+        esRepetible: true,
+        grupoRepetible: 'DOCUMENTOS',
+      },
+      {
+        nombre: 'NOMBREDOCUMENTO',
+        tipoValor: 'VARCHAR',
+        label: 'Nombre Documento',
+        tipoCampo: 'text',
+        requerido: true,
+        mostrarEnTabla: false,
+        orden: 5,
+        placeholder: 'Ej: Acta de Evaluación',
+        esRepetible: true,
+        grupoRepetible: 'DOCUMENTOS',
+      },
+      {
+        nombre: 'TIPODOCUMENTO',
+        tipoValor: 'VARCHAR',
+        label: 'Tipo Documento',
+        tipoCampo: 'text',
+        requerido: false,
+        mostrarEnTabla: false,
+        orden: 6,
+        placeholder: 'Ej: PDF, Word',
+        esRepetible: true,
+        grupoRepetible: 'DOCUMENTOS',
+      },
+    ],
+    gruposRepetibles: [
+      {
+        nombre: 'ESTUDIANTES',
+        labelSingular: 'estudiante',
+        labelPlural: 'estudiantes',
+        camposMostrar: ['NOMBREESTUDIANTE', 'IDESTUDIANTE'],
+      },
+      // NUEVO GRUPO
+      {
+        nombre: 'DOCUMENTOS',
+        labelSingular: 'documento',
+        labelPlural: 'documentos',
+        camposMostrar: ['NOMBREDOCUMENTO', 'CODIGODOCUMENTO'],
+      },
     ],
   },
   PROYECTOS_INVESTIGACION: {

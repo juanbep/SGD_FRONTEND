@@ -41,6 +41,22 @@ export class GestionActividadBaseComponent {
       .sort((a, b) => a.orden - b.orden)
   );
 
+  // Computed para detectar si tiene atributos repetibles
+  readonly tieneAtributosRepetibles = computed(() =>
+    this.metadata.atributos.some((a) => a.esRepetible)
+  );
+
+  // Obtener el título de la columna de grupos repetibles
+  readonly tituloColumnaRepetibles = computed(() => {
+    const gruposConfig = this.metadata.gruposRepetibles || [];
+
+    if (gruposConfig.length === 0) return 'Detalles';
+    if (gruposConfig.length === 1) return gruposConfig[0].labelPlural;
+
+    // Si hay múltiples grupos, mostrar "Detalles" o concatenar nombres
+    return 'Detalles';
+  });
+
   // Estados
   readonly calendarios = signal<Calendario[]>([]);
   readonly calendarioSeleccionado = signal<number | null>(null);
@@ -72,6 +88,13 @@ export class GestionActividadBaseComponent {
   readonly puedeAgregarActividades = computed(
     () => this.calendarioSeleccionado() !== null
   );
+
+  readonly totalColumnas = computed(() => {
+    let total = 6; // # + Nombre + Semanas + Estado + Usuarios + Acciones
+    total += this.atributosTabla().length; // Atributos dinámicos
+    total += this.metadata.gruposRepetibles?.length || 0; // Una columna por grupo
+    return total;
+  });
 
   async ngOnInit() {
     await this.cargarCalendarios();
@@ -149,6 +172,42 @@ export class GestionActividadBaseComponent {
   eliminarActividad(id: string): void {
     const actividades = this.actividadesEnMemoria();
     this.actividadesEnMemoria.set(actividades.filter((a) => a.id !== id));
+  }
+
+  // Obtener resumen de UN grupo específico
+  obtenerResumenGrupo(
+    actividad: ActividadEnMemoria,
+    nombreGrupo: string
+  ): string {
+    const grupos = actividad.atributosRepetibles;
+    if (!grupos || grupos.length === 0) return '-';
+
+    const grupoData = grupos.find((g) => g.grupo === nombreGrupo);
+    if (!grupoData || grupoData.items.length === 0) return '-';
+
+    // Obtener configuración del grupo desde metadata
+    const configGrupo = this.metadata.gruposRepetibles?.find(
+      (g) => g.nombre === nombreGrupo
+    );
+    if (!configGrupo) return '-';
+
+    const total = grupoData.items.length;
+    const primerItem = grupoData.items[0];
+
+    // Buscar los campos según el orden definido en camposMostrar
+    let textoMostrar = '';
+    for (const campo of configGrupo.camposMostrar) {
+      const valor = primerItem.find((a) => a.nombre === campo)?.valor;
+      if (valor) {
+        textoMostrar = textoMostrar ? `${textoMostrar} (${valor})` : valor;
+      }
+    }
+
+    // Construir resumen
+    if (total === 1) {
+      return textoMostrar || `1 ${configGrupo.labelSingular}`;
+    }
+    return `${textoMostrar} +${total - 1} más`;
   }
 
   obtenerValorAtributo(
