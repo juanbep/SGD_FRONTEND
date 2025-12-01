@@ -247,57 +247,92 @@ export class GestionActividadBaseComponent {
   async guardarTodas(): Promise<void> {
     const actividades = this.actividadesEnMemoria();
     if (actividades.length === 0) {
-      alert('No hay actividades para guardar');
+      this.toastr.warning('No hay actividades para guardar');
       return;
     }
 
     this.guardandoTodas.set(true);
 
     try {
-      const payload: CreateActividadDto[] = actividades.map(
-        ({ id, ...actividad }) => actividad
+      // 1. Mapear cada actividad en memoria al DTO del backend
+      const payload: CreateActividadDto[] = actividades.map((a) =>
+        this.mapearActividadAModeloBackend(a)
       );
 
-      console.log('Payload a enviar:', JSON.stringify(payload, null, 2));
+      console.log('Payload lote:', JSON.stringify(payload, null, 2));
 
-      // Usar el helper con el nuevo retorno
-      const resultado = await this.actividadHelperService.createMultiple(
-        payload
-      );
+      // 2. Llamar al helper (que ya creaste)
+      const { exitosas, fallidas, total } =
+        await this.actividadHelperService.createMultiple(payload);
 
-      console.log('Respuesta del backend:', resultado);
-
-      // Construir mensaje según resultados
-      let mensaje = '';
-      if (resultado.exitosas.length === resultado.total) {
-        // Todas exitosas
-        mensaje = `¡${resultado.total} actividades guardadas exitosamente!`;
-      } else if (resultado.exitosas.length === 0) {
-        // Todas fallaron
-        mensaje = `Error: No se pudo guardar ninguna actividad.\n\n${resultado.fallidas
-          .map((f) => `Actividad ${f.indice + 1}: ${f.mensaje}`)
-          .join('\n')}`;
-      } else {
-        // Algunas exitosas, algunas fallidas
-        mensaje = `Se guardaron ${resultado.exitosas.length} de ${resultado.total} actividades.\n\n`;
-        mensaje += `Fallidas:\n${resultado.fallidas
-          .map((f) => `Actividad ${f.indice + 1}: ${f.mensaje}`)
-          .join('\n')}`;
-      }
-
-      alert(mensaje);
-
-      // Limpiar solo si todas fueron exitosas
-      if (resultado.exitosas.length === resultado.total) {
+      // 3. Manejo de resultados
+      if (fallidas.length === 0) {
+        // Todo OK
+        this.toastr.success(
+          `Se guardaron correctamente las ${total} actividades`
+        );
         this.actividadesEnMemoria.set([]);
+      } else if (exitosas.length === 0) {
+        // Todo falló
+        this.toastr.error('No se pudo guardar ninguna actividad');
+        fallidas.forEach((f) =>
+          this.toastr.error(`Actividad ${f.indice + 1}: ${f.mensaje}`)
+        );
+      } else {
+        // Algunas bien, otras mal
+        this.toastr.warning(
+          `Se guardaron ${exitosas.length} de ${total} actividades`
+        );
+        fallidas.forEach((f) =>
+          this.toastr.error(`Actividad ${f.indice + 1}: ${f.mensaje}`)
+        );
+
+        // Opcional: dejar en la tabla solo las que fallaron
+        const indicesFallidas = new Set(fallidas.map((f) => f.indice));
+        this.actividadesEnMemoria.set(
+          actividades.filter((_, idx) => indicesFallidas.has(idx))
+        );
       }
     } catch (error: any) {
-      console.error('Error al guardar actividades:', error);
-      const mensaje = error?.message || 'Error al guardar las actividades';
-      alert(mensaje);
+      console.error('Error al guardar actividades en lote:', error);
+      const msg =
+        error?.error?.mensaje ||
+        error?.message ||
+        'Error al guardar las actividades';
+      this.toastr.error(msg);
     } finally {
       this.guardandoTodas.set(false);
     }
+  }
+
+  private mapearActividadAModeloBackend(
+    actividad: ActividadEnMemoria
+  ): CreateActividadDto {
+    const { id, atributosRepetibles, ...resto } = actividad;
+
+    // Empezamos con los atributos simples
+    const atributos = [...resto.atributos];
+
+    // Aplanamos los repetibles dentro de atributos
+    if (atributosRepetibles && atributosRepetibles.length > 0) {
+      for (const grupo of atributosRepetibles) {
+        grupo.items.forEach((item) => {
+          item.forEach((attr) => {
+            atributos.push({
+              nombre: attr.nombre,
+              tipo: attr.tipo,
+              valor: attr.valor,
+            });
+          });
+        });
+      }
+    }
+
+    return {
+      ...resto, // oidTipoActividad, oidEstadoActividad, nombreActividad, semanas, oidCalendario, usuarios
+      atributos, // ya combinados
+      // SIN atributosRepetibles
+    };
   }
 
   // Guardar actividad individual
