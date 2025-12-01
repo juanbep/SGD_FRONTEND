@@ -166,6 +166,10 @@ h6.text-muted {
   font-weight: 600;
 }
 
+.my-4 {
+  border-color: #f8ae15 !important;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .modal-dialog {

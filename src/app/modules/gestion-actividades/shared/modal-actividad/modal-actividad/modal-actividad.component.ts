@@ -489,6 +489,25 @@ export class ModalActividadComponent implements OnInit {
       .every((c) => camposTemp[c.nombre]?.trim());
   }
 
+  // Devuelve el label del usuario a partir del oid
+  getUsuarioLabel(oidUsuario: number): string {
+    const usuario = this.usuariosDisponibles().find(
+      (u) => u.oid === oidUsuario
+    );
+    return usuario ? usuario.label : `Usuario ${oidUsuario}`;
+  }
+
+  // Devuelve el nombre del cargo a partir del oid
+  getCargoNombre(oidCargo: number): string {
+    const cargo = this.cargosDisponibles().find((c) => c.oid === oidCargo);
+    return cargo ? cargo.nombre : `Cargo ${oidCargo}`;
+  }
+
+  eliminarUsuario(index: number): void {
+    const actuales = this.usuariosAsignados();
+    this.usuariosAsignados.set(actuales.filter((_, i) => i !== index));
+  }
+
   // Función para obtener el label del cargo seleccionado
   cargoSeleccionadoLabel = computed(() => {
     if (!this.cargoSeleccionado()) return null;
