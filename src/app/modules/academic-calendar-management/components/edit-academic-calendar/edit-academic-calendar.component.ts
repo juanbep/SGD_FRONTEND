@@ -69,7 +69,8 @@ export class EditAcademicCalendarComponent implements OnInit {
 
   readonly fechasCalendario = computed(() => {
     const fechas = this.calendario()?.fechas || [];
-    return Utils.ordenarFechasPorOid(fechas);
+    return fechas;
+    //return Utils.ordenarFechasPorOid(fechas); //No ordenar las fechas, estas se ordenan automáticamente
   });
 
   // ===== CONSTANTES =====
