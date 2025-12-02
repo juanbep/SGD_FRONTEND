@@ -60,6 +60,14 @@ const routes: Routes = [
         title: 'Gestión de calendario académico',
       },
       {
+        path: 'gestion-necesidades',
+        loadChildren: () =>
+          import('../needs-management/needs-management-routing.module').then(
+            (m) => m.NeedsManagementRoutingModule
+          ),
+        title: 'Gestión de Necesidades',
+      },
+      {
         path: 'gestion-actividades-docente',
         loadChildren: () =>
           import(

@@ -1,0 +1,106 @@
+/* Estilos coherentes con el patrón visual del proyecto */
+
+.view-needs {
+  display: block;
+}
+
+/* Reutilizar el contenedor principal del proyecto */
+.view-needs .view-container {
+  background-color: var(--white);
+  padding: 24px 112px 50px 112px;
+}
+
+.vn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.vn-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--neutral-90);
+}
+/* Alineado al patrón del proyecto: reutiliza view-container y title-two globales */
+
+.vn-filters-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.vn-filter {
+  min-width: 220px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--neutral-30);
+  background: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--neutral-80);
+}
+
+.vn-filters-actions {
+  margin-left: auto;
+}
+
+.vn-filters-button {
+  background-color: var(--blue);
+  color: var(--white);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  overflow: auto;
+}
+
+.vn-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px; /* permite scroll horizontal en pantallas pequeñas */
+}
+
+.vn-table th,
+.vn-table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--neutral-10);
+  text-align: left;
+  font-size: 13px;
+  color: var(--neutral-80);
+}
+
+.vn-table thead th {
+  background: var(--neutral-0);
+  font-weight: 600;
+  color: var(--neutral-60);
+  position: sticky;
+  top: 0;
+}
+
+.vn-table tbody tr:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .vn-filters-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vn-filters-actions {
+    margin-left: 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+}

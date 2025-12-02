@@ -1,0 +1,73 @@
+<div class="modal fade" [class.show]="visible()" [style.display]="visible() ? 'block' : 'none'"
+    [style.z-index]="visible() ? '1060' : 'auto'" tabindex="-1" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-2">
+                <h5 class="modal-title">
+                    Ajustes generales
+                </h5>
+                <button type="button" class="btn-close" aria-label="Cerrar" (click)="onCerrar()"></button>
+            </div>
+
+            <div class="modal-body pt-2">
+                <form [formGroup]="ajusteForm">
+                    <!-- Checkbox para aplicar solo a campos vacíos -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="aplicarSoloCamposVacios" 
+                            formControlName="aplicarSoloCamposVacios">
+                        <label class="form-check-label" for="aplicarSoloCamposVacios">
+                            Aplicar ajustes solo a materias con campos vacíos
+                        </label>
+                    </div>
+
+                    <!-- Cupos -->
+                    <div class="mb-3">
+                        <label for="cupoAjuste" class="form-label fw-semibold">Cupos:</label>
+                        <input id="cupoAjuste" type="number" class="form-control" formControlName="cupo"
+                            placeholder="Ingrese cantidad de cupos" min="0" />
+                    </div>
+
+                    <!-- Cantidad de grupos -->
+                    <div class="mb-3">
+                        <label for="cantidadGrupos" class="form-label fw-semibold">Cantidad de grupos:</label>
+                        <select id="cantidadGrupos" class="form-select" formControlName="cantidadGrupos">
+                            <option value="">Seleccione cantidad</option>
+                            <option [value]="1">1 grupo</option>
+                            <option [value]="2">2 grupos</option>
+                            <option [value]="3">3 grupos</option>
+                            <option [value]="4">4 grupos</option>
+                            <option [value]="5">5 grupos</option>
+                            <option [value]="6">6 grupos</option>
+                        </select>
+                    </div>
+
+                    <!-- Área de información calculada -->
+                    <div class="bg-light border rounded p-3 mb-3">
+                        <div class="mb-2">
+                            <span class="text-muted">Número de cupos:</span>
+                            <strong class="ms-2">{{ ajusteForm.get('cupo')?.value || 0 }}</strong>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted">Número de grupos:</span>
+                            <strong class="ms-2">{{ ajusteForm.get('cantidadGrupos')?.value || 0 }}</strong>
+                        </div>
+                        <div>
+                            <span class="text-muted">Cupos por grupo:</span>
+                            <strong class="ms-2">{{ cuposPorGrupo() }}</strong>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer border-0 pt-0 justify-content-center">
+                <button type="button" class="btn btn-primary px-4" (click)="onAplicar()">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (visible()) {
+    <div class="modal-backdrop fade show" [style.z-index]="'1055'"></div>
+}
