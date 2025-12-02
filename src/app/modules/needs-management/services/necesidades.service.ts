@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environments } from '../../../../environments/environments';
+import { environment } from '../../../../environments/environments_sgd';
 import { ApiResponse } from '../models/api-response.interface';
 import { PageResponse } from '../models/page-response.interface';
 import { Necesidad } from '../models/necesidad.interface';
@@ -19,7 +19,7 @@ export interface FiltrosNecesidad {
 
 @Injectable({ providedIn: 'root' })
 export class NecesidadesService {
-  private readonly baseUrl = `${environments.baseUrlSGD}/sgd-back/api/necesidades`;
+  private readonly baseUrl = `${environment.baseUrl}/sgd-back/api/necesidades`;
 
   constructor(private readonly http: HttpClient) {}
 
