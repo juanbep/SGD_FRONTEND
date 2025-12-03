@@ -95,16 +95,6 @@
                   </div>
                 </div>
 
-                <!-- Horas -->
-                <div class="col-md-6 col-sm-6">
-                  <div class="info-item">
-                    <label class="info-label">Horas:</label>
-                    <p class="info-value">
-                      {{ actividad.actividad.horas }} horas
-                    </p>
-                  </div>
-                </div>
-
                 <!-- Semanas -->
                 <div class="col-md-6 col-sm-6">
                   <div class="info-item">
@@ -156,7 +146,9 @@
               <table class="table table-hover table-bordered mb-0">
                 <tbody>
                   <tr *ngFor="let atributo of actividad.actividad.atributos">
-                    <td class="text-muted fw-bold">{{ atributo.codigoAtributo }}</td>
+                    <td class="text-muted fw-bold">
+                      {{ atributo.codigoAtributo }}
+                    </td>
                     <td>{{ atributo.valor }}</td>
                   </tr>
                 </tbody>
@@ -168,7 +160,11 @@
 
       <!-- Footer -->
       <div class="modal-footer border-0 py-3">
-        <button type="button" class="btn btn-outline-secondary px-4" (click)="cerrar()">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          (click)="cerrar()"
+        >
           <i class="fas fa-times me-2"></i>
           Cerrar
         </button>

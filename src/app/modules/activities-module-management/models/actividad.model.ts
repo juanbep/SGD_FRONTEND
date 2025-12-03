@@ -1,6 +1,15 @@
 import { BaseResponse, PaginatedResponse } from '../shared/shared.model';
 
-// ========== ENTIDADES BASE ==========
+export interface Actividad {
+  oidActividad: number;
+  tipoActividad: TipoActividad;
+  oidEstadoActividad: number;
+  nombreActividad: string;
+  semanas: number;
+  fechaCreacion: string;
+  fechaActualizacion: string;
+  atributos: Atributo[];
+}
 
 export interface TipoActividad {
   oidTipoActividad: number;
@@ -8,96 +17,78 @@ export interface TipoActividad {
   descripcion: string;
 }
 
-export interface Usuario {
-  oidUsuario: number;
-  identificacion: string;
-  nombres: string;
-  apellidos: string;
-  departamento: string | null;
-  roles: string | null;
-  programaCoordinador: string | null;
-  departamentoJefatura: string | null;
-}
-
-export interface Actividad {
-  oidActividad: number;
-  tipoActividad: TipoActividad;
-  oidEstadoActividad: number;
-  nombreActividad: string;
-  horas: number;
-  semanas: number;
-  informeEjecutivo: string | null;
-  fechaCreacion: string;
-  fechaActualizacion: string;
-  atributos: Atributo[];
-  idLaborDocente: number | null;
-  esLaborDocente: boolean | null;
-  archivoLaborDocente: string | null;
-}
-
 export interface Atributo {
   codigoAtributo: string;
   valor: string;
 }
 
-// ========== DTOs PARA CREAR/ACTUALIZAR ==========
-// Resultado individual del procesamiento batch
-export interface BatchActividadResult {
-  indice: number;
-  exito: boolean;
-  mensaje: string;
-  actividad: ActividadResponse | null; // null si hubo error
+export interface Usuario {
+  oidUsuario: number;
+  identificacion: string;
+  nombres: string;
+  apellidos: string;
+  departamento: Departamento;
+  roles: Rol[];
+  usuarioDetalle: UsuarioDetalle;
+  programaCoordinador: string | null;
+  departamentoJefatura: string | null;
+  horasLaborDocente: HorasLaborDocente;
 }
 
-// Atributo simple (como ya lo tenías)
+export interface Departamento {
+  oidDepartamento: number;
+  nombre: string;
+  facultad: string;
+  jefeOidUsuario: number | null;
+  jefeNombre: string | null;
+  fechaCreacion: string | null;
+  fechaActualizacion: string | null;
+  usuarioCreacion: string | null;
+  usuarioActualizacion: string | null;
+}
+
+export interface Rol {
+  nombre: string;
+}
+
+export interface UsuarioDetalle {
+  oidUsuarioDetalle: number;
+  facultad: string;
+  departamento: string;
+  programa: string | null;
+  categoria: string;
+  contratacion: string;
+  dedicacion: string;
+  estudios: string;
+  fechaCreacion: string;
+  fechaActualizacion: string;
+}
+
+export interface HorasLaborDocente {
+  horasAsignadasPorTipoActividad: Record<string, number>;
+  totalHorasAsignadas: number;
+  horasDisponiblesPorTipoActividad: Record<string, number>;
+  totalHorasDisponibles: number;
+}
+
+export interface AtributoRepetible {
+  grupo: string;
+  items: AtributoActividad[][];
+}
+
 export interface AtributoActividad {
   nombre: string;
   tipo: string;
   valor: string;
 }
 
-// Usuario con cargo y horas
 export interface UsuarioActividad {
   oidUsuario: number;
   oidCargoActividad: number;
   horas: number;
 }
 
-// Atributos repetibles (grupos)
-export interface AtributoRepetible {
-  grupo: string; // 'ESTUDIANTES', 'DOCUMENTOS', etc.
-  items: AtributoActividad[][]; // Array de arrays
-}
-
-// DTO para crear actividad (ACTUALIZADO)
 export interface CreateActividadDTO {
-  oidTipoActividad: number;
-  oidEstadoActividad: number;
-  nombreActividad: string;
-  semanas: number;
-  oidCalendario: number;
-  usuarios: UsuarioActividad[]; // CAMBIADO: de oidsUsuarios a usuarios con detalle
-  atributos: AtributoActividad[]; // Atributos simples
-  atributosRepetibles?: AtributoRepetible[]; // Atributos repetibles
-}
-
-// DTO para actualizar actividad
-export interface UpdateActividadDTO
-  extends Partial<Omit<CreateActividadDTO, 'usuarios'>> {
-  oidActividad: number;
-  usuarios?: UsuarioActividad[];
-}
-
-// DTO para eliminar
-export interface DeleteActividadDTO {
-  oidActividad: number;
-}
-
-// ========== MODELO DE MEMORIA (FRONTEND) ==========
-
-export interface ActividadEnMemoria {
-  id?: string; // ID temporal para manejar en memoria
-  oidActividad?: number; // ID real del backend (cuando se edita)
   oidTipoActividad: number;
   oidEstadoActividad: number;
   nombreActividad: string;
@@ -108,7 +99,36 @@ export interface ActividadEnMemoria {
   atributosRepetibles?: AtributoRepetible[];
 }
 
-// ========== RESPUESTAS DEL BACKEND ==========
+export interface UpdateActividadDTO
+  extends Partial<Omit<CreateActividadDTO, 'usuarios'>> {
+  oidActividad: number;
+  usuarios?: UsuarioActividad[];
+}
+
+export interface DeleteActividadDTO {
+  oidActividad: number;
+}
+
+export interface BatchActividadResult {
+  indice: number;
+  exito: boolean;
+  mensaje: string;
+  actividad: ActividadResponse | null;
+}
+
+export interface ActividadResponse {
+  actividad: Actividad;
+  oidCalendario: number;
+  nombreCalendario: string;
+  usuarios: Usuario[];
+  usuariosActividad: UsuarioActividadAsignacion[];
+}
+
+export interface UsuarioActividadAsignacion {
+  oidUsuario: number;
+  oidCargoActividad: number;
+  horas: number;
+}
 
 export interface DesasignarUsuarioResponse {
   mensaje: string;
@@ -117,50 +137,41 @@ export interface DesasignarUsuarioResponse {
   oidActividad: number;
 }
 
-// ========== FILTROS ==========
+// ========== MODELO DE MEMORIA (FRONTEND) ==========
+
+export interface ActividadEnMemoria {
+  id?: string;
+  oidActividad?: number;
+  oidTipoActividad: number;
+  oidEstadoActividad: number;
+  nombreActividad: string;
+  semanas: number;
+  oidCalendario: number;
+  usuarios: UsuarioActividad[];
+  atributos: AtributoActividad[];
+  atributosRepetibles?: AtributoRepetible[];
+}
 
 export interface ActividadFilters {
-  // Paginación
   page?: number;
   size?: number;
-
-  // Búsqueda general
   searchTerm?: string;
   nombreActividad?: string;
-
-  // Filtros por ID/estado
   oidEstadoActividad?: string | number;
   oidTipoActividad?: string | number;
   oidCalendario?: string | number;
   oidDepartamento?: string | number;
   oidUsuarioResponsable?: number | string;
-
-  // Filtros por rangos numéricos
   horasMin?: number;
   horasMax?: number;
   semanasMin?: number;
   semanasMax?: number;
-
-  // Filtros por fechas
   fechaCreacionDesde?: string;
   fechaCreacionHasta?: string;
-
-  // Filtros por atributos específicos
   semestre?: string;
   nombreEstudiante?: string;
-
-  // Ordenamiento
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
-}
-
-// ========== RESPONSE TYPES ==========
-
-export interface ActividadResponse {
-  actividad: Actividad;
-  oidCalendario: number;
-  nombreCalendario: string;
-  usuarios: Usuario[];
 }
 
 export type ActividadesListResponse = BaseResponse<

@@ -267,6 +267,25 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
   }
 
+  // Mostrar horas específicas por usuario
+  getHorasUsuario(
+    actividadData: ActividadResponse,
+    oidUsuario: number
+  ): number {
+    const usuarioActividad = actividadData.usuariosActividad.find(
+      (ua) => ua.oidUsuario === oidUsuario
+    );
+    return usuarioActividad?.horas || 0;
+  }
+
+  // Obtener el total de horas de una actividad
+  getTotalHorasActividad(actividadData: ActividadResponse): number {
+    return actividadData.usuariosActividad.reduce(
+      (total, ua) => total + ua.horas,
+      0
+    );
+  }
+
   /**
    * Función para ordenar calendarios por año (de mayor a menor)
    * Extrae el año del label y ordena descendentemente
