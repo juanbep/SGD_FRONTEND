@@ -75,10 +75,10 @@ export class CreateAcademicCalendarComponent implements OnInit {
         horasPlanta: dto.horasPlanta,
         horasOcasionales: dto.horasOcasionales,
         observacion: dto.observacion,
-        semanasClase: 0,
-        semanasPreparacion: 0,
-        horasCatedra: 0,
-        horasBecarioPracticante: 0,
+        //semanasClase: 0,
+        //semanasPreparacion: 0,
+        //horasCatedra: 0,
+        //horasBecarioPracticante: 0,
       });
 
       if (calendarioCreado && calendarioCreado.oidcalendario) {
