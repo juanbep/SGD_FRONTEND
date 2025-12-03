@@ -18,7 +18,8 @@
       <!-- Body -->
       <div class="modal-body p-0">
         <app-usuario-carousel
-          [usuariosIds]="usuariosIds"
+          [usuariosAsignaciones]="usuariosAsignaciones"
+          [usuariosCompletos]="usuariosCompletos"
           [modo]="modo"
           [desasignando]="desasignando"
           (onDesasignarUsuario)="desasignarUsuario($event)"

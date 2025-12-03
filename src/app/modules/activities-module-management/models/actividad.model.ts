@@ -1,15 +1,6 @@
 import { BaseResponse, PaginatedResponse } from '../shared/shared.model';
 
-export interface Actividad {
-  oidActividad: number;
-  tipoActividad: TipoActividad;
-  oidEstadoActividad: number;
-  nombreActividad: string;
-  semanas: number;
-  fechaCreacion: string;
-  fechaActualizacion: string;
-  atributos: Atributo[];
-}
+// ========== ENTIDADES BASE ==========
 
 export interface TipoActividad {
   oidTipoActividad: number;
@@ -22,18 +13,7 @@ export interface Atributo {
   valor: string;
 }
 
-export interface Usuario {
-  oidUsuario: number;
-  identificacion: string;
-  nombres: string;
-  apellidos: string;
-  departamento: Departamento;
-  roles: Rol[];
-  usuarioDetalle: UsuarioDetalle;
-  programaCoordinador: string | null;
-  departamentoJefatura: string | null;
-  horasLaborDocente: HorasLaborDocente;
-}
+// ========== ESTRUCTURAS ANIDADAS PARA USUARIO EN ACTIVIDAD ==========
 
 export interface Departamento {
   oidDepartamento: number;
@@ -71,9 +51,49 @@ export interface HorasLaborDocente {
   totalHorasDisponibles: number;
 }
 
-export interface AtributoRepetible {
-  grupo: string;
-  items: AtributoActividad[][];
+// ========== USUARIO EN CONTEXTO DE ACTIVIDAD ==========
+
+export interface UsuarioEnActividad {
+  oidUsuario: number;
+  identificacion: string;
+  nombres: string;
+  apellidos: string;
+  departamento: Departamento | null;
+  roles: Rol[];
+  usuarioDetalle: UsuarioDetalle;
+  programaCoordinador: string | null;
+  departamentoJefatura: string | null;
+  horasLaborDocente: HorasLaborDocente | null;
+}
+
+// ========== ACTIVIDAD ==========
+
+export interface Actividad {
+  oidActividad: number;
+  tipoActividad: TipoActividad;
+  oidEstadoActividad: number;
+  nombreActividad: string;
+  semanas: number;
+  fechaCreacion: string;
+  fechaActualizacion: string;
+  atributos: Atributo[];
+}
+
+// ========== ASIGNACIÓN DE USUARIO A ACTIVIDAD ==========
+
+export interface UsuarioActividadAsignacion {
+  oidUsuario: number;
+  oidCargoActividad: number;
+  horas: number;
+}
+
+// ========== DTOs PARA CREAR/ACTUALIZAR ==========
+
+export interface BatchActividadResult {
+  indice: number;
+  exito: boolean;
+  mensaje: string;
+  actividad: ActividadResponse | null;
 }
 
 export interface AtributoActividad {
@@ -86,6 +106,11 @@ export interface UsuarioActividad {
   oidUsuario: number;
   oidCargoActividad: number;
   horas: number;
+}
+
+export interface AtributoRepetible {
+  grupo: string;
+  items: AtributoActividad[][];
 }
 
 export interface CreateActividadDTO {
@@ -109,34 +134,6 @@ export interface DeleteActividadDTO {
   oidActividad: number;
 }
 
-export interface BatchActividadResult {
-  indice: number;
-  exito: boolean;
-  mensaje: string;
-  actividad: ActividadResponse | null;
-}
-
-export interface ActividadResponse {
-  actividad: Actividad;
-  oidCalendario: number;
-  nombreCalendario: string;
-  usuarios: Usuario[];
-  usuariosActividad: UsuarioActividadAsignacion[];
-}
-
-export interface UsuarioActividadAsignacion {
-  oidUsuario: number;
-  oidCargoActividad: number;
-  horas: number;
-}
-
-export interface DesasignarUsuarioResponse {
-  mensaje: string;
-  oidCalendario: number;
-  oidUsuario: number;
-  oidActividad: number;
-}
-
 // ========== MODELO DE MEMORIA (FRONTEND) ==========
 
 export interface ActividadEnMemoria {
@@ -151,6 +148,25 @@ export interface ActividadEnMemoria {
   atributos: AtributoActividad[];
   atributosRepetibles?: AtributoRepetible[];
 }
+
+// ========== RESPUESTAS DEL BACKEND ==========
+
+export interface DesasignarUsuarioResponse {
+  mensaje: string;
+  oidCalendario: number;
+  oidUsuario: number;
+  oidActividad: number;
+}
+
+export interface ActividadResponse {
+  actividad: Actividad;
+  oidCalendario: number;
+  nombreCalendario: string;
+  usuarios: UsuarioEnActividad[];
+  usuariosActividad: UsuarioActividadAsignacion[];
+}
+
+// ========== FILTROS ==========
 
 export interface ActividadFilters {
   page?: number;
@@ -173,6 +189,8 @@ export interface ActividadFilters {
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
+
+// ========== RESPONSE TYPES ==========
 
 export type ActividadesListResponse = BaseResponse<
   PaginatedResponse<ActividadResponse>

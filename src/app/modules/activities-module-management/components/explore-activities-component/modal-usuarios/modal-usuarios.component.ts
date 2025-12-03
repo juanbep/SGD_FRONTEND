@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { UsuarioCarouselComponent } from '../usuario-carousel/usuario-carousel.component';
 import { ActividadHelperService } from '../../../services';
 import { ToastrService } from 'ngx-toastr';
+import {
+  UsuarioActividadAsignacion,
+  UsuarioEnActividad,
+} from '../../../models';
 
 @Component({
   selector: 'app-modal-usuarios',
@@ -12,7 +16,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './modal-usuarios.component.css',
 })
 export class ModalUsuariosComponent {
-  @Input() usuariosIds: number[] = [];
+  @Input() usuariosAsignaciones: UsuarioActividadAsignacion[] = [];
+  @Input() usuariosCompletos: UsuarioEnActividad[] = [];
   @Input() visible: boolean = false;
   @Input() oidActividad: number | null = null;
   @Input() oidCalendario: number | null = null;
@@ -47,15 +52,18 @@ export class ModalUsuariosComponent {
       );
 
       if (resultado) {
-        // Mensaje de éxito del backend o mensaje por defecto
         const mensaje =
           resultado.mensaje || 'Usuario desasignado correctamente';
         this.toastr.success(mensaje);
 
-        // Remover de la lista local para actualizar UI inmediatamente
-        this.usuariosIds = this.usuariosIds.filter((id) => id !== oidUsuario);
+        // Remover de ambas listas locales
+        this.usuariosAsignaciones = this.usuariosAsignaciones.filter(
+          (ua) => ua.oidUsuario !== oidUsuario
+        );
+        this.usuariosCompletos = this.usuariosCompletos.filter(
+          (u) => u.oidUsuario !== oidUsuario
+        );
 
-        // Notificar al padre para que recargue la tabla
         this.onUsuarioDesasignado.emit();
       }
 
@@ -63,7 +71,6 @@ export class ModalUsuariosComponent {
     } catch (error: any) {
       console.error('Error al desasignar usuario:', error);
 
-      // Capturar mensaje del backend o usar mensaje por defecto
       const mensaje =
         error?.error?.mensaje ||
         'Error al desasignar el usuario de la actividad';

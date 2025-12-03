@@ -1,20 +1,12 @@
 <div class="scroll-container">
-  <!-- Spinner de carga -->
-  <div *ngIf="loading" class="loading-overlay">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-    <p class="mt-2 text-muted">Cargando información de los usuarios...</p>
-  </div>
-
-  <!-- Mensaje de error -->
-  <div *ngIf="error && !loading" class="alert alert-danger m-3" role="alert">
-    <i class="fas fa-exclamation-triangle me-2"></i>
-    {{ error }}
+  <!-- Mensaje cuando no hay usuarios -->
+  <div *ngIf="usuariosCompletos.length === 0" class="alert alert-info m-3">
+    <i class="fas fa-info-circle me-2"></i>
+    No hay usuarios asociados a esta actividad
   </div>
 
   <!-- Lista de usuarios con scroll continuo -->
-  <div *ngIf="!loading && !error && usuarios.length > 0" class="usuarios-list">
+  <div *ngIf="usuariosCompletos.length > 0" class="usuarios-list">
     <!-- Indicador superior -->
     <div class="scroll-hint scroll-hint-top" *ngIf="totalUsuarios > 1">
       <i class="fas fa-chevron-down"></i>
@@ -23,7 +15,7 @@
 
     <!-- Tarjetas de usuarios -->
     <div
-      *ngFor="let usuario of usuarios; let i = index"
+      *ngFor="let usuario of usuariosCompletos; let i = index"
       class="usuario-card-wrapper"
       [attr.data-usuario-id]="usuario.oidUsuario"
     >
@@ -62,18 +54,24 @@
                     <span>{{ usuario.identificacion }}</span>
                   </div>
                   <div class="info-item">
-                    <label>Username:</label>
-                    <span>{{ usuario.username }}</span>
+                    <label>Nombres:</label>
+                    <span>{{ usuario.nombres }}</span>
                   </div>
                   <div class="info-item">
-                    <label>Correo:</label>
-                    <span class="text-break">{{ usuario.correo }}</span>
+                    <label>Apellidos:</label>
+                    <span>{{ usuario.apellidos }}</span>
                   </div>
                   <div class="info-item">
-                    <label>Estado:</label>
-                    <span class="text-break">
-                      {{ usuario.estadoUsuario.nombre }}
-                    </span>
+                    <label>Departamento:</label>
+                    <span>{{
+                      usuario.departamento?.nombre || "No asignado"
+                    }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Facultad:</label>
+                    <span class="text-break">{{
+                      usuario.departamento?.facultad || "No asignada"
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -85,10 +83,6 @@
                   Información Académica
                 </h6>
                 <div class="info-group">
-                  <div class="info-item">
-                    <label>Departamento:</label>
-                    <span>{{ usuario.usuarioDetalle.departamento }}</span>
-                  </div>
                   <div class="info-item">
                     <label>Programa:</label>
                     <span>{{
@@ -131,6 +125,127 @@
                 >
                   {{ rol.nombre }}
                 </span>
+              </div>
+            </div>
+
+            <!-- NUEVA SECCIÓN: Horas en esta Actividad -->
+            <div class="horas-section mt-3 pt-3 border-top">
+              <h6 class="section-subtitle">
+                <i class="fas fa-clock me-2"></i>
+                Asignación en esta Actividad
+              </h6>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <div class="info-card bg-light p-3 rounded">
+                    <div
+                      class="d-flex align-items-center justify-content-between"
+                    >
+                      <div>
+                        <small class="text-muted d-block"
+                          >Horas Asignadas</small
+                        >
+                        <h4 class="mb-0 fw-bold text-primary">
+                          {{ getHorasUsuario(usuario.oidUsuario) }}
+                        </h4>
+                      </div>
+                      <i
+                        class="fas fa-business-time fa-2x text-primary opacity-25"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-card bg-light p-3 rounded">
+                    <div
+                      class="d-flex align-items-center justify-content-between"
+                    >
+                      <div>
+                        <small class="text-muted d-block">Cargo ID</small>
+                        <h4 class="mb-0 fw-bold" style="color: #f8ae15">
+                          {{ getOidCargoUsuario(usuario.oidUsuario) || "N/A" }}
+                        </h4>
+                      </div>
+                      <i
+                        class="fas fa-briefcase fa-2x opacity-25"
+                        style="color: #f8ae15"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NUEVA SECCIÓN: Horas Labor Docente (Total) -->
+            <div
+              class="horas-labor-section mt-3 pt-3 border-top"
+              *ngIf="usuario.horasLaborDocente"
+            >
+              <h6 class="section-subtitle">
+                <i class="fas fa-chart-bar me-2"></i>
+                Resumen de Horas Labor Docente
+              </h6>
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="info-card bg-success bg-opacity-10 p-3 rounded">
+                    <small class="text-muted d-block">Total Asignadas</small>
+                    <h5 class="mb-0 fw-bold text-success">
+                      {{ usuario.horasLaborDocente.totalHorasAsignadas }} hrs
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="info-card bg-warning bg-opacity-10 p-3 rounded">
+                    <small class="text-muted d-block">Total Disponibles</small>
+                    <h5 class="mb-0 fw-bold text-warning">
+                      {{ usuario.horasLaborDocente.totalHorasDisponibles }} hrs
+                    </h5>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Detalle por tipo de actividad -->
+              <div
+                class="mt-3"
+                *ngIf="usuario.horasLaborDocente.horasAsignadasPorTipoActividad"
+              >
+                <small class="text-muted fw-bold"
+                  >Detalle por Tipo de Actividad:</small
+                >
+                <div class="table-responsive mt-2">
+                  <table class="table table-sm table-bordered">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Tipo de Actividad</th>
+                        <th class="text-center">Asignadas</th>
+                        <th class="text-center">Disponibles</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let item of usuario.horasLaborDocente
+                            .horasAsignadasPorTipoActividad | keyvalue
+                        "
+                      >
+                        <td>{{ item.key }}</td>
+                        <td class="text-center">
+                          <span class="badge bg-success"
+                            >{{ item.value }} hrs</span
+                          >
+                        </td>
+                        <td class="text-center">
+                          <span class="badge bg-warning text-dark">
+                            {{
+                              usuario.horasLaborDocente
+                                .horasDisponiblesPorTipoActividad[item.key] || 0
+                            }}
+                            hrs
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
@@ -185,9 +300,12 @@
                 <div class="text-start">
                   <strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong
                   ><br />
-                  <small
-                    >{{ usuario.identificacion }} - {{ usuario.correo }}</small
-                  >
+                  <small>{{ usuario.identificacion }}</small
+                  ><br />
+                  <small class="text-muted">
+                    <i class="fas fa-clock me-1"></i>
+                    {{ getHorasUsuario(usuario.oidUsuario) }} horas asignadas
+                  </small>
                 </div>
               </div>
 
@@ -237,14 +355,5 @@
       <span>Desplázate para ver todos los usuarios</span>
       <i class="fas fa-chevron-up"></i>
     </div>
-  </div>
-
-  <!-- Mensaje cuando no hay usuarios -->
-  <div
-    *ngIf="!loading && !error && usuarios.length === 0"
-    class="alert alert-info m-3"
-  >
-    <i class="fas fa-info-circle me-2"></i>
-    No hay usuarios asociados a esta actividad
   </div>
 </div>

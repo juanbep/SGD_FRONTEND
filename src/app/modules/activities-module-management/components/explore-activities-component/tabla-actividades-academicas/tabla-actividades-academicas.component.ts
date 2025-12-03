@@ -18,6 +18,8 @@ import {
   PaginationConfig,
   DEFAULT_PAGINATION_CONFIG,
   ActividadResponse,
+  UsuarioActividadAsignacion,
+  UsuarioEnActividad,
 } from '../../../models';
 import { EstadoCalendario } from '../../../../academic-calendar-management/models';
 import { ModalDetalleActividadComponent } from '../modal-detalle-actividad/modal-detalle-actividad.component';
@@ -73,7 +75,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   actividadSeleccionada: ActividadResponse | null = null;
   mostrarModalDetalles: boolean = false;
   mostrarModalUsuarios: boolean = false;
-  usuariosSeleccionados: number[] = [];
+  usuariosSeleccionados: UsuarioActividadAsignacion[] = [];
+
+  usuariosAsignaciones: UsuarioActividadAsignacion[] = [];
+  usuariosCompletos: UsuarioEnActividad[] = [];
 
   oidActividadParaUsuarios: number | null = null;
   oidCalendarioParaUsuarios: number | null = null;
@@ -413,9 +418,8 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   }
 
   abrirModalUsuarios(actividadData: ActividadResponse): void {
-    this.usuariosSeleccionados = actividadData.usuarios.map(
-      (u) => u.oidUsuario
-    );
+    this.usuariosAsignaciones = actividadData.usuariosActividad;
+    this.usuariosCompletos = actividadData.usuarios;
     this.oidActividadParaUsuarios = actividadData.actividad.oidActividad;
     this.oidCalendarioParaUsuarios = actividadData.oidCalendario;
     this.mostrarModalUsuarios = true;
@@ -423,7 +427,8 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
   cerrarModalUsuarios(): void {
     this.mostrarModalUsuarios = false;
-    this.usuariosSeleccionados = [];
+    this.usuariosAsignaciones = [];
+    this.usuariosCompletos = [];
     this.oidActividadParaUsuarios = null;
     this.oidCalendarioParaUsuarios = null;
   }
