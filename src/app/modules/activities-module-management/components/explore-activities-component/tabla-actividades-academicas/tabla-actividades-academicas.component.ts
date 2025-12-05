@@ -245,7 +245,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
       const filtros: UsuariosConActividadesFilters = {
         oidDepartamento,
-        filtro: 'DOCENCIA',
+        filtro: 'NO_DOCENCIA', //Ajustar este visaje 
       };
 
       const usuariosDepartamento =

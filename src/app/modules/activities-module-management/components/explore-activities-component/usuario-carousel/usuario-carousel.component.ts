@@ -29,7 +29,6 @@ export class UsuarioCarouselComponent implements OnChanges {
   usuarioEnConfirmacion: number | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Resetear confirmación si los usuarios cambiaron
     if (changes['usuariosCompletos'] || changes['usuariosAsignaciones']) {
       if (
         this.usuarioEnConfirmacion &&
@@ -42,7 +41,6 @@ export class UsuarioCarouselComponent implements OnChanges {
     }
   }
 
-  // Obtener las horas asignadas de un usuario específico en esta actividad
   getHorasUsuario(oidUsuario: number): number {
     const asignacion = this.usuariosAsignaciones.find(
       (ua) => ua.oidUsuario === oidUsuario
@@ -50,7 +48,6 @@ export class UsuarioCarouselComponent implements OnChanges {
     return asignacion?.horas || 0;
   }
 
-  // Obtener el oid del cargo de un usuario específico
   getOidCargoUsuario(oidUsuario: number): number | null {
     const asignacion = this.usuariosAsignaciones.find(
       (ua) => ua.oidUsuario === oidUsuario
@@ -58,34 +55,8 @@ export class UsuarioCarouselComponent implements OnChanges {
     return asignacion?.oidCargoActividad || null;
   }
 
-  // Obtener roles formateados como string
-  getRolesString(usuario: UsuarioEnActividad): string {
-    if (!usuario.roles || usuario.roles.length === 0) {
-      return 'Sin roles asignados';
-    }
-    return usuario.roles.map((r) => r.nombre).join(', ');
-  }
-
   mostrarConfirmacion(oidUsuario: number): void {
     this.usuarioEnConfirmacion = oidUsuario;
-
-    setTimeout(() => {
-      this.scrollToConfirmacion(oidUsuario);
-    }, 100);
-  }
-
-  private scrollToConfirmacion(oidUsuario: number): void {
-    const elemento = document.querySelector(
-      `[data-usuario-id="${oidUsuario}"]`
-    );
-
-    if (elemento) {
-      elemento.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'nearest',
-      });
-    }
   }
 
   cancelarConfirmacion(): void {
