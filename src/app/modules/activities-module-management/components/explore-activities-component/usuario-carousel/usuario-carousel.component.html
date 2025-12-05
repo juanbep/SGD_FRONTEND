@@ -33,6 +33,7 @@
           <strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong>
           <small>
             {{ usuario.identificacion }} |
+            {{ getNombreCargoUsuario(usuario.oidUsuario) }} |
             {{ getHorasUsuario(usuario.oidUsuario) }} hrs
           </small>
         </div>
@@ -67,20 +68,25 @@
           <span class="usuario-numero">{{ i + 1 }}/{{ totalUsuarios }}</span>
         </div>
 
-        <!-- Info rápida -->
+        <!-- Info rápida: Cargo y Horas -->
         <div class="info-rapida">
           <span
-            ><strong>Identificación:</strong> {{ usuario.identificacion }}</span
+            ><strong>Cargo:</strong>
+            {{ getNombreCargoUsuario(usuario.oidUsuario) }}</span
           >
           <span
-            ><strong>Cargo:</strong>
-            {{ getOidCargoUsuario(usuario.oidUsuario) || "N/A" }}</span
+            ><strong>Horas Máximas:</strong>
+            {{ getHorasUsuario(usuario.oidUsuario) }}</span
           >
         </div>
 
         <!-- Grid de información -->
         <div class="info-grid">
           <div class="info-section">
+            <div class="info-item">
+              <label>Identificación</label>
+              <span>{{ usuario.identificacion }}</span>
+            </div>
             <div class="info-item">
               <label>Departamento</label>
               <span>{{ usuario.departamento?.nombre || "No asignado" }}</span>
@@ -128,9 +134,9 @@
           }}</span>
         </div>
 
-        <!-- Horas labor docente (dos desplegables) -->
+        <!-- Horas labor docente -->
         <div *ngIf="usuario.horasLaborDocente" class="horas-compact">
-          <!-- Desplegable 2: Detalle por tipo -->
+          <!-- Desplegable 1: Total horas para esta actividad -->
           <details
             class="detalle-tipos"
             *ngIf="usuario.horasLaborDocente.horasAsignadasPorTipoActividad"
@@ -164,7 +170,7 @@
             </table>
           </details>
 
-          <!-- Desplegable 1: Totales en una fila -->
+          <!-- Desplegable 2: Total horas labor docente -->
           <details class="detalle-tipos">
             <summary>TOTAL HORAS LABOR DOCENTE</summary>
             <table>
