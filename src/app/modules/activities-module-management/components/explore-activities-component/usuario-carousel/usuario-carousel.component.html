@@ -110,6 +110,10 @@
               <label>Dedicación</label>
               <span>{{ usuario.usuarioDetalle.dedicacion }}</span>
             </div>
+            <div class="info-item">
+              <label>Estudios</label>
+              <span>{{ usuario.usuarioDetalle.estudios }}</span>
+            </div>
           </div>
         </div>
 
@@ -124,45 +128,20 @@
           }}</span>
         </div>
 
-        <!-- Horas labor docente -->
+        <!-- Horas labor docente (dos desplegables) -->
         <div *ngIf="usuario.horasLaborDocente" class="horas-compact">
-          <details class="detalle-tipos">
-            <summary>Ver totales de horas</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>Concepto</th>
-                  <th>Horas</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Total Asignadas</td>
-                  <td class="asignadas">
-                    {{ usuario.horasLaborDocente.totalHorasAsignadas }}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Total Disponibles</td>
-                  <td class="disponibles">
-                    {{ usuario.horasLaborDocente.totalHorasDisponibles }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </details>
-
+          <!-- Desplegable 2: Detalle por tipo -->
           <details
             class="detalle-tipos"
             *ngIf="usuario.horasLaborDocente.horasAsignadasPorTipoActividad"
           >
-            <summary>Ver detalle por tipo de actividad</summary>
+            <summary>TOTAL HORAS PARA ESTA ACTIVIDAD</summary>
             <table>
               <thead>
                 <tr>
                   <th>Tipo</th>
-                  <th>Asig.</th>
-                  <th>Disp.</th>
+                  <th>Asignadas</th>
+                  <th>Disponibles</th>
                 </tr>
               </thead>
               <tbody>
@@ -173,12 +152,37 @@
                   "
                 >
                   <td>{{ item.key }}</td>
-                  <td>{{ item.value }}</td>
-                  <td>
+                  <td class="asignadas">{{ item.value }}</td>
+                  <td class="disponibles">
                     {{
                       usuario.horasLaborDocente
                         .horasDisponiblesPorTipoActividad[item.key] || 0
                     }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </details>
+
+          <!-- Desplegable 1: Totales en una fila -->
+          <details class="detalle-tipos">
+            <summary>TOTAL HORAS LABOR DOCENTE</summary>
+            <table>
+              <thead>
+                <tr>
+                  <th>Tipo</th>
+                  <th>Asignadas</th>
+                  <th>Disponibles</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>TOTAL HORAS</td>
+                  <td class="asignadas">
+                    {{ usuario.horasLaborDocente.totalHorasAsignadas }}
+                  </td>
+                  <td class="disponibles">
+                    {{ usuario.horasLaborDocente.totalHorasDisponibles }}
                   </td>
                 </tr>
               </tbody>
