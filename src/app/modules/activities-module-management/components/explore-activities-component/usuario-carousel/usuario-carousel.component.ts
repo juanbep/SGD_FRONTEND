@@ -51,7 +51,6 @@ export class UsuarioCarouselComponent implements OnChanges, OnInit {
         this.usuarioEnConfirmacion = null;
       }
 
-      // Recargar cargos si cambian las asignaciones
       if (changes['usuariosAsignaciones']) {
         await this.cargarCargos();
       }
@@ -59,7 +58,6 @@ export class UsuarioCarouselComponent implements OnChanges, OnInit {
   }
 
   async cargarCargos(): Promise<void> {
-    // Obtener IDs únicos de cargos
     const oidsCargos = [
       ...new Set(
         this.usuariosAsignaciones
@@ -73,11 +71,9 @@ export class UsuarioCarouselComponent implements OnChanges, OnInit {
     this.cargandoCargos = true;
 
     try {
-      // Cargar todos los cargos en paralelo
       const promesas = oidsCargos.map((oid) => this.cargosHelper.getById(oid));
       const cargos = await Promise.all(promesas);
 
-      // Guardar en el Map
       cargos.forEach((cargo) => {
         if (cargo) {
           this.cargosMap.set(cargo.oidCargoActividad, cargo);
@@ -114,6 +110,25 @@ export class UsuarioCarouselComponent implements OnChanges, OnInit {
 
   mostrarConfirmacion(oidUsuario: number): void {
     this.usuarioEnConfirmacion = oidUsuario;
+
+    // Scroll suave al card de confirmación
+    setTimeout(() => {
+      this.scrollToConfirmacion(oidUsuario);
+    }, 150);
+  }
+
+  private scrollToConfirmacion(oidUsuario: number): void {
+    const elemento = document.querySelector(
+      `[data-usuario-id="${oidUsuario}"]`
+    );
+
+    if (elemento) {
+      elemento.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      });
+    }
   }
 
   cancelarConfirmacion(): void {

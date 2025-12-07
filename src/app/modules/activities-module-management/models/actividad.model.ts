@@ -120,7 +120,7 @@ export interface CreateActividadDTO {
   semanas: number;
   oidCalendario: number;
   usuarios: UsuarioActividad[];
-  atributos: AtributoActividad[];
+  atributo: AtributoActividad[];
   atributosRepetibles?: AtributoRepetible[];
 }
 

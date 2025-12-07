@@ -230,7 +230,7 @@ export class GestionActividadBaseComponent {
     actividad: ActividadEnMemoria,
     nombreAtributo: string
   ): string {
-    const atributo = actividad.atributos.find(
+    const atributo = actividad.atributo.find(
       (a) => a.nombre === nombreAtributo
     );
     return atributo?.valor || '-';
@@ -311,14 +311,14 @@ export class GestionActividadBaseComponent {
     const { id, atributosRepetibles, ...resto } = actividad;
 
     // Empezamos con los atributos simples
-    const atributos = [...resto.atributos];
+    const atributo = [...resto.atributo];
 
     // Aplanamos los repetibles dentro de atributos
     if (atributosRepetibles && atributosRepetibles.length > 0) {
       for (const grupo of atributosRepetibles) {
         grupo.items.forEach((item) => {
           item.forEach((attr) => {
-            atributos.push({
+            atributo.push({
               nombre: attr.nombre,
               tipo: attr.tipo,
               valor: attr.valor,
@@ -330,7 +330,7 @@ export class GestionActividadBaseComponent {
 
     return {
       ...resto, // oidTipoActividad, oidEstadoActividad, nombreActividad, semanas, oidCalendario, usuarios
-      atributos, // ya combinados
+      atributo, // ya combinados
       // SIN atributosRepetibles
     };
   }
@@ -344,14 +344,14 @@ export class GestionActividadBaseComponent {
     try {
       const { id, atributosRepetibles, ...resto } = actividad;
 
-      const atributos = [...resto.atributos];
+      const atributo = [...resto.atributo];
 
       // 2. Si hay atributosRepetibles, los aplanamos
       if (atributosRepetibles && atributosRepetibles.length > 0) {
         for (const grupo of atributosRepetibles) {
           grupo.items.forEach((item) => {
             item.forEach((attr) => {
-              atributos.push({
+              atributo.push({
                 nombre: attr.nombre,
                 tipo: attr.tipo,
                 valor: attr.valor,
@@ -363,7 +363,7 @@ export class GestionActividadBaseComponent {
 
       const payload: CreateActividadDto = {
         ...resto, // oidTipoActividad, oidEstadoActividad, nombreActividad, semanas, oidCalendario, usuarios
-        atributos, // atributos ya combinados (simples + repetibles)
+        atributo, // atributos ya combinados (simples + repetibles)
         // SIN atributosRepetibles
       };
 
