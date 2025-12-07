@@ -7,11 +7,18 @@ import {
   UsuarioActividadAsignacion,
   UsuarioEnActividad,
 } from '../../../models';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-modal-usuarios',
   standalone: true,
-  imports: [CommonModule, UsuarioCarouselComponent],
+  imports: [
+    CommonModule,
+    UsuarioCarouselComponent,
+    FormsModule,
+    NgSelectModule,
+  ],
   templateUrl: './modal-usuarios.component.html',
   styleUrl: './modal-usuarios.component.css',
 })
@@ -25,11 +32,30 @@ export class ModalUsuariosComponent {
 
   @Output() onCerrar = new EventEmitter<void>();
   @Output() onUsuarioDesasignado = new EventEmitter<void>();
+  @Output() onUsuarioAsignado = new EventEmitter<void>();
 
   private actividadHelper = inject(ActividadHelperService);
   private toastr = inject(ToastrService);
 
   desasignando: boolean = false;
+
+  // ========== PROPIEDADES PARA ASIGNACIÓN ==========
+
+  mostrandoFormularioAsignacion: boolean = false;
+  asignando: boolean = false;
+
+  // Dropdowns
+  usuariosDisponibles: { value: number; label: string }[] = [];
+  cargosDisponibles: { value: number; label: string }[] = [];
+
+  // Modelo del formulario
+  nuevoUsuario = {
+    oidUsuario: null as number | null,
+    oidCargoActividad: null as number | null,
+    horas: 0,
+  };
+
+  // ========== MÉTODOS PARA DESASIGNAR USUARIO ==========
 
   async desasignarUsuario(oidUsuario: number): Promise<void> {
     if (!this.oidActividad || !this.oidCalendario) {
@@ -81,6 +107,73 @@ export class ModalUsuariosComponent {
   }
 
   cerrar(): void {
+    this.mostrandoFormularioAsignacion = false;
+    this.resetearFormulario();
+
     this.onCerrar.emit();
+  }
+
+  // ========== MÉTODOS PARA ASIGNAR USUARIO ==========
+
+  abrirFormularioAsignacion(): void {
+    this.mostrandoFormularioAsignacion = true;
+    // TODO: Aquí después cargaremos usuarios y cargos disponibles
+  }
+
+  cerrarFormularioAsignacion(): void {
+    this.mostrandoFormularioAsignacion = false;
+    this.resetearFormulario();
+  }
+
+  resetearFormulario(): void {
+    this.nuevoUsuario = {
+      oidUsuario: null,
+      oidCargoActividad: null,
+      horas: 0,
+    };
+  }
+
+  validarFormulario(): boolean {
+    if (!this.nuevoUsuario.oidUsuario) {
+      this.toastr.warning('Debe seleccionar un usuario');
+      return false;
+    }
+    if (!this.nuevoUsuario.oidCargoActividad) {
+      this.toastr.warning('Debe seleccionar un cargo');
+      return false;
+    }
+    if (this.nuevoUsuario.horas <= 0) {
+      this.toastr.warning('Las horas deben ser mayor a 0');
+      return false;
+    }
+    return true;
+  }
+
+  async asignarUsuario(): Promise<void> {
+    if (!this.validarFormulario()) {
+      return;
+    }
+
+    if (!this.oidActividad || !this.oidCalendario) {
+      this.toastr.error('Error: Faltan datos necesarios para asignar');
+      return;
+    }
+
+    this.asignando = true;
+
+    try {
+      // TODO: Aquí implementaremos la lógica de asignación usando los servicios
+      console.log('Datos a asignar:', this.nuevoUsuario);
+
+      // Simulación temporal
+      this.toastr.info('Función de asignación pendiente de implementar');
+
+      this.asignando = false;
+      this.cerrarFormularioAsignacion();
+    } catch (error: any) {
+      console.error('Error al asignar usuario:', error);
+      this.toastr.error('Error al asignar el usuario a la actividad');
+      this.asignando = false;
+    }
   }
 }

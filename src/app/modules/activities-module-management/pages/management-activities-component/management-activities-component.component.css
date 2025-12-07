@@ -1,59 +1,46 @@
-/* Card principal */
-.card {
-  border-radius: 12px;
-  overflow: hidden;
+/* =====================================================
+   ESTILOS PARA SECCIÓN SUPERIOR 
+   ===================================================== */
+
+/* Título principal */
+.title-two {
+  color: #001282 !important;
+  font-weight: 700;
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #001282;
+  padding-bottom: 0.5rem;
 }
 
-.card-header {
-  border-bottom: none;
+/* Contenedores de mensajes informativos */
+.messages-container {
+  background-color: rgba(22, 168, 225, 0.08) !important;
+  border-left: 4px solid #16a8e1 !important;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
 }
 
-/* Tabs */
-.nav-tabs {
-  border-bottom: 2px solid #dee2e6;
-  background-color: #f8f9fa;
+.messages-container img {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
 }
 
-.nav-tabs .nav-link {
-  border: none;
-  color: #6c757d;
-  font-weight: 500;
-  padding: 1rem 1.5rem;
-  transition: all 0.3s ease;
-  border-bottom: 3px solid transparent;
-}
-
-.nav-tabs .nav-link:hover {
-  color: #ffc107;
-  background-color: #e9ecef;
-  border-radius: 8px 8px 0 0;
-}
-
-.nav-tabs .nav-link.active {
-  color: #ffc107;
-  background-color: white;
-  border-bottom: 3px solid #ffc107;
+.messages-container .text-body-heavy {
+  color: #001282 !important;
   font-weight: 600;
-  border-radius: 8px 8px 0 0;
+  line-height: 1.5;
+  margin: 0;
 }
 
-/* Contenido tabs */
-.tab-content {
-  animation: fadeIn 0.3s ease;
-}
+/* =====================================================
+   ALERTAS DE FEEDBACK 
+   ===================================================== */
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Alertas de feedback */
 .alert {
   border-radius: 8px;
   animation: slideDown 0.3s ease;
@@ -70,15 +57,25 @@
   }
 }
 
-/* Responsive */
+/* =====================================================
+   RESPONSIVE 
+   ===================================================== */
+
 @media (max-width: 768px) {
-  .nav-tabs {
-    overflow-x: auto;
-    flex-wrap: nowrap;
+  .title-two {
+    font-size: 1.5rem;
   }
 
-  .nav-tabs .nav-link {
-    padding: 0.75rem 1rem;
-    white-space: nowrap;
+  .messages-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .alert {
+    font-size: 0.9rem;
+  }
+
+  .alert .fa-2x {
+    font-size: 1.5rem;
   }
 }
