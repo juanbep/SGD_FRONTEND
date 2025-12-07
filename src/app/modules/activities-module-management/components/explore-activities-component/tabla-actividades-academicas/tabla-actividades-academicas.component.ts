@@ -29,7 +29,6 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
   actualizarPaginacion,
-  ESTADOS_ACTIVIDAD,
   getEstadoBadgeClass,
   getEstadoNombre,
   getInfoPaginacion,
@@ -67,7 +66,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   error: string = '';
   pagination: PaginationConfig = { ...DEFAULT_PAGINATION_CONFIG };
 
-  // Modales
+  // ========== CONTROL DE MODALES ==========
   actividadSeleccionada: ActividadResponse | null = null;
   mostrarModalDetalles: boolean = false;
   mostrarModalUsuarios: boolean = false;
@@ -79,7 +78,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   oidActividadParaUsuarios: number | null = null;
   oidCalendarioParaUsuarios: number | null = null;
 
-  // Filtros y paginación - oidCalendario y oidDepartamento son obligatorios
+  // ========== OID_CALENDARIO Y OID_DEPARTAMENTO SON OBLIGATORIOS ==========
   filters: ActividadFilters = {
     page: 0,
     size: 10,
@@ -95,7 +94,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.cargarDatosUsuario();
   }
 
-  // Método para cargar datos del usuario desde localStorage
+  // ========== CARGA LOS DATOS DEL USUARIO DESDE LOCALSTORAGE ==========
   cargarDatosUsuario(): void {
     if (!isUserDataAvailable()) {
       this.toastr.error(

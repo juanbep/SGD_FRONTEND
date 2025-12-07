@@ -90,13 +90,24 @@ export class FiltrosActividadesComponent implements OnInit {
       tipos: cargaTipos$,
     }).subscribe({
       next: () => {
+        console.log('Filtros de calendarios y tipos cargados correctamente');
+
+        // Cargar usuarios solo si hay departamento
         if (this.filters.oidDepartamento) {
           this.loadUsuarios();
         }
+
+        // Emitir filtros automáticamente si hay calendario seleccionado
+        if (this.filters.oidCalendario) {
+          console.log('Emitiendo filtros iniciales automáticamente');
+          this.aplicarFiltros();
+        }
       },
       error: (error) => {
-        console.error('Error cargando filtros:', error);
-        this.toastr.error('Error al cargar los filtros');
+        console.error('Error cargando filtros iniciales:', error);
+        this.toastr.error(
+          'Error al cargar los filtros. Intente recargar la página.'
+        );
       },
     });
   }

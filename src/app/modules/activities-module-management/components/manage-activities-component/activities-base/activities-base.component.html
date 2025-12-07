@@ -2,62 +2,10 @@
   <!-- Proyección de contenido personalizado (mensajes, headers, etc.) -->
   <ng-content select="[header-content]"></ng-content>
 
-  <!-- Tabs -->
-  <nav class="tabs-principales mb-4">
-    <div class="tabs-wrapper">
-      <a
-        class="tab-item"
-        [class.active]="activeTab === 'academicas'"
-        (click)="selectTab('academicas')"
-        role="tab"
-      >
-        <i class="fas fa-graduation-cap me-2"></i>
-        Actividades Académicas
-      </a>
-      <a
-        class="tab-item"
-        [class.active]="activeTab === 'docencia'"
-        (click)="selectTab('docencia')"
-        role="tab"
-      >
-        <i class="fas fa-chalkboard-teacher me-2"></i>
-        Docencia
-      </a>
-    </div>
-  </nav>
-
-  <!-- Contenido de las Tabs -->
-  <div class="tab-content">
-    <!-- Tab: Actividades Académicas -->
-    <div
-      class="tab-pane fade"
-      [class.show]="activeTab === 'academicas'"
-      [class.active]="activeTab === 'academicas'"
-    >
-      <app-tabla-actividades-academicas
-        *ngIf="activeTab === 'academicas'"
-        [modo]="modo"
-        (onEditar)="handleEditar($event)"
-        (onEliminar)="handleEliminar($event)"
-      ></app-tabla-actividades-academicas>
-    </div>
-
-    <!-- Tab: Actividades de Docencia -->
-    <div
-      class="tab-pane fade"
-      [class.show]="activeTab === 'docencia'"
-      [class.active]="activeTab === 'docencia'"
-    >
-      <div class="alert alert-info d-flex align-items-center" role="alert">
-        <i class="fas fa-info-circle fa-2x me-3"></i>
-        <div>
-          <h5 class="alert-heading mb-1">Próximamente</h5>
-          <p class="mb-0">
-            La funcionalidad de Actividades de Docencia estará disponible en una
-            próxima actualización.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Contenido directo de Actividades Académicas -->
+  <app-tabla-actividades-academicas
+    [modo]="modo"
+    (onEditar)="handleEditar($event)"
+    (onEliminar)="handleEliminar($event)"
+  ></app-tabla-actividades-academicas>
 </div>
