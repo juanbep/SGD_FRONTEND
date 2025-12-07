@@ -32,6 +32,7 @@ import {
 })
 export class FiltrosActividadesComponent implements OnInit {
   @Input() oidDepartamento?: number;
+  @Input() modo: 'visualizar' | 'gestionar' = 'visualizar';
   @Output() onAplicarFiltros = new EventEmitter<ActividadFilters>();
   @Output() onLimpiarFiltros = new EventEmitter<void>();
 
@@ -48,7 +49,11 @@ export class FiltrosActividadesComponent implements OnInit {
     label: string;
     estado: EstadoCalendario;
   }[] = [];
-  tiposActividadDropdown: { value: number | string; label: string }[] = [];
+  tiposActividadDropdown: {
+    value: number | string;
+    label: string;
+    especial?: boolean;
+  }[] = [];
   usuariosDropdown: { value: number | string; label: string }[] = [];
 
   // Loading states
@@ -142,7 +147,20 @@ export class FiltrosActividadesComponent implements OnInit {
       const tiposCompletos =
         await this.tiposActividadHelper.getAllForDropdown();
 
-      const tiposFiltrados = tiposCompletos.filter((tipo) => tipo.value !== 9);
+      // Filtrar según el modo
+      const tiposFiltrados = tiposCompletos
+        .filter((tipo) => {
+          // En modo gestionar, excluir el tipo 9
+          if (this.modo === 'gestionar' && tipo.value === 9) {
+            return false;
+          }
+          return true;
+        })
+        .map((tipo) => ({
+          value: tipo.value,
+          label: tipo.label,
+          especial: tipo.value === 9,
+        }));
 
       this.tiposActividadDropdown = [
         { value: '', label: 'TODAS' },

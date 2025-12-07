@@ -86,6 +86,29 @@
           notFoundText="No hay tipos de actividad disponibles"
           loadingText="Cargando tipos..."
         >
+          <!-- Template personalizado para mostrar el indicador -->
+          <ng-template ng-option-tmp let-item="item">
+            <div
+              class="d-flex align-items-center"
+            >
+              <span>{{ item.label }}</span>
+              <i
+                *ngIf="item.especial"
+                class="fas fa-star ms-2 tipo-especial-icon"
+              ></i>
+            </div>
+          </ng-template>
+
+          <!-- Template cuando está seleccionado -->
+          <ng-template ng-label-tmp let-item="item">
+            <div class="d-flex align-items-center">
+              <span>{{ item.label }}</span>
+              <i
+                *ngIf="item.especial"
+                class="fas fa-star ms-2 tipo-especial-icon"
+              ></i>
+            </div>
+          </ng-template>
         </ng-select>
         <small class="text-muted">Filtrar por tipo específico</small>
       </div>

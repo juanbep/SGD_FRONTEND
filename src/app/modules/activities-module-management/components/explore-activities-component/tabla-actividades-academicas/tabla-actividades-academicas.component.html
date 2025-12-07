@@ -1,11 +1,12 @@
 <div class="view-container">
   <!-- SECCIÓN DE FILTROS -->
-<app-filtros-actividades
-  [oidDepartamento]="filters.oidDepartamento"
-  (onAplicarFiltros)="aplicarFiltros($event)"
-  (onLimpiarFiltros)="limpiarFiltros()"
-></app-filtros-actividades>
-  
+  <app-filtros-actividades
+    [oidDepartamento]="filters.oidDepartamento"
+    [modo]="modo"
+    (onAplicarFiltros)="aplicarFiltros($event)"
+    (onLimpiarFiltros)="limpiarFiltros()"
+  ></app-filtros-actividades>
+
   <!-- TABLA DE ACTIVIDADES -->
   <div class="card">
     <div
