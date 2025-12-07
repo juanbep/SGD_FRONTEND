@@ -1,0 +1,19 @@
+.badge-activo {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-pendiente {
+  background-color: #ffc107;
+  color: black;
+}
+
+.badge-deshabilitado {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-aprobado {
+  background-color: #17a2b8;
+  color: white;
+}

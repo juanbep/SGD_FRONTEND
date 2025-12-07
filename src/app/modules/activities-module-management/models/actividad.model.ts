@@ -176,7 +176,7 @@ export interface ActividadFilters {
   oidEstadoActividad?: string | number;
   oidTipoActividad?: string | number;
   oidCalendario?: string | number;
-  oidDepartamento?: string | number;
+  oidDepartamento?: number;
   oidUsuarioResponsable?: number | string;
   horasMin?: number;
   horasMax?: number;
