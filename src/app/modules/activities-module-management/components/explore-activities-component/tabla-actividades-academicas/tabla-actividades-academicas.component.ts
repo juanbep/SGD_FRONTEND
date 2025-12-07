@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../../services/actividades/actividades.service';
 import { CalendarioHelperService } from '../../../../academic-calendar-management/services/calendario/calendario-helper.service';
-import { UsuarioHelperService } from '../../../../sgd-users-management//services/users/usuario-helper.service';
 import { TiposActividadHelperService } from '../../../services/tiposActividades/tipos-actividad-helper.service';
 import { ToastrService } from 'ngx-toastr';
 import {
@@ -34,9 +33,18 @@ import { UsuariosConActividadesHelperService } from '../../../../sgd-users-manag
 import { UsuariosConActividadesFilters } from '../../../../sgd-users-management/models';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
+  actualizarPaginacion,
   ESTADOS_ACTIVIDAD,
   ESTADOS_ACTIVIDAD_FILTRO,
+  getEstadoBadgeClass,
+  getEstadoNombre,
+  getInfoPaginacion,
+  getPaginasVisibles,
+  ordenarCalendariosPorAnio,
+  seleccionarCalendarioAutomatico,
+  trackByOidActividad,
 } from '../../../utils/actividad-utils';
+import { forkJoin, from } from 'rxjs';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
@@ -118,13 +126,37 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarDatosUsuario();
-    this.loadCalendarios();
-    this.loadTiposActividad();
+    this.cargarFiltrosIniciales();
+  }
 
-    // Cargar usuarios solo si se obtuvo el departamento
-    if (this.filters.oidDepartamento) {
-      this.loadUsuarios();
-    }
+  /**
+   * Carga todos los filtros en paralelo para mejorar el rendimiento
+   */
+  private cargarFiltrosIniciales(): void {
+    // Convertir las Promises a Observables
+    const cargaCalendarios$ = from(this.loadCalendarios());
+    const cargaTipos$ = from(this.loadTiposActividad());
+
+    // Ejecutar en paralelo
+    forkJoin({
+      calendarios: cargaCalendarios$,
+      tipos: cargaTipos$,
+    }).subscribe({
+      next: () => {
+        console.log('Filtros de calendarios y tipos cargados correctamente');
+
+        // Cargar usuarios solo si hay departamento
+        if (this.filters.oidDepartamento) {
+          this.loadUsuarios();
+        }
+      },
+      error: (error) => {
+        console.error('Error cargando filtros iniciales:', error);
+        this.toastr.error(
+          'Error al cargar los filtros. Intente recargar la página.'
+        );
+      },
+    });
   }
 
   // Método para cargar datos del usuario desde localStorage
@@ -175,7 +207,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
       next: (response) => {
         if (response.codigo === 200) {
           this.actividades = response.data.content;
-          this.updatePagination(response.data);
+          this.pagination = actualizarPaginacion(
+            this.pagination,
+            response.data
+          );
           if (this.filters.page === 0) {
             this.toastr.success(
               response.mensaje || 'Actividades cargadas correctamente'
@@ -210,10 +245,12 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
       // Ordenar calendarios por año (de mayor a menor)
       this.calendariosDropdown =
-        this.ordenarCalendariosPorAnio(calendariosFiltrados);
+        ordenarCalendariosPorAnio(calendariosFiltrados);
 
       // Seleccionar automáticamente el calendario ACTIVO más reciente
-      this.seleccionarCalendarioAutomatico();
+      this.filters.oidCalendario = seleccionarCalendarioAutomatico(
+        this.calendariosDropdown
+      );
 
       // Cargar actividades automáticamente si ya tenemos departamento
       if (this.filters.oidCalendario && this.filters.oidDepartamento) {
@@ -245,7 +282,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
       const filtros: UsuariosConActividadesFilters = {
         oidDepartamento,
-        filtro: 'NO_DOCENCIA', //Ajustar este visaje 
+        filtro: 'NO_DOCENCIA', //Ajustar este visaje
       };
 
       const usuariosDepartamento =
@@ -270,56 +307,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     } finally {
       this.loadingUsuarios = false;
     }
-  }
-
-  // Mostrar horas específicas por usuario
-  getHorasUsuario(
-    actividadData: ActividadResponse,
-    oidUsuario: number
-  ): number {
-    const usuarioActividad = actividadData.usuariosActividad.find(
-      (ua) => ua.oidUsuario === oidUsuario
-    );
-    return usuarioActividad?.horas || 0;
-  }
-
-  // Obtener el total de horas de una actividad
-  getTotalHorasActividad(actividadData: ActividadResponse): number {
-    return actividadData.usuariosActividad.reduce(
-      (total, ua) => total + ua.horas,
-      0
-    );
-  }
-
-  /**
-   * Función para ordenar calendarios por año (de mayor a menor)
-   * Extrae el año del label y ordena descendentemente
-   * @param calendarios - Array de calendarios a ordenar
-   * @returns Array ordenado por año descendente
-   */
-  private ordenarCalendariosPorAnio(
-    calendarios: { value: number; label: string; estado: EstadoCalendario }[]
-  ): { value: number; label: string; estado: EstadoCalendario }[] {
-    return calendarios.sort((a, b) => {
-      // Extraer el año del label (asume formato como "Calendario 2025", "2025-A", etc.)
-      const anioA = this.extraerAnioDeLabel(a.label);
-      const anioB = this.extraerAnioDeLabel(b.label);
-
-      // Ordenar de mayor a menor (descendente)
-      return anioB - anioA;
-    });
-  }
-
-  /**
-   * Función auxiliar para extraer el año de un string
-   * Busca el primer número de 4 dígitos en el label
-   * @param label - String del que extraer el año
-   * @returns Año encontrado o 0 si no se encuentra
-   */
-  private extraerAnioDeLabel(label: string): number {
-    // Buscar un número de 4 dígitos (patrón de año)
-    const match = label.match(/\b(20\d{2}|19\d{2})\b/);
-    return match ? parseInt(match[0], 10) : 0;
   }
 
   // Método para cargar tipos de actividad en el dropdown
@@ -354,27 +341,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.onEditar.emit(actividadData);
   }
 
-  /**
-   * Selecciona automáticamente el calendario ACTIVO más reciente
-   * Prioridad: 1) ACTIVO del año más reciente, 2) Cualquiera del año más reciente
-   */
-  private seleccionarCalendarioAutomatico(): void {
-    if (this.calendariosDropdown.length === 0) {
-      console.warn('No hay calendarios disponibles para seleccionar');
-      return;
-    }
-
-    const calendarioActivo = this.calendariosDropdown.find(
-      (calendario) => calendario.estado === 'ACTIVO'
-    );
-
-    if (calendarioActivo) {
-      this.filters.oidCalendario = calendarioActivo.value;
-    } else {
-      this.filters.oidCalendario = this.calendariosDropdown[0].value;
-    }
-  }
-
   // FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES
 
   aplicarFiltros(): void {
@@ -400,7 +366,9 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.filtroResponsable = '';
 
     // Restablecer el calendario al valor por defecto (ACTIVO más reciente)
-    this.seleccionarCalendarioAutomatico();
+    this.filters.oidCalendario = seleccionarCalendarioAutomatico(
+      this.calendariosDropdown
+    );
 
     //this.actividades = [];
   }
@@ -454,71 +422,28 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loadActividades();
   }
 
-  private updatePagination(data: any): void {
-    this.pagination = {
-      ...this.pagination,
-      currentPage: data.number,
-      totalElements: data.totalElements,
-      totalPages: data.totalPages,
-      pageSize: data.size,
-    };
-  }
+  // ========== MÉTODOS PARA TEMPLATE ==========
 
   getPaginasVisibles(): number[] {
-    const totalPages = this.pagination.totalPages;
-    const currentPage = this.pagination.currentPage;
-    const visiblePages: number[] = [];
-
-    let startPage = Math.max(0, currentPage - 2);
-    let endPage = Math.min(totalPages - 1, currentPage + 2);
-
-    for (let i = startPage; i <= endPage; i++) {
-      visiblePages.push(i);
-    }
-
-    return visiblePages;
+    return getPaginasVisibles(
+      this.pagination.currentPage,
+      this.pagination.totalPages
+    );
   }
 
   getInfoPaginacion(): string {
-    const start = this.pagination.currentPage * this.pagination.pageSize + 1;
-    const end = Math.min(
-      (this.pagination.currentPage + 1) * this.pagination.pageSize,
-      this.pagination.totalElements
-    );
-    return `Mostrando ${start} - ${end} de ${this.pagination.totalElements} registros`;
+    return getInfoPaginacion(this.pagination);
   }
-
-  // UTILIDADES
 
   trackByOid(index: number, item: ActividadResponse): number {
-    return item.actividad.oidActividad;
-  }
-
-  getCalendarioEstadoBadgeClass(estado: EstadoCalendario): string {
-    switch (estado) {
-      case 'ACTIVO':
-        return 'text-success';
-      case 'DESHABILITADO':
-        return 'text-danger';
-      case 'PENDIENTE':
-        return 'text-warning';
-      default:
-        return 'text-secondary';
-    }
+    return trackByOidActividad(index, item);
   }
 
   getEstadoNombre(oidEstado: number): string {
-    const estado = this.estados.find((e) => e.oid === oidEstado);
-    return estado ? estado.nombre : 'DESCONOCIDO';
+    return getEstadoNombre(oidEstado, this.estados);
   }
 
   getEstadoBadgeClass(oidEstado: number): string {
-    const estado = this.estados.find((e) => e.oid === oidEstado);
-    return estado ? estado.class : 'bg-secondary';
-  }
-
-  getUsersTooltip(usuarios: any[]): string {
-    if (usuarios.length === 0) return 'Sin usuarios';
-    return usuarios.map((u) => `${u.nombres} ${u.apellidos}`).join(', ');
+    return getEstadoBadgeClass(oidEstado, this.estados);
   }
 }
