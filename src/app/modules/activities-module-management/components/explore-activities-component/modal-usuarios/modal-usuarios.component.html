@@ -32,8 +32,21 @@
           ></app-usuario-carousel>
         </div>
 
-        <!-- Formulario de Asignación CON WRAPPER -->
+        <!-- Formulario de Asignación CON WRAPPER Y MENSAJE -->
         <div *ngIf="mostrandoFormularioAsignacion" class="wrapper-formulario">
+          <!-- Mensaje informativo con icono -->
+          <section class="mensaje-asignar-usuario">
+            <img
+              [src]="'assets/icons/messages/teacher.svg'"
+              alt="Icono informativo"
+            />
+            <span class="texto-mensaje">
+              Seleccione el usuario, su cargo y las horas a asignar en esta
+              actividad.
+            </span>
+          </section>
+
+          <!-- Formulario limpio -->
           <app-formulario-asignar-usuario
             [oidTipoActividad]="oidTipoActividadActual"
             [usuariosYaAsignados]="usuariosAsignaciones"
