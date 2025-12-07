@@ -9,8 +9,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActividadesService } from '../../../services/actividades/actividades.service';
-import { CalendarioHelperService } from '../../../../academic-calendar-management/services/calendario/calendario-helper.service';
-import { TiposActividadHelperService } from '../../../services/tiposActividades/tipos-actividad-helper.service';
 import { ToastrService } from 'ngx-toastr';
 import {
   ActividadFilters,
@@ -28,7 +26,6 @@ import {
   getUserDepartmentId,
   isUserDataAvailable,
 } from '../../../../auth/utils/user-storage.utils';
-import { UsuariosConActividadesHelperService } from '../../../../sgd-users-management/services';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
   actualizarPaginacion,
@@ -61,11 +58,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   @Output() onEliminar = new EventEmitter<ActividadResponse>();
 
   private actividadesService = inject(ActividadesService);
-  private calendarioHelper = inject(CalendarioHelperService);
-  private tiposActividadHelper = inject(TiposActividadHelperService);
-  private usuariosConActividadesHelper = inject(
-    UsuariosConActividadesHelperService
-  );
   private toastr = inject(ToastrService);
 
   usuario: UserData | null = null;
@@ -99,8 +91,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     fechaCreacionDesde: '',
   };
 
-  readonly estados = ESTADOS_ACTIVIDAD;
-
   ngOnInit(): void {
     this.cargarDatosUsuario();
   }
@@ -130,7 +120,8 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
   }
 
-  // loadActividades con validación obligatoria
+  // ========== CARGAR ACTIVIDADES CON VALIDACIÓN OBLIGATORIA ==========
+
   loadActividades(): void {
     if (!this.filters.oidCalendario) {
       this.toastr.warning('Debe seleccionar un calendario');
@@ -145,7 +136,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    // YA NO NECESITAS AGREGAR filtroResponsable aquí
     console.log('Filtros enviados al servicio:', this.filters);
 
     this.actividadesService.getActividades(this.filters).subscribe({
@@ -184,7 +174,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.onEditar.emit(actividadData);
   }
 
-  // FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES
+  // ========== FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES ==========
 
   aplicarFiltros(filtros: ActividadFilters): void {
     this.filters = { ...filtros, page: 0 };
@@ -195,7 +185,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.actividades = [];
   }
 
-  // MODALES
+  // ========== MODALES ==========
 
   abrirModalDetalles(actividad: ActividadResponse): void {
     this.actividadSeleccionada = actividad;
@@ -223,15 +213,15 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.oidCalendarioParaUsuarios = null;
   }
 
-  /**
-   * Maneja la desasignación de un usuario y recarga la tabla
-   */
+  // ========== MANEJA LA DESASIGNACIÓN DE UN USUARIO ==========
+
   onUsuarioDesasignadoHandler(): void {
     console.log('Usuario desasignado, recargando tabla...');
     this.loadActividades();
   }
 
-  // PAGINACIÓN
+  // ========== PAGINACIÓN ==========
+
   onPageChange(page: number): void {
     if (page >= 0 && page < this.pagination.totalPages) {
       this.filters.page = page;
@@ -244,7 +234,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loadActividades();
   }
 
-  // ========== MÉTODOS PARA TEMPLATE ==========
+  // ========== MÉTODOS TEMPLATE ==========
 
   getPaginasVisibles(): number[] {
     return getPaginasVisibles(
@@ -262,10 +252,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   }
 
   getEstadoNombre(oidEstado: number): string {
-    return getEstadoNombre(oidEstado, this.estados);
+    return getEstadoNombre(oidEstado);
   }
 
   getEstadoBadgeClass(oidEstado: number): string {
-    return getEstadoBadgeClass(oidEstado, this.estados);
+    return getEstadoBadgeClass(oidEstado);
   }
 }

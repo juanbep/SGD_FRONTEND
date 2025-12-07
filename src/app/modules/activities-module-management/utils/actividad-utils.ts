@@ -47,18 +47,18 @@ export const ESTADOS_ACTIVIDAD_DROPDOWN: readonly EstadoActividadDropdown[] = [
 ] as const;
 
 // /**
-//  * Obtiene el nombre del estado por OID
+//  * obtiene el nombre del estado por oid
 //  */
-// export function getEstadoNombre(oidEstado: number): string {
-//   const estado = ESTADOS_ACTIVIDAD.find((e) => e.oid === oidEstado);
-//   return estado ? estado.nombre : 'DESCONOCIDO';
+// export function getestadonombre(oidestado: number): string {
+//   const estado = ESTADOS_ACTIVIDAD.find((e) => e.oid === oidestado);
+//   return estado ? estado.nombre : 'desconocido';
 // }
 
 // /**
-//  * Obtiene la clase CSS del estado por OID
+//  * obtiene la clase css del estado por oid
 //  */
-// export function getEstadoBadgeClass(oidEstado: number): string {
-//   const estado = ESTADOS_ACTIVIDAD.find((e) => e.oid === oidEstado);
+// export function getestadobadgeclass(oidestado: number): string {
+//   const estado = ESTADOS_ACTIVIDAD.find((e) => e.oid === oidestado);
 //   return estado ? estado.class : 'bg-secondary';
 // }
 
@@ -192,11 +192,8 @@ export function trackByOidActividad(
  * @param estados - Array de estados disponibles
  * @returns Nombre del estado o 'DESCONOCIDO'
  */
-export function getEstadoNombre(
-  oidEstado: number,
-  estados: readonly { oid: number; nombre: string; class: string }[]
-): string {
-  const estado = estados.find((e) => e.oid === oidEstado);
+export function getEstadoNombre(oidEstado: number): string {
+  const estado = ESTADOS_ACTIVIDAD.find((e) => e.oid === oidEstado);
   return estado ? estado.nombre : 'DESCONOCIDO';
 }
 
@@ -206,10 +203,7 @@ export function getEstadoNombre(
  * @param estados - Array de estados disponibles
  * @returns Clase CSS del badge
  */
-export function getEstadoBadgeClass(
-  oidEstado: number,
-  estados: readonly { oid: number; nombre: string; class: string }[]
-): string {
-  const estado = estados.find((e) => e.oid === oidEstado);
+export function getEstadoBadgeClass(oidEstado: number): string {
+  const estado = ESTADOS_ACTIVIDAD.find((e) => e.oid === oidEstado);
   return estado ? estado.class : 'bg-secondary';
 }

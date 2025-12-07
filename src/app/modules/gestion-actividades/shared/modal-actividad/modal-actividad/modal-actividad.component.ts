@@ -264,7 +264,7 @@ export class ModalActividadComponent implements OnInit {
     });
 
     // Cargar atributos simples
-    actividad.atributos.forEach((attr) => {
+    actividad.atributo.forEach((attr) => {
       const control = this.actividadForm.get(attr.nombre);
       if (control) {
         control.setValue(attr.valor);
@@ -364,7 +364,7 @@ export class ModalActividadComponent implements OnInit {
       semanas: formValues.semanas,
       oidCalendario: this.actividadAEditar?.oidCalendario || 0,
       usuarios: this.usuariosAsignados(),
-      atributos: atributos,
+      atributo: atributos,
       atributosRepetibles:
         atributosRepetibles.length > 0 ? atributosRepetibles : undefined,
     };
