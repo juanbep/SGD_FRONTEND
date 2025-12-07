@@ -1,0 +1,14 @@
+.formulario-asignacion {
+  padding: 1rem;
+  min-height: 300px;
+}
+
+.alert-info {
+  background-color: rgba(22, 168, 225, 0.1) !important;
+  border-color: #16a8e1 !important;
+  color: #001282 !important;
+}
+
+.alert-info .fas {
+  color: #0051c6 !important;
+}

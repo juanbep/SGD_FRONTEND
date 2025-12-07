@@ -14,14 +14,14 @@
         <button
           type="button"
           class="btn-close btn-close-white"
-          (click)="cerrar()"
+          (click)="cerrarModal()"
           aria-label="Cerrar"
         ></button>
       </div>
 
       <!-- Body -->
       <div class="modal-body">
-        <!-- Carrusel de Usuarios (se oculta cuando está el formulario) -->
+        <!-- Carrusel de Usuarios -->
         <div *ngIf="!mostrandoFormularioAsignacion">
           <app-usuario-carousel
             [usuariosAsignaciones]="usuariosAsignaciones"
@@ -32,78 +32,14 @@
           ></app-usuario-carousel>
         </div>
 
-        <!-- Formulario de Asignación (reemplaza el carrusel) -->
-        <div
+        <!-- Formulario de Asignación (componente hijo) -->
+        <app-formulario-asignar-usuario
           *ngIf="mostrandoFormularioAsignacion"
-          class="formulario-asignacion"
-        >
-          <div class="alert alert-info d-flex align-items-center mb-4">
-            <i class="fas fa-info-circle fa-2x me-3"></i>
-            <div>
-              <strong>Complete los datos del usuario a asignar</strong>
-              <p class="mb-0 small">
-                Seleccione el usuario, su cargo y las horas a asignar en esta
-                actividad.
-              </p>
-            </div>
-          </div>
-
-          <div class="row g-3">
-            <!-- Usuario -->
-            <div class="col-12">
-              <label class="form-label fw-bold">
-                <i class="fas fa-user me-1"></i>Usuario:
-              </label>
-              <ng-select
-                [items]="usuariosDisponibles"
-                bindLabel="label"
-                bindValue="value"
-                [(ngModel)]="nuevoUsuario.oidUsuario"
-                placeholder="Seleccione un usuario"
-                [clearable]="false"
-                notFoundText="No hay usuarios disponibles"
-              >
-              </ng-select>
-              <small class="text-muted"
-                >Usuario que será asignado a esta actividad</small
-              >
-            </div>
-
-            <!-- Cargo -->
-            <div class="col-md-6">
-              <label class="form-label fw-bold">
-                <i class="fas fa-briefcase me-1"></i>Cargo:
-              </label>
-              <ng-select
-                [items]="cargosDisponibles"
-                bindLabel="label"
-                bindValue="value"
-                [(ngModel)]="nuevoUsuario.oidCargoActividad"
-                placeholder="Seleccione un cargo"
-                [clearable]="false"
-                notFoundText="No hay cargos disponibles"
-              >
-              </ng-select>
-              <small class="text-muted">Rol del usuario en la actividad</small>
-            </div>
-
-            <!-- Horas -->
-            <div class="col-md-6">
-              <label class="form-label fw-bold">
-                <i class="fas fa-clock me-1"></i>Horas:
-              </label>
-              <input
-                type="number"
-                class="form-control"
-                [(ngModel)]="nuevoUsuario.horas"
-                min="0"
-                max="999"
-                placeholder="Ej: 8"
-              />
-              <small class="text-muted">Horas semanales asignadas</small>
-            </div>
-          </div>
-        </div>
+          [oidTipoActividad]="oidTipoActividadActual"
+          [usuariosYaAsignados]="usuariosAsignaciones"
+          (onUsuarioListo)="asignarUsuario($event)"
+          (onCancelar)="cerrarFormularioAsignacion()"
+        ></app-formulario-asignar-usuario>
       </div>
 
       <!-- Footer -->
@@ -123,41 +59,23 @@
           <button
             type="button"
             class="btn btn-outline-secondary px-4"
-            (click)="cerrar()"
+            (click)="cerrarModal()"
           >
             <i class="fas fa-times me-2"></i>
             Cerrar
           </button>
         </ng-container>
 
-        <!-- Botones cuando SÍ está el formulario -->
-        <ng-container *ngIf="mostrandoFormularioAsignacion">
-          <button
-            type="button"
-            class="btn btn-outline-secondary px-4"
-            (click)="cerrarFormularioAsignacion()"
-            [disabled]="asignando"
-          >
-            <i class="fas fa-arrow-left me-2"></i>
-            Volver
-          </button>
-
-          <button
-            type="button"
-            class="btn btn-primary px-4"
-            (click)="asignarUsuario()"
-            [disabled]="asignando"
-          >
-            <span *ngIf="!asignando">
-              <i class="fas fa-check me-2"></i>
-              Confirmar Asignación
-            </span>
-            <span *ngIf="asignando">
-              <span class="spinner-border spinner-border-sm me-2"></span>
-              Asignando...
-            </span>
-          </button>
-        </ng-container>
+        <!-- Loading cuando está asignando -->
+        <div
+          *ngIf="mostrandoFormularioAsignacion && asignando"
+          class="w-100 text-center"
+        >
+          <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Asignando...</span>
+          </div>
+          <span>Asignando usuario...</span>
+        </div>
       </div>
     </div>
   </div>

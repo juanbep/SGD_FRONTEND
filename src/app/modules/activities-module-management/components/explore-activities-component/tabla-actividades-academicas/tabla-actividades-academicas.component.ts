@@ -219,6 +219,11 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     this.loadActividades();
   }
 
+  onUsuarioAsignadoHandler(): void {
+    console.log('Usuario asignado, recargando tabla...');
+    this.loadActividades();
+  }
+
   // ========== PAGINACIÓN ==========
 
   onPageChange(page: number): void {

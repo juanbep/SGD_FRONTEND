@@ -1,0 +1,106 @@
+<div class="formulario-asignacion">
+  <!-- Loading state -->
+  <div *ngIf="cargandoDatos" class="text-center py-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-2">Cargando datos...</p>
+  </div>
+
+  <!-- Formulario -->
+  <div *ngIf="!cargandoDatos">
+    <div class="alert alert-info d-flex align-items-center mb-4">
+      <i class="fas fa-info-circle fa-2x me-3"></i>
+      <div>
+        <strong>Complete los datos del usuario a asignar</strong>
+        <p class="mb-0 small">
+          Seleccione el usuario, su cargo y las horas a asignar en esta
+          actividad.
+        </p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <!-- Usuario -->
+      <div class="col-12">
+        <label class="form-label fw-bold">
+          <i class="fas fa-user me-1"></i>Usuario:
+        </label>
+        <ng-select
+          [items]="usuariosDisponibles"
+          bindLabel="label"
+          bindValue="oid"
+          [(ngModel)]="usuarioSeleccionado"
+          placeholder="Seleccione un usuario"
+          [clearable]="false"
+          [loading]="cargandoUsuarios"
+          [searchable]="true"
+          notFoundText="No hay usuarios disponibles"
+        >
+        </ng-select>
+        <small class="text-muted"
+          >Usuario que será asignado a esta actividad</small
+        >
+      </div>
+
+      <!-- Cargo -->
+      <div class="col-md-6">
+        <label class="form-label fw-bold">
+          <i class="fas fa-briefcase me-1"></i>Cargo:
+        </label>
+        <ng-select
+          [items]="cargosDisponibles"
+          bindLabel="nombre"
+          bindValue="oid"
+          [(ngModel)]="cargoSeleccionado"
+          placeholder="Seleccione un cargo"
+          [clearable]="false"
+          [loading]="cargandoCargos"
+          notFoundText="No hay cargos disponibles"
+        >
+        </ng-select>
+        <small class="text-muted">Rol del usuario en la actividad</small>
+      </div>
+
+      <!-- Horas -->
+      <div class="col-md-6">
+        <label class="form-label fw-bold">
+          <i class="fas fa-clock me-1"></i>Horas:
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="horasAsignadas"
+          min="0"
+          max="999"
+          placeholder="Ej: 8"
+        />
+        <small class="text-muted">Horas semanales asignadas</small>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <button
+        type="button"
+        class="btn btn-outline-secondary px-4"
+        (click)="cancelar()"
+      >
+        <i class="fas fa-arrow-left me-2"></i>
+        Volver
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary px-4"
+        (click)="confirmar()"
+        [disabled]="
+          !usuarioSeleccionado || !cargoSeleccionado || horasAsignadas <= 0
+        "
+      >
+        <i class="fas fa-check me-2"></i>
+        Confirmar Asignación
+      </button>
+    </div>
+  </div>
+</div>
