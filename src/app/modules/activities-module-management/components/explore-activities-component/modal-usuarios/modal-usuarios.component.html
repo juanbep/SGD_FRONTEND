@@ -14,7 +14,7 @@
         <button
           type="button"
           class="btn-close btn-close-white"
-          (click)="cerrarModal()"
+          (click)="cerrar()"
           aria-label="Cerrar"
         ></button>
       </div>
@@ -32,14 +32,15 @@
           ></app-usuario-carousel>
         </div>
 
-        <!-- Formulario de Asignación (componente hijo) -->
-        <app-formulario-asignar-usuario
-          *ngIf="mostrandoFormularioAsignacion"
-          [oidTipoActividad]="oidTipoActividadActual"
-          [usuariosYaAsignados]="usuariosAsignaciones"
-          (onUsuarioListo)="asignarUsuario($event)"
-          (onCancelar)="cerrarFormularioAsignacion()"
-        ></app-formulario-asignar-usuario>
+        <!-- Formulario de Asignación CON WRAPPER -->
+        <div *ngIf="mostrandoFormularioAsignacion" class="wrapper-formulario">
+          <app-formulario-asignar-usuario
+            [oidTipoActividad]="oidTipoActividadActual"
+            [usuariosYaAsignados]="usuariosAsignaciones"
+            (onUsuarioListo)="asignarUsuario($event)"
+            (onCancelar)="cerrarFormularioAsignacion()"
+          ></app-formulario-asignar-usuario>
+        </div>
       </div>
 
       <!-- Footer -->
@@ -59,7 +60,7 @@
           <button
             type="button"
             class="btn btn-outline-secondary px-4"
-            (click)="cerrarModal()"
+            (click)="cerrar()"
           >
             <i class="fas fa-times me-2"></i>
             Cerrar

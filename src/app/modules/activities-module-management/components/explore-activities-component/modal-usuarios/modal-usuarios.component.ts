@@ -199,7 +199,7 @@ export class ModalUsuariosComponent {
     this.mostrandoFormularioAsignacion = false;
   }
 
-  cerrarModal(): void {
+  cerrar(): void {
     this.mostrandoFormularioAsignacion = false;
     this.onCerrar.emit();
   }

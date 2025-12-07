@@ -1,14 +1,109 @@
-.formulario-asignacion {
-  padding: 1rem;
-  min-height: 300px;
+/* =====================================================
+   LABELS CON ICONOS
+   ===================================================== */
+
+.campo-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #001282;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.5rem;
 }
 
-.alert-info {
-  background-color: rgba(22, 168, 225, 0.1) !important;
-  border-color: #16a8e1 !important;
-  color: #001282 !important;
+.campo-label i {
+  color: #0051c6;
+  font-size: 1rem;
+  width: 16px;
+  text-align: center;
 }
 
-.alert-info .fas {
-  color: #0051c6 !important;
+/* =====================================================
+   NG-SELECT
+   ===================================================== */
+
+::ng-deep .ng-select .ng-select-container {
+  min-height: 38px;
+  border-radius: 0.375rem;
+}
+
+::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* =====================================================
+   INPUT
+   ===================================================== */
+
+input[type="number"] {
+  min-height: 38px;
+}
+
+input[type="number"]:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* =====================================================
+   BOTONES
+   ===================================================== */
+
+.btn-cancelar,
+.btn-confirmar {
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-cancelar {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.btn-cancelar:hover {
+  background-color: #ffb300;
+}
+
+.btn-confirmar {
+  background-color: #5a8dee;
+  color: white;
+}
+
+.btn-confirmar:hover:not(:disabled) {
+  background-color: #4a7cd6;
+}
+
+.btn-confirmar:disabled {
+  background-color: #6c757d;
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+
+.spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .d-flex.gap-2 {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancelar,
+  .btn-confirmar {
+    width: 100%;
+  }
 }
