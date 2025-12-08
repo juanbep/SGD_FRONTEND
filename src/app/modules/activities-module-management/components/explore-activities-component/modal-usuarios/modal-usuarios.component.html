@@ -49,6 +49,7 @@
           <!-- Formulario limpio -->
           <app-formulario-asignar-usuario
             [oidTipoActividad]="oidTipoActividadActual"
+            [oidCalendario]="oidCalendario!"
             [usuariosYaAsignados]="usuariosAsignaciones"
             (onUsuarioListo)="asignarUsuario($event)"
             (onCancelar)="cerrarFormularioAsignacion()"

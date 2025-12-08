@@ -12,7 +12,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { UsuarioActividadAsignacion } from '../../../models';
 import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
-import { CargosActividadHelperService } from '../../../services';
+import {
+  CargosActividadHelperService,
+  UsuarioActividadCalendarioHelperService,
+} from '../../../services';
 import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
 
 interface UsuarioSelect {
@@ -41,12 +44,14 @@ export interface NuevoUsuarioDTO {
 export class FormularioAsignarUsuarioComponent implements OnInit {
   @Input() oidTipoActividad!: number;
   @Input() usuariosYaAsignados: UsuarioActividadAsignacion[] = [];
+  @Input() oidCalendario!: number;
 
   @Output() onUsuarioListo = new EventEmitter<NuevoUsuarioDTO>();
   @Output() onCancelar = new EventEmitter<void>();
 
   private usuarioService = inject(UsuarioDepartamentoHelperService);
   private cargoService = inject(CargosActividadHelperService);
+  private validacionService = inject(UsuarioActividadCalendarioHelperService);
   private toastr = inject(ToastrService);
 
   // Estados de carga
