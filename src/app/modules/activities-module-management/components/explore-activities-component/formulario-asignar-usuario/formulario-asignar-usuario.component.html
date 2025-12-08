@@ -143,7 +143,11 @@
       class="btn btn-confirmar"
       (click)="confirmar()"
       [disabled]="
-        !usuarioSeleccionado || !cargoSeleccionado || horasAsignadas <= 0
+        !usuarioSeleccionado ||
+        !cargoSeleccionado ||
+        horasAsignadas <= 0 ||
+        validando ||
+        (validacionRealizada && !datosValidacion?.puedeAsignar)
       "
     >
       <i class="fas fa-plus me-2"></i>

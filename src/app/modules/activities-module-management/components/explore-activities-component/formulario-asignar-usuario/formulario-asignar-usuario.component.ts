@@ -199,21 +199,40 @@ export class FormularioAsignarUsuarioComponent implements OnInit {
   }
 
   confirmar(): void {
-    if (!this.validarFormulario()) {
-      return;
+    if (
+      this.usuarioSeleccionado &&
+      this.cargoSeleccionado &&
+      this.horasAsignadas > 0
+    ) {
+      // Validación adicional: verificar que puede asignar
+      if (this.validacionRealizada && !this.datosValidacion?.puedeAsignar) {
+        this.toastr.warning(
+          'El usuario no tiene cupo disponible para este cargo'
+        );
+        return;
+      }
+
+      this.onUsuarioListo.emit({
+        oidUsuario: this.usuarioSeleccionado,
+        oidCargoActividad: this.cargoSeleccionado,
+        horas: this.horasAsignadas,
+      });
+
+      // Limpiar validación después de confirmar
+      this.limpiarValidacion();
     }
-
-    const nuevoUsuario: NuevoUsuarioDTO = {
-      oidUsuario: this.usuarioSeleccionado!,
-      oidCargoActividad: this.cargoSeleccionado!,
-      horas: this.horasAsignadas,
-    };
-
-    this.onUsuarioListo.emit(nuevoUsuario);
   }
 
   cancelar(): void {
+    this.limpiarValidacion();
     this.onCancelar.emit();
+  }
+
+  private limpiarValidacion(): void {
+    this.validando = false;
+    this.validacionRealizada = false;
+    this.datosValidacion = null;
+    this.maxHorasPermitidas = 999;
   }
 
   resetear(): void {
