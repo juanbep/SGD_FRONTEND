@@ -19,18 +19,17 @@
       bindLabel="label"
       bindValue="oid"
       [(ngModel)]="usuarioSeleccionado"
+      (ngModelChange)="validarCupoUsuario()"
       placeholder="Seleccione un usuario"
       [clearable]="false"
       [loading]="cargandoUsuarios"
       [searchable]="true"
       notFoundText="No hay usuarios disponibles"
     >
-      <!-- Template para opciones del dropdown -->
       <ng-template ng-option-tmp let-item="item">
         <span [title]="item.label">{{ item.label }}</span>
       </ng-template>
 
-      <!-- Template para el valor seleccionado -->
       <ng-template ng-label-tmp let-item="item">
         <span [title]="item.label">{{ item.label }}</span>
       </ng-template>
@@ -49,17 +48,16 @@
         bindLabel="nombre"
         bindValue="oid"
         [(ngModel)]="cargoSeleccionado"
+        (ngModelChange)="validarCupoUsuario()"
         placeholder="Seleccione un cargo"
         [clearable]="false"
         [loading]="cargandoCargos"
         notFoundText="No hay cargos disponibles"
       >
-        <!-- Template para opciones del dropdown -->
         <ng-template ng-option-tmp let-item="item">
           <span [title]="item.nombre">{{ item.nombre }}</span>
         </ng-template>
 
-        <!-- Template para el valor seleccionado -->
         <ng-template ng-label-tmp let-item="item">
           <span [title]="item.nombre">{{ item.nombre }}</span>
         </ng-template>
@@ -75,10 +73,61 @@
         type="number"
         class="form-control"
         [(ngModel)]="horasAsignadas"
-        min="0"
-        max="999"
+        [min]="0"
+        [max]="maxHorasPermitidas"
         placeholder="Ej: 8"
       />
+    </div>
+  </div>
+
+  <!-- Estado de validación -->
+  <div *ngIf="validando" class="validacion-loading mb-3">
+    <div class="d-flex align-items-center">
+      <div
+        class="spinner-border spinner-border-sm text-primary me-2"
+        role="status"
+      >
+        <span class="visually-hidden">Validando...</span>
+      </div>
+      <span class="text-muted small">Validando disponibilidad...</span>
+    </div>
+  </div>
+
+  <!-- Card informativa con resultados -->
+  <div
+    *ngIf="validacionRealizada && datosValidacion"
+    class="card-validacion mb-3"
+  >
+    <div
+      class="card-validacion-header"
+      [class.exito]="datosValidacion.puedeAsignar"
+      [class.error]="!datosValidacion.puedeAsignar"
+    >
+      <i
+        class="fas"
+        [class.fa-check-circle]="datosValidacion.puedeAsignar"
+        [class.fa-exclamation-triangle]="!datosValidacion.puedeAsignar"
+      ></i>
+      <span>{{
+        datosValidacion.puedeAsignar
+          ? "Usuario disponible"
+          : "Usuario no disponible"
+      }}</span>
+    </div>
+
+    <div class="card-validacion-body">
+      <div class="info-item">
+        <span class="info-label">Horas disponibles:</span>
+        <span class="info-value"
+          >{{ datosValidacion.horasDisponiblesUsuarioMenorCupo }} h</span
+        >
+      </div>
+      <div class="info-item">
+        <span class="info-label">Horas máximas del cargo:</span>
+        <span class="info-value"
+          >{{ datosValidacion.horasMaximasCargo }} h</span
+        >
+      </div>
     </div>
   </div>
 

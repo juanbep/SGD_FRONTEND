@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
-import { UsuarioActividadAsignacion } from '../../../models';
+import { UsuarioActividadAsignacion, ValidarCupoData } from '../../../models';
 import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
 import {
   CargosActividadHelperService,
@@ -58,6 +58,12 @@ export class FormularioAsignarUsuarioComponent implements OnInit {
   cargandoUsuarios: boolean = false;
   cargandoCargos: boolean = false;
   cargandoDatos: boolean = false;
+
+  // ========== PROPIEDADES PARA VALIDACIÓN ==========
+  validando: boolean = false;
+  validacionRealizada: boolean = false;
+  datosValidacion: ValidarCupoData | null = null;
+  maxHorasPermitidas: number = 999; // Valor por defecto
 
   // Dropdowns
   usuariosDisponibles: UsuarioSelect[] = [];
@@ -147,6 +153,49 @@ export class FormularioAsignarUsuarioComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  // ========== MÉTODO DE VALIDACIÓN ==========
+  async validarCupoUsuario(): Promise<void> {
+    // Solo validar si hay usuario Y cargo seleccionados
+    if (!this.usuarioSeleccionado || !this.cargoSeleccionado) {
+      this.validacionRealizada = false;
+      this.datosValidacion = null;
+      this.maxHorasPermitidas = 999;
+      return;
+    }
+
+    this.validando = true;
+    this.validacionRealizada = false;
+
+    try {
+      const resultado = await this.validacionService.validarCupo({
+        oidTipoActividad: this.oidTipoActividad,
+        oidCargoActividad: this.cargoSeleccionado,
+        oidCalendario: this.oidCalendario,
+        oidUsuario: this.usuarioSeleccionado,
+      });
+
+      if (resultado) {
+        this.datosValidacion = resultado;
+        this.validacionRealizada = true;
+
+        // Actualizar el máximo de horas permitidas
+        this.maxHorasPermitidas = resultado.horasDisponiblesUsuarioMenorCupo;
+
+        // Si las horas actuales exceden el límite, ajustarlas
+        if (this.horasAsignadas > this.maxHorasPermitidas) {
+          this.horasAsignadas = this.maxHorasPermitidas;
+        }
+      }
+    } catch (error) {
+      console.error('Error al validar cupo:', error);
+      this.toastr.error('Error al validar disponibilidad del usuario');
+      this.validacionRealizada = false;
+      this.datosValidacion = null;
+    } finally {
+      this.validando = false;
+    }
   }
 
   confirmar(): void {
