@@ -110,7 +110,7 @@
                 Usuario
               </label>
               <ng-select
-                [items]="usuariosDisponibles()"
+                [items]="usuariosDisponiblesFiltrados()"
                 bindLabel="label"
                 bindValue="oid"
                 [(ngModel)]="usuarioSeleccionado"

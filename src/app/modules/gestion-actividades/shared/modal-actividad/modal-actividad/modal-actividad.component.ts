@@ -94,6 +94,10 @@ export class ModalActividadComponent implements OnInit {
   readonly cargosDisponibles = signal<CargoSelect[]>([]);
   readonly cargandoCargos = signal(true);
   readonly cargoSeleccionado = signal<number | null>(null);
+  readonly usuariosDisponiblesFiltrados = computed(() => {
+    const asignados = this.usuariosAsignados().map((u) => u.oidUsuario);
+    return this.usuariosDisponibles().filter((u) => !asignados.includes(u.oid));
+  });
 
   usuarioSeleccionado: number | null = null;
   horasUsuario: number | null = null;
