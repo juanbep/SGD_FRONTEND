@@ -28,12 +28,17 @@ import {
 } from '../../../config/actividades-metadata.config';
 import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
 import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
-import { CargosActividadHelperService } from '../../../../activities-module-management/services';
+import {
+  CargosActividadHelperService,
+  UsuarioActividadCalendarioHelperService,
+} from '../../../../activities-module-management/services';
 import {
   ESTADOS_ACTIVIDAD,
   ESTADOS_ACTIVIDAD_DROPDOWN,
 } from '../../../../activities-module-management/utils/actividad-utils';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastrService } from 'ngx-toastr';
+import { ValidarCupoData } from '../../../../activities-module-management/models';
 
 interface UsuarioSelect {
   oid: number;
@@ -57,6 +62,7 @@ export class ModalActividadComponent implements OnInit {
   @Input() visible = false;
   @Input() metadata!: SubtipoActividadConfig;
   @Input() actividadAEditar: ActividadEnMemoria | null = null;
+  @Input() oidCalendario!: number;
   @Output() onGuardar = new EventEmitter<ActividadEnMemoria>();
   @Output() onCancelar = new EventEmitter<void>();
 
@@ -68,6 +74,8 @@ export class ModalActividadComponent implements OnInit {
   // ========== SERVICIOS ==========
   private usuarioService = inject(UsuarioDepartamentoHelperService);
   private cargoService = inject(CargosActividadHelperService);
+  private validacionService = inject(UsuarioActividadCalendarioHelperService);
+  private toastr = inject(ToastrService);
 
   // Usuarios
   readonly usuariosDisponibles = signal<UsuarioSelect[]>([]);
@@ -85,10 +93,16 @@ export class ModalActividadComponent implements OnInit {
   //Cargos
   readonly cargosDisponibles = signal<CargoSelect[]>([]);
   readonly cargandoCargos = signal(true);
+  readonly cargoSeleccionado = signal<number | null>(null);
 
   usuarioSeleccionado: number | null = null;
-  readonly cargoSeleccionado = signal<number | null>(null);
   horasUsuario: number | null = null;
+
+  //Estados de validación
+  validandoUsuario = false;
+  validacionRealizadaUsuario = false;
+  datosValidacionUsuario: ValidarCupoData | null = null;
+  maxHorasPermitidasUsuario = 999;
 
   readonly contadorUsuarios = computed(() => {
     const count = this.usuariosAsignados().length;
@@ -131,6 +145,62 @@ export class ModalActividadComponent implements OnInit {
     if (this.actividadAEditar) {
       this.modoEdicion.set(true);
       this.cargarDatosActividad(this.actividadAEditar);
+    }
+  }
+
+  async validarCupoUsuario(): Promise<void> {
+    // Solo validar si hay usuario y cargo
+    if (!this.usuarioSeleccionado || !this.cargoSeleccionado()) {
+      this.validacionRealizadaUsuario = false;
+      this.datosValidacionUsuario = null;
+      this.maxHorasPermitidasUsuario = 999;
+      return;
+    }
+
+    this.validandoUsuario = true;
+    this.validacionRealizadaUsuario = false;
+
+    try {
+      const resultado = await this.validacionService.validarCupo({
+        oidTipoActividad: this.metadata.oidTipoActividad,
+        oidCargoActividad: this.cargoSeleccionado()!,
+        oidCalendario:
+          this.actividadAEditar?.oidCalendario ?? this.oidCalendario,
+        oidUsuario: this.usuarioSeleccionado,
+      });
+
+      if (resultado) {
+        this.datosValidacionUsuario = resultado;
+        this.validacionRealizadaUsuario = true;
+        this.maxHorasPermitidasUsuario =
+          resultado.horasDisponiblesUsuarioMenorCupo;
+
+        // Ajustar horas si se pasa del máximo
+        if (
+          this.horasUsuario &&
+          this.horasUsuario > this.maxHorasPermitidasUsuario
+        ) {
+          this.horasUsuario = this.maxHorasPermitidasUsuario;
+        }
+
+        // Toast con la info del backend
+        const titulo = resultado.puedeAsignar
+          ? 'Usuario con horas disponibles para asignación'
+          : 'Usuario sin horas disponibles';
+
+        this.toastr.info(
+          `Horas disponibles: ${resultado.horasDisponiblesUsuarioMenorCupo}h, ` +
+            `máx. por cargo: ${resultado.horasMaximasCargo}h`,
+          titulo
+        );
+      }
+    } catch (error) {
+      console.error('Error al validar cupo:', error);
+      this.toastr.error('Error al validar disponibilidad del usuario');
+      this.validacionRealizadaUsuario = false;
+      this.datosValidacionUsuario = null;
+    } finally {
+      this.validandoUsuario = false;
     }
   }
 
@@ -183,18 +253,14 @@ export class ModalActividadComponent implements OnInit {
   }
 
   // ========== NUEVO MÉTODO ==========
-  agregarUsuario(): void {
+  async agregarUsuario(): Promise<void> {
     if (
       !this.usuarioSeleccionado ||
-      !this.cargoSeleccionado ||
-      !this.horasUsuario
+      !this.cargoSeleccionado() ||
+      !this.horasUsuario ||
+      this.horasUsuario <= 0
     ) {
-      alert('Por favor complete todos los campos del usuario');
-      return;
-    }
-
-    if (this.horasUsuario <= 0) {
-      alert('Las horas deben ser mayor a 0');
+      this.toastr.warning('Por favor complete todos los campos del usuario');
       return;
     }
 
@@ -202,7 +268,19 @@ export class ModalActividadComponent implements OnInit {
     if (
       usuariosActuales.some((u) => u.oidUsuario === this.usuarioSeleccionado)
     ) {
-      alert('Este usuario ya ha sido agregado a la actividad');
+      this.toastr.warning('Este usuario ya ha sido agregado a la actividad');
+      return;
+    }
+
+    // Si por alguna razón aún no se validó, la forzamos una vez
+    if (!this.validacionRealizadaUsuario) {
+      await this.validarCupoUsuario();
+    }
+
+    if (!this.datosValidacionUsuario?.puedeAsignar) {
+      this.toastr.warning(
+        'El usuario no tiene cupo disponible para este cargo'
+      );
       return;
     }
 
@@ -214,10 +292,15 @@ export class ModalActividadComponent implements OnInit {
 
     this.usuariosAsignados.set([...usuariosActuales, nuevoUsuario]);
 
+    // limpiar selección y estado de validación
     this.usuarioSeleccionado = null;
     this.cargoSeleccionado.set(null);
     this.horasUsuario = null;
+    this.validacionRealizadaUsuario = false;
+    this.datosValidacionUsuario = null;
+    this.maxHorasPermitidasUsuario = 999;
   }
+
   // ===================================
 
   private inicializarFormulario(): void {
@@ -362,7 +445,7 @@ export class ModalActividadComponent implements OnInit {
       oidEstadoActividad: formValues.oidEstadoActividad,
       nombreActividad: formValues.nombreActividad,
       semanas: formValues.semanas,
-      oidCalendario: this.actividadAEditar?.oidCalendario || 0,
+      oidCalendario: this.actividadAEditar?.oidCalendario ?? this.oidCalendario,
       usuarios: this.usuariosAsignados(),
       atributos: atributos,
       atributosRepetibles:

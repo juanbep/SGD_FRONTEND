@@ -6,6 +6,7 @@
 
 .toast-error,
 .toast-success,
+.toast-info,
 .toast-warning {
   min-width: 532px !important;
   min-height: 98px !important;
@@ -42,6 +43,11 @@
   border-left: 15px solid var(--green-color-three) !important;
 }
 
+.toast-info {
+  background-color: #bbdefb !important;
+  border-left: 15px solid #42a5f5 !important;
+}
+
 .toast-error {
   background-color: var(--error-light-3) !important;
   border-left: 15px solid var(--error-ligth) !important;
@@ -62,6 +68,14 @@
 }
 
 .toast-success > .toast-message {
+  color: var(--neutral-35) !important;
+}
+
+.toast-info > .toast-title {
+  color: #64B5F6 !important;
+}
+
+.toast-info > .toast-message {
   color: var(--neutral-35) !important;
 }
 

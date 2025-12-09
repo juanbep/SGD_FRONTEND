@@ -207,6 +207,7 @@
     [visible]="modalVisible()"
     [metadata]="metadata"
     [actividadAEditar]="actividadAEditar()"
+    [oidCalendario]="calendarioSeleccionado()!"
     (onGuardar)="
       actividadAEditar()
         ? actualizarActividad($event)
