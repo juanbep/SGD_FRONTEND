@@ -1,4 +1,11 @@
-import { Component, Input, signal, computed, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  signal,
+  computed,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ModalActividadComponent } from '../modal-actividad/modal-actividad.component';
@@ -17,6 +24,7 @@ import {
   getEstadoBadgeClass,
   getEstadoNombre,
 } from '../../../../activities-module-management/utils/actividad-utils';
+import { loadJson, saveJson } from '../../../utils/storage-utils';
 
 export interface Calendario {
   value: number;
@@ -37,7 +45,7 @@ export interface Calendario {
   templateUrl: './gestion-actividad-base.component.html',
   styleUrl: './gestion-actividad-base.component.css',
 })
-export class GestionActividadBaseComponent {
+export class GestionActividadBaseComponent implements OnInit {
   private readonly calendarioService = inject(CalendarioHelperService);
   private readonly actividadHelperService = inject(ActividadHelperService);
   private readonly toastr = inject(ToastrService);
@@ -114,6 +122,8 @@ export class GestionActividadBaseComponent {
 
   async ngOnInit() {
     await this.cargarCalendarios();
+    this.restaurarUltimoCalendario();
+    this.restaurarActividadesDesdeStorage();
   }
 
   private async cargarCalendarios(): Promise<void> {
@@ -130,8 +140,11 @@ export class GestionActividadBaseComponent {
 
   onCalendarioChange(oidCalendario: number | null): void {
     this.calendarioSeleccionado.set(oidCalendario);
-    // Limpiar actividades al cambiar de calendario
+
     if (oidCalendario) {
+      this.guardarUltimoCalendario();
+      this.restaurarActividadesDesdeStorage();
+    } else {
       this.actividadesEnMemoria.set([]);
     }
   }
@@ -173,6 +186,7 @@ export class GestionActividadBaseComponent {
       oidCalendario: this.calendarioSeleccionado()!,
     };
     this.actividadesEnMemoria.set([...actividades, nuevaActividad]);
+    this.guardarEstadoEnStorage();
   }
 
   actualizarActividad(actividad: ActividadEnMemoria): void {
@@ -182,12 +196,14 @@ export class GestionActividadBaseComponent {
       const nuevasActividades = [...actividades];
       nuevasActividades[index] = actividad;
       this.actividadesEnMemoria.set(nuevasActividades);
+      this.guardarEstadoEnStorage();
     }
   }
 
   eliminarActividad(id: string): void {
     const actividades = this.actividadesEnMemoria();
     this.actividadesEnMemoria.set(actividades.filter((a) => a.id !== id));
+    this.guardarEstadoEnStorage();
   }
 
   // Obtener resumen de UN grupo específico
@@ -272,6 +288,7 @@ export class GestionActividadBaseComponent {
           `Se guardaron correctamente las ${total} actividades`
         );
         this.actividadesEnMemoria.set([]);
+        this.guardarEstadoEnStorage();
       } else if (exitosas.length === 0) {
         // Todo falló
         this.toastr.error('No se pudo guardar ninguna actividad');
@@ -394,5 +411,62 @@ export class GestionActividadBaseComponent {
 
   estaGuardando(id: string): boolean {
     return this.guardandoIndividual() === id;
+  }
+
+  private restaurarActividadesDesdeStorage(): void {
+    const data = loadJson<{
+      oidCalendario: number | null;
+      actividades: ActividadEnMemoria[];
+    }>(this.storageKey);
+
+    if (!data) {
+      this.actividadesEnMemoria.set([]);
+      return;
+    }
+
+    if (data.oidCalendario === this.calendarioSeleccionado()) {
+      this.actividadesEnMemoria.set(data.actividades || []);
+    } else {
+      this.actividadesEnMemoria.set([]);
+    }
+  }
+
+  private restaurarUltimoCalendario(): void {
+    const data = loadJson<{ oidCalendario: number | null }>(
+      this.lastCalendarKey
+    );
+
+    if (data?.oidCalendario) {
+      const existe = this.calendarios().some(
+        (c) => c.value === data.oidCalendario
+      );
+      if (existe) {
+        this.calendarioSeleccionado.set(data.oidCalendario);
+      }
+    }
+  }
+
+  private guardarUltimoCalendario(): void {
+    saveJson(this.lastCalendarKey, {
+      oidCalendario: this.calendarioSeleccionado(),
+    });
+  }
+
+  private guardarEstadoEnStorage(): void {
+    const data = {
+      oidCalendario: this.calendarioSeleccionado(),
+      actividades: this.actividadesEnMemoria(),
+    };
+    saveJson(this.storageKey, data);
+  }
+
+  private get storageKey(): string {
+    const tipo = this.metadata.oidTipoActividad;
+    const cal = this.calendarioSeleccionado();
+    return `gestion-actividad:${tipo}:${cal ?? 'sin-calendario'}`;
+  }
+
+  private get lastCalendarKey(): string {
+    return `gestion-actividad-last-cal:${this.metadata.oidTipoActividad}`;
   }
 }
