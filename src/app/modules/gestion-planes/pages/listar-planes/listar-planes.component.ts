@@ -1,8 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { EstadoPlan, Plan } from '../../models';
+import { EstadoPlan, Plan, PlanFilters } from '../../models';
+import { PlanHelperService, PlanService } from '../../services';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-listar-planes',
@@ -17,6 +26,10 @@ export class ListarPlanesComponent implements OnInit {
   @Output() onVerDetalles = new EventEmitter<Plan>();
   @Output() onModificar = new EventEmitter<Plan>();
   @Output() onCambiarEstado = new EventEmitter<Plan>();
+
+  // ===== SERVICIOS =====
+  private planService = inject(PlanService);
+  private toastr = inject(ToastrService);
 
   // ===== ESTADOS DISPONIBLES =====
   readonly estadosDisponibles: EstadoPlan[] = [
@@ -49,135 +62,60 @@ export class ListarPlanesComponent implements OnInit {
     this.cargarPlanes();
   }
 
-  // ===== CARGAR DATOS (CON MOCK) =====
+  // ===== CARGAR PLANES =====
   cargarPlanes(): void {
     this.loading = true;
     this.error = null;
 
-    // Simulamos llamada asíncrona con setTimeout
-    setTimeout(() => {
-      // DATOS MOCK - Reemplazar con servicio real
-      const todosMock: Plan[] = [
-        {
-          oidPlan: 1,
-          numero: '001',
-          estado: 'ACTIVO',
-          fechaAprobacion: '2024-01-15',
-          acuerdo: 'ACU-2024-001',
-          oidPrograma: 101,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-01-10',
-          fechaActualizacion: '2024-01-15',
-          usuarioCreacion: 'admin',
-          usuarioActualizacion: 'admin',
-        },
-        {
-          oidPlan: 2,
-          numero: '002',
-          estado: 'INACTIVO',
-          fechaAprobacion: '2023-06-20',
-          acuerdo: 'ACU-2023-045',
-          oidPrograma: 102,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2023-06-15',
-          fechaActualizacion: '2024-03-10',
-          usuarioCreacion: 'jperez',
-          usuarioActualizacion: 'admin',
-        },
-        {
-          oidPlan: 3,
-          numero: '001',
-          estado: 'APROBADO',
-          fechaAprobacion: '2024-02-10',
-          acuerdo: 'ACU-2024-012',
-          oidPrograma: 103,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-02-01',
-          fechaActualizacion: '2024-02-10',
-          usuarioCreacion: 'mlopez',
-          usuarioActualizacion: 'mlopez',
-        },
-        {
-          oidPlan: 4,
-          numero: '003',
-          estado: 'EN_REVISION',
-          fechaAprobacion: '2024-03-05',
-          acuerdo: 'ACU-2024-023',
-          oidPrograma: 101,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-02-28',
-          fechaActualizacion: '2024-03-05',
-          usuarioCreacion: 'admin',
-          usuarioActualizacion: 'admin',
-        },
-        {
-          oidPlan: 5,
-          numero: '002',
-          estado: 'ACTIVO',
-          fechaAprobacion: '2024-04-12',
-          acuerdo: 'ACU-2024-034',
-          oidPrograma: 104,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-04-01',
-          fechaActualizacion: '2024-04-12',
-          usuarioCreacion: 'lgarcia',
-          usuarioActualizacion: 'lgarcia',
-        },
-        {
-          oidPlan: 6,
-          numero: '001',
-          estado: 'ACTIVO',
-          fechaAprobacion: '2024-05-20',
-          acuerdo: 'ACU-2024-047',
-          oidPrograma: 105,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-05-10',
-          fechaActualizacion: '2024-05-20',
-          usuarioCreacion: 'crodriguez',
-          usuarioActualizacion: 'crodriguez',
-        },
-      ];
+    const filtros: PlanFilters = {
+      page: this.page,
+      size: this.size,
+    };
 
-      // Aplicar filtros
-      let planesFiltrados = [...todosMock];
+    // Agregar filtros opcionales
+    if (this.filtroNumero?.trim()) {
+      filtros.numero = this.filtroNumero.trim();
+    }
 
-      if (this.filtroNumero) {
-        planesFiltrados = planesFiltrados.filter((p) =>
-          p.numero.toLowerCase().includes(this.filtroNumero.toLowerCase())
-        );
-      }
+    if (this.filtroEstado) {
+      filtros.estado = this.filtroEstado;
+    }
 
-      if (this.filtroEstado) {
-        planesFiltrados = planesFiltrados.filter(
-          (p) => p.estado === this.filtroEstado
-        );
-      }
+    if (this.filtroFechaAprobacion) {
+      filtros.fechaAprobacionDesde = this.filtroFechaAprobacion;
+      filtros.fechaAprobacionHasta = this.filtroFechaAprobacion;
+    }
 
-      if (this.filtroFechaAprobacion) {
-        planesFiltrados = planesFiltrados.filter(
-          (p) => p.fechaAprobacion === this.filtroFechaAprobacion
-        );
-      }
+    if (this.filtroFechaCreacion) {
+      filtros.fechaCreacionDesde = this.filtroFechaCreacion;
+      filtros.fechaCreacionHasta = this.filtroFechaCreacion;
+    }
 
-      if (this.filtroFechaCreacion) {
-        planesFiltrados = planesFiltrados.filter(
-          (p) => p.fechaCreacion === this.filtroFechaCreacion
-        );
-      }
-
-      // Simular paginación
-      this.totalElements = planesFiltrados.length;
-      const inicio = this.page * this.size;
-      const fin = inicio + this.size;
-      this.planes = planesFiltrados.slice(inicio, fin);
-
-      this.loading = false;
-    }, 800);
+    this.planService.getPlanes(filtros).subscribe({
+      next: (response) => {
+        if (response.codigo >= 200 && response.codigo < 300) {
+          this.planes = response.data.content;
+          this.totalElements = response.data.totalElements;
+          this.toastr.success(
+            response.mensaje || 'Planes cargados correctamente'
+          );
+        } else {
+          this.toastr.warning(
+            response.mensaje || 'Respuesta inesperada del servidor'
+          );
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.handleError(error, 'cargar planes');
+        this.loading = false;
+      },
+    });
   }
 
   // ===== MANEJADORES DE FILTROS =====
   onFiltroChange(): void {
-    this.page = 0; // Resetear a página 1 al cambiar filtro
+    this.page = 0;
     this.cargarPlanes();
   }
 
@@ -264,6 +202,21 @@ export class ListarPlanesComponent implements OnInit {
   cambiarEstadoPlan(plan: Plan): void {
     console.log('Cambiar estado del plan:', plan);
     this.onCambiarEstado.emit(plan);
+  }
+
+  private handleError(error: any, operacion: string): void {
+    const codigoBackend = error?.error?.codigo || error.status || '—';
+    const mensajeBackend =
+      error?.error?.mensaje ||
+      error?.message ||
+      `Error al ${operacion}. Intenta de nuevo.`;
+
+    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
+
+    this.toastr.error(
+      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
+      'Error'
+    );
   }
 
   reintentar(): void {

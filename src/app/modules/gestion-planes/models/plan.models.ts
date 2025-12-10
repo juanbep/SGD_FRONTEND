@@ -9,6 +9,7 @@ export interface Plan {
   acuerdo: string;
   oidPrograma: number;
   nombrePrograma: string;
+  cantidadMaterias?: number;
   fechaCreacion: string;
   fechaActualizacion: string;
   usuarioCreacion: string;

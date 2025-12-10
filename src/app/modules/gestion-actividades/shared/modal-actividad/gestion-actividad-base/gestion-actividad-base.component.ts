@@ -39,7 +39,7 @@ export interface Calendario {
     CommonModule,
     FormsModule,
     ModalActividadComponent,
-    ModalUsuariosComponent,
+    // ModalUsuariosComponent,
     NgSelectModule,
   ],
   templateUrl: './gestion-actividad-base.component.html',

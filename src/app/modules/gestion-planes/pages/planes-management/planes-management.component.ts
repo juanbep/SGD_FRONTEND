@@ -6,7 +6,7 @@ import { ViewPlanDetailComponent } from '../view-plan-detail/view-plan-detail.co
 @Component({
   selector: 'app-planes-management',
   standalone: true,
-  imports: [CommonModule, ListarPlanesComponent, ViewPlanDetailComponent ],
+  imports: [CommonModule, ListarPlanesComponent],
   templateUrl: './planes-management.component.html',
   styleUrl: './planes-management.component.css'
 })
