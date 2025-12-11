@@ -1,187 +1,195 @@
-<!-- Backdrop -->
-<div class="modal-backdrop fade show"></div>
-
 <!-- Modal -->
-<div class="modal fade show d-block" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content">
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
       <!-- Header -->
-      <div class="modal-header">
-        <h5 class="modal-title">
-          <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Plan de Estudio
+      <div class="modal-header text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i class="fas fa-file-alt me-2" style="color: #f8ae15"></i>
+          Crear Plan de Estudio
         </h5>
         <button
           type="button"
-          class="btn-close"
+          class="btn-close btn-close-white"
           [disabled]="loading"
           (click)="cancelar()"
+          aria-label="Cerrar"
         ></button>
       </div>
 
       <!-- Body -->
-      <div class="modal-body">
-        <form [formGroup]="planForm">
-          <!-- Fila 1: Número, Estado y Fecha de Aprobación (3 columnas) -->
-          <div class="row">
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="numero" class="form-label fw-bold">
-                  <i class="fas fa-hashtag me-1"></i>Número del Plan
-                  <span class="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="numero"
-                  class="form-control"
-                  formControlName="numero"
-                  placeholder="Ej: 1, 2, 3..."
-                  [class.is-invalid]="numeroInvalid"
-                />
-                <div class="invalid-feedback" *ngIf="numeroInvalid">
-                  El número del plan es obligatorio
-                </div>
-                <small class="text-muted">Identificador único del plan</small>
-              </div>
-            </div>
+      <div class="modal-body p-4">
+        <div class="row g-4">
+          <div class="col-12">
+            <div class="info-section">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-info-circle me-2"></i>
+                Información del Plan
+              </h6>
 
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="estado" class="form-label fw-bold">
-                  <i class="fas fa-info-circle me-1"></i>Estado
-                  <span class="text-danger">*</span>
-                </label>
-                <ng-select
-                  id="estado"
-                  [items]="estadosDisponibles"
-                  formControlName="estado"
-                  placeholder="Seleccione un estado"
-                  [clearable]="false"
-                  [searchable]="false"
-                >
-                </ng-select>
-                <small class="text-muted">Estado inicial del plan</small>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="mb-3">
-                <label for="fechaAprobacion" class="form-label fw-bold">
-                  <i class="fas fa-calendar-check me-1"></i>Fecha de Aprobación
-                </label>
-                <input
-                  type="date"
-                  id="fechaAprobacion"
-                  class="form-control"
-                  formControlName="fechaAprobacion"
-                />
-                <small class="text-muted">Fecha de aprobación (opcional)</small>
-              </div>
-            </div>
-          </div>
-
-          <!-- Fila 2: Acuerdo (ancho completo con textarea) -->
-          <div class="row">
-            <div class="col-12">
-              <div class="mb-3">
-                <label for="acuerdo" class="form-label fw-bold">
-                  <i class="fas fa-file-signature me-1"></i>Acuerdo
-                </label>
-                <textarea
-                  id="acuerdo"
-                  class="form-control"
-                  formControlName="acuerdo"
-                  placeholder="Ej: ACU-2025-001"
-                  rows="3"
-                  style="resize: vertical"
-                ></textarea>
-                <small class="text-muted"
-                  >Acuerdo que aprobó el plan (opcional)</small
-                >
-              </div>
-            </div>
-          </div>
-          <hr class="my-4" />
-          <h6 class="mb-3">
-            <i class="fas fa-copy me-2"></i>Copiar Materias (Opcional)
-          </h6>
-          <!-- Selector dan Base -->
-          <div class="row">
-            <div class="col-md-8">
-              <div class="mb-3">
-                <label for="oidPlanBase" class="form-label fw-bold">
-                  <i class="fas fa-clipboard-list me-1"></i>Seleccionar Plan
-                  Base
-                </label>
-
-                <ng-select
-                  id="oidPlanBase"
-                  [items]="planesDisponibles"
-                  bindLabel="numero"
-                  bindValue="oidPlan"
-                  formControlName="oidPlanBase"
-                  [placeholder]="
-                    loadingPlanes
-                      ? 'Cargando planes...'
-                      : 'Ninguno (plan vacío)'
-                  "
-                  [clearable]="true"
-                  [searchable]="true"
-                  [loading]="loadingPlanes"
-                  [disabled]="loadingPlanes"
-                >
-                  <ng-template ng-label-tmp let-item="item">
-                    Plan {{ item.numero }} - {{ item.estado }}
-                  </ng-template>
-                  <ng-template ng-option-tmp let-item="item">
-                    <div>
-                      <strong>Plan {{ item.numero }}</strong> -
-                      {{ item.estado }}
-                      <br />
-                      <small class="text-muted"
-                        >{{ item.cantidadMaterias || 0 }} materias</small
-                      >
+              <form [formGroup]="planForm">
+                <!-- Fila 1: Número, Estado, Fecha -->
+                <div class="row g-3">
+                  <!-- Número -->
+                  <div class="col-md-4">
+                    <div class="info-item">
+                      <label class="info-label" for="numero">
+                        Número del Plan <span class="text-danger">*</span>
+                      </label>
+                      <input
+                        id="numero"
+                        type="text"
+                        class="form-control"
+                        formControlName="numero"
+                        placeholder="Ej: 1, 2, 3..."
+                        [class.is-invalid]="numeroInvalid"
+                      />
+                      <div class="invalid-feedback" *ngIf="numeroInvalid">
+                        El número del plan es obligatorio
+                      </div>
                     </div>
-                  </ng-template>
-                </ng-select>
+                  </div>
 
-                <small class="text-muted">
-                  Si selecciona un plan, sus materias se copiarán al nuevo plan.
-                  Si no selecciona ninguno, el plan se creará vacío.
-                </small>
-              </div>
+                  <!-- Estado -->
+                  <div class="col-md-4">
+                    <div class="info-item">
+                      <label class="info-label" for="estado">
+                        Estado <span class="text-danger">*</span>
+                      </label>
+                      <ng-select
+                        id="estado"
+                        [items]="estadosDisponibles"
+                        formControlName="estado"
+                        placeholder="Seleccione un estado"
+                        [clearable]="false"
+                        [searchable]="false"
+                      >
+                      </ng-select>
+                    </div>
+                  </div>
+
+                  <!-- Fecha aprobación -->
+                  <div class="col-md-4">
+                    <div class="info-item">
+                      <label class="info-label" for="fechaAprobacion">
+                        Fecha de Aprobación
+                      </label>
+                      <input
+                        id="fechaAprobacion"
+                        type="date"
+                        class="form-control"
+                        formControlName="fechaAprobacion"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fila 2: Acuerdo -->
+                <div class="row g-3 mt-1">
+                  <div class="col-12">
+                    <div class="info-item">
+                      <label class="info-label" for="acuerdo"> Acuerdo </label>
+                      <textarea
+                        id="acuerdo"
+                        class="form-control"
+                        formControlName="acuerdo"
+                        rows="3"
+                        style="resize: vertical"
+                        placeholder="Ej: ACU-2025-001"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sección copiar plan -->
+                <hr class="my-4" />
+
+                <h6 class="section-title mb-3">
+                  <i class="fas fa-copy me-2"></i>
+                  Copiar materias de un plan existente (opcional)
+                </h6>
+
+                <div class="row g-3">
+                  <div class="col-md-8">
+                    <div class="info-item">
+                      <label class="info-label" for="oidPlanBase">
+                        Plan base
+                      </label>
+                      <ng-select
+                        id="oidPlanBase"
+                        [items]="planesDisponibles"
+                        bindLabel="numero"
+                        bindValue="oidPlan"
+                        formControlName="oidPlanBase"
+                        [placeholder]="
+                          loadingPlanes
+                            ? 'Cargando planes...'
+                            : 'Ninguno (plan vacío)'
+                        "
+                        [clearable]="true"
+                        [searchable]="true"
+                        [loading]="loadingPlanes"
+                        [disabled]="loadingPlanes"
+                      >
+                        <ng-template ng-label-tmp let-item="item">
+                          Plan {{ item.numero }} - {{ item.estado }}
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <strong>Plan {{ item.numero }}</strong> -
+                            {{ item.estado }}
+                            <br />
+                            <small class="text-muted">
+                              {{ item.cantidadMaterias || 0 }} materias
+                            </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <small class="text-muted">
+                        Si seleccionas un plan, sus materias se copiarán al
+                        nuevo plan.
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
-        </form>
+        </div>
       </div>
 
       <!-- Footer -->
-      <div class="modal-footer">
+      <div class="modal-footer border-0 py-3">
         <button
           type="button"
-          class="btn btn-secondary"
+          class="btn btn-outline-secondary px-4"
           [disabled]="loading"
           (click)="cancelar()"
         >
-          <i class="fas fa-times me-1"></i>Cancelar
+          <i class="fas fa-times me-2"></i>
+          Cancelar
         </button>
         <button
           type="button"
-          class="btn btn-success"
+          class="btn btn-success px-4"
           [disabled]="loading"
           (click)="crearPlan()"
         >
-          <span *ngIf="!loading">
-            <i class="fas fa-check me-1"></i>Crear Plan
-          </span>
-          <span *ngIf="loading">
+          <ng-container *ngIf="!loading">
+            <i class="fas fa-check me-2"></i>
+            Crear Plan
+          </ng-container>
+          <ng-container *ngIf="loading">
             <span
               class="spinner-border spinner-border-sm me-2"
               role="status"
             ></span>
             Creando...
-          </span>
+          </ng-container>
         </button>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal-backdrop fade show"></div>
