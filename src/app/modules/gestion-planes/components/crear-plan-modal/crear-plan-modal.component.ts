@@ -116,14 +116,12 @@ export class CrearPlanModalComponent implements OnInit {
       oidPrograma: this.oidPrograma,
     };
 
-    // Si se seleccionó un plan base, usar el método con copia
-    const oidPlanBase = formValue.oidPlanBase || null;
+    // Si se seleccionó un plan base, agregarlo al DTO
+    if (formValue.oidPlanBase) {
+      nuevoPlan.oidPlanBase = formValue.oidPlanBase;
+    }
 
-    const observable = oidPlanBase
-      ? this.planService.createPlanCopia(nuevoPlan, oidPlanBase)
-      : this.planService.createPlan(nuevoPlan);
-
-    observable.subscribe({
+    this.planService.createPlan(nuevoPlan).subscribe({
       next: (response) => {
         if (response.codigo >= 200 && response.codigo < 300) {
           this.toastr.success(

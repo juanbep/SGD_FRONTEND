@@ -10,7 +10,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { EstadoPlan, Plan, PlanFilters } from '../../models';
-import { PlanService } from '../../services'; // ✅ Eliminado PlanHelperService (no se usa)
+import { PlanService } from '../../services';
 import { ToastrService } from 'ngx-toastr';
 import { CrearPlanModalComponent } from '../../components/crear-plan-modal/crear-plan-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';

@@ -53,6 +53,7 @@ export interface CreatePlanDto {
   fechaAprobacion: string;
   acuerdo: string;
   oidPrograma: number;
+  oidPlanBase?: number;
 }
 
 export interface UpdatePlanDto extends Partial<CreatePlanDto> {
