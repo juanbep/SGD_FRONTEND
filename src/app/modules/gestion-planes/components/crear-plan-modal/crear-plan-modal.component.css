@@ -1,0 +1,45 @@
+.modal {
+  z-index: 1050;
+}
+
+.modal-backdrop {
+  z-index: 1040;
+}
+
+.modal-header {
+  background-color: #001282;
+  color: white;
+}
+
+.modal-header .btn-close {
+  filter: invert(1);
+}
+
+.form-label {
+  color: #001282;
+}
+
+.form-label .fas {
+  color: #0051c6;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #f8ae15;
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25);
+}
+
+.btn-success {
+  background-color: #249337;
+  border-color: #249337;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #1e7a2d;
+  border-color: #1e7a2d;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}

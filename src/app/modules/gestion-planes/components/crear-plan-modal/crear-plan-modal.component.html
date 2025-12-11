@@ -1,0 +1,187 @@
+<!-- Backdrop -->
+<div class="modal-backdrop fade show"></div>
+
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Plan de Estudio
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          [disabled]="loading"
+          (click)="cancelar()"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form [formGroup]="planForm">
+          <!-- Fila 1: Número, Estado y Fecha de Aprobación (3 columnas) -->
+          <div class="row">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="numero" class="form-label fw-bold">
+                  <i class="fas fa-hashtag me-1"></i>Número del Plan
+                  <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="numero"
+                  class="form-control"
+                  formControlName="numero"
+                  placeholder="Ej: 1, 2, 3..."
+                  [class.is-invalid]="numeroInvalid"
+                />
+                <div class="invalid-feedback" *ngIf="numeroInvalid">
+                  El número del plan es obligatorio
+                </div>
+                <small class="text-muted">Identificador único del plan</small>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="estado" class="form-label fw-bold">
+                  <i class="fas fa-info-circle me-1"></i>Estado
+                  <span class="text-danger">*</span>
+                </label>
+                <ng-select
+                  id="estado"
+                  [items]="estadosDisponibles"
+                  formControlName="estado"
+                  placeholder="Seleccione un estado"
+                  [clearable]="false"
+                  [searchable]="false"
+                >
+                </ng-select>
+                <small class="text-muted">Estado inicial del plan</small>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label for="fechaAprobacion" class="form-label fw-bold">
+                  <i class="fas fa-calendar-check me-1"></i>Fecha de Aprobación
+                </label>
+                <input
+                  type="date"
+                  id="fechaAprobacion"
+                  class="form-control"
+                  formControlName="fechaAprobacion"
+                />
+                <small class="text-muted">Fecha de aprobación (opcional)</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fila 2: Acuerdo (ancho completo con textarea) -->
+          <div class="row">
+            <div class="col-12">
+              <div class="mb-3">
+                <label for="acuerdo" class="form-label fw-bold">
+                  <i class="fas fa-file-signature me-1"></i>Acuerdo
+                </label>
+                <textarea
+                  id="acuerdo"
+                  class="form-control"
+                  formControlName="acuerdo"
+                  placeholder="Ej: ACU-2025-001"
+                  rows="3"
+                  style="resize: vertical"
+                ></textarea>
+                <small class="text-muted"
+                  >Acuerdo que aprobó el plan (opcional)</small
+                >
+              </div>
+            </div>
+          </div>
+          <hr class="my-4" />
+          <h6 class="mb-3">
+            <i class="fas fa-copy me-2"></i>Copiar Materias (Opcional)
+          </h6>
+          <!-- Selector dan Base -->
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="oidPlanBase" class="form-label fw-bold">
+                  <i class="fas fa-clipboard-list me-1"></i>Seleccionar Plan
+                  Base
+                </label>
+
+                <ng-select
+                  id="oidPlanBase"
+                  [items]="planesDisponibles"
+                  bindLabel="numero"
+                  bindValue="oidPlan"
+                  formControlName="oidPlanBase"
+                  [placeholder]="
+                    loadingPlanes
+                      ? 'Cargando planes...'
+                      : 'Ninguno (plan vacío)'
+                  "
+                  [clearable]="true"
+                  [searchable]="true"
+                  [loading]="loadingPlanes"
+                  [disabled]="loadingPlanes"
+                >
+                  <ng-template ng-label-tmp let-item="item">
+                    Plan {{ item.numero }} - {{ item.estado }}
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item">
+                    <div>
+                      <strong>Plan {{ item.numero }}</strong> -
+                      {{ item.estado }}
+                      <br />
+                      <small class="text-muted"
+                        >{{ item.cantidadMaterias || 0 }} materias</small
+                      >
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <small class="text-muted">
+                  Si selecciona un plan, sus materias se copiarán al nuevo plan.
+                  Si no selecciona ninguno, el plan se creará vacío.
+                </small>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="loading"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-1"></i>Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="loading"
+          (click)="crearPlan()"
+        >
+          <span *ngIf="!loading">
+            <i class="fas fa-check me-1"></i>Crear Plan
+          </span>
+          <span *ngIf="loading">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Creando...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

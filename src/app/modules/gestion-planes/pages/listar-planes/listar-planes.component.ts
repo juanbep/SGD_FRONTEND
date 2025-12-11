@@ -10,13 +10,22 @@ import {
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { EstadoPlan, Plan, PlanFilters } from '../../models';
-import { PlanHelperService, PlanService } from '../../services';
+import { PlanService } from '../../services'; // ✅ Eliminado PlanHelperService (no se usa)
 import { ToastrService } from 'ngx-toastr';
+import { CrearPlanModalComponent } from '../../components/crear-plan-modal/crear-plan-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
 
 @Component({
   selector: 'app-listar-planes',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    CrearPlanModalComponent,
+    NgSelectModule,
+  ],
   templateUrl: './listar-planes.component.html',
   styleUrl: './listar-planes.component.css',
 })
@@ -32,12 +41,7 @@ export class ListarPlanesComponent implements OnInit {
   private toastr = inject(ToastrService);
 
   // ===== ESTADOS DISPONIBLES =====
-  readonly estadosDisponibles: EstadoPlan[] = [
-    'ACTIVO',
-    'INACTIVO',
-    'EN_REVISION',
-    'APROBADO',
-  ];
+  readonly estadosDisponibles: EstadoPlan[] = ['ACTIVO', 'INACTIVO'];
 
   // ===== FILTROS =====
   filtroNumero: string = '';
@@ -55,6 +59,9 @@ export class ListarPlanesComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  mostrarModalCrear = false;
+  oidProgramaActual = getUserProgramaId();
+
   // ===== UTILIDADES =====
   Math = Math;
 
@@ -70,6 +77,7 @@ export class ListarPlanesComponent implements OnInit {
     const filtros: PlanFilters = {
       page: this.page,
       size: this.size,
+      oidPrograma: this.oidProgramaActual,
     };
 
     // Agregar filtros opcionales
@@ -96,9 +104,6 @@ export class ListarPlanesComponent implements OnInit {
         if (response.codigo >= 200 && response.codigo < 300) {
           this.planes = response.data.content;
           this.totalElements = response.data.totalElements;
-          this.toastr.success(
-            response.mensaje || 'Planes cargados correctamente'
-          );
         } else {
           this.toastr.warning(
             response.mensaje || 'Respuesta inesperada del servidor'
@@ -173,8 +178,6 @@ export class ListarPlanesComponent implements OnInit {
     const clases: Record<EstadoPlan, string> = {
       ACTIVO: 'bg-success',
       INACTIVO: 'bg-secondary',
-      EN_REVISION: 'bg-warning',
-      APROBADO: 'bg-info',
     };
     return clases[estado] || 'bg-secondary';
   }
@@ -185,25 +188,31 @@ export class ListarPlanesComponent implements OnInit {
 
   // ===== ACCIONES =====
   crearNuevoPlan(): void {
-    console.log('Crear nuevo plan');
-    this.onNuevoPlan.emit();
+    this.mostrarModalCrear = true;
+  }
+
+  onPlanCreado(planCreado: Plan): void {
+    this.mostrarModalCrear = false;
+    this.cargarPlanes(); // Recargar lista
+  }
+
+  onCancelarCreacion(): void {
+    this.mostrarModalCrear = false;
   }
 
   verDetallesPlan(plan: Plan): void {
-    console.log('Ver detalles del plan:', plan);
     this.onVerDetalles.emit(plan);
   }
 
   modificarPlan(plan: Plan): void {
-    console.log('Modificar plan:', plan);
     this.onModificar.emit(plan);
   }
 
   cambiarEstadoPlan(plan: Plan): void {
-    console.log('Cambiar estado del plan:', plan);
     this.onCambiarEstado.emit(plan);
   }
 
+  //validar si esto es necesario
   private handleError(error: any, operacion: string): void {
     const codigoBackend = error?.error?.codigo || error.status || '—';
     const mensajeBackend =

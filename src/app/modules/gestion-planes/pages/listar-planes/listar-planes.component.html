@@ -43,17 +43,16 @@
         <label for="filtroEstado" class="form-label fw-bold">
           <i class="fas fa-tags me-1"></i>Estado:
         </label>
-        <select
+        <ng-select
           id="filtroEstado"
-          class="form-select"
+          [items]="estadosDisponibles"
           [(ngModel)]="filtroEstado"
           (change)="onFiltroChange()"
+          placeholder="TODOS"
+          [clearable]="true"
+          [searchable]="false"
         >
-          <option value="">TODOS</option>
-          <option *ngFor="let estado of estadosDisponibles" [value]="estado">
-            {{ estado }}
-          </option>
-        </select>
+        </ng-select>
         <small class="text-muted">Filtrar por estado del plan</small>
       </div>
 
@@ -357,3 +356,10 @@
     </div>
   </div>
 </div>
+<!-- Modal Crear Plan -->
+<app-crear-plan-modal
+  *ngIf="mostrarModalCrear"
+  [oidPrograma]="oidProgramaActual"
+  (onPlanCreado)="onPlanCreado($event)"
+  (onCancelar)="onCancelarCreacion()"
+></app-crear-plan-modal>

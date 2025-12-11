@@ -16,7 +16,7 @@ export interface Plan {
   usuarioActualizacion: string;
 }
 
-export type EstadoPlan = 'ACTIVO' | 'INACTIVO' | 'EN_REVISION' | 'APROBADO';
+export type EstadoPlan = 'ACTIVO' | 'INACTIVO';
 
 // Filtros para búsqueda y paginación
 export interface PlanFilters {

@@ -51,13 +51,11 @@ export class ViewPlanDetailComponent implements OnInit {
     const clases: Record<EstadoPlan, string> = {
       ACTIVO: 'bg-success',
       INACTIVO: 'bg-secondary',
-      EN_REVISION: 'bg-warning',
-      APROBADO: 'bg-info',
     };
     return clases[estado] || 'bg-secondary';
   }
 
   volverALista(): void {
-    this.router.navigate(['app/gestion-planes/management']); 
+    this.router.navigate(['app/gestion-planes/management']);
   }
 }

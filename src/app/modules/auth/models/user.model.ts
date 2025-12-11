@@ -36,6 +36,18 @@ export interface UsuarioDetalle {
   fechaActualizacion: string;
 }
 
+export interface ProgramaCoordinador {
+  coordinadorNombre: string;
+  coordinadorOidUsuario: number;
+  fechaActualizacion: string | null;
+  fechaCreacion: string;
+  nombre: string;
+  nombreCorto: string;
+  oidPrograma: number;
+  usuarioActualizacion: string | null;
+  usuarioCreacion: string;
+}
+
 /**
  * Modelo principal de Usuario
  */
@@ -47,6 +59,6 @@ export interface UserData {
   departamento: Departamento;
   roles: Rol[];
   usuarioDetalle: UsuarioDetalle;
-  programaCoordinador: any;
+  programaCoordinador: ProgramaCoordinador;
   departamentoJefatura: any;
 }
