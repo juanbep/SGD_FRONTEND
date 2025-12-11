@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CrearPlanModalComponent } from '../../components/crear-plan-modal/crear-plan-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
+import { EditarPlanModalComponentComponent } from '../../components/editar-plan-modal-component/editar-plan-modal-component.component';
 
 @Component({
   selector: 'app-listar-planes',
@@ -24,6 +25,7 @@ import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
     RouterModule,
     FormsModule,
     CrearPlanModalComponent,
+    EditarPlanModalComponentComponent,
     NgSelectModule,
   ],
   templateUrl: './listar-planes.component.html',
@@ -60,6 +62,8 @@ export class ListarPlanesComponent implements OnInit {
   error: string | null = null;
 
   mostrarModalCrear = false;
+  mostrarModalEditar = false;
+  planAEditar: Plan | null = null;
   oidProgramaActual = getUserProgramaId();
 
   // ===== UTILIDADES =====
@@ -205,7 +209,19 @@ export class ListarPlanesComponent implements OnInit {
   }
 
   modificarPlan(plan: Plan): void {
-    this.onModificar.emit(plan);
+    this.planAEditar = plan;
+    this.mostrarModalEditar = true;
+  }
+
+  onPlanActualizado(planActualizado: Plan): void {
+    this.mostrarModalEditar = false;
+    this.planAEditar = null;
+    this.cargarPlanes();
+  }
+
+  onCancelarEdicion(): void {
+    this.mostrarModalEditar = false;
+    this.planAEditar = null;
   }
 
   cambiarEstadoPlan(plan: Plan): void {

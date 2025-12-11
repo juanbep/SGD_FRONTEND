@@ -363,3 +363,10 @@
   (onPlanCreado)="onPlanCreado($event)"
   (onCancelar)="onCancelarCreacion()"
 ></app-crear-plan-modal>
+<!-- Modal Editar Plan -->
+<app-editar-plan-modal-component
+  *ngIf="mostrarModalEditar && planAEditar"
+  [plan]="planAEditar"
+  (onPlanActualizado)="onPlanActualizado($event)"
+  (onCancelar)="onCancelarEdicion()"
+></app-editar-plan-modal-component>
