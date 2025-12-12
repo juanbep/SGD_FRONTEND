@@ -42,11 +42,11 @@ export class EditarPlanModalComponentComponent implements OnInit {
   planesDisponibles: Plan[] = [];
 
   readonly editableConfig = {
-    numero: true,
+    numero: false,
     estado: true,
     fechaAprobacion: true,
     acuerdo: true,
-    oidPlanBase: false,
+    oidPlanBase: true,
   };
 
   ngOnInit(): void {

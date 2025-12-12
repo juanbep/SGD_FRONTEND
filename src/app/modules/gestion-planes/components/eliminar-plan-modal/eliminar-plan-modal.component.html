@@ -1,12 +1,14 @@
 <div class="modal fade show d-block" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
-      <div class="modal-header text-white border-0 py-3">
-        <h5 class="modal-title fw-bold mb-0">
-          <i
-            class="fas fa-exclamation-triangle me-2"
-            style="color: #f8ae15"
-          ></i>
+      <!-- Header -->
+      <div class="modal-header bg-danger text-white border-0">
+        <h5 class="modal-title fw-bold d-flex align-items-center">
+          <img
+            [src]="'assets/icons/tables/icon-trash.svg'"
+            alt="Eliminar plan"
+            class="modal-header-icon me-3"
+          />
           Confirmar Eliminación
         </h5>
         <button
@@ -18,69 +20,100 @@
         ></button>
       </div>
 
+      <!-- Body -->
       <div class="modal-body p-4">
-        <div class="alert alert-warning d-flex align-items-center" role="alert">
-          <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+        <!-- Alerta de peligro más compacta -->
+        <div
+          class="alert alert-danger d-flex align-items-center mb-3"
+          role="alert"
+        >
+          <i class="fas fa-exclamation-circle fa-lg me-3"></i>
           <div>
-            <strong>Esta acción no se puede deshacer.</strong>
-            <p class="mb-0 mt-1">
-              Se eliminará permanentemente el plan y todas sus materias
-              asociadas.
-            </p>
+            <strong>¡Atención!</strong> Esta acción no se puede deshacer.
           </div>
         </div>
 
-        <div class="info-section mt-3">
-          <h6 class="section-title mb-3">
-            <i class="fas fa-info-circle me-2"></i>
-            Información del Plan a Eliminar
-          </h6>
+        <!-- Pregunta principal más destacada -->
+        <p class="text-center fw-bold text-dark mb-3 fs-6">
+          ¿Está seguro que desea eliminar el siguiente plan académico?
+        </p>
 
-          <div class="row g-3">
-            <div class="col-6">
-              <div class="info-item">
-                <label class="info-label">Número:</label>
-                <p class="info-value">{{ plan.numero }}</p>
+        <!-- Card con información del plan - diseño más compacto -->
+        <div class="card border-primary mb-3">
+          <div class="card-header bg-primary-subtle border-primary">
+            <h6 class="mb-0 text-primary fw-bold">
+              <i class="fas fa-info-circle me-2"></i>Información del Plan
+            </h6>
+          </div>
+          <div class="card-body py-2">
+            <!-- Layout en 2 columnas para aprovechar espacio -->
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-hashtag text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Número</small>
+                    <strong>{{ plan.numero }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-info-circle text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Estado</small>
+                    <span
+                      class="badge"
+                      [ngClass]="
+                        plan.estado === 'ACTIVO' ? 'bg-success' : 'bg-secondary'
+                      "
+                    >
+                      {{ plan.estado }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="col-6">
-              <div class="info-item">
-                <label class="info-label">Estado:</label>
-                <p class="info-value">
-                  <span
-                    class="badge rounded-pill"
-                    [ngClass]="
-                      plan.estado === 'ACTIVO' ? 'bg-success' : 'bg-secondary'
-                    "
-                  >
-                    {{ plan.estado }}
-                  </span>
-                </p>
+            <!-- Programa y Acuerdo en filas completas -->
+            <div class="mt-2 pt-2 border-top">
+              <div class="d-flex align-items-start mb-2">
+                <i class="fas fa-graduation-cap text-primary me-2 mt-1"></i>
+                <div>
+                  <small class="text-muted d-block">Programa</small>
+                  <strong>{{ plan.nombrePrograma }}</strong>
+                </div>
               </div>
             </div>
-
-            <div class="col-12">
-              <div class="info-item">
-                <label class="info-label">Programa:</label>
-                <p class="info-value">{{ plan.nombrePrograma }}</p>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="info-item">
-                <label class="info-label">Acuerdo:</label>
-                <p class="info-value">{{ plan.acuerdo || "Sin acuerdo" }}</p>
+            <div class="mt-2 pt-2 border-top">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-file-alt text-primary me-2 mt-1"></i>
+                <div>
+                  <small class="text-muted d-block">Acuerdo</small>
+                  <strong>{{ plan.acuerdo || "Sin acuerdo" }}</strong>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Alerta de advertencia final -->
+        <div
+          class="alert alert-warning mb-0 d-flex align-items-center"
+          role="alert"
+        >
+          <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
+          <small>
+            Este plan y todas sus materias asociadas serán eliminados
+            <strong>permanentemente</strong>.
+          </small>
         </div>
       </div>
 
-      <div class="modal-footer border-0 py-3">
+      <!-- Footer -->
+      <div class="modal-footer border-0">
         <button
           type="button"
-          class="btn btn-outline-secondary px-4"
+          class="btn btn-secondary"
           [disabled]="loading"
           (click)="cancelar()"
         >
@@ -89,12 +122,12 @@
         </button>
         <button
           type="button"
-          class="btn btn-danger px-4"
+          class="btn btn-danger"
           [disabled]="loading"
           (click)="eliminarPlan()"
         >
           <ng-container *ngIf="!loading">
-            <i class="fas fa-trash-alt me-2"></i>
+            <i class="fas fa-trash me-2"></i>
             Eliminar Plan
           </ng-container>
           <ng-container *ngIf="loading">
