@@ -1,0 +1,113 @@
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i
+            class="fas fa-exclamation-triangle me-2"
+            style="color: #f8ae15"
+          ></i>
+          Confirmar Eliminación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          [disabled]="loading"
+          (click)="cancelar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+          <i class="fas fa-exclamation-circle fa-2x me-3"></i>
+          <div>
+            <strong>Esta acción no se puede deshacer.</strong>
+            <p class="mb-0 mt-1">
+              Se eliminará permanentemente el plan y todas sus materias
+              asociadas.
+            </p>
+          </div>
+        </div>
+
+        <div class="info-section mt-3">
+          <h6 class="section-title mb-3">
+            <i class="fas fa-info-circle me-2"></i>
+            Información del Plan a Eliminar
+          </h6>
+
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="info-item">
+                <label class="info-label">Número:</label>
+                <p class="info-value">{{ plan.numero }}</p>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="info-item">
+                <label class="info-label">Estado:</label>
+                <p class="info-value">
+                  <span
+                    class="badge rounded-pill"
+                    [ngClass]="
+                      plan.estado === 'ACTIVO' ? 'bg-success' : 'bg-secondary'
+                    "
+                  >
+                    {{ plan.estado }}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="info-item">
+                <label class="info-label">Programa:</label>
+                <p class="info-value">{{ plan.nombrePrograma }}</p>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="info-item">
+                <label class="info-label">Acuerdo:</label>
+                <p class="info-value">{{ plan.acuerdo || "Sin acuerdo" }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 py-3">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          [disabled]="loading"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          [disabled]="loading"
+          (click)="eliminarPlan()"
+        >
+          <ng-container *ngIf="!loading">
+            <i class="fas fa-trash-alt me-2"></i>
+            Eliminar Plan
+          </ng-container>
+          <ng-container *ngIf="loading">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Eliminando...
+          </ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show"></div>

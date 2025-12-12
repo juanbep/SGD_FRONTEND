@@ -15,7 +15,8 @@ import { ToastrService } from 'ngx-toastr';
 import { CrearPlanModalComponent } from '../../components/crear-plan-modal/crear-plan-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
-import { EditarPlanModalComponentComponent } from '../../components/editar-plan-modal-component/editar-plan-modal-component.component';
+import { EditarPlanModalComponentComponent } from '../../components/editar-plan-modal-component/editar-plan-modal.component';
+import { EliminarPlanModalComponent } from '../../components/eliminar-plan-modal/eliminar-plan-modal.component';
 
 @Component({
   selector: 'app-listar-planes',
@@ -26,6 +27,7 @@ import { EditarPlanModalComponentComponent } from '../../components/editar-plan-
     FormsModule,
     CrearPlanModalComponent,
     EditarPlanModalComponentComponent,
+    EliminarPlanModalComponent,
     NgSelectModule,
   ],
   templateUrl: './listar-planes.component.html',
@@ -63,7 +65,9 @@ export class ListarPlanesComponent implements OnInit {
 
   mostrarModalCrear = false;
   mostrarModalEditar = false;
+  mostrarModalEliminar = false;
   planAEditar: Plan | null = null;
+  planAEliminar: Plan | null = null;
   oidProgramaActual = getUserProgramaId();
 
   // ===== UTILIDADES =====
@@ -191,11 +195,27 @@ export class ListarPlanesComponent implements OnInit {
   }
 
   // ===== ACCIONES =====
+  eliminarPlan(plan: Plan): void {
+    this.planAEliminar = plan;
+    this.mostrarModalEliminar = true;
+  }
+
+  onPlanEliminado(): void {
+    this.mostrarModalEliminar = false;
+    this.planAEliminar = null;
+    this.cargarPlanes();
+  }
+
+  onCancelarEliminacion(): void {
+    this.mostrarModalEliminar = false;
+    this.planAEliminar = null;
+  }
+
   crearNuevoPlan(): void {
     this.mostrarModalCrear = true;
   }
 
-  onPlanCreado(planCreado: Plan): void {
+  onPlanCreado(): void {
     this.mostrarModalCrear = false;
     this.cargarPlanes(); // Recargar lista
   }
@@ -213,7 +233,7 @@ export class ListarPlanesComponent implements OnInit {
     this.mostrarModalEditar = true;
   }
 
-  onPlanActualizado(planActualizado: Plan): void {
+  onPlanActualizado(): void {
     this.mostrarModalEditar = false;
     this.planAEditar = null;
     this.cargarPlanes();

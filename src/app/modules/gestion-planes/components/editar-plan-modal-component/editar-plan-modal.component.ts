@@ -22,8 +22,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
   selector: 'app-editar-plan-modal-component',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
-  templateUrl: './editar-plan-modal-component.component.html',
-  styleUrl: './editar-plan-modal-component.component.css',
+  templateUrl: './editar-plan-modal.component.html',
+  styleUrl: './editar-plan-modal.component.css',
 })
 export class EditarPlanModalComponentComponent implements OnInit {
   @Input() plan!: Plan;

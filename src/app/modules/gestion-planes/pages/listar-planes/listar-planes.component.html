@@ -223,29 +223,13 @@
                   <i class="fas fa-edit"></i>
                 </button>
 
-                <!-- Cambiar estado -->
                 <button
                   type="button"
-                  class="btn btn-sm"
-                  [ngClass]="
-                    plan.estado === 'ACTIVO'
-                      ? 'btn-outline-danger'
-                      : 'btn-outline-success'
-                  "
-                  [title]="
-                    plan.estado === 'ACTIVO'
-                      ? 'Desactivar plan'
-                      : 'Activar plan'
-                  "
-                  (click)="cambiarEstadoPlan(plan)"
+                  class="btn btn-sm btn-outline-danger"
+                  title="Eliminar plan"
+                  (click)="eliminarPlan(plan)"
                 >
-                  <i
-                    [ngClass]="
-                      plan.estado === 'ACTIVO'
-                        ? 'fas fa-toggle-off'
-                        : 'fas fa-toggle-on'
-                    "
-                  ></i>
+                  <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
             </td>
@@ -360,13 +344,20 @@
 <app-crear-plan-modal
   *ngIf="mostrarModalCrear"
   [oidPrograma]="oidProgramaActual"
-  (onPlanCreado)="onPlanCreado($event)"
+  (onPlanCreado)="onPlanCreado()"
   (onCancelar)="onCancelarCreacion()"
 ></app-crear-plan-modal>
 <!-- Modal Editar Plan -->
 <app-editar-plan-modal-component
   *ngIf="mostrarModalEditar && planAEditar"
   [plan]="planAEditar"
-  (onPlanActualizado)="onPlanActualizado($event)"
+  (onPlanActualizado)="onPlanActualizado()"
   (onCancelar)="onCancelarEdicion()"
 ></app-editar-plan-modal-component>
+<!-- Modal Eliminar Plan -->
+<app-eliminar-plan-modal
+  *ngIf="mostrarModalEliminar && planAEliminar"
+  [plan]="planAEliminar"
+  (onPlanEliminado)="onPlanEliminado()"
+  (onCancelar)="onCancelarEliminacion()"
+></app-eliminar-plan-modal>
