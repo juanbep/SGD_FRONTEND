@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EstadoPlan, Plan } from '../../models';
 import { ListMateriasComponent } from '../../components/list-materias/list-materias.component';
+import { PlanService } from '../../services';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-view-plan-detail',
@@ -12,37 +14,56 @@ import { ListMateriasComponent } from '../../components/list-materias/list-mater
   styleUrl: './view-plan-detail.component.css',
 })
 export class ViewPlanDetailComponent implements OnInit {
-  planSeleccionado: Plan | null = null;
+  // ===== SERVICIOS =====
+  private planService = inject(PlanService);
+  private toastr = inject(ToastrService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  // ===== ESTADO =====
+  planSeleccionado: Plan | null = null;
+  loading = false;
+  error: string | null = null;
 
   ngOnInit(): void {
     // Obtener el ID del plan desde la ruta
-    const oidPlan = this.route.snapshot.paramMap.get('id');
+    const oidPlanParam = this.route.snapshot.paramMap.get('id');
 
-    if (oidPlan) {
-      this.cargarPlan(Number(oidPlan));
+    if (oidPlanParam) {
+      const oidPlan = Number(oidPlanParam);
+
+      if (isNaN(oidPlan)) {
+        this.error = 'ID de plan no válido';
+        this.toastr.error('El ID del plan no es válido');
+        return;
+      }
+
+      this.cargarPlan(oidPlan);
+    } else {
+      this.error = 'No se especificó un plan';
+      this.toastr.error('No se especificó un plan válido');
     }
   }
 
   cargarPlan(oidPlan: number): void {
-    // MOCK - Reemplazar con servicio real
-    // Simular la carga del plan
-    setTimeout(() => {
-      this.planSeleccionado = {
-        oidPlan: 1,
-        numero: '001',
-        estado: 'ACTIVO',
-        fechaAprobacion: '2024-01-15',
-        acuerdo: 'ACU-2024-001',
-        oidPrograma: 101,
-        nombrePrograma: 'Ingeniería de Sistemas',
-        fechaCreacion: '2024-01-10',
-        fechaActualizacion: '2024-01-15',
-        usuarioCreacion: 'admin',
-        usuarioActualizacion: 'admin',
-      };
-    }, 300);
+    this.loading = true;
+    this.error = null;
+
+    this.planService.getPlanById(oidPlan).subscribe({
+      next: (response) => {
+        if (response.codigo >= 200 && response.codigo < 300) {
+          this.planSeleccionado = response.data;
+        } else {
+          this.error = response.mensaje || 'No se pudo cargar el plan';
+          this.toastr.warning(response.mensaje || 'No se pudo cargar el plan');
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.handleError(error);
+        this.loading = false;
+      },
+    });
   }
 
   getBadgeClass(estado: EstadoPlan | undefined): string {
@@ -57,5 +78,27 @@ export class ViewPlanDetailComponent implements OnInit {
 
   volverALista(): void {
     this.router.navigate(['app/gestion-planes/management']);
+  }
+
+  private handleError(error: any): void {
+    const codigoBackend = error?.error?.codigo || error.status || '—';
+    const mensajeBackend =
+      error?.error?.mensaje ||
+      error?.message ||
+      'Error al cargar el plan. Intenta de nuevo.';
+
+    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
+
+    this.toastr.error(
+      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
+      'Error al cargar plan'
+    );
+  }
+
+  reintentar(): void {
+    const oidPlanParam = this.route.snapshot.paramMap.get('id');
+    if (oidPlanParam) {
+      this.cargarPlan(Number(oidPlanParam));
+    }
   }
 }

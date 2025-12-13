@@ -2,13 +2,16 @@
 <div class="card mb-4">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-filter me-2" style="color: #f8ae15;"></i>Filtros de Búsqueda
+      <i class="fas fa-filter me-2" style="color: #f8ae15"></i>Filtros de
+      Búsqueda
     </h6>
     <button
       type="button"
       class="btn btn-outline-secondary d-flex align-items-center"
       (click)="limpiarFiltros()"
-      [disabled]="!filtroOid && !filtroCodigo && !filtroNombre && !filtroSemestre"
+      [disabled]="
+        !filtroOid && !filtroCodigo && !filtroNombre && !filtroSemestre
+      "
     >
       <i class="fas fa-times"></i>
       <span class="d-none d-lg-inline ms-1">Limpiar</span>
@@ -88,9 +91,11 @@
 
 <!-- Card de Tabla -->
 <div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+  <div
+    class="card-header d-flex justify-content-between align-items-center flex-wrap"
+  >
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-table me-2" style="color: #f8ae15;"></i>Materias del Plan
+      <i class="fas fa-table me-2" style="color: #f8ae15"></i>Materias del Plan
       <span class="badge bg-primary ms-2">{{ totalElements }}</span>
     </h6>
 
@@ -99,7 +104,7 @@
       <button
         type="button"
         class="btn btn-sm d-flex align-items-center"
-        style="background-color: #249337; color: white; border-color: #249337;"
+        style="background-color: #249337; color: white; border-color: #249337"
         (click)="descargarPlanilla()"
         title="Descargar planilla Excel"
       >
@@ -111,7 +116,7 @@
       <button
         type="button"
         class="btn btn-sm d-flex align-items-center"
-        style="background-color: #16a8e1; color: white; border-color: #16a8e1;"
+        style="background-color: #16a8e1; color: white; border-color: #16a8e1"
         (click)="cargarPlanilla()"
         title="Cargar planilla Excel"
       >
@@ -133,12 +138,12 @@
       <button
         type="button"
         class="btn btn-link text-decoration-none text-primary d-flex align-items-center"
-        (click)="cargarMaterias()"
+        (click)="cargarMaterias(true)"
         [disabled]="loading"
       >
         <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
         <span class="d-none d-lg-inline">
-          {{ loading ? 'Cargando...' : 'Actualizar' }}
+          {{ loading ? "Cargando..." : "Actualizar" }}
         </span>
       </button>
     </div>
@@ -172,9 +177,7 @@
             <th class="fw-bold" style="width: 120px">
               <i class="fas fa-barcode me-1"></i>Código
             </th>
-            <th class="fw-bold">
-              <i class="fas fa-book me-1"></i>Nombre
-            </th>
+            <th class="fw-bold"><i class="fas fa-book me-1"></i>Nombre</th>
             <th class="fw-bold text-center" style="width: 100px">
               <i class="fas fa-calendar-week me-1"></i>Semestre
             </th>
@@ -202,12 +205,16 @@
               <div class="fw-semibold">{{ materia.nombre }}</div>
             </td>
             <td class="text-center">
-              <span class="badge bg-light text-dark">{{ materia.semestre }}</span>
+              <span class="badge bg-light text-dark">{{
+                materia.semestre
+              }}</span>
             </td>
             <td class="text-center">{{ materia.horasSemana }}</td>
             <td>
               <div>{{ materia.nombreDepartamento }}</div>
-              <small class="text-muted">ID: {{ materia.oidDepartamento }}</small>
+              <small class="text-muted"
+                >ID: {{ materia.oidDepartamento }}</small
+              >
             </td>
             <td class="text-center">
               <span

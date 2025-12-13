@@ -160,9 +160,7 @@ export class MateriaService {
   }
 
   private handleError(error: any): Observable<never> {
-    console.error('Error en MateriaService:', error);
-    return throwError(
-      () => new Error(error.mensaje || 'Error en el servicio de materias')
-    );
+    console.error('Error en Materias Service:', error);
+    return throwError(() => error);
   }
 }

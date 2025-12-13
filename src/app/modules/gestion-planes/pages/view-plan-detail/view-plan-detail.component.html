@@ -14,102 +14,129 @@
   <!-- Título -->
   <header class="title-two">Detalle del Plan de Estudio</header>
 
-  <!-- Card con información del plan -->
-  <div class="card mb-4">
-    <div class="card-header">
-      <h6 class="mb-0 d-flex align-items-center">
-        <i class="fas fa-info-circle me-2" style="color: #f8ae15"></i>
-        Información del Plan
-      </h6>
+  <!-- Estado de carga -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
     </div>
-    <div class="card-body">
-      <div class="row g-3">
-        <!-- Programa -->
-        <div class="col-md-6">
-          <label class="form-label fw-bold">
-            <i class="fas fa-university me-1"></i>Programa:
-          </label>
-          <p class="form-control-plaintext fw-semibold">
-            {{ planSeleccionado?.nombrePrograma || "N/A" }}
-          </p>
-        </div>
+    <p class="mt-3 text-muted">Cargando información del plan...</p>
+  </div>
 
-        <!-- Número del Plan -->
-        <div class="col-md-3">
-          <label class="form-label fw-bold">
-            <i class="fas fa-sort-numeric-up me-1"></i>Número del Plan:
-          </label>
-          <p class="form-control-plaintext fw-semibold">
-            {{ planSeleccionado?.numero || "N/A" }}
-          </p>
-        </div>
-
-        <!-- Estado -->
-        <div class="col-md-3">
-          <label class="form-label fw-bold">
-            <i class="fas fa-info-circle me-1"></i>Estado:
-          </label>
-          <p class="form-control-plaintext">
-            <span
-              class="badge rounded-pill"
-              [ngClass]="getBadgeClass(planSeleccionado?.estado)"
-            >
-              {{ planSeleccionado?.estado || "N/A" }}
-            </span>
-          </p>
-        </div>
-
-        <!-- Acuerdo -->
-        <div class="col-md-4">
-          <label class="form-label fw-bold">
-            <i class="fas fa-file-signature me-1"></i>Acuerdo:
-          </label>
-          <p class="form-control-plaintext">
-            {{ planSeleccionado?.acuerdo || "N/A" }}
-          </p>
-        </div>
-
-        <!-- Fecha de Aprobación -->
-        <div class="col-md-4">
-          <label class="form-label fw-bold">
-            <i class="fas fa-calendar-check me-1"></i>Fecha de Aprobación:
-          </label>
-          <p class="form-control-plaintext">
-            {{ planSeleccionado?.fechaAprobacion | date : "dd/MM/yyyy" }}
-          </p>
-        </div>
-
-        <!-- Fecha de Creación -->
-        <div class="col-md-4">
-          <label class="form-label fw-bold">
-            <i class="fas fa-calendar-plus me-1"></i>Fecha de Creación:
-          </label>
-          <p class="form-control-plaintext">
-            {{ planSeleccionado?.fechaCreacion | date : "dd/MM/yyyy" }}
-          </p>
-        </div>
-      </div>
+  <!-- Estado de error -->
+  <div
+    *ngIf="!loading && error"
+    class="alert alert-danger d-flex align-items-center"
+    role="alert"
+  >
+    <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+    <div class="flex-grow-1">
+      <h5 class="alert-heading mb-1">Error al cargar el plan</h5>
+      <p class="mb-2">{{ error }}</p>
+      <button class="btn btn-sm btn-outline-danger" (click)="reintentar()">
+        <i class="fas fa-redo me-1"></i>Reintentar
+      </button>
     </div>
   </div>
 
-  <!-- Mensaje informativo -->
-  <section class="messages-container">
-    <img
-      [src]="'assets/icons/messages/materia-info.svg'"
-      alt="Icono de materia"
-    />
-    <span class="text-body-heavy">
-      A continuación se muestran todas las materias asociadas a este plan de
-      estudio. Puede agregar, modificar, eliminar materias o gestionar los
-      correquisitos.
-    </span>
-  </section>
+  <!-- Contenido cuando el plan está cargado -->
+  <ng-container *ngIf="!loading && !error && planSeleccionado">
+    <!-- Card con información del plan -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="mb-0 d-flex align-items-center">
+          <i class="fas fa-info-circle me-2" style="color: #f8ae15"></i>
+          Información del Plan
+        </h6>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <!-- Programa -->
+          <div class="col-md-6">
+            <label class="form-label fw-bold">
+              <i class="fas fa-university me-1"></i>Programa:
+            </label>
+            <p class="form-control-plaintext fw-semibold">
+              {{ planSeleccionado.nombrePrograma || "N/A" }}
+            </p>
+          </div>
 
-  <div><br /></div>
+          <!-- Número del Plan -->
+          <div class="col-md-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-sort-numeric-up me-1"></i>Número del Plan:
+            </label>
+            <p class="form-control-plaintext fw-semibold">
+              {{ planSeleccionado.numero || "N/A" }}
+            </p>
+          </div>
 
-  <!-- Componente de lista de materias -->
-  <app-list-materias
-    [oidPlan]="planSeleccionado?.oidPlan"
-    [numeroPlan]="planSeleccionado?.numero"
-  ></app-list-materias>
+          <!-- Estado -->
+          <div class="col-md-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-info-circle me-1"></i>Estado:
+            </label>
+            <p class="form-control-plaintext">
+              <span
+                class="badge rounded-pill"
+                [ngClass]="getBadgeClass(planSeleccionado.estado)"
+              >
+                {{ planSeleccionado.estado || "N/A" }}
+              </span>
+            </p>
+          </div>
+
+          <!-- Acuerdo -->
+          <div class="col-md-4">
+            <label class="form-label fw-bold">
+              <i class="fas fa-file-signature me-1"></i>Acuerdo:
+            </label>
+            <p class="form-control-plaintext">
+              {{ planSeleccionado.acuerdo || "N/A" }}
+            </p>
+          </div>
+
+          <!-- Fecha de Aprobación -->
+          <div class="col-md-4">
+            <label class="form-label fw-bold">
+              <i class="fas fa-calendar-check me-1"></i>Fecha de Aprobación:
+            </label>
+            <p class="form-control-plaintext">
+              {{ planSeleccionado.fechaAprobacion | date : "dd/MM/yyyy" }}
+            </p>
+          </div>
+
+          <!-- Fecha de Creación -->
+          <div class="col-md-4">
+            <label class="form-label fw-bold">
+              <i class="fas fa-calendar-plus me-1"></i>Fecha de Creación:
+            </label>
+            <p class="form-control-plaintext">
+              {{ planSeleccionado.fechaCreacion | date : "dd/MM/yyyy" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje informativo -->
+    <section class="messages-container">
+      <img
+        [src]="'assets/icons/messages/materia-info.svg'"
+        alt="Icono de materia"
+      />
+      <span class="text-body-heavy">
+        A continuación se muestran todas las materias asociadas a este plan de
+        estudio. Puede agregar, modificar, eliminar materias o gestionar los
+        correquisitos.
+      </span>
+    </section>
+
+    <div><br /></div>
+
+    <!-- Componente de lista de materias -->
+    <app-list-materias
+      [oidPlan]="planSeleccionado.oidPlan"
+      [numeroPlan]="planSeleccionado.numero"
+    ></app-list-materias>
+  </ng-container>
 </div>
