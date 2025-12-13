@@ -6,6 +6,8 @@ import {
   SimpleChanges,
   signal,
   inject,
+  ViewChild,
+  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +16,7 @@ import {
   Calendario,
   CreateFechaDto,
   UpdateFechaDto,
+  CreateNombreFechaDto,
 } from '../../../models';
 import { ModalAgregarEditarFechaComponent } from '../../edit-academic-calendar/modal-agregar-editar-fecha/modal-agregar-editar-fecha.component';
 import { ModalSeleccionarCalendarioComponent } from '../modal-seleccionar-calendario/modal-seleccionar-calendario.component';
@@ -43,6 +46,9 @@ export class StepFechasComponent implements OnInit, OnChanges {
   private readonly nombreFechaHelper = inject(NombreFechaHelperService);
   private readonly fechaHelper = inject(FechaHelperService);
 
+  @ViewChild(ModalAgregarEditarFechaComponent)
+  modalAgregarEditarRef!: ModalAgregarEditarFechaComponent;
+
   @Input() oidCalendario: number | null = null;
 
   readonly fechas = signal<Fecha[]>([]);
@@ -51,15 +57,22 @@ export class StepFechasComponent implements OnInit, OnChanges {
   readonly modalEliminarVisible = signal<boolean>(false);
   readonly fechaAEditar = signal<Fecha | null>(null);
   readonly fechaAEliminar = signal<Fecha | null>(null);
-  readonly catalogoNombresFecha = signal<any[]>([]);
   readonly calendariosDisponibles = signal<Calendario[]>([]);
   readonly cargandoCalendarios = signal<boolean>(false);
   readonly cargandoFechas = signal<boolean>(false);
   readonly guardandoFecha = signal<boolean>(false);
   readonly eliminandoFecha = signal<boolean>(false);
 
+  // Signals para datos del calendario
+  readonly calendarioActual = signal<Calendario | null>(null);
+  readonly anioCalendario = computed(
+    () => this.calendarioActual()?.anioCalendario || 0
+  );
+  readonly numeroCalendario = computed(
+    () => this.calendarioActual()?.numeroCalendario || 0
+  );
+
   ngOnInit(): void {
-    this.cargarCatalogoNombresFechas();
     this.cargarCalendariosDisponibles();
   }
 
@@ -78,21 +91,16 @@ export class StepFechasComponent implements OnInit, OnChanges {
         this.oidCalendario
       );
       console.log(calendario);
+
+      // Guardar el calendario completo
+      this.calendarioActual.set(calendario);
+
       this.fechas.set(calendario?.fechas || []);
     } catch (error) {
       console.error('Error al cargar fechas:', error);
       this.toastr.error('Error al cargar las fechas');
     } finally {
       this.cargandoFechas.set(false);
-    }
-  }
-
-  private async cargarCatalogoNombresFechas(): Promise<void> {
-    try {
-      const catalogo = await this.nombreFechaHelper.getAllForDropdown();
-      this.catalogoNombresFecha.set(catalogo);
-    } catch (error) {
-      console.error('Error al cargar catálogo:', error);
     }
   }
 
@@ -162,6 +170,29 @@ export class StepFechasComponent implements OnInit, OnChanges {
     } catch (error) {
       console.error('Error al actualizar fecha:', error);
       this.toastr.error('Error al actualizar la fecha');
+    } finally {
+      this.guardandoFecha.set(false);
+    }
+  }
+
+  // Método para manejar la creación de nombres de fecha
+  async handleCrearNombreFecha(dto: CreateNombreFechaDto): Promise<void> {
+    this.guardandoFecha.set(true);
+
+    try {
+      const nuevoNombre = await this.nombreFechaHelper.create(dto);
+
+      if (nuevoNombre) {
+        this.toastr.success('Tipo de fecha creado correctamente');
+
+        this.modalAgregarEditarRef?.recargarCatalogoNombresFechas();
+      } else {
+        this.toastr.error('No se pudo crear el tipo de fecha');
+      }
+    } catch (error: any) {
+      const mensaje =
+        error?.error?.mensaje || 'Error al crear el tipo de fecha';
+      this.toastr.error(mensaje);
     } finally {
       this.guardandoFecha.set(false);
     }
