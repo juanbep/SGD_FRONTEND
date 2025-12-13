@@ -396,3 +396,9 @@
   (onMateriaEliminada)="onMateriaEliminada()"
   (onCancelar)="onCancelarEliminacion()"
 ></app-eliminar-materia-modal>
+<!-- Modal Ver Correquisitos -->
+<app-ver-correquisitos-modal
+  *ngIf="mostrarModalCorrequisitos && materiaVerCorrequisitos"
+  [materia]="materiaVerCorrequisitos"
+  (onCerrar)="onCerrarCorrequisitos()"
+></app-ver-correquisitos-modal>

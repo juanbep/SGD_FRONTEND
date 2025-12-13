@@ -18,11 +18,17 @@ import { ToastrService } from 'ngx-toastr';
 import { BaseHelperService } from '../../services/base-helper.service';
 import { MateriaService } from '../../services/materia/materia.service';
 import { EliminarMateriaModalComponent } from './eliminar-materia-modal/eliminar-materia-modal.component';
+import { VerCorrequisitosModalComponent } from './ver-correquisitos-modal/ver-correquisitos-modal.component';
 
 @Component({
   selector: 'app-list-materias',
   standalone: true,
-  imports: [CommonModule, FormsModule, EliminarMateriaModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    EliminarMateriaModalComponent,
+    VerCorrequisitosModalComponent,
+  ],
   templateUrl: './list-materias.component.html',
   styleUrl: './list-materias.component.css',
 })
@@ -59,6 +65,9 @@ export class ListMateriasComponent implements OnInit, OnChanges {
 
   mostrarModalEliminar = false;
   materiaAEliminar: Materia | null = null;
+
+  mostrarModalCorrequisitos = false;
+  materiaVerCorrequisitos: Materia | null = null;
 
   // ===== ESTADOS PARA DESCARGA/CARGA =====
   descargando = false;
@@ -240,8 +249,15 @@ export class ListMateriasComponent implements OnInit, OnChanges {
     this.materiaAEliminar = null;
   }
 
+  //Ver Correquisitos:
   verCorrequisitos(materia: Materia): void {
-    this.onVerCorrequisitos.emit(materia);
+    this.materiaVerCorrequisitos = materia;
+    this.mostrarModalCorrequisitos = true;
+  }
+
+  onCerrarCorrequisitos(): void {
+    this.mostrarModalCorrequisitos = false;
+    this.materiaVerCorrequisitos = null;
   }
 
   // ===== DESCARGAR PLANILLA =====
