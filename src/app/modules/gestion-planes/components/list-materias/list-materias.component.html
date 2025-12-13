@@ -402,3 +402,10 @@
   [materia]="materiaVerCorrequisitos"
   (onCerrar)="onCerrarCorrequisitos()"
 ></app-ver-correquisitos-modal>
+<app-crear-materia-modal
+  *ngIf="mostrarModalCrear"
+  [oidPlan]="oidPlan!"
+  [numeroPlan]="numeroPlan"
+  (onMateriaCreada)="onMateriaCreada()"
+  (onCancelar)="onCancelarCreacion()"
+></app-crear-materia-modal>

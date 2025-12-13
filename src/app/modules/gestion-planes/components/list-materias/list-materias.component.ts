@@ -19,6 +19,7 @@ import { BaseHelperService } from '../../services/base-helper.service';
 import { MateriaService } from '../../services/materia/materia.service';
 import { EliminarMateriaModalComponent } from './eliminar-materia-modal/eliminar-materia-modal.component';
 import { VerCorrequisitosModalComponent } from './ver-correquisitos-modal/ver-correquisitos-modal.component';
+import { CrearMateriaModalComponent } from './crear-materia-modal/crear-materia-modal.component';
 
 @Component({
   selector: 'app-list-materias',
@@ -28,6 +29,7 @@ import { VerCorrequisitosModalComponent } from './ver-correquisitos-modal/ver-co
     FormsModule,
     EliminarMateriaModalComponent,
     VerCorrequisitosModalComponent,
+    CrearMateriaModalComponent,
   ],
   templateUrl: './list-materias.component.html',
   styleUrl: './list-materias.component.css',
@@ -68,6 +70,8 @@ export class ListMateriasComponent implements OnInit, OnChanges {
 
   mostrarModalCorrequisitos = false;
   materiaVerCorrequisitos: Materia | null = null;
+
+  mostrarModalCrear = false;
 
   // ===== ESTADOS PARA DESCARGA/CARGA =====
   descargando = false;
@@ -226,7 +230,16 @@ export class ListMateriasComponent implements OnInit, OnChanges {
 
   // ===== ACCIONES =====
   crearNuevaMateria(): void {
-    this.onNuevaMateria.emit();
+    this.mostrarModalCrear = true;
+  }
+
+  onMateriaCreada(): void {
+    this.mostrarModalCrear = false;
+    this.cargarMaterias(true);
+  }
+
+  onCancelarCreacion(): void {
+    this.mostrarModalCrear = false;
   }
 
   modificarMateria(materia: Materia): void {
