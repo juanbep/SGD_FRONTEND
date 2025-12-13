@@ -147,13 +147,19 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.guardandoFecha.set(true);
 
     try {
-      await this.fechaHelper.create(createDto);
-      await this.cargarFechas();
-      this.toastr.success('Fecha agregada correctamente');
-      this.cerrarModalAgregar();
-    } catch (error) {
+      const nuevaFecha = await this.fechaHelper.create(createDto);
+
+      if (nuevaFecha) {
+        await this.cargarFechas();
+        this.toastr.success('Fecha agregada correctamente');
+        this.cerrarModalAgregar();
+      } else {
+        this.toastr.error('No se pudo agregar la fecha');
+      }
+    } catch (error: any) {
       console.error('Error al agregar fecha:', error);
-      this.toastr.error('Error al agregar la fecha');
+      const mensaje = error?.error?.mensaje || 'Error al agregar la fecha';
+      this.toastr.error(mensaje);
     } finally {
       this.guardandoFecha.set(false);
     }
