@@ -389,3 +389,10 @@
     </div>
   </div>
 </div>
+<!-- Modal Eliminar Materia -->
+<app-eliminar-materia-modal
+  *ngIf="mostrarModalEliminar && materiaAEliminar"
+  [materia]="materiaAEliminar"
+  (onMateriaEliminada)="onMateriaEliminada()"
+  (onCancelar)="onCancelarEliminacion()"
+></app-eliminar-materia-modal>

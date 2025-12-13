@@ -17,11 +17,12 @@ import { MateriaHelperService } from '../../services/materia/materia-helper.serv
 import { ToastrService } from 'ngx-toastr';
 import { BaseHelperService } from '../../services/base-helper.service';
 import { MateriaService } from '../../services/materia/materia.service';
+import { EliminarMateriaModalComponent } from './eliminar-materia-modal/eliminar-materia-modal.component';
 
 @Component({
   selector: 'app-list-materias',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EliminarMateriaModalComponent],
   templateUrl: './list-materias.component.html',
   styleUrl: './list-materias.component.css',
 })
@@ -55,6 +56,9 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   materias: Materia[] = [];
   loading = false;
   error: string | null = null;
+
+  mostrarModalEliminar = false;
+  materiaAEliminar: Materia | null = null;
 
   // ===== ESTADOS PARA DESCARGA/CARGA =====
   descargando = false;
@@ -221,7 +225,19 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   }
 
   eliminarMateria(materia: Materia): void {
-    this.onEliminar.emit(materia);
+    this.materiaAEliminar = materia;
+    this.mostrarModalEliminar = true;
+  }
+
+  onMateriaEliminada(): void {
+    this.mostrarModalEliminar = false;
+    this.materiaAEliminar = null;
+    this.cargarMaterias(true);
+  }
+
+  onCancelarEliminacion(): void {
+    this.mostrarModalEliminar = false;
+    this.materiaAEliminar = null;
   }
 
   verCorrequisitos(materia: Materia): void {
