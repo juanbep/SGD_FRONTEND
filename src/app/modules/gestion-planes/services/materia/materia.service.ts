@@ -19,6 +19,7 @@ import { environment } from '../../../../../environments/environments_sgd';
 })
 export class MateriaService {
   private readonly apiUrl = `${environment.baseUrl}/materias`;
+  private readonly apiUrlPlanes = `${environment.baseUrl}/planes`;
 
   constructor(private http: HttpClient) {}
 
@@ -64,6 +65,28 @@ export class MateriaService {
   ): Observable<DeleteMateriaResponse> {
     return this.http
       .delete<DeleteMateriaResponse>(`${this.apiUrl}/${deleteData.idMateria}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // DESCARGAR PLANILLA EXCEL MATERIAS
+  descargarPlanillaExcel(oidPlan: number): Observable<Blob> {
+    return this.http
+      .get(`${this.apiUrlPlanes}/documentos/`, {
+        params: new HttpParams().set('oidPlan', oidPlan.toString()),
+        responseType: 'blob',
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  cargarPlanillaExcel(oidPlan: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('oidPlan', oidPlan.toString());
+    formData.append('file', file);
+
+    return this.http
+      .post(`${this.apiUrlPlanes}/documentos/`, formData, {
+        responseType: 'text' as 'json',
+      })
       .pipe(catchError(this.handleError));
   }
 

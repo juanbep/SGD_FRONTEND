@@ -1,11 +1,14 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   inject,
   Input,
+  OnChanges,
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -22,7 +25,7 @@ import { MateriaService } from '../../services/materia/materia.service';
   templateUrl: './list-materias.component.html',
   styleUrl: './list-materias.component.css',
 })
-export class ListMateriasComponent implements OnInit {
+export class ListMateriasComponent implements OnInit, OnChanges {
   // ===== SERVICIOS =====
   private materiaService = inject(MateriaService);
   private toastr = inject(ToastrService);
@@ -34,6 +37,9 @@ export class ListMateriasComponent implements OnInit {
   @Output() onModificar = new EventEmitter<Materia>();
   @Output() onEliminar = new EventEmitter<Materia>();
   @Output() onVerCorrequisitos = new EventEmitter<Materia>();
+
+  // ===== REFERENCIA AL INPUT FILE =====
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   readonly semestresDisponibles: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -50,8 +56,10 @@ export class ListMateriasComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  // Control para mostrar toast solo en acciones explícitas del usuario
-  private mostrarToast = false;
+  // ===== ESTADOS PARA DESCARGA/CARGA =====
+  descargando = false;
+  cargandoArchivo = false;
+  archivoSeleccionado: File | null = null;
 
   Math = Math;
 
@@ -60,18 +68,15 @@ export class ListMateriasComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Detectar cuando cambia el oidPlan
     if (changes['oidPlan']) {
       const oidPlanActual = changes['oidPlan'].currentValue;
 
       if (oidPlanActual) {
-        // Resetear filtros y cargar sin mostrar toast
         this.filtroOid = '';
         this.filtroCodigo = '';
         this.filtroNombre = '';
         this.filtroSemestre = '';
         this.page = 0;
-        this.mostrarToast = false; // No mostrar toast en carga inicial
         this.cargarMaterias();
       } else {
         this.error = 'No se ha especificado un plan válido';
@@ -118,7 +123,6 @@ export class ListMateriasComponent implements OnInit {
           this.materias = response.data.content;
           this.totalElements = response.data.totalElements;
 
-          // Mostrar toast apropiado si se solicitó
           if (mostrarToast) {
             if (this.totalElements > 0) {
               this.toastr.success(
@@ -151,7 +155,6 @@ export class ListMateriasComponent implements OnInit {
 
     if (oidValido && codigoValido && nombreValido) {
       this.page = 0;
-      this.mostrarToast = false; // No mostrar toast al filtrar
       this.cargarMaterias();
     }
   }
@@ -162,25 +165,17 @@ export class ListMateriasComponent implements OnInit {
     this.filtroNombre = '';
     this.filtroSemestre = '';
     this.page = 0;
-    this.mostrarToast = true; // Sí mostrar toast al limpiar
     this.cargarMaterias();
   }
 
   onPageSizeChange(event: any): void {
     this.size = parseInt(event.target.value);
     this.page = 0;
-    this.mostrarToast = false; // No mostrar toast al cambiar tamaño
     this.cargarMaterias();
   }
 
   irAPagina(nuevaPagina: number): void {
     this.page = nuevaPagina;
-    this.mostrarToast = false; // No mostrar toast al paginar
-    this.cargarMaterias();
-  }
-
-  actualizarLista(): void {
-    this.mostrarToast = true; // Sí mostrar toast al actualizar manualmente
     this.cargarMaterias();
   }
 
@@ -216,6 +211,7 @@ export class ListMateriasComponent implements OnInit {
     return item.idMateria;
   }
 
+  // ===== ACCIONES =====
   crearNuevaMateria(): void {
     this.onNuevaMateria.emit();
   }
@@ -232,14 +228,160 @@ export class ListMateriasComponent implements OnInit {
     this.onVerCorrequisitos.emit(materia);
   }
 
+  // ===== DESCARGAR PLANILLA =====
   descargarPlanilla(): void {
-    console.log('Descargar planilla Excel');
-    alert('Funcionalidad de descarga de planilla - Por implementar');
+    if (!this.oidPlan) {
+      this.toastr.error('No se ha especificado un plan válido');
+      return;
+    }
+
+    this.descargando = true;
+    this.toastr.info('Preparando descarga...', 'Descargando');
+
+    this.materiaService.descargarPlanillaExcel(this.oidPlan).subscribe({
+      next: (blob) => {
+        const nombreArchivo = `Materias_Plan_${
+          this.numeroPlan || this.oidPlan
+        }_${new Date().getTime()}.xlsx`;
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = nombreArchivo;
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+
+        this.descargando = false;
+        this.toastr.success('Planilla descargada correctamente', 'Éxito');
+      },
+      error: (error) => {
+        console.error('Error al descargar planilla:', error);
+        const mensajeError =
+          error?.error?.mensaje || 'Error al descargar la planilla';
+        this.toastr.error(mensajeError, 'Error en descarga');
+        this.descargando = false;
+      },
+    });
   }
 
+  // ===== CARGAR PLANILLA =====
   cargarPlanilla(): void {
-    console.log('Cargar planilla Excel');
-    alert('Funcionalidad de carga de planilla - Por implementar');
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    if (!this.validarArchivo(file)) {
+      input.value = '';
+      return;
+    }
+
+    this.archivoSeleccionado = file;
+    this.confirmarCargaArchivo();
+  }
+
+  private validarArchivo(file: File): boolean {
+    const extensionesPermitidas = ['.xlsx', '.xls'];
+    const extension = file.name
+      .substring(file.name.lastIndexOf('.'))
+      .toLowerCase();
+
+    if (!extensionesPermitidas.includes(extension)) {
+      this.toastr.error(
+        'Solo se permiten archivos Excel (.xlsx, .xls)',
+        'Archivo no válido'
+      );
+      return false;
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      this.toastr.error(
+        'El archivo no debe superar los 5MB',
+        'Archivo muy grande'
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  private confirmarCargaArchivo(): void {
+    if (!this.archivoSeleccionado) return;
+
+    const confirmar = confirm(
+      `¿Está seguro de cargar el archivo "${this.archivoSeleccionado.name}"?\n\n` +
+        'Esto actualizará las materias del plan según el contenido del archivo.'
+    );
+
+    if (confirmar) {
+      this.subirArchivo();
+    } else {
+      this.archivoSeleccionado = null;
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  private subirArchivo(): void {
+    if (!this.oidPlan || !this.archivoSeleccionado) {
+      this.toastr.error('No se puede cargar el archivo', 'Error');
+      return;
+    }
+
+    this.cargandoArchivo = true;
+    this.toastr.info('Cargando archivo...', 'Procesando');
+
+    this.materiaService
+      .cargarPlanillaExcel(this.oidPlan, this.archivoSeleccionado)
+      .subscribe({
+        next: (response) => {
+          // La respuesta exitosa es un string
+          this.toastr.success(
+            response || 'Materias cargadas correctamente desde el archivo',
+            'Éxito'
+          );
+          this.cargarMaterias(true);
+          this.limpiarCargaArchivo();
+        },
+        error: (error) => {
+          console.error('Error al cargar archivo:', error);
+
+          let mensajeError =
+            'Error al cargar el archivo. Verifique el formato y contenido.';
+
+          if (error?.error?.mensaje) {
+            mensajeError = error.error.mensaje;
+          } else if (error?.error?.text) {
+            try {
+              const errorObj = JSON.parse(error.error.text);
+              mensajeError = errorObj.mensaje || mensajeError;
+            } catch (e) {
+              mensajeError = error.error.text || mensajeError;
+            }
+          } else if (error?.message) {
+            mensajeError = error.message;
+          }
+
+          this.toastr.error(mensajeError, 'Error al cargar archivo');
+          this.limpiarCargaArchivo();
+        },
+      });
+  }
+
+  private limpiarCargaArchivo(): void {
+    this.cargandoArchivo = false;
+    this.archivoSeleccionado = null;
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   private handleError(error: any, operacion: string): void {

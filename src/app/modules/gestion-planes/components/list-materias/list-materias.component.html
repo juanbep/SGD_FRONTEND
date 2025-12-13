@@ -100,16 +100,31 @@
     </h6>
 
     <div class="d-flex align-items-center gap-2 ms-auto mt-2 mt-lg-0 flex-wrap">
+      <!-- Input file oculto -->
+      <input
+        #fileInput
+        type="file"
+        accept=".xlsx,.xls"
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+
       <!-- Botón Descargar Planilla -->
       <button
         type="button"
         class="btn btn-sm d-flex align-items-center"
         style="background-color: #249337; color: white; border-color: #249337"
         (click)="descargarPlanilla()"
+        [disabled]="descargando"
         title="Descargar planilla Excel"
       >
-        <i class="fas fa-file-download me-1"></i>
-        <span class="d-none d-lg-inline">Descargar</span>
+        <i
+          class="fas me-1"
+          [ngClass]="descargando ? 'fa-spinner fa-spin' : 'fa-file-download'"
+        ></i>
+        <span class="d-none d-lg-inline">{{
+          descargando ? "Descargando..." : "Descargar"
+        }}</span>
       </button>
 
       <!-- Botón Cargar Planilla -->
@@ -118,10 +133,16 @@
         class="btn btn-sm d-flex align-items-center"
         style="background-color: #16a8e1; color: white; border-color: #16a8e1"
         (click)="cargarPlanilla()"
+        [disabled]="cargandoArchivo"
         title="Cargar planilla Excel"
       >
-        <i class="fas fa-file-upload me-1"></i>
-        <span class="d-none d-lg-inline">Cargar</span>
+        <i
+          class="fas me-1"
+          [ngClass]="cargandoArchivo ? 'fa-spinner fa-spin' : 'fa-file-upload'"
+        ></i>
+        <span class="d-none d-lg-inline">{{
+          cargandoArchivo ? "Cargando..." : "Cargar"
+        }}</span>
       </button>
 
       <!-- Botón Nueva Materia -->
