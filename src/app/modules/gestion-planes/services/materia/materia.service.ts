@@ -90,6 +90,16 @@ export class MateriaService {
       .pipe(catchError(this.handleError));
   }
 
+  getMateriasLibres(
+    filters: MateriaFilters = {}
+  ): Observable<MateriasListResponse> {
+    let params = this.buildHttpParams(filters);
+
+    return this.http
+      .get<MateriasListResponse>(`${this.apiUrl}/libres`, { params })
+      .pipe(catchError(this.handleError));
+  }
+
   private buildHttpParams(filters: MateriaFilters): HttpParams {
     let params = new HttpParams();
 

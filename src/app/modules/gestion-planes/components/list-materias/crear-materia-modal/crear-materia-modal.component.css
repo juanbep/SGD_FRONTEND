@@ -208,6 +208,47 @@ hr {
   scroll-margin-top: 20px;
 }
 
+/* ==================== TABS DE CORREQUISITO ==================== */
+.nav-tabs {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #003d7a;
+  border-bottom-color: #0056b3;
+  background-color: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active {
+  color: #003d7a;
+  background-color: transparent;
+  border-bottom-color: #003d7a;
+  font-weight: 600;
+}
+
+.tab-content {
+  padding-top: 1rem;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.show.active {
+  display: block;
+}
+
 /* ==================== NG-SELECT ==================== */
 ::ng-deep ng-select.is-invalid .ng-select-container {
   border-color: #dc3545;

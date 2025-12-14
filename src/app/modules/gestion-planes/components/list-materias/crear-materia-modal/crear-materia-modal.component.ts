@@ -1,13 +1,15 @@
+// crear-materia-modal.component.ts
+
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  ElementRef,
   EventEmitter,
   inject,
   Input,
   OnInit,
   Output,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -19,7 +21,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { DepartamentoHelperService } from '../../../services';
 import { MateriaService } from '../../../services/materia/materia.service';
-import { CreateMateriaDto } from '../../../models';
+import { CreateMateriaDto, Materia } from '../../../models';
 
 @Component({
   selector: 'app-crear-materia-modal',
@@ -34,7 +36,6 @@ export class CrearMateriaModalComponent implements OnInit {
   @Output() onMateriaCreada = new EventEmitter<void>();
   @Output() onCancelar = new EventEmitter<void>();
 
-  // Referencia al elemento del formulario de correquisito
   @ViewChild('correquisitoSection') correquisitoSection!: ElementRef;
 
   private fb = inject(FormBuilder);
@@ -48,6 +49,9 @@ export class CrearMateriaModalComponent implements OnInit {
   // Control para mostrar/ocultar sección de correquisito
   tieneCorrequisito = false;
 
+  // Tipo de correquisito: 'nuevo' o 'existente'
+  tipoCorrequisito: 'nuevo' | 'existente' = 'existente';
+
   // Semestres disponibles (1-10)
   semestresDisponibles: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -55,9 +59,14 @@ export class CrearMateriaModalComponent implements OnInit {
   departamentos: { value: number; label: string; facultad: string }[] = [];
   loadingDepartamentos = false;
 
+  // Materias libres (sin correquisito) del plan
+  materiasLibres: Materia[] = [];
+  loadingMateriasLibres = false;
+
   ngOnInit(): void {
     this.inicializarFormulario();
     this.cargarDepartamentos();
+    this.cargarMateriasLibres();
   }
 
   inicializarFormulario(): void {
@@ -73,7 +82,10 @@ export class CrearMateriaModalComponent implements OnInit {
       ],
       oidDepartamento: [null, [Validators.required]],
 
-      // Datos del correquisito (inicialmente sin validaciones)
+      // Correquisito existente (select)
+      idCorrequisitoExistente: [null],
+
+      // Datos del correquisito nuevo (formulario)
       correquisito: this.fb.group({
         oidMateria: [''],
         codigo: [''],
@@ -110,14 +122,72 @@ export class CrearMateriaModalComponent implements OnInit {
     }
   }
 
-  // Toggle para activar/desactivar correquisito
+  async cargarMateriasLibres(): Promise<void> {
+    this.loadingMateriasLibres = true;
+
+    try {
+      const response = await new Promise<any>((resolve, reject) => {
+        this.materiaService
+          .getMateriasLibres({ oidPlan: this.oidPlan, size: 100 })
+          .subscribe({
+            next: (response) => resolve(response),
+            error: (error) => reject(error),
+          });
+      });
+
+      this.materiasLibres = response.data?.content || [];
+
+      if (this.materiasLibres.length === 0) {
+        console.warn(
+          'No hay materias sin correquisito disponibles en este plan'
+        );
+      }
+    } catch (error) {
+      console.error('Error al cargar materias libres:', error);
+      this.materiasLibres = [];
+    } finally {
+      this.loadingMateriasLibres = false;
+    }
+  }
+
   onToggleCorrequisito(value: boolean): void {
     this.tieneCorrequisito = value;
 
+    if (value) {
+      // Establecer tipo por defecto
+      this.tipoCorrequisito = 'existente';
+      this.onTipoCorrequisitoChange('existente');
+
+      // Scroll automático
+      setTimeout(() => {
+        this.scrollToCorrequisito();
+      }, 100);
+    } else {
+      // Limpiar todo
+      this.limpiarCorrequisito();
+    }
+  }
+
+  onTipoCorrequisitoChange(tipo: 'nuevo' | 'existente'): void {
+    this.tipoCorrequisito = tipo;
     const correquisito = this.materiaForm.get('correquisito') as FormGroup;
 
-    if (value) {
-      // Activar validaciones para el correquisito
+    if (tipo === 'existente') {
+      // Activar validación para select de correquisito existente
+      this.materiaForm
+        .get('idCorrequisitoExistente')
+        ?.setValidators([Validators.required]);
+
+      // Limpiar y desactivar validaciones del formulario nuevo
+      correquisito.get('oidMateria')?.clearValidators();
+      correquisito.get('codigo')?.clearValidators();
+      correquisito.get('nombre')?.clearValidators();
+      correquisito.get('semestre')?.clearValidators();
+      correquisito.get('horasSemana')?.clearValidators();
+      correquisito.get('oidDepartamento')?.clearValidators();
+      correquisito.reset();
+    } else {
+      // Activar validaciones para formulario nuevo
       correquisito
         .get('oidMateria')
         ?.setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
@@ -137,30 +207,41 @@ export class CrearMateriaModalComponent implements OnInit {
         ]);
       correquisito.get('oidDepartamento')?.setValidators([Validators.required]);
 
-      // Scroll automático después de un pequeño delay para que el DOM se actualice
-      setTimeout(() => {
-        this.scrollToCorrequisito();
-      }, 100);
-    } else {
-      // Remover validaciones y limpiar valores
-      correquisito.get('oidMateria')?.clearValidators();
-      correquisito.get('codigo')?.clearValidators();
-      correquisito.get('nombre')?.clearValidators();
-      correquisito.get('semestre')?.clearValidators();
-      correquisito.get('horasSemana')?.clearValidators();
-      correquisito.get('oidDepartamento')?.clearValidators();
-
-      // Limpiar valores
-      correquisito.reset();
+      // Limpiar validación del select existente
+      this.materiaForm.get('idCorrequisitoExistente')?.clearValidators();
+      this.materiaForm.get('idCorrequisitoExistente')?.reset();
     }
 
-    // Actualizar estado de validaciones
+    // Actualizar validaciones
+    this.materiaForm.get('idCorrequisitoExistente')?.updateValueAndValidity();
     Object.keys(correquisito.controls).forEach((key) => {
       correquisito.get(key)?.updateValueAndValidity();
     });
   }
 
-  // Scroll suave hacia la sección de correquisito
+  limpiarCorrequisito(): void {
+    const correquisito = this.materiaForm.get('correquisito') as FormGroup;
+
+    // Limpiar validaciones
+    this.materiaForm.get('idCorrequisitoExistente')?.clearValidators();
+    correquisito.get('oidMateria')?.clearValidators();
+    correquisito.get('codigo')?.clearValidators();
+    correquisito.get('nombre')?.clearValidators();
+    correquisito.get('semestre')?.clearValidators();
+    correquisito.get('horasSemana')?.clearValidators();
+    correquisito.get('oidDepartamento')?.clearValidators();
+
+    // Limpiar valores
+    this.materiaForm.get('idCorrequisitoExistente')?.reset();
+    correquisito.reset();
+
+    // Actualizar estado
+    this.materiaForm.get('idCorrequisitoExistente')?.updateValueAndValidity();
+    Object.keys(correquisito.controls).forEach((key) => {
+      correquisito.get(key)?.updateValueAndValidity();
+    });
+  }
+
   scrollToCorrequisito(): void {
     if (this.correquisitoSection) {
       this.correquisitoSection.nativeElement.scrollIntoView({
@@ -201,7 +282,13 @@ export class CrearMateriaModalComponent implements OnInit {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-  // Getters para validaciones - Correquisito
+  // Getter para correquisito existente
+  get correquisitoExistenteInvalid(): boolean {
+    const control = this.materiaForm.get('idCorrequisitoExistente');
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  // Getters para validaciones - Correquisito Nuevo
   get corrOidMateriaInvalid(): boolean {
     const control = this.materiaForm.get('correquisito.oidMateria');
     return !!(control && control.invalid && (control.dirty || control.touched));
@@ -257,10 +344,15 @@ export class CrearMateriaModalComponent implements OnInit {
 
     try {
       if (this.tieneCorrequisito) {
-        // Escenario 1: Crear materia CON correquisito (2 peticiones)
-        await this.crearMateriaConCorrequisito();
+        if (this.tipoCorrequisito === 'existente') {
+          // Escenario 1: Crear materia con correquisito existente (1 petición)
+          await this.crearMateriaConCorrequisitoExistente();
+        } else {
+          // Escenario 2: Crear materia con correquisito nuevo (2 peticiones)
+          await this.crearMateriaConCorrequisitoNuevo();
+        }
       } else {
-        // Escenario 2: Crear materia SIN correquisito (1 petición)
+        // Escenario 3: Crear materia sin correquisito (1 petición)
         await this.crearMateriaSinCorrequisito();
       }
 
@@ -302,7 +394,32 @@ export class CrearMateriaModalComponent implements OnInit {
     });
   }
 
-  private async crearMateriaConCorrequisito(): Promise<void> {
+  private async crearMateriaConCorrequisitoExistente(): Promise<void> {
+    const formValue = this.materiaForm.value;
+
+    const createDto: CreateMateriaDto = {
+      oidMateria: formValue.oidMateria,
+      codigo: formValue.codigo,
+      nombre: formValue.nombre,
+      semestre: formValue.semestre,
+      horasSemana: Number(formValue.horasSemana),
+      oidDepartamento: formValue.oidDepartamento,
+      oidPlan: this.oidPlan,
+      idCorrequisito: formValue.idCorrequisitoExistente,
+    };
+
+    await new Promise((resolve, reject) => {
+      this.materiaService.createMateria(createDto).subscribe({
+        next: (response) => {
+          console.log('Materia creada con correquisito existente:', response);
+          resolve(response);
+        },
+        error: (error) => reject(error),
+      });
+    });
+  }
+
+  private async crearMateriaConCorrequisitoNuevo(): Promise<void> {
     const formValue = this.materiaForm.value;
     const correquisito = formValue.correquisito;
 
@@ -337,7 +454,7 @@ export class CrearMateriaModalComponent implements OnInit {
       horasSemana: Number(formValue.horasSemana),
       oidDepartamento: formValue.oidDepartamento,
       oidPlan: this.oidPlan,
-      idCorrequisito: correquisitoCreado.data.idMateria, // IMPORTANTE: usar idMateria
+      idCorrequisito: correquisitoCreado.data.idMateria,
     };
 
     await new Promise((resolve, reject) => {
