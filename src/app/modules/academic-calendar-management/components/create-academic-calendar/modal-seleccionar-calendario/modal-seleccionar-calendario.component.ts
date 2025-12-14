@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Calendario } from '../../../models';
+import { Calendario, Fecha } from '../../../models';
 import { Utils } from '../../../utils/calendario.utils';
 
 @Component({
@@ -50,5 +50,18 @@ export class ModalSeleccionarCalendarioComponent {
 
   obtenerBadgeClass(estado: string): string {
     return Utils.getBadgeClass(estado);
+  }
+
+  contarFechasConDatos(fechas: Fecha[] | undefined): number {
+    if (!fechas || fechas.length === 0) return 0;
+
+    return fechas.filter((fecha) => {
+      const tieneFechaInicial =
+        fecha.fechaInicial && fecha.fechaInicial.toString().trim() !== '';
+      const tieneFechaFin =
+        fecha.fechaFin && fecha.fechaFin.toString().trim() !== '';
+
+      return tieneFechaInicial || tieneFechaFin;
+    }).length;
   }
 }

@@ -108,12 +108,26 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.cargandoCalendarios.set(true);
     try {
       const calendarios = await this.calendarioHelper.getAll({ size: 50 });
-      const ordenados = calendarios.sort((a, b) => {
-        if (a.anioCalendario !== b.anioCalendario) {
-          return b.anioCalendario - a.anioCalendario;
-        }
-        return b.numeroCalendario - a.numeroCalendario;
+
+      // Obtener el número de periodo del calendario actual
+      const periodoActual = this.numeroCalendario();
+      const anioActual = this.anioCalendario();
+
+      // Filtrar solo calendarios del mismo periodo
+      const calendariosMismoPeriodo = calendarios.filter((cal) => {
+        // Mismo periodo y diferente año
+        return (
+          cal.numeroCalendario === periodoActual &&
+          cal.anioCalendario !== anioActual
+        );
       });
+
+      // Ordenar por año descendente
+      const ordenados = calendariosMismoPeriodo.sort((a, b) => {
+        return b.anioCalendario - a.anioCalendario;
+      });
+
+      // Tomar los 10 más recientes
       this.calendariosDisponibles.set(ordenados.slice(0, 10));
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
@@ -252,9 +266,12 @@ export class StepFechasComponent implements OnInit, OnChanges {
   }
 
   async copiarFechas(calendarioOrigen: Calendario): Promise<void> {
-    if (!calendarioOrigen.fechas || calendarioOrigen.fechas.length === 0) {
+    // contar solo fechas con datos
+    const fechasConDatos = this.contarFechasConDatos(calendarioOrigen.fechas);
+
+    if (fechasConDatos === 0) {
       this.toastr.warning(
-        'El calendario seleccionado no tiene fechas registradas'
+        'El calendario seleccionado no tiene fechas con datos registrados'
       );
       this.cerrarModalSeleccionar();
       return;
@@ -273,13 +290,23 @@ export class StepFechasComponent implements OnInit, OnChanges {
           (f) => f.oidNombreFecha === fechaActual.oidNombreFecha
         );
 
+        // Solo copiar si la fecha origen tiene datos
         if (fechaOrigen) {
-          mapeadas++;
-          return {
-            ...fechaActual,
-            fechaInicial: fechaOrigen.fechaInicial,
-            fechaFin: fechaOrigen.fechaFin || '',
-          } as Fecha;
+          const tieneFechaInicial =
+            fechaOrigen.fechaInicial &&
+            fechaOrigen.fechaInicial.toString().trim() !== '';
+          const tieneFechaFin =
+            fechaOrigen.fechaFin &&
+            fechaOrigen.fechaFin.toString().trim() !== '';
+
+          if (tieneFechaInicial || tieneFechaFin) {
+            mapeadas++;
+            return {
+              ...fechaActual,
+              fechaInicial: fechaOrigen.fechaInicial,
+              fechaFin: fechaOrigen.fechaFin || '',
+            } as Fecha;
+          }
         }
 
         return { ...fechaActual } as Fecha;
@@ -298,6 +325,22 @@ export class StepFechasComponent implements OnInit, OnChanges {
     } finally {
       this.guardandoFecha.set(false);
     }
+  }
+
+  /**
+   * Cuenta las fechas que tienen al menos fechaInicial o fechaFin definidos
+   */
+  contarFechasConDatos(fechas: Fecha[] | undefined): number {
+    if (!fechas || fechas.length === 0) return 0;
+
+    return fechas.filter((fecha) => {
+      const tieneFechaInicial =
+        fecha.fechaInicial && fecha.fechaInicial.toString().trim() !== '';
+      const tieneFechaFin =
+        fecha.fechaFin && fecha.fechaFin.toString().trim() !== '';
+
+      return tieneFechaInicial || tieneFechaFin;
+    }).length;
   }
 
   formatearFecha(fecha: Fecha): string {
