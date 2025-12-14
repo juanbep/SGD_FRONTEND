@@ -158,7 +158,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 .block-title {
@@ -236,6 +235,8 @@
   align-items: center;
   gap: 1rem;
   justify-content: center;
+  flex: 1;
+  align-items: center;
 }
 
 .total-col {
