@@ -1,5 +1,3 @@
-/* crear-materia-modal.component.css */
-
 /* ==================== ESTRUCTURA DEL MODAL ==================== */
 .modal-overlay {
   position: fixed;
@@ -106,42 +104,30 @@
   cursor: not-allowed;
 }
 
-/* ==================== INFO DEL PLAN ==================== */
-.info-plan-destacado {
-  background: linear-gradient(135deg, #001282 0%, #0051c6 100%);
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
+/* ==================== INFO DEL PLAN (SIMPLIFICADO) ==================== */
+.info-plan-simple {
+  color: #001282;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 61, 122, 0.2);
+  gap: 0.5rem;
 }
 
-.plan-icon {
-  font-size: 2rem;
-  color: #ffffff;
-}
-
-.plan-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.plan-label {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.plan-numero {
-  font-size: 1.5rem;
-  color: #ffffff;
-  font-weight: 700;
+.info-plan-simple i {
+  color: #0051c6;
 }
 
 /* ==================== FORMULARIO ==================== */
+.materia-principal-section {
+  background-color: #f8f9fa;
+  padding: 1.25rem;
+  border-radius: 6px;
+  border-left: 4px solid #0051c6;
+  margin-bottom: 1.5rem;
+}
+
 .info-item {
   margin-bottom: 0;
 }
@@ -170,55 +156,47 @@ hr {
 }
 
 /* ==================== TOGGLE CORREQUISITO ==================== */
+
 .toggle-correquisito-container {
-  background-color: #e7f3ff;
-  border: 2px solid #0056b3;
-  border-radius: 8px;
+  background-color: #edf8fd;
   padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
   margin-bottom: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.toggle-correquisito-container:hover {
-  background-color: #d0e8ff;
-  border-color: #003d7a;
-  box-shadow: 0 2px 8px rgba(0, 61, 122, 0.15);
+.toggle-correquisito-container .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
 }
 
-.form-check-input {
+.toggle-correquisito-container .form-check-input {
   cursor: pointer;
   width: 3rem;
   height: 1.5rem;
+  margin: 0;
+  flex-shrink: 0;
 }
 
-.form-check-input:checked {
+.toggle-correquisito-container .form-check-input:checked {
   background-color: #003d7a;
   border-color: #003d7a;
 }
 
-.form-check-label {
-  cursor: pointer;
-  width: 100%;
+.toggle-correquisito-container .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 61, 122, 0.25);
+  border-color: #003d7a;
 }
 
-.toggle-label-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.toggle-title {
+.toggle-correquisito-container .form-check-label {
   color: #003d7a;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.toggle-description {
-  color: #0056b3;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 0;
+  flex: 1;
 }
 
 /* ==================== SECCIÓN DE CORREQUISITO ==================== */
@@ -226,7 +204,7 @@ hr {
   background-color: #f8f9fa;
   padding: 1.25rem;
   border-radius: 6px;
-  border-left: 4px solid #003d7a;
+  border-left: 4px solid #1e7a2d;
   scroll-margin-top: 20px;
 }
 
@@ -251,13 +229,14 @@ hr {
     max-height: 95vh;
   }
 
-  .info-plan-destacado {
-    flex-direction: column;
-    text-align: center;
+  .info-plan-simple {
+    font-size: 1.1rem;
   }
 
-  .plan-numero {
-    font-size: 1.25rem;
+  .toggle-correquisito-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 
   .modal-body {
