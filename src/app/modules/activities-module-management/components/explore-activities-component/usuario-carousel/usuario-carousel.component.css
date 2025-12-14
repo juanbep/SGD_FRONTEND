@@ -1,10 +1,6 @@
-/* ========== CONTAINER PRINCIPAL ========== */
-
 .usuarios-container {
   background: #f8f9fa;
 }
-
-/* ========== EMPTY STATE ========== */
 
 .empty-state {
   text-align: center;
@@ -23,8 +19,6 @@
   font-size: 0.95rem;
 }
 
-/* ========== HEADER ========== */
-
 .usuarios-header {
   background: #fff;
   padding: 0.875rem 1.25rem;
@@ -42,8 +36,6 @@
   margin-right: 0.5rem;
 }
 
-/* ========== LISTA DE USUARIOS ========== */
-
 .usuarios-list {
   padding: 0.5rem;
 }
@@ -51,8 +43,6 @@
 .usuario-item {
   margin-bottom: 0.75rem;
 }
-
-/* ========== CARD USUARIO ========== */
 
 .usuario-card {
   background: #fff;
@@ -66,8 +56,6 @@
 .usuario-card:hover {
   box-shadow: 0 4px 16px rgba(0, 81, 198, 0.15);
 }
-
-/* ========== CARD HEADER ========== */
 
 .card-header-minimal {
   background-color: #001282;
@@ -100,8 +88,6 @@
   font-weight: 600;
 }
 
-/* ========== INFO RÁPIDA ========== */
-
 .info-rapida {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -121,14 +107,12 @@
   margin-right: 0.25rem;
 }
 
-/* ========== GRID DE INFORMACIÓN ========== */
-
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   padding: 1rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid #f8ae15;
 }
 
 .info-section {
@@ -160,10 +144,136 @@
   line-height: 1.3;
 }
 
-/* ========== ROLES COMPACTOS ========== */
+.horas-minimal {
+  padding: 1rem;
+  border-bottom: 1px solid #f8ae15;
+  background: linear-gradient(to right, #f8f9fa 0%, #fff 100%);
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch;
+  min-height: 150px;
+}
+
+.horas-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.block-title {
+  font-size: 0.75rem;
+  color: #001282;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.block-title i {
+  color: #0051c6;
+  font-size: 0.9rem;
+}
+
+.tipos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tipos-list::-webkit-scrollbar {
+  display: none;
+}
+
+.tipo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.tipo-icon {
+  color: #0051c6;
+  font-size: 0.6rem;
+}
+
+.tipo-text {
+  flex: 1;
+  color: #495057;
+  font-weight: 500;
+}
+
+.tipo-horas {
+  font-weight: 700;
+  color: #001282;
+  background: rgba(0, 81, 198, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.horas-divider {
+  width: 2px;
+  align-self: stretch;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #0051c6 50%,
+    transparent 100%
+  );
+}
+
+.totales-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.total-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.total-num {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.total-num.asignadas {
+  color: #198754;
+}
+
+.total-num.disponibles {
+  color: #f8ae15;
+}
+
+.total-text {
+  font-size: 0.7rem;
+  color: #6c757d;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.total-separator {
+  font-size: 1.5rem;
+  color: #dee2e6;
+  font-weight: 300;
+}
 
 .roles-compact {
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid #e9ecef;
   display: flex;
   align-items: center;
@@ -172,7 +282,7 @@
 }
 
 .roles-compact label {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: #001282;
   font-weight: 600;
   margin: 0;
@@ -189,85 +299,6 @@
   font-weight: 500;
   line-height: 1.2;
 }
-
-/* ========== HORAS COMPACTAS ========== */
-
-.horas-compact {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e9ecef;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-/* ========== DESPLEGABLES (DETAILS) ========== */
-
-.detalle-tipos {
-  margin: 0;
-}
-
-.detalle-tipos summary {
-  cursor: pointer;
-  font-size: 0.8rem;
-  color: #0051c6;
-  padding: 0.5rem;
-  background: #f1f3f5;
-  border-radius: 0.25rem;
-  user-select: none;
-  font-weight: 500;
-}
-
-.detalle-tipos summary:hover {
-  background: rgba(0, 81, 198, 0.1);
-  color: #001282;
-}
-
-.detalle-tipos table {
-  width: 100%;
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
-  border-collapse: collapse;
-}
-
-.detalle-tipos th,
-.detalle-tipos td {
-  padding: 0.4rem 0.5rem;
-  text-align: left;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.detalle-tipos th {
-  background: #f8f9fa;
-  color: #001282;
-  font-weight: 600;
-  font-size: 0.75rem;
-}
-
-.detalle-tipos td {
-  color: #212529;
-}
-
-.detalle-tipos td:nth-child(2),
-.detalle-tipos td:nth-child(3),
-.detalle-tipos th:nth-child(2),
-.detalle-tipos th:nth-child(3) {
-  text-align: center;
-  width: 60px;
-  color: #0051c6;
-  font-weight: 600;
-}
-
-.detalle-tipos td.asignadas {
-  color: #198754;
-  font-weight: 700;
-}
-
-.detalle-tipos td.disponibles {
-  color: #f8ae15;
-  font-weight: 700;
-}
-
-/* ========== FOOTER ========== */
 
 .card-footer-minimal {
   padding: 0.75rem 1rem;
@@ -299,8 +330,6 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
-
-/* ========== CONFIRMACIÓN ========== */
 
 .confirmacion-card {
   background: #fff;
@@ -386,13 +415,9 @@
   cursor: not-allowed;
 }
 
-/* ========== SPINNER ========== */
-
 .spinner-border {
   color: #001282 !important;
 }
-
-/* ========== RESPONSIVE ========== */
 
 @media (max-width: 768px) {
   .info-grid {
@@ -426,5 +451,21 @@
 
   .usuarios-list {
     padding: 0.5rem;
+  }
+
+  .horas-minimal {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .horas-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      #0051c6 50%,
+      transparent 100%
+    );
   }
 }

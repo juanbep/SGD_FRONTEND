@@ -1,11 +1,9 @@
 <div class="usuarios-container">
-  <!-- Mensaje cuando no hay usuarios -->
   <div *ngIf="usuariosCompletos.length === 0" class="empty-state">
     <i class="fas fa-info-circle"></i>
     <p>No hay usuarios asociados a esta actividad</p>
   </div>
 
-  <!-- Header con contador -->
   <div *ngIf="usuariosCompletos.length > 0" class="usuarios-header">
     <span class="usuarios-count">
       <i class="fas fa-users"></i>
@@ -13,14 +11,12 @@
     </span>
   </div>
 
-  <!-- Lista de usuarios -->
   <div class="usuarios-list">
     <div
       *ngFor="let usuario of usuariosCompletos; let i = index"
       class="usuario-item"
       [attr.data-usuario-id]="usuario.oidUsuario"
     >
-      <!-- Vista de confirmación -->
       <div
         *ngIf="usuarioEnConfirmacion === usuario.oidUsuario"
         class="confirmacion-card"
@@ -54,12 +50,10 @@
         </div>
       </div>
 
-      <!-- Vista normal -->
       <div
         *ngIf="usuarioEnConfirmacion !== usuario.oidUsuario"
         class="usuario-card"
       >
-        <!-- Header con nombre y contador -->
         <div class="card-header-minimal">
           <div class="usuario-nombre">
             <i class="fas fa-user-circle"></i>
@@ -68,19 +62,17 @@
           <span class="usuario-numero">{{ i + 1 }}/{{ totalUsuarios }}</span>
         </div>
 
-        <!-- Info rápida: Cargo y Horas -->
         <div class="info-rapida">
-          <span
-            ><strong>Cargo:</strong>
-            {{ getNombreCargoUsuario(usuario.oidUsuario) }}</span
-          >
-          <span
-            ><strong>Horas Máximas:</strong>
-            {{ getHorasUsuario(usuario.oidUsuario) }}</span
-          >
+          <span>
+            <strong>Cargo:</strong>
+            {{ getNombreCargoUsuario(usuario.oidUsuario) }}
+          </span>
+          <span>
+            <strong>Horas:</strong>
+            {{ getHorasUsuario(usuario.oidUsuario) }}
+          </span>
         </div>
 
-        <!-- Grid de información -->
         <div class="info-grid">
           <div class="info-section">
             <div class="info-item">
@@ -123,7 +115,55 @@
           </div>
         </div>
 
-        <!-- Roles -->
+        <div *ngIf="usuario.horasLaborDocente" class="horas-minimal">
+          <div
+            class="horas-block"
+            *ngIf="usuario.horasLaborDocente.horasAsignadasPorTipoActividad"
+          >
+            <div class="block-title">
+              <i class="fas fa-list-check"></i>
+              Horas por Tipo
+            </div>
+            <div class="tipos-list">
+              <div
+                class="tipo-row"
+                *ngFor="
+                  let item of usuario.horasLaborDocente
+                    .horasAsignadasPorTipoActividad | keyvalue
+                "
+              >
+                <span class="tipo-icon">●</span>
+                <span class="tipo-text">{{ item.key }}</span>
+                <span class="tipo-horas">{{ item.value }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="horas-divider"></div>
+
+          <div class="horas-block">
+            <div class="block-title">
+              <i class="fas fa-business-time"></i>
+              Labor Docente
+            </div>
+            <div class="totales-row">
+              <div class="total-col">
+                <span class="total-num asignadas">{{
+                  usuario.horasLaborDocente.totalHorasAsignadas
+                }}</span>
+                <span class="total-text">Asignadas</span>
+              </div>
+              <div class="total-separator">/</div>
+              <div class="total-col">
+                <span class="total-num disponibles">{{
+                  usuario.horasLaborDocente.totalHorasDisponibles
+                }}</span>
+                <span class="total-text">Disponibles</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div
           class="roles-compact"
           *ngIf="usuario.roles && usuario.roles.length > 0"
@@ -134,69 +174,6 @@
           }}</span>
         </div>
 
-        <!-- Horas labor docente -->
-        <div *ngIf="usuario.horasLaborDocente" class="horas-compact">
-          <!-- Desplegable 1: Total horas para esta actividad -->
-          <details
-            class="detalle-tipos"
-            *ngIf="usuario.horasLaborDocente.horasAsignadasPorTipoActividad"
-          >
-            <summary>TOTAL HORAS PARA ESTA ACTIVIDAD</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>Tipo</th>
-                  <th>Asignadas</th>
-                  <th>Disponibles</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  *ngFor="
-                    let item of usuario.horasLaborDocente
-                      .horasAsignadasPorTipoActividad | keyvalue
-                  "
-                >
-                  <td>{{ item.key }}</td>
-                  <td class="asignadas">{{ item.value }}</td>
-                  <td class="disponibles">
-                    {{
-                      usuario.horasLaborDocente
-                        .horasDisponiblesPorTipoActividad[item.key] || 0
-                    }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </details>
-
-          <!-- Desplegable 2: Total horas labor docente -->
-          <details class="detalle-tipos">
-            <summary>TOTAL HORAS LABOR DOCENTE</summary>
-            <table>
-              <thead>
-                <tr>
-                  <th>Tipo</th>
-                  <th>Asignadas</th>
-                  <th>Disponibles</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>TOTAL HORAS</td>
-                  <td class="asignadas">
-                    {{ usuario.horasLaborDocente.totalHorasAsignadas }}
-                  </td>
-                  <td class="disponibles">
-                    {{ usuario.horasLaborDocente.totalHorasDisponibles }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </details>
-        </div>
-
-        <!-- Botón desasignar -->
         <div *ngIf="modo === 'gestionar'" class="card-footer-minimal">
           <button
             class="btn-desasignar"
