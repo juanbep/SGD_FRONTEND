@@ -183,13 +183,22 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.guardandoFecha.set(true);
 
     try {
-      await this.fechaHelper.update(updateDto);
-      await this.cargarFechas();
-      this.toastr.success('Fecha actualizada correctamente');
-      this.cerrarModalAgregar();
-    } catch (error) {
+      const fechaActualizada = await this.fechaHelper.update(updateDto);
+
+      if (fechaActualizada) {
+        await this.cargarFechas();
+        this.toastr.success('Fecha actualizada correctamente');
+        this.cerrarModalAgregar();
+      } else {
+        this.toastr.error('No se pudo actualizar la fecha');
+      }
+    } catch (error: any) {
       console.error('Error al actualizar fecha:', error);
-      this.toastr.error('Error al actualizar la fecha');
+      const mensaje =
+        error?.error?.mensaje ||
+        error?.mensaje ||
+        'Error al actualizar la fecha';
+      this.toastr.error(mensaje);
     } finally {
       this.guardandoFecha.set(false);
     }
