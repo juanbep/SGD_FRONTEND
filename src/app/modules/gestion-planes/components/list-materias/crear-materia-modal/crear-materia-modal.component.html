@@ -1,268 +1,472 @@
-<!-- Modal Backdrop -->
-<div class="modal-backdrop fade show"></div>
+<!-- Modal Overlay -->
+<div class="modal-overlay" (click)="cancelar()"></div>
 
-<!-- Modal -->
-<div class="modal fade show d-block" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content border-0 shadow-lg">
-      <!-- Header -->
-      <div class="modal-header text-white border-0 py-3">
-        <h5 class="modal-title fw-bold mb-0">
-          <i class="fas fa-plus-circle me-2" style="color: #f8ae15"></i>
-          Crear Nueva Materia
-        </h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          [disabled]="guardando"
-          (click)="cancelar()"
-          aria-label="Cerrar"
-        ></button>
+<!-- Modal Container -->
+<div class="modal-container" (click)="$event.stopPropagation()">
+  <!-- Header -->
+  <div class="modal-header">
+    <h5 class="modal-title">
+      <i class="fas fa-plus-circle me-2"></i>
+      Crear Nueva Materia
+    </h5>
+    <button
+      type="button"
+      class="btn-close btn-close-white"
+      [disabled]="guardando"
+      (click)="cancelar()"
+      aria-label="Cerrar"
+    ></button>
+  </div>
+
+  <!-- Body -->
+  <div class="modal-body">
+    <!-- Info del Plan -->
+    <div class="info-plan-destacado mb-4">
+      <div class="plan-icon">
+        <i class="bi bi-journal-bookmark-fill"></i>
       </div>
+      <div class="plan-info">
+        <span class="plan-label">Plan de Estudios</span>
+        <span class="plan-numero">{{ numeroPlan || "N/A" }}</span>
+      </div>
+    </div>
 
-      <!-- Body -->
-      <div class="modal-body p-4">
-        <!-- Alerta informativa del plan -->
-        <div class="alert alert-info d-flex align-items-center mb-3">
-          <i class="fas fa-info-circle fa-lg me-3"></i>
-          <div><strong>Plan:</strong> {{ numeroPlan || oidPlan }}</div>
+    <!-- Formulario -->
+    <form [formGroup]="materiaForm">
+      <!-- ============== MATERIA PRINCIPAL ============== -->
+      <h6 class="section-title mb-3">
+        <i class="bi bi-bookmark-fill me-2"></i>Datos de la Materia
+      </h6>
+
+      <!-- Fila 1: OID Materia, Código, Semestre -->
+      <div class="row g-3">
+        <!-- OID Materia -->
+        <div class="col-md-4">
+          <div class="info-item">
+            <label class="info-label" for="oidMateria">
+              OID Materia <span class="text-danger">*</span>
+            </label>
+            <input
+              id="oidMateria"
+              type="text"
+              class="form-control"
+              formControlName="oidMateria"
+              placeholder="Ej: 10195"
+              [class.is-invalid]="oidMateriaInvalid"
+            />
+            <div class="invalid-feedback" *ngIf="oidMateriaInvalid">
+              <span *ngIf="materiaForm.get('oidMateria')?.hasError('required')">
+                El OID es obligatorio
+              </span>
+              <span *ngIf="materiaForm.get('oidMateria')?.hasError('pattern')">
+                Debe ser un número válido
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div class="row g-4">
-          <div class="col-12">
-            <div class="info-section">
-              <h6 class="section-title mb-3">
-                <i class="fas fa-book me-2"></i>
-                Información de la Materia
-              </h6>
+        <!-- Código -->
+        <div class="col-md-4">
+          <div class="info-item">
+            <label class="info-label" for="codigo">
+              Código <span class="text-danger">*</span>
+            </label>
+            <input
+              id="codigo"
+              type="text"
+              class="form-control"
+              formControlName="codigo"
+              placeholder="Ej: SIS504"
+              [class.is-invalid]="codigoInvalid"
+            />
+            <div class="invalid-feedback" *ngIf="codigoInvalid">
+              El código es obligatorio
+            </div>
+          </div>
+        </div>
 
-              <form [formGroup]="materiaForm">
-                <!-- Fila 1: OID Materia, Código, Semestre -->
-                <div class="row g-3">
-                  <!-- OID Materia -->
-                  <div class="col-md-4">
-                    <div class="info-item">
-                      <label class="info-label" for="oidMateria">
-                        OID Materia <span class="text-danger">*</span>
-                      </label>
-                      <input
-                        id="oidMateria"
-                        type="text"
-                        class="form-control"
-                        formControlName="oidMateria"
-                        placeholder="Ej: 10195"
-                        [class.is-invalid]="oidMateriaInvalid"
-                      />
-                      <div class="invalid-feedback" *ngIf="oidMateriaInvalid">
-                        <span
-                          *ngIf="
-                            materiaForm.get('oidMateria')?.hasError('required')
-                          "
-                        >
-                          El OID es obligatorio
-                        </span>
-                        <span
-                          *ngIf="
-                            materiaForm.get('oidMateria')?.hasError('pattern')
-                          "
-                        >
-                          Debe ser un número válido
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Código -->
-                  <div class="col-md-4">
-                    <div class="info-item">
-                      <label class="info-label" for="codigo">
-                        Código <span class="text-danger">*</span>
-                      </label>
-                      <input
-                        id="codigo"
-                        type="text"
-                        class="form-control"
-                        formControlName="codigo"
-                        placeholder="Ej: SIS504"
-                        [class.is-invalid]="codigoInvalid"
-                      />
-                      <div class="invalid-feedback" *ngIf="codigoInvalid">
-                        El código es obligatorio
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Semestre -->
-                  <div class="col-md-4">
-                    <div class="info-item">
-                      <label class="info-label" for="semestre">
-                        Semestre <span class="text-danger">*</span>
-                      </label>
-                      <ng-select
-                        id="semestre"
-                        [items]="semestresDisponibles"
-                        formControlName="semestre"
-                        placeholder="Seleccione"
-                        [clearable]="false"
-                        [searchable]="false"
-                        [class.is-invalid]="semestreInvalid"
-                      >
-                      </ng-select>
-                      <div
-                        class="invalid-feedback d-block"
-                        *ngIf="semestreInvalid"
-                      >
-                        El semestre es obligatorio
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Fila 2: Nombre -->
-                <div class="row g-3 mt-1">
-                  <div class="col-12">
-                    <div class="info-item">
-                      <label class="info-label" for="nombre">
-                        Nombre de la Materia <span class="text-danger">*</span>
-                      </label>
-                      <input
-                        id="nombre"
-                        type="text"
-                        class="form-control"
-                        formControlName="nombre"
-                        placeholder="Ej: Programación Orientada a Objetos"
-                        [class.is-invalid]="nombreInvalid"
-                      />
-                      <div class="invalid-feedback" *ngIf="nombreInvalid">
-                        El nombre es obligatorio
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Fila 3: Horas/Semana y Departamento -->
-                <div class="row g-3 mt-1">
-                  <!-- Horas/Semana -->
-                  <div class="col-md-4">
-                    <div class="info-item">
-                      <label class="info-label" for="horasSemana">
-                        Horas por Semana <span class="text-danger">*</span>
-                      </label>
-                      <input
-                        id="horasSemana"
-                        type="number"
-                        class="form-control"
-                        formControlName="horasSemana"
-                        placeholder="Ej: 4"
-                        min="1"
-                        [class.is-invalid]="horasSemanaInvalid"
-                      />
-                      <div class="invalid-feedback" *ngIf="horasSemanaInvalid">
-                        <span
-                          *ngIf="
-                            materiaForm.get('horasSemana')?.hasError('required')
-                          "
-                        >
-                          Las horas son obligatorias
-                        </span>
-                        <span
-                          *ngIf="
-                            materiaForm.get('horasSemana')?.hasError('pattern')
-                          "
-                        >
-                          Debe ser un número válido
-                        </span>
-                        <span
-                          *ngIf="
-                            materiaForm.get('horasSemana')?.hasError('min')
-                          "
-                        >
-                          Debe ser mayor a 0
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Departamento -->
-                  <div class="col-md-8">
-                    <div class="info-item">
-                      <label class="info-label" for="oidDepartamento">
-                        Departamento <span class="text-danger">*</span>
-                      </label>
-                      <ng-select
-                        id="oidDepartamento"
-                        [items]="departamentos"
-                        bindLabel="label"
-                        bindValue="value"
-                        formControlName="oidDepartamento"
-                        [placeholder]="
-                          loadingDepartamentos
-                            ? 'Cargando departamentos...'
-                            : 'Seleccione un departamento'
-                        "
-                        [clearable]="true"
-                        [searchable]="true"
-                        [loading]="loadingDepartamentos"
-                        [class.is-invalid]="departamentoInvalid"
-                      >
-                        <ng-template ng-label-tmp let-item="item">
-                          {{ item.label }}
-                        </ng-template>
-                        <ng-template ng-option-tmp let-item="item">
-                          <div>
-                            <strong>{{ item.label }}</strong>
-                            <br />
-                            <small class="text-muted">{{
-                              item.facultad
-                            }}</small>
-                          </div>
-                        </ng-template>
-                      </ng-select>
-                      <div
-                        class="invalid-feedback d-block"
-                        *ngIf="departamentoInvalid"
-                      >
-                        El departamento es obligatorio
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </form>
+        <!-- Semestre -->
+        <div class="col-md-4">
+          <div class="info-item">
+            <label class="info-label" for="semestre">
+              Semestre <span class="text-danger">*</span>
+            </label>
+            <ng-select
+              id="semestre"
+              [items]="semestresDisponibles"
+              formControlName="semestre"
+              placeholder="Seleccione"
+              [clearable]="false"
+              [searchable]="false"
+              [class.is-invalid]="semestreInvalid"
+            >
+            </ng-select>
+            <div class="invalid-feedback d-block" *ngIf="semestreInvalid">
+              El semestre es obligatorio
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Footer -->
-      <div class="modal-footer border-0 py-3">
-        <button
-          type="button"
-          class="btn btn-outline-secondary px-4"
-          [disabled]="guardando"
-          (click)="cancelar()"
-        >
-          <i class="fas fa-times me-2"></i>
-          Cancelar
-        </button>
-        <button
-          type="button"
-          class="btn btn-success px-4"
-          [disabled]="guardando"
-          (click)="guardar()"
-        >
-          <ng-container *ngIf="!guardando">
-            <i class="fas fa-check me-2"></i>
-            Crear Materia
-          </ng-container>
-          <ng-container *ngIf="guardando">
-            <span
-              class="spinner-border spinner-border-sm me-2"
-              role="status"
-            ></span>
-            Creando...
-          </ng-container>
-        </button>
+      <!-- Fila 2: Nombre -->
+      <div class="row g-3 mt-1">
+        <div class="col-12">
+          <div class="info-item">
+            <label class="info-label" for="nombre">
+              Nombre de la Materia <span class="text-danger">*</span>
+            </label>
+            <input
+              id="nombre"
+              type="text"
+              class="form-control"
+              formControlName="nombre"
+              placeholder="Ej: Programación Orientada a Objetos"
+              [class.is-invalid]="nombreInvalid"
+            />
+            <div class="invalid-feedback" *ngIf="nombreInvalid">
+              El nombre es obligatorio
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <!-- Fila 3: Horas/Semana y Departamento -->
+      <div class="row g-3 mt-1">
+        <!-- Horas/Semana -->
+        <div class="col-md-4">
+          <div class="info-item">
+            <label class="info-label" for="horasSemana">
+              Horas por Semana <span class="text-danger">*</span>
+            </label>
+            <input
+              id="horasSemana"
+              type="number"
+              class="form-control"
+              formControlName="horasSemana"
+              placeholder="Ej: 4"
+              min="1"
+              [class.is-invalid]="horasSemanaInvalid"
+            />
+            <div class="invalid-feedback" *ngIf="horasSemanaInvalid">
+              <span
+                *ngIf="materiaForm.get('horasSemana')?.hasError('required')"
+              >
+                Las horas son obligatorias
+              </span>
+              <span *ngIf="materiaForm.get('horasSemana')?.hasError('pattern')">
+                Debe ser un número válido
+              </span>
+              <span *ngIf="materiaForm.get('horasSemana')?.hasError('min')">
+                Debe ser mayor a 0
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Departamento -->
+        <div class="col-md-8">
+          <div class="info-item">
+            <label class="info-label" for="oidDepartamento">
+              Departamento <span class="text-danger">*</span>
+            </label>
+            <ng-select
+              id="oidDepartamento"
+              [items]="departamentos"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="oidDepartamento"
+              [placeholder]="
+                loadingDepartamentos
+                  ? 'Cargando departamentos...'
+                  : 'Seleccione un departamento'
+              "
+              [clearable]="true"
+              [searchable]="true"
+              [loading]="loadingDepartamentos"
+              [class.is-invalid]="departamentoInvalid"
+            >
+              <ng-template ng-label-tmp let-item="item">
+                {{ item.label }}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                <div>
+                  <strong>{{ item.label }}</strong>
+                  <br />
+                  <small class="text-muted">{{ item.facultad }}</small>
+                </div>
+              </ng-template>
+            </ng-select>
+            <div class="invalid-feedback d-block" *ngIf="departamentoInvalid">
+              El departamento es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== CORREQUISITO (OPCIONAL) ============== -->
+      <hr class="my-4" />
+
+      <!-- Toggle para activar correquisito -->
+      <div class="toggle-correquisito-container">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="toggleCorrequisito"
+            [checked]="tieneCorrequisito"
+            (change)="onToggleCorrequisito($any($event.target).checked)"
+          />
+          <label class="form-check-label" for="toggleCorrequisito">
+            <div class="toggle-label-content">
+              <strong class="toggle-title">
+                <i class="bi bi-link-45deg me-1"></i>
+                Esta materia tiene correquisito
+              </strong>
+              <small class="toggle-description">
+                Activa esta opción si necesitas crear el correquisito de esta
+                materia
+              </small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Formulario del Correquisito -->
+      <div
+        *ngIf="tieneCorrequisito"
+        class="correquisito-section"
+        formGroupName="correquisito"
+        #correquisitoSection
+      >
+        <h6 class="section-title mb-3">
+          <i class="bi bi-bookmark me-2"></i>Datos del Correquisito
+        </h6>
+
+        <!-- Fila 1: OID, Código, Semestre -->
+        <div class="row g-3">
+          <!-- OID Correquisito -->
+          <div class="col-md-4">
+            <div class="info-item">
+              <label class="info-label" for="corrOidMateria">
+                OID Materia <span class="text-danger">*</span>
+              </label>
+              <input
+                id="corrOidMateria"
+                type="text"
+                class="form-control"
+                formControlName="oidMateria"
+                placeholder="Ej: 10163"
+                [class.is-invalid]="corrOidMateriaInvalid"
+              />
+              <div class="invalid-feedback" *ngIf="corrOidMateriaInvalid">
+                <span
+                  *ngIf="
+                    materiaForm
+                      .get('correquisito.oidMateria')
+                      ?.hasError('required')
+                  "
+                >
+                  El OID es obligatorio
+                </span>
+                <span
+                  *ngIf="
+                    materiaForm
+                      .get('correquisito.oidMateria')
+                      ?.hasError('pattern')
+                  "
+                >
+                  Debe ser un número válido
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Código Correquisito -->
+          <div class="col-md-4">
+            <div class="info-item">
+              <label class="info-label" for="corrCodigo">
+                Código <span class="text-danger">*</span>
+              </label>
+              <input
+                id="corrCodigo"
+                type="text"
+                class="form-control"
+                formControlName="codigo"
+                placeholder="Ej: SIS503"
+                [class.is-invalid]="corrCodigoInvalid"
+              />
+              <div class="invalid-feedback" *ngIf="corrCodigoInvalid">
+                El código es obligatorio
+              </div>
+            </div>
+          </div>
+
+          <!-- Semestre Correquisito -->
+          <div class="col-md-4">
+            <div class="info-item">
+              <label class="info-label" for="corrSemestre">
+                Semestre <span class="text-danger">*</span>
+              </label>
+              <ng-select
+                id="corrSemestre"
+                [items]="semestresDisponibles"
+                formControlName="semestre"
+                placeholder="Seleccione"
+                [clearable]="false"
+                [searchable]="false"
+                [class.is-invalid]="corrSemestreInvalid"
+              >
+              </ng-select>
+              <div class="invalid-feedback d-block" *ngIf="corrSemestreInvalid">
+                El semestre es obligatorio
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fila 2: Nombre Correquisito -->
+        <div class="row g-3 mt-1">
+          <div class="col-12">
+            <div class="info-item">
+              <label class="info-label" for="corrNombre">
+                Nombre de la Materia <span class="text-danger">*</span>
+              </label>
+              <input
+                id="corrNombre"
+                type="text"
+                class="form-control"
+                formControlName="nombre"
+                placeholder="Ej: Ingeniería de Software I"
+                [class.is-invalid]="corrNombreInvalid"
+              />
+              <div class="invalid-feedback" *ngIf="corrNombreInvalid">
+                El nombre es obligatorio
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fila 3: Horas y Departamento Correquisito -->
+        <div class="row g-3 mt-1">
+          <!-- Horas/Semana Correquisito -->
+          <div class="col-md-4">
+            <div class="info-item">
+              <label class="info-label" for="corrHorasSemana">
+                Horas por Semana <span class="text-danger">*</span>
+              </label>
+              <input
+                id="corrHorasSemana"
+                type="number"
+                class="form-control"
+                formControlName="horasSemana"
+                placeholder="Ej: 4"
+                min="1"
+                [class.is-invalid]="corrHorasSemanaInvalid"
+              />
+              <div class="invalid-feedback" *ngIf="corrHorasSemanaInvalid">
+                <span
+                  *ngIf="
+                    materiaForm
+                      .get('correquisito.horasSemana')
+                      ?.hasError('required')
+                  "
+                >
+                  Las horas son obligatorias
+                </span>
+                <span
+                  *ngIf="
+                    materiaForm
+                      .get('correquisito.horasSemana')
+                      ?.hasError('pattern')
+                  "
+                >
+                  Debe ser un número válido
+                </span>
+                <span
+                  *ngIf="
+                    materiaForm.get('correquisito.horasSemana')?.hasError('min')
+                  "
+                >
+                  Debe ser mayor a 0
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Departamento Correquisito -->
+          <div class="col-md-8">
+            <div class="info-item">
+              <label class="info-label" for="corrOidDepartamento">
+                Departamento <span class="text-danger">*</span>
+              </label>
+              <ng-select
+                id="corrOidDepartamento"
+                [items]="departamentos"
+                bindLabel="label"
+                bindValue="value"
+                formControlName="oidDepartamento"
+                [placeholder]="
+                  loadingDepartamentos
+                    ? 'Cargando departamentos...'
+                    : 'Seleccione un departamento'
+                "
+                [clearable]="true"
+                [searchable]="true"
+                [loading]="loadingDepartamentos"
+                [class.is-invalid]="corrDepartamentoInvalid"
+              >
+                <ng-template ng-label-tmp let-item="item">
+                  {{ item.label }}
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  <div>
+                    <strong>{{ item.label }}</strong>
+                    <br />
+                    <small class="text-muted">{{ item.facultad }}</small>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                class="invalid-feedback d-block"
+                *ngIf="corrDepartamentoInvalid"
+              >
+                El departamento es obligatorio
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary px-4"
+      [disabled]="guardando"
+      (click)="cancelar()"
+    >
+      <i class="fas fa-times me-2"></i>
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-success px-4"
+      [disabled]="guardando"
+      (click)="guardar()"
+    >
+      <ng-container *ngIf="!guardando">
+        <i class="fas fa-check me-2"></i>
+        Crear Materia
+      </ng-container>
+      <ng-container *ngIf="guardando">
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+        ></span>
+        Creando...
+      </ng-container>
+    </button>
   </div>
 </div>

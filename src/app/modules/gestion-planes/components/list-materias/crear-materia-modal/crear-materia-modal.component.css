@@ -1,92 +1,77 @@
-/* Modal backdrop */
-.modal-backdrop {
-  background-color: rgba(0, 18, 130, 0.5) !important;
+/* crear-materia-modal.component.css */
+
+/* ==================== ESTRUCTURA DEL MODAL ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 18, 130, 0.5);
+  z-index: 1050;
 }
 
-/* Modal header - Azul oscuro institucional */
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1rem 3rem rgba(0, 18, 130, 0.3);
+  z-index: 1055;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== HEADER ==================== */
 .modal-header {
-  background-color: #001282 !important;
-  color: white !important;
+  background-color: #001282;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
-.modal-header .modal-title {
-  color: white !important;
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
 }
 
-/* Modal content */
-.modal-content {
-  border: none !important;
-  border-radius: 0.5rem;
+.modal-title i {
+  color: #f8ae15;
 }
 
-/* Modal body */
+/* ==================== BODY ==================== */
 .modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
   background-color: white;
 }
 
-/* Alert info */
-.modal-body .alert-info {
-  background-color: rgba(0, 81, 198, 0.08) !important;
-  border-left: 3px solid #0051c6 !important;
-  border-top: none;
-  border-right: none;
-  border-bottom: none;
-  color: #004085 !important;
-  padding: 0.75rem 1rem;
-}
-
-.modal-body .alert-info i {
-  color: #0051c6 !important;
-  flex-shrink: 0;
-}
-
-/* Info section */
-.info-section {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid #e9ecef;
-}
-
-/* Section title */
-.section-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #001282 !important;
-  border-bottom: 2px solid #f8ae15;
-  padding-bottom: 0.5rem;
-}
-
-.section-title i {
-  color: #0051c6 !important;
-}
-
-/* Info item */
-.info-item {
-  margin-bottom: 0.75rem;
-}
-
-/* Info label */
-.info-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #6c757d;
-  margin-bottom: 0.25rem;
-  display: block;
-}
-
-/* Placeholder temporal */
-.text-muted .fa-code {
-  color: #6c757d;
-}
-
-/* Modal footer */
+/* ==================== FOOTER ==================== */
 .modal-footer {
-  background-color: #f8f9fa !important;
+  padding: 1rem 1.5rem;
   border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
-/* Botón Cancelar - Outline */
+/* Botón Cancelar */
 .btn-outline-secondary {
   border-color: #0051c6 !important;
   color: #0051c6 !important;
@@ -104,7 +89,7 @@
   cursor: not-allowed;
 }
 
-/* Botón Crear - Verde institucional */
+/* Botón Crear */
 .btn-success {
   background-color: #249337 !important;
   border-color: #249337 !important;
@@ -121,52 +106,166 @@
   cursor: not-allowed;
 }
 
-/* Botón cerrar (X) */
-.btn-close-white {
-  filter: brightness(0) invert(1);
+/* ==================== INFO DEL PLAN ==================== */
+.info-plan-destacado {
+  background: linear-gradient(135deg, #001282 0%, #0051c6 100%);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 61, 122, 0.2);
 }
 
-/* Shadow del modal */
-.modal-content.shadow-lg {
-  box-shadow: 0 1rem 3rem rgba(0, 18, 130, 0.3) !important;
+.plan-icon {
+  font-size: 2rem;
+  color: #ffffff;
 }
 
-/* Estilos para ng-select */
-::ng-deep .info-section ng-select {
+.plan-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plan-numero {
+  font-size: 1.5rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ==================== FORMULARIO ==================== */
+.info-item {
+  margin-bottom: 0;
+}
+
+.info-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #003d7a;
+  font-size: 0.95rem;
+}
+
+.section-title {
+  color: #003d7a;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #f8ae15;
+  padding-bottom: 0.5rem;
+}
+
+hr {
+  border-top: 2px solid #dee2e6;
+}
+
+/* ==================== TOGGLE CORREQUISITO ==================== */
+.toggle-correquisito-container {
+  background-color: #e7f3ff;
+  border: 2px solid #0056b3;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-correquisito-container:hover {
+  background-color: #d0e8ff;
+  border-color: #003d7a;
+  box-shadow: 0 2px 8px rgba(0, 61, 122, 0.15);
+}
+
+.form-check-input {
+  cursor: pointer;
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.form-check-input:checked {
+  background-color: #003d7a;
+  border-color: #003d7a;
+}
+
+.form-check-label {
+  cursor: pointer;
   width: 100%;
 }
 
-::ng-deep .info-section ng-select.is-invalid .ng-select-container {
+.toggle-label-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.toggle-title {
+  color: #003d7a;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.toggle-description {
+  color: #0056b3;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* ==================== SECCIÓN DE CORREQUISITO ==================== */
+.correquisito-section {
+  background-color: #f8f9fa;
+  padding: 1.25rem;
+  border-radius: 6px;
+  border-left: 4px solid #003d7a;
+  scroll-margin-top: 20px;
+}
+
+/* ==================== NG-SELECT ==================== */
+::ng-deep ng-select.is-invalid .ng-select-container {
   border-color: #dc3545;
 }
 
-::ng-deep .info-section ng-select .ng-select-container {
+::ng-deep ng-select .ng-select-container {
   min-height: 38px;
   border-radius: 0.375rem;
 }
 
-/* Invalid feedback para ng-select */
 .invalid-feedback.d-block {
   display: block !important;
 }
 
-/* Responsividad */
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-  .modal-dialog {
-    margin: 0.5rem;
+  .modal-container {
+    width: 95%;
+    max-height: 95vh;
   }
 
-  .info-section {
-    padding: 1rem;
+  .info-plan-destacado {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .plan-numero {
+    font-size: 1.25rem;
   }
 
   .modal-body {
-    padding: 1.5rem !important;
+    padding: 1rem;
   }
 
   .modal-footer {
     flex-direction: column;
-    gap: 0.5rem;
   }
 
   .modal-footer .btn {
