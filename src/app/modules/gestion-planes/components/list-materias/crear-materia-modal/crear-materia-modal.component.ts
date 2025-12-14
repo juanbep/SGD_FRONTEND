@@ -18,6 +18,8 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { DepartamentoHelperService } from '../../../services';
+import { MateriaService } from '../../../services/materia/materia.service';
+import { CreateMateriaDto } from '../../../models';
 
 @Component({
   selector: 'app-crear-materia-modal',
@@ -38,6 +40,7 @@ export class CrearMateriaModalComponent implements OnInit {
   private fb = inject(FormBuilder);
   private toastr = inject(ToastrService);
   private departamentoHelper = inject(DepartamentoHelperService);
+  private materiaService = inject(MateriaService);
 
   materiaForm!: FormGroup;
   guardando = false;
@@ -229,7 +232,7 @@ export class CrearMateriaModalComponent implements OnInit {
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
-  guardar(): void {
+  async guardar(): Promise<void> {
     // Marcar todos los campos como touched para mostrar errores
     Object.keys(this.materiaForm.controls).forEach((key) => {
       const control = this.materiaForm.get(key);
@@ -250,24 +253,102 @@ export class CrearMateriaModalComponent implements OnInit {
       return;
     }
 
-    // TODO: Implementar en siguientes fases
-    const datosMateria = this.materiaForm.value;
-    console.log('Datos del formulario:', {
-      materiaCompleta: datosMateria,
-      tieneCorrequisito: this.tieneCorrequisito,
-      materiaPrincipal: {
-        oidMateria: datosMateria.oidMateria,
-        codigo: datosMateria.codigo,
-        nombre: datosMateria.nombre,
-        semestre: datosMateria.semestre,
-        horasSemana: datosMateria.horasSemana,
-        oidDepartamento: datosMateria.oidDepartamento,
-      },
-      materiaCorrequisito: this.tieneCorrequisito
-        ? datosMateria.correquisito
-        : null,
+    this.guardando = true;
+
+    try {
+      if (this.tieneCorrequisito) {
+        // Escenario 1: Crear materia CON correquisito (2 peticiones)
+        await this.crearMateriaConCorrequisito();
+      } else {
+        // Escenario 2: Crear materia SIN correquisito (1 petición)
+        await this.crearMateriaSinCorrequisito();
+      }
+
+      this.toastr.success('Materia creada exitosamente', 'Éxito');
+      this.onMateriaCreada.emit();
+    } catch (error: any) {
+      console.error('Error al crear materia:', error);
+      this.toastr.error(
+        error?.error?.mensaje || 'No se pudo crear la materia',
+        'Error'
+      );
+    } finally {
+      this.guardando = false;
+    }
+  }
+
+  private async crearMateriaSinCorrequisito(): Promise<void> {
+    const materiaPrincipal = this.materiaForm.value;
+
+    const createDto: CreateMateriaDto = {
+      oidMateria: materiaPrincipal.oidMateria,
+      codigo: materiaPrincipal.codigo,
+      nombre: materiaPrincipal.nombre,
+      semestre: materiaPrincipal.semestre,
+      horasSemana: Number(materiaPrincipal.horasSemana),
+      oidDepartamento: materiaPrincipal.oidDepartamento,
+      oidPlan: this.oidPlan,
+      idCorrequisito: null,
+    };
+
+    await new Promise((resolve, reject) => {
+      this.materiaService.createMateria(createDto).subscribe({
+        next: (response) => {
+          console.log('Materia creada:', response);
+          resolve(response);
+        },
+        error: (error) => reject(error),
+      });
     });
-    this.toastr.info('Funcionalidad en desarrollo', 'Próximamente');
+  }
+
+  private async crearMateriaConCorrequisito(): Promise<void> {
+    const formValue = this.materiaForm.value;
+    const correquisito = formValue.correquisito;
+
+    // Paso 1: Crear el correquisito primero
+    const correquisitoDto: CreateMateriaDto = {
+      oidMateria: correquisito.oidMateria,
+      codigo: correquisito.codigo,
+      nombre: correquisito.nombre,
+      semestre: correquisito.semestre,
+      horasSemana: Number(correquisito.horasSemana),
+      oidDepartamento: correquisito.oidDepartamento,
+      oidPlan: this.oidPlan,
+      idCorrequisito: null,
+    };
+
+    const correquisitoCreado = await new Promise<any>((resolve, reject) => {
+      this.materiaService.createMateria(correquisitoDto).subscribe({
+        next: (response) => {
+          console.log('Correquisito creado:', response);
+          resolve(response);
+        },
+        error: (error) => reject(error),
+      });
+    });
+
+    // Paso 2: Crear la materia principal con el idMateria del correquisito
+    const materiaPrincipalDto: CreateMateriaDto = {
+      oidMateria: formValue.oidMateria,
+      codigo: formValue.codigo,
+      nombre: formValue.nombre,
+      semestre: formValue.semestre,
+      horasSemana: Number(formValue.horasSemana),
+      oidDepartamento: formValue.oidDepartamento,
+      oidPlan: this.oidPlan,
+      idCorrequisito: correquisitoCreado.data.idMateria, // IMPORTANTE: usar idMateria
+    };
+
+    await new Promise((resolve, reject) => {
+      this.materiaService.createMateria(materiaPrincipalDto).subscribe({
+        next: (response) => {
+          console.log('Materia principal creada:', response);
+          resolve(response);
+        },
+        error: (error) => reject(error),
+      });
+    });
   }
 
   cancelar(): void {
