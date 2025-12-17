@@ -402,10 +402,24 @@
   [materia]="materiaVerCorrequisitos"
   (onCerrar)="onCerrarCorrequisitos()"
 ></app-ver-correquisitos-modal>
-<app-crear-materia-modal
+
+<!-- Modal Crear Materia -->
+<app-crear-editar-materia-modal
   *ngIf="mostrarModalCrear"
+  [modo]="'crear'"
   [oidPlan]="oidPlan!"
   [numeroPlan]="numeroPlan"
   (onMateriaCreada)="onMateriaCreada()"
   (onCancelar)="onCancelarCreacion()"
-></app-crear-materia-modal>
+></app-crear-editar-materia-modal>
+
+<!-- Modal Editar Materia -->
+<app-crear-editar-materia-modal
+  *ngIf="mostrarModalEditar && materiaAEditar"
+  [modo]="'editar'"
+  [materia]="materiaAEditar"
+  [oidPlan]="oidPlan!"
+  [numeroPlan]="numeroPlan"
+  (onMateriaEditada)="onMateriaEditada()"
+  (onCancelar)="onCancelarEdicion()"
+></app-crear-editar-materia-modal>

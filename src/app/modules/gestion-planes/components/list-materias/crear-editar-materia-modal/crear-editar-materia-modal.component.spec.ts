@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CrearMateriaModalComponent } from './crear-materia-modal.component';
+import { CrearMateriaModalComponent } from './crear-editar-materia-modal.component';
 
 describe('CrearMateriaModalComponent', () => {
   let component: CrearMateriaModalComponent;

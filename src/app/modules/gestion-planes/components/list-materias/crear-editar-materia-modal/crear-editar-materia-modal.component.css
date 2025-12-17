@@ -249,6 +249,28 @@ hr {
   display: block;
 }
 
+/* Estilo para toggle deshabilitado */
+.form-check-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.form-check-label {
+  cursor: pointer;
+}
+
+.form-check-input:disabled ~ .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Alerta de correquisito existente */
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
 /* ==================== NG-SELECT ==================== */
 ::ng-deep ng-select.is-invalid .ng-select-container {
   border-color: #dc3545;

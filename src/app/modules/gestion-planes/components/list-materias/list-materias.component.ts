@@ -19,7 +19,7 @@ import { BaseHelperService } from '../../services/base-helper.service';
 import { MateriaService } from '../../services/materia/materia.service';
 import { EliminarMateriaModalComponent } from './eliminar-materia-modal/eliminar-materia-modal.component';
 import { VerCorrequisitosModalComponent } from './ver-correquisitos-modal/ver-correquisitos-modal.component';
-import { CrearMateriaModalComponent } from './crear-materia-modal/crear-materia-modal.component';
+import { CrearEditarMateriaModalComponent } from './crear-editar-materia-modal/crear-editar-materia-modal.component';
 
 @Component({
   selector: 'app-list-materias',
@@ -29,7 +29,7 @@ import { CrearMateriaModalComponent } from './crear-materia-modal/crear-materia-
     FormsModule,
     EliminarMateriaModalComponent,
     VerCorrequisitosModalComponent,
-    CrearMateriaModalComponent,
+    CrearEditarMateriaModalComponent,
   ],
   templateUrl: './list-materias.component.html',
   styleUrl: './list-materias.component.css',
@@ -43,7 +43,7 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   @Input() numeroPlan: string | undefined;
 
   @Output() onNuevaMateria = new EventEmitter<void>();
-  @Output() onModificar = new EventEmitter<Materia>();
+  // @Output() onModificar = new EventEmitter<Materia>();
   @Output() onEliminar = new EventEmitter<Materia>();
   @Output() onVerCorrequisitos = new EventEmitter<Materia>();
 
@@ -72,6 +72,9 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   materiaVerCorrequisitos: Materia | null = null;
 
   mostrarModalCrear = false;
+  // ===== VARIABLES PARA MODAL DE EDICIÓN =====
+  mostrarModalEditar = false;
+  materiaAEditar: Materia | null = null;
 
   // ===== ESTADOS PARA DESCARGA/CARGA =====
   descargando = false;
@@ -242,8 +245,20 @@ export class ListMateriasComponent implements OnInit, OnChanges {
     this.mostrarModalCrear = false;
   }
 
+  onMateriaEditada(): void {
+    this.mostrarModalEditar = false;
+    this.materiaAEditar = null;
+    this.cargarMaterias(true);
+  }
+
+  onCancelarEdicion(): void {
+    this.mostrarModalEditar = false;
+    this.materiaAEditar = null;
+  }
+
   modificarMateria(materia: Materia): void {
-    this.onModificar.emit(materia);
+    this.materiaAEditar = materia;
+    this.mostrarModalEditar = true;
   }
 
   eliminarMateria(materia: Materia): void {

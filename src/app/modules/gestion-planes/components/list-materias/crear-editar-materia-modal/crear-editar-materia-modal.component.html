@@ -1,5 +1,3 @@
-<!-- crear-materia-modal.component.html -->
-
 <!-- Modal Overlay -->
 <div class="modal-overlay" (click)="cancelar()"></div>
 
@@ -8,8 +6,11 @@
   <!-- Header -->
   <div class="modal-header">
     <h5 class="modal-title">
-      <i class="fas fa-plus-circle me-2"></i>
-      Crear Nueva Materia
+      <i
+        class="fas me-2"
+        [ngClass]="esModoEditar ? 'fa-edit' : 'fa-plus-circle'"
+      ></i>
+      {{ tituloModal }}
     </h5>
     <button
       type="button"
@@ -26,6 +27,22 @@
     <div class="info-plan-simple">
       <i class="bi bi-journal-bookmark-fill"></i>
       Plan de Estudios: {{ numeroPlan || "N/A" }}
+    </div>
+
+    <!-- Info del Correquisito Existente (solo en modo editar) -->
+    <div
+      *ngIf="esModoEditar && materia?.idCorrequisito"
+      class="alert alert-info d-flex align-items-center mb-3"
+      role="alert"
+    >
+      <i class="bi bi-info-circle-fill me-2"></i>
+      <div>
+        <strong>Correquisito Asignado:</strong>
+        {{ materia?.nombreCorrequisito }}
+        <small class="text-muted">(OID: {{ materia?.oidCorrequisito }})</small>
+        <br />
+        <small>El correquisito no puede ser modificado una vez asignado.</small>
+      </div>
     </div>
 
     <!-- Formulario -->
@@ -220,11 +237,25 @@
             role="switch"
             id="toggleCorrequisito"
             [checked]="tieneCorrequisito"
+            [disabled]="!permiteModificarCorrequisito"
             (change)="onToggleCorrequisito($any($event.target).checked)"
           />
           <label class="form-check-label" for="toggleCorrequisito">
-            Activa esta opción si necesitas crear un correquisito para esta
-            materia
+            <span *ngIf="esModoCrear">
+              Activa esta opción si necesitas crear un correquisito para esta
+              materia
+            </span>
+            <span *ngIf="esModoEditar && permiteModificarCorrequisito">
+              Activa esta opción si deseas agregar un correquisito a esta
+              materia
+            </span>
+            <span
+              *ngIf="esModoEditar && !permiteModificarCorrequisito"
+              class="text-muted"
+            >
+              <i class="bi bi-lock-fill me-1"></i>
+              Esta materia ya tiene un correquisito asignado (no modificable)
+            </span>
           </label>
         </div>
       </div>
@@ -238,7 +269,9 @@
               class="nav-link"
               [class.active]="tipoCorrequisito === 'existente'"
               type="button"
-              (click)="onTipoCorrequisitoChange('existente')"
+              (click)="
+                onTipoCorrequisitoChange('existente'); scrollToCorrequisito()
+              "
             >
               <i class="bi bi-list-ul me-2"></i>
               Seleccionar Correquisito Existente
@@ -249,7 +282,9 @@
               class="nav-link"
               [class.active]="tipoCorrequisito === 'nuevo'"
               type="button"
-              (click)="onTipoCorrequisitoChange('nuevo')"
+              (click)="
+                onTipoCorrequisitoChange('nuevo'); scrollToCorrequisito()
+              "
             >
               <i class="bi bi-plus-circle me-2"></i>
               Crear Nuevo Correquisito
@@ -564,15 +599,18 @@
       (click)="guardar()"
     >
       <ng-container *ngIf="!guardando">
-        <i class="fas fa-check me-2"></i>
-        Crear Materia
+        <i
+          class="fas me-2"
+          [ngClass]="esModoEditar ? 'fa-save' : 'fa-check'"
+        ></i>
+        {{ textoBotonGuardar }}
       </ng-container>
       <ng-container *ngIf="guardando">
         <span
           class="spinner-border spinner-border-sm me-2"
           role="status"
         ></span>
-        Creando...
+        {{ esModoEditar ? "Guardando..." : "Creando..." }}
       </ng-container>
     </button>
   </div>
