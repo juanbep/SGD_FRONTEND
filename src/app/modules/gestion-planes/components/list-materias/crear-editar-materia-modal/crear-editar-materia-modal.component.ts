@@ -107,10 +107,18 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     // Aplicar restricciones de campos editables
     this.aplicarRestriccionesEdicion();
 
-    // Si la materia tiene correquisito, mostrar info pero deshabilitar edición
+    // Si la materia tiene correquisito, activar el toggle y prellenar
     if (this.materia.idCorrequisito) {
-      this.tieneCorrequisito = false; // Toggle desactivado
-      // No permitir modificar el correquisito existente
+      this.tieneCorrequisito = true;
+      this.tipoCorrequisito = 'existente'; // Por defecto mostrar como existente
+
+      // Prellenar el select de correquisito existente con el ID actual
+      this.materiaForm.patchValue({
+        idCorrequisitoExistente: this.materia.idCorrequisito,
+      });
+
+      // Configurar validaciones para el modo existente
+      this.onTipoCorrequisitoChange('existente');
     }
   }
 
@@ -218,15 +226,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
   }
 
   onToggleCorrequisito(value: boolean): void {
-    // En modo editar, si ya tiene correquisito, no permitir modificar
-    if (this.esModoEditar && !this.permiteModificarCorrequisito) {
-      this.toastr.warning(
-        'Esta materia ya tiene un correquisito asignado y no puede ser modificado',
-        'Correquisito Bloqueado'
-      );
-      return;
-    }
-
     this.tieneCorrequisito = value;
 
     if (value) {
@@ -242,6 +241,34 @@ export class CrearEditarMateriaModalComponent implements OnInit {
       // Limpiar todo
       this.limpiarCorrequisito();
     }
+  }
+
+  private correquisitoHaCambiado(): boolean {
+    if (!this.esModoEditar || !this.materia) {
+      return false;
+    }
+
+    const idCorrequisitoOriginal = this.materia.idCorrequisito;
+    const idCorrequisitoActual = this.materiaForm.get(
+      'idCorrequisitoExistente'
+    )?.value;
+
+    // Si no tenía correquisito y ahora tiene = cambió
+    if (!idCorrequisitoOriginal && this.tieneCorrequisito) {
+      return true;
+    }
+
+    // Si tenía correquisito y ahora no = cambió
+    if (idCorrequisitoOriginal && !this.tieneCorrequisito) {
+      return true;
+    }
+
+    // Si los IDs son diferentes = cambió
+    if (idCorrequisitoOriginal !== idCorrequisitoActual) {
+      return true;
+    }
+
+    return false;
   }
 
   onTipoCorrequisitoChange(tipo: 'nuevo' | 'existente'): void {
@@ -401,26 +428,104 @@ export class CrearEditarMateriaModalComponent implements OnInit {
       throw new Error('No hay materia para editar');
     }
 
-    // En modo editar, si la materia ya tiene correquisito, no se puede modificar
-    // Solo actualizamos los campos editables de la materia principal
-    if (this.materia.idCorrequisito) {
-      await this.actualizarMateriaSinModificarCorrequisito();
+    const correquisitoOriginal = this.materia.idCorrequisito;
+
+    // CASO 1: Tenía correquisito y ahora se eliminó (toggle desactivado)
+    if (correquisitoOriginal && !this.tieneCorrequisito) {
+      await this.actualizarMateriaEliminandoCorrequisito();
       return;
     }
 
-    // Si la materia NO tiene correquisito, podemos agregar uno
-    if (this.tieneCorrequisito) {
+    // CASO 2: No tenía correquisito y ahora se agrega
+    if (!correquisitoOriginal && this.tieneCorrequisito) {
       if (this.tipoCorrequisito === 'existente') {
-        // Agregar correquisito existente
         await this.actualizarMateriaConCorrequisitoExistente();
       } else {
-        // Crear nuevo correquisito y asignarlo
         await this.actualizarMateriaConCorrequisitoNuevo();
       }
-    } else {
-      // Actualizar sin agregar correquisito
-      await this.actualizarMateriaSinCorrequisito();
+      return;
     }
+
+    // CASO 3: Tenía correquisito y se está modificando
+    if (correquisitoOriginal && this.tieneCorrequisito) {
+      const nuevoCorrequisito = this.materiaForm.get(
+        'idCorrequisitoExistente'
+      )?.value;
+
+      if (this.tipoCorrequisito === 'existente') {
+        // Verificar si cambió a otro correquisito existente
+        if (nuevoCorrequisito !== correquisitoOriginal) {
+          await this.actualizarMateriaCambiandoCorrequisito(nuevoCorrequisito);
+        } else {
+          // El correquisito no cambió, solo actualizar campos editables
+          await this.actualizarMateriaSinModificarCorrequisito();
+        }
+      } else {
+        // Crear nuevo correquisito y reemplazar el existente
+        await this.actualizarMateriaConCorrequisitoNuevo();
+      }
+      return;
+    }
+
+    // CASO 4: No tenía correquisito y tampoco se agrega
+    await this.actualizarMateriaSinCorrequisito();
+  }
+
+  private async actualizarMateriaEliminandoCorrequisito(): Promise<void> {
+    const formValue = this.materiaForm.getRawValue();
+
+    const updateDto: UpdateMateriaDto = {
+      idMateria: this.materia!.idMateria,
+      oidmateria: formValue.oidMateria,
+      codigo: formValue.codigo,
+      nombre: formValue.nombre,
+      semestre: formValue.semestre,
+      horasSemana: Number(formValue.horasSemana),
+      oidDepartamento: formValue.oidDepartamento,
+      oidPlan: this.oidPlan,
+      idCorrequisito: null, // ← Eliminar el correquisito
+    };
+
+    await new Promise((resolve, reject) => {
+      this.materiaService.updateMateria(updateDto).subscribe({
+        next: (response) => {
+          console.log(
+            'Materia actualizada (correquisito eliminado):',
+            response
+          );
+          resolve(response);
+        },
+        error: (error) => reject(error),
+      });
+    });
+  }
+
+  private async actualizarMateriaCambiandoCorrequisito(
+    nuevoIdCorrequisito: number
+  ): Promise<void> {
+    const formValue = this.materiaForm.getRawValue();
+
+    const updateDto: UpdateMateriaDto = {
+      idMateria: this.materia!.idMateria,
+      oidmateria: formValue.oidMateria,
+      codigo: formValue.codigo,
+      nombre: formValue.nombre,
+      semestre: formValue.semestre,
+      horasSemana: Number(formValue.horasSemana),
+      oidDepartamento: formValue.oidDepartamento,
+      oidPlan: this.oidPlan,
+      idCorrequisito: nuevoIdCorrequisito,
+    };
+
+    await new Promise((resolve, reject) => {
+      this.materiaService.updateMateria(updateDto).subscribe({
+        next: (response) => {
+          console.log('Materia actualizada (correquisito cambiado):', response);
+          resolve(response);
+        },
+        error: (error) => reject(error),
+      });
+    });
   }
 
   private async actualizarMateriaSinCorrequisito(): Promise<void> {
@@ -428,6 +533,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
+      oidmateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -453,6 +559,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
+      oidmateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -482,6 +589,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
+      oidmateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -534,6 +642,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     // Paso 2: Actualizar la materia principal con el idMateria del correquisito
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
+      oidmateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -678,9 +787,10 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     // Solo permite modificar correquisito si:
     // 1. Está en modo crear, O
     // 2. Está en modo editar Y la materia NO tiene correquisito asignado
-    return (
-      this.esModoCrear || (this.esModoEditar && !this.materia?.idCorrequisito)
-    );
+    // return (
+    //   this.esModoCrear || (this.esModoEditar && !this.materia?.idCorrequisito)
+    // );
+    return true;
   }
 
   // Getters para validaciones - Materia Principal

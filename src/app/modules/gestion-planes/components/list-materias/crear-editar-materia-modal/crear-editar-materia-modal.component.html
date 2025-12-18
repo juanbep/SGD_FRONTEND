@@ -29,22 +29,6 @@
       Plan de Estudios: {{ numeroPlan || "N/A" }}
     </div>
 
-    <!-- Info del Correquisito Existente (solo en modo editar) -->
-    <div
-      *ngIf="esModoEditar && materia?.idCorrequisito"
-      class="alert alert-info d-flex align-items-center mb-3"
-      role="alert"
-    >
-      <i class="bi bi-info-circle-fill me-2"></i>
-      <div>
-        <strong>Correquisito Asignado:</strong>
-        {{ materia?.nombreCorrequisito }}
-        <small class="text-muted">(OID: {{ materia?.oidCorrequisito }})</small>
-        <br />
-        <small>El correquisito no puede ser modificado una vez asignado.</small>
-      </div>
-    </div>
-
     <!-- Formulario -->
     <form [formGroup]="materiaForm">
       <!-- ============== MATERIA PRINCIPAL ============== -->
@@ -237,7 +221,6 @@
             role="switch"
             id="toggleCorrequisito"
             [checked]="tieneCorrequisito"
-            [disabled]="!permiteModificarCorrequisito"
             (change)="onToggleCorrequisito($any($event.target).checked)"
           />
           <label class="form-check-label" for="toggleCorrequisito">
@@ -245,16 +228,21 @@
               Activa esta opción si necesitas crear un correquisito para esta
               materia
             </span>
-            <span *ngIf="esModoEditar && permiteModificarCorrequisito">
+            <span *ngIf="esModoEditar && !materia?.idCorrequisito">
               Activa esta opción si deseas agregar un correquisito a esta
               materia
             </span>
-            <span
-              *ngIf="esModoEditar && !permiteModificarCorrequisito"
-              class="text-muted"
-            >
-              <i class="bi bi-lock-fill me-1"></i>
-              Esta materia ya tiene un correquisito asignado (no modificable)
+            <span *ngIf="esModoEditar && materia?.idCorrequisito">
+              <strong>Correquisito actual:</strong>
+              {{ materia?.nombreCorrequisito }}
+              <small class="text-muted"
+                >(OID: {{ materia?.oidCorrequisito }})</small
+              >
+              <br />
+              <small class="text-muted"
+                >Puedes modificarlo, cambiarlo o eliminarlo desactivando esta
+                opción</small
+              >
             </span>
           </label>
         </div>
@@ -303,6 +291,13 @@
             <div class="correquisito-section">
               <h6 class="section-title mb-3">
                 <i class="bi bi-list-ul me-2"></i>Seleccionar Correquisito
+                <!-- Badge indicador (solo en modo editar) -->
+                <span
+                  *ngIf="esModoEditar && materia?.idCorrequisito"
+                  class="badge bg-warning text-dark ms-2"
+                >
+                  Actual: {{ materia?.nombreCorrequisito }}
+                </span>
               </h6>
 
               <div class="row g-3">
@@ -372,6 +367,21 @@
               <h6 class="section-title mb-3">
                 <i class="bi bi-bookmark me-2"></i>Datos del Correquisito
               </h6>
+
+              <!-- Mensaje de ayuda en modo editar -->
+              <div
+                *ngIf="esModoEditar && materia?.idCorrequisito"
+                class="alert alert-warning d-flex align-items-start mb-3"
+                role="alert"
+              >
+                <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
+                <div>
+                  <strong>Nota:</strong> Al crear un nuevo correquisito, se
+                  reemplazará el correquisito actual
+                  <strong>({{ materia?.nombreCorrequisito }})</strong> por el
+                  nuevo que estás creando.
+                </div>
+              </div>
 
               <!-- Fila 1: OID, Código, Semestre -->
               <div class="row g-3">

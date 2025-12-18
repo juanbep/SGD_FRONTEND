@@ -271,6 +271,37 @@ hr {
   color: #0c5460;
 }
 
+/* Badge de correquisito actual */
+.badge.bg-warning {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Alert de advertencia */
+.alert-warning {
+  background-color: #fff3cd;
+  border-color: #ffecb5;
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+.alert-warning strong {
+  color: #664d03;
+}
+
+/* Mejorar visibilidad del toggle label */
+.form-check-label {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.form-check-label small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
 /* ==================== NG-SELECT ==================== */
 ::ng-deep ng-select.is-invalid .ng-select-container {
   border-color: #dc3545;

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CrearMateriaModalComponent } from './crear-editar-materia-modal.component';
+import { CrearEditarMateriaModalComponent } from './crear-editar-materia-modal.component';
 
 describe('CrearMateriaModalComponent', () => {
-  let component: CrearMateriaModalComponent;
-  let fixture: ComponentFixture<CrearMateriaModalComponent>;
+  let component: CrearEditarMateriaModalComponent;
+  let fixture: ComponentFixture<CrearEditarMateriaModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CrearMateriaModalComponent]
+      imports: [CrearEditarMateriaModalComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CrearMateriaModalComponent);
+    fixture = TestBed.createComponent(CrearEditarMateriaModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
