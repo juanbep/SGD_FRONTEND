@@ -45,11 +45,15 @@ export class ListarPlanesComponent implements OnInit {
   private toastr = inject(ToastrService);
 
   // ===== ESTADOS DISPONIBLES =====
-  readonly estadosDisponibles: EstadoPlan[] = ['ACTIVO', 'INACTIVO'];
+  readonly estadosDisponibles: (EstadoPlan | 'TODOS')[] = [
+    'TODOS',
+    'ACTIVO',
+    'INACTIVO',
+  ];
 
   // ===== FILTROS =====
   filtroNumero: string = '';
-  filtroEstado: EstadoPlan | '' = '';
+  filtroEstado: EstadoPlan | 'TODOS' | '' = 'TODOS';
   filtroFechaAprobacion: string = '';
   filtroFechaCreacion: string = '';
 
@@ -98,8 +102,8 @@ export class ListarPlanesComponent implements OnInit {
       filtros.numero = this.filtroNumero.trim();
     }
 
-    if (this.filtroEstado) {
-      filtros.estado = this.filtroEstado;
+    if (this.filtroEstado && this.filtroEstado !== 'TODOS') {
+      filtros.estado = this.filtroEstado as EstadoPlan;
     }
 
     if (this.filtroFechaAprobacion) {
@@ -162,7 +166,7 @@ export class ListarPlanesComponent implements OnInit {
 
   limpiarFiltros(): void {
     this.filtroNumero = '';
-    this.filtroEstado = '';
+    this.filtroEstado = 'TODOS'; 
     this.filtroFechaAprobacion = '';
     this.filtroFechaCreacion = '';
     this.page = 0;

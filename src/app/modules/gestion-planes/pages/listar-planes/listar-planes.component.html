@@ -48,8 +48,8 @@
           [items]="estadosDisponibles"
           [(ngModel)]="filtroEstado"
           (change)="onFiltroChange()"
-          placeholder="TODOS"
-          [clearable]="true"
+          placeholder="Seleccione un estado"
+          [clearable]="false"
           [searchable]="false"
         >
         </ng-select>
@@ -67,6 +67,7 @@
           class="form-control"
           [(ngModel)]="filtroFechaAprobacion"
           (change)="onFiltroChange()"
+          [disabled]="true"
         />
         <small class="text-muted">Fecha de aprobación</small>
       </div>
@@ -82,6 +83,7 @@
           class="form-control"
           [(ngModel)]="filtroFechaCreacion"
           (change)="onFiltroChange()"
+          [disabled]="true"
         />
         <small class="text-muted">Fecha de creación</small>
       </div>
