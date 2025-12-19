@@ -476,7 +476,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
-      oidmateria: formValue.oidMateria,
+      oidMateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -507,7 +507,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
-      oidmateria: formValue.oidMateria,
+      oidMateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -533,7 +533,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
-      oidmateria: formValue.oidMateria,
+      oidMateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -559,7 +559,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
-      oidmateria: formValue.oidMateria,
+      oidMateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -589,7 +589,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
-      oidmateria: formValue.oidMateria,
+      oidMateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,
@@ -642,7 +642,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     // Paso 2: Actualizar la materia principal con el idMateria del correquisito
     const updateDto: UpdateMateriaDto = {
       idMateria: this.materia!.idMateria,
-      oidmateria: formValue.oidMateria,
+      oidMateria: formValue.oidMateria,
       codigo: formValue.codigo,
       nombre: formValue.nombre,
       semestre: formValue.semestre,

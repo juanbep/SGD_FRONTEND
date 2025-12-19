@@ -53,6 +53,10 @@ export class ListarPlanesComponent implements OnInit {
   filtroFechaAprobacion: string = '';
   filtroFechaCreacion: string = '';
 
+  // ===== ORDENAMIENTO =====
+  sortField: string = 'numero';
+  sortDirection: 'asc' | 'desc' = 'desc';
+
   // ===== PAGINACIÓN =====
   page = 0;
   size = 10;
@@ -86,6 +90,7 @@ export class ListarPlanesComponent implements OnInit {
       page: this.page,
       size: this.size,
       oidPrograma: this.oidProgramaActual,
+      sort: `${this.sortField},${this.sortDirection}`,
     };
 
     // Agregar filtros opcionales
@@ -124,6 +129,29 @@ export class ListarPlanesComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  // ===== ORDENAMIENTO ===== ⭐ NUEVO
+  onSort(campo: string): void {
+    if (this.sortField === campo) {
+      // Si es el mismo campo, cambiar dirección
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Si es un campo nuevo, establecer como ascendente por defecto
+      this.sortField = campo;
+      this.sortDirection = 'asc';
+    }
+    this.page = 0; // Resetear a primera página
+    this.cargarPlanes();
+  }
+
+  getSortIcon(campo: string): string {
+    if (this.sortField !== campo) {
+      return 'fas fa-sort text-muted'; // No ordenado
+    }
+    return this.sortDirection === 'asc'
+      ? 'fas fa-sort-up text-primary'
+      : 'fas fa-sort-down text-primary';
   }
 
   // ===== MANEJADORES DE FILTROS =====
@@ -217,7 +245,7 @@ export class ListarPlanesComponent implements OnInit {
 
   onPlanCreado(): void {
     this.mostrarModalCrear = false;
-    this.cargarPlanes(); // Recargar lista
+    this.cargarPlanes();
   }
 
   onCancelarCreacion(): void {
@@ -248,7 +276,6 @@ export class ListarPlanesComponent implements OnInit {
     this.onCambiarEstado.emit(plan);
   }
 
-  //validar si esto es necesario
   private handleError(error: any, operacion: string): void {
     const codigoBackend = error?.error?.codigo || error.status || '—';
     const mensajeBackend =

@@ -72,7 +72,7 @@ export interface CreateMateriaDto {
 export interface UpdateMateriaDto
   extends Partial<Omit<CreateMateriaDto, 'oidMateria'>> {
   idMateria: number;
-  oidmateria?: string;
+  oidMateria?: string;
 }
 
 export interface DeleteMateriaDto {

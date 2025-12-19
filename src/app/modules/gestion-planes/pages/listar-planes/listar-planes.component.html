@@ -147,30 +147,48 @@
       <table class="table table-hover mb-0">
         <thead class="table-light sticky-top">
           <tr>
+            <!-- ID - NO ordenable -->
             <th class="fw-bold" style="width: 80px">
               <i class="fas fa-hashtag me-1"></i>ID
             </th>
-            <th class="fw-bold" style="width: 100px">
+
+            <!-- NÚMERO - ÚNICO ordenable -->
+            <th
+              class="fw-bold sortable-header"
+              style="width: 160px; cursor: pointer"
+              (click)="onSort('numero')"
+              title="Ordenar por número"
+            >
               <i class="fas fa-sort-numeric-up me-1"></i>Número
+              <i [ngClass]="getSortIcon('numero')" class="ms-1"></i>
             </th>
+
+            <!-- PROGRAMA - NO ordenable -->
             <th class="fw-bold">
               <i class="fas fa-university me-1"></i>Programa
             </th>
+
+            <!-- ESTADO - NO ordenable -->
             <th class="fw-bold text-center" style="width: 140px">
               <i class="fas fa-info-circle me-1"></i>Estado
             </th>
+
+            <!-- FECHA APROBACIÓN - NO ordenable -->
             <th class="fw-bold" style="width: 150px">
               <i class="fas fa-calendar-check me-1"></i>F. Aprobación
             </th>
-            <!-- <th class="fw-bold">
-              <i class="fas fa-file-signature me-1"></i>Acuerdo
-            </th> -->
+
+            <!-- FECHA CREACIÓN - NO ordenable -->
             <th class="fw-bold" style="width: 150px">
               <i class="fas fa-calendar-plus me-1"></i>F. Creación
             </th>
+
+            <!-- CREADO POR - NO ordenable -->
             <th class="fw-bold" style="width: 120px">
               <i class="fas fa-user me-1"></i>Creado por
             </th>
+
+            <!-- ACCIONES - NO ordenable -->
             <th class="fw-bold text-center" style="width: 180px">
               <i class="fas fa-cogs me-1"></i>Acciones
             </th>
@@ -197,14 +215,13 @@
               </span>
             </td>
             <td>{{ plan.fechaAprobacion | date : "dd/MM/yyyy" }}</td>
-            <!-- <td>{{ plan.acuerdo }}</td> -->
             <td>{{ plan.fechaCreacion | date : "dd/MM/yyyy" }}</td>
             <td>
               <small>{{ plan.usuarioCreacion }}</small>
             </td>
             <td class="text-center">
               <div class="action-buttons-wrapper">
-                <!-- Ver detalles (materias) -->
+                <!-- Ver detalles -->
                 <a
                   [routerLink]="['../management', plan.oidPlan]"
                   class="btn btn-sm btn-outline-success"
@@ -340,6 +357,7 @@
     </div>
   </div>
 </div>
+
 <!-- Modal Crear Plan -->
 <app-crear-plan-modal
   *ngIf="mostrarModalCrear"
@@ -347,6 +365,7 @@
   (onPlanCreado)="onPlanCreado()"
   (onCancelar)="onCancelarCreacion()"
 ></app-crear-plan-modal>
+
 <!-- Modal Editar Plan -->
 <app-editar-plan-modal-component
   *ngIf="mostrarModalEditar && planAEditar"
@@ -354,6 +373,7 @@
   (onPlanActualizado)="onPlanActualizado()"
   (onCancelar)="onCancelarEdicion()"
 ></app-editar-plan-modal-component>
+
 <!-- Modal Eliminar Plan -->
 <app-eliminar-plan-modal
   *ngIf="mostrarModalEliminar && planAEliminar"
