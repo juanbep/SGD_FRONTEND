@@ -413,11 +413,20 @@ export class ModalActividadComponent implements OnInit {
     // Atributos simples (no repetibles)
     const atributos: AtributoActividad[] = this.metadata.atributos
       .filter((attr) => !attr.esRepetible)
-      .map((attr) => ({
-        nombre: attr.nombre,
-        tipo: attr.tipoValor,
-        valor: formValues[attr.nombre]?.toString() || '',
-      }));
+      .map((attr) => {
+        let valor = formValues[attr.nombre];
+
+        // Transformar fecha a datetime si aplica
+        if (attr.tipoCampo === 'date' && valor) {
+          valor = valor + 'T00:00:00';
+        }
+
+        return {
+          nombre: attr.nombre,
+          tipo: attr.tipoValor,
+          valor: valor?.toString() || '',
+        };
+      });
 
     // Atributos repetibles - 100% GENÉRICO
     const atributosRepetibles: AtributoRepetible[] = [];
@@ -433,11 +442,20 @@ export class ModalActividadComponent implements OnInit {
         atributosRepetibles.push({
           grupo: nombreGrupo,
           items: items.map((item) =>
-            atributosDelGrupo.map((attr) => ({
-              nombre: attr.nombre,
-              tipo: attr.tipoValor,
-              valor: item[attr.nombre] || '',
-            }))
+            atributosDelGrupo.map((attr) => {
+              let valor = item[attr.nombre] || '';
+
+              // Transformar fecha a datetime si aplica
+              if (attr.tipoCampo === 'date' && valor) {
+                valor = valor + 'T00:00:00';
+              }
+
+              return {
+                nombre: attr.nombre,
+                tipo: attr.tipoValor,
+                valor: valor,
+              };
+            })
           ),
         });
       }
