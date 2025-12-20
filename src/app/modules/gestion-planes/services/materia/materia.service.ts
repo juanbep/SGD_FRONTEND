@@ -182,6 +182,9 @@ export class MateriaService {
     }
 
     // Ordenamiento
+    if (filters.sort?.trim()) {
+      params = params.set('sort', filters.sort.trim());
+    }
     if (filters.sortBy) {
       params = params.set('sort', filters.sortBy);
     }

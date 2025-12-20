@@ -215,6 +215,31 @@
   flex-wrap: nowrap;
 }
 
+/* ===== ESTILOS PARA ORDENAMIENTO ===== */
+.sortable-header {
+  cursor: pointer !important;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover azul claro solo en columna ordenable */
+.sortable-header:hover {
+  background-color: rgba(0, 81, 198, 0.15) !important;
+}
+
+.sortable-header i.fa-sort,
+.sortable-header i.fa-sort-up,
+.sortable-header i.fa-sort-down {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.sortable-header i.fa-sort-up.text-primary,
+.sortable-header i.fa-sort-down.text-primary {
+  opacity: 1;
+  color: #0051c6 !important;
+}
+
 /* Responsividad */
 @media (max-width: 768px) {
   .action-buttons-wrapper {

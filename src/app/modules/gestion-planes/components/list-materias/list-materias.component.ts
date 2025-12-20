@@ -52,6 +52,9 @@ export class ListMateriasComponent implements OnInit, OnChanges {
 
   readonly semestresDisponibles: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+  sortField: string = 'oidMateria';
+  sortDirection: 'asc' | 'desc' = 'desc';
+
   filtroOid: string = '';
   filtroCodigo: string = '';
   filtroNombre: string = '';
@@ -119,6 +122,7 @@ export class ListMateriasComponent implements OnInit, OnChanges {
       page: this.page,
       size: this.size,
       oidPlan: this.oidPlan,
+      sort: `${this.sortField},${this.sortDirection}`,
     };
 
     if (this.filtroOid && this.filtroOid.trim().length >= 4) {
@@ -164,6 +168,29 @@ export class ListMateriasComponent implements OnInit, OnChanges {
         this.loading = false;
       },
     });
+  }
+
+  // ===== ORDENAMIENTO =====
+  onSort(campo: string): void {
+    if (this.sortField === campo) {
+      // Si es el mismo campo, cambiar dirección
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Si es un campo nuevo, establecer como ascendente por defecto
+      this.sortField = campo;
+      this.sortDirection = 'asc';
+    }
+    this.page = 0; // Resetear a primera página
+    this.cargarMaterias();
+  }
+
+  getSortIcon(campo: string): string {
+    if (this.sortField !== campo) {
+      return 'fas fa-sort text-muted'; // No ordenado
+    }
+    return this.sortDirection === 'asc'
+      ? 'fas fa-sort-up text-primary'
+      : 'fas fa-sort-down text-primary';
   }
 
   onFiltroChange(): void {

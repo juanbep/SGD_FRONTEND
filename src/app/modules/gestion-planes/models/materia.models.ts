@@ -27,17 +27,17 @@ export interface MateriaFilters {
   page?: number;
   size?: number;
 
-  // Búsqueda general
-  searchTerm?: string;
+  // Filtros específicos
+  oidPlan?: number;
   oidMateria?: string;
   codigo?: string;
   nombre?: string;
-
-  // Filtros específicos
   semestre?: number;
   oidDepartamento?: number;
+  searchTerm?: string;
+
   nombreDepartamento?: string;
-  oidPlan?: number;
+
   numeroPlan?: string;
 
   // Filtros por horas
@@ -53,6 +53,7 @@ export interface MateriaFilters {
   fechaCreacionHasta?: string;
 
   // Ordenamiento
+  sort?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
