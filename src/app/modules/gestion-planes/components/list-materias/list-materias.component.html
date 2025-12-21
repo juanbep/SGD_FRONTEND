@@ -41,9 +41,13 @@
           [disabled]="loadingDepartamentos"
         >
           <ng-template ng-option-tmp let-item="item">
-            <div>
+            <div [title]="item.label">
               <strong>{{ item.label }}</strong>
-              <small class="text-muted d-block" *ngIf="item.facultad">
+              <small
+                class="text-muted d-block"
+                *ngIf="item.facultad"
+                [title]="item.facultad"
+              >
                 {{ item.facultad }}
               </small>
             </div>
@@ -217,17 +221,16 @@
     <!-- Selector de tamaño de página -->
     <div class="d-flex align-items-center ms-3 mt-2 mt-lg-0">
       <label class="form-label mb-0 me-2 small">Mostrar:</label>
-      <select
-        class="form-select form-select-sm"
-        style="width: 80px"
+      <ng-select
+        [items]="pageSizeOptions"
         [(ngModel)]="size"
-        (change)="onPageSizeChange($event)"
+        (change)="onPageSizeChange()"
+        [clearable]="false"
+        [searchable]="false"
+        placeholder="10"
+        class="page-size-select"
       >
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-      </select>
+      </ng-select>
       <span class="ms-2 small text-muted">por página</span>
     </div>
   </div>

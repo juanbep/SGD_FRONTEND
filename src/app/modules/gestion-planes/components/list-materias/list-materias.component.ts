@@ -65,7 +65,7 @@ export class ListMateriasComponent implements OnInit, OnChanges {
       { value: 9, label: '9' },
       { value: 10, label: '10' },
     ];
-
+  pageSizeOptions = [5, 10, 25, 50];
   sortField: string = 'oidMateria';
   sortDirection: 'asc' | 'desc' = 'desc';
 
@@ -259,8 +259,7 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   }
 
   // ===== PAGINACIÓN =====
-  onPageSizeChange(event: any): void {
-    this.size = parseInt(event.target.value);
+  onPageSizeChange(): void {
     this.page = 0;
     this.cargarMaterias();
   }

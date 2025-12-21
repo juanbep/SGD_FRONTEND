@@ -48,10 +48,11 @@
           Información del Plan
         </h6>
       </div>
+
       <div class="card-body">
         <div class="row g-3">
-          <!-- Programa -->
-          <div class="col-md-6">
+          <!-- PRIMERA FILA -->
+          <div class="col-md-3">
             <label class="form-label fw-bold">
               <i class="fas fa-university me-1"></i>Programa:
             </label>
@@ -60,7 +61,6 @@
             </p>
           </div>
 
-          <!-- Número del Plan -->
           <div class="col-md-3">
             <label class="form-label fw-bold">
               <i class="fas fa-sort-numeric-up me-1"></i>Número del Plan:
@@ -70,7 +70,6 @@
             </p>
           </div>
 
-          <!-- Estado -->
           <div class="col-md-3">
             <label class="form-label fw-bold">
               <i class="fas fa-info-circle me-1"></i>Estado:
@@ -85,8 +84,17 @@
             </p>
           </div>
 
-          <!-- Acuerdo -->
-          <div class="col-md-4">
+          <div class="col-md-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-book me-1"></i>Cantidad de Materias:
+            </label>
+            <p class="form-control-plaintext fw-semibold">
+              {{ planSeleccionado.cantidadMaterias || "0" }}
+            </p>
+          </div>
+
+          <!-- SEGUNDA FILA -->
+          <div class="col-md-3">
             <label class="form-label fw-bold">
               <i class="fas fa-file-signature me-1"></i>Acuerdo:
             </label>
@@ -95,8 +103,7 @@
             </p>
           </div>
 
-          <!-- Fecha de Aprobación -->
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label fw-bold">
               <i class="fas fa-calendar-check me-1"></i>Fecha de Aprobación:
             </label>
@@ -105,13 +112,21 @@
             </p>
           </div>
 
-          <!-- Fecha de Creación -->
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label fw-bold">
               <i class="fas fa-calendar-plus me-1"></i>Fecha de Creación:
             </label>
             <p class="form-control-plaintext">
               {{ planSeleccionado.fechaCreacion | date : "dd/MM/yyyy" }}
+            </p>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label fw-bold">
+              <i class="fas fa-calendar-alt me-1"></i>Última Actualización:
+            </label>
+            <p class="form-control-plaintext">
+              {{ planSeleccionado.fechaActualizacion | date : "dd/MM/yyyy" }}
             </p>
           </div>
         </div>
@@ -120,10 +135,7 @@
 
     <!-- Mensaje informativo -->
     <section class="messages-container">
-      <img
-        [src]="'assets/icons/messages/courses.svg'"
-        alt="Icono de materia"
-      />
+      <img [src]="'assets/icons/messages/courses.svg'" alt="Icono de materia" />
       <span class="text-body-heavy">
         A continuación se muestran todas las materias asociadas a este plan de
         estudio. Puede agregar, modificar, eliminar materias o gestionar los
