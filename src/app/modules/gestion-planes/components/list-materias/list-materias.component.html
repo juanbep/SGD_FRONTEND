@@ -34,7 +34,6 @@
           bindLabel="label"
           bindValue="value"
           [(ngModel)]="filtroDepartamento"
-          (change)="onFiltroChange()"
           placeholder="Seleccione departamento"
           [clearable]="false"
           [searchable]="true"
@@ -64,7 +63,6 @@
           bindLabel="label"
           bindValue="value"
           [(ngModel)]="filtroSemestre"
-          (change)="onFiltroChange()"
           placeholder="Seleccione semestre"
           [clearable]="false"
           [searchable]="false"
@@ -73,7 +71,22 @@
         <small class="text-muted">Semestre académico</small>
       </div>
 
-      <!-- Filtro por Código -->
+      <!-- Filtro por OID Materia-->
+      <div class="col-xl-2 col-lg-3 col-md-6">
+        <label for="filtroOid" class="form-label fw-bold">
+          <i class="fas fa-key me-1"></i>OID:
+        </label>
+        <input
+          type="text"
+          id="filtroOid"
+          class="form-control"
+          placeholder="Buscar por OID..."
+          [(ngModel)]="filtroOid"
+        />
+        <small class="text-muted">Identificador único</small>
+      </div>
+
+      <!-- Filtro por Código Materia-->
       <div class="col-xl-2 col-lg-3 col-md-6">
         <label for="filtroCodigo" class="form-label fw-bold">
           <i class="fas fa-barcode me-1"></i>Código:
@@ -84,7 +97,6 @@
           class="form-control"
           placeholder="Ej: MAT101..."
           [(ngModel)]="filtroCodigo"
-          (input)="onFiltroChange()"
         />
         <small class="text-muted">Código de la materia</small>
       </div>
@@ -100,9 +112,23 @@
           class="form-control"
           placeholder="Buscar por nombre..."
           [(ngModel)]="filtroNombre"
-          (input)="onFiltroChange()"
         />
         <small class="text-muted">Nombre de la materia</small>
+      </div>
+    </div>
+
+    <!-- Botón de Búsqueda -->
+    <div class="row mt-3">
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          class="btn btn-primary d-flex align-items-center"
+          (click)="buscarConFiltros()"
+          [disabled]="loading"
+        >
+          <i class="fas fa-search me-2"></i>
+          <span>Buscar</span>
+        </button>
       </div>
     </div>
   </div>

@@ -13,9 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Materia, MateriaFilters } from '../../models';
-import { MateriaHelperService } from '../../services/materia/materia-helper.service';
 import { ToastrService } from 'ngx-toastr';
-import { BaseHelperService } from '../../services/base-helper.service';
 import { MateriaService } from '../../services/materia/materia.service';
 import { EliminarMateriaModalComponent } from './eliminar-materia-modal/eliminar-materia-modal.component';
 import { VerCorrequisitosModalComponent } from './ver-correquisitos-modal/ver-correquisitos-modal.component';
@@ -47,7 +45,6 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   @Input() numeroPlan: string | undefined;
 
   @Output() onNuevaMateria = new EventEmitter<void>();
-  // @Output() onModificar = new EventEmitter<Materia>();
   @Output() onEliminar = new EventEmitter<Materia>();
   @Output() onVerCorrequisitos = new EventEmitter<Materia>();
 
@@ -97,7 +94,6 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   materiaVerCorrequisitos: Materia | null = null;
 
   mostrarModalCrear = false;
-  // ===== VARIABLES PARA MODAL DE EDICIÓN =====
   mostrarModalEditar = false;
   materiaAEditar: Materia | null = null;
 
@@ -112,18 +108,16 @@ export class ListMateriasComponent implements OnInit, OnChanges {
     this.cargarDepartamentos();
   }
 
+  ngOnDestroy(): void {
+    // Cleanup si es necesario
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['oidPlan']) {
       const oidPlanActual = changes['oidPlan'].currentValue;
 
       if (oidPlanActual) {
-        this.filtroOid = '';
-        this.filtroCodigo = '';
-        this.filtroNombre = '';
-        this.filtroSemestre = 'TODOS';
-        this.filtroDepartamento = 'TODOS';
-        this.page = 0;
-        this.cargarMaterias();
+        this.limpiarFiltros();
       } else {
         this.error = 'No se ha especificado un plan válido';
         this.materias = [];
@@ -148,24 +142,24 @@ export class ListMateriasComponent implements OnInit, OnChanges {
       sort: `${this.sortField},${this.sortDirection}`,
     };
 
-    if (this.filtroOid && this.filtroOid.trim().length >= 4) {
-      filtros.oidMateria = this.filtroOid.trim();
-    }
-
-    if (this.filtroCodigo && this.filtroCodigo.trim().length >= 4) {
-      filtros.codigo = this.filtroCodigo.trim();
-    }
-
-    if (this.filtroNombre && this.filtroNombre.trim().length >= 4) {
-      filtros.nombre = this.filtroNombre.trim();
+    if (this.filtroDepartamento !== 'TODOS') {
+      filtros.oidDepartamento = Number(this.filtroDepartamento);
     }
 
     if (this.filtroSemestre !== 'TODOS') {
       filtros.semestre = Number(this.filtroSemestre);
     }
 
-    if (this.filtroDepartamento !== 'TODOS') {
-      filtros.oidDepartamento = Number(this.filtroDepartamento);
+    if (this.filtroCodigo && this.filtroCodigo.trim()) {
+      filtros.codigo = this.filtroCodigo.trim();
+    }
+
+    if (this.filtroNombre && this.filtroNombre.trim()) {
+      filtros.nombre = this.filtroNombre.trim();
+    }
+
+    if (this.filtroOid && this.filtroOid.trim()) {
+      filtros.oidMateria = this.filtroOid.trim();
     }
 
     this.materiaService.getMaterias(filtros).subscribe({
@@ -230,37 +224,28 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   // ===== ORDENAMIENTO =====
   onSort(campo: string): void {
     if (this.sortField === campo) {
-      // Si es el mismo campo, cambiar dirección
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      // Si es un campo nuevo, establecer como ascendente por defecto
       this.sortField = campo;
       this.sortDirection = 'asc';
     }
-    this.page = 0; // Resetear a primera página
+    this.page = 0;
     this.cargarMaterias();
   }
 
   getSortIcon(campo: string): string {
     if (this.sortField !== campo) {
-      return 'fas fa-sort text-muted'; // No ordenado
+      return 'fas fa-sort text-muted';
     }
     return this.sortDirection === 'asc'
       ? 'fas fa-sort-up text-primary'
       : 'fas fa-sort-down text-primary';
   }
 
-  onFiltroChange(): void {
-    const oidValido = !this.filtroOid || this.filtroOid.trim().length >= 4;
-    const codigoValido =
-      !this.filtroCodigo || this.filtroCodigo.trim().length >= 4;
-    const nombreValido =
-      !this.filtroNombre || this.filtroNombre.trim().length >= 4;
-
-    if (oidValido && codigoValido && nombreValido) {
-      this.page = 0;
-      this.cargarMaterias();
-    }
+  // ===== FILTROS =====
+  buscarConFiltros(): void {
+    this.page = 0;
+    this.cargarMaterias();
   }
 
   limpiarFiltros(): void {
@@ -273,6 +258,7 @@ export class ListMateriasComponent implements OnInit, OnChanges {
     this.cargarMaterias();
   }
 
+  // ===== PAGINACIÓN =====
   onPageSizeChange(event: any): void {
     this.size = parseInt(event.target.value);
     this.page = 0;
@@ -362,7 +348,6 @@ export class ListMateriasComponent implements OnInit, OnChanges {
     this.materiaAEliminar = null;
   }
 
-  //Ver Correquisitos:
   verCorrequisitos(materia: Materia): void {
     this.materiaVerCorrequisitos = materia;
     this.mostrarModalCorrequisitos = true;
