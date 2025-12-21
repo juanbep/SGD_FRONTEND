@@ -1,0 +1,157 @@
+<!-- Loading state -->
+<div *ngIf="cargandoDatos" class="text-center py-4">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Cargando...</span>
+  </div>
+  <p class="text-muted mt-2 mb-0 small">Cargando datos...</p>
+</div>
+
+<!-- Formulario -->
+<div *ngIf="!cargandoDatos">
+  <!-- Usuario -->
+  <div class="mb-3">
+    <label class="campo-label">
+      <i class="fas fa-user"></i>
+      Usuario
+    </label>
+    <ng-select
+      [items]="usuariosDisponibles"
+      bindLabel="label"
+      bindValue="oid"
+      [(ngModel)]="usuarioSeleccionado"
+      (ngModelChange)="validarCupoUsuario()"
+      placeholder="Seleccione un usuario"
+      [clearable]="false"
+      [loading]="cargandoUsuarios"
+      [searchable]="true"
+      notFoundText="No hay usuarios disponibles"
+    >
+      <ng-template ng-option-tmp let-item="item">
+        <span [title]="item.label">{{ item.label }}</span>
+      </ng-template>
+
+      <ng-template ng-label-tmp let-item="item">
+        <span [title]="item.label">{{ item.label }}</span>
+      </ng-template>
+    </ng-select>
+  </div>
+
+  <!-- Cargo y Horas -->
+  <div class="row g-3 mb-3">
+    <div class="col-md-7">
+      <label class="campo-label">
+        <i class="fas fa-briefcase"></i>
+        Cargo
+      </label>
+      <ng-select
+        [items]="cargosDisponibles"
+        bindLabel="nombre"
+        bindValue="oid"
+        [(ngModel)]="cargoSeleccionado"
+        (ngModelChange)="validarCupoUsuario()"
+        placeholder="Seleccione un cargo"
+        [clearable]="false"
+        [loading]="cargandoCargos"
+        notFoundText="No hay cargos disponibles"
+      >
+        <ng-template ng-option-tmp let-item="item">
+          <span [title]="item.nombre">{{ item.nombre }}</span>
+        </ng-template>
+
+        <ng-template ng-label-tmp let-item="item">
+          <span [title]="item.nombre">{{ item.nombre }}</span>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <div class="col-md-5">
+      <label class="campo-label">
+        <i class="fas fa-clock"></i>
+        Horas
+      </label>
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="horasAsignadas"
+        [min]="0"
+        [max]="maxHorasPermitidas"
+        placeholder="Ej: 8"
+      />
+    </div>
+  </div>
+
+  <!-- Estado de validación -->
+  <div *ngIf="validando" class="validacion-loading mb-3">
+    <div class="d-flex align-items-center">
+      <div
+        class="spinner-border spinner-border-sm text-primary me-2"
+        role="status"
+      >
+        <span class="visually-hidden">Validando...</span>
+      </div>
+      <span class="text-muted small">Validando disponibilidad...</span>
+    </div>
+  </div>
+
+  <!-- Card informativa con resultados -->
+  <div
+    *ngIf="validacionRealizada && datosValidacion"
+    class="card-validacion mb-3"
+  >
+    <div
+      class="card-validacion-header"
+      [class.exito]="datosValidacion.puedeAsignar"
+      [class.error]="!datosValidacion.puedeAsignar"
+    >
+      <i
+        class="fas"
+        [class.fa-check-circle]="datosValidacion.puedeAsignar"
+        [class.fa-exclamation-triangle]="!datosValidacion.puedeAsignar"
+      ></i>
+      <span>{{
+        datosValidacion.puedeAsignar
+          ? "Usuario disponible"
+          : "Usuario no disponible"
+      }}</span>
+    </div>
+
+    <div class="card-validacion-body">
+      <div class="info-item">
+        <span class="info-label">Horas disponibles:</span>
+        <span class="info-value"
+          >{{ datosValidacion.horasDisponiblesUsuarioMenorCupo }} h</span
+        >
+      </div>
+      <div class="info-item">
+        <span class="info-label">Horas máximas del cargo:</span>
+        <span class="info-value"
+          >{{ datosValidacion.horasMaximasCargo }} h</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Botones -->
+  <div class="d-flex justify-content-end gap-2 pt-2">
+    <button type="button" class="btn btn-cancelar" (click)="cancelar()">
+      <i class="fas fa-times me-2"></i>
+      Cancelar
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-confirmar"
+      (click)="confirmar()"
+      [disabled]="
+        !usuarioSeleccionado ||
+        !cargoSeleccionado ||
+        horasAsignadas <= 0 ||
+        validando ||
+        (validacionRealizada && !datosValidacion?.puedeAsignar)
+      "
+    >
+      <i class="fas fa-plus me-2"></i>
+      Guardar
+    </button>
+  </div>
+</div>

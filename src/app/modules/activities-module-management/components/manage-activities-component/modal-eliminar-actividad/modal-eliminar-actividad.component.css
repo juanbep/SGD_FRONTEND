@@ -8,13 +8,15 @@
   color: white !important;
 }
 
-/* Ícono en el header (usando FontAwesome aquí) */
+/* Ícono SVG en el header del modal - más grande */
 .modal-header-icon {
-  font-size: 1.4rem;
+  width: 32px; /* Aumentado de 24px a 32px */
+  height: 32px;
+  filter: brightness(0) invert(1); /* Convierte el SVG a blanco */
   flex-shrink: 0;
 }
 
-/* Modal content y sombra */
+/* Modal Content */
 .modal-content {
   border: none !important;
   border-radius: 0.5rem;

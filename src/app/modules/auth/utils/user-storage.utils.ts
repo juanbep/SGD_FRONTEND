@@ -31,6 +31,15 @@ export function getUserDepartmentId(): number | 0 {
 }
 
 /**
+ * Obtiene el OID del pograma del usuario logueado
+ * @returns number | 0
+ */
+export function getUserProgramaId(): number | 0 {
+  const userData = getUserData();
+  return userData?.programaCoordinador?.oidPrograma || 0;
+}
+
+/**
  * Obtiene el OID del usuario logueado
  * @returns number | null
  */

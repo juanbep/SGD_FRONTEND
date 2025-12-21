@@ -1,0 +1,347 @@
+/* ==================== ESTRUCTURA DEL MODAL ==================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 18, 130, 0.5);
+  z-index: 1050;
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1rem 3rem rgba(0, 18, 130, 0.3);
+  z-index: 1055;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== HEADER ==================== */
+.modal-header {
+  background-color: #001282;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-bottom: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+}
+
+.modal-title i {
+  color: #f8ae15;
+}
+
+/* ==================== BODY ==================== */
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+  background-color: white;
+}
+
+/* ==================== FOOTER ==================== */
+.modal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+/* Botón Cancelar */
+.btn-outline-secondary {
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background-color: #f8ae15 !important;
+  border-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.btn-outline-secondary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Botón Crear */
+.btn-success {
+  background-color: #249337 !important;
+  border-color: #249337 !important;
+  color: white !important;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #1e7a2d !important;
+  border-color: #1e7a2d !important;
+}
+
+.btn-success:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ==================== INFO DEL PLAN (SIMPLIFICADO) ==================== */
+.info-plan-simple {
+  color: #001282;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-plan-simple i {
+  color: #0051c6;
+}
+
+/* ==================== FORMULARIO ==================== */
+.materia-principal-section {
+  background-color: #f8f9fa;
+  padding: 1.25rem;
+  border-radius: 6px;
+  border-left: 4px solid #0051c6;
+  margin-bottom: 1.5rem;
+}
+
+.info-item {
+  margin-bottom: 0;
+}
+
+.info-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #003d7a;
+  font-size: 0.95rem;
+}
+
+.section-title {
+  color: #003d7a;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #f8ae15;
+  padding-bottom: 0.5rem;
+}
+
+hr {
+  border-top: 2px solid #dee2e6;
+}
+
+/* ==================== TOGGLE CORREQUISITO ==================== */
+
+.toggle-correquisito-container {
+  background-color: #edf8fd;
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.toggle-correquisito-container .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.toggle-correquisito-container .form-check-input {
+  cursor: pointer;
+  width: 3rem;
+  height: 1.5rem;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.toggle-correquisito-container .form-check-input:checked {
+  background-color: #003d7a;
+  border-color: #003d7a;
+}
+
+.toggle-correquisito-container .form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 61, 122, 0.25);
+  border-color: #003d7a;
+}
+
+.toggle-correquisito-container .form-check-label {
+  color: #003d7a;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 0;
+  flex: 1;
+}
+
+/* ==================== SECCIÓN DE CORREQUISITO ==================== */
+.correquisito-section {
+  background-color: #f8f9fa;
+  padding: 1.25rem;
+  border-radius: 6px;
+  border-left: 4px solid #1e7a2d;
+  scroll-margin-top: 20px;
+}
+
+/* ==================== TABS DE CORREQUISITO ==================== */
+.nav-tabs {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: transparent;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #003d7a;
+  border-bottom-color: #0056b3;
+  background-color: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active {
+  color: #003d7a;
+  background-color: transparent;
+  border-bottom-color: #003d7a;
+  font-weight: 600;
+}
+
+.tab-content {
+  padding-top: 1rem;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.show.active {
+  display: block;
+}
+
+/* Estilo para toggle deshabilitado */
+.form-check-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.form-check-label {
+  cursor: pointer;
+}
+
+.form-check-input:disabled ~ .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Alerta de correquisito existente */
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+/* Badge de correquisito actual */
+.badge.bg-warning {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Alert de advertencia */
+.alert-warning {
+  background-color: #fff3cd;
+  border-color: #ffecb5;
+  color: #856404;
+  font-size: 0.9rem;
+}
+
+.alert-warning strong {
+  color: #664d03;
+}
+
+/* Mejorar visibilidad del toggle label */
+.form-check-label {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.form-check-label small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+}
+
+/* ==================== NG-SELECT ==================== */
+::ng-deep ng-select.is-invalid .ng-select-container {
+  border-color: #dc3545;
+}
+
+::ng-deep ng-select .ng-select-container {
+  min-height: 38px;
+  border-radius: 0.375rem;
+}
+
+.invalid-feedback.d-block {
+  display: block !important;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .modal-container {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .info-plan-simple {
+    font-size: 1.1rem;
+  }
+
+  .toggle-correquisito-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+}

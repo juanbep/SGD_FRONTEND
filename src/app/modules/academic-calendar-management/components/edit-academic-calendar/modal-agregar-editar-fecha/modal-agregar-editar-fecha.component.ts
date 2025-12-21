@@ -26,6 +26,8 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Utils } from '../../../utils/calendario.utils';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastrService } from 'ngx-toastr';
+import { NombreFechaHelperService } from '../../../services';
 
 export type TipoFecha = 'RESALTADAS' | 'NO_RESALTADAS' | 'ADMINISTRATIVAS';
 
@@ -39,15 +41,10 @@ export type TipoFecha = 'RESALTADAS' | 'NO_RESALTADAS' | 'ADMINISTRATIVAS';
 export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
+  private readonly toastr = inject(ToastrService);
+  private readonly nombreFechaHelper = inject(NombreFechaHelperService);
 
   @Input() visible: boolean = false;
-  @Input() listaNombreFechas: {
-    value: number;
-    label: string;
-    tieneTemplate: boolean;
-    uniqueDate: boolean;
-    tipo?: TipoFecha;
-  }[] = [];
   @Input() oidCalendario: number = 0;
   @Input() guardando: boolean = false;
   @Input() fechaAEditar: Fecha | null = null;
@@ -69,10 +66,22 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
   readonly vistaActual = signal<'fecha' | 'crearNombre'>('fecha');
   readonly nombreFechaSeleccionadoLabel = signal<string>('');
 
+  readonly listaNombreFechas = signal<
+    {
+      value: number;
+      label: string;
+      tieneTemplate: boolean;
+      uniqueDate: boolean;
+      tipo?: TipoFecha;
+    }[]
+  >([]);
+
+  readonly cargandoListaFechas = signal<boolean>(false);
+
   readonly nombresFechaFiltrados = computed(() => {
     const calendarioTexto = `${this.anioCalendario}-${this.numeroCalendario}`;
 
-    return this.listaNombreFechas.map((item) => ({
+    return this.listaNombreFechas().map((item) => ({
       ...item,
       label: item.label.replace(/{calendar}/g, calendarioTexto),
     }));
@@ -114,12 +123,33 @@ export class ModalAgregarEditarFechaComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.inicializarFormularios();
+    this.cargarCatalogoNombresFechas();
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
         this.oidCalendario = +id;
       }
     });
+  }
+
+  // Método para cargar el catálogo internamente
+  async cargarCatalogoNombresFechas(): Promise<void> {
+    this.cargandoListaFechas.set(true);
+
+    try {
+      const nombresFechas = await this.nombreFechaHelper.getAllForDropdown();
+      const listaOrdenada = Utils.ordenarListaNombresFecha(nombresFechas);
+      this.listaNombreFechas.set(listaOrdenada);
+    } catch (error) {
+      console.error('Error al cargar catálogo de fechas:', error);
+      this.toastr.error('Error al cargar el catálogo de tipos de fecha');
+    } finally {
+      this.cargandoListaFechas.set(false);
+    }
+  }
+
+  public recargarCatalogoNombresFechas(): void {
+    this.cargarCatalogoNombresFechas();
   }
 
   ngOnChanges(changes: SimpleChanges): void {

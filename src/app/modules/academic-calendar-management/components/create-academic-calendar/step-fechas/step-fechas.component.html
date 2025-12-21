@@ -51,9 +51,9 @@
 <div class="card shadow-sm" *ngIf="!cargandoFechas()">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h6 class="mb-0 fw-bold d-flex align-items-center">
-      <i class="fas fa-list me-2" style="color: #f8ae15;"></i>
+      <i class="fas fa-list me-2" style="color: #f8ae15"></i>
       Fechas Agregadas
-      <span class="badge bg-primary ms-2">{{ fechas().length  }}</span> 
+      <span class="badge bg-primary ms-2">{{ fechas().length }}</span>
     </h6>
   </div>
 
@@ -118,13 +118,15 @@
 <!-- Modales -->
 <app-modal-agregar-fecha
   [visible]="modalAgregarVisible()"
-  [listaNombreFechas]="catalogoNombresFecha()"
   [oidCalendario]="oidCalendario || 0"
+  [anioCalendario]="anioCalendario()"
+  [numeroCalendario]="numeroCalendario()"
   [guardando]="guardandoFecha()"
   [fechaAEditar]="fechaAEditar()"
   (onConfirmar)="confirmarAgregarFecha($event)"
   (onConfirmarEdicion)="confirmarEditarFecha($event)"
   (onCancelar)="cerrarModalAgregar()"
+  (onCrearNombreFecha)="handleCrearNombreFecha($event)"
 ></app-modal-agregar-fecha>
 
 <app-modal-eliminar-fecha

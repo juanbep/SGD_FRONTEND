@@ -1,4 +1,11 @@
-import { Component, signal, computed, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  signal,
+  computed,
+  OnInit,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -41,20 +48,15 @@ export class EditAcademicCalendarComponent implements OnInit {
   private readonly fechaHelper = inject(FechaHelperService);
   private readonly nombreFechaHelper = inject(NombreFechaHelperService);
 
+  @ViewChild(ModalAgregarEditarFechaComponent)
+  modalAgregarEditarRef!: ModalAgregarEditarFechaComponent;
+
   // ===== SIGNALS =====
   readonly calendario = signal<Calendario | null>(null);
   readonly isLoading = signal<boolean>(false);
   readonly modalEliminarVisible = signal<boolean>(false);
   readonly fechaAEliminar = signal<Fecha | null>(null);
   readonly modalAgregarVisible = signal<boolean>(false);
-  readonly listaNombreFechas = signal<
-    {
-      value: number;
-      label: string;
-      tieneTemplate: boolean;
-      uniqueDate: boolean;
-    }[]
-  >([]);
   readonly guardandoFecha = signal<boolean>(false);
   readonly cargandoListaFechas = signal<boolean>(false);
   readonly fechaAEditar = signal<Fecha | null>(null);
@@ -77,7 +79,6 @@ export class EditAcademicCalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarCalendario();
-    this.cargarCatalogoNombresFechas();
   }
 
   // ===== CARGA DE DATOS =====
@@ -111,23 +112,6 @@ export class EditAcademicCalendarComponent implements OnInit {
       },
       complete: () => this.isLoading.set(false),
     });
-  }
-
-  // ===== CARGAR NOMBRES FECHAS =====
-  private async cargarCatalogoNombresFechas(): Promise<void> {
-    this.cargandoListaFechas.set(true);
-
-    try {
-      const nombresFechas = await this.nombreFechaHelper.getAllForDropdown();
-      // Ordenar antes de asignar al signal
-      const listaOrdenada = Utils.ordenarListaNombresFecha(nombresFechas);
-      this.listaNombreFechas.set(listaOrdenada);
-    } catch (error) {
-      console.error('Error al cargar catálogo de fechas:', error);
-      this.toastr.error('Error al cargar el catálogo de tipos de fecha');
-    } finally {
-      this.cargandoListaFechas.set(false);
-    }
   }
 
   // ===== ELIMINAR FECHA =====
@@ -239,34 +223,18 @@ export class EditAcademicCalendarComponent implements OnInit {
   }
 
   // ===== HANDLER PARA CREAR UN FECHA DE CALENDARIO DESDE COMPONENTE HIJO =====
-  async handleCrearNombreFecha(dto: CreateNombreFechaDto): Promise<void> {
-    console.log('DTO recibido en componente padre:', dto); // ✅ DEBUG
-    console.log('Tipo de uniqueDate:', typeof dto.uniqueDate); // ✅ DEBUG
 
+  async handleCrearNombreFecha(dto: CreateNombreFechaDto): Promise<void> {
     this.guardandoFecha.set(true);
 
     try {
       const nuevoNombre = await this.nombreFechaHelper.create(dto);
 
       if (nuevoNombre) {
-        // Agregar el nuevo nombre a la lista
-        const nuevaLista = [
-          ...this.listaNombreFechas(),
-          {
-            value: nuevoNombre.oidNombreFecha,
-            label: nuevoNombre.nombre,
-            tieneTemplate: false,
-            uniqueDate: nuevoNombre.uniqueDate,
-          },
-        ];
-
-        // Ordenar la lista actualizada
-        const listaOrdenada = Utils.ordenarListaNombresFecha(nuevaLista);
-        this.listaNombreFechas.set(listaOrdenada);
-
         this.toastr.success('Tipo de fecha creado correctamente');
 
-        // El modal se mantiene abierto y vuelve automáticamente a la vista de fecha
+        // Recargar catálogo en el componente hijo
+        this.modalAgregarEditarRef?.recargarCatalogoNombresFechas();
       } else {
         this.toastr.error('No se pudo crear el tipo de fecha');
       }

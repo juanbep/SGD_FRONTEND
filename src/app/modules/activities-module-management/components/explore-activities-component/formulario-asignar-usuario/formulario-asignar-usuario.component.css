@@ -1,0 +1,202 @@
+/* =====================================================
+   LABELS CON ICONOS
+   ===================================================== */
+
+.campo-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #001282;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 0.5rem;
+}
+
+.campo-label i {
+  color: #0051c6;
+  font-size: 1rem;
+  width: 16px;
+  text-align: center;
+}
+
+/* =====================================================
+   NG-SELECT
+   ===================================================== */
+
+::ng-deep .ng-select .ng-select-container {
+  min-height: 38px;
+  border-radius: 0.375rem;
+}
+
+::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* =====================================================
+   INPUT
+   ===================================================== */
+
+input[type="number"] {
+  min-height: 38px;
+}
+
+input[type="number"]:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* =====================================================
+   BOTONES
+   ===================================================== */
+
+.btn-cancelar,
+.btn-confirmar {
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-cancelar {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.btn-cancelar:hover {
+  background-color: #ffb300;
+}
+
+.btn-confirmar {
+  background-color: #5a8dee;
+  color: white;
+}
+
+.btn-confirmar:hover:not(:disabled) {
+  background-color: #4a7cd6;
+}
+
+.btn-confirmar:disabled {
+  background-color: #6c757d;
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+
+.spinner-border {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* =====================================================
+   VALIDACIÓN DE CUPO
+   ===================================================== */
+
+/* Loading state */
+.validacion-loading {
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  border: 1px solid #dee2e6;
+}
+
+/* Card de validación */
+.card-validacion {
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.card-validacion-header {
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.card-validacion-header.exito {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.card-validacion-header.exito i {
+  color: #198754;
+}
+
+.card-validacion-header.error {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.card-validacion-header.error i {
+  color: #ffc107;
+}
+
+.card-validacion-body {
+  padding: 1rem;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #6c757d;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.info-value {
+  color: #001282;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .d-flex.gap-2 {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancelar,
+  .btn-confirmar {
+    width: 100%;
+  }
+
+  .card-validacion-header {
+    font-size: 0.8125rem;
+    padding: 0.625rem 0.875rem;
+  }
+
+  .card-validacion-body {
+    padding: 0.875rem;
+  }
+
+  .info-label,
+  .info-value {
+    font-size: 0.8125rem;
+  }
+}

@@ -1,250 +1,190 @@
-<div class="scroll-container">
-  <!-- Spinner de carga -->
-  <div *ngIf="loading" class="loading-overlay">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-    <p class="mt-2 text-muted">Cargando información de los usuarios...</p>
+<div class="usuarios-container">
+  <div *ngIf="usuariosCompletos.length === 0" class="empty-state">
+    <i class="fas fa-info-circle"></i>
+    <p>No hay usuarios asociados a esta actividad</p>
   </div>
 
-  <!-- Mensaje de error -->
-  <div *ngIf="error && !loading" class="alert alert-danger m-3" role="alert">
-    <i class="fas fa-exclamation-triangle me-2"></i>
-    {{ error }}
+  <div *ngIf="usuariosCompletos.length > 0" class="usuarios-header">
+    <span class="usuarios-count">
+      <i class="fas fa-users"></i>
+      {{ totalUsuarios }} usuario(s) responsable(s)
+    </span>
   </div>
 
-  <!-- Lista de usuarios con scroll continuo -->
-  <div *ngIf="!loading && !error && usuarios.length > 0" class="usuarios-list">
-    <!-- Indicador superior -->
-    <div class="scroll-hint scroll-hint-top" *ngIf="totalUsuarios > 1">
-      <i class="fas fa-chevron-down"></i>
-      <span>Desplázate para ver todos los usuarios</span>
-    </div>
-
-    <!-- Tarjetas de usuarios -->
+  <div class="usuarios-list">
     <div
-      *ngFor="let usuario of usuarios; let i = index"
-      class="usuario-card-wrapper"
+      *ngFor="let usuario of usuariosCompletos; let i = index"
+      class="usuario-item"
       [attr.data-usuario-id]="usuario.oidUsuario"
     >
-      <div class="usuario-card">
-        <!-- ========== VISTA NORMAL ========== -->
-        <ng-container *ngIf="usuarioEnConfirmacion !== usuario.oidUsuario">
-          <!-- Header de la tarjeta -->
-          <div
-            class="card-header text-white d-flex justify-content-between align-items-center"
+      <div
+        *ngIf="usuarioEnConfirmacion === usuario.oidUsuario"
+        class="confirmacion-card"
+      >
+        <div class="confirmacion-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h6>¿Desasignar usuario?</h6>
+        <div class="usuario-info-confirm">
+          <strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong>
+          <small>
+            {{ usuario.identificacion }} |
+            {{ getNombreCargoUsuario(usuario.oidUsuario) }} |
+            {{ getHorasUsuario(usuario.oidUsuario) }} hrs
+          </small>
+        </div>
+        <div class="confirmacion-actions">
+          <button class="btn-cancel" (click)="cancelarConfirmacion()">
+            Cancelar
+          </button>
+          <button
+            class="btn-confirm"
+            [disabled]="desasignando"
+            (click)="confirmarDesasignacion(usuario.oidUsuario)"
           >
-            <div class="d-flex align-items-center">
-              <i class="fas fa-user-circle me-2" style="color: #f8ae15"></i>
-              <span class="fw-bold"
-                >{{ usuario.nombres }} {{ usuario.apellidos }}</span
-              >
-            </div>
-
-            <span class="badge rounded-pill px-3 py-2 badge-contador">
-              <i class="fas fa-user me-1"></i>
-              Usuario {{ i + 1 }} de {{ totalUsuarios }}
+            <span *ngIf="!desasignando">Confirmar</span>
+            <span *ngIf="desasignando">
+              <span class="spinner-border spinner-border-sm"></span>
             </span>
+          </button>
+        </div>
+      </div>
+
+      <div
+        *ngIf="usuarioEnConfirmacion !== usuario.oidUsuario"
+        class="usuario-card"
+      >
+        <div class="card-header-minimal">
+          <div class="usuario-nombre">
+            <i class="fas fa-user-circle"></i>
+            <span>{{ usuario.nombres }} {{ usuario.apellidos }}</span>
+          </div>
+          <span class="usuario-numero">{{ i + 1 }}/{{ totalUsuarios }}</span>
+        </div>
+
+        <div class="info-rapida">
+          <span>
+            <strong>Cargo:</strong>
+            {{ getNombreCargoUsuario(usuario.oidUsuario) }}
+          </span>
+          <span>
+            <strong>Horas:</strong>
+            {{ getHorasUsuario(usuario.oidUsuario) }}
+          </span>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-section">
+            <div class="info-item">
+              <label>Identificación</label>
+              <span>{{ usuario.identificacion }}</span>
+            </div>
+            <div class="info-item">
+              <label>Departamento</label>
+              <span>{{ usuario.departamento?.nombre || "No asignado" }}</span>
+            </div>
+            <div class="info-item">
+              <label>Facultad</label>
+              <span>{{ usuario.departamento?.facultad || "No asignada" }}</span>
+            </div>
+            <div class="info-item">
+              <label>Categoría</label>
+              <span>{{ usuario.usuarioDetalle.categoria }}</span>
+            </div>
           </div>
 
-          <!-- Body con toda la información -->
-          <div class="card-body">
-            <div class="row g-3">
-              <!-- Columna izquierda: Información Personal -->
-              <div class="col-md-6">
-                <h6 class="section-subtitle">
-                  <i class="fas fa-id-card me-2"></i>
-                  Información Personal
-                </h6>
-                <div class="info-group">
-                  <div class="info-item">
-                    <label>Identificación:</label>
-                    <span>{{ usuario.identificacion }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Username:</label>
-                    <span>{{ usuario.username }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Correo:</label>
-                    <span class="text-break">{{ usuario.correo }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Estado:</label>
-                    <span class="text-break">
-                      {{ usuario.estadoUsuario.nombre }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Columna derecha: Información Académica -->
-              <div class="col-md-6">
-                <h6 class="section-subtitle">
-                  <i class="fas fa-graduation-cap me-2"></i>
-                  Información Académica
-                </h6>
-                <div class="info-group">
-                  <div class="info-item">
-                    <label>Departamento:</label>
-                    <span>{{ usuario.usuarioDetalle.departamento }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Programa:</label>
-                    <span>{{
-                      usuario.usuarioDetalle.programa || "No asignado"
-                    }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Categoría:</label>
-                    <span>{{ usuario.usuarioDetalle.categoria }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Contratación:</label>
-                    <span>{{ usuario.usuarioDetalle.contratacion }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Dedicación:</label>
-                    <span>{{ usuario.usuarioDetalle.dedicacion }}</span>
-                  </div>
-                  <div class="info-item">
-                    <label>Estudios:</label>
-                    <span>{{ usuario.usuarioDetalle.estudios }}</span>
-                  </div>
-                </div>
-              </div>
+          <div class="info-section">
+            <div class="info-item">
+              <label>Programa</label>
+              <span>{{
+                usuario.usuarioDetalle.programa || "No asignado"
+              }}</span>
             </div>
-
-            <!-- Sección de Roles -->
-            <div
-              class="roles-section mt-3"
-              *ngIf="usuario.roles && usuario.roles.length > 0"
-            >
-              <h6 class="section-subtitle">
-                <i class="fas fa-user-tag me-2"></i>
-                Roles Asignados
-              </h6>
-              <div class="roles-container">
-                <span
-                  *ngFor="let rol of usuario.roles"
-                  class="badge badge-rol text-white me-2 mb-2"
-                >
-                  {{ rol.nombre }}
-                </span>
-              </div>
+            <div class="info-item">
+              <label>Contratación</label>
+              <span>{{ usuario.usuarioDetalle.contratacion }}</span>
             </div>
-
-            <!-- Botón desasignar (solo en modo gestionar) -->
-            <div
-              *ngIf="modo === 'gestionar'"
-              class="card-footer-actions mt-3 pt-3 border-top d-flex justify-content-end"
-            >
-              <button
-                type="button"
-                class="badge rounded-pill px-3 py-2 badge-desasignar"
-                title="Desasignar usuario de esta actividad"
-                [disabled]="desasignando"
-                (click)="mostrarConfirmacion(usuario.oidUsuario)"
-              >
-                <i class="fas fa-user-times me-1"></i>
-                Desasignar
-              </button>
+            <div class="info-item">
+              <label>Dedicación</label>
+              <span>{{ usuario.usuarioDetalle.dedicacion }}</span>
+            </div>
+            <div class="info-item">
+              <label>Estudios</label>
+              <span>{{ usuario.usuarioDetalle.estudios }}</span>
             </div>
           </div>
-        </ng-container>
+        </div>
 
-        <!-- ========== VISTA DE CONFIRMACIÓN ========== -->
-
-        <ng-container *ngIf="usuarioEnConfirmacion === usuario.oidUsuario">
-          <!-- Header con alerta -->
+        <div *ngIf="usuario.horasLaborDocente" class="horas-minimal">
           <div
-            class="card-header bg-danger text-white d-flex align-items-center"
+            class="horas-block"
+            *ngIf="usuario.horasLaborDocente.horasAsignadasPorTipoActividad"
           >
-            <i
-              class="fas fa-exclamation-triangle me-2"
-              style="font-size: 1.2rem"
-            ></i>
-            <span class="fw-bold">Confirmar Desasignación</span>
-          </div>
-
-          <!-- Body con mensaje de confirmación -->
-          <div class="card-body confirmacion-body">
-            <div class="text-center py-4">
-              <!-- Icono grande en rojo corporativo -->
-              <i
-                class="fas fa-user-times fa-3x mb-3"
-                style="color: #ad0000"
-              ></i>
-
-              <h6 class="fw-bold mb-3">
-                ¿Está seguro que desea desasignar al siguiente usuario?
-              </h6>
-
-              <div class="alert alert-warning d-flex align-items-center mb-4">
-                <i class="fas fa-info-circle me-2"></i>
-                <div class="text-start">
-                  <strong>{{ usuario.nombres }} {{ usuario.apellidos }}</strong
-                  ><br />
-                  <small
-                    >{{ usuario.identificacion }} - {{ usuario.correo }}</small
-                  >
-                </div>
+            <div class="block-title">
+              <i class="fas fa-list-check"></i>
+              Horas por Tipo de Actividad
+            </div>
+            <div class="tipos-list">
+              <div
+                class="tipo-row"
+                *ngFor="
+                  let item of usuario.horasLaborDocente
+                    .horasAsignadasPorTipoActividad | keyvalue
+                "
+              >
+                <span class="tipo-icon">●</span>
+                <span class="tipo-text">{{ item.key }}</span>
+                <span class="tipo-horas">{{ item.value }}</span>
               </div>
-
-              <p class="text-muted small mb-0">
-                Esta acción eliminará al usuario de esta actividad académica.
-              </p>
-            </div>
-
-            <!-- Botones de confirmación -->
-            <div class="d-flex justify-content-center gap-3 mt-3">
-              <button
-                type="button"
-                class="btn btn-outline-secondary px-4"
-                (click)="cancelarConfirmacion()"
-              >
-                <i class="fas fa-times me-2"></i>
-                Cancelar
-              </button>
-
-              <!-- Botón con clase personalizada -->
-              <button
-                type="button"
-                class="btn btn-confirmar-desasignar px-4"
-                [disabled]="desasignando"
-                (click)="confirmarDesasignacion(usuario.oidUsuario)"
-              >
-                <span *ngIf="!desasignando">
-                  <i class="fas fa-user-times me-2"></i>
-                  Confirmar Desasignación
-                </span>
-                <span *ngIf="desasignando">
-                  <span
-                    class="spinner-border spinner-border-sm me-2"
-                    role="status"
-                  ></span>
-                  Desasignando...
-                </span>
-              </button>
             </div>
           </div>
-        </ng-container>
+
+          <div class="horas-divider"></div>
+
+          <div class="horas-block">
+            <div class="block-title">
+              <i class="fas fa-business-time"></i>
+              Total Horas Labor Docente
+            </div>
+            <div class="totales-row">
+              <div class="total-col">
+                <span class="total-num asignadas">{{
+                  usuario.horasLaborDocente.totalHorasAsignadas
+                }}</span>
+                <span class="total-text">Asignadas</span>
+              </div>
+              <div class="total-separator">/</div>
+              <div class="total-col">
+                <span class="total-num disponibles">{{
+                  usuario.horasLaborDocente.totalHorasDisponibles
+                }}</span>
+                <span class="total-text">Disponibles</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="roles-compact"
+          *ngIf="usuario.roles && usuario.roles.length > 0"
+        >
+          <label>Roles:</label>
+          <span *ngFor="let rol of usuario.roles" class="rol-tag">{{
+            rol.nombre
+          }}</span>
+        </div>
+
+        <div *ngIf="modo === 'gestionar'" class="card-footer-minimal">
+          <button
+            class="btn-desasignar"
+            (click)="mostrarConfirmacion(usuario.oidUsuario)"
+            [disabled]="desasignando"
+          >
+            <i class="fas fa-user-times"></i>
+            Desasignar
+          </button>
+        </div>
       </div>
     </div>
-
-    <!-- Indicador inferior -->
-    <div class="scroll-hint scroll-hint-bottom" *ngIf="totalUsuarios > 1">
-      <span>Desplázate para ver todos los usuarios</span>
-      <i class="fas fa-chevron-up"></i>
-    </div>
-  </div>
-
-  <!-- Mensaje cuando no hay usuarios -->
-  <div
-    *ngIf="!loading && !error && usuarios.length === 0"
-    class="alert alert-info m-3"
-  >
-    <i class="fas fa-info-circle me-2"></i>
-    No hay usuarios asociados a esta actividad
   </div>
 </div>

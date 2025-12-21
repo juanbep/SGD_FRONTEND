@@ -9,13 +9,14 @@ export interface Plan {
   acuerdo: string;
   oidPrograma: number;
   nombrePrograma: string;
+  cantidadMaterias?: number;
   fechaCreacion: string;
   fechaActualizacion: string;
   usuarioCreacion: string;
   usuarioActualizacion: string;
 }
 
-export type EstadoPlan = 'ACTIVO' | 'INACTIVO' | 'EN_REVISION' | 'APROBADO';
+export type EstadoPlan = 'ACTIVO' | 'INACTIVO';
 
 // Filtros para búsqueda y paginación
 export interface PlanFilters {
@@ -41,6 +42,7 @@ export interface PlanFilters {
   fechaCreacionHasta?: string;
 
   // Ordenamiento
+  sort?: string;   
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
@@ -52,6 +54,7 @@ export interface CreatePlanDto {
   fechaAprobacion: string;
   acuerdo: string;
   oidPrograma: number;
+  oidPlanBase?: number;
 }
 
 export interface UpdatePlanDto extends Partial<CreatePlanDto> {

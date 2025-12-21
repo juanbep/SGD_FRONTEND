@@ -19,6 +19,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import {
   ActividadResponse,
   UpdateActividadDTO,
+  UsuarioActividad,
 } from '../../../models';
 import { ESTADOS_ACTIVIDAD_DROPDOWN } from '../../../utils/actividad-utils';
 
@@ -42,7 +43,8 @@ export class ModalEditarActividadComponent implements OnChanges {
 
   private fb = inject(FormBuilder);
 
-  // ========== CONFIGURACIÓN DE CAMPOS EDITABLES ==========
+  // ======== CONFIGURACIÓN DE CAMPOS EDITABLES =========
+
   camposEditables = {
     nombreActividad: true,
     tipoActividad: false,
@@ -51,11 +53,12 @@ export class ModalEditarActividadComponent implements OnChanges {
     semanas: true,
     atributos: true,
   };
-  // ======================================================
 
-  // ========== ESTADOS (DEFINIDOS LOCALMENTE) ==========
+  // ==================== ESTADOS ========================
+
   readonly estadosDropdown = ESTADOS_ACTIVIDAD_DROPDOWN;
-  // ====================================================
+
+  // =====================================================
 
   form: FormGroup = this.fb.group({
     oidTipoActividad: [null, Validators.required],
@@ -107,7 +110,7 @@ export class ModalEditarActividadComponent implements OnChanges {
     // Mapear atributos
     const attrsFG = (a.atributos ?? []).map((attr: any) =>
       this.fb.group({
-        nombre: [attr.codigoAtributo],
+        nombre: [{ value: attr.codigoAtributo, disabled: true }],
         tipo: ['VARCHAR'],
         valor: [
           { value: attr.valor, disabled: !this.camposEditables.atributos },
@@ -117,6 +120,14 @@ export class ModalEditarActividadComponent implements OnChanges {
     );
 
     this.form.setControl('atributos', this.fb.array(attrsFG));
+  }
+
+  private mapearUsuariosParaDTO(): UsuarioActividad[] {
+    return this.actividad.usuariosActividad.map((ua) => ({
+      oidUsuario: ua.oidUsuario,
+      oidCargoActividad: ua.oidCargoActividad,
+      horas: ua.horas,
+    }));
   }
 
   cerrar(): void {
@@ -131,19 +142,25 @@ export class ModalEditarActividadComponent implements OnChanges {
 
     const raw = this.form.getRawValue();
 
+    // Mapear atributos al formato correcto
+    const atributos = raw.atributos.map((attr: any) => ({
+      nombre: attr.nombre,
+      tipo: attr.tipo || 'VARCHAR',
+      valor: attr.valor,
+    }));
+
     const dto: UpdateActividadDTO = {
       oidActividad: this.actividad.actividad.oidActividad,
-      // REMOVIDO: oidCargoActividad
-      oidTipoActividad: raw.oidTipoActividad,
+      oidTipoActividad: this.actividad.actividad.tipoActividad.oidTipoActividad,
       oidEstadoActividad: raw.oidEstadoActividad,
       nombreActividad: raw.nombreActividad,
       semanas: raw.semanas,
-      //horas: this.actividad.actividad.horas,
-      oidCalendario: raw.oidCalendario,
-      //atributos: raw.atributos as CreateAtributoDTO[],
+      oidCalendario: this.actividad.oidCalendario,
+      usuarios: this.mapearUsuariosParaDTO(),
+      atributos: atributos,
     };
 
-    console.log('📤 DTO a enviar:', dto);
+    console.log('DTO editar actividad:', dto);
     this.onGuardar.emit(dto);
   }
 }

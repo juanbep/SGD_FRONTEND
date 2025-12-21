@@ -25,12 +25,6 @@ export class ActivitiesBaseComponent {
   @ViewChild(TablaActividadesAcademicasComponent)
   tabla!: TablaActividadesAcademicasComponent;
 
-  activeTab: string = 'academicas';
-
-  selectTab(tab: string): void {
-    this.activeTab = tab;
-  }
-
   handleEditar(actividadData: ActividadResponse): void {
     this.onEditar.emit(actividadData);
   }

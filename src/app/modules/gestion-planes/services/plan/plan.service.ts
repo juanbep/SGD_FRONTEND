@@ -61,6 +61,21 @@ export class PlanService {
       .pipe(catchError(this.handleError));
   }
 
+  // Crear plan con opción de copiar materias
+  createPlanCopia(
+    planData: CreatePlanDto,
+    oidPlanBase?: number
+  ): Observable<CreatePlanResponse> {
+    const body = {
+      ...planData,
+      oidPlanBase: oidPlanBase || null,
+    };
+
+    return this.http
+      .post<CreatePlanResponse>(`${this.apiUrl}/crear-con-copia`, body)
+      .pipe(catchError(this.handleError));
+  }
+
   private buildHttpParams(filters: PlanFilters): HttpParams {
     let params = new HttpParams();
 
@@ -112,6 +127,10 @@ export class PlanService {
     }
 
     // Ordenamiento
+    if (filters.sort?.trim()) {
+      params = params.set('sort', filters.sort.trim());
+    }
+
     if (filters.sortBy) {
       params = params.set('sort', filters.sortBy);
     }
@@ -124,8 +143,6 @@ export class PlanService {
 
   private handleError(error: any): Observable<never> {
     console.error('Error en PlanService:', error);
-    return throwError(
-      () => new Error(error.mensaje || 'Error en el servicio de planes')
-    );
+    return throwError(() => error);
   }
 }

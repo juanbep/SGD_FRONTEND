@@ -1,13 +1,35 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { EstadoPlan, Plan } from '../../models';
+import { EstadoPlan, Plan, PlanFilters } from '../../models';
+import { PlanService } from '../../services';
+import { ToastrService } from 'ngx-toastr';
+import { CrearPlanModalComponent } from '../../components/crear-plan-modal/crear-plan-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
+import { EditarPlanModalComponentComponent } from '../../components/editar-plan-modal-component/editar-plan-modal.component';
+import { EliminarPlanModalComponent } from '../../components/eliminar-plan-modal/eliminar-plan-modal.component';
 
 @Component({
   selector: 'app-listar-planes',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    CrearPlanModalComponent,
+    EditarPlanModalComponentComponent,
+    EliminarPlanModalComponent,
+    NgSelectModule,
+  ],
   templateUrl: './listar-planes.component.html',
   styleUrl: './listar-planes.component.css',
 })
@@ -18,19 +40,26 @@ export class ListarPlanesComponent implements OnInit {
   @Output() onModificar = new EventEmitter<Plan>();
   @Output() onCambiarEstado = new EventEmitter<Plan>();
 
+  // ===== SERVICIOS =====
+  private planService = inject(PlanService);
+  private toastr = inject(ToastrService);
+
   // ===== ESTADOS DISPONIBLES =====
-  readonly estadosDisponibles: EstadoPlan[] = [
+  readonly estadosDisponibles: (EstadoPlan | 'TODOS')[] = [
+    'TODOS',
     'ACTIVO',
     'INACTIVO',
-    'EN_REVISION',
-    'APROBADO',
   ];
 
   // ===== FILTROS =====
   filtroNumero: string = '';
-  filtroEstado: EstadoPlan | '' = '';
+  filtroEstado: EstadoPlan | 'TODOS' | '' = 'TODOS';
   filtroFechaAprobacion: string = '';
   filtroFechaCreacion: string = '';
+
+  // ===== ORDENAMIENTO =====
+  sortField: string = 'numero';
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   // ===== PAGINACIÓN =====
   page = 0;
@@ -42,6 +71,13 @@ export class ListarPlanesComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  mostrarModalCrear = false;
+  mostrarModalEditar = false;
+  mostrarModalEliminar = false;
+  planAEditar: Plan | null = null;
+  planAEliminar: Plan | null = null;
+  oidProgramaActual = getUserProgramaId();
+
   // ===== UTILIDADES =====
   Math = Math;
 
@@ -49,141 +85,88 @@ export class ListarPlanesComponent implements OnInit {
     this.cargarPlanes();
   }
 
-  // ===== CARGAR DATOS (CON MOCK) =====
+  // ===== CARGAR PLANES =====
   cargarPlanes(): void {
     this.loading = true;
     this.error = null;
 
-    // Simulamos llamada asíncrona con setTimeout
-    setTimeout(() => {
-      // DATOS MOCK - Reemplazar con servicio real
-      const todosMock: Plan[] = [
-        {
-          oidPlan: 1,
-          numero: '001',
-          estado: 'ACTIVO',
-          fechaAprobacion: '2024-01-15',
-          acuerdo: 'ACU-2024-001',
-          oidPrograma: 101,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-01-10',
-          fechaActualizacion: '2024-01-15',
-          usuarioCreacion: 'admin',
-          usuarioActualizacion: 'admin',
-        },
-        {
-          oidPlan: 2,
-          numero: '002',
-          estado: 'INACTIVO',
-          fechaAprobacion: '2023-06-20',
-          acuerdo: 'ACU-2023-045',
-          oidPrograma: 102,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2023-06-15',
-          fechaActualizacion: '2024-03-10',
-          usuarioCreacion: 'jperez',
-          usuarioActualizacion: 'admin',
-        },
-        {
-          oidPlan: 3,
-          numero: '001',
-          estado: 'APROBADO',
-          fechaAprobacion: '2024-02-10',
-          acuerdo: 'ACU-2024-012',
-          oidPrograma: 103,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-02-01',
-          fechaActualizacion: '2024-02-10',
-          usuarioCreacion: 'mlopez',
-          usuarioActualizacion: 'mlopez',
-        },
-        {
-          oidPlan: 4,
-          numero: '003',
-          estado: 'EN_REVISION',
-          fechaAprobacion: '2024-03-05',
-          acuerdo: 'ACU-2024-023',
-          oidPrograma: 101,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-02-28',
-          fechaActualizacion: '2024-03-05',
-          usuarioCreacion: 'admin',
-          usuarioActualizacion: 'admin',
-        },
-        {
-          oidPlan: 5,
-          numero: '002',
-          estado: 'ACTIVO',
-          fechaAprobacion: '2024-04-12',
-          acuerdo: 'ACU-2024-034',
-          oidPrograma: 104,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-04-01',
-          fechaActualizacion: '2024-04-12',
-          usuarioCreacion: 'lgarcia',
-          usuarioActualizacion: 'lgarcia',
-        },
-        {
-          oidPlan: 6,
-          numero: '001',
-          estado: 'ACTIVO',
-          fechaAprobacion: '2024-05-20',
-          acuerdo: 'ACU-2024-047',
-          oidPrograma: 105,
-          nombrePrograma: 'Ingeniería de Sistemas',
-          fechaCreacion: '2024-05-10',
-          fechaActualizacion: '2024-05-20',
-          usuarioCreacion: 'crodriguez',
-          usuarioActualizacion: 'crodriguez',
-        },
-      ];
+    const filtros: PlanFilters = {
+      page: this.page,
+      size: this.size,
+      oidPrograma: this.oidProgramaActual,
+      sort: `${this.sortField},${this.sortDirection}`,
+    };
 
-      // Aplicar filtros
-      let planesFiltrados = [...todosMock];
+    // Agregar filtros opcionales
+    if (this.filtroNumero?.trim()) {
+      filtros.numero = this.filtroNumero.trim();
+    }
 
-      if (this.filtroNumero) {
-        planesFiltrados = planesFiltrados.filter((p) =>
-          p.numero.toLowerCase().includes(this.filtroNumero.toLowerCase())
-        );
-      }
+    if (this.filtroEstado && this.filtroEstado !== 'TODOS') {
+      filtros.estado = this.filtroEstado as EstadoPlan;
+    }
 
-      if (this.filtroEstado) {
-        planesFiltrados = planesFiltrados.filter(
-          (p) => p.estado === this.filtroEstado
-        );
-      }
+    if (this.filtroFechaAprobacion) {
+      filtros.fechaAprobacionDesde = this.filtroFechaAprobacion;
+      filtros.fechaAprobacionHasta = this.filtroFechaAprobacion;
+    }
 
-      if (this.filtroFechaAprobacion) {
-        planesFiltrados = planesFiltrados.filter(
-          (p) => p.fechaAprobacion === this.filtroFechaAprobacion
-        );
-      }
+    if (this.filtroFechaCreacion) {
+      filtros.fechaCreacionDesde = this.filtroFechaCreacion;
+      filtros.fechaCreacionHasta = this.filtroFechaCreacion;
+    }
 
-      if (this.filtroFechaCreacion) {
-        planesFiltrados = planesFiltrados.filter(
-          (p) => p.fechaCreacion === this.filtroFechaCreacion
-        );
-      }
+    this.planService.getPlanes(filtros).subscribe({
+      next: (response) => {
+        if (response.codigo >= 200 && response.codigo < 300) {
+          this.planes = response.data.content;
+          this.totalElements = response.data.totalElements;
+        } else {
+          this.toastr.warning(
+            response.mensaje || 'Respuesta inesperada del servidor'
+          );
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.handleError(error, 'cargar planes');
+        this.loading = false;
+      },
+    });
+  }
 
-      // Simular paginación
-      this.totalElements = planesFiltrados.length;
-      const inicio = this.page * this.size;
-      const fin = inicio + this.size;
-      this.planes = planesFiltrados.slice(inicio, fin);
+  // ===== ORDENAMIENTO ===== ⭐ NUEVO
+  onSort(campo: string): void {
+    if (this.sortField === campo) {
+      // Si es el mismo campo, cambiar dirección
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Si es un campo nuevo, establecer como ascendente por defecto
+      this.sortField = campo;
+      this.sortDirection = 'asc';
+    }
+    this.page = 0; // Resetear a primera página
+    this.cargarPlanes();
+  }
 
-      this.loading = false;
-    }, 800);
+  getSortIcon(campo: string): string {
+    if (this.sortField !== campo) {
+      return 'fas fa-sort text-muted'; // No ordenado
+    }
+    return this.sortDirection === 'asc'
+      ? 'fas fa-sort-up text-primary'
+      : 'fas fa-sort-down text-primary';
   }
 
   // ===== MANEJADORES DE FILTROS =====
   onFiltroChange(): void {
-    this.page = 0; // Resetear a página 1 al cambiar filtro
+    this.page = 0;
     this.cargarPlanes();
   }
 
   limpiarFiltros(): void {
     this.filtroNumero = '';
-    this.filtroEstado = '';
+    this.filtroEstado = 'TODOS'; 
     this.filtroFechaAprobacion = '';
     this.filtroFechaCreacion = '';
     this.page = 0;
@@ -235,8 +218,6 @@ export class ListarPlanesComponent implements OnInit {
     const clases: Record<EstadoPlan, string> = {
       ACTIVO: 'bg-success',
       INACTIVO: 'bg-secondary',
-      EN_REVISION: 'bg-warning',
-      APROBADO: 'bg-info',
     };
     return clases[estado] || 'bg-secondary';
   }
@@ -246,24 +227,72 @@ export class ListarPlanesComponent implements OnInit {
   }
 
   // ===== ACCIONES =====
+  eliminarPlan(plan: Plan): void {
+    this.planAEliminar = plan;
+    this.mostrarModalEliminar = true;
+  }
+
+  onPlanEliminado(): void {
+    this.mostrarModalEliminar = false;
+    this.planAEliminar = null;
+    this.cargarPlanes();
+  }
+
+  onCancelarEliminacion(): void {
+    this.mostrarModalEliminar = false;
+    this.planAEliminar = null;
+  }
+
   crearNuevoPlan(): void {
-    console.log('Crear nuevo plan');
-    this.onNuevoPlan.emit();
+    this.mostrarModalCrear = true;
+  }
+
+  onPlanCreado(): void {
+    this.mostrarModalCrear = false;
+    this.cargarPlanes();
+  }
+
+  onCancelarCreacion(): void {
+    this.mostrarModalCrear = false;
   }
 
   verDetallesPlan(plan: Plan): void {
-    console.log('Ver detalles del plan:', plan);
     this.onVerDetalles.emit(plan);
   }
 
   modificarPlan(plan: Plan): void {
-    console.log('Modificar plan:', plan);
-    this.onModificar.emit(plan);
+    this.planAEditar = plan;
+    this.mostrarModalEditar = true;
+  }
+
+  onPlanActualizado(): void {
+    this.mostrarModalEditar = false;
+    this.planAEditar = null;
+    this.cargarPlanes();
+  }
+
+  onCancelarEdicion(): void {
+    this.mostrarModalEditar = false;
+    this.planAEditar = null;
   }
 
   cambiarEstadoPlan(plan: Plan): void {
-    console.log('Cambiar estado del plan:', plan);
     this.onCambiarEstado.emit(plan);
+  }
+
+  private handleError(error: any, operacion: string): void {
+    const codigoBackend = error?.error?.codigo || error.status || '—';
+    const mensajeBackend =
+      error?.error?.mensaje ||
+      error?.message ||
+      `Error al ${operacion}. Intenta de nuevo.`;
+
+    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
+
+    this.toastr.error(
+      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
+      'Error'
+    );
   }
 
   reintentar(): void {

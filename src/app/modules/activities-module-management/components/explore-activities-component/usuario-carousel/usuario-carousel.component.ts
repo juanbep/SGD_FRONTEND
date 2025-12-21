@@ -1,16 +1,20 @@
 import {
   Component,
   EventEmitter,
-  inject,
   Input,
-  OnInit,
   OnChanges,
   SimpleChanges,
   Output,
+  inject,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsuarioHelperService } from '../../../../sgd-users-management/services';
-import { Usuario } from '../../../../sgd-users-management/models';
+import {
+  CargoActividad,
+  UsuarioActividadAsignacion,
+  UsuarioEnActividad,
+} from '../../../models';
+import { CargosActividadHelperService } from '../../../services';
 
 @Component({
   selector: 'app-usuario-carousel',
@@ -19,96 +23,101 @@ import { Usuario } from '../../../../sgd-users-management/models';
   templateUrl: './usuario-carousel.component.html',
   styleUrl: './usuario-carousel.component.css',
 })
-export class UsuarioCarouselComponent implements OnInit, OnChanges {
-  @Input() usuariosIds: number[] = [];
+export class UsuarioCarouselComponent implements OnChanges, OnInit {
+  @Input() usuariosAsignaciones: UsuarioActividadAsignacion[] = [];
+  @Input() usuariosCompletos: UsuarioEnActividad[] = [];
   @Input() modo: 'visualizar' | 'gestionar' = 'visualizar';
   @Input() desasignando = false;
   @Output() onDesasignarUsuario = new EventEmitter<number>();
 
-  private usuarioHelper = inject(UsuarioHelperService);
+  private cargosHelper = inject(CargosActividadHelperService);
 
-  usuarios: Usuario[] = [];
-  currentIndex: number = 0;
-  usuarioActual: Usuario | null = null;
   usuarioEnConfirmacion: number | null = null;
-  loading: boolean = false;
-  error: string = '';
+  cargosMap: Map<number, CargoActividad> = new Map();
+  cargandoCargos = false;
 
   async ngOnInit(): Promise<void> {
-    if (this.usuariosIds && this.usuariosIds.length > 0) {
-      await this.cargarTodosLosUsuarios();
-    }
+    await this.cargarCargos();
   }
 
-  // NUEVO: Detectar cambios en usuariosIds
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['usuariosIds']) {
-      const current = changes['usuariosIds'].currentValue;
-      const previous = changes['usuariosIds'].previousValue;
-
-      // Solo recargar si realmente cambió (no en la primera carga)
-      if (!changes['usuariosIds'].firstChange && current !== previous) {
-        console.log('usuariosIds cambió de', previous, 'a', current);
-        this.cargarTodosLosUsuarios();
-      }
-    }
-  }
-
-  async cargarTodosLosUsuarios(): Promise<void> {
-    // Si no hay IDs, limpiar usuarios
-    if (!this.usuariosIds || this.usuariosIds.length === 0) {
-      this.usuarios = [];
-      this.usuarioActual = null;
-      this.currentIndex = 0;
-      return;
-    }
-
-    this.loading = true;
-    this.error = '';
-
-    try {
-      // Cargar todos los usuarios en paralelo
-      const promesas = this.usuariosIds.map((id) =>
-        this.usuarioHelper.getById(id)
-      );
-      const resultados = await Promise.all(promesas);
-
-      // Filtrar usuarios válidos
-      this.usuarios = resultados.filter(
-        (usuario) => usuario !== null
-      ) as Usuario[];
-
-      // Resetear confirmación si el usuario fue eliminado
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    if (changes['usuariosCompletos'] || changes['usuariosAsignaciones']) {
       if (
         this.usuarioEnConfirmacion &&
-        !this.usuariosIds.includes(this.usuarioEnConfirmacion)
+        !this.usuariosCompletos.find(
+          (u) => u.oidUsuario === this.usuarioEnConfirmacion
+        )
       ) {
         this.usuarioEnConfirmacion = null;
       }
 
-      if (this.usuarios.length === 0) {
-        this.error = 'No se pudieron cargar los usuarios';
+      if (changes['usuariosAsignaciones']) {
+        await this.cargarCargos();
       }
-    } catch (err) {
-      this.error = 'Error al cargar los usuarios';
-      console.error('Error cargando usuarios:', err);
-    } finally {
-      this.loading = false;
     }
   }
 
-  // Método para mostrar confirmación
+  async cargarCargos(): Promise<void> {
+    const oidsCargos = [
+      ...new Set(
+        this.usuariosAsignaciones
+          .map((ua) => ua.oidCargoActividad)
+          .filter((oid) => oid !== null) as number[]
+      ),
+    ];
+
+    if (oidsCargos.length === 0) return;
+
+    this.cargandoCargos = true;
+
+    try {
+      const promesas = oidsCargos.map((oid) => this.cargosHelper.getById(oid));
+      const cargos = await Promise.all(promesas);
+
+      cargos.forEach((cargo) => {
+        if (cargo) {
+          this.cargosMap.set(cargo.oidCargoActividad, cargo);
+        }
+      });
+    } catch (error) {
+      console.error('Error cargando cargos:', error);
+    } finally {
+      this.cargandoCargos = false;
+    }
+  }
+
+  getHorasUsuario(oidUsuario: number): number {
+    const asignacion = this.usuariosAsignaciones.find(
+      (ua) => ua.oidUsuario === oidUsuario
+    );
+    return asignacion?.horas || 0;
+  }
+
+  getOidCargoUsuario(oidUsuario: number): number | null {
+    const asignacion = this.usuariosAsignaciones.find(
+      (ua) => ua.oidUsuario === oidUsuario
+    );
+    return asignacion?.oidCargoActividad || null;
+  }
+
+  getNombreCargoUsuario(oidUsuario: number): string {
+    const oidCargo = this.getOidCargoUsuario(oidUsuario);
+    if (!oidCargo) return 'Sin cargo';
+
+    const cargo = this.cargosMap.get(oidCargo);
+    return cargo?.nombre || `Cargo #${oidCargo}`;
+  }
+
   mostrarConfirmacion(oidUsuario: number): void {
     this.usuarioEnConfirmacion = oidUsuario;
 
-    // Esperar a que Angular renderice la vista de confirmación
+    // Scroll suave al card de confirmación
     setTimeout(() => {
       this.scrollToConfirmacion(oidUsuario);
-    }, 100);
+    }, 150);
   }
 
   private scrollToConfirmacion(oidUsuario: number): void {
-    // Buscar el elemento de la tarjeta con confirmación
     const elemento = document.querySelector(
       `[data-usuario-id="${oidUsuario}"]`
     );
@@ -116,24 +125,22 @@ export class UsuarioCarouselComponent implements OnInit, OnChanges {
     if (elemento) {
       elemento.scrollIntoView({
         behavior: 'smooth',
-        block: 'center', // Centrar verticalmente
+        block: 'center',
         inline: 'nearest',
       });
     }
   }
 
-  // Método para cancelar confirmación
   cancelarConfirmacion(): void {
     this.usuarioEnConfirmacion = null;
   }
 
-  // Método para confirmar desasignación
   confirmarDesasignacion(oidUsuario: number): void {
     this.onDesasignarUsuario.emit(oidUsuario);
     this.usuarioEnConfirmacion = null;
   }
 
   get totalUsuarios(): number {
-    return this.usuarios.length;
+    return this.usuariosCompletos.length;
   }
 }

@@ -6,6 +6,8 @@ import {
   SimpleChanges,
   signal,
   inject,
+  ViewChild,
+  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +16,7 @@ import {
   Calendario,
   CreateFechaDto,
   UpdateFechaDto,
+  CreateNombreFechaDto,
 } from '../../../models';
 import { ModalAgregarEditarFechaComponent } from '../../edit-academic-calendar/modal-agregar-editar-fecha/modal-agregar-editar-fecha.component';
 import { ModalSeleccionarCalendarioComponent } from '../modal-seleccionar-calendario/modal-seleccionar-calendario.component';
@@ -43,6 +46,9 @@ export class StepFechasComponent implements OnInit, OnChanges {
   private readonly nombreFechaHelper = inject(NombreFechaHelperService);
   private readonly fechaHelper = inject(FechaHelperService);
 
+  @ViewChild(ModalAgregarEditarFechaComponent)
+  modalAgregarEditarRef!: ModalAgregarEditarFechaComponent;
+
   @Input() oidCalendario: number | null = null;
 
   readonly fechas = signal<Fecha[]>([]);
@@ -51,15 +57,22 @@ export class StepFechasComponent implements OnInit, OnChanges {
   readonly modalEliminarVisible = signal<boolean>(false);
   readonly fechaAEditar = signal<Fecha | null>(null);
   readonly fechaAEliminar = signal<Fecha | null>(null);
-  readonly catalogoNombresFecha = signal<any[]>([]);
   readonly calendariosDisponibles = signal<Calendario[]>([]);
   readonly cargandoCalendarios = signal<boolean>(false);
   readonly cargandoFechas = signal<boolean>(false);
   readonly guardandoFecha = signal<boolean>(false);
   readonly eliminandoFecha = signal<boolean>(false);
 
+  // Signals para datos del calendario
+  readonly calendarioActual = signal<Calendario | null>(null);
+  readonly anioCalendario = computed(
+    () => this.calendarioActual()?.anioCalendario || 0
+  );
+  readonly numeroCalendario = computed(
+    () => this.calendarioActual()?.numeroCalendario || 0
+  );
+
   ngOnInit(): void {
-    this.cargarCatalogoNombresFechas();
     this.cargarCalendariosDisponibles();
   }
 
@@ -78,6 +91,10 @@ export class StepFechasComponent implements OnInit, OnChanges {
         this.oidCalendario
       );
       console.log(calendario);
+
+      // Guardar el calendario completo
+      this.calendarioActual.set(calendario);
+
       this.fechas.set(calendario?.fechas || []);
     } catch (error) {
       console.error('Error al cargar fechas:', error);
@@ -87,25 +104,30 @@ export class StepFechasComponent implements OnInit, OnChanges {
     }
   }
 
-  private async cargarCatalogoNombresFechas(): Promise<void> {
-    try {
-      const catalogo = await this.nombreFechaHelper.getAllForDropdown();
-      this.catalogoNombresFecha.set(catalogo);
-    } catch (error) {
-      console.error('Error al cargar catálogo:', error);
-    }
-  }
-
   private async cargarCalendariosDisponibles(): Promise<void> {
     this.cargandoCalendarios.set(true);
     try {
       const calendarios = await this.calendarioHelper.getAll({ size: 50 });
-      const ordenados = calendarios.sort((a, b) => {
-        if (a.anioCalendario !== b.anioCalendario) {
-          return b.anioCalendario - a.anioCalendario;
-        }
-        return b.numeroCalendario - a.numeroCalendario;
+
+      // Obtener el número de periodo del calendario actual
+      const periodoActual = this.numeroCalendario();
+      const anioActual = this.anioCalendario();
+
+      // Filtrar solo calendarios del mismo periodo
+      const calendariosMismoPeriodo = calendarios.filter((cal) => {
+        // Mismo periodo y diferente año
+        return (
+          cal.numeroCalendario === periodoActual &&
+          cal.anioCalendario !== anioActual
+        );
       });
+
+      // Ordenar por año descendente
+      const ordenados = calendariosMismoPeriodo.sort((a, b) => {
+        return b.anioCalendario - a.anioCalendario;
+      });
+
+      // Tomar los 10 más recientes
       this.calendariosDisponibles.set(ordenados.slice(0, 10));
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
@@ -139,13 +161,19 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.guardandoFecha.set(true);
 
     try {
-      await this.fechaHelper.create(createDto);
-      await this.cargarFechas();
-      this.toastr.success('Fecha agregada correctamente');
-      this.cerrarModalAgregar();
-    } catch (error) {
+      const nuevaFecha = await this.fechaHelper.create(createDto);
+
+      if (nuevaFecha) {
+        await this.cargarFechas();
+        this.toastr.success('Fecha agregada correctamente');
+        this.cerrarModalAgregar();
+      } else {
+        this.toastr.error('No se pudo agregar la fecha');
+      }
+    } catch (error: any) {
       console.error('Error al agregar fecha:', error);
-      this.toastr.error('Error al agregar la fecha');
+      const mensaje = error?.error?.mensaje || 'Error al agregar la fecha';
+      this.toastr.error(mensaje);
     } finally {
       this.guardandoFecha.set(false);
     }
@@ -155,13 +183,45 @@ export class StepFechasComponent implements OnInit, OnChanges {
     this.guardandoFecha.set(true);
 
     try {
-      await this.fechaHelper.update(updateDto);
-      await this.cargarFechas();
-      this.toastr.success('Fecha actualizada correctamente');
-      this.cerrarModalAgregar();
-    } catch (error) {
+      const fechaActualizada = await this.fechaHelper.update(updateDto);
+
+      if (fechaActualizada) {
+        await this.cargarFechas();
+        this.toastr.success('Fecha actualizada correctamente');
+        this.cerrarModalAgregar();
+      } else {
+        this.toastr.error('No se pudo actualizar la fecha');
+      }
+    } catch (error: any) {
       console.error('Error al actualizar fecha:', error);
-      this.toastr.error('Error al actualizar la fecha');
+      const mensaje =
+        error?.error?.mensaje ||
+        error?.mensaje ||
+        'Error al actualizar la fecha';
+      this.toastr.error(mensaje);
+    } finally {
+      this.guardandoFecha.set(false);
+    }
+  }
+
+  // Método para manejar la creación de nombres de fecha
+  async handleCrearNombreFecha(dto: CreateNombreFechaDto): Promise<void> {
+    this.guardandoFecha.set(true);
+
+    try {
+      const nuevoNombre = await this.nombreFechaHelper.create(dto);
+
+      if (nuevoNombre) {
+        this.toastr.success('Tipo de fecha creado correctamente');
+
+        this.modalAgregarEditarRef?.recargarCatalogoNombresFechas();
+      } else {
+        this.toastr.error('No se pudo crear el tipo de fecha');
+      }
+    } catch (error: any) {
+      const mensaje =
+        error?.error?.mensaje || 'Error al crear el tipo de fecha';
+      this.toastr.error(mensaje);
     } finally {
       this.guardandoFecha.set(false);
     }
@@ -215,9 +275,12 @@ export class StepFechasComponent implements OnInit, OnChanges {
   }
 
   async copiarFechas(calendarioOrigen: Calendario): Promise<void> {
-    if (!calendarioOrigen.fechas || calendarioOrigen.fechas.length === 0) {
+    // contar solo fechas con datos
+    const fechasConDatos = this.contarFechasConDatos(calendarioOrigen.fechas);
+
+    if (fechasConDatos === 0) {
       this.toastr.warning(
-        'El calendario seleccionado no tiene fechas registradas'
+        'El calendario seleccionado no tiene fechas con datos registrados'
       );
       this.cerrarModalSeleccionar();
       return;
@@ -236,13 +299,23 @@ export class StepFechasComponent implements OnInit, OnChanges {
           (f) => f.oidNombreFecha === fechaActual.oidNombreFecha
         );
 
+        // Solo copiar si la fecha origen tiene datos
         if (fechaOrigen) {
-          mapeadas++;
-          return {
-            ...fechaActual,
-            fechaInicial: fechaOrigen.fechaInicial,
-            fechaFin: fechaOrigen.fechaFin || '',
-          } as Fecha;
+          const tieneFechaInicial =
+            fechaOrigen.fechaInicial &&
+            fechaOrigen.fechaInicial.toString().trim() !== '';
+          const tieneFechaFin =
+            fechaOrigen.fechaFin &&
+            fechaOrigen.fechaFin.toString().trim() !== '';
+
+          if (tieneFechaInicial || tieneFechaFin) {
+            mapeadas++;
+            return {
+              ...fechaActual,
+              fechaInicial: fechaOrigen.fechaInicial,
+              fechaFin: fechaOrigen.fechaFin || '',
+            } as Fecha;
+          }
         }
 
         return { ...fechaActual } as Fecha;
@@ -261,6 +334,22 @@ export class StepFechasComponent implements OnInit, OnChanges {
     } finally {
       this.guardandoFecha.set(false);
     }
+  }
+
+  /**
+   * Cuenta las fechas que tienen al menos fechaInicial o fechaFin definidos
+   */
+  contarFechasConDatos(fechas: Fecha[] | undefined): number {
+    if (!fechas || fechas.length === 0) return 0;
+
+    return fechas.filter((fecha) => {
+      const tieneFechaInicial =
+        fecha.fechaInicial && fecha.fechaInicial.toString().trim() !== '';
+      const tieneFechaFin =
+        fecha.fechaFin && fecha.fechaFin.toString().trim() !== '';
+
+      return tieneFechaInicial || tieneFechaFin;
+    }).length;
   }
 
   formatearFecha(fecha: Fecha): string {

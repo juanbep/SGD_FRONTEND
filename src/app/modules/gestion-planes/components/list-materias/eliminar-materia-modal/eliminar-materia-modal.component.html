@@ -1,0 +1,179 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show"></div>
+
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header bg-danger text-white border-0">
+        <h5 class="modal-title fw-bold d-flex align-items-center">
+          <img
+            [src]="'assets/icons/tables/icon-trash.svg'"
+            alt="Eliminar materia"
+            class="modal-header-icon me-3"
+          />
+          Confirmar Eliminación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          [disabled]="eliminando"
+          (click)="cancelar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <!-- Alerta de peligro -->
+        <div
+          class="alert alert-danger d-flex align-items-center mb-3"
+          role="alert"
+        >
+          <i class="fas fa-exclamation-circle fa-lg me-3"></i>
+          <div>
+            <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+          </div>
+        </div>
+
+        <!-- Pregunta principal -->
+        <p class="text-center fw-bold text-dark mb-3 fs-6">
+          ¿Está seguro de que desea eliminar la siguiente materia?
+        </p>
+
+        <!-- Card con información de la materia -->
+        <div class="card border-primary mb-3">
+          <div class="card-header bg-primary-subtle border-primary">
+            <h6 class="mb-0 text-primary fw-bold">
+              <i class="fas fa-info-circle me-2"></i>Información de la Materia
+            </h6>
+          </div>
+          <div class="card-body py-2">
+            <!-- Nombre completo -->
+            <div class="mb-2 pb-2 border-bottom">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-book text-primary me-2 mt-1"></i>
+                <div>
+                  <small class="text-muted d-block">Nombre</small>
+                  <strong>{{ materia.nombre }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layout en 2 columnas -->
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-key text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">OID</small>
+                    <strong>{{ materia.oidMateria }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-barcode text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Código</small>
+                    <strong>{{ materia.codigo }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-calendar-week text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Semestre</small>
+                    <strong>{{ materia.semestre }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-clock text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Horas/Semana</small>
+                    <strong>{{ materia.horasSemana }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Departamento (si existe) -->
+            <div
+              class="mt-2 pt-2 border-top"
+              *ngIf="materia.nombreDepartamento"
+            >
+              <div class="d-flex align-items-start">
+                <i class="fas fa-building text-primary me-2 mt-1"></i>
+                <div>
+                  <small class="text-muted d-block">Departamento</small>
+                  <strong>{{ materia.nombreDepartamento }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Correquisito (si existe) -->
+            <div
+              class="mt-2 pt-2 border-top"
+              *ngIf="materia.nombreCorrequisito"
+            >
+              <div class="d-flex align-items-start">
+                <i class="fas fa-link text-primary me-2 mt-1"></i>
+                <div>
+                  <small class="text-muted d-block">Correquisito</small>
+                  <strong>{{ materia.nombreCorrequisito }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta de advertencia final -->
+        <div
+          class="alert alert-warning mb-0 d-flex align-items-center"
+          role="alert"
+        >
+          <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
+          <small>
+            Si esta materia es correquisito de otra, la relación será eliminada
+            <strong>permanentemente</strong>.
+          </small>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="eliminando"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          [disabled]="eliminando"
+          (click)="confirmarEliminacion()"
+        >
+          <ng-container *ngIf="!eliminando">
+            <i class="fas fa-trash me-2"></i>
+            Eliminar Materia
+          </ng-container>
+          <ng-container *ngIf="eliminando">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Eliminando...
+          </ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,252 +1,249 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Materia } from '../../models';
+import { Materia, MateriaFilters } from '../../models';
+import { ToastrService } from 'ngx-toastr';
+import { MateriaService } from '../../services/materia/materia.service';
+import { EliminarMateriaModalComponent } from './eliminar-materia-modal/eliminar-materia-modal.component';
+import { VerCorrequisitosModalComponent } from './ver-correquisitos-modal/ver-correquisitos-modal.component';
+import { CrearEditarMateriaModalComponent } from './crear-editar-materia-modal/crear-editar-materia-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { DepartamentoHelperService } from '../../services';
 
 @Component({
   selector: 'app-list-materias',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    EliminarMateriaModalComponent,
+    VerCorrequisitosModalComponent,
+    CrearEditarMateriaModalComponent,
+    NgSelectModule,
+  ],
   templateUrl: './list-materias.component.html',
   styleUrl: './list-materias.component.css',
 })
-export class ListMateriasComponent implements OnInit {
+export class ListMateriasComponent implements OnInit, OnChanges {
+  // ===== SERVICIOS =====
+  private materiaService = inject(MateriaService);
+  private departamentoHelper = inject(DepartamentoHelperService);
+  private toastr = inject(ToastrService);
+
   @Input() oidPlan: number | undefined;
   @Input() numeroPlan: string | undefined;
 
   @Output() onNuevaMateria = new EventEmitter<void>();
-  @Output() onModificar = new EventEmitter<Materia>();
   @Output() onEliminar = new EventEmitter<Materia>();
   @Output() onVerCorrequisitos = new EventEmitter<Materia>();
 
-  // ===== SEMESTRES DISPONIBLES =====
-  readonly semestresDisponibles: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // ===== REFERENCIA AL INPUT FILE =====
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  // ===== FILTROS =====
+  readonly semestresDisponibles: { value: number | 'TODOS'; label: string }[] =
+    [
+      { value: 'TODOS', label: 'TODOS' },
+      { value: 1, label: '1' },
+      { value: 2, label: '2' },
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+      { value: 7, label: '7' },
+      { value: 8, label: '8' },
+      { value: 9, label: '9' },
+      { value: 10, label: '10' },
+    ];
+  pageSizeOptions = [5, 10, 25, 50];
+  sortField: string = 'oidMateria';
+  sortDirection: 'asc' | 'desc' = 'desc';
+
   filtroOid: string = '';
   filtroCodigo: string = '';
   filtroNombre: string = '';
-  filtroSemestre: number | '' = '';
+  filtroSemestre: number | 'TODOS' = 'TODOS';
+  filtroDepartamento: number | 'TODOS' = 'TODOS';
 
-  // ===== PAGINACIÓN =====
+  // ===== DEPARTAMENTOS =====
+  departamentos: { value: number; label: string; facultad: string }[] = [];
+  loadingDepartamentos = false;
+
   page = 0;
   size = 10;
   totalElements = 0;
 
-  // ===== DATOS =====
   materias: Materia[] = [];
   loading = false;
   error: string | null = null;
 
-  // ===== UTILIDADES =====
+  mostrarModalEliminar = false;
+  materiaAEliminar: Materia | null = null;
+
+  mostrarModalCorrequisitos = false;
+  materiaVerCorrequisitos: Materia | null = null;
+
+  mostrarModalCrear = false;
+  mostrarModalEditar = false;
+  materiaAEditar: Materia | null = null;
+
+  // ===== ESTADOS PARA DESCARGA/CARGA =====
+  descargando = false;
+  cargandoArchivo = false;
+  archivoSeleccionado: File | null = null;
+
   Math = Math;
 
   ngOnInit(): void {
-    this.cargarMaterias();
+    this.cargarDepartamentos();
   }
 
-  // ===== CARGAR DATOS (CON MOCK) =====
-  cargarMaterias(): void {
+  ngOnDestroy(): void {
+    // Cleanup si es necesario
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['oidPlan']) {
+      const oidPlanActual = changes['oidPlan'].currentValue;
+
+      if (oidPlanActual) {
+        this.limpiarFiltros();
+      } else {
+        this.error = 'No se ha especificado un plan válido';
+        this.materias = [];
+        this.totalElements = 0;
+      }
+    }
+  }
+
+  cargarMaterias(mostrarToast: boolean = false): void {
+    if (!this.oidPlan) {
+      this.error = 'Plan no válido';
+      return;
+    }
+
     this.loading = true;
     this.error = null;
 
-    // Simulamos llamada asíncrona
-    setTimeout(() => {
-      // DATOS MOCK - Reemplazar con servicio real
-      const todosMock: Materia[] = [
-        {
-          idMateria: 1,
-          oidMateria: 'MAT-2024-001',
-          codigo: 'CS101',
-          nombre: 'Introducción a la Programación',
-          semestre: 1,
-          horasSemana: 4,
-          oidDepartamento: 1,
-          nombreDepartamento: 'Ciencias de la Computación',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: null,
-          oidCorrequisito: null,
-          nombreCorrequisito: null,
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-        {
-          idMateria: 2,
-          oidMateria: 'MAT-2024-002',
-          codigo: 'MAT101',
-          nombre: 'Cálculo Diferencial',
-          semestre: 1,
-          horasSemana: 5,
-          oidDepartamento: 2,
-          nombreDepartamento: 'Matemáticas',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: null,
-          oidCorrequisito: null,
-          nombreCorrequisito: null,
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-        {
-          idMateria: 3,
-          oidMateria: 'MAT-2024-003',
-          codigo: 'CS102',
-          nombre: 'Estructura de Datos',
-          semestre: 2,
-          horasSemana: 4,
-          oidDepartamento: 1,
-          nombreDepartamento: 'Ciencias de la Computación',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: 1,
-          oidCorrequisito: 'MAT-2024-001',
-          nombreCorrequisito: 'Introducción a la Programación',
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-        {
-          idMateria: 4,
-          oidMateria: 'MAT-2024-004',
-          codigo: 'MAT102',
-          nombre: 'Cálculo Integral',
-          semestre: 2,
-          horasSemana: 5,
-          oidDepartamento: 2,
-          nombreDepartamento: 'Matemáticas',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: 2,
-          oidCorrequisito: 'MAT-2024-002',
-          nombreCorrequisito: 'Cálculo Diferencial',
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-        {
-          idMateria: 5,
-          oidMateria: 'MAT-2024-005',
-          codigo: 'CS201',
-          nombre: 'Algoritmos y Complejidad',
-          semestre: 3,
-          horasSemana: 4,
-          oidDepartamento: 1,
-          nombreDepartamento: 'Ciencias de la Computación',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: 3,
-          oidCorrequisito: 'MAT-2024-003',
-          nombreCorrequisito: 'Estructura de Datos',
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-        {
-          idMateria: 6,
-          oidMateria: 'MAT-2024-006',
-          codigo: 'CS301',
-          nombre: 'Base de Datos',
-          semestre: 4,
-          horasSemana: 4,
-          oidDepartamento: 1,
-          nombreDepartamento: 'Ciencias de la Computación',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: 3,
-          oidCorrequisito: 'MAT-2024-003',
-          nombreCorrequisito: 'Estructura de Datos',
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-        {
-          idMateria: 7,
-          oidMateria: 'MAT-2024-007',
-          codigo: 'CS302',
-          nombre: 'Ingeniería de Software',
-          semestre: 5,
-          horasSemana: 4,
-          oidDepartamento: 1,
-          nombreDepartamento: 'Ciencias de la Computación',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: 6,
-          oidCorrequisito: 'MAT-2024-006',
-          nombreCorrequisito: 'Base de Datos',
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-        {
-          idMateria: 8,
-          oidMateria: 'MAT-2024-008',
-          codigo: 'FIS101',
-          nombre: 'Física I',
-          semestre: 2,
-          horasSemana: 4,
-          oidDepartamento: 3,
-          nombreDepartamento: 'Física',
-          oidPlan: this.oidPlan || 1,
-          numeroPlan: this.numeroPlan || '001',
-          idCorrequisito: null,
-          oidCorrequisito: null,
-          nombreCorrequisito: null,
-          fechaCreacion: '2024-01-10',
-          usuarioCreacion: 'admin',
-          fechaActualizacion: null,
-          usuarioActualizacion: null,
-        },
-      ];
+    const filtros: MateriaFilters = {
+      page: this.page,
+      size: this.size,
+      oidPlan: this.oidPlan,
+      sort: `${this.sortField},${this.sortDirection}`,
+    };
 
-      // Aplicar filtros
-      let materiasFiltradas = [...todosMock];
+    if (this.filtroDepartamento !== 'TODOS') {
+      filtros.oidDepartamento = Number(this.filtroDepartamento);
+    }
 
-      if (this.filtroOid) {
-        materiasFiltradas = materiasFiltradas.filter((m) =>
-          m.oidMateria.toLowerCase().includes(this.filtroOid.toLowerCase())
-        );
-      }
+    if (this.filtroSemestre !== 'TODOS') {
+      filtros.semestre = Number(this.filtroSemestre);
+    }
 
-      if (this.filtroCodigo) {
-        materiasFiltradas = materiasFiltradas.filter((m) =>
-          m.codigo.toLowerCase().includes(this.filtroCodigo.toLowerCase())
-        );
-      }
+    if (this.filtroCodigo && this.filtroCodigo.trim()) {
+      filtros.codigo = this.filtroCodigo.trim();
+    }
 
-      if (this.filtroNombre) {
-        materiasFiltradas = materiasFiltradas.filter((m) =>
-          m.nombre.toLowerCase().includes(this.filtroNombre.toLowerCase())
-        );
-      }
+    if (this.filtroNombre && this.filtroNombre.trim()) {
+      filtros.nombre = this.filtroNombre.trim();
+    }
 
-      if (this.filtroSemestre) {
-        materiasFiltradas = materiasFiltradas.filter(
-          (m) => m.semestre === this.filtroSemestre
-        );
-      }
+    if (this.filtroOid && this.filtroOid.trim()) {
+      filtros.oidMateria = this.filtroOid.trim();
+    }
 
-      // Simular paginación
-      this.totalElements = materiasFiltradas.length;
-      const inicio = this.page * this.size;
-      const fin = inicio + this.size;
-      this.materias = materiasFiltradas.slice(inicio, fin);
+    this.materiaService.getMaterias(filtros).subscribe({
+      next: (response) => {
+        if (response.codigo >= 200 && response.codigo < 300) {
+          this.materias = response.data.content;
+          this.totalElements = response.data.totalElements;
 
-      this.loading = false;
-    }, 800);
+          if (mostrarToast) {
+            if (this.totalElements > 0) {
+              this.toastr.success(
+                'Lista de materias actualizada correctamente'
+              );
+            } else {
+              this.toastr.info('No se encontraron materias para este plan');
+            }
+          }
+        } else {
+          this.toastr.warning(
+            response.mensaje || 'Respuesta inesperada del servidor'
+          );
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.handleError(error, 'cargar materias');
+        this.loading = false;
+      },
+    });
   }
 
-  // ===== MANEJADORES DE FILTROS =====
-  onFiltroChange(): void {
+  // ===== CARGAR DEPARTAMENTOS =====
+  async cargarDepartamentos(): Promise<void> {
+    this.loadingDepartamentos = true;
+
+    try {
+      const departamentosRaw =
+        await this.departamentoHelper.getAllForDropdown();
+
+      this.departamentos = [
+        { value: 'TODOS' as any, label: 'TODOS', facultad: '' },
+        ...departamentosRaw,
+      ];
+
+      if (departamentosRaw.length === 0) {
+        this.toastr.warning(
+          'No se encontraron departamentos disponibles',
+          'Sin departamentos'
+        );
+      }
+    } catch (error) {
+      console.error('Error al cargar departamentos:', error);
+      this.toastr.error('No se pudieron cargar los departamentos', 'Error');
+      this.departamentos = [
+        { value: 'TODOS' as any, label: 'TODOS', facultad: '' },
+      ];
+    } finally {
+      this.loadingDepartamentos = false;
+    }
+  }
+
+  // ===== ORDENAMIENTO =====
+  onSort(campo: string): void {
+    if (this.sortField === campo) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortField = campo;
+      this.sortDirection = 'asc';
+    }
+    this.page = 0;
+    this.cargarMaterias();
+  }
+
+  getSortIcon(campo: string): string {
+    if (this.sortField !== campo) {
+      return 'fas fa-sort text-muted';
+    }
+    return this.sortDirection === 'asc'
+      ? 'fas fa-sort-up text-primary'
+      : 'fas fa-sort-down text-primary';
+  }
+
+  // ===== FILTROS =====
+  buscarConFiltros(): void {
     this.page = 0;
     this.cargarMaterias();
   }
@@ -255,18 +252,18 @@ export class ListMateriasComponent implements OnInit {
     this.filtroOid = '';
     this.filtroCodigo = '';
     this.filtroNombre = '';
-    this.filtroSemestre = '';
-    this.page = 0;
-    this.cargarMaterias();
-  }
-
-  onPageSizeChange(event: any): void {
-    this.size = parseInt(event.target.value);
+    this.filtroSemestre = 'TODOS';
+    this.filtroDepartamento = 'TODOS';
     this.page = 0;
     this.cargarMaterias();
   }
 
   // ===== PAGINACIÓN =====
+  onPageSizeChange(): void {
+    this.page = 0;
+    this.cargarMaterias();
+  }
+
   irAPagina(nuevaPagina: number): void {
     this.page = nuevaPagina;
     this.cargarMaterias();
@@ -300,45 +297,238 @@ export class ListMateriasComponent implements OnInit {
     return `${inicio} - ${fin} de ${this.totalElements} registros`;
   }
 
-  // ===== UTILIDADES =====
   trackByMateria(index: number, item: Materia): any {
     return item.idMateria;
   }
 
   // ===== ACCIONES =====
   crearNuevaMateria(): void {
-    console.log('Crear nueva materia');
-    this.onNuevaMateria.emit();
+    this.mostrarModalCrear = true;
+  }
+
+  onMateriaCreada(): void {
+    this.mostrarModalCrear = false;
+    this.cargarMaterias(true);
+  }
+
+  onCancelarCreacion(): void {
+    this.mostrarModalCrear = false;
+  }
+
+  onMateriaEditada(): void {
+    this.mostrarModalEditar = false;
+    this.materiaAEditar = null;
+    this.cargarMaterias(true);
+  }
+
+  onCancelarEdicion(): void {
+    this.mostrarModalEditar = false;
+    this.materiaAEditar = null;
   }
 
   modificarMateria(materia: Materia): void {
-    console.log('Modificar materia:', materia);
-    this.onModificar.emit(materia);
+    this.materiaAEditar = materia;
+    this.mostrarModalEditar = true;
   }
 
   eliminarMateria(materia: Materia): void {
-    console.log('Eliminar materia:', materia);
-    this.onEliminar.emit(materia);
+    this.materiaAEliminar = materia;
+    this.mostrarModalEliminar = true;
+  }
+
+  onMateriaEliminada(): void {
+    this.mostrarModalEliminar = false;
+    this.materiaAEliminar = null;
+    this.cargarMaterias(true);
+  }
+
+  onCancelarEliminacion(): void {
+    this.mostrarModalEliminar = false;
+    this.materiaAEliminar = null;
   }
 
   verCorrequisitos(materia: Materia): void {
-    console.log('Ver correquisitos de:', materia);
-    this.onVerCorrequisitos.emit(materia);
+    this.materiaVerCorrequisitos = materia;
+    this.mostrarModalCorrequisitos = true;
   }
 
+  onCerrarCorrequisitos(): void {
+    this.mostrarModalCorrequisitos = false;
+    this.materiaVerCorrequisitos = null;
+  }
+
+  // ===== DESCARGAR PLANILLA =====
   descargarPlanilla(): void {
-    console.log('Descargar planilla Excel');
-    // TODO: Implementar descarga de Excel
-    alert('Funcionalidad de descarga de planilla - Por implementar');
+    if (!this.oidPlan) {
+      this.toastr.error('No se ha especificado un plan válido');
+      return;
+    }
+
+    this.descargando = true;
+    this.toastr.info('Preparando descarga...', 'Descargando');
+
+    this.materiaService.descargarPlanillaExcel(this.oidPlan).subscribe({
+      next: (blob) => {
+        const nombreArchivo = `Materias_Plan_${
+          this.numeroPlan || this.oidPlan
+        }_${new Date().getTime()}.xlsx`;
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = nombreArchivo;
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+
+        this.descargando = false;
+        this.toastr.success('Planilla descargada correctamente', 'Éxito');
+      },
+      error: (error) => {
+        console.error('Error al descargar planilla:', error);
+        const mensajeError =
+          error?.error?.mensaje || 'Error al descargar la planilla';
+        this.toastr.error(mensajeError, 'Error en descarga');
+        this.descargando = false;
+      },
+    });
   }
 
+  // ===== CARGAR PLANILLA =====
   cargarPlanilla(): void {
-    console.log('Cargar planilla Excel');
-    // TODO: Implementar carga de Excel
-    alert('Funcionalidad de carga de planilla - Por implementar');
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+
+    const file = input.files[0];
+
+    if (!this.validarArchivo(file)) {
+      input.value = '';
+      return;
+    }
+
+    this.archivoSeleccionado = file;
+    this.confirmarCargaArchivo();
+  }
+
+  private validarArchivo(file: File): boolean {
+    const extensionesPermitidas = ['.xlsx', '.xls'];
+    const extension = file.name
+      .substring(file.name.lastIndexOf('.'))
+      .toLowerCase();
+
+    if (!extensionesPermitidas.includes(extension)) {
+      this.toastr.error(
+        'Solo se permiten archivos Excel (.xlsx, .xls)',
+        'Archivo no válido'
+      );
+      return false;
+    }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      this.toastr.error(
+        'El archivo no debe superar los 5MB',
+        'Archivo muy grande'
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  private confirmarCargaArchivo(): void {
+    if (!this.archivoSeleccionado) return;
+
+    const confirmar = confirm(
+      `¿Está seguro de cargar el archivo "${this.archivoSeleccionado.name}"?\n\n` +
+        'Esto actualizará las materias del plan según el contenido del archivo.'
+    );
+
+    if (confirmar) {
+      this.subirArchivo();
+    } else {
+      this.archivoSeleccionado = null;
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  private subirArchivo(): void {
+    if (!this.oidPlan || !this.archivoSeleccionado) {
+      this.toastr.error('No se puede cargar el archivo', 'Error');
+      return;
+    }
+
+    this.cargandoArchivo = true;
+    this.toastr.info('Cargando archivo...', 'Procesando');
+
+    this.materiaService
+      .cargarPlanillaExcel(this.oidPlan, this.archivoSeleccionado)
+      .subscribe({
+        next: (response) => {
+          // La respuesta exitosa es un string
+          this.toastr.success(
+            response || 'Materias cargadas correctamente desde el archivo',
+            'Éxito'
+          );
+          this.cargarMaterias(true);
+          this.limpiarCargaArchivo();
+        },
+        error: (error) => {
+          console.error('Error al cargar archivo:', error);
+
+          let mensajeError =
+            'Error al cargar el archivo. Verifique el formato y contenido.';
+
+          if (error?.error?.mensaje) {
+            mensajeError = error.error.mensaje;
+          } else if (error?.error?.text) {
+            try {
+              const errorObj = JSON.parse(error.error.text);
+              mensajeError = errorObj.mensaje || mensajeError;
+            } catch (e) {
+              mensajeError = error.error.text || mensajeError;
+            }
+          } else if (error?.message) {
+            mensajeError = error.message;
+          }
+
+          this.toastr.error(mensajeError, 'Error al cargar archivo');
+          this.limpiarCargaArchivo();
+        },
+      });
+  }
+
+  private limpiarCargaArchivo(): void {
+    this.cargandoArchivo = false;
+    this.archivoSeleccionado = null;
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
+  }
+
+  private handleError(error: any, operacion: string): void {
+    const codigoBackend = error?.error?.codigo || error.status || '—';
+    const mensajeBackend =
+      error?.error?.mensaje ||
+      error?.message ||
+      `Error al ${operacion}. Intenta de nuevo.`;
+
+    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
+
+    this.toastr.error(
+      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
+      'Error'
+    );
   }
 
   reintentar(): void {
-    this.cargarMaterias();
+    this.cargarMaterias(true);
   }
 }

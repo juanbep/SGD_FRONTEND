@@ -1,0 +1,156 @@
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show"></div>
+
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header bg-info text-white border-0">
+        <h5 class="modal-title fw-bold d-flex align-items-center">
+          <i class="fas fa-link me-3 fa-lg"></i>
+          Información de Correquisitos
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cerrar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <!-- Información de la materia principal -->
+        <div class="card border-primary mb-4">
+          <div class="card-header bg-primary-subtle border-primary">
+            <h6 class="mb-0 text-primary fw-bold">
+              <i class="fas fa-book me-2"></i>Materia Seleccionada
+            </h6>
+          </div>
+          <div class="card-body py-3">
+            <!-- Nombre completo -->
+            <div class="mb-3 pb-3 border-bottom">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-book text-primary me-2 mt-1"></i>
+                <div class="flex-grow-1">
+                  <small class="text-muted d-block">Nombre</small>
+                  <strong class="fs-6">{{ materia.nombre }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layout en 3 columnas -->
+            <div class="row g-3">
+              <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-key text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">OID</small>
+                    <strong>{{ materia.oidMateria }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-barcode text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Código</small>
+                    <strong>{{ materia.codigo }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-calendar-week text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Semestre</small>
+                    <strong>{{ materia.semestre }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información del correquisito -->
+        <div
+          class="card border-success"
+          *ngIf="materia.oidCorrequisito && materia.nombreCorrequisito"
+        >
+          <div class="card-header bg-success-subtle border-success">
+            <h6 class="mb-0 text-success fw-bold">
+              <i class="fas fa-link me-2"></i>Correquisito Asignado
+            </h6>
+          </div>
+          <div class="card-body py-3">
+            <div class="row g-3 align-items-center">
+              <div class="col-md-8">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-book text-success me-2"></i>
+                  <div>
+                    <small class="text-muted d-block"
+                      >Nombre del Correquisito</small
+                    >
+                    <strong class="fs-6">{{
+                      materia.nombreCorrequisito
+                    }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-key text-success me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">OID</small>
+                    <strong>{{ materia.oidCorrequisito }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nota informativa -->
+            <div class="alert alert-info mt-3 mb-0 d-flex align-items-center">
+              <i class="fas fa-info-circle me-2"></i>
+              <small>
+                Esta materia requiere cursar
+                <strong>{{ materia.nombreCorrequisito }}</strong> como
+                correquisito.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sin correquisito -->
+        <div
+          class="card border-secondary"
+          *ngIf="!materia.oidCorrequisito || !materia.nombreCorrequisito"
+        >
+          <div class="card-body py-4 text-center">
+            <i class="fas fa-unlink fa-3x text-muted mb-3"></i>
+            <p class="text-muted mb-0">
+              <strong>Esta materia no tiene correquisitos asignados.</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Nota informativa general -->
+        <div class="alert alert-light border mt-3 mb-0">
+          <small class="text-muted">
+            <i class="fas fa-lightbulb me-1"></i>
+            <strong>Nota:</strong> Los correquisitos son materias que deben
+            cursarse simultáneamente con la materia seleccionada.
+          </small>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-primary" (click)="cerrar()">
+          <i class="fas fa-check me-2"></i>
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

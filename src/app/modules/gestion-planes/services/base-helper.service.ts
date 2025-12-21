@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, firstValueFrom, map, catchError, of } from 'rxjs';
+import {
+  Observable,
+  firstValueFrom,
+  map,
+  catchError,
+  of,
+  throwError,
+} from 'rxjs';
 import { BaseResponse } from '../models';
 
 @Injectable({
@@ -12,9 +19,10 @@ export class BaseHelperService {
     try {
       const response = await firstValueFrom(apiCall);
       return this.isSuccessResponse(response.codigo) ? response.data : null;
-    } catch (error) {
-      console.error('Error en BaseHelper:', error); //TODO: implementar manejo de errores mas explicito
-      return null;
+    } catch (error: any) {
+      console.error('Error en BaseHelper:', error);
+      // Re-lanzar el error
+      throw error;
     }
   }
 
@@ -26,8 +34,9 @@ export class BaseHelperService {
         this.isSuccessResponse(response.codigo) ? response.data : null
       ),
       catchError((error) => {
-        console.error('Error en BaseHelper:', error); //TODO: implementar manejo de errores mas explicito
-        return of(null);
+        console.error('Error en BaseHelper:', error);
+        // Re-lanzar el error
+        return throwError(() => error);
       })
     );
   }

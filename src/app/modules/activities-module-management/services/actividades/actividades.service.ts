@@ -146,8 +146,7 @@ export class ActividadesService {
     }
     if (
       filters.oidDepartamento !== undefined &&
-      filters.oidDepartamento !== null &&
-      filters.oidDepartamento !== ''
+      filters.oidDepartamento !== null
     ) {
       params = params.set(
         'oidDepartamento',

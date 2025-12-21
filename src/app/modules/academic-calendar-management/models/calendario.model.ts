@@ -57,12 +57,12 @@ export interface CreateCalendarioDTO {
   anioCalendario: number;
   numeroCalendario: number;
   observacion?: string; // Opcional para creación
-  semanasClase: number;
-  semanasPreparacion: number;
+  //semanasClase: number;
+  //semanasPreparacion: number;
   horasPlanta: number;
-  horasCatedra: number;
+  //horasCatedra: number;
   horasOcasionales: number;
-  horasBecarioPracticante: number;
+  //horasBecarioPracticante: number;
 }
 
 export interface UpdateCalendarioDTO

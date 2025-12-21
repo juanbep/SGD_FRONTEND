@@ -2,13 +2,20 @@
 <div class="card mb-4">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-filter me-2" style="color: #f8ae15;"></i>Filtros de Búsqueda
+      <i class="fas fa-filter me-2" style="color: #f8ae15"></i>Filtros de
+      Búsqueda
     </h6>
     <button
       type="button"
       class="btn btn-outline-secondary d-flex align-items-center"
       (click)="limpiarFiltros()"
-      [disabled]="!filtroOid && !filtroCodigo && !filtroNombre && !filtroSemestre"
+      [disabled]="
+        !filtroOid &&
+        !filtroCodigo &&
+        !filtroNombre &&
+        filtroSemestre === 'TODOS' &&
+        filtroDepartamento === 'TODOS'
+      "
     >
       <i class="fas fa-times"></i>
       <span class="d-none d-lg-inline ms-1">Limpiar</span>
@@ -16,8 +23,60 @@
   </div>
   <div class="card-body">
     <div class="row g-3">
-      <!-- Filtro por OID -->
+      <!-- Filtro por Departamento -->
       <div class="col-xl-3 col-lg-4 col-md-6">
+        <label for="filtroDepartamento" class="form-label fw-bold">
+          <i class="fas fa-building me-1"></i>Departamento:
+        </label>
+        <ng-select
+          id="filtroDepartamento"
+          [items]="departamentos"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filtroDepartamento"
+          placeholder="Seleccione departamento"
+          [clearable]="false"
+          [searchable]="true"
+          [loading]="loadingDepartamentos"
+          [disabled]="loadingDepartamentos"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            <div [title]="item.label">
+              <strong>{{ item.label }}</strong>
+              <small
+                class="text-muted d-block"
+                *ngIf="item.facultad"
+                [title]="item.facultad"
+              >
+                {{ item.facultad }}
+              </small>
+            </div>
+          </ng-template>
+        </ng-select>
+        <small class="text-muted">Filtrar por departamento</small>
+      </div>
+
+      <!-- Filtro por Semestre -->
+      <div class="col-xl-2 col-lg-3 col-md-6">
+        <label for="filtroSemestre" class="form-label fw-bold">
+          <i class="fas fa-calendar-week me-1"></i>Semestre:
+        </label>
+        <ng-select
+          id="filtroSemestre"
+          [items]="semestresDisponibles"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filtroSemestre"
+          placeholder="Seleccione semestre"
+          [clearable]="false"
+          [searchable]="false"
+        >
+        </ng-select>
+        <small class="text-muted">Semestre académico</small>
+      </div>
+
+      <!-- Filtro por OID Materia-->
+      <div class="col-xl-2 col-lg-3 col-md-6">
         <label for="filtroOid" class="form-label fw-bold">
           <i class="fas fa-key me-1"></i>OID:
         </label>
@@ -27,13 +86,12 @@
           class="form-control"
           placeholder="Buscar por OID..."
           [(ngModel)]="filtroOid"
-          (input)="onFiltroChange()"
         />
         <small class="text-muted">Identificador único</small>
       </div>
 
-      <!-- Filtro por Código -->
-      <div class="col-xl-3 col-lg-4 col-md-6">
+      <!-- Filtro por Código Materia-->
+      <div class="col-xl-2 col-lg-3 col-md-6">
         <label for="filtroCodigo" class="form-label fw-bold">
           <i class="fas fa-barcode me-1"></i>Código:
         </label>
@@ -43,13 +101,12 @@
           class="form-control"
           placeholder="Ej: MAT101..."
           [(ngModel)]="filtroCodigo"
-          (input)="onFiltroChange()"
         />
         <small class="text-muted">Código de la materia</small>
       </div>
 
       <!-- Filtro por Nombre -->
-      <div class="col-xl-4 col-lg-4 col-md-6">
+      <div class="col-xl-3 col-lg-4 col-md-6">
         <label for="filtroNombre" class="form-label fw-bold">
           <i class="fas fa-book me-1"></i>Nombre:
         </label>
@@ -59,28 +116,23 @@
           class="form-control"
           placeholder="Buscar por nombre..."
           [(ngModel)]="filtroNombre"
-          (input)="onFiltroChange()"
         />
         <small class="text-muted">Nombre de la materia</small>
       </div>
+    </div>
 
-      <!-- Filtro por Semestre -->
-      <div class="col-xl-2 col-lg-3 col-md-6">
-        <label for="filtroSemestre" class="form-label fw-bold">
-          <i class="fas fa-calendar-week me-1"></i>Semestre:
-        </label>
-        <select
-          id="filtroSemestre"
-          class="form-select"
-          [(ngModel)]="filtroSemestre"
-          (change)="onFiltroChange()"
+    <!-- Botón de Búsqueda -->
+    <div class="row mt-3">
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          class="btn btn-primary d-flex align-items-center"
+          (click)="buscarConFiltros()"
+          [disabled]="loading"
         >
-          <option value="">TODOS</option>
-          <option *ngFor="let sem of semestresDisponibles" [value]="sem">
-            {{ sem }}
-          </option>
-        </select>
-        <small class="text-muted">Semestre académico</small>
+          <i class="fas fa-search me-2"></i>
+          <span>Buscar</span>
+        </button>
       </div>
     </div>
   </div>
@@ -88,35 +140,58 @@
 
 <!-- Card de Tabla -->
 <div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+  <div
+    class="card-header d-flex justify-content-between align-items-center flex-wrap"
+  >
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-table me-2" style="color: #f8ae15;"></i>Materias del Plan
+      <i class="fas fa-table me-2" style="color: #f8ae15"></i>Materias del Plan
       <span class="badge bg-primary ms-2">{{ totalElements }}</span>
     </h6>
 
     <div class="d-flex align-items-center gap-2 ms-auto mt-2 mt-lg-0 flex-wrap">
+      <!-- Input file oculto -->
+      <input
+        #fileInput
+        type="file"
+        accept=".xlsx,.xls"
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+
       <!-- Botón Descargar Planilla -->
       <button
         type="button"
         class="btn btn-sm d-flex align-items-center"
-        style="background-color: #249337; color: white; border-color: #249337;"
+        style="background-color: #249337; color: white; border-color: #249337"
         (click)="descargarPlanilla()"
+        [disabled]="descargando"
         title="Descargar planilla Excel"
       >
-        <i class="fas fa-file-download me-1"></i>
-        <span class="d-none d-lg-inline">Descargar</span>
+        <i
+          class="fas me-1"
+          [ngClass]="descargando ? 'fa-spinner fa-spin' : 'fa-file-download'"
+        ></i>
+        <span class="d-none d-lg-inline">{{
+          descargando ? "Descargando..." : "Descargar"
+        }}</span>
       </button>
 
       <!-- Botón Cargar Planilla -->
       <button
         type="button"
         class="btn btn-sm d-flex align-items-center"
-        style="background-color: #16a8e1; color: white; border-color: #16a8e1;"
+        style="background-color: #16a8e1; color: white; border-color: #16a8e1"
         (click)="cargarPlanilla()"
+        [disabled]="cargandoArchivo"
         title="Cargar planilla Excel"
       >
-        <i class="fas fa-file-upload me-1"></i>
-        <span class="d-none d-lg-inline">Cargar</span>
+        <i
+          class="fas me-1"
+          [ngClass]="cargandoArchivo ? 'fa-spinner fa-spin' : 'fa-file-upload'"
+        ></i>
+        <span class="d-none d-lg-inline">{{
+          cargandoArchivo ? "Cargando..." : "Cargar"
+        }}</span>
       </button>
 
       <!-- Botón Nueva Materia -->
@@ -133,12 +208,12 @@
       <button
         type="button"
         class="btn btn-link text-decoration-none text-primary d-flex align-items-center"
-        (click)="cargarMaterias()"
+        (click)="cargarMaterias(true)"
         [disabled]="loading"
       >
         <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
         <span class="d-none d-lg-inline">
-          {{ loading ? 'Cargando...' : 'Actualizar' }}
+          {{ loading ? "Cargando..." : "Actualizar" }}
         </span>
       </button>
     </div>
@@ -146,17 +221,16 @@
     <!-- Selector de tamaño de página -->
     <div class="d-flex align-items-center ms-3 mt-2 mt-lg-0">
       <label class="form-label mb-0 me-2 small">Mostrar:</label>
-      <select
-        class="form-select form-select-sm"
-        style="width: 80px"
+      <ng-select
+        [items]="pageSizeOptions"
         [(ngModel)]="size"
-        (change)="onPageSizeChange($event)"
+        (change)="onPageSizeChange()"
+        [clearable]="false"
+        [searchable]="false"
+        placeholder="10"
+        class="page-size-select"
       >
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-      </select>
+      </ng-select>
       <span class="ms-2 small text-muted">por página</span>
     </div>
   </div>
@@ -166,27 +240,46 @@
       <table class="table table-hover mb-0">
         <thead class="table-light sticky-top">
           <tr>
-            <th class="fw-bold" style="width: 120px">
+            <!-- OID ordenable -->
+            <th
+              class="fw-bold sortable-header"
+              style="width: 120px; cursor: pointer"
+              (click)="onSort('oidMateria')"
+              title="Ordenar por OID"
+            >
               <i class="fas fa-key me-1"></i>OID
+              <i [ngClass]="getSortIcon('oidMateria')" class="ms-1"></i>
             </th>
+
+            <!-- CÓDIGO - NO ordenable -->
             <th class="fw-bold" style="width: 120px">
               <i class="fas fa-barcode me-1"></i>Código
             </th>
-            <th class="fw-bold">
-              <i class="fas fa-book me-1"></i>Nombre
-            </th>
+
+            <!-- NOMBRE - NO ordenable -->
+            <th class="fw-bold"><i class="fas fa-book me-1"></i>Nombre</th>
+
+            <!-- SEMESTRE - NO ordenable -->
             <th class="fw-bold text-center" style="width: 100px">
               <i class="fas fa-calendar-week me-1"></i>Semestre
             </th>
+
+            <!-- HORAS/SEMANA - NO ordenable -->
             <th class="fw-bold text-center" style="width: 120px">
               <i class="fas fa-clock me-1"></i>Horas/Semana
             </th>
+
+            <!-- DEPARTAMENTO - NO ordenable -->
             <th class="fw-bold">
               <i class="fas fa-building me-1"></i>Departamento
             </th>
+
+            <!-- CORREQUISITO - NO ordenable -->
             <th class="fw-bold text-center" style="width: 150px">
               <i class="fas fa-link me-1"></i>Correquisito
             </th>
+
+            <!-- ACCIONES - NO ordenable -->
             <th class="fw-bold text-center" style="width: 200px">
               <i class="fas fa-cogs me-1"></i>Acciones
             </th>
@@ -202,12 +295,16 @@
               <div class="fw-semibold">{{ materia.nombre }}</div>
             </td>
             <td class="text-center">
-              <span class="badge bg-light text-dark">{{ materia.semestre }}</span>
+              <span class="badge bg-light text-dark">{{
+                materia.semestre
+              }}</span>
             </td>
             <td class="text-center">{{ materia.horasSemana }}</td>
             <td>
               <div>{{ materia.nombreDepartamento }}</div>
-              <small class="text-muted">ID: {{ materia.oidDepartamento }}</small>
+              <small class="text-muted"
+                >ID: {{ materia.oidDepartamento }}</small
+              >
             </td>
             <td class="text-center">
               <span
@@ -361,3 +458,37 @@
     </div>
   </div>
 </div>
+<!-- Modal Eliminar Materia -->
+<app-eliminar-materia-modal
+  *ngIf="mostrarModalEliminar && materiaAEliminar"
+  [materia]="materiaAEliminar"
+  (onMateriaEliminada)="onMateriaEliminada()"
+  (onCancelar)="onCancelarEliminacion()"
+></app-eliminar-materia-modal>
+<!-- Modal Ver Correquisitos -->
+<app-ver-correquisitos-modal
+  *ngIf="mostrarModalCorrequisitos && materiaVerCorrequisitos"
+  [materia]="materiaVerCorrequisitos"
+  (onCerrar)="onCerrarCorrequisitos()"
+></app-ver-correquisitos-modal>
+
+<!-- Modal Crear Materia -->
+<app-crear-editar-materia-modal
+  *ngIf="mostrarModalCrear"
+  [modo]="'crear'"
+  [oidPlan]="oidPlan!"
+  [numeroPlan]="numeroPlan"
+  (onMateriaCreada)="onMateriaCreada()"
+  (onCancelar)="onCancelarCreacion()"
+></app-crear-editar-materia-modal>
+
+<!-- Modal Editar Materia -->
+<app-crear-editar-materia-modal
+  *ngIf="mostrarModalEditar && materiaAEditar"
+  [modo]="'editar'"
+  [materia]="materiaAEditar"
+  [oidPlan]="oidPlan!"
+  [numeroPlan]="numeroPlan"
+  (onMateriaEditada)="onMateriaEditada()"
+  (onCancelar)="onCancelarEdicion()"
+></app-crear-editar-materia-modal>

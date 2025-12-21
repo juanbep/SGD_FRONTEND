@@ -46,6 +46,35 @@
     (onEditar)="handleEditar($event)"
     (onEliminar)="handleEliminar($event)"
   >
+    <!-- Contenido personalizado que se proyectará -->
+    <div header-content>
+      <header class="title-two">Gestionar Actividades Académicas</header>
+
+      <section class="messages-container">
+        <img
+          [src]="'assets/icons/messages/activities-magement.svg'"
+          alt="Icono de profesor"
+        />
+        <span class="text-body-heavy">
+          Desde aquí puede gestionar todas las actividades académicas del
+          departamento. Edite o elimine actividades según sea necesario.
+        </span>
+      </section>
+
+      <section class="messages-container mt-4">
+        <img
+          [src]="'assets/icons/messages/activities-filter.svg'"
+          alt="Icono de profesor"
+        />
+        <span class="text-body-heavy">
+          Utilice los filtros para encontrar rápidamente las actividades que
+          desea modificar. Los cambios se reflejarán inmediatamente en el
+          sistema.
+        </span>
+      </section>
+
+      <div><br /></div>
+    </div>
   </app-activities-base>
 
   <!-- Modal de Confirmación de Eliminación -->

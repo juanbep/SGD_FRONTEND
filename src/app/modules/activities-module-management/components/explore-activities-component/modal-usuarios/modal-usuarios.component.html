@@ -5,7 +5,11 @@
       <div class="modal-header text-white border-0 py-3">
         <h5 class="modal-title fw-bold mb-0">
           <i class="fas fa-users me-2" style="color: #f8ae15"></i>
-          Usuarios Responsables
+          {{
+            mostrandoFormularioAsignacion
+              ? "Asignar Nuevo Usuario"
+              : "Usuarios Responsables"
+          }}
         </h5>
         <button
           type="button"
@@ -16,25 +20,77 @@
       </div>
 
       <!-- Body -->
-      <div class="modal-body p-0">
-        <app-usuario-carousel
-          [usuariosIds]="usuariosIds"
-          [modo]="modo"
-          [desasignando]="desasignando"
-          (onDesasignarUsuario)="desasignarUsuario($event)"
-        ></app-usuario-carousel>
+      <div class="modal-body">
+        <!-- Carrusel de Usuarios -->
+        <div *ngIf="!mostrandoFormularioAsignacion">
+          <app-usuario-carousel
+            [usuariosAsignaciones]="usuariosAsignaciones"
+            [usuariosCompletos]="usuariosCompletos"
+            [modo]="modo"
+            [desasignando]="desasignando"
+            (onDesasignarUsuario)="desasignarUsuario($event)"
+          ></app-usuario-carousel>
+        </div>
+
+        <!-- Formulario de Asignación CON WRAPPER Y MENSAJE -->
+        <div *ngIf="mostrandoFormularioAsignacion" class="wrapper-formulario">
+          <!-- Mensaje informativo con icono -->
+          <section class="mensaje-asignar-usuario">
+            <img
+              [src]="'assets/icons/messages/teacher.svg'"
+              alt="Icono informativo"
+            />
+            <span class="texto-mensaje">
+              Seleccione el usuario, su cargo y las horas a asignar en esta
+              actividad.
+            </span>
+          </section>
+
+          <!-- Formulario limpio -->
+          <app-formulario-asignar-usuario
+            [oidTipoActividad]="oidTipoActividadActual"
+            [oidCalendario]="oidCalendario!"
+            [usuariosYaAsignados]="usuariosAsignaciones"
+            (onUsuarioListo)="asignarUsuario($event)"
+            (onCancelar)="cerrarFormularioAsignacion()"
+          ></app-formulario-asignar-usuario>
+        </div>
       </div>
 
       <!-- Footer -->
       <div class="modal-footer border-0 py-3">
-        <button
-          type="button"
-          class="btn btn-outline-secondary px-4"
-          (click)="cerrar()"
+        <!-- Botones cuando NO está el formulario -->
+        <ng-container *ngIf="!mostrandoFormularioAsignacion">
+          <button
+            *ngIf="modo === 'gestionar'"
+            type="button"
+            class="btn btn-success px-4"
+            (click)="abrirFormularioAsignacion()"
+          >
+            <i class="fas fa-user-plus me-2"></i>
+            Asignar Usuario
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary px-4"
+            (click)="cerrar()"
+          >
+            <i class="fas fa-times me-2"></i>
+            Cerrar
+          </button>
+        </ng-container>
+
+        <!-- Loading cuando está asignando -->
+        <div
+          *ngIf="mostrandoFormularioAsignacion && asignando"
+          class="w-100 text-center"
         >
-          <i class="fas fa-times me-2"></i>
-          Cerrar
-        </button>
+          <div class="spinner-border spinner-border-sm me-2" role="status">
+            <span class="visually-hidden">Asignando...</span>
+          </div>
+          <span>Asignando usuario...</span>
+        </div>
       </div>
     </div>
   </div>

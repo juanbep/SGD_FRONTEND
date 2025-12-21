@@ -52,7 +52,8 @@
                 </h6>
                 <small class="text-muted">
                   <i class="fas fa-calendar-check me-1"></i>
-                  {{ calendario.fechas?.length || 0 }} fechas registradas
+                  {{ contarFechasConDatos(calendario.fechas) }} fechas
+                  registradas
                 </small>
               </div>
               <div class="d-flex align-items-center gap-2">
