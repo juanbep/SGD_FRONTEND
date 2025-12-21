@@ -101,3 +101,15 @@
   font-size: 12px;
   color: var(--blue);
 }
+
+/* Cursor pointer para ng-select - aplicar a todos los elementos internos */
+ng-select,
+ng-select *,
+ng-select .ng-select-container,
+ng-select .ng-select-container * {
+  cursor: pointer !important;
+}
+
+ng-select .ng-select-container:hover {
+  border-color: #f8ae15 !important;
+}

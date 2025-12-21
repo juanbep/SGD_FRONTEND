@@ -20,6 +20,8 @@ import { MateriaService } from '../../services/materia/materia.service';
 import { EliminarMateriaModalComponent } from './eliminar-materia-modal/eliminar-materia-modal.component';
 import { VerCorrequisitosModalComponent } from './ver-correquisitos-modal/ver-correquisitos-modal.component';
 import { CrearEditarMateriaModalComponent } from './crear-editar-materia-modal/crear-editar-materia-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { DepartamentoHelperService } from '../../services';
 
 @Component({
   selector: 'app-list-materias',
@@ -30,6 +32,7 @@ import { CrearEditarMateriaModalComponent } from './crear-editar-materia-modal/c
     EliminarMateriaModalComponent,
     VerCorrequisitosModalComponent,
     CrearEditarMateriaModalComponent,
+    NgSelectModule,
   ],
   templateUrl: './list-materias.component.html',
   styleUrl: './list-materias.component.css',
@@ -37,6 +40,7 @@ import { CrearEditarMateriaModalComponent } from './crear-editar-materia-modal/c
 export class ListMateriasComponent implements OnInit, OnChanges {
   // ===== SERVICIOS =====
   private materiaService = inject(MateriaService);
+  private departamentoHelper = inject(DepartamentoHelperService);
   private toastr = inject(ToastrService);
 
   @Input() oidPlan: number | undefined;
@@ -50,7 +54,20 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   // ===== REFERENCIA AL INPUT FILE =====
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  readonly semestresDisponibles: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  readonly semestresDisponibles: { value: number | 'TODOS'; label: string }[] =
+    [
+      { value: 'TODOS', label: 'TODOS' },
+      { value: 1, label: '1' },
+      { value: 2, label: '2' },
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+      { value: 7, label: '7' },
+      { value: 8, label: '8' },
+      { value: 9, label: '9' },
+      { value: 10, label: '10' },
+    ];
 
   sortField: string = 'oidMateria';
   sortDirection: 'asc' | 'desc' = 'desc';
@@ -58,7 +75,12 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   filtroOid: string = '';
   filtroCodigo: string = '';
   filtroNombre: string = '';
-  filtroSemestre: number | '' = '';
+  filtroSemestre: number | 'TODOS' = 'TODOS';
+  filtroDepartamento: number | 'TODOS' = 'TODOS';
+
+  // ===== DEPARTAMENTOS =====
+  departamentos: { value: number; label: string; facultad: string }[] = [];
+  loadingDepartamentos = false;
 
   page = 0;
   size = 10;
@@ -87,7 +109,7 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   Math = Math;
 
   ngOnInit(): void {
-    // No hacer nada aquí, esperar a que llegue el Input
+    this.cargarDepartamentos();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -98,7 +120,8 @@ export class ListMateriasComponent implements OnInit, OnChanges {
         this.filtroOid = '';
         this.filtroCodigo = '';
         this.filtroNombre = '';
-        this.filtroSemestre = '';
+        this.filtroSemestre = 'TODOS';
+        this.filtroDepartamento = 'TODOS';
         this.page = 0;
         this.cargarMaterias();
       } else {
@@ -137,8 +160,12 @@ export class ListMateriasComponent implements OnInit, OnChanges {
       filtros.nombre = this.filtroNombre.trim();
     }
 
-    if (this.filtroSemestre !== '') {
+    if (this.filtroSemestre !== 'TODOS') {
       filtros.semestre = Number(this.filtroSemestre);
+    }
+
+    if (this.filtroDepartamento !== 'TODOS') {
+      filtros.oidDepartamento = Number(this.filtroDepartamento);
     }
 
     this.materiaService.getMaterias(filtros).subscribe({
@@ -168,6 +195,36 @@ export class ListMateriasComponent implements OnInit, OnChanges {
         this.loading = false;
       },
     });
+  }
+
+  // ===== CARGAR DEPARTAMENTOS =====
+  async cargarDepartamentos(): Promise<void> {
+    this.loadingDepartamentos = true;
+
+    try {
+      const departamentosRaw =
+        await this.departamentoHelper.getAllForDropdown();
+
+      this.departamentos = [
+        { value: 'TODOS' as any, label: 'TODOS', facultad: '' },
+        ...departamentosRaw,
+      ];
+
+      if (departamentosRaw.length === 0) {
+        this.toastr.warning(
+          'No se encontraron departamentos disponibles',
+          'Sin departamentos'
+        );
+      }
+    } catch (error) {
+      console.error('Error al cargar departamentos:', error);
+      this.toastr.error('No se pudieron cargar los departamentos', 'Error');
+      this.departamentos = [
+        { value: 'TODOS' as any, label: 'TODOS', facultad: '' },
+      ];
+    } finally {
+      this.loadingDepartamentos = false;
+    }
   }
 
   // ===== ORDENAMIENTO =====
@@ -210,7 +267,8 @@ export class ListMateriasComponent implements OnInit, OnChanges {
     this.filtroOid = '';
     this.filtroCodigo = '';
     this.filtroNombre = '';
-    this.filtroSemestre = '';
+    this.filtroSemestre = 'TODOS';
+    this.filtroDepartamento = 'TODOS';
     this.page = 0;
     this.cargarMaterias();
   }

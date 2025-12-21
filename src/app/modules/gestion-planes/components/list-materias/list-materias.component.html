@@ -10,7 +10,11 @@
       class="btn btn-outline-secondary d-flex align-items-center"
       (click)="limpiarFiltros()"
       [disabled]="
-        !filtroOid && !filtroCodigo && !filtroNombre && !filtroSemestre
+        !filtroOid &&
+        !filtroCodigo &&
+        !filtroNombre &&
+        filtroSemestre === 'TODOS' &&
+        filtroDepartamento === 'TODOS'
       "
     >
       <i class="fas fa-times"></i>
@@ -19,24 +23,58 @@
   </div>
   <div class="card-body">
     <div class="row g-3">
-      <!-- Filtro por OID -->
+      <!-- Filtro por Departamento -->
       <div class="col-xl-3 col-lg-4 col-md-6">
-        <label for="filtroOid" class="form-label fw-bold">
-          <i class="fas fa-key me-1"></i>OID:
+        <label for="filtroDepartamento" class="form-label fw-bold">
+          <i class="fas fa-building me-1"></i>Departamento:
         </label>
-        <input
-          type="text"
-          id="filtroOid"
-          class="form-control"
-          placeholder="Buscar por OID..."
-          [(ngModel)]="filtroOid"
-          (input)="onFiltroChange()"
-        />
-        <small class="text-muted">Identificador único</small>
+        <ng-select
+          id="filtroDepartamento"
+          [items]="departamentos"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filtroDepartamento"
+          (change)="onFiltroChange()"
+          placeholder="Seleccione departamento"
+          [clearable]="false"
+          [searchable]="true"
+          [loading]="loadingDepartamentos"
+          [disabled]="loadingDepartamentos"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            <div>
+              <strong>{{ item.label }}</strong>
+              <small class="text-muted d-block" *ngIf="item.facultad">
+                {{ item.facultad }}
+              </small>
+            </div>
+          </ng-template>
+        </ng-select>
+        <small class="text-muted">Filtrar por departamento</small>
+      </div>
+
+      <!-- Filtro por Semestre -->
+      <div class="col-xl-2 col-lg-3 col-md-6">
+        <label for="filtroSemestre" class="form-label fw-bold">
+          <i class="fas fa-calendar-week me-1"></i>Semestre:
+        </label>
+        <ng-select
+          id="filtroSemestre"
+          [items]="semestresDisponibles"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filtroSemestre"
+          (change)="onFiltroChange()"
+          placeholder="Seleccione semestre"
+          [clearable]="false"
+          [searchable]="false"
+        >
+        </ng-select>
+        <small class="text-muted">Semestre académico</small>
       </div>
 
       <!-- Filtro por Código -->
-      <div class="col-xl-3 col-lg-4 col-md-6">
+      <div class="col-xl-2 col-lg-3 col-md-6">
         <label for="filtroCodigo" class="form-label fw-bold">
           <i class="fas fa-barcode me-1"></i>Código:
         </label>
@@ -52,7 +90,7 @@
       </div>
 
       <!-- Filtro por Nombre -->
-      <div class="col-xl-4 col-lg-4 col-md-6">
+      <div class="col-xl-3 col-lg-4 col-md-6">
         <label for="filtroNombre" class="form-label fw-bold">
           <i class="fas fa-book me-1"></i>Nombre:
         </label>
@@ -65,25 +103,6 @@
           (input)="onFiltroChange()"
         />
         <small class="text-muted">Nombre de la materia</small>
-      </div>
-
-      <!-- Filtro por Semestre -->
-      <div class="col-xl-2 col-lg-3 col-md-6">
-        <label for="filtroSemestre" class="form-label fw-bold">
-          <i class="fas fa-calendar-week me-1"></i>Semestre:
-        </label>
-        <select
-          id="filtroSemestre"
-          class="form-select"
-          [(ngModel)]="filtroSemestre"
-          (change)="onFiltroChange()"
-        >
-          <option value="">TODOS</option>
-          <option *ngFor="let sem of semestresDisponibles" [value]="sem">
-            {{ sem }}
-          </option>
-        </select>
-        <small class="text-muted">Semestre académico</small>
       </div>
     </div>
   </div>
