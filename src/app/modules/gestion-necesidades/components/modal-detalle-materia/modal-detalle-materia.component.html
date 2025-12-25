@@ -1,0 +1,179 @@
+<!-- Modal -->
+<div
+  *ngIf="mostrar && materia"
+  class="modal fade show d-block"
+  tabindex="-1"
+  (click)="cerrarSiClickFuera($event)"
+>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i class="fas fa-book-open me-2" style="color: #f8ae15"></i>
+          Detalles de la Materia
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cerrar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <!-- Información General -->
+        <div class="row g-4">
+          <div class="col-12">
+            <div class="info-section">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-info-circle me-2"></i>
+                Información General
+              </h6>
+
+              <!-- Grid de campos -->
+              <div class="row g-3">
+                <!-- OID Materia -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">OID Materia:</label>
+                    <p class="info-value">{{ materia.oidMateria }}</p>
+                  </div>
+                </div>
+
+                <!-- Código -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">Código:</label>
+                    <p class="info-value fw-bold">{{ materia.codigo }}</p>
+                  </div>
+                </div>
+
+                <!-- Nombre -->
+                <div class="col-12">
+                  <div class="info-item">
+                    <label class="info-label">Nombre:</label>
+                    <p class="info-value fw-semibold">{{ materia.nombre }}</p>
+                  </div>
+                </div>
+
+                <!-- Horas por Semana -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">Horas por Semana:</label>
+                    <p class="info-value">{{ materia.horasSemana }} horas</p>
+                  </div>
+                </div>
+
+                <!-- Departamento -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">Departamento:</label>
+                    <p class="info-value">{{ materia.nombreDepartamento }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Correquisito -->
+        <div class="row g-4 mt-1">
+          <div class="col-12">
+            <div class="info-section">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-link me-2"></i>
+                Correquisito
+              </h6>
+
+              <div class="row g-3">
+                <!-- Si tiene correquisito -->
+                <ng-container
+                  *ngIf="materia.oidCorrequisito && materia.nombreCorrequisito"
+                >
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">OID Correquisito:</label>
+                      <p class="info-value">{{ materia.oidCorrequisito }}</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">Nombre Correquisito:</label>
+                      <p class="info-value">{{ materia.nombreCorrequisito }}</p>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <!-- Si NO tiene correquisito -->
+                <div
+                  class="col-12"
+                  *ngIf="
+                    !materia.oidCorrequisito && !materia.nombreCorrequisito
+                  "
+                >
+                  <div class="alert alert-info mb-0" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Esta materia no tiene correquisito asignado.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trazabilidad -->
+        <div class="row g-4 mt-1">
+          <div class="col-12">
+            <div class="info-section">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-history me-2"></i>
+                Trazabilidad
+              </h6>
+
+              <div class="row g-3">
+                <!-- Fecha Creación -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">Fecha Creación:</label>
+                    <p class="info-value">
+                      {{ materia.fechaCreacion | date : "dd/MM/yyyy HH:mm" }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Fecha Actualización -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">Última Actualización:</label>
+                    <p class="info-value">
+                      {{
+                        materia.fechaActualizacion | date : "dd/MM/yyyy HH:mm"
+                      }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 py-3">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          (click)="cerrar()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div *ngIf="mostrar && materia" class="modal-backdrop fade show"></div>

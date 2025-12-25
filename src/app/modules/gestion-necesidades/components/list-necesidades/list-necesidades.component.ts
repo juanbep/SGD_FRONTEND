@@ -23,6 +23,7 @@ import {
   toggleSort,
   trackByOid,
 } from '../../shared/table.utils';
+import { ModalDetalleMateriaComponent } from "../modal-detalle-materia/modal-detalle-materia.component";
 
 @Component({
   selector: 'app-list-necesidades',
@@ -32,7 +33,8 @@ import {
     FormsModule,
     NgSelectModule,
     FiltrosNecesidadesComponent,
-  ],
+    ModalDetalleMateriaComponent
+],
   templateUrl: './list-necesidades.component.html',
   styleUrl: './list-necesidades.component.css',
 })
@@ -74,9 +76,9 @@ export class ListNecesidadesComponent implements OnInit {
   mostrarModalEditar = false;
   mostrarModalEliminar = false;
   mostrarModalCorrequisitos = false;
+  mostrarModalDetalleMateria = false; // Modal de detalles
   necesidadSeleccionada: NecesidadResponse | null = null;
-  mostrarModalDetalleMateria = false;
-  materiaSeleccionada: Materia | null = null;
+  materiaSeleccionada: Materia | null = null; // Materia seleccionada
 
   Math = Math;
 
@@ -218,6 +220,18 @@ export class ListNecesidadesComponent implements OnInit {
   // ===== UTILIDADES PARA TEMPLATE =====
   getBadgeClassEstado = getBadgeClassEstado;
 
+  // ===== MODAL DE DETALLES DE MATERIA =====
+  verDetallesMateria(materia: Materia): void {
+    this.materiaSeleccionada = materia;
+    this.mostrarModalDetalleMateria = true;
+    console.log('Detalles de materia:', materia);
+  }
+
+  cerrarModalDetalleMateria(): void {
+    this.mostrarModalDetalleMateria = false;
+    this.materiaSeleccionada = null;
+  }
+
   // ===== ACCIONES =====
   crearNuevaNecesidad(): void {
     this.toastr.info('Crear necesidad - pendiente de implementar');
@@ -254,19 +268,6 @@ export class ListNecesidadesComponent implements OnInit {
     }
     this.toastr.info('Cargar planilla - pendiente de implementar');
     input.value = '';
-  }
-
-  // ===== MODALES =====
-
-  verDetallesMateria(materia: Materia): void {
-    this.materiaSeleccionada = materia;
-    this.mostrarModalDetalleMateria = true;
-    console.log('Detalles de materia:', materia);
-  }
-
-  cerrarModalDetalleMateria(): void {
-    this.mostrarModalDetalleMateria = false;
-    this.materiaSeleccionada = null;
   }
 
   // ===== UTILIDADES =====

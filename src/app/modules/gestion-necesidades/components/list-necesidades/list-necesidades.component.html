@@ -375,3 +375,9 @@
     </div>
   </div>
 </div>
+<!-- Modal de Detalles de Materia -->
+<app-modal-detalle-materia
+  [materia]="materiaSeleccionada"
+  [mostrar]="mostrarModalDetalleMateria"
+  (onCerrar)="cerrarModalDetalleMateria()"
+></app-modal-detalle-materia>
