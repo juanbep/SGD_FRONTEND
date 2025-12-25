@@ -1,0 +1,107 @@
+<!-- Modal -->
+<div
+  *ngIf="mostrar"
+  class="modal fade show d-block"
+  tabindex="-1"
+  (click)="cerrarSiClickFuera($event)"
+>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i
+            class="fas me-2"
+            [ngClass]="iconoTitulo"
+            style="color: #f8ae15"
+          ></i>
+          {{ tituloModal }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cerrar()"
+          [disabled]="guardando"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body (sin cambios) -->
+      <div class="modal-body p-4">
+        <form [formGroup]="formulario">
+          <!-- ... todo el formulario igual que antes ... -->
+
+          <!-- Solo agregar esto en la sección de Calendario para mostrar info adicional en modo editar -->
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="info-section">
+                <h6 class="section-title mb-3">
+                  <i class="fas fa-calendar-alt me-2"></i>
+                  Calendario
+                </h6>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label">Calendario Seleccionado:</label>
+                      <p class="info-value fw-bold">
+                        {{ nombreCalendario || "No seleccionado" }}
+                      </p>
+                    </div>
+                  </div>
+                  <!-- Info adicional en modo editar -->
+                  <div class="col-md-6" *ngIf="modo === 'editar' && necesidad">
+                    <div class="info-item">
+                      <label class="info-label">OID Necesidad:</label>
+                      <p class="info-value">
+                        <span class="badge bg-info">{{
+                          necesidad.oidNecesidad
+                        }}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ... resto del formulario igual ... -->
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 py-3">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          (click)="cerrar()"
+          [disabled]="guardando"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn px-4"
+          [ngClass]="modo === 'crear' ? 'btn-success' : 'btn-primary'"
+          (click)="guardar()"
+          [disabled]="guardando || formulario.invalid"
+        >
+          <i
+            class="fas me-2"
+            [ngClass]="
+              guardando
+                ? 'fa-spinner fa-spin'
+                : modo === 'crear'
+                ? 'fa-save'
+                : 'fa-check'
+            "
+          ></i>
+          {{ textoBotonGuardar }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div *ngIf="mostrar" class="modal-backdrop fade show"></div>

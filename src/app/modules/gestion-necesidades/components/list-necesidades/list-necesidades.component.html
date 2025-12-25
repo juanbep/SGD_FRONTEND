@@ -68,7 +68,7 @@
         (click)="crearNuevaNecesidad()"
       >
         <i class="fas fa-plus me-1"></i>
-        <span class="d-none d-lg-inline">Nueva Necesidad</span>
+        <span class="d-none d-lg-inline">Agregar Necesidades</span>
       </button>
 
       <!-- Botón Actualizar -->
@@ -381,3 +381,13 @@
   [mostrar]="mostrarModalDetalleMateria"
   (onCerrar)="cerrarModalDetalleMateria()"
 ></app-modal-detalle-materia>
+<!-- Modal de Crear/Editar Necesidad -->
+<app-modal-crear-editar-necesidad
+  [mostrar]="mostrarModalFormulario"
+  [modo]="modoModal"
+  [necesidad]="necesidadSeleccionada"
+  [oidCalendario]="filtrosActuales.oidCalendario"
+  [nombreCalendario]="getNombreCalendarioSeleccionado()"
+  (onCerrar)="cerrarModalFormulario()"
+  (onNecesidadGuardada)="onNecesidadGuardada()"
+></app-modal-crear-editar-necesidad>
