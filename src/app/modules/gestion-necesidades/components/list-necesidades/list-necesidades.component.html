@@ -107,32 +107,29 @@
       <table class="table table-hover mb-0">
         <thead class="table-light sticky-top">
           <tr>
-            <!-- OID ordenable -->
+            <!-- OID NECESIDAD ordenable -->
             <th
               class="fw-bold sortable-header"
-              style="width: 100px; cursor: pointer"
+              style="width: 180px; cursor: pointer"
               (click)="onSort('oidNecesidad')"
-              title="Ordenar por OID"
+              title="Ordenar por OID Necesidad"
             >
-              <i class="fas fa-key me-1"></i>OID
+              <i class="fas fa-key me-1"></i>OID Necesidad
               <i [ngClass]="getSortIcon('oidNecesidad')" class="ms-1"></i>
             </th>
 
-            <!-- CÓDIGO MATERIA -->
-            <th class="fw-bold" style="width: 120px">
-              <i class="fas fa-barcode me-1"></i>Código
+            <!-- NOMBRE MATERIA + BOTÓN DETALLES -->
+            <th class="fw-bold" style="min-width: 200px">
+              <i class="fas fa-book me-1"></i>Materia
             </th>
 
-            <!-- NOMBRE MATERIA -->
-            <th class="fw-bold"><i class="fas fa-book me-1"></i>Materia</th>
-
             <!-- SEMESTRE -->
-            <th class="fw-bold text-center" style="width: 100px">
-              <i class="fas fa-calendar-week me-1"></i>Semestre
+            <th class="fw-bold text-center" style="width: 90px">
+              <i class="fas fa-calendar-week me-1"></i>Sem.
             </th>
 
             <!-- GRUPO -->
-            <th class="fw-bold text-center" style="width: 80px">
+            <th class="fw-bold text-center" style="width: 110px">
               <i class="fas fa-users me-1"></i>Grupo
             </th>
 
@@ -146,70 +143,100 @@
               <i class="fas fa-flag me-1"></i>Estado
             </th>
 
-            <!-- CORREQUISITO -->
-            <th class="fw-bold text-center" style="width: 150px">
-              <i class="fas fa-link me-1"></i>Correquisito
+            <!-- FECHA CREACIÓN ordenable -->
+            <th
+              class="fw-bold sortable-header text-center"
+              style="width: 140px; cursor: pointer"
+              (click)="onSort('fechaCreacion')"
+              title="Ordenar por Fecha de Creación"
+            >
+              <i class="fas fa-calendar-plus me-1"></i>Creación
+              <i [ngClass]="getSortIcon('fechaCreacion')" class="ms-1"></i>
+            </th>
+
+            <!-- FECHA ACTUALIZACIÓN ordenable -->
+            <th
+              class="fw-bold sortable-header text-center"
+              style="width: 170px; cursor: pointer"
+              (click)="onSort('fechaActualizacion')"
+              title="Ordenar por Fecha de Actualización"
+            >
+              <i class="fas fa-calendar-check me-1"></i>Actualización
+              <i [ngClass]="getSortIcon('fechaActualizacion')" class="ms-1"></i>
             </th>
 
             <!-- ACCIONES -->
-            <th class="fw-bold text-center" style="width: 220px">
+            <th class="fw-bold text-center" style="width: 180px">
               <i class="fas fa-cogs me-1"></i>Acciones
             </th>
           </tr>
         </thead>
         <tbody *ngIf="necesidades && necesidades.length > 0; else noData">
           <tr *ngFor="let necesidad of necesidades; trackBy: trackByNecesidad">
+            <!-- OID NECESIDAD -->
             <td>
               <small class="text-muted">{{ necesidad.oidNecesidad }}</small>
             </td>
-            <td class="fw-bold">{{ necesidad.codigoMateria }}</td>
+
+            <!-- NOMBRE MATERIA + BOTÓN DETALLES -->
             <td>
-              <div class="fw-semibold">{{ necesidad.nombreMateria }}</div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="fw-semibold flex-grow-1">{{
+                  necesidad.nombreMateria
+                }}</span>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-info"
+                  title="Ver detalles de la materia"
+                  (click)="verDetallesMateria(necesidad.materia)"
+                >
+                  <i class="fas fa-info-circle"></i>
+                </button>
+              </div>
             </td>
+
+            <!-- SEMESTRE -->
             <td class="text-center">
               <span class="badge bg-light text-dark">{{
                 necesidad.semestreMateria
               }}</span>
             </td>
+
+            <!-- GRUPO -->
             <td class="text-center">
               <span class="badge bg-info">{{ necesidad.grupo }}</span>
             </td>
+
+            <!-- CUPO -->
             <td class="text-center">{{ necesidad.cupo }}</td>
+
+            <!-- ESTADO -->
             <td class="text-center">
               <span
                 class="badge"
                 [ngClass]="getBadgeClassEstado(necesidad.estado)"
               >
-                {{ necesidad.estado }}
+                {{ necesidad.estadoDescripcion || necesidad.estado }}
               </span>
             </td>
+
+            <!-- FECHA CREACIÓN -->
             <td class="text-center">
-              <span
-                *ngIf="necesidad.materia.nombreCorrequisito"
-                class="badge bg-warning"
-                [title]="'OID: ' + necesidad.materia.oidCorrequisito"
-              >
-                {{ necesidad.materia.nombreCorrequisito }}
-              </span>
-              <span
-                *ngIf="!necesidad.materia.nombreCorrequisito"
-                class="text-muted"
-              >
-                <small>Sin correquisito</small>
-              </span>
+              <small class="text-muted">{{
+                necesidad.fechaCreacion | date : "dd/MM/yyyy HH:mm"
+              }}</small>
             </td>
+
+            <!-- FECHA ACTUALIZACIÓN -->
+            <td class="text-center">
+              <small class="text-muted">{{
+                necesidad.fechaActualizacion | date : "dd/MM/yyyy HH:mm"
+              }}</small>
+            </td>
+
+            <!-- ACCIONES -->
             <td class="text-center">
               <div class="action-buttons-wrapper">
-                <!-- Gestionar relación -->
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-warning"
-                  title="Gestionar correquisitos"
-                  (click)="gestionarCorrequisitos(necesidad)"
-                >
-                  <i class="fas fa-link"></i>
-                </button>
-
                 <!-- Modificar -->
                 <button
                   type="button"
@@ -229,6 +256,16 @@
                 >
                   <i class="fas fa-trash-alt"></i>
                 </button>
+
+                <!-- Gestionar correquisitos -->
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-warning"
+                  title="Gestionar correquisitos"
+                  (click)="gestionarCorrequisitos(necesidad)"
+                >
+                  <i class="fas fa-link"></i>
+                </button>
               </div>
             </td>
           </tr>
@@ -236,7 +273,7 @@
         <ng-template #noData>
           <tbody>
             <tr>
-              <td colspan="9" class="text-center py-5">
+              <td colspan="11" class="text-center py-5">
                 <div
                   *ngIf="loading"
                   class="d-flex justify-content-center align-items-center"

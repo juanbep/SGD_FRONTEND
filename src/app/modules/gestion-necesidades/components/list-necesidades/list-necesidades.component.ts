@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { NecesidadesService } from '../../services';
-import { NecesidadFilters, NecesidadResponse } from '../../models';
+import { Materia, NecesidadFilters, NecesidadResponse } from '../../models';
 import { getBadgeClassEstado } from '../../utils/necesidades.utils';
 import { FiltrosNecesidadesComponent } from '../filtros-necesidades/filtros-necesidades.component';
 import {
@@ -75,6 +75,8 @@ export class ListNecesidadesComponent implements OnInit {
   mostrarModalEliminar = false;
   mostrarModalCorrequisitos = false;
   necesidadSeleccionada: NecesidadResponse | null = null;
+  mostrarModalDetalleMateria = false;
+  materiaSeleccionada: Materia | null = null;
 
   Math = Math;
 
@@ -252,6 +254,19 @@ export class ListNecesidadesComponent implements OnInit {
     }
     this.toastr.info('Cargar planilla - pendiente de implementar');
     input.value = '';
+  }
+
+  // ===== MODALES =====
+
+  verDetallesMateria(materia: Materia): void {
+    this.materiaSeleccionada = materia;
+    this.mostrarModalDetalleMateria = true;
+    console.log('Detalles de materia:', materia);
+  }
+
+  cerrarModalDetalleMateria(): void {
+    this.mostrarModalDetalleMateria = false;
+    this.materiaSeleccionada = null;
   }
 
   // ===== UTILIDADES =====
