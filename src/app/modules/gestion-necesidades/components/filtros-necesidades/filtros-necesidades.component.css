@@ -1,0 +1,125 @@
+/* ===== ESTILOS PARA CARD DE FILTROS ===== */
+
+.card-header {
+  background-color: #001282 !important;
+  color: white !important;
+}
+
+.card-header h6,
+.card-header .btn,
+.card-header .text-muted,
+.card-header .small.text-muted {
+  color: white !important;
+}
+
+/* ===== ESTILOS PARA FORMULARIOS ===== */
+
+.form-label.fw-bold {
+  color: #001282 !important;
+}
+
+.form-label .fas {
+  color: #0051c6 !important;
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: #f8ae15 !important;
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
+}
+
+/* ===== ESTILOS PARA BOTONES ===== */
+
+.btn i,
+.btn .spinner-border {
+  color: inherit !important;
+}
+
+.btn-outline-secondary {
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background-color: #f8ae15 !important;
+  border-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.btn-primary {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: #003d99 !important;
+  border-color: #003d99 !important;
+}
+
+/* ===== ESTILOS PARA BADGES EN DROPDOWN DE CALENDARIO ===== */
+
+.badge.bg-success {
+  background-color: #249337 !important;
+  color: white !important;
+}
+
+.badge.bg-warning {
+  background-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.badge.bg-info {
+  background-color: #16a8e1 !important;
+  color: white !important;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+/* Badges personalizados para estados de calendario */
+.badge-activo {
+  background-color: #249337 !important;
+  color: white !important;
+}
+
+.badge-pendiente {
+  background-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.badge-aprobado {
+  background-color: #16a8e1 !important;
+  color: white !important;
+}
+
+.badge-deshabilitado {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+/* ===== RESPONSIVIDAD ===== */
+
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .card-header .btn {
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .form-label {
+    font-size: 0.9rem;
+  }
+
+  .form-label .fas {
+    font-size: 0.85rem;
+  }
+}
