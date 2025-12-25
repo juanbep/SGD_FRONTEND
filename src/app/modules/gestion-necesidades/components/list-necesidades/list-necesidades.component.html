@@ -34,7 +34,42 @@
           [loading]="loadingCalendarios"
           [disabled]="loadingCalendarios"
           (change)="onCalendarioChange()"
+          notFoundText="No hay calendarios disponibles"
+          loadingText="Cargando calendarios..."
         >
+          <ng-template ng-label-tmp let-item="item">
+            <div class="d-flex align-items-center">
+              <span>{{ item.label }}</span>
+              <span
+                class="badge ms-2"
+                [ngClass]="{
+                  'bg-success': item.estado === 'ACTIVO',
+                  'bg-warning': item.estado === 'PENDIENTE',
+                  'bg-secondary': item.estado === 'DESHABILITADO',
+                  'bg-info': item.estado === 'APROBADO'
+                }"
+              >
+                {{ item.estado }}
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>{{ item.label }}</span>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'bg-success': item.estado === 'ACTIVO',
+                  'bg-warning': item.estado === 'PENDIENTE',
+                  'bg-secondary': item.estado === 'DESHABILITADO',
+                  'bg-info': item.estado === 'APROBADO'
+                }"
+              >
+                {{ item.estado }}
+              </span>
+            </div>
+          </ng-template>
         </ng-select>
         <small class="text-muted">Período académico</small>
       </div>
@@ -356,13 +391,16 @@
             </td>
             <td class="text-center">
               <span
-                *ngIf="necesidad.nombreCorrequisito"
+                *ngIf="necesidad.materia.nombreCorrequisito"
                 class="badge bg-warning"
-                [title]="'OID: ' + necesidad.oidCorrequisito"
+                [title]="'OID: ' + necesidad.materia.oidCorrequisito"
               >
-                {{ necesidad.nombreCorrequisito }}
+                {{ necesidad.materia.nombreCorrequisito }}
               </span>
-              <span *ngIf="!necesidad.nombreCorrequisito" class="text-muted">
+              <span
+                *ngIf="!necesidad.materia.nombreCorrequisito"
+                class="text-muted"
+              >
                 <small>Sin correquisito</small>
               </span>
             </td>

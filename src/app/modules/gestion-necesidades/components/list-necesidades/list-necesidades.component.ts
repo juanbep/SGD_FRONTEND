@@ -9,6 +9,11 @@ import {
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
+import { NecesidadesService } from '../../services';
+import { NecesidadFilters, NecesidadResponse } from '../../models';
+import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
+import { CalendarioHelperService } from '../../../academic-calendar-management/services';
+import { EstadoCalendario } from '../../../academic-calendar-management/models';
 
 @Component({
   selector: 'app-list-necesidades',
@@ -19,6 +24,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ListNecesidadesComponent implements OnInit {
   // ===== SERVICIOS =====
+  private necesidadesService = inject(NecesidadesService);
+  private calendarioHelper = inject(CalendarioHelperService);
   private toastr = inject(ToastrService);
 
   // ===== REFERENCIA AL INPUT FILE =====
@@ -60,11 +67,16 @@ export class ListNecesidadesComponent implements OnInit {
   pageSizeOptions = [5, 10, 25, 50];
 
   // ===== CALENDARIOS =====
-  calendarios: { value: number; label: string }[] = [];
+  calendarios: {
+    value: number;
+    label: string;
+    estado: EstadoCalendario;
+  }[] = [];
   loadingCalendarios = false;
 
   // ===== FILTROS =====
-  filtroCalendario: number | null = null;
+  filtroCalendario: number | string = ''; // Cambiado a string para validación
+  filtroOidPrograma: number = getUserProgramaId(); // TODO: Temporal - reemplazar con datos del usuario logueado
   filtroOid: string = '';
   filtroCodigo: string = '';
   filtroNombre: string = '';
@@ -81,7 +93,7 @@ export class ListNecesidadesComponent implements OnInit {
   sortDirection: 'asc' | 'desc' = 'desc';
 
   // ===== DATOS =====
-  necesidades: any[] = [];
+  necesidades: NecesidadResponse[] = [];
   loading = false;
   error: string | null = null;
 
@@ -95,7 +107,7 @@ export class ListNecesidadesComponent implements OnInit {
   mostrarModalEditar = false;
   mostrarModalEliminar = false;
   mostrarModalCorrequisitos = false;
-  necesidadSeleccionada: any = null;
+  necesidadSeleccionada: NecesidadResponse | null = null;
 
   Math = Math;
 
@@ -104,16 +116,78 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   // ===== CARGAR CALENDARIOS =====
-  cargarCalendarios(): void {
-    this.loadingCalendarios = true;
-    // TODO: Implementar servicio
-    setTimeout(() => {
-      this.calendarios = [
-        { value: 1, label: '2025-1' },
-        { value: 2, label: '2025-2' },
-      ];
+  async cargarCalendarios(): Promise<void> {
+    try {
+      this.loadingCalendarios = true;
+      const calendariosCompletos =
+        await this.calendarioHelper.getAllForDropdown();
+
+      // Filtrar calendarios deshabilitados
+      const calendariosFiltrados = calendariosCompletos.filter(
+        (calendario) => calendario.estado !== 'DESHABILITADO'
+      );
+
+      this.calendarios = this.ordenarCalendariosPorAnio(calendariosFiltrados);
+
+      // Seleccionar automáticamente el calendario ACTIVO más reciente
+      this.filtroCalendario = this.seleccionarCalendarioAutomatico(
+        this.calendarios
+      );
+
+      // Cargar necesidades si hay calendario seleccionado
+      if (this.filtroCalendario) {
+        this.cargarNecesidades();
+      }
+    } catch (error) {
+      console.error('Error al cargar calendarios:', error);
+      this.toastr.error('Error al cargar la lista de calendarios');
+      this.calendarios = [];
+    } finally {
       this.loadingCalendarios = false;
-    }, 500);
+    }
+  }
+
+  /**
+   * Ordena calendarios por año (más reciente primero)
+   */
+  private ordenarCalendariosPorAnio(
+    calendarios: {
+      value: number;
+      label: string;
+      estado: EstadoCalendario;
+    }[]
+  ): { value: number; label: string; estado: EstadoCalendario }[] {
+    return [...calendarios].sort((a, b) => {
+      const anioA = parseInt(a.label.split('-')[0]);
+      const anioB = parseInt(b.label.split('-')[0]);
+      return anioB - anioA; // Orden descendente
+    });
+  }
+
+  /**
+   * Selecciona automáticamente el calendario ACTIVO más reciente
+   */
+  private seleccionarCalendarioAutomatico(
+    calendarios: { value: number; label: string; estado: EstadoCalendario }[]
+  ): number | string {
+    if (calendarios.length === 0) {
+      console.warn('No hay calendarios disponibles para seleccionar');
+      return '';
+    }
+
+    // Buscar el primer calendario ACTIVO
+    const calendarioActivo = calendarios.find(
+      (calendario) => calendario.estado === 'ACTIVO'
+    );
+
+    if (calendarioActivo) {
+      console.log('Calendario ACTIVO seleccionado:', calendarioActivo.label);
+      return calendarioActivo.value;
+    }
+
+    // Si no hay ACTIVO, seleccionar el primero (más reciente)
+    console.log('Calendario más reciente seleccionado:', calendarios[0].label);
+    return calendarios[0].value;
   }
 
   onCalendarioChange(): void {
@@ -123,19 +197,75 @@ export class ListNecesidadesComponent implements OnInit {
 
   // ===== CARGAR NECESIDADES =====
   cargarNecesidades(mostrarToast: boolean = false): void {
+    // Validar que hay calendario seleccionado
+    if (!this.filtroCalendario) {
+      this.toastr.warning('Debe seleccionar un calendario');
+      this.necesidades = [];
+      this.totalElements = 0;
+      return;
+    }
+
     this.loading = true;
     this.error = null;
 
-    // TODO: Implementar servicio
-    setTimeout(() => {
-      this.necesidades = [];
-      this.totalElements = 0;
-      this.loading = false;
+    const filtros: NecesidadFilters = {
+      page: this.page,
+      size: this.size,
+      oidCalendario: this.filtroCalendario,
+      oidPrograma: this.filtroOidPrograma, // TODO: Temporal
+      sort: `${this.sortField},${this.sortDirection}`,
+    };
 
-      if (mostrarToast) {
-        this.toastr.info('Función cargarNecesidades pendiente de implementar');
-      }
-    }, 1000);
+    // Filtros opcionales
+    if (this.filtroEstado && this.filtroEstado !== 'TODOS') {
+      filtros.estado = this.filtroEstado;
+    }
+
+    if (this.filtroSemestre && this.filtroSemestre !== 'TODOS') {
+      filtros.semestreMateria = this.filtroSemestre;
+    }
+
+    if (this.filtroCodigo && this.filtroCodigo.trim()) {
+      filtros.codigoMateria = this.filtroCodigo.trim();
+    }
+
+    if (this.filtroNombre && this.filtroNombre.trim()) {
+      filtros.nombreMateria = this.filtroNombre.trim();
+    }
+
+    if (this.filtroOid && this.filtroOid.trim()) {
+      filtros.idMateria = this.filtroOid.trim();
+    }
+
+    this.necesidadesService.getNecesidades(filtros).subscribe({
+      next: (response) => {
+        if (response.codigo >= 200 && response.codigo < 300) {
+          this.necesidades = response.data.content;
+          this.totalElements = response.data.totalElements;
+
+          if (mostrarToast) {
+            if (this.totalElements > 0) {
+              this.toastr.success(
+                'Lista de necesidades actualizada correctamente'
+              );
+            } else {
+              this.toastr.info(
+                'No se encontraron necesidades para este calendario'
+              );
+            }
+          }
+        } else {
+          this.toastr.warning(
+            response.mensaje || 'Respuesta inesperada del servidor'
+          );
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        this.handleError(error, 'cargar necesidades');
+        this.loading = false;
+      },
+    });
   }
 
   // ===== FILTROS =====
@@ -153,6 +283,12 @@ export class ListNecesidadesComponent implements OnInit {
     this.filtroCupo = null;
     this.filtroEstado = 'TODOS';
     this.page = 0;
+
+    // Re-seleccionar el calendario activo
+    this.filtroCalendario = this.seleccionarCalendarioAutomatico(
+      this.calendarios
+    );
+
     this.cargarNecesidades();
   }
 
@@ -228,7 +364,7 @@ export class ListNecesidadesComponent implements OnInit {
     return `${inicio} - ${fin} de ${this.totalElements} registros`;
   }
 
-  trackByNecesidad(index: number, item: any): any {
+  trackByNecesidad(index: number, item: NecesidadResponse): any {
     return item.oidNecesidad || index;
   }
 
@@ -237,15 +373,15 @@ export class ListNecesidadesComponent implements OnInit {
     this.toastr.info('Crear necesidad - pendiente de implementar');
   }
 
-  modificarNecesidad(necesidad: any): void {
+  modificarNecesidad(necesidad: NecesidadResponse): void {
     this.toastr.info('Modificar necesidad - pendiente de implementar');
   }
 
-  eliminarNecesidad(necesidad: any): void {
+  eliminarNecesidad(necesidad: NecesidadResponse): void {
     this.toastr.info('Eliminar necesidad - pendiente de implementar');
   }
 
-  gestionarCorrequisitos(necesidad: any): void {
+  gestionarCorrequisitos(necesidad: NecesidadResponse): void {
     this.toastr.info('Gestionar correquisitos - pendiente de implementar');
   }
 
@@ -281,5 +417,20 @@ export class ListNecesidadesComponent implements OnInit {
 
   reintentar(): void {
     this.cargarNecesidades(true);
+  }
+
+  private handleError(error: any, operacion: string): void {
+    const codigoBackend = error?.error?.codigo || error.status || '—';
+    const mensajeBackend =
+      error?.error?.mensaje ||
+      error?.message ||
+      `Error al ${operacion}. Intenta de nuevo.`;
+
+    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
+
+    this.toastr.error(
+      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
+      'Error'
+    );
   }
 }
