@@ -1,0 +1,25 @@
+<div class="view-container">
+  <!-- Título -->
+  <header class="title-two">
+    Gestión de Necesidades del Calendario Académico
+  </header>
+
+  <!-- Mensaje informativo -->
+  <section class="messages-container">
+    <img
+      [src]="'assets/icons/messages/courses.svg'"
+      alt="Icono de necesidades"
+      onerror="this.style.display='none'"
+    />
+    <span class="text-body-heavy">
+      A continuación se muestran las necesidades del calendario académico. Puede
+      crear, modificar y eliminar necesidades, gestionar correquisitos y cambiar
+      estados según el flujo de aprobación.
+    </span>
+  </section>
+
+  <div><br /></div>
+
+  <!-- Componente de lista de necesidades -->
+  <app-list-necesidades></app-list-necesidades>
+</div>
