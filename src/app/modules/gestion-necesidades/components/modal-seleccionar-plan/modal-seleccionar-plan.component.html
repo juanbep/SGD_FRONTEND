@@ -1,0 +1,100 @@
+<!-- Modal -->
+<div
+  *ngIf="mostrar"
+  class="modal fade show d-block"
+  tabindex="-1"
+  (click)="cerrarSiClickFuera($event)"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i class="fas fa-clipboard-list me-2" style="color: #f8ae15"></i>
+          Seleccionar Plan de Estudios
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cerrar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <p class="text-muted mb-3">
+          <i class="fas fa-info-circle me-1"></i>
+          Seleccione el plan de estudios a partir del cual desea crear las
+          necesidades.
+        </p>
+
+        <!-- Selector de Plan -->
+        <div class="mb-3">
+          <label for="planSelect" class="form-label fw-bold required">
+            <i class="fas fa-graduation-cap me-1"></i>Plan de Estudios:
+          </label>
+          <ng-select
+            id="planSelect"
+            [(ngModel)]="planSeleccionado"
+            [items]="planesDisponibles"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Seleccione un plan"
+            [loading]="loadingPlanes"
+            notFoundText="No hay planes disponibles"
+            loadingText="Cargando planes..."
+            [clearable]="true"
+            [searchable]="false"
+          >
+          </ng-select>
+          <small
+            class="text-muted d-block mt-2"
+            *ngIf="!loadingPlanes && planesDisponibles.length === 0"
+          >
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            No hay planes activos disponibles para este programa
+          </small>
+          <small
+            class="text-success d-block mt-2"
+            *ngIf="!loadingPlanes && planesDisponibles.length > 0"
+          >
+            <i class="fas fa-check-circle me-1"></i>
+            {{ planesDisponibles.length }} plan(es) disponible(s)
+          </small>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="alert alert-info mb-0" role="alert">
+          <i class="fas fa-lightbulb me-2"></i>
+          <strong>Nota:</strong> Se mostrarán todas las materias del plan
+          seleccionado para que pueda configurar grupos y cupos.
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 py-3">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          (click)="cerrar()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success px-4"
+          (click)="continuar()"
+          [disabled]="!planSeleccionado || loadingPlanes"
+        >
+          <i class="fas fa-arrow-right me-2"></i>
+          Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div *ngIf="mostrar" class="modal-backdrop fade show"></div>

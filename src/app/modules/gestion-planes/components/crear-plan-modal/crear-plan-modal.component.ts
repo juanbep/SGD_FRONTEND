@@ -72,10 +72,12 @@ export class CrearPlanModalComponent implements OnInit {
   cargarPlanesDisponibles(): void {
     this.loadingPlanes = true;
 
-    // Cargar planes del mismo programa
+    // Deshabilitar el control mientras carga
+    this.planForm.get('oidPlanBase')?.disable();
+
     const filtros = {
       oidPrograma: this.oidPrograma,
-      size: 1000, // Cargar todos los planes del programa
+      size: 1000,
     };
 
     this.planService.getPlanes(filtros).subscribe({
@@ -84,11 +86,17 @@ export class CrearPlanModalComponent implements OnInit {
           this.planesDisponibles = response.data.content;
         }
         this.loadingPlanes = false;
+
+        // Habilitar el control cuando termine
+        this.planForm.get('oidPlanBase')?.enable();
       },
       error: (error) => {
         console.error('Error al cargar planes disponibles:', error);
         this.planesDisponibles = [];
         this.loadingPlanes = false;
+
+        // Habilitar incluso si hay error
+        this.planForm.get('oidPlanBase')?.enable();
       },
     });
   }

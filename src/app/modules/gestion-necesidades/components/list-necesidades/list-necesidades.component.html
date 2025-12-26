@@ -382,3 +382,9 @@
   [mostrar]="mostrarModalDetalleMateria"
   (onCerrar)="cerrarModalDetalleMateria()"
 ></app-modal-detalle-materia>
+<!-- Modal de Seleccionar Plan -->
+<app-modal-seleccionar-plan
+  [mostrar]="mostrarModalSeleccionarPlan"
+  (onCerrar)="cerrarModalSeleccionarPlan()"
+  (onPlanSeleccionado)="onPlanSeleccionado($event)"
+></app-modal-seleccionar-plan>

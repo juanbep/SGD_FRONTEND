@@ -24,6 +24,7 @@ import {
   trackByOid,
 } from '../../shared/table.utils';
 import { ModalDetalleMateriaComponent } from '../modal-detalle-materia/modal-detalle-materia.component';
+import { ModalSeleccionarPlanComponent } from '../modal-seleccionar-plan/modal-seleccionar-plan.component';
 
 @Component({
   selector: 'app-list-necesidades',
@@ -34,6 +35,7 @@ import { ModalDetalleMateriaComponent } from '../modal-detalle-materia/modal-det
     NgSelectModule,
     FiltrosNecesidadesComponent,
     ModalDetalleMateriaComponent,
+    ModalSeleccionarPlanComponent,
   ],
   templateUrl: './list-necesidades.component.html',
   styleUrl: './list-necesidades.component.css',
@@ -73,6 +75,7 @@ export class ListNecesidadesComponent implements OnInit {
 
   // ===== MODALES =====
   mostrarModalEliminar = false;
+  mostrarModalSeleccionarPlan = false;
   mostrarModalCorrequisitos = false;
   mostrarModalDetalleMateria = false;
   necesidadSeleccionada: NecesidadResponse | null = null;
@@ -232,7 +235,18 @@ export class ListNecesidadesComponent implements OnInit {
 
   // ===== ACCIONES =====
   crearNuevaNecesidad(): void {
-    this.toastr.info('Agregar necesidades - pendiente de implementar');
+    this.mostrarModalSeleccionarPlan = true;
+  }
+
+  cerrarModalSeleccionarPlan(): void {
+    this.mostrarModalSeleccionarPlan = false;
+  }
+
+  onPlanSeleccionado(oidPlan: number): void {
+    console.log('Navegando a creación masiva con plan:', oidPlan);
+
+    // Navegar a la nueva vista de creación masiva
+    // Pasando el oidPlan y el oidCalendario
   }
 
   modificarNecesidad(necesidad: NecesidadResponse): void {
