@@ -61,7 +61,7 @@
         }}</span>
       </button>
 
-      <!-- Botón Nueva Necesidad -->
+      <!-- Botón Agregar Necesidades -->
       <button
         type="button"
         class="btn btn-success btn-sm d-flex align-items-center"
@@ -273,7 +273,7 @@
         <ng-template #noData>
           <tbody>
             <tr>
-              <td colspan="11" class="text-center py-5">
+              <td colspan="9" class="text-center py-5">
                 <div
                   *ngIf="loading"
                   class="d-flex justify-content-center align-items-center"
@@ -375,19 +375,10 @@
     </div>
   </div>
 </div>
+
 <!-- Modal de Detalles de Materia -->
 <app-modal-detalle-materia
   [materia]="materiaSeleccionada"
   [mostrar]="mostrarModalDetalleMateria"
   (onCerrar)="cerrarModalDetalleMateria()"
 ></app-modal-detalle-materia>
-<!-- Modal de Crear/Editar Necesidad -->
-<app-modal-crear-editar-necesidad
-  [mostrar]="mostrarModalFormulario"
-  [modo]="modoModal"
-  [necesidad]="necesidadSeleccionada"
-  [oidCalendario]="filtrosActuales.oidCalendario"
-  [nombreCalendario]="getNombreCalendarioSeleccionado()"
-  (onCerrar)="cerrarModalFormulario()"
-  (onNecesidadGuardada)="onNecesidadGuardada()"
-></app-modal-crear-editar-necesidad>

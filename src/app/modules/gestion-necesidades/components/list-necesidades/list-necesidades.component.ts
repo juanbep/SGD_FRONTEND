@@ -24,7 +24,6 @@ import {
   trackByOid,
 } from '../../shared/table.utils';
 import { ModalDetalleMateriaComponent } from '../modal-detalle-materia/modal-detalle-materia.component';
-import { ModalCrearEditarNecesidadComponent } from '../modal-crear-editar-necesidad/modal-crear-editar-necesidad.component';
 
 @Component({
   selector: 'app-list-necesidades',
@@ -35,7 +34,6 @@ import { ModalCrearEditarNecesidadComponent } from '../modal-crear-editar-necesi
     NgSelectModule,
     FiltrosNecesidadesComponent,
     ModalDetalleMateriaComponent,
-    ModalCrearEditarNecesidadComponent,
   ],
   templateUrl: './list-necesidades.component.html',
   styleUrl: './list-necesidades.component.css',
@@ -74,13 +72,11 @@ export class ListNecesidadesComponent implements OnInit {
   archivoSeleccionado: File | null = null;
 
   // ===== MODALES =====
-  mostrarModalFormulario = false;
   mostrarModalEliminar = false;
   mostrarModalCorrequisitos = false;
-  mostrarModalDetalleMateria = false; // Modal de detalles
+  mostrarModalDetalleMateria = false;
   necesidadSeleccionada: NecesidadResponse | null = null;
-  materiaSeleccionada: Materia | null = null; // Materia seleccionada
-  modoModal: 'crear' | 'editar' = 'crear';
+  materiaSeleccionada: Materia | null = null;
 
   Math = Math;
 
@@ -235,14 +231,10 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   // ===== ACCIONES =====
-  // Método para abrir modal crear necesidad
   crearNuevaNecesidad(): void {
-    this.modoModal = 'crear';
-    this.necesidadSeleccionada = null;
-    this.mostrarModalFormulario = true;
+    this.toastr.info('Agregar necesidades - pendiente de implementar');
   }
 
-  // Método para abrir modal editar necesidad
   modificarNecesidad(necesidad: NecesidadResponse): void {
     // Validar que solo se pueda editar si está en BORRADOR
     if (necesidad.estado !== 'BORRADOR') {
@@ -253,30 +245,20 @@ export class ListNecesidadesComponent implements OnInit {
       return;
     }
 
-    this.modoModal = 'editar';
     this.necesidadSeleccionada = necesidad;
-    this.mostrarModalFormulario = true;
-  }
-
-  // Método cuando se guarda (crear o editar)
-  onNecesidadGuardada(): void {
-    this.cargarNecesidades(true);
-  }
-
-  // Método para cerrar modal
-  cerrarModalFormulario(): void {
-    this.mostrarModalFormulario = false;
-    this.modoModal = 'crear';
-    this.necesidadSeleccionada = null;
-  }
-
-  getNombreCalendarioSeleccionado(): string {
-    // TODO: Obtener el nombre del calendario del componente de filtros
-    // Por ahora retornar un valor temporal
-    return '2025-1'; // Temporal
+    this.toastr.info('Modificar necesidad - pendiente de implementar');
   }
 
   eliminarNecesidad(necesidad: NecesidadResponse): void {
+    // Validar que solo se pueda eliminar si está en BORRADOR
+    if (necesidad.estado !== 'BORRADOR') {
+      this.toastr.warning(
+        'Solo se pueden eliminar necesidades en estado BORRADOR',
+        'Operación no permitida'
+      );
+      return;
+    }
+
     this.necesidadSeleccionada = necesidad;
     this.toastr.info('Eliminar necesidad - pendiente de implementar');
   }
