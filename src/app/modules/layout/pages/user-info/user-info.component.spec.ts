@@ -10,7 +10,11 @@ describe('UserInfoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, AngularFireModule.initializeApp(environments.firebaseConfig), UserInfoComponent],
+      imports: [
+        HttpClientModule,
+        AngularFireModule.initializeApp(environments.firebaseConfig),
+        UserInfoComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserInfoComponent);

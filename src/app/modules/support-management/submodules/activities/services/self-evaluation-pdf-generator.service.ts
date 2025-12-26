@@ -11,7 +11,7 @@ import { autoTable } from 'jspdf-autotable';
 export class SelfEvaluationPdfGeneratorService {
   private httpClient = inject(HttpClient);
 
-  private ODS: {id:number, name:string}[] = [
+  private ODS: { id: number; name: string }[] = [
     { id: 1, name: 'Fin de la pobreza' },
     { id: 2, name: 'Hambre cero' },
     { id: 3, name: 'Salud y bienestar' },
@@ -29,17 +29,21 @@ export class SelfEvaluationPdfGeneratorService {
     { id: 15, name: 'Vida de ecosistemas terrestres' },
     { id: 16, name: 'Paz, justicia e instituciones sólidas' },
     { id: 17, name: 'Alianzas para lograr los objetivos' },
-  ]
+  ];
 
-
-  generatePdfDocument(formData: any, teacherInfo: any): { base64: string; file: File } {
+  generatePdfDocument(
+    formData: any,
+    teacherInfo: any
+  ): { base64: string; file: File } {
     const doc: jsPDF = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
 
     // Encabezado
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text('Formulario de Autoevaluación', pageWidth / 2, 20, { align: 'center' });
+    doc.text('Formulario de Autoevaluación', pageWidth / 2, 20, {
+      align: 'center',
+    });
 
     // Información docente y actividad
     doc.setFontSize(12);
@@ -47,7 +51,10 @@ export class SelfEvaluationPdfGeneratorService {
     autoTable(doc, {
       startY: 30,
       body: [
-        ['Nombre del docente:', teacherInfo?.nombres + ' ' + teacherInfo?.apellidos || ''],
+        [
+          'Nombre del docente:',
+          teacherInfo?.nombres + ' ' + teacherInfo?.apellidos || '',
+        ],
         ['Identificación:', teacherInfo?.identificacion || ''],
         ['Descripción actividad:', formData.activityDescription || ''],
       ],
@@ -62,7 +69,11 @@ export class SelfEvaluationPdfGeneratorService {
       autoTable(doc, {
         startY: y,
         head: [['Resultado', 'ODS']],
-        body: formData.results.map((r: any) => [r.result || '', this.ODS.find(ods => ods.id.toString() === r.ODS?.toString())?.name || '']),
+        body: formData.results.map((r: any) => [
+          r.result || '',
+          this.ODS.find((ods) => ods.id.toString() === r.ODS?.toString())
+            ?.name || '',
+        ]),
         theme: 'grid',
         styles: { fontSize: 10 },
         headStyles: {
@@ -86,7 +97,10 @@ export class SelfEvaluationPdfGeneratorService {
     }
 
     // Oportunidades de mejora
-    if (formData.improvementOpportunities && formData.improvementOpportunities.length > 0) {
+    if (
+      formData.improvementOpportunities &&
+      formData.improvementOpportunities.length > 0
+    ) {
       doc.text('Oportunidades de mejora:', 10, y);
       y += 5;
       formData.improvementOpportunities.forEach((opp: any, index: number) => {
@@ -123,7 +137,9 @@ export class SelfEvaluationPdfGeneratorService {
     // Conversión a base64 y blob
     const base64 = doc.output('datauristring');
     const blob = doc.output('blob');
-    const file = new File([blob], 'self_evaluation.pdf', { type: 'application/pdf' });
+    const file = new File([blob], 'self_evaluation.pdf', {
+      type: 'application/pdf',
+    });
     return { base64, file };
   }
 }

@@ -75,15 +75,18 @@ export class ConsolidatedServicesService {
     return this.consolidatedTeacher();
   }
 
-
-
   /*
    * Get teachers
    * @returns {any}
    * */
-  getTeachers(page: number, totalPage: number, department: string, evaluatedName: string | null,
+  getTeachers(
+    page: number,
+    totalPage: number,
+    department: string,
+    evaluatedName: string | null,
     contractType: string | null,
-    evaluatedId: string | null,) {
+    evaluatedId: string | null
+  ) {
     return this.smConsolidatedServicesService.getTeachers(
       page,
       totalPage,
@@ -250,6 +253,8 @@ export class ConsolidatedServicesService {
   }
 
   downloadConsolidatedGeneralFile(departmentId: string) {
-    return this.smConsolidatedServicesService.downloadConsolidatedGeneralFile(departmentId);
+    return this.smConsolidatedServicesService.downloadConsolidatedGeneralFile(
+      departmentId
+    );
   }
 }

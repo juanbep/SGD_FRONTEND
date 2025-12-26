@@ -9,7 +9,11 @@ describe('ActivitiesUploadSelfAssessmentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), ActivitiesUploadSelfAssessmentComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ActivitiesUploadSelfAssessmentComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActivitiesUploadSelfAssessmentComponent);

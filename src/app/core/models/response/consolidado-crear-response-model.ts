@@ -1,5 +1,4 @@
 export interface ConsolidadoCrearResponse {
-    nombreArchivo: string;
-    oidConsolidado: number;
+  nombreArchivo: string;
+  oidConsolidado: number;
 }
-    

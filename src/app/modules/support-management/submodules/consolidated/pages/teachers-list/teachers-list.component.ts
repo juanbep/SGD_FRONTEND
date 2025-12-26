@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TeachersListFilterComponent } from "../../components/teachers-list-filter/teachers-list-filter.component";
-import { TeacherListTableComponent } from "../../components/teachers-list-table/teachers-list-table.component";
+import { TeachersListFilterComponent } from '../../components/teachers-list-filter/teachers-list-filter.component';
+import { TeacherListTableComponent } from '../../components/teachers-list-table/teachers-list-table.component';
 import { ConsolidatedServicesService } from '../../services/consolidated-services.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { TitleCasePipe } from '@angular/common';
@@ -8,39 +8,51 @@ import { AuthServiceService } from '../../../../../auth/service/auth-service.ser
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
 
 @Component({
   selector: 'support-management-consolidated',
   standalone: true,
-  imports: [TeachersListFilterComponent, TeacherListTableComponent, TitleCasePipe, LoadingOverleyComponent],
+  imports: [
+    TeachersListFilterComponent,
+    TeacherListTableComponent,
+    TitleCasePipe,
+    LoadingOverleyComponent,
+  ],
   templateUrl: './teachers-list.component.html',
-  styleUrl: './teachers-list.component.css'
+  styleUrl: './teachers-list.component.css',
 })
 export class TeachersListComponent implements OnInit {
-
   private consolidatedServicesService = inject(ConsolidatedServicesService);
   private authService = inject(AuthServiceService);
-  private academicPeriodMangementService = inject(AcademicPeriodManagementService);
+  private academicPeriodMangementService = inject(
+    AcademicPeriodManagementService
+  );
   private messagesInfoService = inject(MessagesInfoService);
 
   public currentUser: UsuarioResponse | null = null;
   public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
   public loading: boolean = false;
-  
+
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
-    this.activeAcademicPeriod = this.academicPeriodMangementService.currentAcademicPeriodValue;
+    this.activeAcademicPeriod =
+      this.academicPeriodMangementService.currentAcademicPeriodValue;
   }
-  
 
-  downloadAllSuppotFiles(){
+  downloadAllSuppotFiles() {
     this.loading = true;
-  
-    if(this.activeAcademicPeriod && this.currentUser){
-      this.consolidatedServicesService.downloadAllSupportFiles(this.activeAcademicPeriod.idPeriodo, this.currentUser?.usuarioDetalle.departamento || '', '', null, null).subscribe
-      (
-        {
+
+    if (this.activeAcademicPeriod && this.currentUser) {
+      this.consolidatedServicesService
+        .downloadAllSupportFiles(
+          this.activeAcademicPeriod.idPeriodo,
+          this.currentUser?.usuarioDetalle.departamento || '',
+          '',
+          null,
+          null
+        )
+        .subscribe({
           next: (response: any) => {
             const blob = new Blob([response], { type: 'application/zip' });
             const url = window.URL.createObjectURL(blob);
@@ -54,20 +66,23 @@ export class TeachersListComponent implements OnInit {
           },
           error: (error: any) => {
             this.loading = false;
-            this.messagesInfoService.showErrorMessage('Error al descargar el archivo consolidado general','Error');
-
-          }
-        }
-      );
+            this.messagesInfoService.showErrorMessage(
+              'Error al descargar el archivo consolidado general',
+              'Error'
+            );
+          },
+        });
     }
   }
 
-  downloadConsolidatedGeneralFile(){
+  downloadConsolidatedGeneralFile() {
     this.loading = true;
-    if(this.currentUser && this.currentUser?.usuarioDetalle.departamento){
-      this.consolidatedServicesService.downloadConsolidatedGeneralFile(this.currentUser.usuarioDetalle.departamento).subscribe
-      (
-        {
+    if (this.currentUser && this.currentUser?.usuarioDetalle.departamento) {
+      this.consolidatedServicesService
+        .downloadConsolidatedGeneralFile(
+          this.currentUser.usuarioDetalle.departamento
+        )
+        .subscribe({
           next: (response: any) => {
             const blob = new Blob([response], { type: 'application/zip' });
             const url = window.URL.createObjectURL(blob);
@@ -81,11 +96,12 @@ export class TeachersListComponent implements OnInit {
           },
           error: (error: any) => {
             this.loading = false;
-            this.messagesInfoService.showErrorMessage('Error al descargar el archivo consolidado general','Error');
-          }
-        }
-      );
+            this.messagesInfoService.showErrorMessage(
+              'Error al descargar el archivo consolidado general',
+              'Error'
+            );
+          },
+        });
     }
   }
- 
 }

@@ -1,5 +1,5 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
-import { PaginatorComponent } from "../../../../../../shared/components/paginator/paginator.component";
+import { PaginatorComponent } from '../../../../../../shared/components/paginator/paginator.component';
 import { CommonModule } from '@angular/common';
 import { ActivitiesManagementService } from '../../services/activities-management.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -15,16 +15,19 @@ import { ActividadResponse } from '../../../../../../core/models/response/activi
     CommonModule,
     PaginatorComponent,
     ModalActivitieDetailsComponent,
-    RouterModule
-],
+    RouterModule,
+  ],
   templateUrl: './activities-table.component.html',
-  styleUrls: ['./activities-table.component.css']
+  styleUrls: ['./activities-table.component.css'],
 })
 export class ActivitiesTableComponent implements OnInit {
+  @ViewChild(ModalActivitieDetailsComponent) modalActivitieDetails:
+    | ModalActivitieDetailsComponent
+    | undefined;
 
-  @ViewChild(ModalActivitieDetailsComponent) modalActivitieDetails: ModalActivitieDetailsComponent | undefined;
-
-  private activitiesManagementService: ActivitiesManagementService = inject(ActivitiesManagementService);
+  private activitiesManagementService: ActivitiesManagementService = inject(
+    ActivitiesManagementService
+  );
   private activitieRouter = inject(ActivatedRoute);
   private messageToast = inject(MessagesInfoService);
 
@@ -34,17 +37,20 @@ export class ActivitiesTableComponent implements OnInit {
   public currentPage: number = 1;
   public sizePage: number = 10;
 
-  public filterParams: {nameActivity: string | null, 
-    typeActivity: string | null, 
-    activityCode: string | null, 
-    administrativeCode: string | null, 
-    vriCode: string | null} | null = null;
+  public filterParams: {
+    nameActivity: string | null;
+    typeActivity: string | null;
+    activityCode: string | null;
+    administrativeCode: string | null;
+    vriCode: string | null;
+  } | null = null;
 
-  activitiesEffect = effect(()=>{
-    this.filterParams=this.activitiesManagementService.getParamsActivitiesFilter();
+  activitiesEffect = effect(() => {
+    this.filterParams =
+      this.activitiesManagementService.getParamsActivitiesFilter();
     this.currentPage = 1;
     this.recoverActivitiesByUser(this.currentPage, this.sizePage);
-  })
+  });
 
   ngOnInit(): void {
     this.idUserParam = this.activitieRouter.snapshot.params['id'];
@@ -55,18 +61,33 @@ export class ActivitiesTableComponent implements OnInit {
     this.recoverActivitiesByUser(this.currentPage, this.sizePage);
   }
 
-  openActivitieDetails(activity: ActividadResponse){
-    if(this.modalActivitieDetails){
+  openActivitieDetails(activity: ActividadResponse) {
+    if (this.modalActivitieDetails) {
       this.modalActivitieDetails.open(activity);
     }
   }
 
   recoverActivitiesByUser(page: number, size: number) {
-    const { nameActivity = '', typeActivity = '', activityCode = '', administrativeCode = '', vriCode = '' } = this.filterParams || {};
+    const {
+      nameActivity = '',
+      typeActivity = '',
+      activityCode = '',
+      administrativeCode = '',
+      vriCode = '',
+    } = this.filterParams || {};
     if (this.idUserParam) {
-      this.activitiesManagementService.getActivitiesByParams(page-1, size, this.idUserParam,
-         nameActivity, typeActivity, activityCode, administrativeCode, vriCode).subscribe(
-        {
+      this.activitiesManagementService
+        .getActivitiesByParams(
+          page - 1,
+          size,
+          this.idUserParam,
+          nameActivity,
+          typeActivity,
+          activityCode,
+          administrativeCode,
+          vriCode
+        )
+        .subscribe({
           next: (response) => {
             this.activityResponse = response.data;
             if (this.activityResponse && this.activityResponse.content) {
@@ -76,14 +97,8 @@ export class ActivitiesTableComponent implements OnInit {
           error: (error) => {
             this.messageToast.showErrorMessage(error.error.mensaje, 'Error');
             this.filterParams = null;
-          }
-        }
-      );
+          },
+        });
     }
   }
-
-  
-
-
-
 }

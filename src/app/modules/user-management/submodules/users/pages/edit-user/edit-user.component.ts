@@ -1,5 +1,11 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { ValidatorsService } from '../../../../../../shared/services/validators.service';
 import { UsersServiceService } from '../../services/users-service.service';
@@ -14,17 +20,13 @@ import { UsuarioResponse } from '../../../../../../core/models/response/usuario-
 @Component({
   selector: 'app-edit-user',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ConfirmDialogComponent
-  ],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent],
   templateUrl: './edit-user.component.html',
-  styleUrl: './edit-user.component.css'
+  styleUrl: './edit-user.component.css',
 })
 export class EditUserComponent implements OnInit {
-
-  @ViewChild(ConfirmDialogComponent) confirmDialog: ConfirmDialogComponent | null = null;
+  @ViewChild(ConfirmDialogComponent)
+  confirmDialog: ConfirmDialogComponent | null = null;
 
   private formBuilder: FormBuilder = inject(FormBuilder);
   private messageToast = inject(MessagesInfoService);
@@ -38,7 +40,8 @@ export class EditUserComponent implements OnInit {
   public userInformation: UsuarioResponse | null = null;
   public catalogData: CatalogDataResponse | null = null;
 
-  public messageConfirmDialog: string = '¿Está seguro de actualizar el usuario?';
+  public messageConfirmDialog: string =
+    '¿Está seguro de actualizar el usuario?';
   public titleConfirmDialog: string = 'Confirmar actualización de usuario';
 
   editUserForm: FormGroup = this.formBuilder.group({
@@ -46,7 +49,13 @@ export class EditUserComponent implements OnInit {
     name: [null, Validators.required],
     lastName: [null, Validators.required],
     email: [null, [Validators.required, Validators.email]],
-    idUser: [null, [Validators.required, Validators.pattern(this.validatorsService.numericPattern)]],
+    idUser: [
+      null,
+      [
+        Validators.required,
+        Validators.pattern(this.validatorsService.numericPattern),
+      ],
+    ],
     faculty: [null, Validators.required],
     program: [null, Validators.required],
     department: [null, Validators.required],
@@ -60,16 +69,16 @@ export class EditUserComponent implements OnInit {
   stateOptions = [
     {
       value: '1',
-      text: 'Activo'
+      text: 'Activo',
     },
     {
       value: '2',
-      text: 'Inactivo'
-    }
-  ]
+      text: 'Inactivo',
+    },
+  ];
 
   ngOnInit(): void {
-    this.idUserParam = this.activateRoute.snapshot.params['id']
+    this.idUserParam = this.activateRoute.snapshot.params['id'];
     this.catalogData = this.catalogDataService.catalogDataSignal;
     this.disableField();
     this.recoverData();
@@ -77,76 +86,92 @@ export class EditUserComponent implements OnInit {
   }
 
   /*
-  * Method to recover the data of the user
-  * */
+   * Method to recover the data of the user
+   * */
   recoverData(): void {
     if (this.idUserParam) {
-      this.UserServices.getUserbyId(this.idUserParam).subscribe(
-        {
-          next: (response) => {
-            this.userInformation = response.data;
-            response.data.roles.forEach((role) => {
-              this.rolesFormArray.push(this.formBuilder.control(role.oid));
-            });
-            this.setValuesForm(response.data);
-            this.changesInRoleField();
-          },
-          error: (error) => {
-            this.messageToast.showErrorMessage('Error al recuperar la información del usuario', 'Error');
-          }
-        }
-      )
+      this.UserServices.getUserbyId(this.idUserParam).subscribe({
+        next: (response) => {
+          this.userInformation = response.data;
+          response.data.roles.forEach((role) => {
+            this.rolesFormArray.push(this.formBuilder.control(role.oid));
+          });
+          this.setValuesForm(response.data);
+          this.changesInRoleField();
+        },
+        error: (error) => {
+          this.messageToast.showErrorMessage(
+            'Error al recuperar la información del usuario',
+            'Error'
+          );
+        },
+      });
     }
   }
 
   /*
-  * Method to get the roles form array
-  * */
+   * Method to get the roles form array
+   * */
   get rolesFormArray() {
     return this.editUserForm.get('role') as FormArray;
   }
 
   /*
-  * Method to set the values of the form
-  * @param userInfoResponse:User
-  * */
+   * Method to set the values of the form
+   * @param userInfoResponse:User
+   * */
   setValuesForm(userInfoResponse: UsuarioResponse): void {
     this.editUserForm.get('name')?.setValue(userInfoResponse.nombres);
     this.editUserForm.get('lastName')?.setValue(userInfoResponse.apellidos);
     this.editUserForm.get('email')?.setValue(userInfoResponse.correo);
     this.editUserForm.get('idUser')?.setValue(userInfoResponse.identificacion);
-    this.editUserForm.get('faculty')?.setValue(userInfoResponse.usuarioDetalle.facultad);
-    this.editUserForm.get('department')?.setValue(userInfoResponse.usuarioDetalle.departamento);
-    this.editUserForm.get('program')?.setValue(userInfoResponse.usuarioDetalle.programa);
-    this.editUserForm.get('typeContract')?.setValue(userInfoResponse.usuarioDetalle.contratacion);
-    this.editUserForm.get('studies')?.setValue(userInfoResponse.usuarioDetalle.estudios);
-    this.editUserForm.get('category')?.setValue(userInfoResponse.usuarioDetalle.categoria);
-    this.editUserForm.get('dedication')?.setValue(userInfoResponse.usuarioDetalle.dedicacion);
-    this.editUserForm.get('state')?.setValue(userInfoResponse.estadoUsuario.oidEstadoUsuario);
+    this.editUserForm
+      .get('faculty')
+      ?.setValue(userInfoResponse.usuarioDetalle.facultad);
+    this.editUserForm
+      .get('department')
+      ?.setValue(userInfoResponse.usuarioDetalle.departamento);
+    this.editUserForm
+      .get('program')
+      ?.setValue(userInfoResponse.usuarioDetalle.programa);
+    this.editUserForm
+      .get('typeContract')
+      ?.setValue(userInfoResponse.usuarioDetalle.contratacion);
+    this.editUserForm
+      .get('studies')
+      ?.setValue(userInfoResponse.usuarioDetalle.estudios);
+    this.editUserForm
+      .get('category')
+      ?.setValue(userInfoResponse.usuarioDetalle.categoria);
+    this.editUserForm
+      .get('dedication')
+      ?.setValue(userInfoResponse.usuarioDetalle.dedicacion);
+    this.editUserForm
+      .get('state')
+      ?.setValue(userInfoResponse.estadoUsuario.oidEstadoUsuario);
   }
 
-  /*	
-  * Method to check if a role is checked
-  * @param roleId:string
-  * @returns boolean
-  * */
+  /*
+   * Method to check if a role is checked
+   * @param roleId:string
+   * @returns boolean
+   * */
   isChekedRol(roleId: string): boolean {
     const id = parseFloat(roleId);
     return this.userInformation?.roles.some((role) => role.oid === id) || false;
   }
 
-
   /*
-  * Method to handle the change of the checkbox
-  * @param event:any
-  * */
+   * Method to handle the change of the checkbox
+   * @param event:any
+   * */
   onCheckboxChange(event: any) {
     const rolsFormArray = this.rolesFormArray;
     this.disableField();
     if (event.target.checked) {
       rolsFormArray.push(this.formBuilder.control(event.target.value));
       this.changesInRoleField();
-      this.setValuesForm(this.userInformation || {} as UsuarioResponse);
+      this.setValuesForm(this.userInformation || ({} as UsuarioResponse));
     } else {
       const index = this.rolesFormArray.controls.findIndex(
         (control) => control.value.toString() === event.target.value
@@ -158,14 +183,14 @@ export class EditUserComponent implements OnInit {
   }
 
   /*
-  * Method to enable or disable the fields depending on the role
-  * */
+   * Method to enable or disable the fields depending on the role
+   * */
   changesInRoleField() {
     for (const role of this.editUserForm.get('role')?.value) {
       const rolString = role.toString();
       switch (rolString) {
-         //Docente
-         case '1':
+        //Docente
+        case '1':
           this.editUserForm.get('name')?.enable();
           this.editUserForm.get('lastName')?.enable();
           this.editUserForm.get('email')?.enable();
@@ -226,7 +251,7 @@ export class EditUserComponent implements OnInit {
           this.editUserForm.get('department')?.enable();
           this.editUserForm.get('state')?.enable();
           break;
-        
+
         //CPD
         case '7':
           this.editUserForm.get('name')?.enable();
@@ -245,30 +270,34 @@ export class EditUserComponent implements OnInit {
   }
 
   /*
-  * Method to check if a field is disabled
-  * @param field:string
-  * @returns boolean
-  *  */
+   * Method to check if a field is disabled
+   * @param field:string
+   * @returns boolean
+   *  */
   isDisabledField(field: string) {
     return this.editUserForm.get(field)?.disabled;
   }
 
   /*
-  * Method to check if a field is invalid
-  * @param field:string
-  * @returns boolean
-  * */
+   * Method to check if a field is invalid
+   * @param field:string
+   * @returns boolean
+   * */
   isInvaldField(field: string) {
     const control = this.editUserForm.get(field);
-    return control && control.errors && control.invalid && (control.dirty || control.touched);
+    return (
+      control &&
+      control.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    );
   }
 
-
   /*
-  * Method to get the error of a field
-  * @param field:string
-  * @returns string | null
-  * */
+   * Method to get the error of a field
+   * @param field:string
+   * @returns string | null
+   * */
   getFieldError(field: string): string | null {
     if (!this.editUserForm.controls[field]) return null;
     const control = this.editUserForm.controls[field];
@@ -289,8 +318,8 @@ export class EditUserComponent implements OnInit {
   }
 
   /*
-* Method to validate if the role field is invalid
-* */
+   * Method to validate if the role field is invalid
+   * */
   isInvalidRoleField() {
     const control = this.editUserForm.get('role');
     if (control?.value.length === 0) {
@@ -299,10 +328,9 @@ export class EditUserComponent implements OnInit {
     return false;
   }
 
-
   /*
-  * Method to disable the fields
-  * */
+   * Method to disable the fields
+   * */
   disableField() {
     this.editUserForm.get('name')?.disable();
     this.editUserForm.get('lastName')?.disable();
@@ -319,8 +347,8 @@ export class EditUserComponent implements OnInit {
   }
 
   /*
-  * Method to  update the user information
-  * */
+   * Method to  update the user information
+   * */
   onConfirm(event: boolean | void) {
     if (!event) return;
     this.editUserForm.markAllAsTouched();
@@ -335,7 +363,8 @@ export class EditUserComponent implements OnInit {
           oidEstadoUsuario: this.editUserForm.get('state')?.value,
         },
         usuarioDetalle: {
-          oidUsuarioDetalle: this.userInformation?.usuarioDetalle.oidUsuarioDetalle,
+          oidUsuarioDetalle:
+            this.userInformation?.usuarioDetalle.oidUsuarioDetalle,
           facultad: this.editUserForm.get('faculty')?.value,
           departamento: this.editUserForm.get('department')?.value,
           programa: this.editUserForm.get('program')?.value,
@@ -346,65 +375,96 @@ export class EditUserComponent implements OnInit {
         },
         roles: this.editUserForm.get('role')?.value.map((role: string) => {
           return {
-            oid: role
-          }
-        })
+            oid: role,
+          };
+        }),
       };
       if (this.userInformation) {
-        this.UserServices.updateUsers(this.userInformation.oidUsuario, userUpdate).subscribe({
+        this.UserServices.updateUsers(
+          this.userInformation.oidUsuario,
+          userUpdate
+        ).subscribe({
           next: (response) => {
-            this.messageToast.showSuccessMessage('Usuario actualizado correctamente', 'Actualización exitosa');
+            this.messageToast.showSuccessMessage(
+              'Usuario actualizado correctamente',
+              'Actualización exitosa'
+            );
             this.clearFormFields();
             this.router.navigate(['/app/gestion-usuarios/usuarios']);
           },
           error: (error) => {
             this.messageToast.showErrorMessage(error.error.mensaje, 'Error');
-          }
-        })
+          },
+        });
       }
     } else {
-      this.messageToast.showWarningMessage('Por favor, verifica los campos', 'Advertencia');
+      this.messageToast.showWarningMessage(
+        'Por favor, verifica los campos',
+        'Advertencia'
+      );
     }
   }
 
   /*
-  * Method to clear the disabled fields
-  * */
+   * Method to clear the disabled fields
+   * */
   clearDiseabledFields() {
-    this.editUserForm.get('name')?.status === 'DISABLED' ? this.editUserForm.get('name')?.reset() : null;
-    this.editUserForm.get('lastName')?.status === 'DISABLED' ? this.editUserForm.get('lastName')?.reset() : null;
-    this.editUserForm.get('email')?.status === 'DISABLED' ? this.editUserForm.get('email')?.reset() : null;
-    this.editUserForm.get('idUser')?.status === 'DISABLED' ? this.editUserForm.get('idUser')?.reset() : null;
-    this.editUserForm.get('faculty')?.status === 'DISABLED' ? this.editUserForm.get('faculty')?.reset() : null;
-    this.editUserForm.get('department')?.status === 'DISABLED' ? this.editUserForm.get('department')?.reset() : null;
-    this.editUserForm.get('program')?.status === 'DISABLED' ? this.editUserForm.get('program')?.reset() : null;
-    this.editUserForm.get('typeContract')?.status === 'DISABLED' ? this.editUserForm.get('typeContract')?.reset() : null;
-    this.editUserForm.get('studies')?.status === 'DISABLED' ? this.editUserForm.get('studies')?.reset() : null;
-    this.editUserForm.get('category')?.status === 'DISABLED' ? this.editUserForm.get('category')?.reset() : null;
-    this.editUserForm.get('dedication')?.status === 'DISABLED' ? this.editUserForm.get('dedication')?.reset() : null;
-    this.editUserForm.get('state')?.status === 'DISABLED' ? this.editUserForm.get('state')?.reset() : null;
+    this.editUserForm.get('name')?.status === 'DISABLED'
+      ? this.editUserForm.get('name')?.reset()
+      : null;
+    this.editUserForm.get('lastName')?.status === 'DISABLED'
+      ? this.editUserForm.get('lastName')?.reset()
+      : null;
+    this.editUserForm.get('email')?.status === 'DISABLED'
+      ? this.editUserForm.get('email')?.reset()
+      : null;
+    this.editUserForm.get('idUser')?.status === 'DISABLED'
+      ? this.editUserForm.get('idUser')?.reset()
+      : null;
+    this.editUserForm.get('faculty')?.status === 'DISABLED'
+      ? this.editUserForm.get('faculty')?.reset()
+      : null;
+    this.editUserForm.get('department')?.status === 'DISABLED'
+      ? this.editUserForm.get('department')?.reset()
+      : null;
+    this.editUserForm.get('program')?.status === 'DISABLED'
+      ? this.editUserForm.get('program')?.reset()
+      : null;
+    this.editUserForm.get('typeContract')?.status === 'DISABLED'
+      ? this.editUserForm.get('typeContract')?.reset()
+      : null;
+    this.editUserForm.get('studies')?.status === 'DISABLED'
+      ? this.editUserForm.get('studies')?.reset()
+      : null;
+    this.editUserForm.get('category')?.status === 'DISABLED'
+      ? this.editUserForm.get('category')?.reset()
+      : null;
+    this.editUserForm.get('dedication')?.status === 'DISABLED'
+      ? this.editUserForm.get('dedication')?.reset()
+      : null;
+    this.editUserForm.get('state')?.status === 'DISABLED'
+      ? this.editUserForm.get('state')?.reset()
+      : null;
   }
 
-
   /*
-  * Method to open the confirm dialog
-  * */
+   * Method to open the confirm dialog
+   * */
   openConfirmDialog() {
     if (this.confirmDialog) this.confirmDialog.open();
   }
 
   /*
-  * Method to clear the fields
-  * */
+   * Method to clear the fields
+   * */
   clearFormFields() {
     this.editUserForm.reset();
   }
 
-
   /*
-  * Method to go back
-  * */
+   * Method to go back
+   * */
   goBack() {
-    this.router.navigate(['/app/gestion-usuarios/usuarios']); 
+    this.router.navigate(['/app/gestion-usuarios/usuarios']);
   }
 }

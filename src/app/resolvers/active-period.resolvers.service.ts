@@ -7,12 +7,10 @@ import { SimpleResponse } from '../core/models/response/simple-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class ActivePeriodResolvers implements Resolve<any> {
+  private activePeriodManagementService: AcademicPeriodManagementService =
+    inject(AcademicPeriodManagementService);
 
-    private activePeriodManagementService: AcademicPeriodManagementService = inject(AcademicPeriodManagementService);
-
-    resolve(): Observable<SimpleResponse<PeriodoAcademicoResponse>>  | null {
-        return this.activePeriodManagementService.getActiveAcademicPeriod();
-    }
-
-
+  resolve(): Observable<SimpleResponse<PeriodoAcademicoResponse>> | null {
+    return this.activePeriodManagementService.getActiveAcademicPeriod();
+  }
 }

@@ -8,9 +8,8 @@ describe('EliminarMateriaModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EliminarMateriaModalComponent]
-    })
-    .compileComponents();
+      imports: [EliminarMateriaModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EliminarMateriaModalComponent);
     component = fixture.componentInstance;

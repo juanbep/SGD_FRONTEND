@@ -16,7 +16,7 @@ describe('ConsolidatedTeacherComponent', () => {
         HttpClientModule,
         ToastrModule.forRoot(),
         ConsolidatedTeacherComponent,
-        AngularFireModule.initializeApp(environments.firebaseConfig)
+        AngularFireModule.initializeApp(environments.firebaseConfig),
       ],
       providers: [
         provideRouter([]), // Provide an empty router for testing

@@ -5,19 +5,27 @@ import { CurrentUserResolverService } from './resolvers/currentUser.resolver.ser
 import { ActivePeriodResolvers } from './resolvers/active-period.resolvers.service';
 
 export const routes: Routes = [
-    {
-        
-        path:'app',
-        resolve: {catalog: CatalogResolverService, currentUser: CurrentUserResolverService},
-        canActivate: [AuthGuard],
-        loadChildren: ()=> import('./modules/layout/layout-routing.module').then(m=>m.LayoutRoutingModule),
+  {
+    path: 'app',
+    resolve: {
+      catalog: CatalogResolverService,
+      currentUser: CurrentUserResolverService,
     },
-    {
-        path:'auth',
-        loadChildren: ()=> import('./modules/auth/auth-routing.module').then(m=>m.AuthRoutingModule)
-    },
-    {
-        path:'**',
-        redirectTo: 'auth'
-    }
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/layout/layout-routing.module').then(
+        (m) => m.LayoutRoutingModule
+      ),
+  },
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./modules/auth/auth-routing.module').then(
+        (m) => m.AuthRoutingModule
+      ),
+  },
+  {
+    path: '**',
+    redirectTo: 'auth',
+  },
 ];

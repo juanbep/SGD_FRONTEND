@@ -6,22 +6,20 @@ declare var bootstrap: any;
 @Component({
   selector: 'user-management-modal-activitie-details',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './modal-activitie-details.component.html',
-  styleUrl: './modal-activitie-details.component.css'
+  styleUrl: './modal-activitie-details.component.css',
 })
 export class ModalActivitieDetailsComponent {
-  
   activitieDetails: ActividadResponse | null = null;
 
   open(activitieDetails: ActividadResponse) {
-    const modal = new bootstrap.Modal(document.getElementById('modal-activitie-details'));
+    const modal = new bootstrap.Modal(
+      document.getElementById('modal-activitie-details')
+    );
     if (modal) {
       modal.show();
       this.activitieDetails = activitieDetails;
     }
   }
-
 }

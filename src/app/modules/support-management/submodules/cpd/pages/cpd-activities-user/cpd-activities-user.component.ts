@@ -95,17 +95,19 @@ export class CpdActivitiesUserComponent implements OnInit {
 
   public recoverTeacherInfo(idUser: number | null) {
     if (idUser) {
-      this.cpdServicesService.getInformationTeacherConsolidatedResponse(idUser).subscribe({
-        next: (response) => {
-          this.userTeacherInfo = response.data;
-        },
-        error: (error) => {
-          this.messagesInfoService.showErrorMessage(
-            'Error al recuperar la información del usuario',
-            'Error'
-          );
-        },
-      });
+      this.cpdServicesService
+        .getInformationTeacherConsolidatedResponse(idUser)
+        .subscribe({
+          next: (response) => {
+            this.userTeacherInfo = response.data;
+          },
+          error: (error) => {
+            this.messagesInfoService.showErrorMessage(
+              'Error al recuperar la información del usuario',
+              'Error'
+            );
+          },
+        });
     }
   }
 

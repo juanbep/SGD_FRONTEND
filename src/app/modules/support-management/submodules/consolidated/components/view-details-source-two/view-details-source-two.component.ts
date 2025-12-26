@@ -9,14 +9,11 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-view-details-source-two',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './view-details-source-two.component.html',
-  styleUrl: './view-details-source-two.component.css'
+  styleUrl: './view-details-source-two.component.css',
 })
 export class ViewDetailsSourceTwoComponent {
-
   private consolidatedServices = inject(ConsolidatedServicesService);
   private utilities = inject(Utilities);
 
@@ -24,7 +21,7 @@ export class ViewDetailsSourceTwoComponent {
   public sourceTwo: Fuente | undefined = undefined;
   public sourceFile: Blob | null = null;
 
-  open(oidActividad:number): void {
+  open(oidActividad: number): void {
     const myModal = document.getElementById('view-details-source-two-modal');
     if (myModal) {
       var bootstrapModal = new bootstrap.Modal(myModal);
@@ -33,33 +30,34 @@ export class ViewDetailsSourceTwoComponent {
     }
   }
 
-  recoverActivity(oidActividad:number) {
-    this.consolidatedServices.getActivityByOidActivity(oidActividad).subscribe(
-      {
-        next: (actividad: ActividadResponse) => {
-          this.activity = actividad;
-          this.recoverSourceTwo();
-         
-        }
-      }
-    )
+  recoverActivity(oidActividad: number) {
+    this.consolidatedServices.getActivityByOidActivity(oidActividad).subscribe({
+      next: (actividad: ActividadResponse) => {
+        this.activity = actividad;
+        this.recoverSourceTwo();
+      },
+    });
   }
 
   recoverSourceTwo() {
     if (this.activity) {
-      this.sourceTwo = this.activity.fuentes.find(fuente => fuente.tipoFuente === '2');
+      this.sourceTwo = this.activity.fuentes.find(
+        (fuente) => fuente.tipoFuente === '2'
+      );
       this.recoverFileSourceTwo();
     }
   }
 
   recoverFileSourceTwo() {
-    this.consolidatedServices.downloadSourceFile(this.sourceTwo!.oidFuente).subscribe((response: Blob) => {
-      this.sourceFile = response;
-    });
+    this.consolidatedServices
+      .downloadSourceFile(this.sourceTwo!.oidFuente)
+      .subscribe((response: Blob) => {
+        this.sourceFile = response;
+      });
   }
 
   downloadSourceFile() {
-    if(this.sourceFile) {
+    if (this.sourceFile) {
       const url = window.URL.createObjectURL(this.sourceFile);
       const a = document.createElement('a');
       a.href = url;
@@ -68,11 +66,9 @@ export class ViewDetailsSourceTwoComponent {
       a.click();
       window.URL.revokeObjectURL(url);
     }
-
   }
 
   adjustFormatDate(date: string): string {
     return this.utilities.adjustFormatDate(date);
   }
-
 }

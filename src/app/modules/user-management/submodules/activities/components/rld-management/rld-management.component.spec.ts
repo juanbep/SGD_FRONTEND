@@ -8,9 +8,8 @@ describe('RldManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RldManagementComponent]
-    })
-    .compileComponents();
+      imports: [RldManagementComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RldManagementComponent);
     component = fixture.componentInstance;

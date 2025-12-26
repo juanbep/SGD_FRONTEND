@@ -9,7 +9,7 @@ import { AuthServiceService } from '../../../../../auth/service/auth-service.ser
 import { ActividadConsolidadoResponse } from '../../../../../../core/models/response/actividad-consolidado-response.model';
 import { DetalleUsuarioConsolidadoResponse } from '../../../../../../core/models/response/detalle-usuario-cosolidado-response.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { CommonModule } from '@angular/common';
@@ -26,8 +26,8 @@ const CONFIRM_MESSAGE = '¿Está seguro que desea aprobar el consolidado?';
     ConsolidatedTeacherTableComponent,
     ConfirmDialogComponent,
     LoadingOverleyComponent,
-    CommonModule
-],
+    CommonModule,
+  ],
   templateUrl: './consolidated-teacher.component.html',
   styleUrl: './consolidated-teacher.component.css',
 })
@@ -40,8 +40,9 @@ export class ConsolidatedTeacherComponent implements OnInit {
   private toastr = inject(MessagesInfoService);
   private router = inject(Router);
   private authService = inject(AuthServiceService);
-  private academicPeriodMangementService = inject(AcademicPeriodManagementService);
-  
+  private academicPeriodMangementService = inject(
+    AcademicPeriodManagementService
+  );
 
   public consolidatedTeacher: ActividadConsolidadoResponse | null = null;
   public currentPage: number = 1;
@@ -52,7 +53,6 @@ export class ConsolidatedTeacherComponent implements OnInit {
 
   public isLoading: boolean = false;
   public activeAcademicPeriod: PeriodoAcademicoResponse | null = null;
-  
 
   public tittleMessage: string = TITTLE_MESSAGE;
   public confirmMessage: string = CONFIRM_MESSAGE;
@@ -70,7 +70,8 @@ export class ConsolidatedTeacherComponent implements OnInit {
   ngOnInit(): void {
     this.infoCurrentUser = this.authService.currentUserValue;
     this.idUserTeacher = this.activateRoute.snapshot.params['id'];
-    this.activeAcademicPeriod = this.academicPeriodMangementService.currentAcademicPeriodValue;
+    this.activeAcademicPeriod =
+      this.academicPeriodMangementService.currentAcademicPeriodValue;
     this.recoverInfoTeacher();
   }
 
@@ -114,17 +115,13 @@ export class ConsolidatedTeacherComponent implements OnInit {
             );
           },
           error: (error) => {
-            this.toastr.showErrorMessage(
-              error.error.mensaje,
-              'Error'
-            );
+            this.toastr.showErrorMessage(error.error.mensaje, 'Error');
           },
         });
     }
   }
 
   responseApproveConsolidated(response: boolean): void {
-
     if (response && this.idUserTeacher && this.infoCurrentUser) {
       this.isLoading = true;
       this.consolidatedServicesService
@@ -136,35 +133,40 @@ export class ConsolidatedTeacherComponent implements OnInit {
         .subscribe({
           next: (response) => {
             this.isLoading = false;
-            this.downloadApproveConsolidated(response.data.oidConsolidado, response.data.nombreArchivo);
+            this.downloadApproveConsolidated(
+              response.data.oidConsolidado,
+              response.data.nombreArchivo
+            );
             this.toastr.showSuccessMessage(
               'Consolidado aprobado  y generado correctamente',
               'Éxito'
             );
           },
           error: (error: any) => {
-            this.toastr.showErrorMessage(
-              error.error.mensaje,
-              'Error'
-            );
+            this.toastr.showErrorMessage(error.error.mensaje, 'Error');
           },
         });
     } else {
     }
   }
 
-  downloadApproveConsolidated(oidConsolidado: number, consolidatedName: string){
-    this.consolidatedServicesService.downloadConsolidatedFile(oidConsolidado).subscribe({
-      next: (blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${consolidatedName}.xlsx`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    });
+  downloadApproveConsolidated(
+    oidConsolidado: number,
+    consolidatedName: string
+  ) {
+    this.consolidatedServicesService
+      .downloadConsolidatedFile(oidConsolidado)
+      .subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${consolidatedName}.xlsx`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+      });
   }
 
   pageChange(page: number): void {
@@ -200,13 +202,14 @@ export class ConsolidatedTeacherComponent implements OnInit {
           a.click();
           window.URL.revokeObjectURL(url);
         },
-        error: (error: any) => {
-        },
+        error: (error: any) => {},
       });
   }
 
- findRoleCurrentUserById(rol:string): boolean {
-    const role = this.infoCurrentUser?.roles.find((role) => role.nombre === rol);
+  findRoleCurrentUserById(rol: string): boolean {
+    const role = this.infoCurrentUser?.roles.find(
+      (role) => role.nombre === rol
+    );
     return !!role;
- }
+  }
 }

@@ -166,7 +166,7 @@ export class ListarPlanesComponent implements OnInit {
 
   limpiarFiltros(): void {
     this.filtroNumero = '';
-    this.filtroEstado = 'TODOS'; 
+    this.filtroEstado = 'TODOS';
     this.filtroFechaAprobacion = '';
     this.filtroFechaCreacion = '';
     this.page = 0;

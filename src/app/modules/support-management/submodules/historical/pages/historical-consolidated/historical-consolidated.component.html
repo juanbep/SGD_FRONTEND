@@ -1,48 +1,64 @@
 <shared-loading-overley [isLoading]="loading"></shared-loading-overley>
 <div class="view-container">
-
-    <span class="title-two">Histórico de consolidados</span>
-    <div class="mb-2"></div>
-    <div class="messages-container">
-        <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-        <span class="text-body-heavy">Por favor, seleccione uno o varios periodos académicos que le permitirán
-            visualizar la evaluación final del docente o de los docentes, y así generar la resolución
-            correspondiente.</span>
-    </div>
-    <section style="width: 50%;">
-        <span class="title-three">Periodos academicos</span>
-        <form [formGroup]="formHistoricalConsolidated">
-            <div class="row">
-                <div class="col">
-                    <ng-container *ngIf="academicPeriodResponse.length > 0">
-                        <ng-multiselect-dropdown formControlName="academicPeriod" [placeholder]="'* Peridos académicos'"
-                            [settings]="dropdownSettings" [data]="dropdownAcademicPeriodsList">
-                        </ng-multiselect-dropdown>
-                        <span *ngIf="isInvaldField('academicPeriod')" class="error-message text-body-small-r ms-1">
-                            {{ getFieldError("academicPeriod") }}
-                        </span>
-                    </ng-container>
-                </div>
-            </div>
-        </form>
-    </section>
-        <div class="messages-container">
-            <img src="assets/icons/messages/teacher.svg" alt="teacher-icon">
-            <span class="text-body-heavy">Tener en cuenta que la resolución del docente se generará con el promedio de las evaluaciones correspondientes a los períodos seleccionados.</span>
+  <span class="title-two">Histórico de consolidados</span>
+  <div class="mb-2"></div>
+  <div class="messages-container">
+    <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+    <span class="text-body-heavy"
+      >Por favor, seleccione uno o varios periodos académicos que le permitirán
+      visualizar la evaluación final del docente o de los docentes, y así
+      generar la resolución correspondiente.</span
+    >
+  </div>
+  <section style="width: 50%">
+    <span class="title-three">Periodos academicos</span>
+    <form [formGroup]="formHistoricalConsolidated">
+      <div class="row">
+        <div class="col">
+          <ng-container *ngIf="academicPeriodResponse.length > 0">
+            <ng-multiselect-dropdown
+              formControlName="academicPeriod"
+              [placeholder]="'* Peridos académicos'"
+              [settings]="dropdownSettings"
+              [data]="dropdownAcademicPeriodsList"
+            >
+            </ng-multiselect-dropdown>
+            <span
+              *ngIf="isInvaldField('academicPeriod')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("academicPeriod") }}
+            </span>
+          </ng-container>
         </div>
-        <historical-user-filter></historical-user-filter>
-        <historical-user-table [consolidadoHistoricoResponse]="consolidadoHistoricoResponse"
-            [academicPeriods]="formHistoricalConsolidated.get('academicPeriod')?.value"
-            (pageChange)="pageChange($event)"></historical-user-table>
+      </div>
+    </form>
+  </section>
+  <div class="messages-container">
+    <img src="assets/icons/messages/teacher.svg" alt="teacher-icon" />
+    <span class="text-body-heavy"
+      >Tener en cuenta que la resolución del docente se generará con el promedio
+      de las evaluaciones correspondientes a los períodos seleccionados.</span
+    >
+  </div>
+  <historical-user-filter></historical-user-filter>
+  <historical-user-table
+    [consolidadoHistoricoResponse]="consolidadoHistoricoResponse"
+    [academicPeriods]="formHistoricalConsolidated.get('academicPeriod')?.value"
+    (pageChange)="pageChange($event)"
+  ></historical-user-table>
 
-        <section style="width: 50%;">
-            <span class="title-three">Descargar consolidado histórico</span>
-            <div class="buttons-container">
-                <div>
-                    <span class="text-body-regular">Descargar consolidado histórico</span>
-                    <br>
-                </div>
-                <button class="button-actions button-download" (click)="downloadHistoricalConsolidated()"></button>
-            </div>
-        </section>
+  <section style="width: 50%">
+    <span class="title-three">Descargar consolidado histórico</span>
+    <div class="buttons-container">
+      <div>
+        <span class="text-body-regular">Descargar consolidado histórico</span>
+        <br />
+      </div>
+      <button
+        class="button-actions button-download"
+        (click)="downloadHistoricalConsolidated()"
+      ></button>
+    </div>
+  </section>
 </div>

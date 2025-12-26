@@ -51,10 +51,8 @@ export class LineChartComponent implements OnInit, OnChanges {
       },
       options: {
         scales: {
-          
           y: {
             beginAtZero: true,
-            
           },
         },
       },
@@ -68,5 +66,3 @@ export class LineChartComponent implements OnInit, OnChanges {
     link.click();
   }
 }
-
-

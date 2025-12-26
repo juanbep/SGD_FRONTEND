@@ -11,7 +11,12 @@ describe('SideBarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, AngularFireModule.initializeApp(environments.firebaseConfig), RouterTestingModule, SideBarComponent],
+      imports: [
+        HttpClientModule,
+        AngularFireModule.initializeApp(environments.firebaseConfig),
+        RouterTestingModule,
+        SideBarComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SideBarComponent);

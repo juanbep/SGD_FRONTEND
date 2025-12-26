@@ -1,24 +1,41 @@
-<div class="modal fade" id="modal-confirm-dialog" data-bs-backdrop="static" tabindex="1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="row row-cols-auto align-items-center">
-                    <div class="col" class="align-self-center">
-                        <img [src]="'assets/icons/messages/icon-info.svg'" alt="">
-                    </div>
-                    <div class="col">
-                        <span class="title-three mx-3">{{this.title}}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body">
-                <span class="text-body-regular">{{this.message}}</span>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="button-modal text-body-heavy" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="button-modal text-body-heavy" data-bs-dismiss="modal" (click)="onConfirm()"
-                   >Aceptar</button>
-            </div>
+<div
+  class="modal fade"
+  id="modal-confirm-dialog"
+  data-bs-backdrop="static"
+  tabindex="1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row row-cols-auto align-items-center">
+          <div class="col" class="align-self-center">
+            <img [src]="'assets/icons/messages/icon-info.svg'" alt="" />
+          </div>
+          <div class="col">
+            <span class="title-three mx-3">{{ this.title }}</span>
+          </div>
         </div>
+      </div>
+      <div class="modal-body">
+        <span class="text-body-regular">{{ this.message }}</span>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="button-modal text-body-heavy"
+          data-bs-dismiss="modal"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="button-modal text-body-heavy"
+          data-bs-dismiss="modal"
+          (click)="onConfirm()"
+        >
+          Aceptar
+        </button>
+      </div>
     </div>
+  </div>
 </div>

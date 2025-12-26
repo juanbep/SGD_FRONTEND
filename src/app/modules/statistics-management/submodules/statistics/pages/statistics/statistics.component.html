@@ -175,7 +175,12 @@
                 formControlName="academicPeriod"
               >
                 <option value="">Seleccionar periodo</option>
-                <option *ngFor="let academicPeriod of academicPeriodResponse" [value]="academicPeriod.oidPeriodoAcademico">{{academicPeriod.idPeriodo}}</option>
+                <option
+                  *ngFor="let academicPeriod of academicPeriodResponse"
+                  [value]="academicPeriod.oidPeriodoAcademico"
+                >
+                  {{ academicPeriod.idPeriodo }}
+                </option>
               </select>
               <label
                 for="academicPeriod"
@@ -196,8 +201,12 @@
                 formControlName="academicPeriod"
               >
                 <option value="">Seleccionar periodo</option>
-                <option *ngFor="let academicPeriod of academicPeriodResponse" [value]="academicPeriod.oidPeriodoAcademico">{{academicPeriod.idPeriodo}}</option>
-
+                <option
+                  *ngFor="let academicPeriod of academicPeriodResponse"
+                  [value]="academicPeriod.oidPeriodoAcademico"
+                >
+                  {{ academicPeriod.idPeriodo }}
+                </option>
               </select>
               <label
                 for="academicPeriod"
@@ -225,7 +234,7 @@
                 >Departamento</label
               >
             </div>
-          </div>      
+          </div>
         </div>
       </ng-container>
       <ng-container *ngIf="formStatistics.get('statisticsType')?.value === '4'">
@@ -251,7 +260,6 @@
               [placeholder]="'Departamentos'"
               [settings]="dropdownSettings"
               [data]="dropdownDepartmentList"
-             
             >
             </ng-multiselect-dropdown>
           </div>
@@ -267,9 +275,14 @@
                 formControlName="academicPeriod"
               >
                 <option value="">Seleccionar periodo</option>
-                <option *ngFor="let period of academicPeriodResponse" [value]="period.oidPeriodoAcademico" >{{period.idPeriodo}}</option>
+                <option
+                  *ngFor="let period of academicPeriodResponse"
+                  [value]="period.oidPeriodoAcademico"
+                >
+                  {{ period.idPeriodo }}
+                </option>
               </select>
-              
+
               <label
                 for="academicPeriod"
                 class="label-custom text-body-small-sb"
@@ -301,7 +314,6 @@
               <label for="department" class="label-custom text-body-small-sb"
                 >*Departamento</label
               >
-              
             </div>
             <span
               *ngIf="isInvaldField('department')"

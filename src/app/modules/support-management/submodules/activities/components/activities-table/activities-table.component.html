@@ -45,7 +45,10 @@
             "
             (click)="openModalView(activity, 1)"
           >
-            <img [src]="'assets/icons/tables/icon-view.svg'" alt="Ver actividad" />
+            <img
+              [src]="'assets/icons/tables/icon-view.svg'"
+              alt="Ver actividad"
+            />
           </button>
           <button
             class="button-table"
@@ -54,7 +57,9 @@
               activity.fuentes[0].estadoFuente == 'DILIGENCIADO' &&
               activity.fuentes[0].tipoCalificacion == 'EN_LINEA'
             "
-            (click)="openSelfEvaluationReviewForm(activity.fuentes[0].oidFuente)"
+            (click)="
+              openSelfEvaluationReviewForm(activity.fuentes[0].oidFuente)
+            "
           >
             <img
               [src]="'assets/icons/tables/icon-view.svg'"
@@ -131,7 +136,10 @@
             "
             (click)="openModalView(activity, 2)"
           >
-            <img [src]="'assets/icons/tables/icon-view.svg'" alt="Ver actividad" />
+            <img
+              [src]="'assets/icons/tables/icon-view.svg'"
+              alt="Ver actividad"
+            />
           </button>
           <activities-view-evaluation
             *ngIf="

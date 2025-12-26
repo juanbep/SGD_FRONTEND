@@ -62,7 +62,7 @@ export class SmConsolidatedServicesService {
     department: string,
     evaluatedName: string | null,
     contractType: string | null,
-    evaluatedId: string | null,
+    evaluatedId: string | null
   ): Observable<SimpleResponse<PagedResponse<UsuarioConsolidadoResponse>>> {
     let params = new HttpParams()
       .set('departamento', department)
@@ -256,7 +256,14 @@ export class SmConsolidatedServicesService {
     );
   }
 
-  historicalConsolidated(page: number, totalPage:number, academicPeriodsId: number[], evaluatedName: string | null, contractType: string | null, evaluatedId: string | null): Observable<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>> {
+  historicalConsolidated(
+    page: number,
+    totalPage: number,
+    academicPeriodsId: number[],
+    evaluatedName: string | null,
+    contractType: string | null,
+    evaluatedId: string | null
+  ): Observable<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', totalPage.toString())
@@ -265,10 +272,12 @@ export class SmConsolidatedServicesService {
       .set('categoria', contractType || '')
       .set('identificacion', evaluatedId || '');
 
-    return this.httpClient.get<SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>>(`${this.baseUrl}/api/consolidado/historico-calificaciones`, { params });
+    return this.httpClient.get<
+      SimpleResponse<PagedResponse<ConsolidadoHistoricoResponse>>
+    >(`${this.baseUrl}/api/consolidado/historico-calificaciones`, { params });
   }
 
-  downloadConsolidatedGeneralFile(departmentId: string){
+  downloadConsolidatedGeneralFile(departmentId: string) {
     const params = new HttpParams().set('departamento', departmentId);
     return this.httpClient.get(
       `${this.baseUrl}/api/usuarios/exportar-evaluacion-docente`,
@@ -277,9 +286,12 @@ export class SmConsolidatedServicesService {
   }
 
   dowloadConsolidatedHistoricFile(
-    academicPeriodsId: number[],
+    academicPeriodsId: number[]
   ): Observable<any> {
-    const params = new HttpParams().set('periodos', academicPeriodsId.toString());
+    const params = new HttpParams().set(
+      'periodos',
+      academicPeriodsId.toString()
+    );
     return this.httpClient.get(
       `${this.baseUrl}/api/consolidado/exportar-historico`,
       { params, responseType: 'blob' }

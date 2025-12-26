@@ -8,9 +8,8 @@ describe('ViewPlanDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewPlanDetailComponent]
-    })
-    .compileComponents();
+      imports: [ViewPlanDetailComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewPlanDetailComponent);
     component = fixture.componentInstance;

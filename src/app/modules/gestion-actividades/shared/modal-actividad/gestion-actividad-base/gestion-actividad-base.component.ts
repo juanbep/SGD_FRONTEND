@@ -275,8 +275,6 @@ export class GestionActividadBaseComponent implements OnInit {
         this.mapearActividadAModeloBackend(a)
       );
 
-      console.log('Payload lote:', JSON.stringify(payload, null, 2));
-
       // 2. Llamar al helper (que ya creaste)
       const { exitosas, fallidas, total } =
         await this.actividadHelperService.createMultiple(payload);
@@ -384,10 +382,7 @@ export class GestionActividadBaseComponent implements OnInit {
         // SIN atributosRepetibles
       };
 
-      console.log('Payload a enviar:', JSON.stringify(payload, null, 2));
-
       const response = await this.actividadHelperService.create(payload);
-      console.log('Respuesta del backend:', response);
 
       if (response) {
         this.toastr.success('Actividad guardada exitosamente');

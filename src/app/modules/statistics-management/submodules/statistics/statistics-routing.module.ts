@@ -3,26 +3,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
 
-
 export const routes: Routes = [
-    {
-        path: '',
-        component: StatisticsComponent
-    }
-]
+  {
+    path: '',
+    component: StatisticsComponent,
+  },
+];
 
 @NgModule({
-    declarations: [
-    ],
-    imports: [
-      RouterModule.forChild(routes),
-      CommonModule
-    ],
-    exports: [
-      RouterModule
-    ]
-  }
-)
-  
-export class StatisticsRoutingModule { 
-}
+  declarations: [],
+  imports: [RouterModule.forChild(routes), CommonModule],
+  exports: [RouterModule],
+})
+export class StatisticsRoutingModule {}

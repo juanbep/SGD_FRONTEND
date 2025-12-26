@@ -35,9 +35,7 @@ export class NecesidadHelperService {
     return response?.content || [];
   }
 
-  getAllObservable(
-    filters: NecesidadFilters
-  ): Observable<NecesidadResponse[]> {
+  getAllObservable(filters: NecesidadFilters): Observable<NecesidadResponse[]> {
     return this.baseHelper
       .getDataFromResponseObservable(
         this.necesidadService.getNecesidades(filters)

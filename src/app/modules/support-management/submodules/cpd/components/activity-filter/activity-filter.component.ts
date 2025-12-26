@@ -7,19 +7,22 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'cpd-activity-filter',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule
-  ],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './activity-filter.component.html',
-  styleUrl: './activity-filter.component.css'
+  styleUrl: './activity-filter.component.css',
 })
 export class ActivityFilterComponent {
   private formBuilder = inject(FormBuilder);
   private catalogService = inject(CatalogDataService);
 
   @Output()
-  public filterParams: EventEmitter<{ activityName: string | null, activityType: string | null }> = new EventEmitter<{ activityName: string | null, activityType: string | null }>();
+  public filterParams: EventEmitter<{
+    activityName: string | null;
+    activityType: string | null;
+  }> = new EventEmitter<{
+    activityName: string | null;
+    activityType: string | null;
+  }>();
 
   public catalogData: CatalogDataResponse | null = null;
 
@@ -43,5 +46,4 @@ export class ActivityFilterComponent {
     this.formFilter.get('activityType')?.setValue('');
     this.filterParams.emit({ activityName: '', activityType: '' });
   }
-
 }

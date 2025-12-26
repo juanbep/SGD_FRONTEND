@@ -40,12 +40,7 @@ export class ModalEditAcademicPeriodComponent {
 
   newAcademicPeriodForm: FormGroup = this.formBuilder.group(
     {
-      idAcademicPeriod: [
-        null,
-        [
-          Validators.required
-        ],
-      ],
+      idAcademicPeriod: [null, [Validators.required]],
       startDate: [
         null,
         [Validators.required, this.validatorsService.validateDateRange],
@@ -175,14 +170,18 @@ export class ModalEditAcademicPeriodComponent {
               period.id ==
               this.newAcademicPeriodForm.get('idAcademicPeriod')?.value
             );
-          })?.label || this.academicPeriod?.idPeriodo || '',
+          })?.label ||
+          this.academicPeriod?.idPeriodo ||
+          '',
         idPeriodoApi:
           this.peridoAcademicoKiraResponse.find((period) => {
             return (
               period.id ==
               this.newAcademicPeriodForm.get('idAcademicPeriod')?.value
             );
-          })?.id || this.academicPeriod?.idPeriodoApi || '',
+          })?.id ||
+          this.academicPeriod?.idPeriodoApi ||
+          '',
         fechaInicio: this.newAcademicPeriodForm.get('startDate')?.value,
         fechaFin: this.newAcademicPeriodForm.get('endDate')?.value,
         estadoPeriodoAcademico: {
@@ -235,16 +234,19 @@ export class ModalEditAcademicPeriodComponent {
       .getAllAcademicPeriods(this.currentPage - 1, PAGE_SIZE)
       .subscribe((response) => {
         this.academicPeriodManagementService.setAcademicPeriods(response.data);
-        this.academicPeriodManagementService.getActiveAcademicPeriod().subscribe({
-          next: (activeAcademicPeriod) => {
-            this.academicPeriodManagementService.currentAcademicPeriodValue = activeAcademicPeriod.data;
-          },
-          error: (error) => {
-            this.academicPeriodManagementService.currentAcademicPeriodValue = null;
-          }
-        });
-
-      })
+        this.academicPeriodManagementService
+          .getActiveAcademicPeriod()
+          .subscribe({
+            next: (activeAcademicPeriod) => {
+              this.academicPeriodManagementService.currentAcademicPeriodValue =
+                activeAcademicPeriod.data;
+            },
+            error: (error) => {
+              this.academicPeriodManagementService.currentAcademicPeriodValue =
+                null;
+            },
+          });
+      });
   }
 
   clearFields(): void {

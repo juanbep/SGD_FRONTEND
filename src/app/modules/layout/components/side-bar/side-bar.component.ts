@@ -37,12 +37,12 @@ export class SideBarComponent implements OnInit {
       ],
     },
     {
-    role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
+      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
       label: 'Gestion usuarios',
       icon: 'assets/icons/sidebar/icon-user.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD', 'DECANO'],
+          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
           label: 'Usuarios',
           url: '/app/gestion-usuarios/usuarios',
         },
@@ -83,13 +83,12 @@ export class SideBarComponent implements OnInit {
             'COORDINADOR',
             'DECANO',
             'DOCENTE',
-        
           ],
           label: 'Mis responsabilidades',
           url: '/app/gestion-soportes/responsabilidades',
         },
         {
-          role: ['JEFE DE DEPARTAMENTO','COORDINADOR'],
+          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
           label: 'Consolidado',
           url: '/app/gestion-soportes/consolidado/lista-docentes',
         },
@@ -106,12 +105,24 @@ export class SideBarComponent implements OnInit {
       ],
     },
     {
-      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO', 'CPD','COORDINADOR'],
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'SECRETARIA/O FACULTAD',
+        'DECANO',
+        'CPD',
+        'COORDINADOR',
+      ],
       label: 'Estadísticas',
       icon: 'assets/icons/sidebar/icon-statistics.svg',
       sub: [
         {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO', 'CPD','COORDINADOR'],
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'SECRETARIA/O FACULTAD',
+            'DECANO',
+            'CPD',
+            'COORDINADOR',
+          ],
           label: 'Estadísticas',
           url: '/app/gestion-estadisticas/estadisticas',
         },

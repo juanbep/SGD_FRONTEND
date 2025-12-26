@@ -8,8 +8,6 @@ import { ViewPlanDetailComponent } from '../view-plan-detail/view-plan-detail.co
   standalone: true,
   imports: [CommonModule, ListarPlanesComponent],
   templateUrl: './planes-management.component.html',
-  styleUrl: './planes-management.component.css'
+  styleUrl: './planes-management.component.css',
 })
-export class PlanesManagementComponent {
-
-}
+export class PlanesManagementComponent {}

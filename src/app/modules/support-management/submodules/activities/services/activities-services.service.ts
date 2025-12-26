@@ -120,7 +120,6 @@ export class ActivitiesServicesService {
     return this.umUsersServicesService.getUserbyId(userId);
   }
 
-
   getEvidenceResultOdsFile(idResult: number) {
     return this.smActivitiesServicesService.getEvidenceResultOdsFile(idResult);
   }

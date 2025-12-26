@@ -88,7 +88,6 @@ export class FiltrosNecesidadesComponent implements OnInit {
     }
 
     this.filters.oidPrograma = oidPrograma;
-    console.log('OID Programa del usuario logueado:', oidPrograma);
   }
 
   // ===== CARGAR CALENDARIOS =====
@@ -108,7 +107,6 @@ export class FiltrosNecesidadesComponent implements OnInit {
 
       // Emitir filtros automáticamente si hay calendario y programa seleccionados
       if (this.filters.oidCalendario && this.filters.oidPrograma) {
-        console.log('Emitiendo filtros iniciales automáticamente');
         this.aplicarFiltros();
       }
     } catch (error) {
@@ -161,7 +159,6 @@ export class FiltrosNecesidadesComponent implements OnInit {
       filtrosCompletos.idMateria = this.filtroOid.trim();
     }
 
-    console.log('Filtros a aplicar:', filtrosCompletos);
     this.onAplicarFiltros.emit(filtrosCompletos);
   }
 

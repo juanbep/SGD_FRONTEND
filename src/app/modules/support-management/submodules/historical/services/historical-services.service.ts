@@ -5,48 +5,69 @@ import { UmUsersServicesService } from '../../../../../core/services/users-manag
 
 @Injectable({ providedIn: 'root' })
 export class HistoricalServices {
+  private smConsolidatedServicesService = inject(SmConsolidatedServicesService);
+  private apmAcademicPeriodManagementService = inject(
+    ApmAcademicPeriodManagementService
+  );
+  private umUsersServicesService = inject(UmUsersServicesService);
 
-    private smConsolidatedServicesService = inject(SmConsolidatedServicesService);
-    private apmAcademicPeriodManagementService = inject(ApmAcademicPeriodManagementService);
-    private umUsersServicesService = inject(UmUsersServicesService);
+  private filterTeacherParams: WritableSignal<{
+    evaluatedName: string | null;
+    evaluatedId: string | null;
+    category: string | null;
+    department: string | null;
+  }> = signal({
+    evaluatedName: null,
+    evaluatedId: null,
+    category: null,
+    department: null,
+  });
 
-    private filterTeacherParams: WritableSignal<{
-        evaluatedName: string | null;
-        evaluatedId: string | null;
-        category: string | null;
-        department: string | null;
-    }> = signal({ evaluatedName: null, evaluatedId: null, category: null, department: null });
+  setFilterTeacherParams(newData: {
+    evaluatedName: string | null;
+    evaluatedId: string | null;
+    category: string | null;
+    department: string | null;
+  }) {
+    this.filterTeacherParams.update((data) => (data = newData));
+  }
 
-    
-    setFilterTeacherParams(newData: {
-        evaluatedName: string | null;
-        evaluatedId: string | null;
-        category: string | null;
-        department: string | null;
-    }) {
-        this.filterTeacherParams.update((data) => (data = newData));
-    }
+  getFilterTeacherParams() {
+    return this.filterTeacherParams();
+  }
 
-    getFilterTeacherParams() {
-        return this.filterTeacherParams();
-    }
+  historicalConsolidated(
+    page: number,
+    totalPage: number,
+    academicPeriodsId: number[],
+    evaluatedName: string | null,
+    contractType: string | null,
+    evaluatedId: string | null
+  ) {
+    return this.smConsolidatedServicesService.historicalConsolidated(
+      page,
+      totalPage,
+      academicPeriodsId,
+      evaluatedName,
+      contractType,
+      evaluatedId
+    );
+  }
 
+  getAllAcademicPeriods(page: number, size: number) {
+    return this.apmAcademicPeriodManagementService.getAllAcademicPeriods(
+      page,
+      size
+    );
+  }
 
-    historicalConsolidated(page: number, totalPage: number, academicPeriodsId: number[], evaluatedName: string | null, contractType: string | null, evaluatedId: string | null) {
-        return this.smConsolidatedServicesService.historicalConsolidated(page, totalPage, academicPeriodsId, evaluatedName, contractType, evaluatedId);
-    }
+  getUserById(id: number) {
+    return this.umUsersServicesService.getUserbyId(id);
+  }
 
-    getAllAcademicPeriods(page: number, size: number) {
-        return this.apmAcademicPeriodManagementService.getAllAcademicPeriods(page, size);
-    }
-
-    getUserById(id: number) {   
-        return this.umUsersServicesService.getUserbyId(id);
-    }
-
-    downloadHistoricalConsolidated(
-        academicPeriodsId: number[],
-    ) {
-        return this.smConsolidatedServicesService.dowloadConsolidatedHistoricFile(academicPeriodsId);
-    }
+  downloadHistoricalConsolidated(academicPeriodsId: number[]) {
+    return this.smConsolidatedServicesService.dowloadConsolidatedHistoricFile(
+      academicPeriodsId
+    );
+  }
 }

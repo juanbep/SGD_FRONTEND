@@ -7,37 +7,34 @@ import { LayoutComponent } from './pages/layout/layout.component';
 import { EditActivityComponent } from './pages/edit-activity/edit-activity.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        component: LayoutComponent,
-        children: [
-            {
-                path: 'usuarios',
-                component: UsersComponent
-            },
-            {
-                path: 'actividades-usuario/:id',
-                component: ActivitiesComponent
-            },
-            {
-                path: 'nueva-actividad/:id',
-                component: NewActivityComponent
-            },
-            {
-                path: 'editar-actividad/:id',
-                component: EditActivityComponent
-            }
-        ]
-    },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'usuarios',
+        component: UsersComponent,
+      },
+      {
+        path: 'actividades-usuario/:id',
+        component: ActivitiesComponent,
+      },
+      {
+        path: 'nueva-actividad/:id',
+        component: NewActivityComponent,
+      },
+      {
+        path: 'editar-actividad/:id',
+        component: EditActivityComponent,
+      },
+    ],
+  },
 ];
 
-
 @NgModule({
-    imports: [
-        RouterModule.forChild(routes),
-    ],
-    exports: [],
-    declarations: [],
-    providers: [],
+  imports: [RouterModule.forChild(routes)],
+  exports: [],
+  declarations: [],
+  providers: [],
 })
-export class ActivitiesRoutingModule { }
+export class ActivitiesRoutingModule {}

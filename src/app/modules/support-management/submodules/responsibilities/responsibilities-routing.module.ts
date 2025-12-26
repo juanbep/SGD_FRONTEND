@@ -8,42 +8,31 @@ import { ResponsibilitieCoordinatorFormComponent } from './pages/responsibilitie
 import { ResponsibilitiesEditCoordinatorFormComponent } from './pages/responsibilities-edit-coordinator-form/responsibilities-edit-coordinator-form.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        component: ResponsibilitiesComponent 
-    },
-    {
-      path: 'formulario-evaluacion-docente-estudiante/:id',
-      component: ResponsabilitieStudentFormComponent
-    },
-    {
-      path: 'formulario-evaluacion-docente-estudiante-editar/:id',
-      component: ReponsibilitiesEditStudentFormComponent
-    },
-    {
-      path: 'formulario-evaluacion-docente-coordinador/:id',
-      component: ResponsibilitieCoordinatorFormComponent
-    },
-    {
-      path: 'formulario-evaluacion-docente-coordinador-editar/:id',
-      component: ResponsibilitiesEditCoordinatorFormComponent
-    }
-]
-
+  {
+    path: '',
+    component: ResponsibilitiesComponent,
+  },
+  {
+    path: 'formulario-evaluacion-docente-estudiante/:id',
+    component: ResponsabilitieStudentFormComponent,
+  },
+  {
+    path: 'formulario-evaluacion-docente-estudiante-editar/:id',
+    component: ReponsibilitiesEditStudentFormComponent,
+  },
+  {
+    path: 'formulario-evaluacion-docente-coordinador/:id',
+    component: ResponsibilitieCoordinatorFormComponent,
+  },
+  {
+    path: 'formulario-evaluacion-docente-coordinador-editar/:id',
+    component: ResponsibilitiesEditCoordinatorFormComponent,
+  },
+];
 
 @NgModule({
-    declarations: [
-    ],
-    imports: [
-      RouterModule.forChild(routes),
-      CommonModule
-    ],
-    exports: [
-      RouterModule
-    ]
-  }
-)
-
-export class ResponsibilitiesRoutingModule { 
-    
-}
+  declarations: [],
+  imports: [RouterModule.forChild(routes), CommonModule],
+  exports: [RouterModule],
+})
+export class ResponsibilitiesRoutingModule {}

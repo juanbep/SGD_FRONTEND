@@ -1,10 +1,4 @@
-import {
-  Component,
-  effect,
-  inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
 import { CpdServicesService } from '../../services/cpd-services.service';
 import { AuthServiceService } from '../../../../../auth/service/auth-service.service';
 import { CommonModule } from '@angular/common';
@@ -21,7 +15,7 @@ import { UsuarioConsolidadoCreadoResponse } from '../../../../../../core/models/
 import { CpdInfoFormComponent } from '../../components/cpd-info-form/cpd-info-form.component';
 import { UsersServiceService } from '../../../../../user-management/submodules/users/services/users-service.service';
 import { ROLES } from '../../../../../../core/enums/domain-enums';
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
 const TOTAL_PAGE = 10;
 const ID_ROL = '1';
 
@@ -34,13 +28,12 @@ const ID_ROL = '1';
     PaginatorComponent,
     RouterModule,
     UserFilterComponent,
-    LoadingOverleyComponent
+    LoadingOverleyComponent,
   ],
   templateUrl: './cpd.component.html',
   styleUrl: './cpd.component.css',
 })
 export class CpdComponent implements OnInit {
-
   @ViewChild(EmailComponent) emailComponent: EmailComponent | null = null;
 
   private academicPeriodManagementService = inject(
@@ -60,7 +53,12 @@ export class CpdComponent implements OnInit {
     evaluatedId: string | null;
     category: string | null;
     department: string | null;
-  } = { evaluatedName: null, evaluatedId: null, category: null, department: null };
+  } = {
+    evaluatedName: null,
+    evaluatedId: null,
+    category: null,
+    department: null,
+  };
   public teacherByDepartment: PagedResponse<UsuarioConsolidadoCreadoResponse> | null =
     null;
 
@@ -69,20 +67,16 @@ export class CpdComponent implements OnInit {
 
   filterEffect = effect(() => {
     this.filterParams = this.cpdServiceServices.getFilterTeacherParams();
-    this.recoverTeachers(
-      this.currentPage,
-      TOTAL_PAGE,)
+    this.recoverTeachers(this.currentPage, TOTAL_PAGE);
   });
 
   ngOnInit(): void {
     this.currentUser = this.authServiceService.currentUserValue;
-    this.academicPeriodActive = this.academicPeriodManagementService.currentAcademicPeriodValue;
+    this.academicPeriodActive =
+      this.academicPeriodManagementService.currentAcademicPeriodValue;
   }
 
-  recoverTeachers(
-    page: number,
-    totalPage: number,
-  ) {
+  recoverTeachers(page: number, totalPage: number) {
     this.cpdServiceServices
       .getUsersWithConsolidatedCreated(
         page - 1,
@@ -102,31 +96,28 @@ export class CpdComponent implements OnInit {
 
   pageChanged(page: number) {
     this.currentPage = page;
-    this.recoverTeachers(
-      this.currentPage,
-      TOTAL_PAGE);
-
+    this.recoverTeachers(this.currentPage, TOTAL_PAGE);
   }
 
   recoverBossDepartment(teacherDepartment: string = '') {
-    this.userService.getAllUsersByParams(
-      0,
-      3,
-      '',
-      '',
-      '',
-      teacherDepartment,
-      '',
-      '',
-      '',
-      '',
-      ROLES.JEFE_DE_DEPARTAMENTO.toString(),
-      '1'
-    )
+    this.userService
+      .getAllUsersByParams(
+        0,
+        3,
+        '',
+        '',
+        '',
+        teacherDepartment,
+        '',
+        '',
+        '',
+        '',
+        ROLES.JEFE_DE_DEPARTAMENTO.toString(),
+        '1'
+      )
       .subscribe({
         next: (response) => {
           this.bossDepartment = response.data.content[0];
-
         },
         error: (error) => {
           this.bossDepartment = null;
@@ -142,10 +133,7 @@ export class CpdComponent implements OnInit {
   }
 
   downloadFiles() {
-    if (
-      this.academicPeriodActive &&
-      this.currentUser
-    ) {
+    if (this.academicPeriodActive && this.currentUser) {
       this.loading = true;
 
       this.cpdServiceServices
@@ -179,31 +167,27 @@ export class CpdComponent implements OnInit {
   }
 
   downloadConsolidatedReportFile() {
-
     if (this.academicPeriodActive) {
       this.loading = true;
-      this.cpdServiceServices
-        .downloadConsolidatedReportFile()
-        .subscribe({
-          next: (blob) => {
-            this.loading = false;
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `consolidado_${this.academicPeriodActive?.idPeriodo}.xlsx`;
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-          },
-          error: (error) => {
-            this.loading = false;
-            this.messagesInfoService.showErrorMessage(
-              'Error al descargar el archivo',
-              'Error'
-            );
-          },
-        });
+      this.cpdServiceServices.downloadConsolidatedReportFile().subscribe({
+        next: (blob) => {
+          this.loading = false;
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `consolidado_${this.academicPeriodActive?.idPeriodo}.xlsx`;
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        },
+        error: (error) => {
+          this.loading = false;
+          this.messagesInfoService.showErrorMessage(
+            'Error al descargar el archivo',
+            'Error'
+          );
+        },
+      });
     }
   }
-
 }

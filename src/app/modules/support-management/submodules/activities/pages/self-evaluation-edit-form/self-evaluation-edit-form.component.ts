@@ -36,7 +36,7 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
     CommonModule,
     RouterModule,
     ConfirmDialogComponent,
-],
+  ],
   templateUrl: './self-evaluation-edit-form.component.html',
   styleUrls: [],
 })
@@ -60,7 +60,6 @@ export class SelfEvaluationEditFormComponent implements OnInit {
   );
 
   public evaluado: UsuarioResponse | null = null;
-  
 
   // ====================== Propiedades Públicas ======================
   public activityPeriod: PeriodoAcademicoResponse | null = null;
@@ -202,9 +201,10 @@ export class SelfEvaluationEditFormComponent implements OnInit {
             this.fuenteDocenteFormularioResponse.Fuente.calificacion
           ),
           observation: this.fuenteDocenteFormularioResponse.Fuente.observacion,
-        
         });
-        this.recoverEvaluated(this.fuenteDocenteFormularioResponse.Fuente.evaluado.oidUsuario);
+        this.recoverEvaluated(
+          this.fuenteDocenteFormularioResponse.Fuente.evaluado.oidUsuario
+        );
         // Manejo del FormArray de resultados
         this.results.clear();
         this.fuenteDocenteFormularioResponse.odsSeleccionados.forEach((ods) => {
@@ -326,16 +326,15 @@ export class SelfEvaluationEditFormComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.evidences[index] = input.files[0];
-      this.editSelfEvaluationForm.get('results.' + index + '.evidence')?.setValue(
-        input.files[0].name
-      );
+      this.editSelfEvaluationForm
+        .get('results.' + index + '.evidence')
+        ?.setValue(input.files[0].name);
     }
   }
 
   optionDownloadEvidenceFile(index: number) {
     if (
       this.editSelfEvaluationForm.get('results.' + index + '.evidence')?.value
-
     ) {
       this.downloadEvidenceFileById(index);
     } else {
@@ -387,7 +386,6 @@ export class SelfEvaluationEditFormComponent implements OnInit {
           nombres: this.evaluado?.nombres,
           apellidos: this.evaluado?.apellidos,
           identificacion: this.evaluado?.identificacion,
-          
         }
       );
     this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
@@ -446,11 +444,7 @@ export class SelfEvaluationEditFormComponent implements OnInit {
     });
     this.generatePdfPreview();
     this.activitiesService
-      .saveSelfAssessmentByForm(
-        autoevaluacion,
-        this.evidences,
-        this.formPdf!
-      )
+      .saveSelfAssessmentByForm(autoevaluacion, this.evidences, this.formPdf!)
       .subscribe({
         next: (response) => {
           this.messagesInfoService.showSuccessMessage(
@@ -470,11 +464,13 @@ export class SelfEvaluationEditFormComponent implements OnInit {
 
   // ====================== Métodos Adicionales para Evidencias ======================
   loadEvidenceFile() {
-    this.fuenteDocenteFormularioResponse?.odsSeleccionados.forEach((ods, index) => {
-      if(ods.documento) {
-        this.downloadEvidenceFileById(index);
+    this.fuenteDocenteFormularioResponse?.odsSeleccionados.forEach(
+      (ods, index) => {
+        if (ods.documento) {
+          this.downloadEvidenceFileById(index);
+        }
       }
-    });
+    );
   }
 
   deleteEvidenceFile(index: number) {
@@ -495,7 +491,12 @@ export class SelfEvaluationEditFormComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-         this.evidences[index] = new File([response], this.fuenteDocenteFormularioResponse?.odsSeleccionados[index].documento || 'evidencia', {type: 'application/pdf'});
+          this.evidences[index] = new File(
+            [response],
+            this.fuenteDocenteFormularioResponse?.odsSeleccionados[index]
+              .documento || 'evidencia',
+            { type: 'application/pdf' }
+          );
         },
         error: (error) => {
           this.messagesInfoService.showErrorMessage(

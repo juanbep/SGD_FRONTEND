@@ -135,9 +135,7 @@ export class ActivitiesEditEvaluationComponent {
    */
   populateForm(): void {
     this.userActivities?.forEach((activitie) => {
-      if (
-        activitie.fuentes[0].tipoCalificacion !== 'EN_LINEA'
-      ) {
+      if (activitie.fuentes[0].tipoCalificacion !== 'EN_LINEA') {
         this.fileNameSelected =
           activitie.fuentes[0].nombreDocumentoFuente || '';
         this.formSelfEvaluation
@@ -182,7 +180,6 @@ export class ActivitiesEditEvaluationComponent {
     );
   }
 
-
   getFieldError(field: string): string | null {
     if (!this.formSelfEvaluation.controls[field]) return null;
     const control = this.formSelfEvaluation.controls[field];
@@ -206,7 +203,6 @@ export class ActivitiesEditEvaluationComponent {
     return null;
   }
 
-
   /*
    *  Recupera el archivo de fuente
    */
@@ -229,9 +225,9 @@ export class ActivitiesEditEvaluationComponent {
                 { type: 'application/pdf' }
               );
               this.selectedSourceFile = content.fuentes[0].soporte;
-              this.formSelfEvaluation.get('uploadFileSource')?.setValue(
-                content.fuentes[0].soporte
-              );
+              this.formSelfEvaluation
+                .get('uploadFileSource')
+                ?.setValue(content.fuentes[0].soporte);
             },
             error: (error) => {
               this.toastr.showErrorMessage(
@@ -430,8 +426,7 @@ export class ActivitiesEditEvaluationComponent {
             tipoCalificacion: 'DOCUMENTO',
             tipoFuente: '1',
             calificacion: activitie.fuentes[0].calificacion || 0,
-            informeEjecutivo:
-              activitie.fuentes[0].nombreDocumentoInforme || '',
+            informeEjecutivo: activitie.fuentes[0].nombreDocumentoInforme || '',
           };
           this.sendSource.push(fuente);
         }

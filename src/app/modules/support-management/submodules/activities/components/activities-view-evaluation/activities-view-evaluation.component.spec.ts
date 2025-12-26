@@ -9,7 +9,11 @@ describe('ActivitiesViewEvaluationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), ActivitiesViewEvaluationComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ActivitiesViewEvaluationComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActivitiesViewEvaluationComponent);

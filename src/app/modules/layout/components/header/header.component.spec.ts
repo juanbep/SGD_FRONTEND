@@ -10,7 +10,11 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, AngularFireModule.initializeApp(environments.firebaseConfig), HeaderComponent],
+      imports: [
+        HttpClientModule,
+        AngularFireModule.initializeApp(environments.firebaseConfig),
+        HeaderComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);

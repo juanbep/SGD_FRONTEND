@@ -9,14 +9,12 @@ declare var bootstrap: any;
 @Component({
   selector: 'cpd-view-details-source-two',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './view-details-source-two.component.html',
-  styleUrl: './view-details-source-two.component.css'
+  styleUrl: './view-details-source-two.component.css',
 })
 export class ViewDetailsSourceTwoComponent {
- private consolidatedServices = inject(ConsolidatedServicesService);
+  private consolidatedServices = inject(ConsolidatedServicesService);
   private utilities = inject(Utilities);
 
   public activity: ActividadResponse | null = null;
@@ -35,19 +33,23 @@ export class ViewDetailsSourceTwoComponent {
 
   recoverSourceTwo() {
     if (this.activity) {
-      this.sourceTwo = this.activity.fuentes.find(fuente => fuente.tipoFuente === '2');
+      this.sourceTwo = this.activity.fuentes.find(
+        (fuente) => fuente.tipoFuente === '2'
+      );
       this.recoverFileSourceTwo();
     }
   }
 
   recoverFileSourceTwo() {
-    this.consolidatedServices.downloadSourceFile(this.sourceTwo!.oidFuente).subscribe((response: Blob) => {
-      this.sourceFile = response;
-    });
+    this.consolidatedServices
+      .downloadSourceFile(this.sourceTwo!.oidFuente)
+      .subscribe((response: Blob) => {
+        this.sourceFile = response;
+      });
   }
 
   downloadSourceFile() {
-    if(this.sourceFile) {
+    if (this.sourceFile) {
       const url = window.URL.createObjectURL(this.sourceFile);
       const a = document.createElement('a');
       a.href = url;
@@ -56,11 +58,9 @@ export class ViewDetailsSourceTwoComponent {
       a.click();
       window.URL.revokeObjectURL(url);
     }
-
   }
 
   adjustFormatDate(date: string): string {
     return this.utilities.adjustFormatDate(date);
   }
-
 }

@@ -14,7 +14,7 @@ describe('UsersComponent', () => {
     await TestBed.configureTestingModule({
       imports: [UsersComponent, ToastrModule.forRoot()],
       providers: [
-        { provide: ActivatedRoute, useValue: ActivatedRoute }, 
+        { provide: ActivatedRoute, useValue: ActivatedRoute },
         provideHttpClient(), // Provide HttpClient for testing
         provideRouter([]), // Provide an empty router for testing
         provideHttpClientTesting(), // Provide HttpClientTesting for testing

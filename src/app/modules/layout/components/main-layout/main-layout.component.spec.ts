@@ -11,7 +11,12 @@ describe('MainLayoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, AngularFireModule.initializeApp(environments.firebaseConfig), RouterTestingModule, MainLayoutComponent],
+      imports: [
+        HttpClientModule,
+        AngularFireModule.initializeApp(environments.firebaseConfig),
+        RouterTestingModule,
+        MainLayoutComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainLayoutComponent);

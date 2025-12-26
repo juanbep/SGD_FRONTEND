@@ -16,8 +16,12 @@ export class CpdServicesService {
     evaluatedId: string | null;
     category: string | null;
     department: string | null;
-  }> = signal({ evaluatedName: null, evaluatedId: null, category: null, department: null });
-
+  }> = signal({
+    evaluatedName: null,
+    evaluatedId: null,
+    category: null,
+    department: null,
+  });
 
   setFilterTeacherParams(newData: {
     evaluatedName: string | null;

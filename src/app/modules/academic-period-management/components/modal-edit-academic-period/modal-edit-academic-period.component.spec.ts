@@ -9,7 +9,11 @@ describe('ModalEditAcademicPeriodComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), ModalEditAcademicPeriodComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalEditAcademicPeriodComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalEditAcademicPeriodComponent);

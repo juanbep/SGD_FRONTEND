@@ -95,8 +95,6 @@ export class FiltrosActividadesComponent implements OnInit {
       tipos: cargaTipos$,
     }).subscribe({
       next: () => {
-        console.log('Filtros de calendarios y tipos cargados correctamente');
-
         // Cargar usuarios solo si hay departamento
         if (this.filters.oidDepartamento) {
           this.loadUsuarios();
@@ -104,7 +102,6 @@ export class FiltrosActividadesComponent implements OnInit {
 
         // Emitir filtros automáticamente si hay calendario seleccionado
         if (this.filters.oidCalendario) {
-          console.log('Emitiendo filtros iniciales automáticamente');
           this.aplicarFiltros();
         }
       },

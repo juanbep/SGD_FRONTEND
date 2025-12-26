@@ -1,222 +1,214 @@
-.obligatoryField{
-    color: var(--error-ligth) !important;
-  }
+.obligatoryField {
+  color: var(--error-ligth) !important;
+}
 
 /* Upload file input style */
 
 .file-upload-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 8px;
-    width: 100%;
-    height: 64px;
-    border: 1px solid var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  width: 100%;
+  height: 64px;
+  border: 1px solid var(--blue);
 }
 
-
-
 .file-upload-label {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    cursor: pointer;
-    height: 100%;
-    background-color: var(--white);
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  background-color: var(--white);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 
 .file-details {
-    margin-right: auto;
-    height: 100%;
-    width: 100%;
+  margin-right: auto;
+  height: 100%;
+  width: 100%;
 }
 
 .file-title {
-    padding-left: 26px;
-    padding-top: 14px;
+  padding-left: 26px;
+  padding-top: 14px;
 }
 
 .file-name {
-    position: relative;
-    bottom: 21px;
-    left: 26px;
+  position: relative;
+  bottom: 21px;
+  left: 26px;
 }
 
 .file-actions {
-    display: flex;
-    align-items: center;
-    height: 100%;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 /* Removed duplicate .button-actions */
 
 .button-upload {
-    background-image: url('../assets/icons/buttons/upload-icon.svg');
-    background-size: 36px 36px !important;
-    /* Ajusta el tamaño del SVG */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Centrar la imagen */
-    background-color: var(--blue);
-    pointer-events: all;
+  background-image: url("../assets/icons/buttons/upload-icon.svg");
+  background-size: 36px 36px !important;
+  /* Ajusta el tamaño del SVG */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Centrar la imagen */
+  background-color: var(--blue);
+  pointer-events: all;
 }
 
 .button-upload-error {
-    background-image: url('../assets/icons/buttons/upload-icon.svg');
-    background-size: 36px 36px !important;
-    /* Ajusta el tamaño del SVG */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Centrar la imagen */
-    background-color: var(--red-light);
-    pointer-events: all;
+  background-image: url("../assets/icons/buttons/upload-icon.svg");
+  background-size: 36px 36px !important;
+  /* Ajusta el tamaño del SVG */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Centrar la imagen */
+  background-color: var(--red-light);
+  pointer-events: all;
 }
 
 /* download file input style */
 
-
 .button-download {
-    border: none;
-    z-index: 1;
-    right: 0;
-    width: 54px;
-    height: 63px;
-    border-radius: 0px 8px 8px 0px;
-    background-color: var(--blue);
-    background-image: url(../assets/icons/buttons/download-icon.svg);
-    background-position: center;
-    background-repeat: no-repeat;
+  border: none;
+  z-index: 1;
+  right: 0;
+  width: 54px;
+  height: 63px;
+  border-radius: 0px 8px 8px 0px;
+  background-color: var(--blue);
+  background-image: url(../assets/icons/buttons/download-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .download-file-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 8px;
-    width: 100%;
-    height: 64px;
-    border: 1px solid var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  width: 100%;
+  height: 64px;
+  border: 1px solid var(--blue);
 }
 
 .button-view {
-    border: none;
-    z-index: 1;
-    right: 0;
-    width: 54px;
-    height: 63px;
-    border-radius: 0px 8px 8px 0px;
-    background-color: var(--blue);
-    background-image: url(../assets/icons/buttons/view-icon.svg);
-    background-position: center;
-    background-repeat: no-repeat;
+  border: none;
+  z-index: 1;
+  right: 0;
+  width: 54px;
+  height: 63px;
+  border-radius: 0px 8px 8px 0px;
+  background-color: var(--blue);
+  background-image: url(../assets/icons/buttons/view-icon.svg);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-
-
 .button-delete {
-    background-image: url('../assets/icons/buttons/delete-icon.svg');
-    background-size: 36px 36px !important;
-    /* Ajusta el tamaño del SVG */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Centrar la imagen */
-    background-color: var(--blue);
-    pointer-events: all;
+  background-image: url("../assets/icons/buttons/delete-icon.svg");
+  background-size: 36px 36px !important;
+  /* Ajusta el tamaño del SVG */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Centrar la imagen */
+  background-color: var(--blue);
+  pointer-events: all;
 }
 
 .download-file-label {
-    margin: 15px;
-    padding-top: 5px;
-    flex: 1;
-    align-items: center;
-    cursor: pointer;
-    height: 100%;
-    background-color: var(--white);
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+  margin: 15px;
+  padding-top: 5px;
+  flex: 1;
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  background-color: var(--white);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
-
 
 .evaluation {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 64px;
-    width: 128px;
-    border-radius: 16px;
-    border: 1px solid var(--blue);
-    font-size: 25px;
-    margin: 0px;
-    text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  width: 128px;
+  border-radius: 16px;
+  border: 1px solid var(--blue);
+  font-size: 25px;
+  margin: 0px;
+  text-align: center;
 }
 
-
 .text-error {
-    display: block;
-    color: var(--red-light);
+  display: block;
+  color: var(--red-light);
 }
 
 .observation {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    border-radius: 16px;
-    border: 1px solid var(--blue);
-    background: var(--white);
-    outline: none;
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 16px;
+  border: 1px solid var(--blue);
+  background: var(--white);
+  outline: none;
 }
 
 .button-modal {
-    display: flex;
-    width: 120px;
-    height: 40px;
-    padding: 26px;
-    margin: 5px;
-    border: none;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 100px;
-    background: var(--blue);
-    color: #FFF;
+  display: flex;
+  width: 120px;
+  height: 40px;
+  padding: 26px;
+  margin: 5px;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 100px;
+  background: var(--blue);
+  color: #fff;
 }
 
 .modal-buttons {
-    display: flex;
-    width: 100%;
-    justify-content: flex-end;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
 }
 
-
 .input-nota {
-    height: 64px;
-    width: 128px;
-    border-radius: 16px;
-    border: 1px solid var(--blue);
-    font-size: 25px;
-    margin: 0px;
-    text-align: center;
-    outline: none;
+  height: 64px;
+  width: 128px;
+  border-radius: 16px;
+  border: 1px solid var(--blue);
+  font-size: 25px;
+  margin: 0px;
+  text-align: center;
+  outline: none;
 }
 
 .input-nota-error {
-    height: 64px;
-    width: 128px;
-    border-radius: 16px;
-    border: 1px solid var(--red-light);
-    font-size: 25px;
-    margin: 0px;
-    text-align: center;
-    outline: none;
-    color: var(--red-light);
+  height: 64px;
+  width: 128px;
+  border-radius: 16px;
+  border: 1px solid var(--red-light);
+  font-size: 25px;
+  margin: 0px;
+  text-align: center;
+  outline: none;
+  color: var(--red-light);
 }
 
 /* Removed duplicate definition of .input-nota-error */
@@ -224,144 +216,139 @@
 /* formularios CRUD */
 
 .form-floating label {
-    transition: none !important;
-    text-wrap: wrap !important;
-    height: auto !important;
+  transition: none !important;
+  text-wrap: wrap !important;
+  height: auto !important;
 }
 
 /* Input text */
 .input-text {
-    padding-right: 30px !important;
+  padding-right: 30px !important;
 }
 
-
 .label-custom {
-    transform: translateY(-50%) !important;
-    top: 35% !important;
-    padding-left: 30px !important;
-    padding-right: 0px !important;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
-    color: var(--neutral-70) !important;
-    background-color: transparent !important;
-    pointer-events: all !important;
+  transform: translateY(-50%) !important;
+  top: 35% !important;
+  padding-left: 30px !important;
+  padding-right: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  color: var(--neutral-70) !important;
+  background-color: transparent !important;
+  pointer-events: all !important;
 }
 
 .input-text::placeholder {
-    position: absolute !important;
-    color: var(--blue) !important;
-    top: 29px !important;
-    left: 30px !important;
+  position: absolute !important;
+  color: var(--blue) !important;
+  top: 29px !important;
+  left: 30px !important;
 }
 
 /* Input text disabled */
 .input-text-disabled {
-    color: var(--neutral-60) !important;
-    background-color: var(--neutral-95) !important;
-    border-color: var(--neutral-95) !important;
-    pointer-events: none;
-    cursor: not-allowed;
+  color: var(--neutral-60) !important;
+  background-color: var(--neutral-95) !important;
+  border-color: var(--neutral-95) !important;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 .input-text-disabled::placeholder {
-    color: var(--neutral-70) !important;
+  color: var(--neutral-70) !important;
 }
 
 .input-date,
 .input-select,
 .input-search,
 .input-text {
-    /* border-color: var(--blue) !important; */
-    /* Cambia el color del borde sin enfocar */
-    padding-left: 30px !important;
-    height: 63px !important;
-    color: var(--blue) !important;
+  /* border-color: var(--blue) !important; */
+  /* Cambia el color del borde sin enfocar */
+  padding-left: 30px !important;
+  height: 63px !important;
+  color: var(--blue) !important;
 }
 
 .input-search-disabled {
-    color: var (--neutral-60) !important;
-    background-color: var(--neutral-95) !important;
-    border-color: var(--neutral-95) !important;
-    pointer-events: none;
-    cursor: not-allowed;
+  color: var (--neutral-60) !important;
+  background-color: var(--neutral-95) !important;
+  border-color: var(--neutral-95) !important;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 /* Input select */
 .input-select {
-    padding-right: 50px !important;
+  padding-right: 50px !important;
 }
 
 .input-select {
-    background-image: url('../assets/icons/forms/select-normal.svg') !important;
-    background-size: 20px 20px !important;
-    background-repeat: no-repeat !important;
-    background-position: right 25px center !important;
+  background-image: url("../assets/icons/forms/select-normal.svg") !important;
+  background-size: 20px 20px !important;
+  background-repeat: no-repeat !important;
+  background-position: right 25px center !important;
 }
 
 /* Input select disabled */
 .input-select-disabled {
-    color: var(--neutral-60) !important;
-    background-color: var(--neutral-95) !important;
-    border-color: var(--neutral-95) !important;
-    pointer-events: none;
-    background-image: url('../assets/icons/forms/select-disabled.svg') !important;
+  color: var(--neutral-60) !important;
+  background-color: var(--neutral-95) !important;
+  border-color: var(--neutral-95) !important;
+  pointer-events: none;
+  background-image: url("../assets/icons/forms/select-disabled.svg") !important;
 }
 
-.error-select-background{
-    background-image: url('../assets/icons/forms/select-error.svg') !important;
-    background-size: 20px 20px !important;
-    background-repeat: no-repeat !important;
-  }
+.error-select-background {
+  background-image: url("../assets/icons/forms/select-error.svg") !important;
+  background-size: 20px 20px !important;
+  background-repeat: no-repeat !important;
+}
 
 /* ERRORS */
 .error-label {
-    color: var(--error-ligth) !important;
-    ;
+  color: var(--error-ligth) !important;
 }
 
 .label-disabled {
-    pointer-events: none !important;
+  pointer-events: none !important;
 }
 
 .error-input {
-    border-color: var(--error-ligth) !important;
-    color: var (--error-ligth) !important;
-    ;
+  border-color: var(--error-ligth) !important;
+  color: var (--error-ligth) !important;
 }
 
 .error-input::placeholder {
-    color: var(--error-ligth) !important;
-    ;
+  color: var(--error-ligth) !important;
 }
 
 /* Error message */
 .error-message {
-    color: var(--error-ligth) !important;
+  color: var(--error-ligth) !important;
 }
 
 /* ---------- */
 
 .obligatoryField-disabled {
-    color: var(--neutral-60);
+  color: var(--neutral-60);
 }
 
 .container-buttons {
-    margin-top: 50px !important;
+  margin-top: 50px !important;
 }
 
 .input-date::-webkit-calendar-picker-indicator {
-    /* background-image: url('../assets/icons/forms/calendar-normal.svg'); */
-    background-repeat: no-repeat;
-    background-size: 24px 24px;
-    padding-right: 15px;
-    padding-bottom: 25px;
-  }
+  /* background-image: url('../assets/icons/forms/calendar-normal.svg'); */
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  padding-right: 15px;
+  padding-bottom: 25px;
+}
 
-
-  /* input date disabled */
+/* input date disabled */
 .input-date:disabled {
-    /* background: url('../assets/icons/forms/calendar-disabled.svg') no-repeat 93% center; */
-    color:var(--neutral-60) !important;
-    background-color: var(--neutral-95) !important;
-    border-color: var(--neutral-95) !important;
-  }
+  /* background: url('../assets/icons/forms/calendar-disabled.svg') no-repeat 93% center; */
+  color: var(--neutral-60) !important;
+  background-color: var(--neutral-95) !important;
+  border-color: var(--neutral-95) !important;
+}

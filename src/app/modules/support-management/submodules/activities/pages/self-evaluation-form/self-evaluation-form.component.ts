@@ -26,7 +26,6 @@ import { ConfirmDialogComponent } from '../../../../../../shared/components/conf
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 
-
 @Component({
   selector: 'app-self-evaluation-form',
   standalone: true,

@@ -1,4 +1,12 @@
-import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { Chart } from 'chart.js/auto';
 @Component({
   selector: 'statistics-chart',
@@ -8,7 +16,6 @@ import { Chart } from 'chart.js/auto';
   styleUrl: './chart.component.css',
 })
 export class ChartComponent implements OnInit, OnChanges {
-
   @Input()
   labels: string[] = [];
 
@@ -22,10 +29,10 @@ export class ChartComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-   if (changes['labels'] || changes['dataSets']) {
+    if (changes['labels'] || changes['dataSets']) {
       this.labels = changes['labels'].currentValue;
       this.dataSets = changes['dataSets'].currentValue;
-      if(this.chart){
+      if (this.chart) {
         this.chart.destroy();
         this.drawChart(this.labels, this.dataSets);
       }
@@ -55,5 +62,4 @@ export class ChartComponent implements OnInit, OnChanges {
       },
     });
   }
-
 }

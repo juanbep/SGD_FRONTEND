@@ -8,9 +8,8 @@ describe('HistoricalConsolidatedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HistoricalConsolidatedComponent]
-    })
-    .compileComponents();
+      imports: [HistoricalConsolidatedComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HistoricalConsolidatedComponent);
     component = fixture.componentInstance;

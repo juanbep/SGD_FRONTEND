@@ -5,28 +5,19 @@ import { TeachersListComponent } from './pages/teachers-list/teachers-list.compo
 import { ConsolidatedTeacherComponent } from './pages/consolidated-teacher/consolidated-teacher.component';
 
 export const routes: Routes = [
-    {
-        path: 'lista-docentes',
-        component: TeachersListComponent 
-    },
-    {
-      path: 'consolidado-docente/:id',
-      component: ConsolidatedTeacherComponent
-    }
-]
-
+  {
+    path: 'lista-docentes',
+    component: TeachersListComponent,
+  },
+  {
+    path: 'consolidado-docente/:id',
+    component: ConsolidatedTeacherComponent,
+  },
+];
 
 @NgModule({
-    declarations: [
-    ],
-    imports: [
-      RouterModule.forChild(routes),
-      CommonModule
-    ],
-    exports: [
-      RouterModule
-    ]
-  }
-)
-  
-export class ConsolidatedRoutingModule { }
+  declarations: [],
+  imports: [RouterModule.forChild(routes), CommonModule],
+  exports: [RouterModule],
+})
+export class ConsolidatedRoutingModule {}

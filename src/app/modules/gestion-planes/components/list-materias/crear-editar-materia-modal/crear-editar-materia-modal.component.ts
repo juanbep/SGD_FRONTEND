@@ -489,10 +489,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.updateMateria(updateDto).subscribe({
         next: (response) => {
-          console.log(
-            'Materia actualizada (correquisito eliminado):',
-            response
-          );
           resolve(response);
         },
         error: (error) => reject(error),
@@ -520,7 +516,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.updateMateria(updateDto).subscribe({
         next: (response) => {
-          console.log('Materia actualizada (correquisito cambiado):', response);
           resolve(response);
         },
         error: (error) => reject(error),
@@ -546,7 +541,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.updateMateria(updateDto).subscribe({
         next: (response) => {
-          console.log('Materia actualizada:', response);
           resolve(response);
         },
         error: (error) => reject(error),
@@ -573,10 +567,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.updateMateria(updateDto).subscribe({
         next: (response) => {
-          console.log(
-            'Materia actualizada (correquisito sin cambios):',
-            response
-          );
           resolve(response);
         },
         error: (error) => reject(error),
@@ -602,10 +592,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.updateMateria(updateDto).subscribe({
         next: (response) => {
-          console.log(
-            'Materia actualizada con correquisito existente:',
-            response
-          );
           resolve(response);
         },
         error: (error) => reject(error),
@@ -631,10 +617,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     const correquisitoCreado = await new Promise<any>((resolve, reject) => {
       this.materiaService.createMateria(correquisitoDto).subscribe({
-        next: (response) => {
-          console.log('Correquisito creado:', response);
-          resolve(response);
-        },
+        next: (response) => {},
         error: (error) => reject(error),
       });
     });
@@ -654,10 +637,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
 
     await new Promise((resolve, reject) => {
       this.materiaService.updateMateria(updateDto).subscribe({
-        next: (response) => {
-          console.log('Materia actualizada con nuevo correquisito:', response);
-          resolve(response);
-        },
+        next: (response) => {},
         error: (error) => reject(error),
       });
     });
@@ -680,7 +660,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.createMateria(createDto).subscribe({
         next: (response) => {
-          console.log('Materia creada:', response);
           resolve(response);
         },
         error: (error) => reject(error),
@@ -705,7 +684,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.createMateria(createDto).subscribe({
         next: (response) => {
-          console.log('Materia creada con correquisito existente:', response);
           resolve(response);
         },
         error: (error) => reject(error),
@@ -732,7 +710,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     const correquisitoCreado = await new Promise<any>((resolve, reject) => {
       this.materiaService.createMateria(correquisitoDto).subscribe({
         next: (response) => {
-          console.log('Correquisito creado:', response);
           resolve(response);
         },
         error: (error) => reject(error),
@@ -754,7 +731,6 @@ export class CrearEditarMateriaModalComponent implements OnInit {
     await new Promise((resolve, reject) => {
       this.materiaService.createMateria(materiaPrincipalDto).subscribe({
         next: (response) => {
-          console.log('Materia principal creada:', response);
           resolve(response);
         },
         error: (error) => reject(error),

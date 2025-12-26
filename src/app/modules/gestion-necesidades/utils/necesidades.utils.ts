@@ -79,12 +79,9 @@ export function seleccionarCalendarioAutomatico(
   );
 
   if (calendarioActivo) {
-    console.log('Calendario ACTIVO seleccionado:', calendarioActivo.label);
     return calendarioActivo.value;
   }
 
-  // Si no hay ACTIVO, seleccionar el primero (más reciente)
-  console.log('Calendario más reciente seleccionado:', calendarios[0].label);
   return calendarios[0].value;
 }
 

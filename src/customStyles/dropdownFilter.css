@@ -1,67 +1,65 @@
 /* Estilo para el contenedor del dropdown */
 .dropdown {
-    position: relative;
-    display: inline-block;
-    border-radius: 8px 8px 8px 8px;
-    width: 200px;
-    height: 45px;
+  position: relative;
+  display: inline-block;
+  border-radius: 8px 8px 8px 8px;
+  width: 200px;
+  height: 45px;
 }
 
 /* Estilo para el botón del dropdown */
 .dropbtn {
-    display: flex;
-    align-items: center;
-    background-color: var(--white);
-    width: 200px;
-    height: 45px;
-    border-radius: 8px 8px 8px 8px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border: 1px solid var(--blue);
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  width: 200px;
+  height: 45px;
+  border-radius: 8px 8px 8px 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border: 1px solid var(--blue);
+  justify-content: space-between;
 }
 
 /* Contenedor del contenido del dropdown (invisible por defecto) */
 .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    width: 200px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    border-radius: 0px 0px 8px 8px;
-    border: 1px solid var(--blue);
-    padding-bottom: 14px;
-    
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 0px 0px 8px 8px;
+  border: 1px solid var(--blue);
+  padding-bottom: 14px;
 }
 
 /* Estilo para los links dentro del dropdown */
 .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    width: 200px;
-    height: 35px;
-    text-decoration: none;
-    display: block;
+  color: black;
+  padding: 12px 16px;
+  width: 200px;
+  height: 35px;
+  text-decoration: none;
+  display: block;
 }
 
 /* Cambia el color al pasar el mouse sobre los links */
 .dropdown-content a:hover {
-    background-color: #f1f1f1;
-    width: 198px;
+  background-color: #f1f1f1;
+  width: 198px;
 }
 
 /* Muestra el contenido del dropdown al hacer hover */
 .dropdown:hover .dropdown-content {
-    display: block;
-    
+  display: block;
 }
 
 /* Cambia el color del botón al hacer hover */
 .dropdown:hover .dropbtn {
-    border: 1px solid var(--blue);  
-    border-radius: 8px 8px 0px 0px; 
-    border-bottom: var(--white);
+  border: 1px solid var(--blue);
+  border-radius: 8px 8px 0px 0px;
+  border-bottom: var(--white);
 }

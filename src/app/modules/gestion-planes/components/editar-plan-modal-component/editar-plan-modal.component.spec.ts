@@ -8,9 +8,8 @@ describe('EditarPlanModalComponentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditarPlanModalComponentComponent]
-    })
-    .compileComponents();
+      imports: [EditarPlanModalComponentComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EditarPlanModalComponentComponent);
     component = fixture.componentInstance;

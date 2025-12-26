@@ -90,7 +90,6 @@ export class StepFechasComponent implements OnInit, OnChanges {
       const calendario = await this.calendarioHelper.getById(
         this.oidCalendario
       );
-      console.log(calendario);
 
       // Guardar el calendario completo
       this.calendarioActual.set(calendario);
@@ -255,7 +254,6 @@ export class StepFechasComponent implements OnInit, OnChanges {
         this.cerrarModalEliminar();
       }
     } catch (error: any) {
-      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
       this.cerrarModalEliminar();
 
       // Mostrar el mensaje que viene del backend

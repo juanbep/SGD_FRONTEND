@@ -139,7 +139,6 @@ export class EditAcademicCalendarComponent implements OnInit {
         this.cerrarModalEliminar();
       }
     } catch (error: any) {
-      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
       this.cerrarModalEliminar();
       const mensaje = error?.error?.mensaje || 'Error al eliminar la fecha';
       this.toastr.error(mensaje);
@@ -175,7 +174,6 @@ export class EditAcademicCalendarComponent implements OnInit {
         this.cerrarModalAgregar();
       }
     } catch (error: any) {
-      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
       const mensaje = error?.error?.mensaje || 'Error al agregar la fecha';
       this.toastr.error(mensaje);
     } finally {
@@ -209,7 +207,6 @@ export class EditAcademicCalendarComponent implements OnInit {
         this.cerrarModalAgregar();
       }
     } catch (error: any) {
-      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
       const mensaje = error?.error?.mensaje || 'Error al actualizar la fecha';
       this.toastr.error(mensaje);
     } finally {

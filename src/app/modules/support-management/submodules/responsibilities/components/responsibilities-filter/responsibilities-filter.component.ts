@@ -8,18 +8,16 @@ import { ResponsibilitiesServicesService } from '../../services/responsibilities
 @Component({
   selector: 'responsibilities-filter',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './responsibilities-filter.component.html',
-  styleUrl: './responsibilities-filter.component.css'
+  styleUrl: './responsibilities-filter.component.css',
 })
 export class ResponsibilitiesFilterComponent {
-
   private formBuilder: FormBuilder = inject(FormBuilder);
   private catalogDataService = inject(CatalogDataService);
-  private responsabiltitiesServicesService = inject(ResponsibilitiesServicesService);
+  private responsabiltitiesServicesService = inject(
+    ResponsibilitiesServicesService
+  );
 
   public catalogDataResponse: CatalogDataResponse | null = null;
 
@@ -30,7 +28,6 @@ export class ResponsibilitiesFilterComponent {
     evaluatorRole: string | null;
   } | null = null;
 
-
   formFilter: FormGroup = this.formBuilder.group({
     activityType: [''],
     activityName: [''],
@@ -40,7 +37,8 @@ export class ResponsibilitiesFilterComponent {
 
   ngOnInit(): void {
     this.recoverCatalog();
-    const filterParams = this.responsabiltitiesServicesService.getParamsActivitiesFilterSignal();
+    const filterParams =
+      this.responsabiltitiesServicesService.getParamsActivitiesFilterSignal();
     this.formFilter.get('activityName')?.setValue(filterParams.activityName);
     this.formFilter.get('activityType')?.setValue(filterParams.activityType);
     this.formFilter.get('evaluatorName')?.setValue(filterParams.evaluatorName);
@@ -57,11 +55,21 @@ export class ResponsibilitiesFilterComponent {
     const evaluatorName = this.formFilter.get('evaluatorName')?.value;
     const evaluatorRole = this.formFilter.get('evaluatorRole')?.value;
 
-    this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal(activityName, activityType, evaluatorName, evaluatorRole);
+    this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal(
+      activityName,
+      activityType,
+      evaluatorName,
+      evaluatorRole
+    );
   }
 
   clearFilter() {
     this.formFilter.reset();
-    this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal('', '', '', '');
+    this.responsabiltitiesServicesService.setParamsActivitiesFilterSignal(
+      '',
+      '',
+      '',
+      ''
+    );
   }
 }

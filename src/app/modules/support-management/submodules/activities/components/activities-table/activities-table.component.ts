@@ -1,4 +1,11 @@
-import { Component, effect, inject, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivitiesViewEvaluationComponent } from '../activities-view-evaluation/activities-view-evaluation.component';
 import { ActivitiesServicesService } from '../../services/activities-services.service';
@@ -21,18 +28,18 @@ const PAGE_SIZE = 10;
     CommonModule,
     ActivitiesViewEvaluationComponent,
     PaginatorComponent,
-    SelfEvaluationReviewModalComponent
+    SelfEvaluationReviewModalComponent,
   ],
   templateUrl: './activities-table.component.html',
   styleUrl: './activities-table.component.css',
 })
 export class ActivitiesTableComponent implements OnInit {
-
   @Input()
   currentUser: UsuarioResponse | null = null;
 
   @ViewChild(SelfEvaluationReviewModalComponent)
-  selfEvaluationReviewModalComponent: SelfEvaluationReviewModalComponent | null = null;
+  selfEvaluationReviewModalComponent: SelfEvaluationReviewModalComponent | null =
+    null;
 
   public currentPage: number = 1;
   public activities: PagedResponse<ActividadResponse> | null = null;
@@ -71,9 +78,7 @@ export class ActivitiesTableComponent implements OnInit {
     this.recoverActivities(this.currentPage, PAGE_SIZE);
   });
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   pageChanged(event: any) {
     this.currentPage = event;
@@ -123,13 +128,18 @@ export class ActivitiesTableComponent implements OnInit {
   }
 
   public openFormEvaluation(responsabiltyId: number) {
-    this.router.navigate(['/app/gestion-soportes/actividades/formulario-autoevaluacion', responsabiltyId]);
+    this.router.navigate([
+      '/app/gestion-soportes/actividades/formulario-autoevaluacion',
+      responsabiltyId,
+    ]);
   }
 
   public openEditFormEvaluation(responsabiltyId: number) {
-    this.router.navigate(['/app/gestion-soportes/actividades/formulario-editar-autoevaluacion', responsabiltyId]);
+    this.router.navigate([
+      '/app/gestion-soportes/actividades/formulario-editar-autoevaluacion',
+      responsabiltyId,
+    ]);
   }
-
 
   public reloadActivities() {
     if (this.activities && this.activities.content) {
@@ -158,7 +168,6 @@ export class ActivitiesTableComponent implements OnInit {
       this.selfEvaluationReviewModalComponent.openModal(idSource);
     }
   }
-
 }
 
 interface ActividadesPorTipoActividad {

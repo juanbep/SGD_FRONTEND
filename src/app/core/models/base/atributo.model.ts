@@ -1,4 +1,4 @@
 export interface Atributo {
-    codigoAtributo: string;
-    valor: string;
+  codigoAtributo: string;
+  valor: string;
 }

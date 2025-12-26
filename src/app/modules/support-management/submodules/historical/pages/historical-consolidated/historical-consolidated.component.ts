@@ -1,38 +1,48 @@
 import { Component, effect, inject, OnInit, ViewChild } from '@angular/core';
-import { UserFilterComponent } from "../../components/user-filter/user-filter.component";
-import { UserTableComponent } from "../../components/user-table/user-table.component";
+import { UserFilterComponent } from '../../components/user-filter/user-filter.component';
+import { UserTableComponent } from '../../components/user-table/user-table.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { HistoricalServices } from '../../services/historical-services.service';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ConsolidadoHistoricoResponse } from '../../../../../../core/models/response/consolidado-historico-response.model';
 import { PagedResponse } from '../../../../../../core/models/response/paged-response.model';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
 
 const PAGE_SIZE = 10;
 
 @Component({
   selector: 'app-historical-consolidated',
   standalone: true,
-  imports: [UserFilterComponent, UserTableComponent, NgMultiSelectDropDownModule, CommonModule, ReactiveFormsModule, LoadingOverleyComponent],
+  imports: [
+    UserFilterComponent,
+    UserTableComponent,
+    NgMultiSelectDropDownModule,
+    CommonModule,
+    ReactiveFormsModule,
+    LoadingOverleyComponent,
+  ],
   templateUrl: './historical-consolidated.component.html',
-  styleUrl: './historical-consolidated.component.css'
+  styleUrl: './historical-consolidated.component.css',
 })
 export class HistoricalConsolidatedComponent implements OnInit {
-
-
-
   private formBuilder: FormBuilder = inject(FormBuilder);
   private historicalServices = inject(HistoricalServices);
   private messagesInfoService = inject(MessagesInfoService);
 
-
   public dropdownSettings = {};
   public academicPeriodResponse: PeriodoAcademicoResponse[] = [];
-  public dropdownAcademicPeriodsList: { item_id: number; item_text: string }[] = [];
-  public consolidadoHistoricoResponse: PagedResponse<ConsolidadoHistoricoResponse> | null = null;
+  public dropdownAcademicPeriodsList: { item_id: number; item_text: string }[] =
+    [];
+  public consolidadoHistoricoResponse: PagedResponse<ConsolidadoHistoricoResponse> | null =
+    null;
 
   public loading = false;
 
@@ -41,7 +51,12 @@ export class HistoricalConsolidatedComponent implements OnInit {
     evaluatedId: string | null;
     category: string | null;
     department: string | null;
-  } = { evaluatedName: null, evaluatedId: null, category: null, department: null };
+  } = {
+    evaluatedName: null,
+    evaluatedId: null,
+    category: null,
+    department: null,
+  };
 
   public currentPage = 0;
 
@@ -68,13 +83,15 @@ export class HistoricalConsolidatedComponent implements OnInit {
       itemsShowLimit: 5,
       allowSearchFilter: true,
       searchPlaceholderText: 'Buscar',
-    }
+    };
   }
 
   onAcademicPeriodSelect() {
-    this.formHistoricalConsolidated.get('academicPeriod')?.valueChanges.subscribe((value) => {
-      this.searchHistoricalConsolidated();
-    });
+    this.formHistoricalConsolidated
+      .get('academicPeriod')
+      ?.valueChanges.subscribe((value) => {
+        this.searchHistoricalConsolidated();
+      });
   }
 
   recoverAcademicPeriods() {
@@ -117,32 +134,47 @@ export class HistoricalConsolidatedComponent implements OnInit {
   }
 
   searchHistoricalConsolidated() {
-
-    if ((this.formHistoricalConsolidated.invalid && this.formHistoricalConsolidated.dirty && this.formHistoricalConsolidated.get('academicPeriod')?.value.length === 0) || this.formHistoricalConsolidated.get('academicPeriod')?.value.length === 0) {
+    if (
+      (this.formHistoricalConsolidated.invalid &&
+        this.formHistoricalConsolidated.dirty &&
+        this.formHistoricalConsolidated.get('academicPeriod')?.value.length ===
+          0) ||
+      this.formHistoricalConsolidated.get('academicPeriod')?.value.length === 0
+    ) {
       this.formHistoricalConsolidated.markAllAsTouched();
       this.consolidadoHistoricoResponse = null;
       return;
     }
-    const academicPeriodsId = this.formHistoricalConsolidated.get('academicPeriod')?.value.map((item: { item_id: number; }) => item.item_id);
-    this.historicalServices.historicalConsolidated
-      (this.currentPage,
+    const academicPeriodsId = this.formHistoricalConsolidated
+      .get('academicPeriod')
+      ?.value.map((item: { item_id: number }) => item.item_id);
+    this.historicalServices
+      .historicalConsolidated(
+        this.currentPage,
         PAGE_SIZE,
         academicPeriodsId,
         this.filterParams.evaluatedName,
         this.filterParams.category,
         this.filterParams.evaluatedId
-      ).subscribe({
+      )
+      .subscribe({
         next: (response) => {
-          if(!response || response.data.content.length === 0 ){ 
-            this.messagesInfoService.showWarningMessage('No se encontraron resultados','Advertencia');
+          if (!response || response.data.content.length === 0) {
+            this.messagesInfoService.showWarningMessage(
+              'No se encontraron resultados',
+              'Advertencia'
+            );
             this.consolidadoHistoricoResponse = null;
-          }else{
+          } else {
             this.consolidadoHistoricoResponse = response.data;
           }
         },
         error: (error) => {
           this.consolidadoHistoricoResponse = null;
-          this.messagesInfoService.showErrorMessage('Error al cargar los datos', 'Error');
+          this.messagesInfoService.showErrorMessage(
+            'Error al cargar los datos',
+            'Error'
+          );
         },
       });
   }
@@ -154,24 +186,31 @@ export class HistoricalConsolidatedComponent implements OnInit {
 
   downloadHistoricalConsolidated() {
     this.loading = true;
-    const academicPeriodsId = this.formHistoricalConsolidated.get('academicPeriod')?.value.map((item: { item_id: number; }) => item.item_id);
-    this.historicalServices.downloadHistoricalConsolidated(academicPeriodsId).subscribe({
-      next: (response) => {
-        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'consolidados_historicos.xlsx';
-        a.click();
-        window.URL.revokeObjectURL(url);
-        this.loading = false;
-      },
-      error: (error) => {
-        this.loading = false;
-        this.messagesInfoService.showErrorMessage('Error al descargar el archivo', 'Error');
-      },
-    });
+    const academicPeriodsId = this.formHistoricalConsolidated
+      .get('academicPeriod')
+      ?.value.map((item: { item_id: number }) => item.item_id);
+    this.historicalServices
+      .downloadHistoricalConsolidated(academicPeriodsId)
+      .subscribe({
+        next: (response) => {
+          const blob = new Blob([response], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'consolidados_historicos.xlsx';
+          a.click();
+          window.URL.revokeObjectURL(url);
+          this.loading = false;
+        },
+        error: (error) => {
+          this.loading = false;
+          this.messagesInfoService.showErrorMessage(
+            'Error al descargar el archivo',
+            'Error'
+          );
+        },
+      });
   }
-
-
 }

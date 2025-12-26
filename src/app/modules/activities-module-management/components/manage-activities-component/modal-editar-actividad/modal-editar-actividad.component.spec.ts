@@ -8,9 +8,8 @@ describe('ModalEditarActividadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalEditarActividadComponent]
-    })
-    .compileComponents();
+      imports: [ModalEditarActividadComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModalEditarActividadComponent);
     component = fixture.componentInstance;

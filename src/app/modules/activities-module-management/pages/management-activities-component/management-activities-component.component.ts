@@ -61,11 +61,7 @@ export class ManagementActivitiesComponentComponent {
     this.editando = true;
 
     try {
-      console.log('📡 Enviando al backend:', dto);
-
       const resultado = await this.actividadHelperService.update(dto);
-
-      console.log('✅ Respuesta del backend:', resultado);
 
       this.toastr.success(
         `Actividad "${this.actividadAEditar.actividad.nombreActividad}" actualizada correctamente`,

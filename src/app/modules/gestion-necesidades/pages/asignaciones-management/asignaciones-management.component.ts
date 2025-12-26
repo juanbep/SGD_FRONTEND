@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './asignaciones-management.component.html',
-  styleUrl: './asignaciones-management.component.css'
+  styleUrl: './asignaciones-management.component.css',
 })
-export class AsignacionesManagementComponent {
-
-}
+export class AsignacionesManagementComponent {}

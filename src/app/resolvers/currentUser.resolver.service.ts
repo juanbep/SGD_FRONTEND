@@ -6,22 +6,19 @@ import { CatalogDataService } from '../shared/services/catalogData.service';
 
 @Injectable({ providedIn: 'root' })
 export class CurrentUserResolverService implements Resolve<any> {
+  private authServiceService: AuthServiceService = inject(AuthServiceService);
 
-    private authServiceService: AuthServiceService = inject(AuthServiceService);
+  constructor() {}
 
-    constructor() { }
-
-    resolve() {
-        this.authServiceService.getUserInfo().subscribe({
-            next: (response) => {
-                this.authServiceService.currentUserValue = response.data;
-                this.authServiceService.updateLoginSuccess = true;
-            },
-            error: (error) => {
-                this.authServiceService.logout()
-            },
-        }
-        )
-    }
-
+  resolve() {
+    this.authServiceService.getUserInfo().subscribe({
+      next: (response) => {
+        this.authServiceService.currentUserValue = response.data;
+        this.authServiceService.updateLoginSuccess = true;
+      },
+      error: (error) => {
+        this.authServiceService.logout();
+      },
+    });
+  }
 }

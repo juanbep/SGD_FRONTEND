@@ -8,11 +8,12 @@ describe('ResponsibilitiesEditCoordinatorFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResponsibilitiesEditCoordinatorFormComponent]
-    })
-    .compileComponents();
+      imports: [ResponsibilitiesEditCoordinatorFormComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(ResponsibilitiesEditCoordinatorFormComponent);
+    fixture = TestBed.createComponent(
+      ResponsibilitiesEditCoordinatorFormComponent
+    );
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

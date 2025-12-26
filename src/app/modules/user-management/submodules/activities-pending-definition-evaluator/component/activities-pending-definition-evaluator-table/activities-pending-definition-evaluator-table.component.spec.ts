@@ -8,11 +8,12 @@ describe('ActivitiesPendingDefinitionEvaluatorTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ActivitiesPendingDefinitionEvaluatorTableComponent]
-    })
-    .compileComponents();
+      imports: [ActivitiesPendingDefinitionEvaluatorTableComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(ActivitiesPendingDefinitionEvaluatorTableComponent);
+    fixture = TestBed.createComponent(
+      ActivitiesPendingDefinitionEvaluatorTableComponent
+    );
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

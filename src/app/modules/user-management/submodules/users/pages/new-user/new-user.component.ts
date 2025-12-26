@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { UsersServiceService } from '../../services/users-service.service';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
@@ -12,16 +18,11 @@ import { UsuarioCreate } from '../../../../../../core/models/modified/usuario-cr
 @Component({
   selector: 'user-management-new-user',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    ConfirmDialogComponent
-  ],
+  imports: [ReactiveFormsModule, CommonModule, ConfirmDialogComponent],
   templateUrl: './new-user.component.html',
-  styleUrl: './new-user.component.css'
+  styleUrl: './new-user.component.css',
 })
 export class NewUserComponent implements OnInit {
-
   @ViewChild(ConfirmDialogComponent) confirmDialog!: ConfirmDialogComponent;
 
   private formBuilder: FormBuilder = inject(FormBuilder);
@@ -34,17 +35,24 @@ export class NewUserComponent implements OnInit {
   public titleConfirmDialog: string = 'Confirmar creación de usuario';
   public catalogDataResponse: CatalogDataResponse | null = null;
 
-
-
   newUserForm: FormGroup = this.formBuilder.group({
-    role: this.formBuilder.array([], [Validators.required, this.validatorsService.minSelectedCheckboxes]),
+    role: this.formBuilder.array(
+      [],
+      [Validators.required, this.validatorsService.minSelectedCheckboxes]
+    ),
     name: [null, Validators.required],
     lastName: [null, Validators.required],
     email: [null, [Validators.required, Validators.email]],
-    idUser: [null, [Validators.required, Validators.pattern(this.validatorsService.numericPattern)]],
+    idUser: [
+      null,
+      [
+        Validators.required,
+        Validators.pattern(this.validatorsService.numericPattern),
+      ],
+    ],
     faculty: [null, Validators.required],
     department: [null, Validators.required],
-    program : [null, Validators.required],
+    program: [null, Validators.required],
     typeContract: [null, Validators.required],
     studies: [null, Validators.required],
     category: [null, Validators.required],
@@ -55,32 +63,30 @@ export class NewUserComponent implements OnInit {
   stateOptions = [
     {
       value: '1',
-      text: 'Activo'
+      text: 'Activo',
     },
     {
       value: '2',
-      text: 'Inactivo'
-    }
-  ]
-
+      text: 'Inactivo',
+    },
+  ];
 
   ngOnInit(): void {
     this.disableField();
     this.catalogDataResponse = this.catalogDataService.catalogDataSignal;
   }
 
-
   /*
-  * Method to get the form array of roles
-  */
+   * Method to get the form array of roles
+   */
   get rolesFormArray() {
     return this.newUserForm.get('role') as FormArray;
   }
 
   /*
-  * Method to handle the change of the checkbox
-  * @param event:any
-  * */
+   * Method to handle the change of the checkbox
+   * @param event:any
+   * */
   onCheckboxChange(event: any) {
     const rolsFormArray = this.rolesFormArray;
     this.disableField();
@@ -97,8 +103,8 @@ export class NewUserComponent implements OnInit {
   }
 
   /*
-  * Method to disable the fields
-  */
+   * Method to disable the fields
+   */
   disableField() {
     this.newUserForm.get('name')?.disable();
     this.newUserForm.get('lastName')?.disable();
@@ -115,25 +121,30 @@ export class NewUserComponent implements OnInit {
   }
 
   /*
-  * Method to validate the fields
-  * @param field:string
-  * */
+   * Method to validate the fields
+   * @param field:string
+   * */
   isDisabledField(field: string) {
     return this.newUserForm.get(field)?.disabled;
   }
 
   /*
-  * Method to validate the fields
-  * @param field:string
-  * */
+   * Method to validate the fields
+   * @param field:string
+   * */
   isInvaldField(field: string) {
     const control = this.newUserForm.get(field);
-    return control && control.errors && control.invalid && (control.dirty || control.touched);
+    return (
+      control &&
+      control.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    );
   }
 
   /*
-  * Method to enable or disable the fields depending on the role
-  * */
+   * Method to enable or disable the fields depending on the role
+   * */
   changesInRoleField() {
     for (const role of this.newUserForm.get('role')?.value) {
       switch (role) {
@@ -199,7 +210,7 @@ export class NewUserComponent implements OnInit {
           this.newUserForm.get('department')?.enable();
           this.newUserForm.get('state')?.enable();
           break;
-        
+
         //CPD
         case '7':
           this.newUserForm.get('name')?.enable();
@@ -218,9 +229,9 @@ export class NewUserComponent implements OnInit {
   }
 
   /*
-  * Method to get the field error
-  * @param field:string
-  * */
+   * Method to get the field error
+   * @param field:string
+   * */
   getFieldError(field: string): string | null {
     if (!this.newUserForm.controls[field]) return null;
     const control = this.newUserForm.controls[field];
@@ -241,56 +252,62 @@ export class NewUserComponent implements OnInit {
   }
 
   /*
-  * Method to handle the confirm event and save the user
-  * @param event:boolean|void
-  * */
+   * Method to handle the confirm event and save the user
+   * @param event:boolean|void
+   * */
   onConfirm(event: boolean | void): void {
     if (event) {
       this.newUserForm.markAllAsTouched();
       if (this.newUserForm.valid) {
-        let newUser: UsuarioCreate[] = [{
-          nombres: this.newUserForm.get('name')?.value,
-          apellidos: this.newUserForm.get('lastName')?.value,
-          correo: this.newUserForm.get('email')?.value,
-          username: '',
-          identificacion: this.newUserForm.get('idUser')?.value,
-          estadoUsuario: {
-            oidEstadoUsuario: this.newUserForm.get('state')?.value.toString(),
-          },
-          usuarioDetalle: {
-            facultad: this.newUserForm.get('faculty')?.value,
-            departamento: this.newUserForm.get('department')?.value,
-            programa: this.newUserForm.get('program')?.value,
-            categoria: this.newUserForm.get('category')?.value,
-            contratacion: this.newUserForm.get('typeContract')?.value,
-            dedicacion: this.newUserForm.get('dedication')?.value,
-            estudios: this.newUserForm.get('studies')?.value,
-          },
-          roles: this.newUserForm.get('role')?.value.map((role: string) => {
-            return {
-              oid: role
-            }
-          })
-        }];
-        this.userServices.saveUser(newUser).subscribe(
+        let newUser: UsuarioCreate[] = [
           {
-            next: () => {
-              this.messageToast.showSuccessMessage('Usuario creado correctamente', 'Usuario creado');
-              this.clearFormFields();
+            nombres: this.newUserForm.get('name')?.value,
+            apellidos: this.newUserForm.get('lastName')?.value,
+            correo: this.newUserForm.get('email')?.value,
+            username: '',
+            identificacion: this.newUserForm.get('idUser')?.value,
+            estadoUsuario: {
+              oidEstadoUsuario: this.newUserForm.get('state')?.value.toString(),
             },
-            error: (error) => {
-              this.messageToast.showErrorMessage(error.error.mensaje, 'Error');
-            }
-          }
-        );
+            usuarioDetalle: {
+              facultad: this.newUserForm.get('faculty')?.value,
+              departamento: this.newUserForm.get('department')?.value,
+              programa: this.newUserForm.get('program')?.value,
+              categoria: this.newUserForm.get('category')?.value,
+              contratacion: this.newUserForm.get('typeContract')?.value,
+              dedicacion: this.newUserForm.get('dedication')?.value,
+              estudios: this.newUserForm.get('studies')?.value,
+            },
+            roles: this.newUserForm.get('role')?.value.map((role: string) => {
+              return {
+                oid: role,
+              };
+            }),
+          },
+        ];
+        this.userServices.saveUser(newUser).subscribe({
+          next: () => {
+            this.messageToast.showSuccessMessage(
+              'Usuario creado correctamente',
+              'Usuario creado'
+            );
+            this.clearFormFields();
+          },
+          error: (error) => {
+            this.messageToast.showErrorMessage(error.error.mensaje, 'Error');
+          },
+        });
       } else {
-        this.messageToast.showWarningMessage('Por favor, verifica los campos', 'Advertencia');
+        this.messageToast.showWarningMessage(
+          'Por favor, verifica los campos',
+          'Advertencia'
+        );
       }
     }
   }
   /*
-  * Method to validate if the role field is invalid
-  * */
+   * Method to validate if the role field is invalid
+   * */
   isInvalidRoleField() {
     const control = this.newUserForm.get('role');
     if (control?.value.length === 0) {
@@ -299,49 +316,65 @@ export class NewUserComponent implements OnInit {
     return false;
   }
 
-
   /*
-  * Method to go back
-  * */
+   * Method to go back
+   * */
   goBack() {
     window.history.back();
   }
 
   /*
-  * Method to clear the fields that are disabled
-  * */
+   * Method to clear the fields that are disabled
+   * */
   clearDiseabledFields() {
     //Limpia los campos que estan deshabilitados
 
-    this.newUserForm.get('name')?.status === 'DISABLED' ? this.newUserForm.get('name')?.reset() : null;
-    this.newUserForm.get('lastName')?.status === 'DISABLED' ? this.newUserForm.get('lastName')?.reset() : null;
-    this.newUserForm.get('email')?.status === 'DISABLED' ? this.newUserForm.get('email')?.reset() : null;
-    this.newUserForm.get('idUser')?.status === 'DISABLED' ? this.newUserForm.get('idUser')?.reset() : null;
-    this.newUserForm.get('faculty')?.status === 'DISABLED' ? this.newUserForm.get('faculty')?.reset() : null;
-    this.newUserForm.get('department')?.status === 'DISABLED' ? this.newUserForm.get('department')?.reset() : null;
-    this.newUserForm.get('typeContract')?.status === 'DISABLED' ? this.newUserForm.get('typeContract')?.reset() : null;
-    this.newUserForm.get('studies')?.status === 'DISABLED' ? this.newUserForm.get('studies')?.reset() : null;
-    this.newUserForm.get('category')?.status === 'DISABLED' ? this.newUserForm.get('category')?.reset() : null;
-    this.newUserForm.get('dedication')?.status === 'DISABLED' ? this.newUserForm.get('dedication')?.reset() : null;
-    this.newUserForm.get('state')?.status === 'DISABLED' ? this.newUserForm.get('state')?.reset() : null;
-
+    this.newUserForm.get('name')?.status === 'DISABLED'
+      ? this.newUserForm.get('name')?.reset()
+      : null;
+    this.newUserForm.get('lastName')?.status === 'DISABLED'
+      ? this.newUserForm.get('lastName')?.reset()
+      : null;
+    this.newUserForm.get('email')?.status === 'DISABLED'
+      ? this.newUserForm.get('email')?.reset()
+      : null;
+    this.newUserForm.get('idUser')?.status === 'DISABLED'
+      ? this.newUserForm.get('idUser')?.reset()
+      : null;
+    this.newUserForm.get('faculty')?.status === 'DISABLED'
+      ? this.newUserForm.get('faculty')?.reset()
+      : null;
+    this.newUserForm.get('department')?.status === 'DISABLED'
+      ? this.newUserForm.get('department')?.reset()
+      : null;
+    this.newUserForm.get('typeContract')?.status === 'DISABLED'
+      ? this.newUserForm.get('typeContract')?.reset()
+      : null;
+    this.newUserForm.get('studies')?.status === 'DISABLED'
+      ? this.newUserForm.get('studies')?.reset()
+      : null;
+    this.newUserForm.get('category')?.status === 'DISABLED'
+      ? this.newUserForm.get('category')?.reset()
+      : null;
+    this.newUserForm.get('dedication')?.status === 'DISABLED'
+      ? this.newUserForm.get('dedication')?.reset()
+      : null;
+    this.newUserForm.get('state')?.status === 'DISABLED'
+      ? this.newUserForm.get('state')?.reset()
+      : null;
   }
 
   /*
-  * Method to clear the fields
-  * */
+   * Method to clear the fields
+   * */
   clearFormFields() {
     window.location.reload();
   }
 
-
   /*
-  * Method to open the confirm dialog
-  * */
+   * Method to open the confirm dialog
+   * */
   openConfirmDialog() {
     this.confirmDialog.open();
   }
-
-
-
 }

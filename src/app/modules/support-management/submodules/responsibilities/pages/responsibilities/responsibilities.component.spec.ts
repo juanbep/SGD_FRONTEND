@@ -16,7 +16,7 @@ describe('ResponsibilitiesComponent', () => {
         HttpClientModule,
         ToastrModule.forRoot(),
         ResponsibilitiesComponent,
-        AngularFireModule.initializeApp(environments.firebaseConfig)
+        AngularFireModule.initializeApp(environments.firebaseConfig),
       ],
       providers: [
         provideRouter([]), // Provide an empty router for testing

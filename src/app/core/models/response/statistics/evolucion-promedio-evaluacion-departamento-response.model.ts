@@ -1,9 +1,9 @@
 export interface EvolucionPromedioEvaluacionDepartamento {
-    departamento: string;
-    evolucion:    Evolucion[];
+  departamento: string;
+  evolucion: Evolucion[];
 }
 
 export interface Evolucion {
-    periodo:             string;
-    promedioConsolidado: number;
+  periodo: string;
+  promedioConsolidado: number;
 }

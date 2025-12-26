@@ -21,8 +21,8 @@ import { PeriodoAcademicoResponse } from '../../../../../../core/models/response
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { FuenteCoordinadorFormulario } from '../../../../../../core/models/modified/fuente-coordinador-formulario.model';
 import { FuenteCoordinadorFormularioResponse } from '../../../../../../core/models/response/fuente-coordinador-formulario-response.model';
-import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
@@ -30,14 +30,18 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 @Component({
   selector: 'app-responsibilitie-coordinator-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, LoadingOverleyComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    LoadingOverleyComponent,
+  ],
   templateUrl: './responsibilities-edit-coordinator-form.component.html',
   styleUrl: './responsibilities-edit-coordinator-form.component.css',
 })
 export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
-
   @ViewChild(ConfirmDialogComponent)
-    confirmDialog: ConfirmDialogComponent | null = null;
+  confirmDialog: ConfirmDialogComponent | null = null;
 
   private formBuilder: FormBuilder = inject(FormBuilder);
   private validatorsService: ValidatorsService = inject(ValidatorsService);
@@ -63,7 +67,8 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
   public evaluado: UsuarioResponse | null = null;
   public responsibility: ActividadResponse | null = null;
 
-  public sourceResponsibility: FuenteCoordinadorFormularioResponse | null = null;
+  public sourceResponsibility: FuenteCoordinadorFormularioResponse | null =
+    null;
 
   public totalAverage: number | null = null;
   public errorCalification: boolean = false;
@@ -79,7 +84,6 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
 
   public activityPeriod: PeriodoAcademicoResponse | null = null;
 
-  
   public messageTitle: string = MESSAGE_TITLE;
   public messageConfirmCancel: string = MESSAGE_CONFIRM_CANCEL;
 
@@ -235,14 +239,12 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
     this.isQuilificationChanged();
     this.loadResponsibility(id);
     this.applyFileTypeValidator();
-
   }
 
   applyFileTypeValidator() {
-    this.formEvaluation.get('userSignature')?.setValidators([
-      Validators.required,
-      this.fileTypeValidator(['png']),
-    ]);
+    this.formEvaluation
+      .get('userSignature')
+      ?.setValidators([Validators.required, this.fileTypeValidator(['png'])]);
     this.formEvaluation.get('userSignature')?.updateValueAndValidity();
   }
 
@@ -299,8 +301,12 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
         .subscribe({
           next: (source) => {
             this.sourceResponsibility = source.data;
-            this.recoverEvaluated(this.sourceResponsibility.Fuente.evaluado.oidUsuario);
-            this.recoverEvualator(this.sourceResponsibility.Fuente.evaluador.oidUsuario);
+            this.recoverEvaluated(
+              this.sourceResponsibility.Fuente.evaluado.oidUsuario
+            );
+            this.recoverEvualator(
+              this.sourceResponsibility.Fuente.evaluador.oidUsuario
+            );
             this.pathForm();
           },
           error: (error) => {
@@ -331,10 +337,7 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
         this.evaluado = user.data;
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
       },
     });
   }
@@ -345,10 +348,7 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
         this.evaluador = user.data;
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
       },
     });
   }
@@ -469,8 +469,6 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
       activityName: this.sourceResponsibility?.Fuente.nombreActividad,
     };
 
-
-
     const pdfBase64 =
       this.responsibilityCoordinatorPdfGeneratorService.generatePdfDocument(
         this.formEvaluation.value,
@@ -483,7 +481,6 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
 
     this.selectedFiles.reportDocument = this.formPdf;
   }
-
 
   qualitativeEquivalent(evaluation: string | null) {
     if (evaluation === null || evaluation === '') {
@@ -520,8 +517,7 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
 
     this.isLoading = true;
 
-    (await this.generatePdfPreview());
-
+    await this.generatePdfPreview();
 
     const fuenteCoordinadorFormulario: FuenteCoordinadorFormulario = {
       oidFuente: this.sourceResponsibility?.Fuente.oidFuente || 0,
@@ -531,63 +527,93 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
       informesAdministracion: [
         {
           oidObjetivoComponente: 1,
-          calificacion: Number(this.formEvaluation.get('qualification_1')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_1')?.value
+          ),
         },
         {
           oidObjetivoComponente: 2,
-          calificacion: Number(this.formEvaluation.get('qualification_2')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_2')?.value
+          ),
         },
         {
           oidObjetivoComponente: 3,
-          calificacion: Number(this.formEvaluation.get('qualification_3')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_3')?.value
+          ),
         },
         {
           oidObjetivoComponente: 4,
-          calificacion: Number(this.formEvaluation.get('qualification_4')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_4')?.value
+          ),
         },
         {
           oidObjetivoComponente: 5,
-          calificacion: Number(this.formEvaluation.get('qualification_5')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_5')?.value
+          ),
         },
         {
           oidObjetivoComponente: 6,
-          calificacion: Number(this.formEvaluation.get('qualification_6')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_6')?.value
+          ),
         },
         {
           oidObjetivoComponente: 7,
-          calificacion: Number(this.formEvaluation.get('qualification_7')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_7')?.value
+          ),
         },
         {
           oidObjetivoComponente: 8,
-          calificacion: Number(this.formEvaluation.get('qualification_8')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_8')?.value
+          ),
         },
         {
           oidObjetivoComponente: 9,
-          calificacion: Number(this.formEvaluation.get('qualification_9')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_9')?.value
+          ),
         },
         {
           oidObjetivoComponente: 10,
-          calificacion: Number(this.formEvaluation.get('qualification_10')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_10')?.value
+          ),
         },
         {
           oidObjetivoComponente: 11,
-          calificacion: Number(this.formEvaluation.get('qualification_11')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_11')?.value
+          ),
         },
         {
           oidObjetivoComponente: 12,
-          calificacion: Number(this.formEvaluation.get('qualification_12')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_12')?.value
+          ),
         },
         {
           oidObjetivoComponente: 13,
-          calificacion: Number(this.formEvaluation.get('qualification_13')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_13')?.value
+          ),
         },
         {
           oidObjetivoComponente: 14,
-          calificacion: Number(this.formEvaluation.get('qualification_14')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_14')?.value
+          ),
         },
         {
           oidObjetivoComponente: 15,
-          calificacion: Number(this.formEvaluation.get('qualification_15')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_15')?.value
+          ),
         },
       ],
     };
@@ -595,7 +621,7 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
     this.responsibilitiesServicesService
       .saveResponibilityFormCoordinador(
         fuenteCoordinadorFormulario,
-        this.selectedFiles.reportDocument || new File([], ''),
+        this.selectedFiles.reportDocument || new File([], '')
       )
       .subscribe({
         next: (response) => {
@@ -624,6 +650,4 @@ export class ResponsibilitiesEditCoordinatorFormComponent implements OnInit {
     if (confirm)
       this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
   }
-
 }
-

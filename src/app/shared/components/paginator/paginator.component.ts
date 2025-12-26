@@ -4,11 +4,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'shared-paginator',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './paginator.component.html',
-  styleUrl: './paginator.component.css'
+  styleUrl: './paginator.component.css',
 })
 export class PaginatorComponent {
   @Input() currentPage: number = 1;
@@ -17,7 +15,7 @@ export class PaginatorComponent {
   totalPagesArray: (number | string)[] = [];
   singlePage: boolean = false;
 
-  constructor() { }
+  constructor() {}
 
   ngOnChanges(): void {
     this.calculateTotalPagesArray();
@@ -31,7 +29,10 @@ export class PaginatorComponent {
     this.totalPagesArray = [];
 
     if (total <= pagesToShow) {
-      this.totalPagesArray = Array.from({ length: total }, (_, index) => index + 1);
+      this.totalPagesArray = Array.from(
+        { length: total },
+        (_, index) => index + 1
+      );
     } else {
       const half = Math.floor(pagesToShow / 2);
 
@@ -40,7 +41,15 @@ export class PaginatorComponent {
       } else if (current >= total - half) {
         this.totalPagesArray = [1, '...', total - 2, total - 1, total];
       } else {
-        this.totalPagesArray = [1, '...', current - 1, current, current + 1, '...', total];
+        this.totalPagesArray = [
+          1,
+          '...',
+          current - 1,
+          current,
+          current + 1,
+          '...',
+          total,
+        ];
       }
     }
   }
@@ -70,5 +79,4 @@ export class PaginatorComponent {
   goToLastPage(): void {
     this.pageChange.emit(this.totalPages);
   }
-
 }

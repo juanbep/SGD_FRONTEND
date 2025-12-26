@@ -1,58 +1,74 @@
 <section>
-    <table class="table-bordered">
-        <thead>
-            <tr>
-                <th class="text-body-heavy">Nombre docente</th>
-                <th class="text-body-heavy">Identificación</th>
-                <th class="text-body-heavy">Tipo contrato</th>
-                <th class="text-body-heavy">% Evaluación completado</th>
-                <th class="text-body-heavy">Evaluación acumulada</th>
-                <th class="text-body-heavy">Estado consolidado</th>
-                <th class="text-body-heavy">Acciones</th>
-            </tr>
-        </thead>
-        <ng-container *ngIf="teacherList.length > 0; else noData">
-            <tbody>
-                <tr *ngFor="let teacher of teacherList">
-                    <td>
-                        <span class="text-body-regular">{{teacher.nombreDocente}}</span>
-                    </td>
-                    <td>
-                        <span class="text-body-regular">{{teacher.identificacion}}</span> 
-                    </td>
-                    <td>
-                        <span class="text-body-regular">{{teacher.contratacion}}</span>
-                    </td>
-                    <td class="text-end">
-                        <span class="text-body-regular">{{teacher.porcentajeEvaluacionCompletado}}%</span>
-                    </td>
-                    <td class="text-end">
-                        <span class="text-body-regular">{{teacher.totalAcumulado}}</span>
-                    </td>
-                    <td>
-                       <span class="text-body-regular">{{teacher.estadoConsolidado}}</span>
-                     </td>
-                    <td class="text-center">
-                        <button class="button-table">
-                            <a [routerLink]="['../consolidado-docente',teacher.oidUsuario]" routerLinkActive="router-link-active">
-                                <img [src]="'assets/icons/tables/icon-consolidated.svg'" alt="icon-view">
-                            </a>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </ng-container>
-        <ng-template #noData>
-            <tbody>
-                <tr>
-                    <td colspan="7" class="text-center">
-                        <span class="text-body-regular">No hay docente registrados en el sistema</span>
-                    </td>
-                </tr>
-            </tbody>
-        </ng-template>
-    </table>
+  <table class="table-bordered">
+    <thead>
+      <tr>
+        <th class="text-body-heavy">Nombre docente</th>
+        <th class="text-body-heavy">Identificación</th>
+        <th class="text-body-heavy">Tipo contrato</th>
+        <th class="text-body-heavy">% Evaluación completado</th>
+        <th class="text-body-heavy">Evaluación acumulada</th>
+        <th class="text-body-heavy">Estado consolidado</th>
+        <th class="text-body-heavy">Acciones</th>
+      </tr>
+    </thead>
+    <ng-container *ngIf="teacherList.length > 0; else noData">
+      <tbody>
+        <tr *ngFor="let teacher of teacherList">
+          <td>
+            <span class="text-body-regular">{{ teacher.nombreDocente }}</span>
+          </td>
+          <td>
+            <span class="text-body-regular">{{ teacher.identificacion }}</span>
+          </td>
+          <td>
+            <span class="text-body-regular">{{ teacher.contratacion }}</span>
+          </td>
+          <td class="text-end">
+            <span class="text-body-regular"
+              >{{ teacher.porcentajeEvaluacionCompletado }}%</span
+            >
+          </td>
+          <td class="text-end">
+            <span class="text-body-regular">{{ teacher.totalAcumulado }}</span>
+          </td>
+          <td>
+            <span class="text-body-regular">{{
+              teacher.estadoConsolidado
+            }}</span>
+          </td>
+          <td class="text-center">
+            <button class="button-table">
+              <a
+                [routerLink]="['../consolidado-docente', teacher.oidUsuario]"
+                routerLinkActive="router-link-active"
+              >
+                <img
+                  [src]="'assets/icons/tables/icon-consolidated.svg'"
+                  alt="icon-view"
+                />
+              </a>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </ng-container>
+    <ng-template #noData>
+      <tbody>
+        <tr>
+          <td colspan="7" class="text-center">
+            <span class="text-body-regular"
+              >No hay docente registrados en el sistema</span
+            >
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
+  </table>
 </section>
 <section id="paginator-section-consolidated">
-    <shared-paginator [currentPage]="currentPage" [totalPages]="teacherServiceResponse?.totalPages || 1" (pageChange)="pageChanged($event)"></shared-paginator>
+  <shared-paginator
+    [currentPage]="currentPage"
+    [totalPages]="teacherServiceResponse?.totalPages || 1"
+    (pageChange)="pageChanged($event)"
+  ></shared-paginator>
 </section>

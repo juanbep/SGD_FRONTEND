@@ -12,7 +12,6 @@ import { RankingDocentesResponse } from '../../models/response/statistics/rankin
 
 @Injectable({ providedIn: 'root' })
 export class StatisticsManagementServicesService {
-
   private httpClient = inject(HttpClient);
   private baseUrlStatistics: string = environments.baseUrlStatistics;
 
@@ -20,54 +19,79 @@ export class StatisticsManagementServicesService {
     idUser: number,
     academicPeriodId: number,
     activityTypeId: number | null
-  ):Observable<SimpleResponse<ComparacionEvaluacionActividad>> {
+  ): Observable<SimpleResponse<ComparacionEvaluacionActividad>> {
     const params: Params = {
-        idEvaluado: idUser,
-        idPeriodo: academicPeriodId,
-        idTipoActividad: activityTypeId
+      idEvaluado: idUser,
+      idPeriodo: academicPeriodId,
+      idTipoActividad: activityTypeId,
     };
 
-    return this.httpClient.get<SimpleResponse<ComparacionEvaluacionActividad>>(`${this.baseUrlStatistics}/api/estadisticas/comparacion-fuente`, { params });
+    return this.httpClient.get<SimpleResponse<ComparacionEvaluacionActividad>>(
+      `${this.baseUrlStatistics}/api/estadisticas/comparacion-fuente`,
+      { params }
+    );
   }
 
   getAverageEvaluationDepartment(
     academicPeriodId: number
   ): Observable<SimpleResponse<PromedioEvaluacionDepartamentoResponse>> {
-
     const params: Params = {
-      idPeriodo: academicPeriodId
+      idPeriodo: academicPeriodId,
     };
 
-    return this.httpClient.get<SimpleResponse<PromedioEvaluacionDepartamentoResponse>>(`${this.baseUrlStatistics}/api/estadisticas/promedio-departamento`, { params })
+    return this.httpClient.get<
+      SimpleResponse<PromedioEvaluacionDepartamentoResponse>
+    >(`${this.baseUrlStatistics}/api/estadisticas/promedio-departamento`, {
+      params,
+    });
   }
 
-
-
-  getEvolutionAvarageEvaluationDepartment(academicPeriodsId:string[], departmentsId: string[] | null): Observable<SimpleResponse<EvolucionPromedioEvaluacionDepartamento[]>> {
+  getEvolutionAvarageEvaluationDepartment(
+    academicPeriodsId: string[],
+    departmentsId: string[] | null
+  ): Observable<SimpleResponse<EvolucionPromedioEvaluacionDepartamento[]>> {
     const params: Params = {
       periodos: academicPeriodsId.join(','),
-      nombresDepartamentos: departmentsId?.length ? departmentsId.join(',') : null,
+      nombresDepartamentos: departmentsId?.length
+        ? departmentsId.join(',')
+        : null,
     };
 
-    return this.httpClient.get<SimpleResponse<EvolucionPromedioEvaluacionDepartamento[]>>(`${this.baseUrlStatistics}/api/estadisticas/evolucion-promedio`, { params });
+    return this.httpClient.get<
+      SimpleResponse<EvolucionPromedioEvaluacionDepartamento[]>
+    >(`${this.baseUrlStatistics}/api/estadisticas/evolucion-promedio`, {
+      params,
+    });
   }
 
-  getStatisticsQuestions(academicPeriodId:String, departmentId: String, activityType: String):  Observable<SimpleResponse<QuestionStatisticsResponse[]>>{
-    
+  getStatisticsQuestions(
+    academicPeriodId: String,
+    departmentId: String,
+    activityType: String
+  ): Observable<SimpleResponse<QuestionStatisticsResponse[]>> {
     const params: Params = {
       periodos: academicPeriodId,
       departamentos: departmentId,
       tiposActividad: activityType,
     };
 
-    return this.httpClient.get<SimpleResponse<QuestionStatisticsResponse[]>>(`${this.baseUrlStatistics}/api/estadisticas/ranking-preguntas`, { params });
+    return this.httpClient.get<SimpleResponse<QuestionStatisticsResponse[]>>(
+      `${this.baseUrlStatistics}/api/estadisticas/ranking-preguntas`,
+      { params }
+    );
   }
 
-  rankingTeacher(period: string, department: string): Observable<SimpleResponse<RankingDocentesResponse[]>> {
+  rankingTeacher(
+    period: string,
+    department: string
+  ): Observable<SimpleResponse<RankingDocentesResponse[]>> {
     const params: Params = {
       periodos: period,
       departamentos: department,
     };
-    return this.httpClient.get<SimpleResponse<RankingDocentesResponse[]>>(`${this.baseUrlStatistics}/api/estadisticas/ranking-docentes`, { params });
+    return this.httpClient.get<SimpleResponse<RankingDocentesResponse[]>>(
+      `${this.baseUrlStatistics}/api/estadisticas/ranking-docentes`,
+      { params }
+    );
   }
 }

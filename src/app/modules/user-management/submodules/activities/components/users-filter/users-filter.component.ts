@@ -8,53 +8,55 @@ import { ActivitiesManagementService } from '../../services/activities-managemen
 @Component({
   selector: 'user-management-activities-users-filter',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule
-  ],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './users-filter.component.html',
-  styleUrl: './users-filter.component.css'
+  styleUrl: './users-filter.component.css',
 })
 export class UsersFilterComponent implements OnInit {
-
-
   private formBuilder: FormBuilder = inject(FormBuilder);
   private activitiesServices = inject(ActivitiesManagementService);
-  private catalogService = inject(CatalogDataService);  
+  private catalogService = inject(CatalogDataService);
   public catalogData: CatalogDataResponse | null = null;
 
-  public filterParams: {nameUser: string | null, identification: string | null, faculty: string | null, program: string | null, rol: string | null, state: string | null} | null = null;
-
+  public filterParams: {
+    nameUser: string | null;
+    identification: string | null;
+    faculty: string | null;
+    program: string | null;
+    rol: string | null;
+    state: string | null;
+  } | null = null;
 
   formFilter: FormGroup = this.formBuilder.group({
     nameUser: [''],
     identification: [''],
     faculty: [''],
     program: [''],
-    state: ['']
-  })
+    state: [''],
+  });
 
   stateOptions = [
     {
       value: '1',
-      text: 'Activo'
+      text: 'Activo',
     },
     {
       value: '2',
-      text: 'Inactivo'
-    }
-  ]
+      text: 'Inactivo',
+    },
+  ];
 
   ngOnInit(): void {
     this.catalogData = this.catalogService.catalogDataSignal;
     const paramsFilter = this.activitiesServices.getParamsUsersFilter();
     this.formFilter.get('nameUser')?.setValue(paramsFilter?.nameUser || '');
-    this.formFilter.get('identification')?.setValue(paramsFilter?.identification || '');
+    this.formFilter
+      .get('identification')
+      ?.setValue(paramsFilter?.identification || '');
     this.formFilter.get('faculty')?.setValue(paramsFilter?.faculty || '');
     this.formFilter.get('program')?.setValue(paramsFilter?.program || '');
     this.formFilter.get('state')?.setValue(paramsFilter?.state || '');
     this.formFilter.get('rol')?.setValue(paramsFilter?.rol || '');
-    
   }
 
   searchUsers() {
@@ -65,7 +67,14 @@ export class UsersFilterComponent implements OnInit {
     const rol = 'DOCENTE';
     const state = this.formFilter.get('state')?.value || '';
 
-    this.activitiesServices.setParamsUsersFilter({ nameUser, identification, faculty, program, rol, state });
+    this.activitiesServices.setParamsUsersFilter({
+      nameUser,
+      identification,
+      faculty,
+      program,
+      rol,
+      state,
+    });
   }
 
   clearFilter() {
@@ -75,6 +84,13 @@ export class UsersFilterComponent implements OnInit {
     this.formFilter.get('program')?.setValue('');
     this.formFilter.get('state')?.setValue('');
     this.formFilter.get('rol')?.setValue('DOCENTE');
-    this.activitiesServices.setParamsUsersFilter({ nameUser: '', identification: '', faculty: '', program: '', rol: 'DOCENTE', state: '' });
+    this.activitiesServices.setParamsUsersFilter({
+      nameUser: '',
+      identification: '',
+      faculty: '',
+      program: '',
+      rol: 'DOCENTE',
+      state: '',
+    });
   }
 }

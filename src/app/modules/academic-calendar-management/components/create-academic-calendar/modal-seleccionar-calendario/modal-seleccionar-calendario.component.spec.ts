@@ -8,9 +8,8 @@ describe('ModalSeleccionarCalendarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalSeleccionarCalendarioComponent]
-    })
-    .compileComponents();
+      imports: [ModalSeleccionarCalendarioComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModalSeleccionarCalendarioComponent);
     component = fixture.componentInstance;

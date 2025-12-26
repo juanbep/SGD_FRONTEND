@@ -16,7 +16,7 @@ describe('TeachersListTableComponent', () => {
         HttpClientModule,
         ToastrModule.forRoot(),
         TeacherListTableComponent,
-        AngularFireModule.initializeApp(environments.firebaseConfig)
+        AngularFireModule.initializeApp(environments.firebaseConfig),
       ],
       providers: [
         provideRouter([]), // Provide an empty router for testing

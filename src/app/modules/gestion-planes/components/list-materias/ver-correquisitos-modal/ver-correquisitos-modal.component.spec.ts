@@ -8,9 +8,8 @@ describe('VerCorrequisitosModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VerCorrequisitosModalComponent]
-    })
-    .compileComponents();
+      imports: [VerCorrequisitosModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(VerCorrequisitosModalComponent);
     component = fixture.componentInstance;

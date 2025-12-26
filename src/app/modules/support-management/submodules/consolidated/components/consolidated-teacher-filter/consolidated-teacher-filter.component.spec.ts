@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ConsolidatedTeacherFilterComponent } from './consolidated-teacher-filter.component';
-import {  provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ConsolidatedTeacherFilterComponent', () => {
@@ -10,15 +10,8 @@ describe('ConsolidatedTeacherFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        ToastrModule.forRoot(),
-        ConsolidatedTeacherFilterComponent,
-      ],
-      providers:
-      [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      imports: [ToastrModule.forRoot(), ConsolidatedTeacherFilterComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConsolidatedTeacherFilterComponent);

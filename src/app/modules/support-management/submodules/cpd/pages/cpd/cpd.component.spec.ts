@@ -11,8 +11,12 @@ describe('CpdComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), CpdComponent, AngularFireModule.initializeApp(environments.firebaseConfig)],
-
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        CpdComponent,
+        AngularFireModule.initializeApp(environments.firebaseConfig),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CpdComponent);

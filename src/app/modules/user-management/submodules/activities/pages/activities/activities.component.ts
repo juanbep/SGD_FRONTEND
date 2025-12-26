@@ -6,26 +6,25 @@ import { ActivitiesManagementService } from '../../services/activities-managemen
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { MessagesInfoService } from '../../../../../../shared/services/messages-info.service';
 import { CommonModule } from '@angular/common';
-import { RldManagementComponent } from "../../components/rld-management/rld-management.component";
+import { RldManagementComponent } from '../../components/rld-management/rld-management.component';
 
 @Component({
   selector: 'app-activities',
   standalone: true,
   imports: [
-    ActivitiesFilterComponent, 
-    ActivitiesTableComponent, 
-    CommonModule, 
-    RouterModule, 
-    RldManagementComponent],
+    ActivitiesFilterComponent,
+    ActivitiesTableComponent,
+    CommonModule,
+    RouterModule,
+    RldManagementComponent,
+  ],
   templateUrl: './activities.component.html',
   styleUrl: './activities.component.css',
 })
 export class ActivitiesComponent implements OnInit {
-
   private route = inject(ActivatedRoute);
   private activitiesMagementService = inject(ActivitiesManagementService);
   private messageInfoService = inject(MessagesInfoService);
-
 
   public teacherInformation: UsuarioResponse | null = null;
   public idUserParam: number | null = null;
@@ -35,22 +34,19 @@ export class ActivitiesComponent implements OnInit {
     this.recoverTeacherInformation();
   }
 
-
   recoverTeacherInformation() {
     if (this.idUserParam) {
-      this.activitiesMagementService.getUserById(this.idUserParam).subscribe(
-        {
-          next: (response) => {
-            this.teacherInformation = response.data;
-          },
-          error: (error) => {
-            this.messageInfoService.showErrorMessage(
-              error.error.mensaje,
-              'Error'
-            );
-          },
-        }
-      );
+      this.activitiesMagementService.getUserById(this.idUserParam).subscribe({
+        next: (response) => {
+          this.teacherInformation = response.data;
+        },
+        error: (error) => {
+          this.messageInfoService.showErrorMessage(
+            error.error.mensaje,
+            'Error'
+          );
+        },
+      });
     }
   }
 

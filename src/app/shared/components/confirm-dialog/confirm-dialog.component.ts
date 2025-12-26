@@ -6,22 +6,23 @@ declare var bootstrap: any;
   standalone: true,
   imports: [],
   templateUrl: './confirm-dialog.component.html',
-  styleUrl: './confirm-dialog.component.css'
+  styleUrl: './confirm-dialog.component.css',
 })
 export class ConfirmDialogComponent {
-
   @Input()
   title: string | null = null;
 
   @Input()
   message: string | null = null;
-  
-  @Output() 
+
+  @Output()
   confirm: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  open(){
-    const modal = new bootstrap.Modal(document.getElementById('modal-confirm-dialog'));
-    if(modal){
+  open() {
+    const modal = new bootstrap.Modal(
+      document.getElementById('modal-confirm-dialog')
+    );
+    if (modal) {
       modal.show();
     }
   }
@@ -31,12 +32,11 @@ export class ConfirmDialogComponent {
   }
 
   close() {
-    const modal = new bootstrap.Modal(document.getElementById('modal-confirm-dialog'));
-    if(modal){
+    const modal = new bootstrap.Modal(
+      document.getElementById('modal-confirm-dialog')
+    );
+    if (modal) {
       modal.hide();
     }
   }
-
-
-
 }

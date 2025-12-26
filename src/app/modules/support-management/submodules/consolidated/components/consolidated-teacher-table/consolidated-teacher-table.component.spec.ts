@@ -16,11 +16,11 @@ describe('ConsolidatedTeacherTableComponent', () => {
         HttpClientModule,
         ToastrModule.forRoot(),
         ConsolidatedTeacherTableComponent,
-        AngularFireModule.initializeApp(environments.firebaseConfig)
+        AngularFireModule.initializeApp(environments.firebaseConfig),
       ],
-        providers: [
-            provideRouter   ([]), // Provide an empty router for testing
-        ],
+      providers: [
+        provideRouter([]), // Provide an empty router for testing
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConsolidatedTeacherTableComponent);

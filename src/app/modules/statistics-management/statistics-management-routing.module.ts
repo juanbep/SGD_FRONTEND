@@ -8,8 +8,15 @@ export const routes: Routes = [
     path: '',
     children: [
       {
-        canActivate:[RoleGuard],
-        data: { roles: ['JEFE DE DEPARTAMENTO','SECRETARIA/O FACULTAD','COORDINADOR','DECANO'] },
+        canActivate: [RoleGuard],
+        data: {
+          roles: [
+            'JEFE DE DEPARTAMENTO',
+            'SECRETARIA/O FACULTAD',
+            'COORDINADOR',
+            'DECANO',
+          ],
+        },
         path: 'estadisticas',
         loadChildren: () =>
           import('./submodules/statistics/statistics-routing.module').then(

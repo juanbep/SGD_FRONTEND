@@ -20,9 +20,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PeriodoAcademicoResponse } from '../../../../../../core/models/response/periodo-academico-response.model';
 import { AcademicPeriodManagementService } from '../../../../../academic-period-management/services/academic-period-management-service.service';
 import { FuenteCoordinadorFormulario } from '../../../../../../core/models/modified/fuente-coordinador-formulario.model';
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
-import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
-
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
@@ -30,15 +29,18 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 @Component({
   selector: 'app-responsibilitie-coordinator-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingOverleyComponent, ConfirmDialogComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    LoadingOverleyComponent,
+    ConfirmDialogComponent,
+  ],
   templateUrl: './responsibilitie-coordinator-form.component.html',
   styleUrl: './responsibilitie-coordinator-form.component.css',
 })
 export class ResponsibilitieCoordinatorFormComponent implements OnInit {
-
   @ViewChild(ConfirmDialogComponent)
-    confirmDialog: ConfirmDialogComponent | null = null;
-  
+  confirmDialog: ConfirmDialogComponent | null = null;
 
   private formBuilder: FormBuilder = inject(FormBuilder);
   private validatorsService: ValidatorsService = inject(ValidatorsService);
@@ -71,7 +73,6 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
   public allCompleted: boolean = false;
 
   public currentDate = new Date();
-
 
   public pdfUrl: SafeResourceUrl | null = null;
   public formPdf: File | null = null;
@@ -237,10 +238,9 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
   }
 
   aplyFileTypeValidator() {
-    this.formEvaluation.get('userSignature')?.setValidators([
-      Validators.required,
-      this.fileTypeValidator(['png']),
-    ]);
+    this.formEvaluation
+      .get('userSignature')
+      ?.setValidators([Validators.required, this.fileTypeValidator(['png'])]);
     this.formEvaluation.get('userSignature')?.updateValueAndValidity();
   }
 
@@ -316,10 +316,7 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
         this.evaluado = user.data;
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
       },
     });
   }
@@ -330,10 +327,7 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
         this.evaluador = user.data;
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
       },
     });
   }
@@ -451,8 +445,7 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
       evaluationDate: this.currentDate.toLocaleDateString(),
       totalAverage: this.totalAverage,
       period: this.activityPeriod?.idPeriodo,
-      activityName: this.responsibility?.nombreActividad
-      ,
+      activityName: this.responsibility?.nombreActividad,
     };
 
     const pdfBase64 =
@@ -467,7 +460,6 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
 
     this.selectedFiles.reportDocument = this.formPdf;
   }
-
 
   qualitativeEquivalent(evaluation: string | null) {
     if (evaluation === null || evaluation === '') {
@@ -504,7 +496,7 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
 
     this.isLoading = true;
 
-  (await this.generatePdfPreview());
+    await this.generatePdfPreview();
 
     const fuenteCoordinadorFormulario: FuenteCoordinadorFormulario = {
       oidFuente: this.responsibility?.fuentes[1].oidFuente || 0,
@@ -514,63 +506,93 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
       informesAdministracion: [
         {
           oidObjetivoComponente: 1,
-          calificacion: Number(this.formEvaluation.get('qualification_1')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_1')?.value
+          ),
         },
         {
           oidObjetivoComponente: 2,
-          calificacion: Number(this.formEvaluation.get('qualification_2')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_2')?.value
+          ),
         },
         {
           oidObjetivoComponente: 3,
-          calificacion: Number(this.formEvaluation.get('qualification_3')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_3')?.value
+          ),
         },
         {
           oidObjetivoComponente: 4,
-          calificacion: Number(this.formEvaluation.get('qualification_4')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_4')?.value
+          ),
         },
         {
           oidObjetivoComponente: 5,
-          calificacion: Number(this.formEvaluation.get('qualification_5')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_5')?.value
+          ),
         },
         {
           oidObjetivoComponente: 6,
-          calificacion: Number(this.formEvaluation.get('qualification_6')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_6')?.value
+          ),
         },
         {
           oidObjetivoComponente: 7,
-          calificacion: Number(this.formEvaluation.get('qualification_7')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_7')?.value
+          ),
         },
         {
           oidObjetivoComponente: 8,
-          calificacion: Number(this.formEvaluation.get('qualification_8')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_8')?.value
+          ),
         },
         {
           oidObjetivoComponente: 9,
-          calificacion: Number(this.formEvaluation.get('qualification_9')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_9')?.value
+          ),
         },
         {
           oidObjetivoComponente: 10,
-          calificacion: Number(this.formEvaluation.get('qualification_10')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_10')?.value
+          ),
         },
         {
           oidObjetivoComponente: 11,
-          calificacion: Number(this.formEvaluation.get('qualification_11')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_11')?.value
+          ),
         },
         {
           oidObjetivoComponente: 12,
-          calificacion: Number(this.formEvaluation.get('qualification_12')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_12')?.value
+          ),
         },
         {
           oidObjetivoComponente: 13,
-          calificacion: Number(this.formEvaluation.get('qualification_13')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_13')?.value
+          ),
         },
         {
           oidObjetivoComponente: 14,
-          calificacion: Number(this.formEvaluation.get('qualification_14')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_14')?.value
+          ),
         },
         {
           oidObjetivoComponente: 15,
-          calificacion: Number(this.formEvaluation.get('qualification_15')?.value),
+          calificacion: Number(
+            this.formEvaluation.get('qualification_15')?.value
+          ),
         },
       ],
     };
@@ -578,7 +600,7 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
     this.responsibilitiesServicesService
       .saveResponibilityFormCoordinador(
         fuenteCoordinadorFormulario,
-        this.selectedFiles.reportDocument || new File([], ''),
+        this.selectedFiles.reportDocument || new File([], '')
       )
       .subscribe({
         next: (response) => {
@@ -606,5 +628,4 @@ export class ResponsibilitieCoordinatorFormComponent implements OnInit {
     if (confirm)
       this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
   }
-
 }

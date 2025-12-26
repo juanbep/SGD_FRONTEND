@@ -8,20 +8,16 @@ declare var bootstrap: any;
 @Component({
   selector: 'cpd-view-details-source-one',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './view-details-source-one.component.html',
-  styleUrl: './view-details-source-one.component.css'
+  styleUrl: './view-details-source-one.component.css',
 })
 export class ViewDetailsSourceOneComponent {
-
   public activity: ActividadResponse | null = null;
   private consolidatedServices = inject(ConsolidatedServicesService);
   public sourceFile: Blob | null = null;
   public reportFile: Blob | null = null;
   public sourceOne: Fuente | undefined = undefined;
-
 
   open(activity: ActividadResponse) {
     const myModal = document.getElementById('view-details-source-one-modal');
@@ -35,7 +31,9 @@ export class ViewDetailsSourceOneComponent {
 
   recoverSourceOne() {
     if (this.activity) {
-      this.sourceOne = this.activity.fuentes.find((fuente: Fuente) => fuente.tipoFuente === '1');
+      this.sourceOne = this.activity.fuentes.find(
+        (fuente: Fuente) => fuente.tipoFuente === '1'
+      );
       this.recoverFileSourceOne();
       this.recoverReportFile();
     }
@@ -43,9 +41,11 @@ export class ViewDetailsSourceOneComponent {
 
   recoverFileSourceOne() {
     if (this.activity) {
-      this.consolidatedServices.downloadSourceFile(this.sourceOne!.oidFuente).subscribe((response: Blob) => {
-        this.sourceFile = response;
-      });
+      this.consolidatedServices
+        .downloadSourceFile(this.sourceOne!.oidFuente)
+        .subscribe((response: Blob) => {
+          this.sourceFile = response;
+        });
     }
   }
 
@@ -61,12 +61,13 @@ export class ViewDetailsSourceOneComponent {
     }
   }
 
-
   recoverReportFile() {
     if (this.activity) {
-      this.consolidatedServices.downloadReportFile(this.sourceOne!.oidFuente, true).subscribe((response: Blob) => {
-        this.reportFile = response;
-      });
+      this.consolidatedServices
+        .downloadReportFile(this.sourceOne!.oidFuente, true)
+        .subscribe((response: Blob) => {
+          this.reportFile = response;
+        });
     }
   }
 
@@ -82,12 +83,11 @@ export class ViewDetailsSourceOneComponent {
     }
   }
 
-
   adjustFormatDate(date: string): string {
     const dataArray: string[] = date.split('T');
-    return `${dataArray[0].split('-').reverse().join('/')} ${dataArray[1].split(':').slice(0, 3).join(':')}`;
+    return `${dataArray[0].split('-').reverse().join('/')} ${dataArray[1]
+      .split(':')
+      .slice(0, 3)
+      .join(':')}`;
   }
-
-
-
 }

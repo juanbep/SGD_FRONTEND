@@ -172,9 +172,9 @@ export class SmActivitiesServicesService {
     let params = new HttpParams()
       .set('idArchivo', idResult.toString())
       .set('tipoArchivo', 'ODS');
-    return this.httpClient.get(
-      `${this.baseUrl}/api/documento/evidencia-ods`,
-      { params, responseType: 'blob' }
-    );
+    return this.httpClient.get(`${this.baseUrl}/api/documento/evidencia-ods`, {
+      params,
+      responseType: 'blob',
+    });
   }
 }

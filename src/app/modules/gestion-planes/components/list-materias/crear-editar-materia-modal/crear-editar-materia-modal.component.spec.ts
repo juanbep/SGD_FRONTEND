@@ -8,9 +8,8 @@ describe('CrearMateriaModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CrearEditarMateriaModalComponent]
-    })
-    .compileComponents();
+      imports: [CrearEditarMateriaModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CrearEditarMateriaModalComponent);
     component = fixture.componentInstance;

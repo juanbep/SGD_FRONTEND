@@ -1,8 +1,8 @@
 export interface PromedioEvaluacionDepartamentoResponse {
-    promediosPorDepartamento: PromediosPorDepartamento[];
+  promediosPorDepartamento: PromediosPorDepartamento[];
 }
 
 export interface PromediosPorDepartamento {
-    departamento:    string;
-    promedioGeneral: number;
+  departamento: string;
+  promedioGeneral: number;
 }

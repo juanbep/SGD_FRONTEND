@@ -62,9 +62,9 @@ const routes: Routes = [
       {
         path: 'gestion-necesidades',
         loadChildren: () =>
-          import('../gestion-necesidades/necesidades-management-routing.module').then(
-            (m) => m.NecesidadesManagementRoutingModule
-          ),
+          import(
+            '../gestion-necesidades/necesidades-management-routing.module'
+          ).then((m) => m.NecesidadesManagementRoutingModule),
         title: 'Gestión de Necesidades',
       },
       {

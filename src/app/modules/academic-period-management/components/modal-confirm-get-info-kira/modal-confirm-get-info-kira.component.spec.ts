@@ -8,9 +8,8 @@ describe('ModalConfirmGetInfoKiraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalConfirmGetInfoKiraComponent]
-    })
-    .compileComponents();
+      imports: [ModalConfirmGetInfoKiraComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModalConfirmGetInfoKiraComponent);
     component = fixture.componentInstance;

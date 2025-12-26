@@ -6,33 +6,23 @@ import { SelfEvaluationFormComponent } from './pages/self-evaluation-form/self-e
 import { SelfEvaluationEditFormComponent } from './pages/self-evaluation-edit-form/self-evaluation-edit-form.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        component: ActivitiesComponent
-    },
-    {
-      path: 'formulario-autoevaluacion/:id',
-      component: SelfEvaluationFormComponent
-    },
-    {
-      path: 'formulario-editar-autoevaluacion/:id',
-      component: SelfEvaluationEditFormComponent
-    }
-]
-
+  {
+    path: '',
+    component: ActivitiesComponent,
+  },
+  {
+    path: 'formulario-autoevaluacion/:id',
+    component: SelfEvaluationFormComponent,
+  },
+  {
+    path: 'formulario-editar-autoevaluacion/:id',
+    component: SelfEvaluationEditFormComponent,
+  },
+];
 
 @NgModule({
-    declarations: [
-    ],
-    imports: [
-      RouterModule.forChild(routes),
-      CommonModule
-    ],
-    exports: [
-      RouterModule
-    ]
-  }
-)
-  
-export class ActivitiesRoutingModule { 
-}
+  declarations: [],
+  imports: [RouterModule.forChild(routes), CommonModule],
+  exports: [RouterModule],
+})
+export class ActivitiesRoutingModule {}

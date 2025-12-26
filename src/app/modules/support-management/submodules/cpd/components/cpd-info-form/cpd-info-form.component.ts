@@ -6,17 +6,20 @@ declare var bootstrap: any;
 @Component({
   selector: 'modal-cpd-info-form',
   standalone: true,
-  imports: [
-    ReactiveFormsModule
-  ],
+  imports: [ReactiveFormsModule],
   templateUrl: './cpd-info-form.component.html',
-  styleUrl: './cpd-info-form.component.css'
+  styleUrl: './cpd-info-form.component.css',
 })
 export class CpdInfoFormComponent {
-
   @Output()
-  public infoCpd= new EventEmitter<{resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string}>();
-  
+  public infoCpd = new EventEmitter<{
+    resolutionNumber: string;
+    oficioNumber: string;
+    oficioDate: string;
+    meetingCouncil: string;
+    councilPresident: string;
+  }>();
+
   private formBuilder: FormBuilder = inject(FormBuilder);
 
   public formCpd = this.formBuilder.group({
@@ -27,37 +30,37 @@ export class CpdInfoFormComponent {
     councilPresident: [''],
   });
 
-  open(){
-    const modal= document.getElementById('cpd-info-form');
-    if(modal){
+  open() {
+    const modal = document.getElementById('cpd-info-form');
+    if (modal) {
       var myModal = new bootstrap.Modal(modal);
       myModal.show();
     }
   }
 
-  close(){
-    const modal= document.getElementById('cpd-info-form');
-    if(modal){
+  close() {
+    const modal = document.getElementById('cpd-info-form');
+    if (modal) {
       const modalInstance = bootstrap.Modal.getInstance(modal);
       modalInstance?.hide();
     }
   }
 
-  saveCpdInfo(){
-    const info: {resolutionNumber: string, oficioNumber: string, oficioDate: string, meetingCouncil: string, councilPresident: string} = {
+  saveCpdInfo() {
+    const info: {
+      resolutionNumber: string;
+      oficioNumber: string;
+      oficioDate: string;
+      meetingCouncil: string;
+      councilPresident: string;
+    } = {
       resolutionNumber: this.formCpd.get('resolutionNumber')?.value ?? '',
       oficioNumber: this.formCpd.get('oficioNumber')?.value ?? '',
       oficioDate: this.formCpd.get('oficioDate')?.value ?? '',
       meetingCouncil: this.formCpd.get('meetingCouncil')?.value ?? '',
       councilPresident: this.formCpd.get('councilPresident')?.value ?? '',
-    }
-    
+    };
+
     this.infoCpd.emit(info);
-   }
-
-
-
-  
-
-
+  }
 }

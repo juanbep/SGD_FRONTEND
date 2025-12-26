@@ -100,11 +100,6 @@ export class CreateAcademicCalendarComponent implements OnInit {
           `Calendario ${dto.anioCalendario}-${dto.numeroCalendario} creado exitosamente`,
           '¡Éxito!'
         );
-
-        console.log(
-          'Calendario creado con OID:',
-          calendarioCreado.oidcalendario
-        );
       } else {
         throw new Error('No se recibió el OID del calendario creado');
       }

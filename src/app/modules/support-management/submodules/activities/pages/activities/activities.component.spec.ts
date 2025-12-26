@@ -17,10 +17,7 @@ describe('ActivitiesComponent', () => {
         ToastrModule.forRoot(),
         AngularFireModule.initializeApp(environments.firebaseConfig),
       ],
-      providers: [
-        provideHttpClient(),
-        provideRouter([]),
-      ],
+      providers: [provideHttpClient(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActivitiesComponent);

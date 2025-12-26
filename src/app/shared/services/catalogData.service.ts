@@ -5,26 +5,24 @@ import { CatalogDataResponse } from '../../core/models/catalogData.interface';
 import { HttpClient } from '@angular/common/http';
 import { CatalogServicesService } from '../../core/services/catalog-services.service';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class CatalogDataService {
+  private catalogServicesService = inject(CatalogServicesService);
 
-    private catalogServicesService = inject(CatalogServicesService);
+  private catalogData: WritableSignal<CatalogDataResponse | null> =
+    signal(null);
 
-    private catalogData: WritableSignal<CatalogDataResponse | null> = signal(null);
+  get catalogDataSignal() {
+    return this.catalogData();
+  }
 
-    get catalogDataSignal() {
-        return this.catalogData();
-    }
+  setCatalogData(newData: CatalogDataResponse) {
+    this.catalogData.update((data) => (data = newData));
+  }
 
-    
-    setCatalogData(newData: CatalogDataResponse) {
-        this.catalogData.update(data => data = newData);
-    }
-
-    getCatalogData() {
-        this.catalogServicesService.getCatalog().subscribe(response => {
-            return this.catalogData.set(response.data);
-        });
-    }
-
+  getCatalogData() {
+    this.catalogServicesService.getCatalog().subscribe((response) => {
+      return this.catalogData.set(response.data);
+    });
+  }
 }

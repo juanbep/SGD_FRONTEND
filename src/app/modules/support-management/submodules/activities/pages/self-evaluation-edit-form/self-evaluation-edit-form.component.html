@@ -1,4 +1,3 @@
-
 <div class="view-container">
   <span class="title-two">Formulario de edición autoevaluación</span>
   <div class="mb-3"></div>
@@ -11,23 +10,31 @@
         <th>
           <span class="text-body-regular">Nombres y apellidos</span>
           <br />
-          <span class="text-body-small-sb">{{fuenteDocenteFormularioResponse?.Fuente?.evaluado?.nombreCompleto}}</span>
+          <span class="text-body-small-sb">{{
+            fuenteDocenteFormularioResponse?.Fuente?.evaluado?.nombreCompleto
+          }}</span>
         </th>
         <th>
           <span class="text-body-regular">Nombre de la actividad</span>
           <br />
-          <span class="text-body-small-sb">{{fuenteDocenteFormularioResponse?.actividad?.nombreActividad}}</span>
+          <span class="text-body-small-sb">{{
+            fuenteDocenteFormularioResponse?.actividad?.nombreActividad
+          }}</span>
         </th>
         <th>
           <span class="text-body-regular">Tipo</span>
           <br />
-          <span class="text-body-small-sb">{{fuenteDocenteFormularioResponse?.actividad?.tipoActividad}}</span>
+          <span class="text-body-small-sb">{{
+            fuenteDocenteFormularioResponse?.actividad?.tipoActividad
+          }}</span>
         </th>
         <th>
           <!-- Horas totales -->
           <span class="text-body-regular">Horas totales</span>
           <br />
-          <span class="text-body-small-sb">{{fuenteDocenteFormularioResponse?.actividad?.horasTotales}}</span>
+          <span class="text-body-small-sb">{{
+            fuenteDocenteFormularioResponse?.actividad?.horasTotales
+          }}</span>
         </th>
       </tr>
       <tr>
@@ -35,11 +42,15 @@
           <!-- Periodo -->
           <span class="text-body-regular">Periodo</span>
           <br />
-          <span class="text-body-small-sb">{{fuenteDocenteFormularioResponse?.actividad?.periodoAcademico}}</span>
+          <span class="text-body-small-sb">{{
+            fuenteDocenteFormularioResponse?.actividad?.periodoAcademico
+          }}</span>
         </th>
         <th>
           <!-- Fecha de inicio -->
-          <span class="text-body-regular">Fecha inicio periodo de evaluación</span>
+          <span class="text-body-regular"
+            >Fecha inicio periodo de evaluación</span
+          >
           <br />
           <span class="text-body-small-sb">{{
             activityPeriod?.fechaFin | date : "dd/MM/yyyy"
@@ -57,7 +68,9 @@
           <!-- Fecha de evaluación -->
           <span class="text-body-regular">Fecha de evaluación</span>
           <br />
-          <span class="text-body-small-sb">{{fuenteDocenteFormularioResponse?.Fuente?.fechaCreacion}}</span>
+          <span class="text-body-small-sb">{{
+            fuenteDocenteFormularioResponse?.Fuente?.fechaCreacion
+          }}</span>
         </th>
       </tr>
     </thead>
@@ -132,11 +145,11 @@
               >Resultado
             </label>
             <span
-            *ngIf="isInvalidField('results.' + i + '.result')"
-            class="error-message text-body-small-r ms-1"
-          >
-            {{ getFieldError("results." + i + ".result") }}
-          </span>
+              *ngIf="isInvalidField('results.' + i + '.result')"
+              class="error-message text-body-small-r ms-1"
+            >
+              {{ getFieldError("results." + i + ".result") }}
+            </span>
           </div>
         </div>
         <div class="col">
@@ -150,12 +163,7 @@
               }"
             >
               <option value="">Seleccione ODS</option>
-              <option
-                *ngFor="
-                  let ods of ods
-                "
-                [value]="ods.value"
-              >
+              <option *ngFor="let ods of ods" [value]="ods.value">
                 ODS {{ ods.label }}
               </option>
             </select>
@@ -172,11 +180,11 @@
             </label>
           </div>
           <span
-          *ngIf="isInvalidField('results.' + i + '.ODS')"
-          class="error-message text-body-small-r ms-1"
-        >
-          {{ getFieldError("results." + i + ".ODS") }}
-        </span>
+            *ngIf="isInvalidField('results.' + i + '.ODS')"
+            class="error-message text-body-small-r ms-1"
+          >
+            {{ getFieldError("results." + i + ".ODS") }}
+          </span>
         </div>
         <div class="col">
           <ng-container
@@ -216,7 +224,7 @@
               <div class="download-file-label">
                 <span class="text-body-small-r">Evidencia</span>
                 <br />
-                <span class="text-body-small-sb">{{evidences[i].name}}</span>
+                <span class="text-body-small-sb">{{ evidences[i].name }}</span>
               </div>
               <div class="file-actions">
                 <button
@@ -395,11 +403,11 @@
           </label>
         </div>
         <span
-        *ngIf="isInvalidField('evaluation')"
-        class="error-message text-body-small-r ms-1"
-      >
-        {{ getFieldError("evaluation") }}
-      </span>
+          *ngIf="isInvalidField('evaluation')"
+          class="error-message text-body-small-r ms-1"
+        >
+          {{ getFieldError("evaluation") }}
+        </span>
       </div>
     </div>
     <div class="mb-3"></div>
@@ -471,11 +479,11 @@
           </div>
         </ng-template>
         <span
-        *ngIf="isInvalidField('signature')"
-        class="error-message text-body-small-r ms-1"
-      >
-        {{ getFieldError("signature") }}
-      </span>
+          *ngIf="isInvalidField('signature')"
+          class="error-message text-body-small-r ms-1"
+        >
+          {{ getFieldError("signature") }}
+        </span>
       </div>
     </div>
     <div class="mb-3"></div>
@@ -518,8 +526,8 @@
   </section>
 </div>
 
-
 <shared-confirm-dialog
-(confirm)="onConfirmCancel($event)"
-[title]="messageTitle"
-[message]="messageConfirmCancel"></shared-confirm-dialog>
+  (confirm)="onConfirmCancel($event)"
+  [title]="messageTitle"
+  [message]="messageConfirmCancel"
+></shared-confirm-dialog>

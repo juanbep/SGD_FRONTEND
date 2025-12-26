@@ -12,7 +12,11 @@ describe('EditActivityComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ToastrModule.forRoot(), EditActivityComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])], 
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EditActivityComponent);

@@ -8,9 +8,8 @@ describe('AsignacionesManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AsignacionesManagementComponent]
-    })
-    .compileComponents();
+      imports: [AsignacionesManagementComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AsignacionesManagementComponent);
     component = fixture.componentInstance;

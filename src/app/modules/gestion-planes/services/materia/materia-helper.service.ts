@@ -13,6 +13,4 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root',
 })
-export class MateriaHelperService {
- 
-}
+export class MateriaHelperService {}

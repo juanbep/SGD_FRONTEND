@@ -8,9 +8,8 @@ describe('EliminarPlanModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EliminarPlanModalComponent]
-    })
-    .compileComponents();
+      imports: [EliminarPlanModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EliminarPlanModalComponent);
     component = fixture.componentInstance;

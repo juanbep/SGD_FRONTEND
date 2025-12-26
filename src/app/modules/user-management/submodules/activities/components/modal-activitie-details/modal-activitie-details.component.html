@@ -216,7 +216,8 @@
             class="col-4 mb-3"
             *ngIf="
               activitieDetails?.tipoActividad?.oidTipoActividad == 2 ||
-              activitieDetails?.tipoActividad?.oidTipoActividad == 3 ; else noStudent
+                activitieDetails?.tipoActividad?.oidTipoActividad == 3;
+              else noStudent
             "
           >
             <div class="form-floating">
@@ -236,9 +237,7 @@
               >
             </div>
             <!-- Nombre del estudiante -->
-            <div
-              class="col-4 mb-3"
-            >
+            <div class="col-4 mb-3">
               <div class="form-floating">
                 <input
                   type="text"

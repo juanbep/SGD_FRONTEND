@@ -19,7 +19,7 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
   async generatePdfDocument(
     formData: any,
     userInfo: any
-  ): Promise<{ base64: string; file: File; }> {
+  ): Promise<{ base64: string; file: File }> {
     const doc: jsPDF = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -28,12 +28,9 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
     // Títulos principales
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text(
-      'EVALUACIÓN COORDINADOR DE TRABAJO DE GRADO',
-      pageWidth / 2,
-      y,
-      { align: 'center' }
-    );
+    doc.text('EVALUACIÓN COORDINADOR DE TRABAJO DE GRADO', pageWidth / 2, y, {
+      align: 'center',
+    });
     y += 10;
     doc.text(
       'FACULTAD DE INGENIERÍA ELECTRÓNICA Y TELECOMUNICACIONES',
@@ -66,12 +63,7 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
           'Periodo evaluado:',
           userInfo.period || '',
         ],
-        [
-          'Nombre de actividad:',
-          userInfo.activityName || '',
-          '',
-          '',
-        ],
+        ['Nombre de actividad:', userInfo.activityName || '', '', ''],
       ],
       theme: 'grid',
       styles: { fontSize: 10 },
@@ -86,12 +78,7 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
     autoTable(doc, {
       startY: y,
       head: [
-        [
-          'Componente',
-          'Pregunta',
-          'Evaluación',
-          'Equivalente Cualitativo',
-        ],
+        ['Componente', 'Pregunta', 'Evaluación', 'Equivalente Cualitativo'],
       ],
       body: [
         // Cumplimiento (30%)
@@ -141,7 +128,6 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
           this.getQualitativeEquivalent(Number(formData.qualification_8)),
         ],
         [
-          
           'Maneja el tiempo de sus intervenciones',
           formData.qualification_9,
           this.getQualitativeEquivalent(Number(formData.qualification_9)),
@@ -221,12 +207,18 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
     doc.setFontSize(12);
     doc.text('Firma:', 10, y);
     if (formData.userSignature) {
-      doc.addImage((await this.convertFileToBase64(formData.userSignature)), 'PNG', 30, y - 10, 30, 30);
+      doc.addImage(
+        await this.convertFileToBase64(formData.userSignature),
+        'PNG',
+        30,
+        y - 10,
+        30,
+        30
+      );
       y += 50;
     } else {
       doc.line(10, y + 10, 80, y + 10);
-      const signatureText =
-        userInfo.coordinatorName || '';
+      const signatureText = userInfo.coordinatorName || '';
       doc.text(signatureText, 10, y + 20);
       y += 30;
     }
@@ -247,14 +239,14 @@ export class ResponsibilityCoordinatorPdfGeneratorService {
     return 'Sobresaliente';
   }
 
-    // Función auxiliar para convertir una imagen de un dato tipo file a base64
-  
-    convertFileToBase64(file: File): Promise<string> {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(file);
-      });
-    }
+  // Función auxiliar para convertir una imagen de un dato tipo file a base64
+
+  convertFileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
 }

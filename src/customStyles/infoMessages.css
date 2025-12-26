@@ -3,27 +3,27 @@
   align-items: center;
   margin-top: 20px;
   width: 100%;
-  min-height: 81px; 
+  min-height: 81px;
   padding: 8.5px 20px;
   gap: 8px;
   border-radius: 8px;
   background: var(--Colores-secundarios-Azl-tertiary-95, #ecf0ff);
-  flex-wrap: nowrap; 
+  flex-wrap: nowrap;
 }
 
 .messages-container img {
-  flex-shrink: 0; 
-  width: 48px; 
+  flex-shrink: 0;
+  width: 48px;
   height: 48px;
 }
 
 .messages-container .text-body-heavy {
-  flex: 1; 
-  min-width: 0; 
+  flex: 1;
+  min-width: 0;
   /* Tipografía fluida con clamp() */
   font-size: clamp(0.75rem, 2vw, 1rem) !important;
   line-height: 1.4;
-  word-wrap: break-word; 
+  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
@@ -32,7 +32,7 @@
   align-items: center;
   margin-top: 20px;
   width: 100%;
-  min-height: 81px; 
+  min-height: 81px;
   padding: 8.5px 20px;
   gap: 8px;
   border-radius: 8px;

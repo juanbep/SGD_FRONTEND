@@ -13,7 +13,9 @@
         <th>
           <span class="text-body-regular">Nombres y apellidos</span>
           <br />
-          <span class="text-body-small-sb">{{ evaluado?.nombres }} {{ evaluado?.apellidos }}</span>
+          <span class="text-body-small-sb"
+            >{{ evaluado?.nombres }} {{ evaluado?.apellidos }}</span
+          >
         </th>
         <th>
           <span class="text-body-regular">Num.Id</span>
@@ -25,14 +27,14 @@
           <br />
           <span class="text-body-small-sb">{{
             activityResponse?.nombreActividad
-            }}</span>
+          }}</span>
         </th>
         <th>
           <span class="text-body-regular">Tipo</span>
           <br />
           <span class="text-body-small-sb">{{
             activityResponse?.tipoActividad?.nombre
-            }}</span>
+          }}</span>
         </th>
       </tr>
       <tr>
@@ -42,7 +44,7 @@
           <br />
           <span class="text-body-small-sb">{{
             (activityResponse?.semanas || 0) * (activityResponse?.horas || 0)
-            }}</span>
+          }}</span>
         </th>
         <th>
           <!-- Periodo -->
@@ -50,15 +52,17 @@
           <br />
           <span class="text-body-small-sb">{{
             activityPeriod?.idPeriodo
-            }}</span>
+          }}</span>
         </th>
         <th>
           <!-- Fecha de inicio -->
-          <span class="text-body-regular">Fecha inicio periodo de evaluación</span>
+          <span class="text-body-regular"
+            >Fecha inicio periodo de evaluación</span
+          >
           <br />
           <span class="text-body-small-sb">{{
             activityPeriod?.fechaFin | date : "dd/MM/yyyy"
-            }}</span>
+          }}</span>
         </th>
         <th>
           <!-- Fecha de fin -->
@@ -66,7 +70,7 @@
           <br />
           <span class="text-body-small-sb">{{
             activityPeriod?.fechaInicio | date : "dd/MM/yyyy"
-            }}</span>
+          }}</span>
         </th>
       </tr>
     </thead>
@@ -77,15 +81,33 @@
     <div class="row">
       <span class="title-three">Descripción actividad</span>
       <div class="form-floating">
-        <input type="text" class="form-control input-text" accept=".pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt"
-          id="activityDescription" formControlName="activityDescription" [ngClass]="{
+        <input
+          type="text"
+          class="form-control input-text"
+          accept=".pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt"
+          id="activityDescription"
+          formControlName="activityDescription"
+          [ngClass]="{
             'error-input': isInvalidField('activityDescription')
-          }" />
-        <label class="--green-on text-body-small-sb" for="activityDescription" [ngClass]="{
+          }"
+        />
+        <label
+          class="--green-on text-body-small-sb"
+          for="activityDescription"
+          [ngClass]="{
             'error-label': isInvalidField('activityDescription')
-          }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">* </span>Descripción
-          actividad</label>
-        <span *ngIf="isInvalidField('activityDescription')" class="error-message text-body-small-r ms-1">
+          }"
+          ><span
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Campo obligatorio"
+            >* </span
+          >Descripción actividad</label
+        >
+        <span
+          *ngIf="isInvalidField('activityDescription')"
+          class="error-message text-body-small-r ms-1"
+        >
           {{ getFieldError("activityDescription") }}
         </span>
       </div>
@@ -98,29 +120,56 @@
     </div>
     <div class="row">
       <div formArrayName="results">
-        <div *ngFor="let resultGroup of results.controls; let i = index" [formGroupName]="i" class="row">
+        <div
+          *ngFor="let resultGroup of results.controls; let i = index"
+          [formGroupName]="i"
+          class="row"
+        >
           <div *ngIf="i > 0" class="mb-2"></div>
           <div class="col">
             <div class="form-floating">
-              <input type="text" formControlName="result" class="form-control input-text" [ngClass]="{
+              <input
+                type="text"
+                formControlName="result"
+                class="form-control input-text"
+                [ngClass]="{
                   'error-input': isInvalidField('results.' + i + '.result')
-                }" />
-              <label class="label-custom text-body-small-sb" for="result" [ngClass]="{
+                }"
+              />
+              <label
+                class="label-custom text-body-small-sb"
+                for="result"
+                [ngClass]="{
                   'error-label': isInvalidField('results.' + i + '.result')
-                }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">*
-                </span>Resultado</label>
+                }"
+                ><span
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Campo obligatorio"
+                  >* </span
+                >Resultado</label
+              >
             </div>
-            <span *ngIf="isInvalidField('results.' + i + '.result')" class="error-message text-body-small-r ms-1">
+            <span
+              *ngIf="isInvalidField('results.' + i + '.result')"
+              class="error-message text-body-small-r ms-1"
+            >
               {{ getFieldError("results." + i + ".result") }}
             </span>
           </div>
           <div class="col">
             <div class="form-floating">
-              <select formControlName="ODS" class="form-select input-select text-body-custom" id="ods-input-{{ i }}"
+              <select
+                formControlName="ODS"
+                class="form-select input-select text-body-custom"
+                id="ods-input-{{ i }}"
                 [ngClass]="{
                   'error-input': isInvalidField('results.' + i + '.ODS')
-                }">
-                <option [value]="null">Objetivo de Desarrollo Sostenible (ODS)</option>
+                }"
+              >
+                <option [value]="null">
+                  Objetivo de Desarrollo Sostenible (ODS)
+                </option>
                 <option value="1">Fin del pobreza</option>
                 <option value="2">Hambre cero</option>
                 <option value="3">Salud y bienestar</option>
@@ -145,31 +194,57 @@
                 </option>
                 <option value="17">Alianzas para lograr los objetivos</option>
               </select>
-              <label for="ods-input-{{ i }}" class="label-custom text-body-small-sb" [ngClass]="{
+              <label
+                for="ods-input-{{ i }}"
+                class="label-custom text-body-small-sb"
+                [ngClass]="{
                   'error-label': isInvalidField('results.' + i + '.ODS')
-                }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">* </span>ODS</label>
+                }"
+                ><span
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Campo obligatorio"
+                  >* </span
+                >ODS</label
+              >
             </div>
-            <span *ngIf="isInvalidField('results.' + i + '.ODS')" class="error-message text-body-small-r ms-1">
+            <span
+              *ngIf="isInvalidField('results.' + i + '.ODS')"
+              class="error-message text-body-small-r ms-1"
+            >
               {{ getFieldError("results." + i + ".ODS") }}
             </span>
           </div>
           <div class="col">
-            <ng-container *ngIf="
+            <ng-container
+              *ngIf="
                 !newSelfEvaluationForm.get('results')?.value[i].evidence;
                 else viewEvidenceFile
-              ">
+              "
+            >
               <div class="file-upload-container">
-                <label for="uploadFileAssessment{{ i }}" class="file-upload-label">
+                <label
+                  for="uploadFileAssessment{{ i }}"
+                  class="file-upload-label"
+                >
                   <div class="file-details">
                     <p class="file-title text-body-small-sb">Evidencia</p>
                     <p class="file-name text-body-small-r"></p>
                   </div>
-                  <input type="file" formControlName="evidence" id="uploadFileAssessment{{ i }}"
-                    (change)="onEvidenceSelected($event, i)" hidden />
+                  <input
+                    type="file"
+                    formControlName="evidence"
+                    id="uploadFileAssessment{{ i }}"
+                    (change)="onEvidenceSelected($event, i)"
+                    hidden
+                  />
                 </label>
                 <div class="file-actions">
-                  <button class="button-upload button-actions button-border-radius" type="button"
-                    (click)="triggersEvidences('uploadFileAssessment' + i)"></button>
+                  <button
+                    class="button-upload button-actions button-border-radius"
+                    type="button"
+                    (click)="triggersEvidences('uploadFileAssessment' + i)"
+                  ></button>
                 </div>
               </div>
             </ng-container>
@@ -180,19 +255,31 @@
                   <br />
                   <span class="text-body-small-sb">{{
                     this.evidences[i].name
-                    }}</span>
+                  }}</span>
                 </div>
                 <div class="file-actions">
-                  <button class="button-actions button-delete" type="button" (click)="deleteEvidenceFile(i)"></button>
-                  <button type="button" class="button-actions button-download"
-                    (click)="downloadEvidenceFile(i)"></button>
+                  <button
+                    class="button-actions button-delete"
+                    type="button"
+                    (click)="deleteEvidenceFile(i)"
+                  ></button>
+                  <button
+                    type="button"
+                    class="button-actions button-download"
+                    (click)="downloadEvidenceFile(i)"
+                  ></button>
                 </div>
               </div>
             </ng-template>
           </div>
           <div class="col-auto d-flex align-items-center">
-            <img [src]="'assets/icons/forms/x-icon.svg'" alt="Eliminar resultado" *ngIf="i > 0" type="button"
-              (click)="removeResultEntry(i)" />
+            <img
+              [src]="'assets/icons/forms/x-icon.svg'"
+              alt="Eliminar resultado"
+              *ngIf="i > 0"
+              type="button"
+              (click)="removeResultEntry(i)"
+            />
           </div>
         </div>
       </div>
@@ -200,11 +287,16 @@
       <div class="mb-2"></div>
       <div class="row">
         <div class="col">
-          <button type="button" (click)="addResultEntry()" [disabled]="results.length >= 10" [ngClass]="[
+          <button
+            type="button"
+            (click)="addResultEntry()"
+            [disabled]="results.length >= 10"
+            [ngClass]="[
               results.length >= 10
                 ? 'button-normal-large-disabled'
                 : 'button-normal-large'
-            ]">
+            ]"
+          >
             Nuevo resultado
           </button>
         </div>
@@ -216,30 +308,53 @@
       <div class="col">
         <span class="title-three">Lecciones aprendidas</span>
         <div formArrayName="lessonsLearned">
-          <div *ngFor="
+          <div
+            *ngFor="
               let lessonGroup of lessonsLearnedArray.controls;
               let j = index
-            " [formGroupName]="j" class="row">
+            "
+            [formGroupName]="j"
+            class="row"
+          >
             <div *ngIf="j > 0" class="mb-2"></div>
 
             <div class="col">
               <div class="form-floating">
-                <input type="text" formControlName="lesson" class="form-control input-text" id="learnedLesson{{ j }}" />
-                <label for="learnedLesson{{ j }}" class="label-custom text-body-small-sb">Lección aprendida</label>
+                <input
+                  type="text"
+                  formControlName="lesson"
+                  class="form-control input-text"
+                  id="learnedLesson{{ j }}"
+                />
+                <label
+                  for="learnedLesson{{ j }}"
+                  class="label-custom text-body-small-sb"
+                  >Lección aprendida</label
+                >
               </div>
             </div>
             <div class="col-auto d-flex align-items-center">
-              <img [src]="'assets/icons/forms/x-icon.svg'" alt="Eliminar resultado" *ngIf="j > 0" type="button"
-                (click)="removeLessonEntry(j)" />
+              <img
+                [src]="'assets/icons/forms/x-icon.svg'"
+                alt="Eliminar resultado"
+                *ngIf="j > 0"
+                type="button"
+                (click)="removeLessonEntry(j)"
+              />
             </div>
           </div>
         </div>
         <div class="mb-2"></div>
-        <button type="button" (click)="addLessonEntry()" [disabled]="lessonsLearnedArray.length >= 10" [ngClass]="[
+        <button
+          type="button"
+          (click)="addLessonEntry()"
+          [disabled]="lessonsLearnedArray.length >= 10"
+          [ngClass]="[
             lessonsLearnedArray.length >= 10
               ? 'button-normal-large-disabled'
               : 'button-normal-large'
-          ]">
+          ]"
+        >
           Nueva lección aprendida
         </button>
       </div>
@@ -247,33 +362,53 @@
       <div class="col">
         <span class="title-three">Oportunidad de mejora</span>
         <div formArrayName="improvementOpportunities">
-          <div *ngFor="
+          <div
+            *ngFor="
               let oppGroup of improvementOpportunitiesArray.controls;
               let k = index
-            " [formGroupName]="k" class="row">
+            "
+            [formGroupName]="k"
+            class="row"
+          >
             <div *ngIf="k > 0" class="mb-2"></div>
 
             <div class="col">
               <div class="form-floating">
-                <input type="text" formControlName="opportunity" class="form-control input-text"
-                  id="improvementOpportunity{{ k }}" />
-                <label for="improvementOpportunity{{ k }}" class="label-custom text-body-small-sb">Oportunidad de
-                  mejora</label>
+                <input
+                  type="text"
+                  formControlName="opportunity"
+                  class="form-control input-text"
+                  id="improvementOpportunity{{ k }}"
+                />
+                <label
+                  for="improvementOpportunity{{ k }}"
+                  class="label-custom text-body-small-sb"
+                  >Oportunidad de mejora</label
+                >
               </div>
             </div>
             <div class="col-auto d-flex align-items-center">
-              <img [src]="'assets/icons/forms/x-icon.svg'" alt="Eliminar resultado" *ngIf="k > 0" type="button"
-                (click)="removeOpportunityEntry(k)" />
+              <img
+                [src]="'assets/icons/forms/x-icon.svg'"
+                alt="Eliminar resultado"
+                *ngIf="k > 0"
+                type="button"
+                (click)="removeOpportunityEntry(k)"
+              />
             </div>
           </div>
         </div>
         <div class="mb-2"></div>
-        <button type="button" (click)="addOpportunityEntry()" [disabled]="improvementOpportunitiesArray.length >= 10"
+        <button
+          type="button"
+          (click)="addOpportunityEntry()"
+          [disabled]="improvementOpportunitiesArray.length >= 10"
           [ngClass]="[
             improvementOpportunitiesArray.length >= 10
               ? 'button-normal-large-disabled'
               : 'button-normal-large'
-          ]">
+          ]"
+        >
           Nueva oportunidad de mejora
         </button>
       </div>
@@ -284,14 +419,33 @@
       <div class="col-3">
         <span class="title-three">Evaluación</span>
         <div class="form-floating">
-          <input type="text" class="form-control input-text" id="evaluation" formControlName="evaluation" [ngClass]="{
+          <input
+            type="text"
+            class="form-control input-text"
+            id="evaluation"
+            formControlName="evaluation"
+            [ngClass]="{
               'error-label': isInvalidField('evaluation')
-            }" />
-          <label class="label-custom text-body-small-sb" for="evaluation" [ngClass]="{
+            }"
+          />
+          <label
+            class="label-custom text-body-small-sb"
+            for="evaluation"
+            [ngClass]="{
               'error-label': isInvalidField('evaluation')
-            }"><span data-toggle="tooltip" data-placement="top" title="Campo obligatorio">* </span>Evaluación</label>
+            }"
+            ><span
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Campo obligatorio"
+              >* </span
+            >Evaluación</label
+          >
         </div>
-        <span *ngIf="isInvalidField('evaluation')" class="error-message text-body-small-r ms-1">
+        <span
+          *ngIf="isInvalidField('evaluation')"
+          class="error-message text-body-small-r ms-1"
+        >
           {{ getFieldError("evaluation") }}
         </span>
       </div>
@@ -300,7 +454,12 @@
     <div class="mb-3"></div>
     <div class="row">
       <span class="title-three">Observaciones</span>
-      <input formControlName="observation" type="text" class="observation" placeholder="Ingrese sus observaciones" />
+      <input
+        formControlName="observation"
+        type="text"
+        class="observation"
+        placeholder="Ingrese sus observaciones"
+      />
     </div>
 
     <div class="mb-3"></div>
@@ -308,24 +467,36 @@
     <div class="row" style="width: 50%">
       <div class="col">
         <span class="title-three">Firma del evaluado</span>
-        <ng-container *ngIf="
+        <ng-container
+          *ngIf="
             !newSelfEvaluationForm.get('signature')?.value;
             else signatureLoaded
-          ">
+          "
+        >
           <div class="file-upload-container">
             <label for="signature" class="file-upload-label">
               <div class="file-details">
                 <p class="file-title text-body-small-sb">Firma</p>
                 <p class="file-name text-body-small-r">Cargar firma (.png)</p>
               </div>
-              <input type="file" accept=".png" [ngClass]="{
+              <input
+                type="file"
+                accept=".png"
+                [ngClass]="{
                   'error-input': isInvalidField('signature')
-                }" formControlName="signature" id="signature" (change)="onSignatureSelected($event)" hidden />
+                }"
+                formControlName="signature"
+                id="signature"
+                (change)="onSignatureSelected($event)"
+                hidden
+              />
             </label>
             <div class="file-actions">
-              <button type="button" class="button-upload button-actions button-border-radius"
-                (click)="triggersSignatureUpload()"></button>
-
+              <button
+                type="button"
+                class="button-upload button-actions button-border-radius"
+                (click)="triggersSignatureUpload()"
+              ></button>
             </div>
           </div>
         </ng-container>
@@ -338,13 +509,23 @@
               </p>
             </div>
             <div class="file-actions">
-              <button type="button" class="button-actions button-delete button-radius-custom"
-                (click)="deleteSignatureFile()"></button>
-              <button type="button" class="button-actions button-download" (click)="downloadSignatureFile()"></button>
+              <button
+                type="button"
+                class="button-actions button-delete button-radius-custom"
+                (click)="deleteSignatureFile()"
+              ></button>
+              <button
+                type="button"
+                class="button-actions button-download"
+                (click)="downloadSignatureFile()"
+              ></button>
             </div>
           </div>
         </ng-template>
-        <span *ngIf="isInvalidField('signature')" class="error-message text-body-small-r ms-1">
+        <span
+          *ngIf="isInvalidField('signature')"
+          class="error-message text-body-small-r ms-1"
+        >
           {{ getFieldError("signature") }}
         </span>
       </div>
@@ -361,7 +542,11 @@
             </p>
           </div>
           <div class="file-actions">
-            <button type="button" class="button-actions button-view" (click)="generatePdfPreview()"></button>
+            <button
+              type="button"
+              class="button-actions button-view"
+              (click)="generatePdfPreview()"
+            ></button>
           </div>
         </div>
       </div>
@@ -385,5 +570,8 @@
   </section>
 </div>
 
-<shared-confirm-dialog (confirm)="onConfirmCancel($event)" [title]="messageTitle"
-  [message]="messageConfirmCancel"></shared-confirm-dialog>
+<shared-confirm-dialog
+  (confirm)="onConfirmCancel($event)"
+  [title]="messageTitle"
+  [message]="messageConfirmCancel"
+></shared-confirm-dialog>

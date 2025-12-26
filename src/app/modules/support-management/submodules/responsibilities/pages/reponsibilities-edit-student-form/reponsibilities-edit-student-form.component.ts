@@ -17,7 +17,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { ResponsibilityPdfGeneratorService } from '../../services/responsibility-pdf-generator.service';
 import { FuenteEstudianteFormulario } from '../../../../../../core/models/modified/fuente-estudiante-formulario.model';
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
 
 const MESSAGE_TITLE = 'Cancelar';
 const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
@@ -25,7 +25,12 @@ const MESSAGE_CONFIRM_CANCEL = '¿Está seguro que desea cancelar?';
 @Component({
   selector: 'reponsibilities-edit-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, LoadingOverleyComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ConfirmDialogComponent,
+    LoadingOverleyComponent,
+  ],
   templateUrl: './reponsibilities-edit-student-form.component.html',
   styleUrls: ['./reponsibilities-edit-student-form.component.css'],
 })
@@ -54,7 +59,6 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
   public currentDate = new Date();
   public formPdf: File | null = null;
   public isLoading: boolean = false;
-
 
   public selectedFiles: {
     signature: File | null;
@@ -157,8 +161,12 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
       this.responsibilitiesService.getInfoResponsibilityByForm(id).subscribe({
         next: (resp) => {
           this.responsibility = resp.data;
-          this.recoverEvaluated(this.responsibility?.Fuente.evaluado.oidUsuario || 0);
-          this.recoverEvualator(this.responsibility?.Fuente.evaluador.oidUsuario || 0);
+          this.recoverEvaluated(
+            this.responsibility?.Fuente.evaluado.oidUsuario || 0
+          );
+          this.recoverEvualator(
+            this.responsibility?.Fuente.evaluador.oidUsuario || 0
+          );
           this.patchForm();
         },
         error: (err) => {
@@ -174,10 +182,7 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
         this.evaluado = user.data;
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
       },
     });
   }
@@ -188,10 +193,7 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
         this.evaluador = user.data;
       },
       error: (error) => {
-        this.messagesInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
+        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
       },
     });
   }
@@ -300,7 +302,7 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
     if (evaluationNumber >= 80 && evaluationNumber < 90) {
       return 'Bueno';
     }
-    if (evaluationNumber >= 90 && evaluationNumber <95) {
+    if (evaluationNumber >= 90 && evaluationNumber < 95) {
       return 'Sobresaliente';
     }
     if (evaluationNumber >= 95 && evaluationNumber <= 100) {
@@ -371,87 +373,87 @@ export class ReponsibilitiesEditStudentFormComponent implements OnInit {
   }
 
   saveEvaluation() {
-      if (this.formEvaluation.invalid) {
-        this.formEvaluation.markAllAsTouched();
-        this.messagesInfoService.showWarningMessage(
-          'Por favor complete todos los campos',
-          'Advertencia'
-        );
-        return;
-      }
-      
-      this.isLoading = true;
-
-      this.generatePdfPreview();
-  
-      const fuenteEstudianteFormulario: FuenteEstudianteFormulario = {
-        oidFuente: this.responsibility?.Fuente.oidFuente|| 0,
-        tipoCalificacion: 'EN_LINEA',
-        observacion: this.formEvaluation.get('observations')?.value || '',
-        oidEstadoEtapaDesarrollo: this.formEvaluation.get('developmentStage')?.value,
-        encuesta: {
-          nombre: this.formEvaluation.get('degreeWorkTitle')?.value,
-        },
-        preguntas: [
-          {
-            oidPregunta: 1,
-            respuesta: Number(this.formEvaluation.get('qualification_1')?.value)
-          },
-          {
-            oidPregunta: 2,
-            respuesta: Number(this.formEvaluation.get('qualification_2')?.value)
-          },
-          {
-            oidPregunta: 3,
-            respuesta: Number(this.formEvaluation.get('qualification_3')?.value)
-          },
-          {
-            oidPregunta: 4,
-            respuesta: Number(this.formEvaluation.get('qualification_4')?.value)
-          },
-          {
-            oidPregunta: 5,
-            respuesta: Number(this.formEvaluation.get('qualification_5')?.value)
-          },
-          {
-            oidPregunta: 6,
-            respuesta: Number(this.formEvaluation.get('qualification_6')?.value),
-          },
-          {
-            oidPregunta: 7,
-            respuesta: Number(this.formEvaluation.get('qualification_7')?.value),
-          },
-          {
-            oidPregunta: 8,
-            respuesta: Number(this.formEvaluation.get('qualification_8')?.value),
-          },
-        ],
-      };
-  
-      this.responsibilitiesService
-        .saveResponibilityFormStundent(
-          fuenteEstudianteFormulario,
-          this.selectedFiles.reportDocument || new File([], ''),
-        )
-        .subscribe({
-          next: (response) => {
-            this.isLoading = false;
-            this.messagesInfoService.showSuccessMessage(
-              'Evaluación guardada correctamente',
-              'Éxito'
-            );
-            this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
-          },
-          error: (error) => {
-            this.isLoading = false;
-            this.messagesInfoService.showErrorMessage(
-              error.error.mensaje,
-              'Error'
-            );
-          },
-        });
+    if (this.formEvaluation.invalid) {
+      this.formEvaluation.markAllAsTouched();
+      this.messagesInfoService.showWarningMessage(
+        'Por favor complete todos los campos',
+        'Advertencia'
+      );
+      return;
     }
-  
+
+    this.isLoading = true;
+
+    this.generatePdfPreview();
+
+    const fuenteEstudianteFormulario: FuenteEstudianteFormulario = {
+      oidFuente: this.responsibility?.Fuente.oidFuente || 0,
+      tipoCalificacion: 'EN_LINEA',
+      observacion: this.formEvaluation.get('observations')?.value || '',
+      oidEstadoEtapaDesarrollo:
+        this.formEvaluation.get('developmentStage')?.value,
+      encuesta: {
+        nombre: this.formEvaluation.get('degreeWorkTitle')?.value,
+      },
+      preguntas: [
+        {
+          oidPregunta: 1,
+          respuesta: Number(this.formEvaluation.get('qualification_1')?.value),
+        },
+        {
+          oidPregunta: 2,
+          respuesta: Number(this.formEvaluation.get('qualification_2')?.value),
+        },
+        {
+          oidPregunta: 3,
+          respuesta: Number(this.formEvaluation.get('qualification_3')?.value),
+        },
+        {
+          oidPregunta: 4,
+          respuesta: Number(this.formEvaluation.get('qualification_4')?.value),
+        },
+        {
+          oidPregunta: 5,
+          respuesta: Number(this.formEvaluation.get('qualification_5')?.value),
+        },
+        {
+          oidPregunta: 6,
+          respuesta: Number(this.formEvaluation.get('qualification_6')?.value),
+        },
+        {
+          oidPregunta: 7,
+          respuesta: Number(this.formEvaluation.get('qualification_7')?.value),
+        },
+        {
+          oidPregunta: 8,
+          respuesta: Number(this.formEvaluation.get('qualification_8')?.value),
+        },
+      ],
+    };
+
+    this.responsibilitiesService
+      .saveResponibilityFormStundent(
+        fuenteEstudianteFormulario,
+        this.selectedFiles.reportDocument || new File([], '')
+      )
+      .subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.messagesInfoService.showSuccessMessage(
+            'Evaluación guardada correctamente',
+            'Éxito'
+          );
+          this.router.navigate(['./app/gestion-soportes/responsabilidades/']);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.messagesInfoService.showErrorMessage(
+            error.error.mensaje,
+            'Error'
+          );
+        },
+      });
+  }
 
   goBack() {
     if (this.confirmDialog) this.confirmDialog?.open();

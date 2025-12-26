@@ -65,7 +65,7 @@ export class LoginPageComponent implements OnInit {
     (await this.authServicesService.getUserInfoFromBackend()).subscribe({
       next: (response) => {
         this.authServicesService.currentUserValue = response.data;
-        
+
         this.authServicesService.updateLoginSuccess = true;
 
         // Guardar los roles

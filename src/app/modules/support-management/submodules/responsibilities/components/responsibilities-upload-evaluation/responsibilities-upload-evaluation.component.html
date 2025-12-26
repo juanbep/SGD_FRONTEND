@@ -34,7 +34,7 @@
     </section>
     <!--Sección carga de autoevaluación -->
 
-    <form [formGroup]="form" style="width: 100%;">
+    <form [formGroup]="form" style="width: 100%">
       <!-- File Upload Section -->
       <span class="title-three"> Soporte </span>
       <div class="file-upload-container">
@@ -43,7 +43,9 @@
             <p class="file-title text-body-small-sb">Soporte</p>
             <p class="file-name text-body-small-r">
               {{
-                fileNameSelected() ? fileNameSelected() : "Seleccione un archivo"
+                fileNameSelected()
+                  ? fileNameSelected()
+                  : "Seleccione un archivo"
               }}
             </p>
           </div>
@@ -63,7 +65,10 @@
           ></button>
         </div>
       </div>
-      <span *ngIf="isInvalidField('selectedFile')" class="error-message text-body-small-r ms-1">
+      <span
+        *ngIf="isInvalidField('selectedFile')"
+        class="error-message text-body-small-r ms-1"
+      >
         {{ getFieldError("selectedFile") }}
       </span>
       <span
@@ -71,8 +76,9 @@
           'text-error text-body-text-body-small-r': errorMessageFile != '',
           text: errorMessageFile === ''
         }"
-        >Únicamente se permiten archivos en formato .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt </span
-      >
+        >Únicamente se permiten archivos en formato .pdf, .docx, .doc, .xlsx,
+        .xls, .pptx, .ppt
+      </span>
 
       <!-- Evaluation Section -->
       <section id="assessment-fill-out-responsability">
@@ -85,7 +91,10 @@
           type="text"
           placeholder="Nota"
         /><br />
-        <span *ngIf="isInvalidField('evaluation')" class="error-message text-body-small-r ms-1">
+        <span
+          *ngIf="isInvalidField('evaluation')"
+          class="error-message text-body-small-r ms-1"
+        >
           {{ getFieldError("evaluation") }}
         </span>
         <span
@@ -95,14 +104,13 @@
           }"
           >Valores permitidos 0-100</span
         >
-        <span 
+        <span
           [ngClass]="{
             'text-error text-body-text-body-small-r': errorMessageNote != '',
             text: errorMessageNote === ''
           }"
           >La nota debe estar entre 0 y 100</span
         >
-      
       </section>
 
       <!-- Observation Section -->

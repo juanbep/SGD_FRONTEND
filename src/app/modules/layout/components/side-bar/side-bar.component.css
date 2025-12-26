@@ -10,8 +10,6 @@
   padding-left: 40px;
 }
 
-
-
 .title-menu {
   font-family: "myGaramond";
   font-size: 16px;
@@ -24,7 +22,6 @@
   flex-direction: column;
   transition: left 0.3s ease;
 }
-
 
 #sidebar-toggle {
   display: none;
@@ -40,7 +37,7 @@
 
 #sidebar.active {
   left: 0;
-  position:static;
+  position: static;
 }
 .nav-container {
   display: none;
@@ -60,9 +57,7 @@
   background-color: var(--neutral-95);
   transition: all 0.3s ease;
   z-index: 1;
-  
 }
-
 
 .container-line {
   display: flex;
@@ -128,7 +123,6 @@ a {
   background-color: var(--blue-60);
 }
 
-
 .nav-toggle:before,
 .nav-toggle:after {
   content: "";
@@ -154,7 +148,6 @@ a {
 .nav-container.is-active .nav-toggle:before {
   transform: rotate(45deg) !important;
   top: 0px;
-
 }
 
 .nav-container.is-active .nav-toggle:after {
@@ -166,12 +159,11 @@ a {
   left: 200px;
 }
 
-
 /* Estilos para el despliegue suave con transición */
 .sidebar-dropdown {
   max-height: 0;
   overflow: hidden;
-  transition: all .3s ease-out; /* Ajusta la duración y tipo de transición según tus preferencias */
+  transition: all 0.3s ease-out; /* Ajusta la duración y tipo de transición según tus preferencias */
 }
 
 .sidebar-dropdown.expanded {
@@ -179,19 +171,15 @@ a {
   transition: max-height 0.6s linear;
 }
 
-@media(max-width: 1280px){
-
-
-  #sidebar{
+@media (max-width: 1280px) {
+  #sidebar {
     left: -250px;
     position: fixed;
   }
 
-  .nav-container{
+  .nav-container {
     display: flex;
-
   }
-  
 }
 
 .sidebar-nav .bottom-link {

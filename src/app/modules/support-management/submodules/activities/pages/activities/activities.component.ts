@@ -33,8 +33,9 @@ export class ActivitiesComponent {
 
   private authServiceService = inject(AuthServiceService);
   private activitiesServices = inject(ActivitiesServicesService);
-  private academicPeriodManagementService = inject(AcademicPeriodManagementService);
-
+  private academicPeriodManagementService = inject(
+    AcademicPeriodManagementService
+  );
 
   public activityResponse: PagedResponse<ActividadResponse> | null = null;
   public checkActivitiesDiliegenciadoVar: boolean = false;
@@ -45,7 +46,8 @@ export class ActivitiesComponent {
   activitiesEffect = effect(() => {
     this.activityResponse = this.activitiesServices.getDataActivities();
     this.checkActivitiesDiliegenciadoVar = this.checkActivitiesComplete();
-    this.academicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue;
+    this.academicPeriod =
+      this.academicPeriodManagementService.currentAcademicPeriodValue;
   });
 
   private checkActivitiesComplete() {
@@ -53,7 +55,9 @@ export class ActivitiesComponent {
       return this.activityResponse.content.some((activity) =>
         activity.fuentes.some(
           (fuente) =>
-            fuente.estadoFuente === 'DILIGENCIADO' && fuente.tipoFuente === '1' && fuente.tipoCalificacion !== 'EN_LINEA'
+            fuente.estadoFuente === 'DILIGENCIADO' &&
+            fuente.tipoFuente === '1' &&
+            fuente.tipoCalificacion !== 'EN_LINEA'
         )
       );
     }

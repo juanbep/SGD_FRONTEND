@@ -3,11 +3,13 @@
     <tr>
       <th class="text-body-heavy text-center">{{ headDataTable[0] }}</th>
       <th colspan="4" class="text-center">{{ headDataTable[1] }}</th>
-      <th class="text-body-heavy center-text text-center">{{ headDataTable[2] }}</th>
+      <th class="text-body-heavy center-text text-center">
+        {{ headDataTable[2] }}
+      </th>
     </tr>
     <tr>
       <th
-        class="text-body-regular "
+        class="text-body-regular"
         *ngFor="let subHead of subHeadDataTableStudents"
       >
         <span>{{ subHead }}</span>
@@ -35,29 +37,50 @@
         </td>
         <td class="text-center">
           <button
-            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' "
+            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE'"
             class="button-table"
             id="button-table"
             (click)="openModalUpload(responsability)"
           >
-            <img [src]="'assets/icons/tables/icon-upload.svg'" alt="icon-upload" title="Formulario carga de evaluación docente"/>
+            <img
+              [src]="'assets/icons/tables/icon-upload.svg'"
+              alt="icon-upload"
+              title="Formulario carga de evaluación docente"
+            />
           </button>
           <button
-            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.oidTipoActividad === 1  || responsability.tipoActividad.oidTipoActividad === 7)"
+            *ngIf="
+              responsability.fuentes[1].estadoFuente === 'PENDIENTE' &&
+              (responsability.tipoActividad.oidTipoActividad === 1 ||
+                responsability.tipoActividad.oidTipoActividad === 7)
+            "
             class="button-table"
             id="button-table"
-            (click)="openFormEvaluation(responsability.oidActividad)" 
+            (click)="openFormEvaluation(responsability.oidActividad)"
           >
-          <img [src]="'assets/icons/tables/icon-form.svg'" alt="iconoformularion evaluación" title="Formulario de evalución">
-        </button>
-        <button
-            *ngIf="responsability.fuentes[1].estadoFuente === 'PENDIENTE' && (responsability.tipoActividad.oidTipoActividad !== 1 && responsability.tipoActividad.oidTipoActividad !== 7 && responsability.tipoActividad.oidTipoActividad !==9) "
+            <img
+              [src]="'assets/icons/tables/icon-form.svg'"
+              alt="iconoformularion evaluación"
+              title="Formulario de evalución"
+            />
+          </button>
+          <button
+            *ngIf="
+              responsability.fuentes[1].estadoFuente === 'PENDIENTE' &&
+              responsability.tipoActividad.oidTipoActividad !== 1 &&
+                responsability.tipoActividad.oidTipoActividad !== 7 &&
+                responsability.tipoActividad.oidTipoActividad !== 9
+            "
             class="button-table"
             id="button-table"
-            (click)="openCoordinatorFormEvaluation(responsability.oidActividad)" 
+            (click)="openCoordinatorFormEvaluation(responsability.oidActividad)"
           >
-          <img [src]="'assets/icons/tables/icon-form.svg'" alt="iconoformularion evaluación" title="Formulario de evalución">
-        </button>
+            <img
+              [src]="'assets/icons/tables/icon-form.svg'"
+              alt="iconoformularion evaluación"
+              title="Formulario de evalución"
+            />
+          </button>
           <button
             *ngIf="responsability.fuentes[1].estadoFuente == 'DILIGENCIADO'"
             class="button-table"

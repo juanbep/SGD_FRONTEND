@@ -9,7 +9,11 @@ describe('AcademicPeriodManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule,ToastrModule.forRoot(), AcademicPeriodManagementComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        AcademicPeriodManagementComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AcademicPeriodManagementComponent);

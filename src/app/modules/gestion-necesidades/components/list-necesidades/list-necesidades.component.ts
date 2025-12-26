@@ -89,8 +89,6 @@ export class ListNecesidadesComponent implements OnInit {
 
   // ===== MANEJADORES DE EVENTOS DEL COMPONENTE DE FILTROS =====
   onFiltrosAplicados(filtros: NecesidadFilters): void {
-    console.log('Filtros aplicados:', filtros);
-
     this.filtrosActuales = {
       ...filtros,
       page: 0,
@@ -102,8 +100,6 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   onFiltrosLimpiados(): void {
-    console.log('Filtros limpiados');
-
     this.filtrosActuales = {
       ...this.filtrosActuales,
       page: 0,
@@ -225,7 +221,6 @@ export class ListNecesidadesComponent implements OnInit {
   verDetallesMateria(materia: Materia): void {
     this.materiaSeleccionada = materia;
     this.mostrarModalDetalleMateria = true;
-    console.log('Detalles de materia:', materia);
   }
 
   cerrarModalDetalleMateria(): void {

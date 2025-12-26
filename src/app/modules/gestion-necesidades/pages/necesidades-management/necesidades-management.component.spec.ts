@@ -8,9 +8,8 @@ describe('NecesidadesManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NecesidadesManagementComponent]
-    })
-    .compileComponents();
+      imports: [NecesidadesManagementComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(NecesidadesManagementComponent);
     component = fixture.componentInstance;

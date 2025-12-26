@@ -14,32 +14,42 @@ describe('ModalCreateAcademicPeriodComponent', () => {
   let mockValidatorsService: jasmine.SpyObj<ValidatorsService>;
 
   beforeEach(async () => {
-    mockAcademicPeriodManagementService = jasmine.createSpyObj('AcademicPeriodManagementService', [
-      'saveNewAcademicPeriod',
-      'getAcademicPeriodsByKira',
-      'getAllAcademicPeriods',
-      'setAcademicPeriods',
-    ]);
+    mockAcademicPeriodManagementService = jasmine.createSpyObj(
+      'AcademicPeriodManagementService',
+      [
+        'saveNewAcademicPeriod',
+        'getAcademicPeriodsByKira',
+        'getAllAcademicPeriods',
+        'setAcademicPeriods',
+      ]
+    );
     mockMessagesInfoService = jasmine.createSpyObj('MessagesInfoService', [
       'showSuccessMessage',
       'showErrorMessage',
     ]);
-    mockValidatorsService = jasmine.createSpyObj('ValidatorsService', ['validateDateRange']);
+    mockValidatorsService = jasmine.createSpyObj('ValidatorsService', [
+      'validateDateRange',
+    ]);
     mockValidatorsService.validateDateRange.and.returnValue(() => null);
 
     mockAcademicPeriodManagementService.getAcademicPeriodsByKira.and.returnValue(
       of({
         codigo: 200,
         mensaje: 'Kira periods response',
-        data: []
+        data: [],
       })
     );
-    mockAcademicPeriodManagementService.getAllAcademicPeriods.and.returnValue(of());
+    mockAcademicPeriodManagementService.getAllAcademicPeriods.and.returnValue(
+      of()
+    );
 
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, ModalCreateAcademicPeriodComponent],
       providers: [
-        { provide: AcademicPeriodManagementService, useValue: mockAcademicPeriodManagementService },
+        {
+          provide: AcademicPeriodManagementService,
+          useValue: mockAcademicPeriodManagementService,
+        },
         { provide: MessagesInfoService, useValue: mockMessagesInfoService },
         { provide: ValidatorsService, useValue: mockValidatorsService },
       ],
@@ -60,4 +70,3 @@ describe('ModalCreateAcademicPeriodComponent', () => {
     });
   });
 });
-

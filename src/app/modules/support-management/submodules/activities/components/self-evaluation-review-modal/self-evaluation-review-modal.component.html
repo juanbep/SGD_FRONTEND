@@ -16,9 +16,18 @@
           <div class="row">
             <div class="col">
               <div class="form-floating">
-                <input type="text" class="form-control input-text" id="activityDescription"
-                  [value]="evaluationForm.get('activityDescription')?.value" disabled />
-                <label for="activityDescription" class="label-custom text-body-small-sb">Descripción Actividad</label>
+                <input
+                  type="text"
+                  class="form-control input-text"
+                  id="activityDescription"
+                  [value]="evaluationForm.get('activityDescription')?.value"
+                  disabled
+                />
+                <label
+                  for="activityDescription"
+                  class="label-custom text-body-small-sb"
+                  >Descripción Actividad</label
+                >
               </div>
             </div>
           </div>
@@ -27,9 +36,16 @@
           <div class="row">
             <div class="col">
               <div class="form-floating">
-                <input type="text" class="form-control input-text" id="evaluation"
-                  [value]="evaluationForm.get('evaluation')?.value" disabled />
-                <label for="evaluation" class="label-custom text-body-small-sb">Evaluación</label>
+                <input
+                  type="text"
+                  class="form-control input-text"
+                  id="evaluation"
+                  [value]="evaluationForm.get('evaluation')?.value"
+                  disabled
+                />
+                <label for="evaluation" class="label-custom text-body-small-sb"
+                  >Evaluación</label
+                >
               </div>
             </div>
           </div>
@@ -48,14 +64,33 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let result of evaluationForm.get('results')?.value; let i = index">
+                  <tr
+                    *ngFor="
+                      let result of evaluationForm.get('results')?.value;
+                      let i = index
+                    "
+                  >
                     <td class="text-body-regular">{{ result.result }}</td>
                     <td class="text-body-regular">{{ result.ODS }}</td>
                     <td class="text-center">
-                      <ng-container *ngIf="evaluationForm.get('results.'+i+'.evidence')?.value && selfEvaluation">
-                        <img [src]="'assets/icons/tables/icon-download.svg'" alt="descargar-evidencia"
-                          style="cursor: pointer;"
-                          (click)="downloadEvidenceFile(selfEvaluation.odsSeleccionados[i].oidAutoevaluacionOds || null,i)">
+                      <ng-container
+                        *ngIf="
+                          evaluationForm.get('results.' + i + '.evidence')
+                            ?.value && selfEvaluation
+                        "
+                      >
+                        <img
+                          [src]="'assets/icons/tables/icon-download.svg'"
+                          alt="descargar-evidencia"
+                          style="cursor: pointer"
+                          (click)="
+                            downloadEvidenceFile(
+                              selfEvaluation.odsSeleccionados[i]
+                                .oidAutoevaluacionOds || null,
+                              i
+                            )
+                          "
+                        />
                       </ng-container>
                     </td>
                   </tr>
@@ -77,9 +112,17 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let learnedLesson of evaluationForm.get('lessonsLearned')?.value; let i = index">
+                  <tr
+                    *ngFor="
+                      let learnedLesson of evaluationForm.get('lessonsLearned')
+                        ?.value;
+                      let i = index
+                    "
+                  >
                     <td class="text-body-regular">{{ i + 1 }}</td>
-                    <td class="text-body-regular">{{ learnedLesson.lesson }}</td>
+                    <td class="text-body-regular">
+                      {{ learnedLesson.lesson }}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -100,9 +143,17 @@
                 </thead>
                 <tbody>
                   <tr
-                    *ngFor="let improvementOpportunity of evaluationForm.get('improvementOpportunities')?.value; let i = index">
+                    *ngFor="
+                      let improvementOpportunity of evaluationForm.get(
+                        'improvementOpportunities'
+                      )?.value;
+                      let i = index
+                    "
+                  >
                     <td class="text-body-regular">{{ i + 1 }}</td>
-                    <td class="text-body-regular">{{ improvementOpportunity.opportunity }}</td>
+                    <td class="text-body-regular">
+                      {{ improvementOpportunity.opportunity }}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -113,9 +164,16 @@
           <div class="row">
             <div class="col">
               <div class="form-floating">
-                <textarea class="form-control input-text" id="observation" disabled
-                  style="height:100px;">{{ evaluationForm.get('observation')?.value }}</textarea>
-                <label for="observation" class="label-custom text-body-small-sb">Observación</label>
+                <textarea
+                  class="form-control input-text"
+                  id="observation"
+                  disabled
+                  style="height: 100px"
+                  >{{ evaluationForm.get("observation")?.value }}</textarea
+                >
+                <label for="observation" class="label-custom text-body-small-sb"
+                  >Observación</label
+                >
               </div>
             </div>
           </div>
@@ -131,7 +189,11 @@
                   <p class="file-name text-body-small-sb"></p>
                 </div>
                 <div class="file-actions">
-                  <button type="button" class="button-actions button-download" (click)="downloadSupportFile()"></button>
+                  <button
+                    type="button"
+                    class="button-actions button-download"
+                    (click)="downloadSupportFile()"
+                  ></button>
                 </div>
               </div>
             </div>

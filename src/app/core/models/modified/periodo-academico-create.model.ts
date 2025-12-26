@@ -1,10 +1,9 @@
 export interface PeriodoAcademicoCreate {
-    idPeriodo: string;
-    fechaInicio: string;
-    idPeriodoApi: string;
-    fechaFin: string;
-    estadoPeriodoAcademico: {
-        oidEstadoPeriodoAcademico: number
-    }
+  idPeriodo: string;
+  fechaInicio: string;
+  idPeriodoApi: string;
+  fechaFin: string;
+  estadoPeriodoAcademico: {
+    oidEstadoPeriodoAcademico: number;
+  };
 }
-

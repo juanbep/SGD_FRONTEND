@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Fuente } from '../../../../../../core/models/base/fuente.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,9 +14,14 @@ import { MessagesInfoService } from '../../../../../../shared/services/messages-
 import { ResponsabilidadResponse } from '../../../../../../core/models/response/responsabilidad-response.model';
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
-import { ConfirmDialogComponent } from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
-import { LoadingOverleyComponent } from "../../../../../../shared/components/loading-overley/loading-overley.component";
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 @Component({
   selector: 'responsibilities-edit-evaluation',
@@ -19,13 +31,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
     FormsModule,
     ReactiveFormsModule,
     ConfirmDialogComponent,
-    LoadingOverleyComponent
+    LoadingOverleyComponent,
   ],
   templateUrl: './responsibilities-edit-evaluation.component.html',
-  styleUrl: './responsibilities-edit-evaluation.component.css'
+  styleUrl: './responsibilities-edit-evaluation.component.css',
 })
 export class ResponsibilitiesEditEvaluationComponent {
-
   @Input()
   public source: Fuente | null = null;
 
@@ -39,7 +50,8 @@ export class ResponsibilitiesEditEvaluationComponent {
   currentUser: UsuarioResponse | null = null;
 
   @Output()
-  public closeModalEditSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public closeModalEditSelected: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   private myModal: HTMLElement | null = null;
   public errorFormatFile: boolean = false;
@@ -58,17 +70,20 @@ export class ResponsibilitiesEditEvaluationComponent {
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
-      evaluation: ['', [Validators.required, Validators.min(0), Validators.max(100)]],
+      evaluation: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
       observation: [''],
-      selectedFile: [null, Validators.required]
+      selectedFile: [null, Validators.required],
     });
   }
 
   ngAfterViewInit() {
     if (this.openModalSelected) {
-      this.myModal = document.getElementById("myModalEdit");
+      this.myModal = document.getElementById('myModalEdit');
       if (this.myModal) {
-        this.myModal.style.display = "flex";
+        this.myModal.style.display = 'flex';
       }
     }
   }
@@ -76,8 +91,10 @@ export class ResponsibilitiesEditEvaluationComponent {
   ngOnInit(): void {
     if (this.source) {
       this.form.patchValue({
-        evaluation: this.source.calificacion ? this.source.calificacion.toFixed(1) : '',
-        observation: this.source.observacion || ''
+        evaluation: this.source.calificacion
+          ? this.source.calificacion.toFixed(1)
+          : '',
+        observation: this.source.observacion || '',
       });
       this.fileNameSelected.set(this.source.nombreDocumentoFuente || '');
       this.recoverFile();
@@ -119,17 +136,23 @@ export class ResponsibilitiesEditEvaluationComponent {
   }
 
   public recoverFile() {
-    this.service.getdownloadSourceFile(this.source!.oidFuente).subscribe(
-      {
-        next: file => {
-          const selectedFile = new File([file], this.source?.nombreDocumentoFuente || '', { type: file.type, lastModified: Date.now() });
-          this.form.get('selectedFile')?.setValue(selectedFile);
-          this.fileSelected = selectedFile;
-        },
-        error: error => {
-          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-        }
-      });
+    this.service.getdownloadSourceFile(this.source!.oidFuente).subscribe({
+      next: (file) => {
+        const selectedFile = new File(
+          [file],
+          this.source?.nombreDocumentoFuente || '',
+          { type: file.type, lastModified: Date.now() }
+        );
+        this.form.get('selectedFile')?.setValue(selectedFile);
+        this.fileSelected = selectedFile;
+      },
+      error: (error) => {
+        this.toastr.showErrorMessage(
+          'Error al consultar la información',
+          'Error'
+        );
+      },
+    });
   }
 
   onFileSelected(event: Event): void {
@@ -159,7 +182,9 @@ export class ResponsibilitiesEditEvaluationComponent {
   }
 
   triggerFileUpload() {
-    const fileUpload = document.getElementById('uploadFileAssessment') as HTMLInputElement;
+    const fileUpload = document.getElementById(
+      'uploadFileAssessment'
+    ) as HTMLInputElement;
     if (fileUpload) {
       fileUpload.click();
     }
@@ -167,7 +192,7 @@ export class ResponsibilitiesEditEvaluationComponent {
 
   closeModal() {
     if (this.myModal) {
-      this.myModal.style.display = "none";
+      this.myModal.style.display = 'none';
       this.closeModalEditSelected.emit(true);
     }
   }
@@ -180,7 +205,9 @@ export class ResponsibilitiesEditEvaluationComponent {
       } else {
         this.errorEvaluation = false;
       }
-      return parseFloat(evaluation) >= 0 && parseFloat(evaluation) <= 100 ? 'input-nota' : 'input-nota-error';
+      return parseFloat(evaluation) >= 0 && parseFloat(evaluation) <= 100
+        ? 'input-nota'
+        : 'input-nota-error';
     } else {
       return '';
     }
@@ -191,37 +218,62 @@ export class ResponsibilitiesEditEvaluationComponent {
       const { evaluation, observation } = this.form.value;
       this.updateSource(evaluation, observation, this.fileSelected);
     } else {
-      this.toastr.showWarningMessage('Por favor complete todos los campos correctamente.', 'Advertencia');
+      this.toastr.showWarningMessage(
+        'Por favor complete todos los campos correctamente.',
+        'Advertencia'
+      );
     }
   }
 
-  private updateSource(evaluation: string, observation: string, selectedFile: File) {
+  private updateSource(
+    evaluation: string,
+    observation: string,
+    selectedFile: File
+  ) {
     let sendSource: FuenteCreate[] = [];
     if (this.responsability && selectedFile && evaluation && this.currentUser) {
       this.isLoading = true;
-      sendSource = [{
-        tipoFuente: "2",
-        tipoCalificacion: "DOCUMENTO",
-        calificacion: parseFloat(evaluation),
-        oidActividad: this.responsability.oidActividad,
-        informeEjecutivo: ''
-      }];
-      this.service.saveResponsibilityEvaluation(selectedFile, observation, sendSource).subscribe({
-        next: () => {
-          this.toastr.showSuccessMessage('Evaluación guardada correctamente', 'Éxito');
-          this.isLoading = false;
-          this.closeModalEditSelected.emit(true);
-          this.service.setParamsActivitiesFilterSignal(null, null, null, null);
+      sendSource = [
+        {
+          tipoFuente: '2',
+          tipoCalificacion: 'DOCUMENTO',
+          calificacion: parseFloat(evaluation),
+          oidActividad: this.responsability.oidActividad,
+          informeEjecutivo: '',
         },
-        error: () => {
-          this.isLoading = false;
-          this.toastr.showErrorMessage('Error al guardar la evaluación', 'Error');
-        }
-      });
+      ];
+      this.service
+        .saveResponsibilityEvaluation(selectedFile, observation, sendSource)
+        .subscribe({
+          next: () => {
+            this.toastr.showSuccessMessage(
+              'Evaluación guardada correctamente',
+              'Éxito'
+            );
+            this.isLoading = false;
+            this.closeModalEditSelected.emit(true);
+            this.service.setParamsActivitiesFilterSignal(
+              null,
+              null,
+              null,
+              null
+            );
+          },
+          error: () => {
+            this.isLoading = false;
+            this.toastr.showErrorMessage(
+              'Error al guardar la evaluación',
+              'Error'
+            );
+          },
+        });
     } else {
       this.isLoading = false;
       this.form.markAllAsTouched();
-      this.toastr.showWarningMessage('Asegúrese de que las evaluaciones y el soporte se encuentren diligenciados.', 'Advertencia');
+      this.toastr.showWarningMessage(
+        'Asegúrese de que las evaluaciones y el soporte se encuentren diligenciados.',
+        'Advertencia'
+      );
     }
   }
 
@@ -243,20 +295,20 @@ export class ResponsibilitiesEditEvaluationComponent {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-
     }
   }
 
   private getFilebyName() {
-    this.service.getdownloadSourceFile(this.source!.oidFuente).subscribe(
-      {
-        next: file => {
-          // this.selectedFile = new File([file], this.source?.nombreDocumentoFuente, { type: file.type, lastModified: Date.now() })
-        },
-        error: error => {
-          this.toastr.showErrorMessage('Error al consultar la información', 'Error');
-        }
-      });
+    this.service.getdownloadSourceFile(this.source!.oidFuente).subscribe({
+      next: (file) => {
+        // this.selectedFile = new File([file], this.source?.nombreDocumentoFuente, { type: file.type, lastModified: Date.now() })
+      },
+      error: (error) => {
+        this.toastr.showErrorMessage(
+          'Error al consultar la información',
+          'Error'
+        );
+      },
+    });
   }
-
 }

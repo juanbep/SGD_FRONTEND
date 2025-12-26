@@ -61,7 +61,7 @@ export class FechaHelperService {
     const result = await this.baseHelper.getDataFromResponse(
       this.fechaService.deleteFecha({ oidFecha: id })
     );
-    return result === true || result === null; // trampita mientras se acomoda por parte del backend 
+    return result === true || result === null; // trampita mientras se acomoda por parte del backend
   }
 
   // Métodos de conveniencia específicos del dominio

@@ -1,7 +1,6 @@
 .btn-custom-normal {
   height: 35px;
   width: 100px;
-
 }
 
 section {
@@ -32,7 +31,7 @@ section {
   border-radius: 0px 8px 8px 0px;
 }
 
-table{
+table {
   border-style: none !important ;
   box-shadow: none !important;
   border-radius: 0px !important;
@@ -60,7 +59,7 @@ table{
   margin: 0px;
 }
 
-.input-evaluation-disabled{
+.input-evaluation-disabled {
   color: var(--neutral-60) !important;
   background-color: var(--neutral-95) !important;
   border-color: var(--neutral-95) !important;

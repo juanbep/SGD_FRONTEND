@@ -9,15 +9,11 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-view-details-source-one',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './view-details-source-one.component.html',
-  styleUrl: './view-details-source-one.component.css'
+  styleUrl: './view-details-source-one.component.css',
 })
 export class ViewDetailsSourceOneComponent {
-
-
   private consolidatedServices = inject(ConsolidatedServicesService);
 
   public activity: ActividadResponse | null = null;
@@ -25,47 +21,49 @@ export class ViewDetailsSourceOneComponent {
   public reportFile: Blob | null = null;
   public sourceOne: Fuente | undefined = undefined;
 
-
-
-
-  open(oidActividad:number): void {
+  open(oidActividad: number): void {
     const myModal = document.getElementById('view-details-source-one-modal');
     if (myModal) {
       var bootstrapModal = new bootstrap.Modal(myModal);
-      this.recoverActivity(oidActividad);     
+      this.recoverActivity(oidActividad);
       bootstrapModal.show();
     }
   }
 
-  recoverActivity(oidActividad:number) {
-    this.consolidatedServices.getActivityByOidActivity(oidActividad).pipe(
-      tap((actividad: ActividadResponse) => {
-        this.activity = actividad;
-        this.recoverSourceOne();
-      } )
-    ).subscribe(
-      {
+  recoverActivity(oidActividad: number) {
+    this.consolidatedServices
+      .getActivityByOidActivity(oidActividad)
+      .pipe(
+        tap((actividad: ActividadResponse) => {
+          this.activity = actividad;
+          this.recoverSourceOne();
+        })
+      )
+      .subscribe({
         next: (actividad: ActividadResponse) => {
           this.activity = actividad;
           this.recoverSourceOne();
-        }
-      }
-    )
+        },
+      });
   }
 
   recoverSourceOne() {
     if (this.activity) {
-      this.sourceOne = this.activity.fuentes.find((fuente: Fuente) => fuente.tipoFuente === '1');
-      this.recoverFileSourceOne(); 
+      this.sourceOne = this.activity.fuentes.find(
+        (fuente: Fuente) => fuente.tipoFuente === '1'
+      );
+      this.recoverFileSourceOne();
       this.recoverReportFile();
     }
   }
 
   recoverFileSourceOne() {
     if (this.activity) {
-      this.consolidatedServices.downloadSourceFile(this.sourceOne!.oidFuente).subscribe((response: Blob) => {
-        this.sourceFile = response;
-      });
+      this.consolidatedServices
+        .downloadSourceFile(this.sourceOne!.oidFuente)
+        .subscribe((response: Blob) => {
+          this.sourceFile = response;
+        });
     }
   }
 
@@ -81,12 +79,13 @@ export class ViewDetailsSourceOneComponent {
     }
   }
 
-
   recoverReportFile() {
     if (this.activity) {
-      this.consolidatedServices.downloadReportFile(this.sourceOne!.oidFuente,true).subscribe((response: Blob) => {
-        this.reportFile = response;
-      });
+      this.consolidatedServices
+        .downloadReportFile(this.sourceOne!.oidFuente, true)
+        .subscribe((response: Blob) => {
+          this.reportFile = response;
+        });
     }
   }
 
@@ -95,18 +94,18 @@ export class ViewDetailsSourceOneComponent {
       const url = window.URL.createObjectURL(this.reportFile);
       const a = document.createElement('a');
       a.href = url;
-      a.download =  a.download = this.sourceOne!.nombreDocumentoInforme || '';
+      a.download = a.download = this.sourceOne!.nombreDocumentoInforme || '';
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
     }
   }
 
-
   adjustFormatDate(date: string): string {
-    const dataArray:string[] = date.split('T');
-    return `${dataArray[0].split('-').reverse().join('/')} ${dataArray[1].split(':').slice(0,3).join(':')}`;
+    const dataArray: string[] = date.split('T');
+    return `${dataArray[0].split('-').reverse().join('/')} ${dataArray[1]
+      .split(':')
+      .slice(0, 3)
+      .join(':')}`;
   }
-
-
 }

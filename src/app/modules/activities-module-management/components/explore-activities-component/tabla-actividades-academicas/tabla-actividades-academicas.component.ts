@@ -113,7 +113,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
           : oidDepartamento;
 
       this.usuario = getUserData();
-      console.log('oidDepartamento obtenido:', this.filters.oidDepartamento);
     } else {
       this.toastr.warning('No se pudo obtener el departamento del usuario');
     }
@@ -134,8 +133,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
     this.loading = true;
     this.error = '';
-
-    console.log('Filtros enviados al servicio:', this.filters);
 
     this.actividadesService.getActividades(this.filters).subscribe({
       next: (response) => {
@@ -215,12 +212,10 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   // ========== MANEJA LA DESASIGNACIÓN DE UN USUARIO ==========
 
   onUsuarioDesasignadoHandler(): void {
-    console.log('Usuario desasignado, recargando tabla...');
     this.loadActividades();
   }
 
   onUsuarioAsignadoHandler(): void {
-    console.log('Usuario asignado, recargando tabla...');
     this.loadActividades();
   }
 

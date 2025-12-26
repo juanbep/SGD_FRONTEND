@@ -1,8 +1,12 @@
-<div class="modal fade" [class.show]="visible" [style.display]="visible ? 'block' : 'none'" tabindex="-1"
-  [attr.aria-hidden]="!visible">
+<div
+  class="modal fade"
+  [class.show]="visible"
+  [style.display]="visible ? 'block' : 'none'"
+  tabindex="-1"
+  [attr.aria-hidden]="!visible"
+>
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
-
       <!-- Body -->
       <div class="modal-body pt-2 px-4 pb-4">
         <form [formGroup]="formulario">
@@ -10,7 +14,13 @@
           @if (formulario.get('nombre')) {
           <div class="mb-3">
             <label for="nombre" class="form-label mb-2">Nombre</label>
-            <input type="text" class="form-control" id="nombre" formControlName="nombre" placeholder="" />
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              formControlName="nombre"
+              placeholder=""
+            />
           </div>
           }
 
@@ -19,23 +29,29 @@
             @if (formulario.get('semestre')) {
             <div class="col-6">
               <label for="semestre" class="form-label mb-2">Semestre</label>
-              <select class="form-select" id="semestre" formControlName="semestre">
+              <select
+                class="form-select"
+                id="semestre"
+                formControlName="semestre"
+              >
                 <option value="">1</option>
-                @for (campo of campos; track campo.nombre) {
-                @if (campo.nombre === 'semestre' && campo.opciones) {
-                @for (opcion of campo.opciones; track opcion.valor) {
+                @for (campo of campos; track campo.nombre) { @if (campo.nombre
+                === 'semestre' && campo.opciones) { @for (opcion of
+                campo.opciones; track opcion.valor) {
                 <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
-                }
-                }
-                }
+                } } }
               </select>
             </div>
-            }
-
-            @if (formulario.get('codigo')) {
+            } @if (formulario.get('codigo')) {
             <div class="col-6">
               <label for="codigo" class="form-label mb-2">Código</label>
-              <input type="text" class="form-control" id="codigo" formControlName="codigo" placeholder="" />
+              <input
+                type="text"
+                class="form-control"
+                id="codigo"
+                formControlName="codigo"
+                placeholder=""
+              />
             </div>
             }
           </div>
@@ -47,7 +63,11 @@
         <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" (click)="aplicarFiltros()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="aplicarFiltros()"
+        >
           Aplicar Filtros
         </button>
       </div>

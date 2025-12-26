@@ -5,27 +5,24 @@ import { NewUserComponent } from './pages/new-user/new-user.component';
 import { EditUserComponent } from './pages/edit-user/edit-user.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        component: UsersComponent,
-    },
-    {
-        path: 'nuevo-usuario',
-        component: NewUserComponent,
-    },
-    {
-        path: 'editar-usuario/:id',
-        component: EditUserComponent,
-    }
+  {
+    path: '',
+    component: UsersComponent,
+  },
+  {
+    path: 'nuevo-usuario',
+    component: NewUserComponent,
+  },
+  {
+    path: 'editar-usuario/:id',
+    component: EditUserComponent,
+  },
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(routes),
-    ],
-    exports: [
-    ],
-    declarations: [],
-    providers: [],
+  imports: [RouterModule.forChild(routes)],
+  exports: [],
+  declarations: [],
+  providers: [],
 })
-export class UserRoutingModule { }
+export class UserRoutingModule {}

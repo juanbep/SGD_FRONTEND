@@ -8,9 +8,8 @@ describe('StepInfoBasicaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StepInfoBasicaComponent]
-    })
-    .compileComponents();
+      imports: [StepInfoBasicaComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(StepInfoBasicaComponent);
     component = fixture.componentInstance;

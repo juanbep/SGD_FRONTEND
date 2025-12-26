@@ -77,8 +77,6 @@ export class ModalSeleccionarPlanComponent implements OnChanges {
         label: `Plan ${plan.numero}`,
         estado: plan.estado,
       }));
-
-      console.log('Planes disponibles:', this.planesDisponibles);
     } catch (error) {
       console.error('Error al cargar planes:', error);
       this.toastr.error('Error al cargar la lista de planes');
@@ -95,10 +93,6 @@ export class ModalSeleccionarPlanComponent implements OnChanges {
       return;
     }
 
-    console.log(
-      'Plan seleccionado para crear necesidades:',
-      this.planSeleccionado
-    );
     this.onPlanSeleccionado.emit(this.planSeleccionado);
     this.cerrar();
   }

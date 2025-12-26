@@ -5,15 +5,15 @@ import { Observable } from 'rxjs';
 import { CatalogDataResponse } from '../models/catalogData.interface';
 import { SimpleResponse } from '../models/response/simple-response.model';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class CatalogServicesService {
+  private baseUrl: string = environments.baseUrl;
 
-    private baseUrl: string = environments.baseUrl;
+  private httpClient: HttpClient = inject(HttpClient);
 
-    private httpClient: HttpClient = inject(HttpClient);
-
-    getCatalog(): Observable<SimpleResponse<CatalogDataResponse>> {
-        return this.httpClient.get<any>(`${this.baseUrl}/api/catalogo/obtenerCatalogo`);
-    }
-    
+  getCatalog(): Observable<SimpleResponse<CatalogDataResponse>> {
+    return this.httpClient.get<any>(
+      `${this.baseUrl}/api/catalogo/obtenerCatalogo`
+    );
+  }
 }

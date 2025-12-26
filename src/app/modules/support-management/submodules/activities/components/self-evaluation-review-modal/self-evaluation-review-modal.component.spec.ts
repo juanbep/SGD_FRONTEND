@@ -9,7 +9,11 @@ describe('SelfEvaluationReviewModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), SelfEvaluationReviewModalComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        SelfEvaluationReviewModalComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelfEvaluationReviewModalComponent);

@@ -9,7 +9,11 @@ describe('ViewDetailsSourceTwoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule,ToastrModule.forRoot(), ViewDetailsSourceTwoComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ViewDetailsSourceTwoComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewDetailsSourceTwoComponent);

@@ -160,7 +160,6 @@ export class ModalEditarActividadComponent implements OnChanges {
       atributos: atributos,
     };
 
-    console.log('DTO editar actividad:', dto);
     this.onGuardar.emit(dto);
   }
 }

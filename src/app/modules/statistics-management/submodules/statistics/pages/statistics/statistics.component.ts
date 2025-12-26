@@ -195,7 +195,7 @@ export class StatisticsComponent implements OnInit {
         this.formStatistics.get('teacher')?.updateValueAndValidity();
         this.recoverActivityEvaluationComparison();
         break;
-      
+
       case '2':
         this.recoverAverageEvaluationByDepartment();
         break;
@@ -389,14 +389,14 @@ export class StatisticsComponent implements OnInit {
   }
 
   recoverStatisticsQuestions() {
-    let academicPeriod : string;
+    let academicPeriod: string;
     let departementId: string;
     let activityTypeId: string;
 
     academicPeriod = this.formStatistics.get('academicPeriod')?.value;
     departementId = this.formStatistics.get('department')?.value;
     activityTypeId = this.formStatistics.get('activityType')?.value;
-    
+
     this.statisticsService
       .getStatisticsQuestions(academicPeriod, departementId, activityTypeId)
       .subscribe({
@@ -437,7 +437,7 @@ export class StatisticsComponent implements OnInit {
               data: sortedData.map((item) => item.promedio),
               borderWidth: 1,
             },
-          ];  
+          ];
         },
         error: (error) => {
           this.messageInfoService.showErrorMessage(
@@ -451,41 +451,43 @@ export class StatisticsComponent implements OnInit {
   recoverRakingTeacher() {
     const academicPeriodId = this.formStatistics.get('academicPeriod')?.value;
     const departmentId = this.formStatistics.get('department')?.value;
-    this.statisticsService.getRankingTeacher(academicPeriodId, departmentId).subscribe({
-      next: (response) => {
-        if (response.data.length === 0) {
-          this.messageInfoService.showErrorMessage(
-            'No hay datos para mostrar',
-            'Error'
-          );
-          return;
-        }
-        let promedios: number[] = [];
-        let docentes: string[] = [];
-        response.data.forEach((ranking) => {
-          ranking.departamentos.forEach((departamento) => {
-            departamento.docentes.forEach((docente) => {
-              promedios.push(docente.calificacion);
-              docentes.push(docente.nombre);
+    this.statisticsService
+      .getRankingTeacher(academicPeriodId, departmentId)
+      .subscribe({
+        next: (response) => {
+          if (response.data.length === 0) {
+            this.messageInfoService.showErrorMessage(
+              'No hay datos para mostrar',
+              'Error'
+            );
+            return;
+          }
+          let promedios: number[] = [];
+          let docentes: string[] = [];
+          response.data.forEach((ranking) => {
+            ranking.departamentos.forEach((departamento) => {
+              departamento.docentes.forEach((docente) => {
+                promedios.push(docente.calificacion);
+                docentes.push(docente.nombre);
+              });
             });
           });
-        });
-        this.labels = docentes;
-        this.dataSets = [
-          {
-            label: 'Ranking Docentes',
-            data: promedios,
-            borderWidth: 1,
-          },
-        ];
-      },
-      error: (error) => {
-        this.messageInfoService.showErrorMessage(
-          error.error.mensaje,
-          'Error'
-        );
-      },
-    });
+          this.labels = docentes;
+          this.dataSets = [
+            {
+              label: 'Ranking Docentes',
+              data: promedios,
+              borderWidth: 1,
+            },
+          ];
+        },
+        error: (error) => {
+          this.messageInfoService.showErrorMessage(
+            error.error.mensaje,
+            'Error'
+          );
+        },
+      });
   }
 
   validateUserExist(

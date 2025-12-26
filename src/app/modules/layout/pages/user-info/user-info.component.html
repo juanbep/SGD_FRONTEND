@@ -135,43 +135,42 @@
       </ng-container>
     </div>
     <!-- Categoría -->
-    
   </div>
   <div class="mb-3"></div>
   <div class="row">
     <div class="col">
-        <ng-container *ngIf="currentUser?.usuarioDetalle?.categoria">
-          <div class="form-floating">
-            <input
-              type="text"
-              class="form-control input-text"
-              id="categoria"
-              value="{{ currentUser?.usuarioDetalle?.categoria }}"
-              disabled
-            />
-            <label for="categoria" class="label-custom text-body-small-sb"
-              >Categoría</label
-            >
-          </div>
-        </ng-container>
-      </div>
-      <!-- Contratación -->
-      <div class="col">
-        <ng-container *ngIf="currentUser?.usuarioDetalle?.contratacion">
-          <div class="form-floating">
-            <input
-              type="text"
-              class="form-control input-text"
-              id="contratacion"
-              value="{{ currentUser?.usuarioDetalle?.contratacion }}"
-              disabled
-            />
-            <label for="contratacion" class="label-custom text-body-small-sb"
-              >Contratación</label
-            >
-          </div>
-        </ng-container>
-      </div>
+      <ng-container *ngIf="currentUser?.usuarioDetalle?.categoria">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control input-text"
+            id="categoria"
+            value="{{ currentUser?.usuarioDetalle?.categoria }}"
+            disabled
+          />
+          <label for="categoria" class="label-custom text-body-small-sb"
+            >Categoría</label
+          >
+        </div>
+      </ng-container>
+    </div>
+    <!-- Contratación -->
+    <div class="col">
+      <ng-container *ngIf="currentUser?.usuarioDetalle?.contratacion">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control input-text"
+            id="contratacion"
+            value="{{ currentUser?.usuarioDetalle?.contratacion }}"
+            disabled
+          />
+          <label for="contratacion" class="label-custom text-body-small-sb"
+            >Contratación</label
+          >
+        </div>
+      </ng-container>
+    </div>
     <!-- Dedicación -->
     <div class="col">
       <ng-container *ngIf="currentUser?.usuarioDetalle?.dedicacion">

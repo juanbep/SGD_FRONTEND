@@ -1,5 +1,5 @@
 export interface SimpleResponse<T> {
-    codigo: number;
-    mensaje: string;
-    data: T;
+  codigo: number;
+  mensaje: string;
+  data: T;
 }

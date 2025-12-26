@@ -211,7 +211,8 @@ export class ReponsibilitiesViewEvaluationFormComponent {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = this.responsibility?.Fuente.nombreArchivo || 'fuente.pdf';
+            a.download =
+              this.responsibility?.Fuente.nombreArchivo || 'fuente.pdf';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

@@ -4,11 +4,11 @@
     • Buen estilo general; revisar estados interactivos adicionales si es necesario
 */
 #activities-table-button-edit {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-left: 1px solid var(--white);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-left: 1px solid var(--white);
 }
 
 section {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }

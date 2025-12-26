@@ -9,21 +9,15 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: AcademicPeriodManagementComponent
-      }
-    ]
+        component: AcademicPeriodManagementComponent,
+      },
+    ],
   },
-]
+];
 
 @NgModule({
-  declarations: [
-  ],
-  imports: [
-    RouterModule.forChild(routes),
-    CommonModule
-  ],
-  exports: [
-    RouterModule
-  ]
+  declarations: [],
+  imports: [RouterModule.forChild(routes), CommonModule],
+  exports: [RouterModule],
 })
-export class AcademicPeriodManagementRoutingModule { }
+export class AcademicPeriodManagementRoutingModule {}

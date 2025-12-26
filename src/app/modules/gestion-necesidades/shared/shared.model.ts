@@ -46,6 +46,5 @@ export const DEFAULT_PAGINATION_CONFIG: PaginationConfig = {
   pageSize: 10,
   totalElements: 0,
   totalPages: 0,
-  pageSizeOptions: [5, 10, 20, 50]
+  pageSizeOptions: [5, 10, 20, 50],
 };
-

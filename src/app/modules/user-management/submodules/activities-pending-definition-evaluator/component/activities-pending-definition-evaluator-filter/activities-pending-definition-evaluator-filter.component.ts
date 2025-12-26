@@ -8,17 +8,17 @@ import { ActivitiesPendingDefinitionEvaluatorServicesService } from '../../servi
 @Component({
   selector: 'activities-pending-definition-evaluator-filter',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
-  templateUrl: './activities-pending-definition-evaluator-filter.component.html',
-  styleUrl: './activities-pending-definition-evaluator-filter.component.css'
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl:
+    './activities-pending-definition-evaluator-filter.component.html',
+  styleUrl: './activities-pending-definition-evaluator-filter.component.css',
 })
 export class ActivitiesPendingDefinitionEvaluatorFilterComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private catalogDataService = inject(CatalogDataService);
-  private activitiesPendingDefinitionEvaluatorServicesService = inject(ActivitiesPendingDefinitionEvaluatorServicesService);
+  private activitiesPendingDefinitionEvaluatorServicesService = inject(
+    ActivitiesPendingDefinitionEvaluatorServicesService
+  );
 
   public catalogDataResponse: CatalogDataResponse | null = null;
 
@@ -43,7 +43,14 @@ export class ActivitiesPendingDefinitionEvaluatorFilterComponent {
     const evaluatorName = this.formFilter.get('evaluatorName')?.value;
     const evaluatorRole = this.formFilter.get('evaluatorRole')?.value;
 
-    this.activitiesPendingDefinitionEvaluatorServicesService.setParamsActivitiesFilterSignal({ activityName, activityType, evaluatedName: evaluatorName, evaluatedRole: evaluatorRole });
+    this.activitiesPendingDefinitionEvaluatorServicesService.setParamsActivitiesFilterSignal(
+      {
+        activityName,
+        activityType,
+        evaluatedName: evaluatorName,
+        evaluatedRole: evaluatorRole,
+      }
+    );
   }
 
   clearFilter() {
@@ -51,6 +58,13 @@ export class ActivitiesPendingDefinitionEvaluatorFilterComponent {
     this.formFilter.get('activityName')?.setValue('');
     this.formFilter.get('evaluatorName')?.setValue('');
     this.formFilter.get('evaluatorRole')?.setValue('');
-    this.activitiesPendingDefinitionEvaluatorServicesService.setParamsActivitiesFilterSignal({ activityName: '', activityType: '', evaluatedName: '', evaluatedRole: '' });
+    this.activitiesPendingDefinitionEvaluatorServicesService.setParamsActivitiesFilterSignal(
+      {
+        activityName: '',
+        activityType: '',
+        evaluatedName: '',
+        evaluatedRole: '',
+      }
+    );
   }
 }

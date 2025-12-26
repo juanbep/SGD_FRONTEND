@@ -1,12 +1,12 @@
 .view-container {
-    background-color: var(--white);
-    padding-right: 62px;
-    padding-left: 112px;
-    padding-top: 40px;
-    padding-bottom: 50px;
-    /* border-top-right-radius: 8px;
+  background-color: var(--white);
+  padding-right: 62px;
+  padding-left: 112px;
+  padding-top: 40px;
+  padding-bottom: 50px;
+  /* border-top-right-radius: 8px;
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px; */
-    min-height: 700px;
+  min-height: 700px;
 }

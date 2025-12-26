@@ -18,7 +18,6 @@ describe('ActivitiesTableComponent', () => {
       providers: [
         provideRouter([]), // Provide an empty router for testing
       ],
-      
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActivitiesTableComponent);

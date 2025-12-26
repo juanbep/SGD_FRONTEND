@@ -125,8 +125,7 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
         );
       case 'PROYECTOS INVESTIGACIÓN':
         return (
-          this.consolidatedTeacher?.actividades['PROYECTOS INVESTIGACIÓN'] ||
-          []
+          this.consolidatedTeacher?.actividades['PROYECTOS INVESTIGACIÓN'] || []
         );
       case 'TRABAJO DE DOCENCIA':
         return (
@@ -193,13 +192,12 @@ Estado fuente: ${sourceSelected.estadoFuente}`;
           a.click();
           window.URL.revokeObjectURL(url);
         },
-        error: (error: any) => {
-        },
+        error: (error: any) => {},
       });
   }
 
-  findRoleCurrentUserById(rol:string): boolean {
+  findRoleCurrentUserById(rol: string): boolean {
     const role = this.currentUser?.roles.find((role) => role.nombre === rol);
     return !!role;
- }
+  }
 }

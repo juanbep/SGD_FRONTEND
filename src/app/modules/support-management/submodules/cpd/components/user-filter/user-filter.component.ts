@@ -8,23 +8,28 @@ import { CpdServicesService } from '../../services/cpd-services.service';
 @Component({
   selector: 'cpd-user-filter',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './user-filter.component.html',
-  styleUrl: './user-filter.component.css'
+  styleUrl: './user-filter.component.css',
 })
 export class UserFilterComponent implements OnInit {
-
   private formBuilder = inject(FormBuilder);
   private catalogService = inject(CatalogDataService);
   private cpdServiceService = inject(CpdServicesService);
 
-  public filterParams: EventEmitter<{ nameUser: string | null, identification: string | null, category: string | null, department:string | null }> = new EventEmitter<{ nameUser: string | null, identification: string | null, category: string | null, department:string | null  }>();
+  public filterParams: EventEmitter<{
+    nameUser: string | null;
+    identification: string | null;
+    category: string | null;
+    department: string | null;
+  }> = new EventEmitter<{
+    nameUser: string | null;
+    identification: string | null;
+    category: string | null;
+    department: string | null;
+  }>();
 
   public catalogData: CatalogDataResponse | null = null;
-
 
   public formFilter = this.formBuilder.group({
     nameUser: [''],
@@ -37,13 +42,14 @@ export class UserFilterComponent implements OnInit {
     this.catalogData = this.catalogService.catalogDataSignal;
     const filterParams = this.cpdServiceService.getFilterTeacherParams();
     this.formFilter.get('nameUser')?.setValue(filterParams.evaluatedName || '');
-    this.formFilter.get('identification')?.setValue(filterParams.evaluatedId || '');
+    this.formFilter
+      .get('identification')
+      ?.setValue(filterParams.evaluatedId || '');
     this.formFilter.get('category')?.setValue(filterParams.category || '');
     this.formFilter.get('department')?.setValue(filterParams.department || '');
   }
 
   public searchUsers() {
-
     const nameUser = this.formFilter.get('nameUser')?.value || '';
     const identification = this.formFilter.get('identification')?.value || '';
     const category = this.formFilter.get('category')?.value || '';
@@ -53,7 +59,7 @@ export class UserFilterComponent implements OnInit {
       evaluatedName: nameUser,
       evaluatedId: identification,
       category: category,
-      department: department
+      department: department,
     });
   }
 
@@ -67,10 +73,7 @@ export class UserFilterComponent implements OnInit {
       evaluatedName: null,
       evaluatedId: null,
       category: null,
-      department: null
+      department: null,
     });
-
   }
-
-
 }

@@ -8,9 +8,8 @@ describe('ResponsibilitieCoordinatorFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResponsibilitieCoordinatorFormComponent]
-    })
-    .compileComponents();
+      imports: [ResponsibilitieCoordinatorFormComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ResponsibilitieCoordinatorFormComponent);
     component = fixture.componentInstance;

@@ -65,7 +65,6 @@ export class AcademicCalendarManagementComponent {
         this.tablaCalendarios.cargarCalendarios();
       }
     } catch (error: any) {
-      console.log('ERROR CAPTURADO EN COMPONENTE:', error);
       this.cerrarModalEliminar();
       const mensaje =
         error?.error?.mensaje || 'Error al eliminar el calendario';

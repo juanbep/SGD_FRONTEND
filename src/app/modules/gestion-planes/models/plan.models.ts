@@ -42,7 +42,7 @@ export interface PlanFilters {
   fechaCreacionHasta?: string;
 
   // Ordenamiento
-  sort?: string;   
+  sort?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }

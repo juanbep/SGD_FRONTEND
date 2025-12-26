@@ -18,8 +18,11 @@ import { PagedResponse } from '../../../../../../core/models/response/paged-resp
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { ActividadResponse } from '../../../../../../core/models/response/actividad-response.model';
 import { ActividadCreate } from '../../../../../../core/models/modified/actividad-create.model';
-import { TIPO_ACTIVIDADES, ROLES } from '../../../../../../core/enums/domain-enums';
-import { RldManagementComponent } from "../../components/rld-management/rld-management.component";
+import {
+  TIPO_ACTIVIDADES,
+  ROLES,
+} from '../../../../../../core/enums/domain-enums';
+import { RldManagementComponent } from '../../components/rld-management/rld-management.component';
 
 @Component({
   selector: 'app-edit-activity',
@@ -29,12 +32,12 @@ import { RldManagementComponent } from "../../components/rld-management/rld-mana
     CommonModule,
     RouterModule,
     ConfirmDialogComponent,
-    RldManagementComponent
-],
+    RldManagementComponent,
+  ],
   templateUrl: './edit-activity.component.html',
   styleUrl: './edit-activity.component.css',
 })
-export class EditActivityComponent implements OnInit{
+export class EditActivityComponent implements OnInit {
   @ViewChild(ConfirmDialogComponent)
   confirmDialogComponent: ConfirmDialogComponent | null = null;
 
@@ -102,7 +105,6 @@ export class EditActivityComponent implements OnInit{
     this.catalogResponse = this.catalogDataService.catalogDataSignal;
     this.recoverInfoActivity();
     this.onChangeInfoEvaluator();
-
   }
 
   recoverUserById(id: number | null): void {
@@ -179,8 +181,10 @@ export class EditActivityComponent implements OnInit{
         .get('weeks')
         ?.setValue(this.activity.semanas.toString());
       if (
-        this.activity.tipoActividad.oidTipoActividad === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA ||
-        this.activity.tipoActividad.oidTipoActividad === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION
+        this.activity.tipoActividad.oidTipoActividad ===
+          TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA ||
+        this.activity.tipoActividad.oidTipoActividad ===
+          TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION
       ) {
         this.activityForm
           .get('idStudent')
@@ -200,8 +204,8 @@ export class EditActivityComponent implements OnInit{
         .get('evaluatorName')
         ?.setValue(
           this.activity.evaluador.nombres +
-          ' ' +
-          this.activity.evaluador.apellidos
+            ' ' +
+            this.activity.evaluador.apellidos
         );
       this.evaluator = this.activity.evaluador;
     }
@@ -600,8 +604,8 @@ export class EditActivityComponent implements OnInit{
                     .get('evaluatorName')
                     ?.setValue(
                       this.userResponse.content[0].nombres +
-                      ' ' +
-                      this.userResponse.content[0].apellidos
+                        ' ' +
+                        this.userResponse.content[0].apellidos
                     );
                   this.activityForm
                     .get('evaluatorId')
@@ -644,8 +648,8 @@ export class EditActivityComponent implements OnInit{
                     .get('evaluatorName')
                     ?.setValue(
                       this.userResponse.content[0].nombres +
-                      ' ' +
-                      this.userResponse.content[0].apellidos
+                        ' ' +
+                        this.userResponse.content[0].apellidos
                     );
                   this.activityForm
                     .get('evaluatorId')
@@ -688,8 +692,8 @@ export class EditActivityComponent implements OnInit{
                     .get('evaluatorName')
                     ?.setValue(
                       this.userResponse.content[0].nombres +
-                      ' ' +
-                      this.userResponse.content[0].apellidos
+                        ' ' +
+                        this.userResponse.content[0].apellidos
                     );
                   this.activityForm
                     .get('evaluatorId')
@@ -717,8 +721,10 @@ export class EditActivityComponent implements OnInit{
         ?.setValue(user?.nombres + ' ' + user?.apellidos);
       this.activityForm.get('evaluatorId')?.setValue(user?.identificacion);
       if (
-        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA ||
-        this.activityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION
+        this.activityForm.get('typeActivity')?.value ===
+          TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA ||
+        this.activityForm.get('typeActivity')?.value ===
+          TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION
       ) {
         this.activityForm.get('idStudent')?.setValue(user?.identificacion);
       }

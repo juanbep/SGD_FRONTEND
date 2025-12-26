@@ -7,29 +7,25 @@ import { Rol } from '../../../../core/models/base/rol.model';
 @Component({
   selector: 'app-user-info',
   standalone: true,
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   templateUrl: './user-info.component.html',
-  styleUrl: './user-info.component.css'
+  styleUrl: './user-info.component.css',
 })
 export class UserInfoComponent implements OnInit {
- 
   private authServicesService: AuthServiceService = inject(AuthServiceService);
 
   public currentUser: UsuarioResponse | null = null;
 
   ngOnInit(): void {
-    this.currentUser=this.authServicesService.currentUserValue;
+    this.currentUser = this.authServicesService.currentUserValue;
   }
-  
+
   returnAllRoles(roles: Rol[] | null) {
-    if(!roles) return '';
+    if (!roles) return '';
     let rolesString = '';
     roles.forEach((role: Rol) => {
       rolesString += role.nombre + ', ';
-    })
+    });
     return rolesString.slice(0, -2);
   }
-
 }

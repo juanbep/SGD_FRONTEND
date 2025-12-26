@@ -1,22 +1,22 @@
 export interface AutoevaluacionFuente {
-    descripcionActividad: string;
-    resultados: Resultado[];
-    leccionesAprendidas: LeccionAprendida[];
-    oportunidadesMejora: OportunidadMejora[];
-    evaluacion: number,
-    observaciones?: string,
+  descripcionActividad: string;
+  resultados: Resultado[];
+  leccionesAprendidas: LeccionAprendida[];
+  oportunidadesMejora: OportunidadMejora[];
+  evaluacion: number;
+  observaciones?: string;
 }
 
 interface Resultado {
-    resultado: string;
-    ODS: string;
-    evidencia: File,
+  resultado: string;
+  ODS: string;
+  evidencia: File;
 }
 
 interface LeccionAprendida {
-    leccion: string;
+  leccion: string;
 }
 
 interface OportunidadMejora {
-    oportunidad: string;
+  oportunidad: string;
 }

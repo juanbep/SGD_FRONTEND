@@ -7,7 +7,7 @@ import { PaginatorComponent } from '../../../../shared/components/paginator/pagi
 import { PagedResponse } from '../../../../core/models/response/paged-response.model';
 import { PeriodoAcademicoResponse } from '../../../../core/models/response/periodo-academico-response.model';
 import { MessagesInfoService } from '../../../../shared/services/messages-info.service';
-import { LoadingOverleyComponent } from "../../../../shared/components/loading-overley/loading-overley.component";
+import { LoadingOverleyComponent } from '../../../../shared/components/loading-overley/loading-overley.component';
 import { ModalConfirmGetInfoKiraComponent } from '../../components/modal-confirm-get-info-kira/modal-confirm-get-info-kira.component';
 
 const PAGE_SIZE = 10;
@@ -21,8 +21,8 @@ const PAGE_SIZE = 10;
     CommonModule,
     PaginatorComponent,
     LoadingOverleyComponent,
-    ModalConfirmGetInfoKiraComponent
-],
+    ModalConfirmGetInfoKiraComponent,
+  ],
   templateUrl: './academic-period-management.component.html',
   styleUrl: './academic-period-management.component.css',
 })
@@ -49,7 +49,8 @@ export class AcademicPeriodManagementComponent implements OnInit {
   modalConfirmGetInfoKira!: ModalConfirmGetInfoKiraComponent;
 
   academicPeriodsEffect = effect(() => {
-    this.academicPeriodResponse = this.academicPeriodManagementService.getDatAcademicPeriods();
+    this.academicPeriodResponse =
+      this.academicPeriodManagementService.getDatAcademicPeriods();
     this.academicPeriods = this.academicPeriodResponse?.content || [];
   });
 
@@ -85,7 +86,8 @@ export class AcademicPeriodManagementComponent implements OnInit {
   }
 
   setCurrentAcademicPeriod(): void {
-    this.currentAcademicPeriod = this.academicPeriodManagementService.currentAcademicPeriodValue;
+    this.currentAcademicPeriod =
+      this.academicPeriodManagementService.currentAcademicPeriodValue;
   }
 
   openModalCreateAcademicPeriod(): void {
@@ -101,7 +103,6 @@ export class AcademicPeriodManagementComponent implements OnInit {
     this.recoverAcademicPeriods(this.currentPage, PAGE_SIZE);
   }
 
-  
   loadInfoTechersAndActivities() {
     this.modalConfirmGetInfoKira.open();
   }
@@ -116,16 +117,23 @@ export class AcademicPeriodManagementComponent implements OnInit {
     }
     let academicPeriodId = this.currentAcademicPeriod?.idPeriodoApi;
     this.isLoading = true;
-    this.academicPeriodManagementService.loadInfoTechersAndActivities(academicPeriodId?.toString()).subscribe({
-      next: data => {
-        this.isLoading = false;
-        this.messagesInfoService.showSuccessMessage('Se ha cargado la información correctamente', 'Exito');
-      },
-      error: error => {
-        this.isLoading = false;
-        this.messagesInfoService.showErrorMessage(error.error.mensaje, 'Error');
-      }
-    });
+    this.academicPeriodManagementService
+      .loadInfoTechersAndActivities(academicPeriodId?.toString())
+      .subscribe({
+        next: (data) => {
+          this.isLoading = false;
+          this.messagesInfoService.showSuccessMessage(
+            'Se ha cargado la información correctamente',
+            'Exito'
+          );
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.messagesInfoService.showErrorMessage(
+            error.error.mensaje,
+            'Error'
+          );
+        },
+      });
   }
-
 }

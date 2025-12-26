@@ -11,11 +11,15 @@ describe('ActivitiesTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), RouterTestingModule, ActivitiesTableComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        RouterTestingModule,
+        ActivitiesTableComponent,
+      ],
       providers: [
         provideRouter([]), // Provide an empty router for testing
       ],
-
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActivitiesTableComponent);

@@ -207,7 +207,8 @@ export class ResponsibilityPdfGeneratorService {
   private developmentStageName(developmentStage: string): string {
     const nameDevelopmentStage =
       this.cataloDataResponse?.estadoEtapaDesarrollo.find(
-        (element) => element.oidEstadoEtapaDesarrollo.toString() === developmentStage
+        (element) =>
+          element.oidEstadoEtapaDesarrollo.toString() === developmentStage
       )?.nombre;
 
     return nameDevelopmentStage || '';

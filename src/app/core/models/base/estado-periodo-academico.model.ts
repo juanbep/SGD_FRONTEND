@@ -1,6 +1,6 @@
 export interface EstadoPeriodoAcademico {
-    oidEstadoPeriodoAcademico: number;
-    nombre: string;
-    fechaCreacion: string;
-    fechaActualizacion: string;
+  oidEstadoPeriodoAcademico: number;
+  nombre: string;
+  fechaCreacion: string;
+  fechaActualizacion: string;
 }

@@ -119,18 +119,16 @@ export class UmActivitiesServiceService {
     const formData = new FormData();
     formData.append('documento', file);
     formData.append('data', JSON.stringify({ oidUsuario: oidUser }));
-    return this.httpClient.post(
-      `${this.baseUrl}/api/labor-docente`, formData, {
-        responseType: 'text',
-      }
-    );
+    return this.httpClient.post(`${this.baseUrl}/api/labor-docente`, formData, {
+      responseType: 'text',
+    });
   }
 
   getRLD(oidUser: number): Observable<any> {
     const params: Params = { oidUsuario: oidUser.toString() };
-    return this.httpClient.get(
-      `${this.baseUrl}/api/labor-docente/descargar`,
-      { params, responseType: 'blob' }
-    );
+    return this.httpClient.get(`${this.baseUrl}/api/labor-docente/descargar`, {
+      params,
+      responseType: 'blob',
+    });
   }
 }

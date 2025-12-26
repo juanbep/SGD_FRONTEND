@@ -273,7 +273,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
     if (evaluationNumber >= 80 && evaluationNumber < 90) {
       return 'Bueno';
     }
-    if (evaluationNumber >= 90 && evaluationNumber <95) {
+    if (evaluationNumber >= 90 && evaluationNumber < 95) {
       return 'Sobresaliente';
     }
     if (evaluationNumber >= 95 && evaluationNumber <= 100) {
@@ -435,7 +435,7 @@ export class ResponsabilitieStudentFormComponent implements OnInit {
     this.responsibilitiesServicesService
       .saveResponibilityFormStundent(
         fuenteEstudianteFormulario,
-        this.selectedFiles.reportDocument || new File([], ''),
+        this.selectedFiles.reportDocument || new File([], '')
       )
       .subscribe({
         next: (response) => {

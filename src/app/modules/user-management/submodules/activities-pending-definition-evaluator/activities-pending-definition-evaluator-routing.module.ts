@@ -3,20 +3,16 @@ import { ActivitiesPendingDefinitionEvaluatorComponent } from './pages/activitie
 import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
-    {
-        path: '',
-        component: ActivitiesPendingDefinitionEvaluatorComponent,
-    }
+  {
+    path: '',
+    component: ActivitiesPendingDefinitionEvaluatorComponent,
+  },
 ];
 
-
 @NgModule({
-    imports: [
-        RouterModule.forChild(routes),
-    ],
-    exports: [],
-    declarations: [],
-    providers: [],
+  imports: [RouterModule.forChild(routes)],
+  exports: [],
+  declarations: [],
+  providers: [],
 })
-
-export class ActivitiesPendingDefinitionEvaluatorRoutingModule { }
+export class ActivitiesPendingDefinitionEvaluatorRoutingModule {}

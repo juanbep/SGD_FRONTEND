@@ -1,193 +1,191 @@
 .button-normal {
-    display: flex;
-    width: 100px;
-    height: 45px;
-    margin-left: 10px;
-    margin-top: 1px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    border-radius: 100px;
-    border: none;
-    color: var(--white);
-    background: var(--blue);
+  display: flex;
+  width: 100px;
+  height: 45px;
+  margin-left: 10px;
+  margin-top: 1px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 100px;
+  border: none;
+  color: var(--white);
+  background: var(--blue);
 }
 
 .button-normal-disabled {
-    display: flex;
-    width: 100px;
-    height: 45px;
-    margin-left: 10px;
-    margin-top: 1px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    border-radius: 100px;
-    border: none;
-    color: var(--white);
-    background: var(--Gray-background);
-    pointer-events: none;
+  display: flex;
+  width: 100px;
+  height: 45px;
+  margin-left: 10px;
+  margin-top: 1px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 100px;
+  border: none;
+  color: var(--white);
+  background: var(--Gray-background);
+  pointer-events: none;
 }
 
 .button-normal-large {
-    display: flex;
-    width: 254px;
-    height: 40px;
-    margin-top: 1px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    border-radius: 100px;
-    border: none;
-    background: var(--blue);
-    color: var(--white);
+  display: flex;
+  width: 254px;
+  height: 40px;
+  margin-top: 1px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 100px;
+  border: none;
+  background: var(--blue);
+  color: var(--white);
 }
 
 .button-normal-large-disabled {
-    display: flex;
-    width: 254px;
-    height: 40px;
-    margin-top: 1px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    border-radius: 100px;
-    border: none;
-    background: var(--Gray-background);
-    color: var(--white);
-    pointer-events: none;
+  display: flex;
+  width: 254px;
+  height: 40px;
+  margin-top: 1px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 100px;
+  border: none;
+  background: var(--Gray-background);
+  color: var(--white);
+  pointer-events: none;
 }
 
 .button-actions {
-    width: 54px;
-    height: 100%;
-    border: none;
-    padding: 0;
-    display: flex;
-    /* Añadir flexbox al botón */
-    justify-content: center;
-    /* Centrar horizontalmente */
-    align-items: center;
-    /* Centrar verticalmente */
+  width: 54px;
+  height: 100%;
+  border: none;
+  padding: 0;
+  display: flex;
+  /* Añadir flexbox al botón */
+  justify-content: center;
+  /* Centrar horizontalmente */
+  align-items: center;
+  /* Centrar verticalmente */
 }
 
 .buttons-actions {
-    display: flex;
-    align-items: center;
-    height: 100%;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .buttons-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 8px;
-    width: 100%;
-    height: 64px;
-    border: 1px solid var(--blue);
-    padding-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+  width: 100%;
+  height: 64px;
+  border: 1px solid var(--blue);
+  padding-left: 20px;
 }
 
 .button-edit {
-    background-image: url('../assets/icons/buttons/edit-icon.svg');
-    background-size: 36px 36px !important;
-    /* Ajusta el tamaño del SVG */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Centrar la imagen */
-    background-color: var(--blue);
-
+  background-image: url("../assets/icons/buttons/edit-icon.svg");
+  background-size: 36px 36px !important;
+  /* Ajusta el tamaño del SVG */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Centrar la imagen */
+  background-color: var(--blue);
 }
 
 .button-edit-disabled {
-    background-image: url('../assets/icons/buttons/edit-icon.svg');
-    background-size: 36px 36px !important;
-    /* Ajusta el tamaño del SVG */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Centrar la imagen */
-    background-color: var(--Gray-background);
-    pointer-events: none;
+  background-image: url("../assets/icons/buttons/edit-icon.svg");
+  background-size: 36px 36px !important;
+  /* Ajusta el tamaño del SVG */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Centrar la imagen */
+  background-color: var(--Gray-background);
+  pointer-events: none;
 }
 
 .button-fill-out {
-    background-image: url('../assets/icons/buttons/go-icon.svg');
-    background-size: 36px 36px !important;
-    /* Ajusta el tamaño del SVG */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Centrar la imagen */
-    background-color: var(--blue);
+  background-image: url("../assets/icons/buttons/go-icon.svg");
+  background-size: 36px 36px !important;
+  /* Ajusta el tamaño del SVG */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Centrar la imagen */
+  background-color: var(--blue);
 }
 
 .button-fill-out-disabled {
-    background-image: url('../assets/icons/buttons/go-icon.svg');
-    background-size: 36px 36px !important;
-    /* Ajusta el tamaño del SVG */
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* Centrar la imagen */
-    background-color: var(--Gray-background);
-    pointer-events: none;
-
+  background-image: url("../assets/icons/buttons/go-icon.svg");
+  background-size: 36px 36px !important;
+  /* Ajusta el tamaño del SVG */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  /* Centrar la imagen */
+  background-color: var(--Gray-background);
+  pointer-events: none;
 }
 
 .button-table-email {
-    color: var(--white);
-    border: none;
-    margin: none;
-    width: 30px;
-    max-width: 100%;
-    height: 30px;
-    background-color: var(--white);
-    background-image: url(../assets/icons/tables/icon-message.svg);
-    background-position: center;
-    background-repeat: no-repeat;
+  color: var(--white);
+  border: none;
+  margin: none;
+  width: 30px;
+  max-width: 100%;
+  height: 30px;
+  background-color: var(--white);
+  background-image: url(../assets/icons/tables/icon-message.svg);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .button-table-form {
-    color: var(--white);
-    border: none;
-    margin: none;
-    width: 30px;
-    max-width: 100%;
-    height: 30px;
-    background-color: var(--white);
-    background-image: url(../assets/icons/tables/icon-form.svg);
-    background-position: center;
-    background-repeat: no-repeat;
+  color: var(--white);
+  border: none;
+  margin: none;
+  width: 30px;
+  max-width: 100%;
+  height: 30px;
+  background-color: var(--white);
+  background-image: url(../assets/icons/tables/icon-form.svg);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .button-table-view {
-    color: var(--white);
-    border: none;
-    margin: none;
-    width: 30px;
-    max-width: 100%;
-    height: 30px;
-    background-color: var(--white);
-    background-image: url(../assets/icons/tables/icon-view.svg);
-    background-position: center;
-    background-repeat: no-repeat;
+  color: var(--white);
+  border: none;
+  margin: none;
+  width: 30px;
+  max-width: 100%;
+  height: 30px;
+  background-color: var(--white);
+  background-image: url(../assets/icons/tables/icon-view.svg);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .button-table-check {
-    color: var(--white);
-    border: none;
-    margin: none;
-    width: 30px;
-    max-width: 100%;
-    height: 30px;
-    background-color: var(--white);
-    background-image: url(../assets/icons/tables/icon-check.svg);
-    background-position: center;
-    background-repeat: no-repeat;
+  color: var(--white);
+  border: none;
+  margin: none;
+  width: 30px;
+  max-width: 100%;
+  height: 30px;
+  background-color: var(--white);
+  background-image: url(../assets/icons/tables/icon-check.svg);
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .button-border-radius {
-    border-radius: 0px 8px 8px 0px;
+  border-radius: 0px 8px 8px 0px;
 }

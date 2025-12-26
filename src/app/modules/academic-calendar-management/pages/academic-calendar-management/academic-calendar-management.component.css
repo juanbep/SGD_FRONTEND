@@ -11,7 +11,7 @@
 /* Contenedores de mensajes informativos */
 .messages-container {
   background-color: rgba(22, 168, 225, 0.08) !important; /* Cian Claro suave */
-  border-left: 4px solid #16A8E1 !important; /* Cian Claro */
+  border-left: 4px solid #16a8e1 !important; /* Cian Claro */
   padding: 1rem 1.25rem;
   border-radius: 0.5rem;
   display: flex;
@@ -39,11 +39,10 @@
   font-weight: 500;
 }
 
-
 /* Contenedor de advertencia con borde amarillo */
 .messages-container:has(.text-warning) {
   background-color: #fff3cd !important; /* Amarillo claro sólido - mejor contraste */
-  border-left-color: #F8AE15 !important; /* Amarillo institucional */
+  border-left-color: #f8ae15 !important; /* Amarillo institucional */
   border-left-width: 4px;
 }
 
@@ -107,16 +106,16 @@
 }
 
 .btn-link:hover {
-  color: #0051C6 !important; /* Azul Medio */
+  color: #0051c6 !important; /* Azul Medio */
 }
 
 .btn-link:focus {
-  outline: 2px solid #F8AE15; /* Amarillo */
+  outline: 2px solid #f8ae15; /* Amarillo */
   outline-offset: 2px;
 }
 
 a:focus {
-  outline: 2px solid #F8AE15; /* Amarillo */
+  outline: 2px solid #f8ae15; /* Amarillo */
   outline-offset: 2px;
 }
 
@@ -147,18 +146,18 @@ a:focus {
   .col-acciones {
     width: 28%;
   }
-  
+
   /* Ajustes para título en móvil */
   .title-two {
     font-size: 1.5rem;
   }
-  
+
   /* Ajustes para mensajes en móvil */
   .messages-container {
     flex-direction: column;
     text-align: center;
   }
-  
+
   .messages-container img {
     width: 40px;
     height: 40px;

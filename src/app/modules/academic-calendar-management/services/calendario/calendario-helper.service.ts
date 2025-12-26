@@ -89,8 +89,6 @@ export class CalendarioHelperService {
       // Limpiar
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-
-      console.log('PDF descargado correctamente');
     } catch (error) {
       console.error('Error al descargar PDF:', error);
       throw error;

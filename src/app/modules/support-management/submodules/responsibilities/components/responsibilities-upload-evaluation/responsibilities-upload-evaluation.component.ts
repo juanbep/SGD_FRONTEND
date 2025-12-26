@@ -14,12 +14,22 @@ import { ResponsabilidadResponse } from '../../../../../../core/models/response/
 import { FuenteCreate } from '../../../../../../core/models/modified/fuente-create.model';
 import { UsuarioResponse } from '../../../../../../core/models/response/usuario-response.model';
 import { LoadingOverleyComponent } from '../../../../../../shared/components/loading-overley/loading-overley.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'responsibilities-upload-evaluation',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, LoadingOverleyComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    LoadingOverleyComponent,
+  ],
   templateUrl: './responsibilities-upload-evaluation.component.html',
   styleUrl: './responsibilities-upload-evaluation.component.css',
 })
@@ -53,16 +63,18 @@ export class ResponsibilitiesUploadEvaluationComponent {
     evaluatorRole: string | null;
   } | null = null;
 
-
   constructor(
     private service: ResponsibilitiesServicesService,
     private toastr: MessagesInfoService,
     private fb: FormBuilder
   ) {
     this.form = this.fb.group({
-      evaluation: [null, [Validators.required, Validators.min(0), Validators.max(100)]],
+      evaluation: [
+        null,
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
       selectedFile: [null, Validators.required],
-      observacionSend: ['']
+      observacionSend: [''],
     });
   }
 
@@ -131,7 +143,6 @@ export class ResponsibilitiesUploadEvaluationComponent {
     return null;
   }
 
-
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -147,7 +158,8 @@ export class ResponsibilitiesUploadEvaluationComponent {
       ];
       const isValidFileType = allowedTypes.includes(file.type);
       if (!isValidFileType) {
-        this.errorMessageFile = 'Únicamente se permiten archivos en formato .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt ';
+        this.errorMessageFile =
+          'Únicamente se permiten archivos en formato .pdf, .docx, .doc, .xlsx, .xls, .pptx, .ppt ';
         this.form.get('selectedFile')?.setValue(null);
       } else {
         this.form.get('selectedFile')?.setValue(file);
@@ -180,7 +192,11 @@ export class ResponsibilitiesUploadEvaluationComponent {
         },
       ];
       this.service
-        .saveResponsibilityEvaluation(selectedFile, observacionSend, this.sendSource)
+        .saveResponsibilityEvaluation(
+          selectedFile,
+          observacionSend,
+          this.sendSource
+        )
         .subscribe({
           next: (data) => {
             this.isLoading = false;
@@ -198,7 +214,10 @@ export class ResponsibilitiesUploadEvaluationComponent {
             );
           },
           error: (error) => {
-            this.toastr.showErrorMessage('Error al guardar la información', 'Error');
+            this.toastr.showErrorMessage(
+              'Error al guardar la información',
+              'Error'
+            );
           },
         });
     } else {

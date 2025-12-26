@@ -9,71 +9,134 @@ import { FuenteEstudianteFormulario } from '../../../../../core/models/modified/
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilitiesServicesService {
+  private userResponsibilities: WritableSignal<PagedResponse<ResponsabilidadResponse> | null> =
+    signal(null);
+  private paramsActivitiesFilterSignal: WritableSignal<{
+    activityName: string | null;
+    activityType: string | null;
+    evaluatorName: string | null;
+    evaluatorRole: string | null;
+  }> = signal({
+    activityName: null,
+    activityType: null,
+    evaluatorName: null,
+    evaluatorRole: null,
+  });
 
-    private userResponsibilities: WritableSignal<PagedResponse<ResponsabilidadResponse> | null> = signal(null);
-    private paramsActivitiesFilterSignal: WritableSignal<{ activityName: string | null, activityType: string | null, evaluatorName: string | null, evaluatorRole: string | null }> = signal({ activityName: null, activityType: null, evaluatorName: null, evaluatorRole: null });
+  private smResponsibilitiesServicesService = inject(
+    SmResponsibilitiesServicesService
+  );
 
-    private smResponsibilitiesServicesService = inject(SmResponsibilitiesServicesService);
-    
-    private smActivitiesServicesService = inject(SmActivitiesServicesService);
+  private smActivitiesServicesService = inject(SmActivitiesServicesService);
 
-    private umUsersServicesService = inject(UmUsersServicesService);
+  private umUsersServicesService = inject(UmUsersServicesService);
 
-    setParamsActivitiesFilterSignal(activityName: string | null, activityType: string | null, evaluatorName: string | null, evaluatorRole: string | null) {
-        this.paramsActivitiesFilterSignal.update(data => data = { activityName, activityType, evaluatorName, evaluatorRole });
-    }
-    
-    getParamsActivitiesFilterSignal() {
-        return this.paramsActivitiesFilterSignal();
-    }
+  setParamsActivitiesFilterSignal(
+    activityName: string | null,
+    activityType: string | null,
+    evaluatorName: string | null,
+    evaluatorRole: string | null
+  ) {
+    this.paramsActivitiesFilterSignal.update(
+      (data) =>
+        (data = { activityName, activityType, evaluatorName, evaluatorRole })
+    );
+  }
 
-    getInfoResponsibilityByForm(idSource: number){
-        return this.smResponsibilitiesServicesService.getInfoResponsibilityByForm(idSource);
-    }
-    
-    
-    setResponsibilitiesData(newData: PagedResponse<ResponsabilidadResponse>) {
-        this.userResponsibilities.update(data => data = newData);
-    }   
-    
-    getResponsibilitiesData() {
-        return this.userResponsibilities();
-    }
+  getParamsActivitiesFilterSignal() {
+    return this.paramsActivitiesFilterSignal();
+  }
 
-    getUserById(userId: number){
-        return this.umUsersServicesService.getUserbyId(userId);
-    }
-    
-    getResponsibilitieById(responsibilitieId:number){
-        return this.smActivitiesServicesService.getActivityById(responsibilitieId);
-    }
+  getInfoResponsibilityByForm(idSource: number) {
+    return this.smResponsibilitiesServicesService.getInfoResponsibilityByForm(
+      idSource
+    );
+  }
 
-    getResponsibilities(evaluatorId: string, activityName: string | null, activityType: string | null, evaluatorName: string | null, roles: string | null, asignacionDefault:boolean ,page: number | null, totalPage: number | null) {
-        return this.smResponsibilitiesServicesService.getResponsibilities(evaluatorId, activityName, activityType, evaluatorName, roles, asignacionDefault, page, totalPage);
-    }
+  setResponsibilitiesData(newData: PagedResponse<ResponsabilidadResponse>) {
+    this.userResponsibilities.update((data) => (data = newData));
+  }
 
-    saveResponsibilityEvaluation(file: File, observation: string, source: FuenteCreate[]) {
-        return this.smResponsibilitiesServicesService.saveResponsibilityEvaluation(file, observation, source)
-    }
+  getResponsibilitiesData() {
+    return this.userResponsibilities();
+  }
 
-    saveResponibilityFormStundent(fuenteEstudianteFormulario: FuenteEstudianteFormulario, reportDocument: File) {
-        return this.smResponsibilitiesServicesService.saveResponibilityFormStundent(fuenteEstudianteFormulario, reportDocument);
-    }
+  getUserById(userId: number) {
+    return this.umUsersServicesService.getUserbyId(userId);
+  }
 
-    getInforResponsibilityByFormCoordinator(idSource: number) {
-        return this.smResponsibilitiesServicesService.getInforResponsibilityByFormCoordinator(idSource);
-    }
+  getResponsibilitieById(responsibilitieId: number) {
+    return this.smActivitiesServicesService.getActivityById(responsibilitieId);
+  }
 
-    saveResponibilityFormCoordinador(fuenteCoordinadorFormulario: any, reportDocument: File) {
-        return this.smResponsibilitiesServicesService.saveResponsibilityFormCoordinator(fuenteCoordinadorFormulario, reportDocument);
-    }
+  getResponsibilities(
+    evaluatorId: string,
+    activityName: string | null,
+    activityType: string | null,
+    evaluatorName: string | null,
+    roles: string | null,
+    asignacionDefault: boolean,
+    page: number | null,
+    totalPage: number | null
+  ) {
+    return this.smResponsibilitiesServicesService.getResponsibilities(
+      evaluatorId,
+      activityName,
+      activityType,
+      evaluatorName,
+      roles,
+      asignacionDefault,
+      page,
+      totalPage
+    );
+  }
 
-    getdownloadSourceFile(idSource: number) {
-        return this.smResponsibilitiesServicesService.downloadSourceFile(idSource);
-    }
+  saveResponsibilityEvaluation(
+    file: File,
+    observation: string,
+    source: FuenteCreate[]
+  ) {
+    return this.smResponsibilitiesServicesService.saveResponsibilityEvaluation(
+      file,
+      observation,
+      source
+    );
+  }
 
-    getDownloadReportFile(idSource: number, report:boolean) {
-        return this.smResponsibilitiesServicesService.downloadReportFile(idSource, report);
-    }
+  saveResponibilityFormStundent(
+    fuenteEstudianteFormulario: FuenteEstudianteFormulario,
+    reportDocument: File
+  ) {
+    return this.smResponsibilitiesServicesService.saveResponibilityFormStundent(
+      fuenteEstudianteFormulario,
+      reportDocument
+    );
+  }
 
+  getInforResponsibilityByFormCoordinator(idSource: number) {
+    return this.smResponsibilitiesServicesService.getInforResponsibilityByFormCoordinator(
+      idSource
+    );
+  }
+
+  saveResponibilityFormCoordinador(
+    fuenteCoordinadorFormulario: any,
+    reportDocument: File
+  ) {
+    return this.smResponsibilitiesServicesService.saveResponsibilityFormCoordinator(
+      fuenteCoordinadorFormulario,
+      reportDocument
+    );
+  }
+
+  getdownloadSourceFile(idSource: number) {
+    return this.smResponsibilitiesServicesService.downloadSourceFile(idSource);
+  }
+
+  getDownloadReportFile(idSource: number, report: boolean) {
+    return this.smResponsibilitiesServicesService.downloadReportFile(
+      idSource,
+      report
+    );
+  }
 }

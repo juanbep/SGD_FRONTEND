@@ -107,13 +107,14 @@ export class SelfEvaluationReviewModalComponent {
   }
 
   downloadEvidenceFile(idResult: number | null, index: number) {
-    if(!idResult) return;
+    if (!idResult) return;
     this.activitiesServices.getEvidenceResultOdsFile(idResult).subscribe({
       next: (blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = this.selfEvaluation?.odsSeleccionados[index].documento|| 'evidencia';
+        a.download =
+          this.selfEvaluation?.odsSeleccionados[index].documento || 'evidencia';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

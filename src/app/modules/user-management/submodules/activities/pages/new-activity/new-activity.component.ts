@@ -23,7 +23,7 @@ import {
   TIPO_ACTIVIDADES,
   ROLES,
 } from '../../../../../../core/enums/domain-enums';
-import { RldManagementComponent } from "../../components/rld-management/rld-management.component";
+import { RldManagementComponent } from '../../components/rld-management/rld-management.component';
 
 @Component({
   selector: 'app-new-activity',
@@ -34,13 +34,12 @@ import { RldManagementComponent } from "../../components/rld-management/rld-mana
     ActivitiesTableComponent,
     ConfirmDialogComponent,
     RouterModule,
-    RldManagementComponent
-],
+    RldManagementComponent,
+  ],
   templateUrl: './new-activity.component.html',
   styleUrl: './new-activity.component.css',
 })
 export class NewActivityComponent implements OnInit {
-  
   @ViewChild(ConfirmDialogComponent)
   confirmDialogComponent: ConfirmDialogComponent | null = null;
 
@@ -98,7 +97,7 @@ export class NewActivityComponent implements OnInit {
     ],
     projectName: [null, Validators.required],
     administrativeAct: [null, Validators.required],
-    researchSeed : [null, Validators.required],
+    researchSeed: [null, Validators.required],
     idStudent: [null, Validators.required],
     activity: [null, Validators.required],
     evaluatorName: [null, Validators.required],
@@ -778,8 +777,10 @@ export class NewActivityComponent implements OnInit {
         ?.setValue(user?.nombres + ' ' + user?.apellidos);
       this.newActivityForm.get('evaluatorId')?.setValue(user?.identificacion);
       if (
-        this.newActivityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA.toString() ||
-        this.newActivityForm.get('typeActivity')?.value === TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION.toString()
+        this.newActivityForm.get('typeActivity')?.value ===
+          TIPO_ACTIVIDADES.TRABAJO_DE_DOCENCIA.toString() ||
+        this.newActivityForm.get('typeActivity')?.value ===
+          TIPO_ACTIVIDADES.TRABAJO_DE_INVESTIGACION.toString()
       ) {
         this.newActivityForm.get('idStudent')?.setValue(user?.identificacion);
       }

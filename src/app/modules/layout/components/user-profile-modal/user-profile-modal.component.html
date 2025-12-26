@@ -1,13 +1,9 @@
 <!-- Overlay -->
-<div 
-  class="modal-overlay" 
-  *ngIf="isOpen"
-  (click)="closeModal()"
-></div>
+<div class="modal-overlay" *ngIf="isOpen" (click)="closeModal()"></div>
 
 <!-- Popover flotante -->
-<div 
-  class="user-profile-popover" 
+<div
+  class="user-profile-popover"
   *ngIf="isOpen"
   [ngClass]="{ 'popover-from-collapsed': isSidebarCollapsed }"
 >
@@ -56,13 +52,15 @@
 
     <!-- Información laboral -->
     <div class="divider-small"></div>
-    
+
     <div class="info-section" *ngIf="currentUser?.usuarioDetalle">
       <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.departamento">
         <i class="fas fa-sitemap"></i>
         <div class="info-text">
           <span class="label">Departamento (Detalle)</span>
-          <span class="value">{{ currentUser?.usuarioDetalle?.departamento }}</span>
+          <span class="value">{{
+            currentUser?.usuarioDetalle?.departamento
+          }}</span>
         </div>
       </div>
 
@@ -78,7 +76,9 @@
         <i class="fas fa-id-badge"></i>
         <div class="info-text">
           <span class="label">Categoría</span>
-          <span class="value">{{ currentUser?.usuarioDetalle?.categoria }}</span>
+          <span class="value">{{
+            currentUser?.usuarioDetalle?.categoria
+          }}</span>
         </div>
       </div>
 
@@ -86,7 +86,9 @@
         <i class="fas fa-briefcase"></i>
         <div class="info-text">
           <span class="label">Contratación</span>
-          <span class="value">{{ currentUser?.usuarioDetalle?.contratacion }}</span>
+          <span class="value">{{
+            currentUser?.usuarioDetalle?.contratacion
+          }}</span>
         </div>
       </div>
 
@@ -94,7 +96,9 @@
         <i class="fas fa-clock"></i>
         <div class="info-text">
           <span class="label">Dedicación</span>
-          <span class="value">{{ currentUser?.usuarioDetalle?.dedicacion }}</span>
+          <span class="value">{{
+            currentUser?.usuarioDetalle?.dedicacion
+          }}</span>
         </div>
       </div>
 
@@ -108,9 +112,19 @@
     </div>
 
     <!-- Información adicional -->
-    <div class="divider-small" *ngIf="currentUser?.programaCoordinador || currentUser?.departamentoJefatura"></div>
+    <div
+      class="divider-small"
+      *ngIf="
+        currentUser?.programaCoordinador || currentUser?.departamentoJefatura
+      "
+    ></div>
 
-    <div class="info-section" *ngIf="currentUser?.programaCoordinador || currentUser?.departamentoJefatura">
+    <div
+      class="info-section"
+      *ngIf="
+        currentUser?.programaCoordinador || currentUser?.departamentoJefatura
+      "
+    >
       <div class="info-item" *ngIf="currentUser?.programaCoordinador">
         <i class="fas fa-user-graduate"></i>
         <div class="info-text">

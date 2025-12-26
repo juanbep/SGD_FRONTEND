@@ -8,9 +8,8 @@ describe('FormularioAsignarUsuarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormularioAsignarUsuarioComponent]
-    })
-    .compileComponents();
+      imports: [FormularioAsignarUsuarioComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FormularioAsignarUsuarioComponent);
     component = fixture.componentInstance;

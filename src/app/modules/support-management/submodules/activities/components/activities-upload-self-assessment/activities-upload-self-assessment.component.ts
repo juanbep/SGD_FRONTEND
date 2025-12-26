@@ -159,7 +159,6 @@ export class ActivitiesUploadSelfAssessmentComponent {
     });
   }
 
-
   /*
    * Method to open the modal
    */
@@ -208,7 +207,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
         'application/vnd.ms-powerpoint',
       ];
       const isValidFileType = allowedTypes.includes(file.type);
-      if (!isValidFileType) { 
+      if (!isValidFileType) {
         this.errorMessageFile = 'El archivo seleccionado no es un PDF';
         this.selectedFile = null;
       } else {
@@ -298,7 +297,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
    */
 
   saveEvaluation(): void {
-    if(this.formSelfAssessment.invalid) {
+    if (this.formSelfAssessment.invalid) {
       this.formSelfAssessment.markAllAsTouched();
       this.toastr.showWarningMessage(
         'Asegurese que las evaluaciones y el soporte se encuentren diligenciados.',
@@ -312,7 +311,7 @@ export class ActivitiesUploadSelfAssessmentComponent {
           activitie.fuentes[0].calificacion =
             this.activities.controls[index].value.calificacion;
         });
-        
+
         this.userActivities.forEach((activitie, index) => {
           if (activitie.fuentes[0].tipoCalificacion !== 'EN_LINEA') {
             const fuente = {

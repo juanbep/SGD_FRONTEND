@@ -1,7 +1,6 @@
-import { EstadoUsuario } from "../base/estado-usuario.model";
-import { Rol } from "../base/rol.model";
-import { UsuarioDetalle } from "../base/usuario-detalle.model";
-
+import { EstadoUsuario } from '../base/estado-usuario.model';
+import { Rol } from '../base/rol.model';
+import { UsuarioDetalle } from '../base/usuario-detalle.model';
 
 export interface UsuarioResponse {
   oidUsuario: number;
@@ -14,5 +13,5 @@ export interface UsuarioResponse {
   ultimoIngreso: string;
   estadoUsuario: EstadoUsuario;
   usuarioDetalle: UsuarioDetalle;
-  roles: Rol[]; 
+  roles: Rol[];
 }

@@ -34,9 +34,9 @@ export class TeacherListTableComponent implements OnInit {
     contractType: string | null;
   } | null = null;
 
-
   filterEffect = effect(() => {
-    this.filterParams = this.consolidatedServicesService.getFilterTeacherParams();
+    this.filterParams =
+      this.consolidatedServicesService.getFilterTeacherParams();
     if (this.filterParams) {
       this.recoverTeachers(this.currentPage, PAGE_SIZE);
     }

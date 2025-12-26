@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './button-providers.component.html',
-  styleUrl: './button-providers.component.css'
+  styleUrl: './button-providers.component.css',
 })
 export class ButtonProvidersComponent {
   @Output()

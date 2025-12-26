@@ -1,8 +1,16 @@
-import { ApplicationConfig, provideZoneChangeDetection, importProvidersFrom  } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideZoneChangeDetection,
+  importProvidersFrom,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -17,9 +25,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: FIREBASE_OPTIONS, useValue: environments.firebaseConfig },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    provideHttpClient(
-      withInterceptorsFromDi()
-    ),
+    provideHttpClient(withInterceptorsFromDi()),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     importProvidersFrom(NgxDaterangepickerMd.forRoot()),
