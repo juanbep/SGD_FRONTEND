@@ -169,7 +169,7 @@
   </nav>
 
   <!-- CONTENIDO SEGÚN TAB ACTIVO -->
-  <div *ngIf="activeTab === 'individual'">
+  <div [hidden]="activeTab !== 'individual'">
     <app-crear-individual
       [oidPlan]="oidPlan"
       [oidCalendario]="oidCalendario"
@@ -177,7 +177,7 @@
     ></app-crear-individual>
   </div>
 
-  <div *ngIf="activeTab === 'lote'">
+  <div [hidden]="activeTab !== 'lote'">
     <app-crear-lote
       [oidPlan]="oidPlan"
       [oidCalendario]="oidCalendario"
