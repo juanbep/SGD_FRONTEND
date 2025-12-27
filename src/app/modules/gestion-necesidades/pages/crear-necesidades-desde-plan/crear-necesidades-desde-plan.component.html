@@ -1,0 +1,451 @@
+<div class="view-container">
+  <!-- Título -->
+  <header class="title-two d-flex justify-content-between align-items-center">
+    <span>Crear Necesidades desde Plan</span>
+    <button
+      type="button"
+      class="btn btn-outline-secondary btn-sm"
+      (click)="volverALista()"
+    >
+      <i class="fas fa-arrow-left me-2"></i>
+      Volver
+    </button>
+  </header>
+
+  <!-- Mensaje informativo -->
+  <section class="messages-container">
+    <img
+      [src]="'assets/icons/messages/necesidades-management.svg'"
+      alt="Icono de necesidades"
+      onerror="this.style.display='none'"
+    />
+    <span class="text-body-heavy">
+      Configure el cupo y grupo para cada materia del plan y guarde las
+      necesidades individualmente. Las materias guardadas se eliminarán de la
+      lista.
+    </span>
+  </section>
+
+  <div><br /></div>
+
+  <!-- Card de Filtros (DESHABILITADOS) -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h6 class="mb-0 d-flex align-items-center">
+        <i class="fas fa-filter me-2" style="color: #f8ae15"></i>Filtros de
+        Búsqueda
+      </h6>
+      <button
+        type="button"
+        class="btn btn-outline-secondary d-flex align-items-center"
+        disabled
+      >
+        <i class="fas fa-times"></i>
+        <span class="d-none d-lg-inline ms-1">Limpiar</span>
+      </button>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <!-- Filtro por Departamento -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label for="filtroDepartamento" class="form-label fw-bold">
+            <i class="fas fa-building me-1"></i>Departamento:
+          </label>
+          <ng-select
+            id="filtroDepartamento"
+            [items]="[]"
+            [(ngModel)]="filtroDepartamento"
+            placeholder="Seleccione departamento"
+            [disabled]="true"
+          >
+          </ng-select>
+          <small class="text-muted">Filtrar por departamento</small>
+        </div>
+
+        <!-- Filtro por Semestre -->
+        <div class="col-xl-2 col-lg-3 col-md-6">
+          <label for="filtroSemestre" class="form-label fw-bold">
+            <i class="fas fa-calendar-week me-1"></i>Semestre:
+          </label>
+          <ng-select
+            id="filtroSemestre"
+            [items]="semestresDisponibles"
+            bindLabel="label"
+            bindValue="value"
+            [(ngModel)]="filtroSemestre"
+            placeholder="Seleccione semestre"
+            [disabled]="true"
+          >
+          </ng-select>
+          <small class="text-muted">Semestre académico</small>
+        </div>
+
+        <!-- Filtro por OID Materia-->
+        <div class="col-xl-2 col-lg-3 col-md-6">
+          <label for="filtroOid" class="form-label fw-bold">
+            <i class="fas fa-key me-1"></i>OID:
+          </label>
+          <input
+            type="text"
+            id="filtroOid"
+            class="form-control"
+            placeholder="Buscar por OID..."
+            [(ngModel)]="filtroOid"
+            disabled
+          />
+          <small class="text-muted">Identificador único</small>
+        </div>
+
+        <!-- Filtro por Código Materia-->
+        <div class="col-xl-2 col-lg-3 col-md-6">
+          <label for="filtroCodigo" class="form-label fw-bold">
+            <i class="fas fa-barcode me-1"></i>Código:
+          </label>
+          <input
+            type="text"
+            id="filtroCodigo"
+            class="form-control"
+            placeholder="Ej: MAT101..."
+            [(ngModel)]="filtroCodigo"
+            disabled
+          />
+          <small class="text-muted">Código de la materia</small>
+        </div>
+
+        <!-- Filtro por Nombre -->
+        <div class="col-xl-3 col-lg-4 col-md-6">
+          <label for="filtroNombre" class="form-label fw-bold">
+            <i class="fas fa-book me-1"></i>Nombre:
+          </label>
+          <input
+            type="text"
+            id="filtroNombre"
+            class="form-control"
+            placeholder="Buscar por nombre..."
+            [(ngModel)]="filtroNombre"
+            disabled
+          />
+          <small class="text-muted">Nombre de la materia</small>
+        </div>
+      </div>
+
+      <!-- Botón de Búsqueda -->
+      <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <button
+            type="button"
+            class="btn btn-primary d-flex align-items-center"
+            disabled
+          >
+            <i class="fas fa-search me-2"></i>
+            <span>Buscar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card de Tabla -->
+  <div class="card">
+    <div
+      class="card-header d-flex justify-content-between align-items-center flex-wrap"
+    >
+      <h6 class="mb-0 d-flex align-items-center">
+        <i class="fas fa-table me-2" style="color: #f8ae15"></i>Materias del
+        Plan
+        <span class="badge bg-primary ms-2">{{ totalElements }}</span>
+      </h6>
+
+      <div
+        class="d-flex align-items-center gap-2 ms-auto mt-2 mt-lg-0 flex-wrap"
+      >
+        <!-- Botón Actualizar -->
+        <button
+          type="button"
+          class="btn btn-link text-decoration-none text-primary d-flex align-items-center"
+          (click)="cargarMaterias(true)"
+          [disabled]="loading"
+        >
+          <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
+          <span class="d-none d-lg-inline">
+            {{ loading ? "Cargando..." : "Actualizar" }}
+          </span>
+        </button>
+      </div>
+
+      <!-- Selector de tamaño de página -->
+      <div class="d-flex align-items-center ms-3 mt-2 mt-lg-0">
+        <label class="form-label mb-0 me-2 small">Mostrar:</label>
+        <ng-select
+          [items]="pageSizeOptions"
+          [(ngModel)]="size"
+          (change)="onPageSizeChange()"
+          [clearable]="false"
+          [searchable]="false"
+          placeholder="10"
+          class="page-size-select"
+        >
+        </ng-select>
+        <span class="ms-2 small text-muted">por página</span>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive" style="max-height: 600px">
+        <table class="table table-hover mb-0">
+          <thead class="table-light sticky-top">
+            <tr>
+              <!-- OID ordenable -->
+              <th
+                class="fw-bold sortable-header"
+                style="width: 120px; cursor: pointer"
+                (click)="onSort('oidMateria')"
+                title="Ordenar por OID"
+              >
+                <i class="fas fa-key me-1"></i>OID
+                <i [ngClass]="getSortIcon('oidMateria')" class="ms-1"></i>
+              </th>
+
+              <!-- CÓDIGO -->
+              <th class="fw-bold" style="width: 120px">
+                <i class="fas fa-barcode me-1"></i>Código
+              </th>
+
+              <!-- NOMBRE -->
+              <th class="fw-bold"><i class="fas fa-book me-1"></i>Nombre</th>
+
+              <!-- SEMESTRE -->
+              <th class="fw-bold text-center" style="width: 100px">
+                <i class="fas fa-calendar-week me-1"></i>Semestre
+              </th>
+
+              <!-- HORAS/SEMANA -->
+              <th class="fw-bold text-center" style="width: 120px">
+                <i class="fas fa-clock me-1"></i>Horas/Semana
+              </th>
+
+              <!-- DEPARTAMENTO -->
+              <th class="fw-bold">
+                <i class="fas fa-building me-1"></i>Departamento
+              </th>
+
+              <!-- CUPO (NUEVO) -->
+              <th class="fw-bold text-center" style="width: 120px">
+                <i class="fas fa-user-friends me-1"></i>Cupo
+              </th>
+
+              <!-- GRUPO (NUEVO) -->
+              <th class="fw-bold text-center" style="width: 140px">
+                <i class="fas fa-users me-1"></i>Grupo
+              </th>
+
+              <!-- ACCIONES -->
+              <th class="fw-bold text-center" style="width: 180px">
+                <i class="fas fa-cogs me-1"></i>Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="materias && materias.length > 0; else noData">
+            <tr
+              *ngFor="
+                let materia of materias;
+                let i = index;
+                trackBy: trackByMateria
+              "
+            >
+              <td>
+                <small class="text-muted">{{ materia.oidMateria }}</small>
+              </td>
+              <td class="fw-bold">{{ materia.codigo }}</td>
+              <td>
+                <div class="fw-semibold">{{ materia.nombre }}</div>
+              </td>
+              <td class="text-center">
+                <span class="badge bg-light text-dark">{{
+                  materia.semestre
+                }}</span>
+              </td>
+              <td class="text-center">{{ materia.horasSemana }}</td>
+              <td>
+                <div>{{ materia.nombreDepartamento }}</div>
+                <small class="text-muted"
+                  >ID: {{ materia.oidDepartamento }}</small
+                >
+              </td>
+
+              <!-- CUPO INPUT -->
+              <td class="text-center">
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  [(ngModel)]="materia.cupo"
+                  placeholder="Ej: 30"
+                  min="1"
+                  max="99"
+                  [disabled]="materia.guardando"
+                />
+              </td>
+
+              <!-- GRUPO DROPDOWN -->
+              <td class="text-center">
+                <ng-select
+                  [(ngModel)]="materia.grupo"
+                  [items]="gruposDisponibles"
+                  bindLabel="label"
+                  bindValue="value"
+                  placeholder="Seleccione"
+                  [clearable]="false"
+                  [searchable]="false"
+                  [disabled]="materia.guardando"
+                  class="grupo-select"
+                >
+                </ng-select>
+              </td>
+
+              <!-- ACCIONES -->
+              <td class="text-center">
+                <div class="action-buttons-wrapper">
+                  <!-- Guardar -->
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-success"
+                    title="Guardar necesidad"
+                    (click)="guardarNecesidad(materia, i)"
+                    [disabled]="materia.guardando"
+                  >
+                    <i
+                      class="fas"
+                      [ngClass]="
+                        materia.guardando ? 'fa-spinner fa-spin' : 'fa-save'
+                      "
+                    ></i>
+                  </button>
+
+                  <!-- Eliminar -->
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    title="Eliminar de la lista"
+                    (click)="eliminarFila(i)"
+                    [disabled]="materia.guardando"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <ng-template #noData>
+            <tbody>
+              <tr>
+                <td colspan="9" class="text-center py-5">
+                  <div
+                    *ngIf="loading"
+                    class="d-flex justify-content-center align-items-center"
+                  >
+                    <div
+                      class="spinner-border spinner-border-sm me-3"
+                      role="status"
+                    >
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <span class="text-muted">Cargando materias...</span>
+                  </div>
+                  <div *ngIf="!loading && error" class="text-danger">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                    <div class="fw-bold">Error al cargar materias</div>
+                    <div class="small">{{ error }}</div>
+                    <button
+                      class="btn btn-outline-primary btn-sm mt-3"
+                      (click)="reintentar()"
+                    >
+                      <i class="fas fa-redo me-1"></i>Reintentar
+                    </button>
+                  </div>
+                  <div *ngIf="!loading && !error" class="text-muted">
+                    <i class="fas fa-book-open fa-2x mb-3"></i>
+                    <div class="fw-bold">
+                      No hay materias disponibles o todas fueron guardadas
+                    </div>
+                    <div class="small">
+                      No se encontraron más materias para este plan
+                    </div>
+                    <button
+                      class="btn btn-outline-primary btn-sm mt-3"
+                      (click)="volverALista()"
+                    >
+                      <i class="fas fa-arrow-left me-1"></i>Volver a la lista
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer con Paginación -->
+    <div class="card-footer" *ngIf="materias && materias.length > 0">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="text-muted small">Mostrando {{ getInfoPaginacion() }}</div>
+
+        <nav aria-label="Paginación materias">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="page === 0">
+              <button
+                class="page-link"
+                (click)="irAPagina(0)"
+                [disabled]="page === 0"
+              >
+                <i class="fas fa-angle-double-left"></i>
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="page === 0">
+              <button
+                class="page-link"
+                (click)="irAPagina(page - 1)"
+                [disabled]="page === 0"
+              >
+                <i class="fas fa-angle-left"></i>
+              </button>
+            </li>
+            <li
+              class="page-item"
+              *ngFor="let p of getPaginasVisibles()"
+              [class.active]="p === page"
+            >
+              <button class="page-link" (click)="irAPagina(p)">
+                {{ p + 1 }}
+              </button>
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="page >= getTotalPaginas() - 1"
+            >
+              <button
+                class="page-link"
+                (click)="irAPagina(page + 1)"
+                [disabled]="page >= getTotalPaginas() - 1"
+              >
+                <i class="fas fa-angle-right"></i>
+              </button>
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="page >= getTotalPaginas() - 1"
+            >
+              <button
+                class="page-link"
+                (click)="irAPagina(getTotalPaginas() - 1)"
+                [disabled]="page >= getTotalPaginas() - 1"
+              >
+                <i class="fas fa-angle-double-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

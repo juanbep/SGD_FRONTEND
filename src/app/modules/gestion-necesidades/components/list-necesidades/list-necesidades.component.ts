@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
@@ -44,6 +45,7 @@ export class ListNecesidadesComponent implements OnInit {
   // ===== SERVICIOS =====
   private necesidadesService = inject(NecesidadesService);
   private toastr = inject(ToastrService);
+  private router = inject(Router);
 
   // ===== REFERENCIA AL INPUT FILE =====
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -238,10 +240,20 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   onPlanSeleccionado(oidPlan: number): void {
-    console.log('Navegando a creación masiva con plan:', oidPlan);
+    // Obtener el calendario actual de los filtros
+    const oidCalendario = this.filtrosActuales.oidCalendario;
 
-    // Navegar a la nueva vista de creación masiva
-    // Pasando el oidPlan y el oidCalendario
+    if (!oidCalendario) {
+      this.toastr.error('No se ha seleccionado un calendario', 'Error');
+      return;
+    }
+
+    // Navegar a la vista de creación con parámetros
+    this.router.navigate([
+      '/app/gestion-necesidades/crear-desde-plan',
+      oidPlan,
+      oidCalendario,
+    ]);
   }
 
   modificarNecesidad(necesidad: NecesidadResponse): void {

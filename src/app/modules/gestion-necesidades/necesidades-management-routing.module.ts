@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NecesidadesManagementComponent } from './pages/necesidades-management/necesidades-management.component';
 import { ViewNecesidadDetailComponent } from './pages/view-necesidad-detail/view-necesidad-detail.component';
 import { AsignacionesManagementComponent } from './pages/asignaciones-management/asignaciones-management.component';
+import { CrearNecesidadesDesdePlanComponent } from './pages/crear-necesidades-desde-plan/crear-necesidades-desde-plan.component';
 
 const routes: Routes = [
   {
@@ -17,7 +18,12 @@ const routes: Routes = [
         // canActivate: [RoleGuard],
         // data: { roles: ['COORDINADOR', 'SECRETARIO', 'DECANO'] }
       },
-
+      {
+        path: 'crear-desde-plan/:oidPlan/:oidCalendario',
+        component: CrearNecesidadesDesdePlanComponent,
+        // canActivate: [RoleGuard],
+        // data: { roles: ['COORDINADOR'] }
+      },
       // ===== DETALLE DE NECESIDAD =====
       {
         path: 'view',
