@@ -11,6 +11,8 @@ import {
   UpdateNecesidadDTO,
   DeleteNecesidadDTO,
   NecesidadFilters,
+  CreateNecesidadLoteDTO,
+  CreateNecesidadLoteResponse,
 } from '../../models';
 import { environment } from '../../../../../environments/environments_sgd';
 
@@ -46,6 +48,15 @@ export class NecesidadesService {
   ): Observable<CreateNecesidadResponse> {
     return this.http
       .post<CreateNecesidadResponse>(this.apiUrl, necesidadData)
+      .pipe(catchError(this.handleError));
+  }
+
+  // CREATE LOTE
+  createNecesidadesLote(
+    loteData: CreateNecesidadLoteDTO
+  ): Observable<CreateNecesidadLoteResponse> {
+    return this.http
+      .post<CreateNecesidadLoteResponse>(`${this.apiUrl}/lote`, loteData)
       .pipe(catchError(this.handleError));
   }
 

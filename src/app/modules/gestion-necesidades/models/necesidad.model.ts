@@ -65,6 +65,33 @@ export interface DeleteNecesidadDTO {
   oidNecesidad: number;
 }
 
+// ========== CREACIÓN EN LOTE ==========
+
+export interface NecesidadLoteItem {
+  idMateria: number;
+  cantidadGrupos: number;
+  cupo: number;
+}
+
+export interface CreateNecesidadLoteDTO {
+  oidCalendario: number;
+  necesidades: NecesidadLoteItem[];
+}
+
+export interface NecesidadLoteResultado {
+  idMateria: number;
+  nombreMateria: string;
+  gruposCreados: string[];
+  exitoso: boolean;
+  mensaje?: string;
+}
+
+export interface CreateNecesidadLoteResponse {
+  codigo: number;
+  mensaje: string;
+  data: NecesidadLoteResultado[];
+}
+
 // ========== FILTROS ==========
 
 export interface NecesidadFilters {
