@@ -24,6 +24,7 @@ interface MateriaConEstado extends Materia {
   cupo: number | null;
   grupo: string | null;
   guardando: boolean;
+  gruposDisponibles: { value: string; label: string }[];
 }
 
 @Component({
@@ -51,8 +52,8 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  // ===== GRUPOS DISPONIBLES =====
-  readonly gruposDisponibles = GRUPOS_DISPONIBLES.filter(
+  // ===== GRUPOS DISPONIBLES (TODOS) =====
+  readonly todosLosGrupos = GRUPOS_DISPONIBLES.filter(
     (g) => g.value !== 'TODOS'
   );
 
@@ -130,7 +131,7 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
     this.materiaService.getMaterias(filtros).subscribe({
       next: (response) => {
         if (response.codigo >= 200 && response.codigo < 300) {
-          // Cast explícito para evitar error de tipos
+          // Mapear materias agregando campos de estado
           this.materias = response.data.content.map(
             (materia) =>
               ({
@@ -138,6 +139,7 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
                 cupo: null,
                 grupo: null,
                 guardando: false,
+                gruposDisponibles: [...this.todosLosGrupos],
               } as MateriaConEstado)
           );
 
@@ -200,14 +202,32 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
             'Éxito'
           );
 
-          // Eliminar la fila de la tabla
-          this.materias.splice(index, 1);
-          this.totalElements--;
+          // Actualizar grupos disponibles eliminando el que se acaba de guardar
+          materia.gruposDisponibles = materia.gruposDisponibles.filter(
+            (g) => g.value !== materia.grupo
+          );
 
-          // Si la página quedó vacía, ir a la anterior
-          if (this.materias.length === 0 && this.page > 0) {
-            this.page--;
-            this.cargarMaterias();
+          // Verificar si ya se guardaron los 4 grupos
+          if (materia.gruposDisponibles.length === 0) {
+            // Eliminar la fila completamente
+            this.materias.splice(index, 1);
+            this.totalElements--;
+
+            this.toastr.info(
+              `Todos los grupos de "${materia.nombre}" han sido guardados`,
+              'Materia completa'
+            );
+
+            // Si la página quedó vacía, ir a la anterior
+            if (this.materias.length === 0 && this.page > 0) {
+              this.page--;
+              this.cargarMaterias();
+            }
+          } else {
+            // Resetear campos
+            materia.cupo = null;
+            materia.grupo = null;
+            materia.guardando = false;
           }
         } else {
           this.toastr.warning(
@@ -232,6 +252,7 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
     );
 
     if (confirmar) {
+      // Eliminar de la tabla
       this.materias.splice(index, 1);
       this.totalElements--;
       this.toastr.info('Materia eliminada de la lista', 'Información');
