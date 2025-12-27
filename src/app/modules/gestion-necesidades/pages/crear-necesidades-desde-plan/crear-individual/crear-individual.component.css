@@ -175,8 +175,18 @@
   color: #0051c6 !important;
 }
 
-.grupo-select {
+.grupo-select-native {
   min-width: 120px;
+  cursor: pointer;
+  color: #212529;
+}
+
+.grupo-select-native:disabled {
+  cursor: not-allowed;
+}
+
+.grupo-select-native.placeholder-active {
+  color: #5f6061 !important;
 }
 
 /* Responsividad */

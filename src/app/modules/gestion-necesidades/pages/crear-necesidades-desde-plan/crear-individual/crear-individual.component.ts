@@ -114,7 +114,7 @@ export class CrearIndividualComponent implements OnInit, OnChanges {
               ({
                 ...materia,
                 cupo: null,
-                grupo: null,
+                grupo: '',
                 guardando: false,
                 gruposDisponibles: [...this.todosLosGrupos],
               } as MateriaConEstado)
@@ -156,7 +156,7 @@ export class CrearIndividualComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (!materia.grupo || materia.grupo === 'TODOS') {
+    if (!materia.grupo || materia.grupo === 'TODOS' || materia.grupo === '') {
       this.toastr.warning('Debe seleccionar un grupo', 'Validación');
       return;
     }
@@ -203,7 +203,7 @@ export class CrearIndividualComponent implements OnInit, OnChanges {
           } else {
             // Resetear campos
             materia.cupo = null;
-            materia.grupo = null;
+            materia.grupo = '';
             materia.guardando = false;
           }
         } else {

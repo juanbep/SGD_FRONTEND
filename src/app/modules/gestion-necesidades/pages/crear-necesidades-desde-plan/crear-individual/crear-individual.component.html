@@ -138,18 +138,22 @@
 
             <!-- GRUPO DROPDOWN -->
             <td class="text-center">
-              <ng-select
+              <select
+                class="form-select form-select-sm grupo-select-native"
+                [class.placeholder-active]="
+                  !materia.grupo || materia.grupo === ''
+                "
                 [(ngModel)]="materia.grupo"
-                [items]="materia.gruposDisponibles"
-                bindLabel="label"
-                bindValue="value"
-                placeholder="Seleccione"
-                [clearable]="false"
-                [searchable]="false"
                 [disabled]="materia.guardando"
-                class="grupo-select"
               >
-              </ng-select>
+                <option value="" disabled selected>Seleccione</option>
+                <option
+                  *ngFor="let grupo of materia.gruposDisponibles"
+                  [value]="grupo.value"
+                >
+                  {{ grupo.label }}
+                </option>
+              </select>
             </td>
 
             <!-- ACCIONES -->
