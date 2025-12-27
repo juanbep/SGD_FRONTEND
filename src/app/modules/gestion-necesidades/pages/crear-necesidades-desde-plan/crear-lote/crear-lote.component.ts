@@ -27,6 +27,7 @@ import {
   toggleSort,
 } from '../../../shared/table.utils';
 import { MateriaFilters } from '../../../../gestion-planes/models';
+import { FiltrosMaterias } from '../crear-necesidades-desde-plan.component';
 
 // Interfaz para manejar el estado de cada fila en MODO LOTE
 interface MateriaLote extends Materia {
@@ -45,6 +46,7 @@ export class CrearLoteComponent implements OnInit, OnChanges {
   // ===== INPUTS =====
   @Input() oidPlan: number = 0;
   @Input() oidCalendario: number = 0;
+  @Input() filtros: FiltrosMaterias = {};
 
   // ===== SERVICIOS =====
   private materiaService = inject(MateriaService);

@@ -22,43 +22,11 @@
   padding: 0.4em 0.65em;
 }
 
-.badge.bg-warning {
-  background-color: #f8ae15 !important;
-  color: #212529 !important;
-}
-
-.badge.bg-success {
-  background-color: #249337 !important;
-  color: white !important;
-}
-
-.badge.bg-info {
-  background-color: #16a8e1 !important;
-  color: white !important;
-}
-
-.badge.bg-secondary {
-  background-color: #6c757d !important;
-  color: white !important;
-}
-
 .badge.bg-light.text-dark {
   background-color: #0051c6 !important;
   color: white !important;
   border: none;
   font-weight: 600;
-}
-
-.btn-outline-secondary {
-  border-color: #0051c6 !important;
-  color: #0051c6 !important;
-  background-color: transparent !important;
-}
-
-.btn-outline-secondary:hover:not(:disabled) {
-  background-color: #f8ae15 !important;
-  border-color: #f8ae15 !important;
-  color: #212529 !important;
 }
 
 .btn-link.text-primary {
@@ -107,29 +75,6 @@
   color: white !important;
 }
 
-.btn-outline-info {
-  border-color: #16a8e1 !important;
-  color: #16a8e1 !important;
-  background-color: transparent !important;
-}
-
-.btn-outline-info:hover {
-  background-color: #16a8e1 !important;
-  border-color: #16a8e1 !important;
-  color: white !important;
-}
-
-.btn-success {
-  background-color: #249337 !important;
-  border-color: #249337 !important;
-  color: white !important;
-}
-
-.btn-success:hover {
-  background-color: #1e7a2d !important;
-  border-color: #1e7a2d !important;
-}
-
 .table thead th {
   color: #001282 !important;
 }
@@ -150,14 +95,6 @@
 
 .table tbody td {
   vertical-align: middle;
-}
-
-.form-label.fw-bold {
-  color: #001282 !important;
-}
-
-.form-label .fas {
-  color: #0051c6 !important;
 }
 
 .form-select:focus,
@@ -238,48 +175,8 @@
   color: #0051c6 !important;
 }
 
-/* Estilos específicos para ng-select de grupo */
 .grupo-select {
   min-width: 120px;
-}
-
-/* ===== ESTILOS PARA TABS ===== */
-.nav-tabs .nav-link {
-  color: #001282 !important;
-  border-color: transparent !important;
-  font-weight: 600;
-}
-
-.nav-tabs .nav-link:hover {
-  background-color: rgba(248, 174, 21, 0.1) !important;
-  border-color: transparent !important;
-}
-
-.nav-tabs .nav-link.active {
-  color: #f8ae15 !important;
-  background-color: white !important;
-  border-color: #dee2e6 #dee2e6 #fff !important;
-  border-bottom: 2px solid #f8ae15 !important;
-}
-
-/* ===== BOTÓN GUARDAR TODAS ===== */
-.btn-success.btn-lg {
-  padding: 0.75rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: 0 4px 6px rgba(36, 147, 55, 0.3);
-  transition: all 0.3s ease;
-}
-
-.btn-success.btn-lg:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(36, 147, 55, 0.4);
-}
-
-.btn-success.btn-lg:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
 }
 
 /* Responsividad */
