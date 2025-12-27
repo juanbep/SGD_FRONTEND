@@ -79,12 +79,13 @@ export class CrearIndividualComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Recargar si cambian los inputs
+    // Recargar si cambian los inputs O los filtros
     if (
-      (changes['oidPlan'] || changes['oidCalendario']) &&
+      (changes['oidPlan'] || changes['oidCalendario'] || changes['filtros']) &&
       !changes['oidPlan']?.firstChange &&
       !changes['oidCalendario']?.firstChange
     ) {
+      this.page = 0; // Resetear a la primera página
       this.cargarMaterias();
     }
   }
@@ -104,6 +105,13 @@ export class CrearIndividualComponent implements OnInit, OnChanges {
       size: this.size,
       oidPlan: this.oidPlan,
       sort: buildSortString(this.sortField, this.sortDirection),
+      ...(this.filtros.oidDepartamento && {
+        oidDepartamento: this.filtros.oidDepartamento,
+      }),
+      ...(this.filtros.semestre && { semestre: this.filtros.semestre }),
+      ...(this.filtros.oidMateria && { oidMateria: this.filtros.oidMateria }),
+      ...(this.filtros.codigo && { codigo: this.filtros.codigo }),
+      ...(this.filtros.nombre && { nombre: this.filtros.nombre }),
     };
 
     this.materiaService.getMaterias(filtros).subscribe({

@@ -76,12 +76,13 @@ export class CrearLoteComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Recargar si cambian los inputs
+    // Recargar si cambian los inputs O los filtros
     if (
-      (changes['oidPlan'] || changes['oidCalendario']) &&
+      (changes['oidPlan'] || changes['oidCalendario'] || changes['filtros']) &&
       !changes['oidPlan']?.firstChange &&
       !changes['oidCalendario']?.firstChange
     ) {
+      this.page = 0; // Resetear a la primera página
       this.cargarMaterias();
     }
   }
@@ -101,6 +102,13 @@ export class CrearLoteComponent implements OnInit, OnChanges {
       size: this.size,
       oidPlan: this.oidPlan,
       sort: buildSortString(this.sortField, this.sortDirection),
+      ...(this.filtros.oidDepartamento && {
+        oidDepartamento: this.filtros.oidDepartamento,
+      }),
+      ...(this.filtros.semestre && { semestre: this.filtros.semestre }),
+      ...(this.filtros.oidMateria && { oidMateria: this.filtros.oidMateria }),
+      ...(this.filtros.codigo && { codigo: this.filtros.codigo }),
+      ...(this.filtros.nombre && { nombre: this.filtros.nombre }),
     };
 
     this.materiaService.getMaterias(filtros).subscribe({
@@ -191,8 +199,6 @@ export class CrearLoteComponent implements OnInit, OnChanges {
     this.necesidadesService.createNecesidadesLote(dto).subscribe({
       next: (response) => {
         this.guardandoLote = false;
-
-        console.log('Respuesta del backend:', response); // DEBUG
 
         if (response.codigo >= 200 && response.codigo < 300) {
           // Verificar si data existe y es un array
