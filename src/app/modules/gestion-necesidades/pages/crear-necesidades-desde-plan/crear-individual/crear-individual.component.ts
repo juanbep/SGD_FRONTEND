@@ -41,7 +41,7 @@ interface MateriaConEstado extends Materia {
   templateUrl: './crear-individual.component.html',
   styleUrl: './crear-individual.component.css',
 })
-export class CrearIndividualComponent {
+export class CrearIndividualComponent implements OnInit, OnChanges {
   // ===== INPUTS =====
   @Input() oidPlan: number = 0;
   @Input() oidCalendario: number = 0;
