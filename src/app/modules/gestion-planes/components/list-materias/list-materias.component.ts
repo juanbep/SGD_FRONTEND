@@ -42,7 +42,7 @@ export class ListMateriasComponent implements OnInit, OnChanges {
   private toastr = inject(ToastrService);
 
   @Input() oidPlan: number | undefined;
-  @Input() numeroPlan: string | undefined;
+  @Input() numeroPlan: number | undefined;
 
   @Output() onNuevaMateria = new EventEmitter<void>();
   @Output() onEliminar = new EventEmitter<Materia>();

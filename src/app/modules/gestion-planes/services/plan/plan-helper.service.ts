@@ -51,9 +51,9 @@ export class PlanHelperService {
     );
   }
 
-  async update(data: UpdatePlanDto): Promise<Plan | null> {
+  async update(oidPlan: number, data: UpdatePlanDto): Promise<Plan | null> {
     return this.baseHelper.getDataFromResponse(
-      this.planService.updatePlan(data)
+      this.planService.updatePlan(oidPlan, data)
     );
   }
 
@@ -66,7 +66,7 @@ export class PlanHelperService {
 
   // Métodos para usos específicos del dominio
 
-  async getPlanNumero(id: number): Promise<string | null> {
+  async getPlanNumero(id: number): Promise<number | null> {
     const plan = await this.getById(id);
     return plan?.numero || null;
   }
@@ -119,7 +119,7 @@ export class PlanHelperService {
     });
   }
 
-  async searchByNumero(numero: string): Promise<Plan[]> {
+  async searchByNumero(numero: number): Promise<Plan[]> {
     return this.getAll({ numero, size: 50 });
   }
 

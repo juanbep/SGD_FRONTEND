@@ -127,11 +127,10 @@ export class EditarPlanModalComponentComponent implements OnInit {
 
     this.loading = true;
 
-    const formValue = this.planForm.value;
+    const formValue = this.planForm.getRawValue();
 
     const planActualizado: UpdatePlanDto = {
-      oidPlan: this.plan.oidPlan,
-      numero: formValue.numero.trim(),
+      numero: Number(formValue.numero),
       estado: formValue.estado,
       fechaAprobacion:
         formValue.fechaAprobacion || new Date().toISOString().split('T')[0],
@@ -143,7 +142,7 @@ export class EditarPlanModalComponentComponent implements OnInit {
       planActualizado.oidPlanBase = formValue.oidPlanBase;
     }
 
-    this.planService.updatePlan(planActualizado).subscribe({
+    this.planService.updatePlan(this.plan.oidPlan, planActualizado).subscribe({
       next: (response) => {
         if (response.codigo >= 200 && response.codigo < 300) {
           this.toastr.success(

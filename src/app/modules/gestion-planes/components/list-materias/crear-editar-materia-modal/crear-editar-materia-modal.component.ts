@@ -32,7 +32,7 @@ export class CrearEditarMateriaModalComponent implements OnInit {
   // ===== INPUTS =====
   @Input() modo: 'crear' | 'editar' = 'crear';
   @Input() oidPlan!: number;
-  @Input() numeroPlan?: string;
+  @Input() numeroPlan?: number;
   @Input() materia?: Materia;
 
   // ===== OUTPUTS =====

@@ -3,7 +3,7 @@ import { BaseResponse, PaginatedResponse } from '../shared/shared.model';
 // Modelo principal
 export interface Plan {
   oidPlan: number;
-  numero: string;
+  numero: number;
   estado: EstadoPlan;
   fechaAprobacion: string;
   acuerdo: string;
@@ -26,7 +26,7 @@ export interface PlanFilters {
 
   // Búsqueda general
   searchTerm?: string;
-  numero?: string;
+  numero?: number;
   acuerdo?: string;
 
   // Filtros específicos
@@ -49,7 +49,7 @@ export interface PlanFilters {
 
 // DTOs para CRUD
 export interface CreatePlanDto {
-  numero: string;
+  numero: number;
   estado: EstadoPlan;
   fechaAprobacion: string;
   acuerdo: string;
@@ -57,8 +57,14 @@ export interface CreatePlanDto {
   oidPlanBase?: number;
 }
 
-export interface UpdatePlanDto extends Partial<CreatePlanDto> {
-  oidPlan: number;
+// UpdatePlanDto
+export interface UpdatePlanDto {
+  numero: number;
+  estado: EstadoPlan;
+  fechaAprobacion: string;
+  acuerdo: string;
+  oidPrograma: number;
+  oidPlanBase?: number;
 }
 
 export interface DeletePlanDto {

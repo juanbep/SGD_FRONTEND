@@ -46,11 +46,12 @@ export class PlanService {
   }
 
   // UPDATE
-  updatePlan(planData: UpdatePlanDto): Observable<UpdatePlanResponse> {
-    const { oidPlan, ...updateData } = planData;
-
+  updatePlan(
+    oidPlan: number,
+    planData: UpdatePlanDto
+  ): Observable<UpdatePlanResponse> {
     return this.http
-      .put<UpdatePlanResponse>(`${this.apiUrl}/${oidPlan}`, updateData)
+      .put<UpdatePlanResponse>(`${this.apiUrl}/${oidPlan}`, planData)
       .pipe(catchError(this.handleError));
   }
 
@@ -91,8 +92,8 @@ export class PlanService {
     if (filters.searchTerm?.trim()) {
       params = params.set('search', filters.searchTerm.trim());
     }
-    if (filters.numero?.trim()) {
-      params = params.set('numero', filters.numero.trim());
+    if (filters.numero) {
+      params = params.set('numero', filters.numero);
     }
     if (filters.acuerdo?.trim()) {
       params = params.set('acuerdo', filters.acuerdo.trim());

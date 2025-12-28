@@ -52,7 +52,7 @@ export class ListarPlanesComponent implements OnInit {
   ];
 
   // ===== FILTROS =====
-  filtroNumero: string = '';
+  filtroNumero: number | null = null;
   filtroEstado: EstadoPlan | 'TODOS' | '' = 'TODOS';
   filtroFechaAprobacion: string = '';
   filtroFechaCreacion: string = '';
@@ -98,8 +98,8 @@ export class ListarPlanesComponent implements OnInit {
     };
 
     // Agregar filtros opcionales
-    if (this.filtroNumero?.trim()) {
-      filtros.numero = this.filtroNumero.trim();
+    if (this.filtroNumero !== null) {
+      filtros.numero = this.filtroNumero;
     }
 
     if (this.filtroEstado && this.filtroEstado !== 'TODOS') {
@@ -165,7 +165,7 @@ export class ListarPlanesComponent implements OnInit {
   }
 
   limpiarFiltros(): void {
-    this.filtroNumero = '';
+    this.filtroNumero = null;
     this.filtroEstado = 'TODOS';
     this.filtroFechaAprobacion = '';
     this.filtroFechaCreacion = '';
