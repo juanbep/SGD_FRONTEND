@@ -3,6 +3,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NecesidadResponse, UpdateNecesidadDTO } from '../../models';
+import {
+  getBadgeClassEstado,
+  GRUPOS_DISPONIBLES,
+} from '../../utils/necesidades.utils';
 
 @Component({
   selector: 'app-modal-editar-necesidad',
@@ -27,14 +31,13 @@ export class ModalEditarNecesidadComponent implements OnInit {
     cupo: null,
   };
 
-  // Opciones de grupos
-  gruposDisponibles = [
-    { value: 'A', label: 'Grupo A' },
-    { value: 'B', label: 'Grupo B' },
-    { value: 'C', label: 'Grupo C' },
-    { value: 'D', label: 'Grupo D' },
-    { value: 'E', label: 'Grupo E' },
-  ];
+  // Opciones de grupos (sin 'TODOS')
+  readonly gruposDisponibles = GRUPOS_DISPONIBLES.filter(
+    (g) => g.value !== 'TODOS'
+  );
+
+  // Importar función de utilidades
+  getBadgeClassEstado = getBadgeClassEstado;
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -85,18 +88,5 @@ export class ModalEditarNecesidadComponent implements OnInit {
     }
 
     return true;
-  }
-
-  getBadgeClassEstado(estado: string | undefined): string {
-    switch (estado) {
-      case 'BORRADOR':
-        return 'bg-secondary';
-      case 'PUBLICADA':
-        return 'bg-success';
-      case 'CANCELADA':
-        return 'bg-danger';
-      default:
-        return 'bg-secondary';
-    }
   }
 }

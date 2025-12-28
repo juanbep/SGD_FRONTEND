@@ -40,15 +40,7 @@
           <ng-template ng-label-tmp let-item="item">
             <div class="d-flex align-items-center">
               <span>{{ item.label }}</span>
-              <span
-                class="badge ms-2"
-                [ngClass]="{
-                  'bg-success': item.estado === 'ACTIVO',
-                  'bg-warning': item.estado === 'PENDIENTE',
-                  'bg-secondary': item.estado === 'DESHABILITADO',
-                  'bg-info': item.estado === 'APROBADO'
-                }"
-              >
+              <span class="badge ms-2" [ngClass]="getBadgeClass(item.estado)">
                 {{ item.estado }}
               </span>
             </div>
@@ -57,15 +49,7 @@
           <ng-template ng-option-tmp let-item="item">
             <div class="d-flex justify-content-between align-items-center">
               <span>{{ item.label }}</span>
-              <span
-                class="badge"
-                [ngClass]="{
-                  'bg-success': item.estado === 'ACTIVO',
-                  'bg-warning': item.estado === 'PENDIENTE',
-                  'bg-secondary': item.estado === 'DESHABILITADO',
-                  'bg-info': item.estado === 'APROBADO'
-                }"
-              >
+              <span class="badge" [ngClass]="getBadgeClass(item.estado)">
                 {{ item.estado }}
               </span>
             </div>

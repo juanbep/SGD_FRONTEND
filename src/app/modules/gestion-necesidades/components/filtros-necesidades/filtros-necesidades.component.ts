@@ -17,6 +17,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import {
   ESTADOS_NECESIDAD_DISPONIBLES,
   filtrarCalendariosDeshabilitados,
+  getBadgeClass,
   GRUPOS_DISPONIBLES,
   ordenarCalendariosPorAnio,
   seleccionarCalendarioAutomatico,
@@ -48,6 +49,8 @@ export class FiltrosNecesidadesComponent implements OnInit {
   readonly semestresDisponibles = SEMESTRES_DISPONIBLES;
   readonly gruposDisponibles = GRUPOS_DISPONIBLES;
   readonly estadosDisponibles = ESTADOS_NECESIDAD_DISPONIBLES;
+
+  getBadgeClass = getBadgeClass;
 
   // ===== LOADING STATES =====
   loadingCalendarios = false;

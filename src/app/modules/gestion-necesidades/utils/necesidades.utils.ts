@@ -7,7 +7,6 @@ export const SEMESTRES_DISPONIBLES: {
   label: string;
 }[] = [
   { value: 'TODOS', label: 'TODOS' },
-  { value: 'NO_APLICA', label: 'No aplica' },
   { value: 1, label: '1' },
   { value: 2, label: '2' },
   { value: 3, label: '3' },
@@ -26,6 +25,7 @@ export const GRUPOS_DISPONIBLES: { value: string; label: string }[] = [
   { value: 'B', label: 'B' },
   { value: 'C', label: 'C' },
   { value: 'D', label: 'D' },
+  { value: 'E', label: 'E' },
 ];
 
 export const ESTADOS_NECESIDAD_DISPONIBLES: { value: string; label: string }[] =
@@ -158,4 +158,19 @@ export function getBadgeClassEstado(estado: string): string {
     ASIGNADA: 'bg-success',
   };
   return clases[estado] || 'bg-secondary';
+}
+
+export function getBadgeClass(estado: string): string {
+  switch (estado) {
+    case 'ACTIVO':
+      return 'bg-success';
+    case 'PENDIENTE':
+      return 'bg-warning text-dark';
+    case 'APROBADO':
+      return 'bg-info text-dark';
+    case 'DESHABILITADO':
+      return 'bg-secondary';
+    default:
+      return 'bg-light text-dark';
+  }
 }

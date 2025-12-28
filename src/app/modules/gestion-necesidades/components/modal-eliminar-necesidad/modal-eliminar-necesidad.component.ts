@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NecesidadResponse } from '../../models';
+import { getBadgeClassEstado } from '../../utils/necesidades.utils';
 
 @Component({
   selector: 'app-modal-eliminar-necesidad',
@@ -24,16 +25,5 @@ export class ModalEliminarNecesidadComponent {
     this.onCancelar.emit();
   }
 
-  getBadgeClassEstado(estado: string | undefined): string {
-    switch (estado) {
-      case 'BORRADOR':
-        return 'bg-secondary';
-      case 'PUBLICADA':
-        return 'bg-success';
-      case 'CANCELADA':
-        return 'bg-danger';
-      default:
-        return 'bg-secondary';
-    }
-  }
+  getBadgeClassEstado = getBadgeClassEstado;
 }
