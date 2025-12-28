@@ -51,6 +51,18 @@
   color: white !important;
 }
 
+.btn-success {
+  background-color: #249337 !important;
+  border-color: #249337 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.btn-success:hover:not(:disabled) {
+  background-color: #1e7a2d !important;
+  border-color: #1e7a2d !important;
+}
+
 .btn-outline-primary {
   border-color: #0051c6 !important;
   color: #0051c6 !important;

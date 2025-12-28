@@ -17,25 +17,9 @@
       >
         <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
         <span class="d-none d-lg-inline">
-          {{ loading ? "Cargando..." : "Actualizar" }}
+          {{ loading ? "Cargando..." : "Recargar materias" }}
         </span>
       </button>
-    </div>
-
-    <!-- Selector de tamaño de página -->
-    <div class="d-flex align-items-center ms-3 mt-2 mt-lg-0">
-      <label class="form-label mb-0 me-2 small">Mostrar:</label>
-      <ng-select
-        [items]="pageSizeOptions"
-        [(ngModel)]="size"
-        (change)="onPageSizeChange()"
-        [clearable]="false"
-        [searchable]="false"
-        placeholder="10"
-        class="page-size-select"
-      >
-      </ng-select>
-      <span class="ms-2 small text-muted">por página</span>
     </div>
   </div>
 
@@ -132,6 +116,7 @@
                 min="1"
                 max="4"
                 [disabled]="guardandoLote"
+                required="true"
               />
             </td>
 
@@ -145,6 +130,7 @@
                 min="1"
                 max="99"
                 [disabled]="guardandoLote"
+                required="true"
               />
             </td>
 
@@ -209,73 +195,12 @@
     </div>
   </div>
 
-  <!-- Footer con Paginación y Botón Guardar Todas -->
+  <!-- Footer con Botón Guardar Todas (SIN PAGINACIÓN) -->
   <div class="card-footer" *ngIf="materias && materias.length > 0">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <div class="text-muted small">Mostrando {{ getInfoPaginacion() }}</div>
-
-      <nav aria-label="Paginación materias">
-        <ul class="pagination pagination-sm mb-0">
-          <li class="page-item" [class.disabled]="page === 0">
-            <button
-              class="page-link"
-              (click)="irAPagina(0)"
-              [disabled]="page === 0"
-            >
-              <i class="fas fa-angle-double-left"></i>
-            </button>
-          </li>
-          <li class="page-item" [class.disabled]="page === 0">
-            <button
-              class="page-link"
-              (click)="irAPagina(page - 1)"
-              [disabled]="page === 0"
-            >
-              <i class="fas fa-angle-left"></i>
-            </button>
-          </li>
-          <li
-            class="page-item"
-            *ngFor="let p of getPaginasVisibles()"
-            [class.active]="p === page"
-          >
-            <button class="page-link" (click)="irAPagina(p)">
-              {{ p + 1 }}
-            </button>
-          </li>
-          <li
-            class="page-item"
-            [class.disabled]="page >= getTotalPaginas() - 1"
-          >
-            <button
-              class="page-link"
-              (click)="irAPagina(page + 1)"
-              [disabled]="page >= getTotalPaginas() - 1"
-            >
-              <i class="fas fa-angle-right"></i>
-            </button>
-          </li>
-          <li
-            class="page-item"
-            [class.disabled]="page >= getTotalPaginas() - 1"
-          >
-            <button
-              class="page-link"
-              (click)="irAPagina(getTotalPaginas() - 1)"
-              [disabled]="page >= getTotalPaginas() - 1"
-            >
-              <i class="fas fa-angle-double-right"></i>
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-
-    <!-- Botón Guardar Todas -->
     <div class="d-flex justify-content-center">
       <button
         type="button"
-        class="btn btn-success btn-lg d-flex align-items-center px-5"
+        class="btn btn-success btn-sm d-flex align-items-center px-5"
         (click)="guardarTodasEnLote()"
         [disabled]="guardandoLote"
       >
@@ -284,7 +209,7 @@
           [ngClass]="guardandoLote ? 'fa-spinner fa-spin' : 'fa-save'"
         ></i>
         <span>{{
-          guardandoLote ? "Guardando..." : "Guardar Todas las Necesidades"
+          guardandoLote ? "Guardando..." : "Crear Necesidades"
         }}</span>
       </button>
     </div>

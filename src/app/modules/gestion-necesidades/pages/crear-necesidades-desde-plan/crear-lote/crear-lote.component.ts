@@ -19,10 +19,7 @@ import {
 } from '../../../models';
 import {
   buildSortString,
-  getPaginationInfo,
   getSortIcon,
-  getTotalPages,
-  getVisiblePages,
   SortDirection,
   toggleSort,
 } from '../../../shared/table.utils';
@@ -60,10 +57,7 @@ export class CrearLoteComponent implements OnInit, OnChanges {
   error: string | null = null;
   guardandoLote = false;
 
-  // ===== PAGINACIÓN Y ORDENAMIENTO =====
-  pageSizeOptions = [5, 10, 25, 50];
-  page = 0;
-  size = 10;
+  // ===== ORDENAMIENTO =====
   sortField: string = 'oidMateria';
   sortDirection: SortDirection = 'desc';
 
@@ -82,12 +76,11 @@ export class CrearLoteComponent implements OnInit, OnChanges {
       !changes['oidPlan']?.firstChange &&
       !changes['oidCalendario']?.firstChange
     ) {
-      this.page = 0; // Resetear a la primera página
       this.cargarMaterias();
     }
   }
 
-  // ===== CARGAR MATERIAS DEL PLAN =====
+  // ===== CARGAR MATERIAS DEL PLAN (SIN PAGINACIÓN) =====
   cargarMaterias(mostrarToast: boolean = false): void {
     if (!this.oidPlan) {
       this.error = 'Plan no válido';
@@ -98,8 +91,8 @@ export class CrearLoteComponent implements OnInit, OnChanges {
     this.error = null;
 
     const filtros: MateriaFilters = {
-      page: this.page,
-      size: this.size,
+      page: 0,
+      size: 9999, // Traer todas las materias
       oidPlan: this.oidPlan,
       sort: buildSortString(this.sortField, this.sortDirection),
       ...(this.filtros.oidDepartamento && {
@@ -176,12 +169,6 @@ export class CrearLoteComponent implements OnInit, OnChanges {
       return;
     }
 
-    const confirmar = confirm(
-      `¿Está seguro de crear necesidades en lote para ${materiasValidas.length} materia(s)?\n\nSe crearán los grupos automáticamente según la cantidad especificada.`
-    );
-
-    if (!confirmar) return;
-
     // Preparar DTO
     const necesidades: NecesidadLoteItem[] = materiasValidas.map((m) => ({
       idMateria: m.idMateria,
@@ -201,69 +188,41 @@ export class CrearLoteComponent implements OnInit, OnChanges {
         this.guardandoLote = false;
 
         if (response.codigo >= 200 && response.codigo < 300) {
-          // Verificar si data existe y es un array
-          if (response.data && Array.isArray(response.data)) {
-            // Contar exitosos solo si tienen la propiedad exitoso
-            const exitosos = response.data.filter((r) => r.exitoso === true);
-            const fallidos = response.data.filter((r) => r.exitoso === false);
+          // El backend devuelve directamente el array de necesidades creadas
+          if (
+            response.data &&
+            Array.isArray(response.data) &&
+            response.data.length > 0
+          ) {
+            const cantidadCreadas = response.data.length;
 
-            if (exitosos.length > 0) {
-              this.toastr.success(
-                `Se crearon ${exitosos.length} necesidad(es) exitosamente`,
-                'Guardado en lote'
-              );
-
-              // Eliminar las materias guardadas exitosamente
-              exitosos.forEach((resultado) => {
-                const index = this.materias.findIndex(
-                  (m) => m.idMateria === resultado.idMateria
-                );
-                if (index !== -1) {
-                  this.materias.splice(index, 1);
-                  this.totalElements--;
-                }
-              });
-            }
-
-            if (fallidos.length > 0) {
-              this.toastr.warning(
-                `${fallidos.length} materia(s) no se pudieron guardar. Revise los mensajes.`,
-                'Algunos errores'
-              );
-
-              // Mostrar errores individuales
-              fallidos.forEach((resultado) => {
-                this.toastr.error(
-                  resultado.mensaje || 'Error desconocido',
-                  resultado.nombreMateria
-                );
-              });
-            }
-          } else {
-            // Si data no es un array, asumir que TODO fue exitoso
             this.toastr.success(
-              `Se crearon ${materiasValidas.length} necesidad(es) exitosamente`,
+              `Se crearon ${cantidadCreadas} necesidad(es) exitosamente`,
               'Guardado en lote'
             );
 
-            // Eliminar TODAS las materias válidas
-            materiasValidas.forEach((materia) => {
+            // Obtener IDs de materias únicas del response
+            const idsMateriasGuardadas = [
+              ...new Set(response.data.map((item: any) => item.idMateria)),
+            ];
+
+            // Eliminar las materias guardadas exitosamente
+            idsMateriasGuardadas.forEach((idMateria) => {
               const index = this.materias.findIndex(
-                (m) => m.idMateria === materia.idMateria
+                (m) => m.idMateria === idMateria
               );
               if (index !== -1) {
                 this.materias.splice(index, 1);
                 this.totalElements--;
               }
             });
-          }
 
-          // Si la página quedó vacía, recargar
-          if (this.materias.length === 0) {
-            if (this.page > 0) {
-              this.page--;
+            // Si no quedan materias, recargar
+            if (this.materias.length === 0) {
+              this.cargarMaterias();
             }
-            this.cargarMaterias();
+          } else {
+            this.toastr.warning('No se recibieron datos del servidor');
           }
         } else {
           this.toastr.warning(
@@ -282,21 +241,12 @@ export class CrearLoteComponent implements OnInit, OnChanges {
   eliminarFila(index: number): void {
     const materia = this.materias[index];
 
-    const confirmar = confirm(
-      `¿Está seguro de eliminar la materia "${materia.nombre}" de la lista?\n\nEsta acción solo la quitará de la vista actual.`
+    this.materias.splice(index, 1);
+    this.totalElements--;
+    this.toastr.info(
+      `Materia "${materia.nombre}" eliminada de la lista`,
+      'Información'
     );
-
-    if (confirmar) {
-      this.materias.splice(index, 1);
-      this.totalElements--;
-      this.toastr.info('Materia eliminada de la lista', 'Información');
-
-      // Si la página quedó vacía, ir a la anterior
-      if (this.materias.length === 0 && this.page > 0) {
-        this.page--;
-        this.cargarMaterias();
-      }
-    }
   }
 
   // ===== ORDENAMIENTO =====
@@ -304,35 +254,11 @@ export class CrearLoteComponent implements OnInit, OnChanges {
     const newSort = toggleSort(this.sortField, this.sortDirection, campo);
     this.sortField = newSort.field;
     this.sortDirection = newSort.direction;
-    this.page = 0;
     this.cargarMaterias();
   }
 
   getSortIcon(campo: string): string {
     return getSortIcon(campo, this.sortField, this.sortDirection);
-  }
-
-  // ===== PAGINACIÓN =====
-  onPageSizeChange(): void {
-    this.page = 0;
-    this.cargarMaterias();
-  }
-
-  irAPagina(nuevaPagina: number): void {
-    this.page = nuevaPagina;
-    this.cargarMaterias();
-  }
-
-  getTotalPaginas(): number {
-    return getTotalPages(this.totalElements, this.size);
-  }
-
-  getPaginasVisibles(): number[] {
-    return getVisiblePages(this.page, this.totalElements, this.size);
-  }
-
-  getInfoPaginacion(): string {
-    return getPaginationInfo(this.page, this.size, this.totalElements);
   }
 
   trackByMateria(index: number, item: MateriaLote): any {

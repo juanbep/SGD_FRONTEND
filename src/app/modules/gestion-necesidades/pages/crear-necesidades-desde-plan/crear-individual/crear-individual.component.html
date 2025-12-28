@@ -18,7 +18,7 @@
       >
         <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
         <span class="d-none d-lg-inline">
-          {{ loading ? "Cargando..." : "Actualizar" }}
+          {{ loading ? "Cargando..." : "Recargar materias" }}
         </span>
       </button>
     </div>
@@ -133,6 +133,7 @@
                 min="1"
                 max="99"
                 [disabled]="materia.guardando"
+                required="true"
               />
             </td>
 

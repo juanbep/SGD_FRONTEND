@@ -232,20 +232,17 @@ export class CrearIndividualComponent implements OnInit, OnChanges {
   eliminarFila(index: number): void {
     const materia = this.materias[index];
 
-    const confirmar = confirm(
-      `¿Está seguro de eliminar la materia "${materia.nombre}" de la lista?\n\nEsta acción solo la quitará de la vista actual.`
+    this.materias.splice(index, 1);
+    this.totalElements--;
+    this.toastr.info(
+      `Materia "${materia.nombre}" eliminada de la lista`,
+      'Información'
     );
 
-    if (confirmar) {
-      this.materias.splice(index, 1);
-      this.totalElements--;
-      this.toastr.info('Materia eliminada de la lista', 'Información');
-
-      // Si la página quedó vacía, ir a la anterior
-      if (this.materias.length === 0 && this.page > 0) {
-        this.page--;
-        this.cargarMaterias();
-      }
+    // Si la página quedó vacía, ir a la anterior
+    if (this.materias.length === 0 && this.page > 0) {
+      this.page--;
+      this.cargarMaterias();
     }
   }
 
@@ -303,9 +300,6 @@ export class CrearIndividualComponent implements OnInit, OnChanges {
 
     this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
 
-    this.toastr.error(
-      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
-      'Error'
-    );
+    this.toastr.error(`${mensajeBackend}`, 'Error');
   }
 }
