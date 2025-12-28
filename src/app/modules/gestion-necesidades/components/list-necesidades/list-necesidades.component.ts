@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
-import { NecesidadesService } from '../../services';
+import { NecesidadesService, NecesidadHelperService } from '../../services';
 import { Materia, NecesidadFilters, NecesidadResponse } from '../../models';
 import { getBadgeClassEstado } from '../../utils/necesidades.utils';
 import { FiltrosNecesidadesComponent } from '../filtros-necesidades/filtros-necesidades.component';
@@ -26,6 +26,7 @@ import {
 } from '../../shared/table.utils';
 import { ModalDetalleMateriaComponent } from '../modal-detalle-materia/modal-detalle-materia.component';
 import { ModalSeleccionarPlanComponent } from '../modal-seleccionar-plan/modal-seleccionar-plan.component';
+import { ModalEliminarNecesidadComponent } from '../modal-eliminar-necesidad/modal-eliminar-necesidad.component';
 
 @Component({
   selector: 'app-list-necesidades',
@@ -37,6 +38,7 @@ import { ModalSeleccionarPlanComponent } from '../modal-seleccionar-plan/modal-s
     FiltrosNecesidadesComponent,
     ModalDetalleMateriaComponent,
     ModalSeleccionarPlanComponent,
+    ModalEliminarNecesidadComponent,
   ],
   templateUrl: './list-necesidades.component.html',
   styleUrl: './list-necesidades.component.css',
@@ -44,6 +46,7 @@ import { ModalSeleccionarPlanComponent } from '../modal-seleccionar-plan/modal-s
 export class ListNecesidadesComponent implements OnInit {
   // ===== SERVICIOS =====
   private necesidadesService = inject(NecesidadesService);
+  private necesidadesHelper = inject(NecesidadHelperService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
 
@@ -82,6 +85,8 @@ export class ListNecesidadesComponent implements OnInit {
   mostrarModalDetalleMateria = false;
   necesidadSeleccionada: NecesidadResponse | null = null;
   materiaSeleccionada: Materia | null = null;
+  necesidadAEliminar: NecesidadResponse | null = null;
+  eliminando = false;
 
   Math = Math;
 
@@ -280,8 +285,48 @@ export class ListNecesidadesComponent implements OnInit {
       return;
     }
 
-    this.necesidadSeleccionada = necesidad;
-    this.toastr.info('Eliminar necesidad - pendiente de implementar');
+    this.necesidadAEliminar = necesidad;
+    this.mostrarModalEliminar = true;
+  }
+
+  async confirmarEliminacion(): Promise<void> {
+    if (!this.necesidadAEliminar) return;
+
+    this.eliminando = true;
+
+    try {
+      const resultado = await this.necesidadesHelper.delete(
+        this.necesidadAEliminar.oidNecesidad
+      );
+
+      if (resultado) {
+        this.toastr.success(
+          `Necesidad "${this.necesidadAEliminar.nombreMateria} - Grupo ${this.necesidadAEliminar.grupo}" eliminada exitosamente`,
+          'Eliminación exitosa'
+        );
+        this.cerrarModalEliminar();
+        this.cargarNecesidades();
+      } else {
+        this.toastr.error('No se pudo eliminar la necesidad', 'Error');
+      }
+    } catch (error: any) {
+      console.error('Error al eliminar necesidad:', error);
+      const mensajeError =
+        error?.error?.mensaje ||
+        error?.message ||
+        'Error al eliminar la necesidad.';
+      this.toastr.error(mensajeError, 'Error al eliminar');
+    } finally {
+      this.eliminando = false;
+      this.cerrarModalEliminar();
+    }
+  }
+
+  cerrarModalEliminar(): void {
+    if (!this.eliminando) {
+      this.mostrarModalEliminar = false;
+      this.necesidadAEliminar = null;
+    }
   }
 
   gestionarCorrequisitos(necesidad: NecesidadResponse): void {

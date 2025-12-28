@@ -388,3 +388,11 @@
   (onCerrar)="cerrarModalSeleccionarPlan()"
   (onPlanSeleccionado)="onPlanSeleccionado($event)"
 ></app-modal-seleccionar-plan>
+<!-- Modal de Eliminar Necesidad -->
+<app-modal-eliminar-necesidad
+  [necesidad]="necesidadAEliminar"
+  [visible]="mostrarModalEliminar"
+  [eliminando]="eliminando"
+  (onConfirmar)="confirmarEliminacion()"
+  (onCancelar)="cerrarModalEliminar()"
+></app-modal-eliminar-necesidad>
