@@ -11,7 +11,12 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { NecesidadesService, NecesidadHelperService } from '../../services';
-import { Materia, NecesidadFilters, NecesidadResponse } from '../../models';
+import {
+  Materia,
+  NecesidadFilters,
+  NecesidadResponse,
+  UpdateNecesidadDTO,
+} from '../../models';
 import { getBadgeClassEstado } from '../../utils/necesidades.utils';
 import { FiltrosNecesidadesComponent } from '../filtros-necesidades/filtros-necesidades.component';
 import {
@@ -27,6 +32,7 @@ import {
 import { ModalDetalleMateriaComponent } from '../modal-detalle-materia/modal-detalle-materia.component';
 import { ModalSeleccionarPlanComponent } from '../modal-seleccionar-plan/modal-seleccionar-plan.component';
 import { ModalEliminarNecesidadComponent } from '../modal-eliminar-necesidad/modal-eliminar-necesidad.component';
+import { ModalEditarNecesidadComponent } from '../modal-editar-necesidad/modal-editar-necesidad.component';
 
 @Component({
   selector: 'app-list-necesidades',
@@ -39,6 +45,7 @@ import { ModalEliminarNecesidadComponent } from '../modal-eliminar-necesidad/mod
     ModalDetalleMateriaComponent,
     ModalSeleccionarPlanComponent,
     ModalEliminarNecesidadComponent,
+    ModalEditarNecesidadComponent,
   ],
   templateUrl: './list-necesidades.component.html',
   styleUrl: './list-necesidades.component.css',
@@ -80,13 +87,16 @@ export class ListNecesidadesComponent implements OnInit {
 
   // ===== MODALES =====
   mostrarModalEliminar = false;
+  mostrarModalEditar = false;
   mostrarModalSeleccionarPlan = false;
   mostrarModalCorrequisitos = false;
   mostrarModalDetalleMateria = false;
   necesidadSeleccionada: NecesidadResponse | null = null;
   materiaSeleccionada: Materia | null = null;
   necesidadAEliminar: NecesidadResponse | null = null;
+  necesidadAEditar: NecesidadResponse | null = null;
   eliminando = false;
+  editando = false;
 
   Math = Math;
 
@@ -271,8 +281,46 @@ export class ListNecesidadesComponent implements OnInit {
       return;
     }
 
-    this.necesidadSeleccionada = necesidad;
-    this.toastr.info('Modificar necesidad - pendiente de implementar');
+    this.necesidadAEditar = necesidad;
+    this.mostrarModalEditar = true;
+  }
+
+  async confirmarEdicion(dto: UpdateNecesidadDTO): Promise<void> {
+    if (!this.necesidadAEditar) return;
+
+    this.editando = true;
+
+    try {
+      const resultado = await this.necesidadesHelper.update(dto);
+
+      if (resultado) {
+        this.toastr.success(
+          `Necesidad "${this.necesidadAEditar.nombreMateria} - Grupo ${dto.grupo}" actualizada correctamente`,
+          'Actualización exitosa'
+        );
+        this.cerrarModalEditar();
+        this.cargarNecesidades();
+      } else {
+        this.toastr.error('No se pudo actualizar la necesidad', 'Error');
+      }
+    } catch (error: any) {
+      console.error('Error al actualizar:', error);
+      const mensajeError =
+        error?.error?.mensaje ||
+        error?.message ||
+        'Error al actualizar la necesidad.';
+      this.toastr.error(mensajeError, 'Error al actualizar');
+    } finally {
+      this.editando = false;
+      this.cerrarModalEditar();
+    }
+  }
+
+  cerrarModalEditar(): void {
+    if (!this.editando) {
+      this.mostrarModalEditar = false;
+      this.necesidadAEditar = null;
+    }
   }
 
   eliminarNecesidad(necesidad: NecesidadResponse): void {

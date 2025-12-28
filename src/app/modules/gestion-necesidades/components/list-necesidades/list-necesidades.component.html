@@ -396,3 +396,12 @@
   (onConfirmar)="confirmarEliminacion()"
   (onCancelar)="cerrarModalEliminar()"
 ></app-modal-eliminar-necesidad>
+<!-- Modal de Editar Necesidad -->
+<app-modal-editar-necesidad
+  *ngIf="necesidadAEditar"
+  [necesidad]="necesidadAEditar"
+  [visible]="mostrarModalEditar"
+  [editando]="editando"
+  (onCerrar)="cerrarModalEditar()"
+  (onGuardar)="confirmarEdicion($event)"
+></app-modal-editar-necesidad>
