@@ -10,33 +10,30 @@ import { EditAcademicCalendarComponent } from './components/edit-academic-calend
 
 const routes: Routes = [
   {
-    path: '',
-    children: [
-      {
-        path: '',
-        component: AcademicCalendarManagementComponent,
-      },
-      {
-        path: 'list',
-        component: ViewAcademicCalendarsComponent,
-      },
-      {
-        path: 'crear',
-        component: CreateAcademicCalendarComponent,
-      },
-      {
-        path: 'editar/:id',
-        component: EditAcademicCalendarComponent,
-      },
-      {
-        path: 'ver/:id',
-        component: ViewAcademicCalendarComponent,
-      },
-
-      //explorar calendarios
-      //crear calendario
-      //gestionar calendario
-    ],
+    path: 'listar',
+    component: ViewAcademicCalendarsComponent,
+  },
+  {
+    path: 'gestionar',
+    component: AcademicCalendarManagementComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['SECRETARIA/O FACULTAD'] },
+  },
+  {
+    path: 'crear',
+    component: CreateAcademicCalendarComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['SECRETARIA/O FACULTAD'] },
+  },
+  {
+    path: 'editar/:id',
+    component: EditAcademicCalendarComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['SECRETARIA/O FACULTAD'] },
+  },
+  {
+    path: 'ver/:id',
+    component: ViewAcademicCalendarComponent,
   },
 ];
 

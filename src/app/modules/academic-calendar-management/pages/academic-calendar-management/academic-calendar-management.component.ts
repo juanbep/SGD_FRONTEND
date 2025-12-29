@@ -53,6 +53,13 @@ export class AcademicCalendarManagementComponent {
     const calendario = this.calendarioAEliminar();
     if (!calendario) return;
 
+    // Validación de roles
+    if (!this.validarRol()) {
+      this.toastr.error('No tienes permisos para eliminar calendarios');
+      this.cerrarModalEliminar();
+      return;
+    }
+
     try {
       const resultado = await this.calendarioHelperService.delete(
         calendario.oidcalendario
@@ -61,7 +68,6 @@ export class AcademicCalendarManagementComponent {
       if (resultado) {
         this.toastr.success('Calendario eliminado correctamente');
         this.cerrarModalEliminar();
-        // Recargar la lista usando el ViewChild
         this.tablaCalendarios.cargarCalendarios();
       }
     } catch (error: any) {
@@ -70,5 +76,14 @@ export class AcademicCalendarManagementComponent {
         error?.error?.mensaje || 'Error al eliminar el calendario';
       this.toastr.error(mensaje);
     }
+  }
+
+  private validarRol(): boolean {
+    const rolesLocalStorage = localStorage.getItem('userRoles');
+    if (rolesLocalStorage) {
+      const userRoles = JSON.parse(rolesLocalStorage);
+      return userRoles.includes('SECRETARIA/O FACULTAD');
+    }
+    return false;
   }
 }

@@ -218,7 +218,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
   cancel(): void {
     if (confirm('¿Estás seguro de cancelar? Se perderán los cambios.')) {
       this.limpiarStorage();
-      this.router.navigate(['/app/gestion-calendario-academico']);
+      this.router.navigate(['/app/gestion-calendario-academico/gestionar']);
     }
   }
 }

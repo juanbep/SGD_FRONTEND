@@ -57,11 +57,14 @@ export class CalendarioHelperService {
     );
   }
 
+  //Validar esto con el backend
   async delete(id: number): Promise<boolean> {
     const result = await this.baseHelper.getDataFromResponse(
       this.calendarioService.deleteCalendarioAcademico({ oidcalendario: id })
     );
-    return result === true;
+
+    // Si result no es null, la eliminación fue exitosa
+    return result !== null;
   }
 
   // Descargar PDF del calendario

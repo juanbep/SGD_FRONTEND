@@ -131,16 +131,32 @@ export class SideBarV2Component implements OnInit, OnChanges {
     //   ],
     // },
     {
-      role: ['SECRETARIA/O FACULTAD'],
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'COORDINADOR',
+        'DOCENTE',
+        'ESTUDIANTE',
+        'DECANO',
+        'SECRETARIA/O FACULTAD',
+        'CPD',
+      ],
       icon: 'assets/icons/sidebar/icon-calendar-management.svg',
       label: 'Calendario académico',
       isOpen: false,
       children: [
         {
-          role: ['SECRETARIA/O FACULTAD'],
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'COORDINADOR',
+            'DOCENTE',
+            'ESTUDIANTE',
+            'DECANO',
+            'SECRETARIA/O FACULTAD',
+            'CPD',
+          ],
           icon: 'fas fa-search',
           label: 'Explorar calendarios',
-          url: '/app/gestion-calendario-academico/list',
+          url: '/app/gestion-calendario-academico/listar',
         },
         {
           role: ['SECRETARIA/O FACULTAD'],
@@ -151,8 +167,8 @@ export class SideBarV2Component implements OnInit, OnChanges {
         {
           role: ['SECRETARIA/O FACULTAD'],
           icon: 'fas fa-sliders-h',
-          label: 'Gestiónar calendarios',
-          url: '/app/gestion-calendario-academico',
+          label: 'Gestionar calendarios',
+          url: '/app/gestion-calendario-academico/gestionar',
         },
       ],
     },

@@ -20,7 +20,7 @@
   <div class="sidebar-menu">
     <ul>
       <ng-container *ngFor="let item of menuItems">
-        <li class="sidebar-menu-item">
+        <li class="sidebar-menu-item" *ngIf="hasRole(item.role)">
           <a
             href="#"
             class="sidebar-item"
@@ -44,16 +44,17 @@
             *ngIf="item.children && !isSidebarCollapsed && item.isOpen"
             class="sidebar-submenu"
           >
-            <li *ngFor="let child of item.children">
-              <!-- *ngIf="hasRole(child.role ? child.role : [])"  -->
-              <a
-                routerLink="{{ child.url }}"
-                class="sidebar-item sidebar-subitem"
-              >
-                <i [class]="child.icon"></i>
-                <span class="sidebar-item-text">{{ child.label }}</span>
-              </a>
-            </li>
+            <ng-container *ngFor="let child of item.children">
+              <li *ngIf="hasRole(child.role)">
+                <a
+                  routerLink="{{ child.url }}"
+                  class="sidebar-item sidebar-subitem"
+                >
+                  <i [class]="child.icon"></i>
+                  <span class="sidebar-item-text">{{ child.label }}</span>
+                </a>
+              </li>
+            </ng-container>
           </ul>
         </li>
       </ng-container>
