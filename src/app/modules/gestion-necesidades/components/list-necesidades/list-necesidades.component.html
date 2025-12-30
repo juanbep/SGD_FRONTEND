@@ -202,20 +202,38 @@
 
             <!-- DEPARTAMENTO -->
             <td>
-              <span
-                *ngIf="
-                  necesidad.materia.nombreDepartamento;
-                  else sinDepartamento
-                "
-                class="text-muted small"
+              <div
+                class="d-flex align-items-center justify-content-between gap-2"
               >
-                {{ necesidad.materia.nombreDepartamento }}
-              </span>
-              <ng-template #sinDepartamento>
-                <span class="badge bg-secondary">
-                  <i class="fas fa-minus me-1"></i>Sin asignar
-                </span>
-              </ng-template>
+                <!-- Contenedor del texto/badge -->
+                <div>
+                  <span
+                    *ngIf="
+                      necesidad.materia.nombreDepartamento;
+                      else sinDepartamento
+                    "
+                    class="text-muted small"
+                  >
+                    {{ necesidad.materia.nombreDepartamento }}
+                  </span>
+
+                  <ng-template #sinDepartamento>
+                    <span class="badge bg-secondary">
+                      <i class="fas fa-minus me-1"></i>Sin asignar
+                    </span>
+                  </ng-template>
+                </div>
+
+                <!-- Botón para editar departamento (siempre al final) -->
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary flex-shrink-0"
+                  title="Editar departamento"
+                  (click)="editarDepartamento(necesidad)"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
             </td>
 
             <!-- SEMESTRE -->
@@ -428,3 +446,11 @@
   (onCerrar)="cerrarModalEditar()"
   (onGuardar)="confirmarEdicion($event)"
 ></app-modal-editar-necesidad>
+<!-- Modal de Editar Departamento -->
+<app-modal-editar-departamento
+  *ngIf="necesidadParaEditarDepartamento"
+  [necesidad]="necesidadParaEditarDepartamento"
+  [visible]="mostrarModalEditarDepartamento"
+  (onCerrar)="cerrarModalEditarDepartamento()"
+  (onDepartamentoActualizado)="onDepartamentoActualizado()"
+></app-modal-editar-departamento>

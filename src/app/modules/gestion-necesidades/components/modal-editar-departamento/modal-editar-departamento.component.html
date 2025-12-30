@@ -1,0 +1,185 @@
+<!-- Modal -->
+<div *ngIf="visible" class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i class="fas fa-building me-2" style="color: #f8ae15"></i>
+          Editar Departamento
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          [disabled]="guardando"
+          (click)="cerrar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <div class="row g-4">
+          <div class="col-12">
+            <!-- Información de la materia (solo lectura) -->
+            <div class="info-section mb-4">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-info-circle me-2"></i>
+                Información de la Materia
+              </h6>
+
+              <div class="row g-3">
+                <!-- Columna izquierda -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">Materia</label>
+                    <div class="info-value">{{ necesidad.nombreMateria }}</div>
+                  </div>
+
+                  <div class="info-item">
+                    <label class="info-label">Código</label>
+                    <div class="info-value">{{ necesidad.codigoMateria }}</div>
+                  </div>
+                </div>
+
+                <!-- Columna derecha -->
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <label class="info-label">Semestre</label>
+                    <div class="info-value">
+                      {{ necesidad.semestreMateria }}
+                    </div>
+                  </div>
+
+                  <div class="info-item">
+                    <label class="info-label">Departamento Actual</label>
+                    <div class="info-value">
+                      <span
+                        *ngIf="tieneDepartamento; else sinDepartamentoActual"
+                      >
+                        {{ departamentoActual }}
+                      </span>
+                      <ng-template #sinDepartamentoActual>
+                        <span class="badge bg-secondary rounded-pill">
+                          <i class="fas fa-minus me-1"></i>Sin asignar
+                        </span>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulario de edición -->
+            <div class="info-section">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-edit me-2"></i>
+                Cambiar Departamento
+              </h6>
+
+              <form [formGroup]="departamentoForm">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <div class="info-item">
+                      <label for="oidDepartamento" class="info-label">
+                        Nuevo Departamento
+                        <span class="text-danger">*</span>
+                      </label>
+                      <ng-select
+                        id="oidDepartamento"
+                        formControlName="oidDepartamento"
+                        [items]="departamentos"
+                        bindLabel="label"
+                        bindValue="value"
+                        groupBy="facultad"
+                        placeholder="Seleccione un departamento"
+                        [clearable]="false"
+                        [searchable]="true"
+                        [disabled]="loadingDepartamentos || guardando"
+                        [loading]="loadingDepartamentos"
+                        [class.is-invalid]="departamentoInvalid"
+                      >
+                        <ng-template ng-label-tmp let-item="item">
+                          <i class="fas fa-building me-2 text-primary"></i>
+                          {{ item.label }}
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                          <div class="d-flex align-items-center">
+                            <i class="fas fa-building me-2 text-primary"></i>
+                            <span>{{ item.label }}</span>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <div
+                        class="invalid-feedback d-block"
+                        *ngIf="departamentoInvalid"
+                      >
+                        Por favor, seleccione un departamento
+                      </div>
+                      <small class="text-muted" *ngIf="loadingDepartamentos">
+                        <i class="fas fa-spinner fa-spin me-1"></i>Cargando
+                        departamentos...
+                      </small>
+                      <small class="text-muted" *ngIf="!loadingDepartamentos">
+                        Seleccione el nuevo departamento para esta materia
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <!-- Alerta informativa -->
+              <div
+                class="alert alert-warning mt-3 mb-0 d-flex align-items-start"
+                role="alert"
+              >
+                <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                <small>
+                  <strong>Importante:</strong> Este cambio afectará únicamente a
+                  la materia <strong>{{ necesidad.nombreMateria }}</strong> y se
+                  reflejará en todas las necesidades asociadas a esta materia.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 py-3">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          (click)="cerrar()"
+          [disabled]="guardando"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary px-4"
+          (click)="confirmar()"
+          [disabled]="
+            guardando || loadingDepartamentos || departamentoForm.invalid
+          "
+        >
+          <ng-container *ngIf="!guardando">
+            <i class="fas fa-save me-2"></i>
+            Guardar Cambios
+          </ng-container>
+          <ng-container *ngIf="guardando">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Guardando...
+          </ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div *ngIf="visible" class="modal-backdrop fade show"></div>

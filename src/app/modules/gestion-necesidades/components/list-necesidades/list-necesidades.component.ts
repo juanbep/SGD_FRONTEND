@@ -33,6 +33,7 @@ import { ModalDetalleMateriaComponent } from '../modal-detalle-materia/modal-det
 import { ModalSeleccionarPlanComponent } from '../modal-seleccionar-plan/modal-seleccionar-plan.component';
 import { ModalEliminarNecesidadComponent } from '../modal-eliminar-necesidad/modal-eliminar-necesidad.component';
 import { ModalEditarNecesidadComponent } from '../modal-editar-necesidad/modal-editar-necesidad.component';
+import { ModalEditarDepartamentoComponent } from '../modal-editar-departamento/modal-editar-departamento.component';
 
 @Component({
   selector: 'app-list-necesidades',
@@ -46,6 +47,7 @@ import { ModalEditarNecesidadComponent } from '../modal-editar-necesidad/modal-e
     ModalSeleccionarPlanComponent,
     ModalEliminarNecesidadComponent,
     ModalEditarNecesidadComponent,
+    ModalEditarDepartamentoComponent,
   ],
   templateUrl: './list-necesidades.component.html',
   styleUrl: './list-necesidades.component.css',
@@ -91,6 +93,8 @@ export class ListNecesidadesComponent implements OnInit {
   mostrarModalSeleccionarPlan = false;
   mostrarModalCorrequisitos = false;
   mostrarModalDetalleMateria = false;
+  mostrarModalEditarDepartamento = false;
+  necesidadParaEditarDepartamento: NecesidadResponse | null = null;
   necesidadSeleccionada: NecesidadResponse | null = null;
   materiaSeleccionada: Materia | null = null;
   necesidadAEliminar: NecesidadResponse | null = null;
@@ -177,6 +181,30 @@ export class ListNecesidadesComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  editarDepartamento(necesidad: NecesidadResponse): void {
+    // Validar que solo se pueda editar si está en BORRADOR
+    if (necesidad.estado !== 'BORRADOR') {
+      this.toastr.warning(
+        'Solo se pueden editar departamentos de necesidades en estado BORRADOR',
+        'Operación no permitida'
+      );
+      return;
+    }
+
+    this.necesidadParaEditarDepartamento = necesidad;
+    this.mostrarModalEditarDepartamento = true;
+  }
+
+  cerrarModalEditarDepartamento(): void {
+    this.mostrarModalEditarDepartamento = false;
+    this.necesidadParaEditarDepartamento = null;
+  }
+
+  onDepartamentoActualizado(): void {
+    this.cerrarModalEditarDepartamento();
+    this.cargarNecesidades();
   }
 
   // ===== ORDENAMIENTO =====
