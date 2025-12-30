@@ -110,17 +110,22 @@
             <!-- OID NECESIDAD ordenable -->
             <th
               class="fw-bold sortable-header"
-              style="width: 180px; cursor: pointer"
+              style="width: 120px; cursor: pointer"
               (click)="onSort('oidNecesidad')"
               title="Ordenar por OID Necesidad"
             >
-              <i class="fas fa-key me-1"></i>OID Necesidad
+              <i class="fas fa-key me-1"></i>OID
               <i [ngClass]="getSortIcon('oidNecesidad')" class="ms-1"></i>
             </th>
 
             <!-- NOMBRE MATERIA + BOTÓN DETALLES -->
-            <th class="fw-bold" style="min-width: 200px">
+            <th class="fw-bold" style="min-width: 220px">
               <i class="fas fa-book me-1"></i>Materia
+            </th>
+
+            <!-- DEPARTAMENTO -->
+            <th class="fw-bold" style="min-width: 220px">
+              <i class="fas fa-building me-1"></i>Departamento
             </th>
 
             <!-- SEMESTRE -->
@@ -155,7 +160,7 @@
             </th>
 
             <!-- FECHA ACTUALIZACIÓN ordenable -->
-            <th
+            <!-- <th
               class="fw-bold sortable-header text-center"
               style="width: 170px; cursor: pointer"
               (click)="onSort('fechaActualizacion')"
@@ -163,10 +168,10 @@
             >
               <i class="fas fa-calendar-check me-1"></i>Actualización
               <i [ngClass]="getSortIcon('fechaActualizacion')" class="ms-1"></i>
-            </th>
+            </th> -->
 
             <!-- ACCIONES -->
-            <th class="fw-bold text-center" style="width: 180px">
+            <th class="fw-bold text-center" style="width: 160px">
               <i class="fas fa-cogs me-1"></i>Acciones
             </th>
           </tr>
@@ -193,6 +198,24 @@
                   <i class="fas fa-info-circle"></i>
                 </button>
               </div>
+            </td>
+
+            <!-- DEPARTAMENTO -->
+            <td>
+              <span
+                *ngIf="
+                  necesidad.materia.nombreDepartamento;
+                  else sinDepartamento
+                "
+                class="text-muted small"
+              >
+                {{ necesidad.materia.nombreDepartamento }}
+              </span>
+              <ng-template #sinDepartamento>
+                <span class="badge bg-secondary">
+                  <i class="fas fa-minus me-1"></i>Sin asignar
+                </span>
+              </ng-template>
             </td>
 
             <!-- SEMESTRE -->
@@ -228,11 +251,11 @@
             </td>
 
             <!-- FECHA ACTUALIZACIÓN -->
-            <td class="text-center">
+            <!-- <td class="text-center">
               <small class="text-muted">{{
                 necesidad.fechaActualizacion | date : "dd/MM/yyyy HH:mm"
               }}</small>
-            </td>
+            </td> -->
 
             <!-- ACCIONES -->
             <td class="text-center">
@@ -258,14 +281,14 @@
                 </button>
 
                 <!-- Gestionar correquisitos -->
-                <button
+                <!-- <button
                   type="button"
                   class="btn btn-sm btn-outline-warning"
                   title="Gestionar correquisitos"
                   (click)="gestionarCorrequisitos(necesidad)"
                 >
                   <i class="fas fa-link"></i>
-                </button>
+                </button> -->
               </div>
             </td>
           </tr>
@@ -273,7 +296,7 @@
         <ng-template #noData>
           <tbody>
             <tr>
-              <td colspan="9" class="text-center py-5">
+              <td colspan="10" class="text-center py-5">
                 <div
                   *ngIf="loading"
                   class="d-flex justify-content-center align-items-center"
