@@ -4,6 +4,104 @@
   (onLimpiarFiltros)="onFiltrosLimpiados()"
 ></app-filtros-necesidades>
 
+<!-- ========== BARRA DE ACCIONES MASIVAS ========== -->
+<div
+  class="alert mb-3"
+  [ngClass]="haySeleccionadas ? 'alert-success' : 'alert-warning'"
+  *ngIf="totalElements > 0 && puedeRealizarTransiciones"
+>
+  <div
+    class="d-flex justify-content-between align-items-center flex-wrap gap-3"
+  >
+    <!-- Info -->
+    <div class="d-flex align-items-center gap-2">
+      <i
+        class="fas"
+        [ngClass]="
+          haySeleccionadas ? 'fa-check-square' : 'fa-exclamation-triangle'
+        "
+      ></i>
+      <span *ngIf="!haySeleccionadas">
+        <strong>{{ totalElements }}</strong> necesidades
+        <span class="text-muted small"
+          >(sin selección = se procesarán TODAS)</span
+        >
+      </span>
+      <span *ngIf="haySeleccionadas">
+        <strong>{{ totalSeleccionadas }}</strong> de
+        <strong>{{ totalElements }}</strong> seleccionadas
+      </span>
+
+      <button
+        *ngIf="haySeleccionadas"
+        type="button"
+        class="btn btn-sm btn-link text-danger p-0"
+        (click)="limpiarSeleccion()"
+      >
+        <i class="fas fa-times"></i> Limpiar
+      </button>
+    </div>
+
+    <!-- Botones -->
+    <div class="btn-group btn-group-sm">
+      <button
+        *ngIf="puedeEnviarARevisionSecretario"
+        type="button"
+        class="btn btn-primary"
+        (click)="enviarARevisionSecretario()"
+        [disabled]="transicionandoEstado || loading"
+      >
+        <i class="fas fa-paper-plane me-1"></i>
+        {{ haySeleccionadas ? "Enviar seleccionadas" : "Enviar TODAS" }}
+      </button>
+
+      <button
+        *ngIf="puedeDevolverABorrador"
+        type="button"
+        class="btn btn-warning"
+        (click)="devolverABorrador()"
+        [disabled]="transicionandoEstado || loading"
+      >
+        <i class="fas fa-undo me-1"></i>
+        {{ haySeleccionadas ? "Devolver seleccionadas" : "Devolver TODAS" }}
+      </button>
+
+      <button
+        *ngIf="puedeEnviarARevisionJefe"
+        type="button"
+        class="btn btn-success"
+        (click)="enviarARevisionJefe()"
+        [disabled]="transicionandoEstado || loading"
+      >
+        <i class="fas fa-share-square me-1"></i>
+        {{ haySeleccionadas ? "Enviar seleccionadas" : "Enviar TODAS" }}
+      </button>
+
+      <button
+        *ngIf="puedeDevolverASecretario"
+        type="button"
+        class="btn btn-warning"
+        (click)="devolverASecretario()"
+        [disabled]="transicionandoEstado || loading"
+      >
+        <i class="fas fa-undo me-1"></i>
+        {{ haySeleccionadas ? "Devolver seleccionadas" : "Devolver TODAS" }}
+      </button>
+
+      <button
+        *ngIf="puedeLiberarParaAsignacion"
+        type="button"
+        class="btn btn-info"
+        (click)="liberarParaAsignacion()"
+        [disabled]="transicionandoEstado || loading"
+      >
+        <i class="fas fa-unlock me-1"></i>
+        {{ haySeleccionadas ? "Liberar seleccionadas" : "Liberar TODAS" }}
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Card de Tabla -->
 <div class="card">
   <div
@@ -61,8 +159,9 @@
         }}</span>
       </button>
 
-      <!-- Botón Agregar Necesidades -->
+      <!-- Botón Agregar Necesidades - SOLO COORDINADOR -->
       <button
+        *ngIf="puedeCrearNecesidades"
         type="button"
         class="btn btn-success btn-sm d-flex align-items-center"
         (click)="crearNuevaNecesidad()"
@@ -107,6 +206,27 @@
       <table class="table table-hover mb-0">
         <thead class="table-light sticky-top">
           <tr>
+            <!-- COLUMNA DE CHECKBOX -->
+            <th class="text-center" style="width: 45px">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [checked]="todasSeleccionadas()"
+                [indeterminate]="algunaSeleccionada() && !todasSeleccionadas()"
+                [disabled]="checkboxSeleccionarTodasDeshabilitado"
+                (change)="toggleTodasSeleccionadas()"
+                [title]="
+                  checkboxSeleccionarTodasDeshabilitado
+                    ? 'No hay necesidades seleccionables en esta página'
+                    : 'Seleccionar todas las de esta página'
+                "
+                [style.cursor]="
+                  checkboxSeleccionarTodasDeshabilitado
+                    ? 'not-allowed'
+                    : 'pointer'
+                "
+              />
+            </th>
             <!-- OID NECESIDAD ordenable -->
             <th
               class="fw-bold sortable-header"
@@ -178,6 +298,27 @@
         </thead>
         <tbody *ngIf="necesidades && necesidades.length > 0; else noData">
           <tr *ngFor="let necesidad of necesidades; trackBy: trackByNecesidad">
+            <!-- COLUMNA DE CHECKBOX -->
+            <td class="text-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                [checked]="estaSeleccionada(necesidad)"
+                [disabled]="checkboxDeshabilitado(necesidad)"
+                (change)="toggleSeleccion(necesidad)"
+                [title]="
+                  checkboxDeshabilitado(necesidad)
+                    ? 'No se puede seleccionar (estado: ' +
+                      necesidad.estado +
+                      ')'
+                    : 'Seleccionar necesidad'
+                "
+                [style.cursor]="
+                  checkboxDeshabilitado(necesidad) ? 'not-allowed' : 'pointer'
+                "
+              />
+            </td>
+
             <!-- OID NECESIDAD -->
             <td>
               <small class="text-muted">{{ necesidad.oidNecesidad }}</small>
@@ -278,8 +419,11 @@
             <!-- ACCIONES -->
             <td class="text-center">
               <div class="action-buttons-wrapper">
-                <!-- Modificar -->
+                <!-- Modificar - Solo COORDINADOR y solo en BORRADOR -->
                 <button
+                  *ngIf="
+                    puedeModificarBorrador && necesidad.estado === 'BORRADOR'
+                  "
                   type="button"
                   class="btn btn-sm btn-outline-primary"
                   title="Modificar necesidad"
@@ -288,8 +432,11 @@
                   <i class="fas fa-edit"></i>
                 </button>
 
-                <!-- Eliminar -->
+                <!-- Eliminar - Solo COORDINADOR y solo en BORRADOR -->
                 <button
+                  *ngIf="
+                    puedeModificarBorrador && necesidad.estado === 'BORRADOR'
+                  "
                   type="button"
                   class="btn btn-sm btn-outline-danger"
                   title="Eliminar necesidad"
@@ -298,15 +445,15 @@
                   <i class="fas fa-trash-alt"></i>
                 </button>
 
-                <!-- Gestionar correquisitos -->
-                <!-- <button
-                  type="button"
-                  class="btn btn-sm btn-outline-warning"
-                  title="Gestionar correquisitos"
-                  (click)="gestionarCorrequisitos(necesidad)"
+                <!-- Mensaje cuando no hay acciones disponibles -->
+                <span
+                  *ngIf="
+                    !puedeModificarBorrador || necesidad.estado !== 'BORRADOR'
+                  "
+                  class="text-muted small"
                 >
-                  <i class="fas fa-link"></i>
-                </button> -->
+                  <i class="fas fa-minus-circle"></i> Sin acciones
+                </span>
               </div>
             </td>
           </tr>
@@ -314,7 +461,7 @@
         <ng-template #noData>
           <tbody>
             <tr>
-              <td colspan="10" class="text-center py-5">
+              <td colspan="11" class="text-center py-5">
                 <div
                   *ngIf="loading"
                   class="d-flex justify-content-center align-items-center"
@@ -454,3 +601,11 @@
   (onCerrar)="cerrarModalEditarDepartamento()"
   (onDepartamentoActualizado)="onDepartamentoActualizado()"
 ></app-modal-editar-departamento>
+<!-- Modal de Confirmación de Transición -->
+<app-modal-confirmacion
+  [visible]="mostrarModalTransicion"
+  [config]="configModalTransicion"
+  [procesando]="transicionandoEstado"
+  (onConfirmar)="confirmarTransicion()"
+  (onCancelar)="cerrarModalTransicion()"
+></app-modal-confirmacion>

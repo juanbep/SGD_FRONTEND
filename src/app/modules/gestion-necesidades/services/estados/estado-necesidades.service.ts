@@ -62,20 +62,28 @@ export class EstadoNecesidadesService {
       .pipe(catchError(this.handleError));
   }
 
-  // ========== MÉTODOS ESPECÍFICOS POR TRANSICIÓN ==========
+  // ========== MÉTODOS ESPECÍFICOS POR TRANSICIÓN (ACTUALIZADOS) ==========
 
   /**
    * BORRADOR → EN_REVISION_SECRETARIO
    * Enviar necesidades en borrador a revisión del secretario
+   * @param oidCalendario - ID del calendario
+   * @param oidPrograma - ID del programa
+   * @param oidNecesidades - (Opcional) IDs específicos de necesidades. Si no se envía, afecta todas.
    */
   enviarBorradorARevisionSecretario(
     oidCalendario: number,
-    oidPrograma: number
+    oidPrograma: number,
+    oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
-    return this.cambiarEstado('borrador', 'en-revision-secretario', {
-      oidCalendario,
-      oidPrograma,
-    });
+    const body = oidNecesidades ? { oidNecesidades } : null;
+
+    return this.cambiarEstadoConBody(
+      'borrador',
+      'en-revision-secretario',
+      { oidCalendario, oidPrograma },
+      body
+    );
   }
 
   /**
@@ -84,12 +92,17 @@ export class EstadoNecesidadesService {
    */
   devolverRevisionSecretarioABorrador(
     oidCalendario: number,
-    oidPrograma: number
+    oidPrograma: number,
+    oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
-    return this.cambiarEstado('en-revision-secretario', 'borrador', {
-      oidCalendario,
-      oidPrograma,
-    });
+    const body = oidNecesidades ? { oidNecesidades } : null;
+
+    return this.cambiarEstadoConBody(
+      'en-revision-secretario',
+      'borrador',
+      { oidCalendario, oidPrograma },
+      body
+    );
   }
 
   /**
@@ -99,13 +112,17 @@ export class EstadoNecesidadesService {
   enviarRevisionSecretarioARevisionJefe(
     oidCalendario: number,
     oidPrograma: number,
-    oidDepartamento: number
+    oidDepartamento: number,
+    oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
-    return this.cambiarEstado('en-revision-secretario', 'en-revision-jefe', {
-      oidCalendario,
-      oidPrograma,
-      oidDepartamento,
-    });
+    const body = oidNecesidades ? { oidNecesidades } : null;
+
+    return this.cambiarEstadoConBody(
+      'en-revision-secretario',
+      'en-revision-jefe',
+      { oidCalendario, oidPrograma, oidDepartamento },
+      body
+    );
   }
 
   /**
@@ -115,13 +132,17 @@ export class EstadoNecesidadesService {
   devolverRevisionJefeARevisionSecretario(
     oidCalendario: number,
     oidPrograma: number,
-    oidDepartamento: number
+    oidDepartamento: number,
+    oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
-    return this.cambiarEstado('en-revision-jefe', 'en-revision-secretario', {
-      oidCalendario,
-      oidPrograma,
-      oidDepartamento,
-    });
+    const body = oidNecesidades ? { oidNecesidades } : null;
+
+    return this.cambiarEstadoConBody(
+      'en-revision-jefe',
+      'en-revision-secretario',
+      { oidCalendario, oidPrograma, oidDepartamento },
+      body
+    );
   }
 
   /**
@@ -130,12 +151,42 @@ export class EstadoNecesidadesService {
    */
   enviarRevisionJefeANoAsignada(
     oidCalendario: number,
-    oidDepartamento: number
+    oidDepartamento: number,
+    oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
-    return this.cambiarEstado('en-revision-jefe', 'no-asignada', {
-      oidCalendario,
-      oidDepartamento,
-    });
+    const body = oidNecesidades ? { oidNecesidades } : null;
+
+    return this.cambiarEstadoConBody(
+      'en-revision-jefe',
+      'no-asignada',
+      { oidCalendario, oidDepartamento },
+      body
+    );
+  }
+
+  /**
+   * Método privado para cambiar estado con body
+   */
+  private cambiarEstadoConBody(
+    estadoOrigen: string,
+    estadoDestino: string,
+    params: CambioEstadoParams,
+    body: { oidNecesidades: number[] } | null
+  ): Observable<CambioEstadoResponse> {
+    const httpParams = this.buildHttpParams(params);
+
+    // TEMPORAL: Ver qué se está enviando
+    console.log('🔍 URL:', `${this.apiUrl}/${estadoOrigen}/${estadoDestino}`);
+    console.log('🔍 Params:', httpParams.toString());
+    console.log('🔍 Body:', body);
+
+    return this.http
+      .patch<CambioEstadoResponse>(
+        `${this.apiUrl}/${estadoOrigen}/${estadoDestino}`,
+        body,
+        { params: httpParams }
+      )
+      .pipe(catchError(this.handleError));
   }
 
   // ========== MÉTODOS PRIVADOS ==========

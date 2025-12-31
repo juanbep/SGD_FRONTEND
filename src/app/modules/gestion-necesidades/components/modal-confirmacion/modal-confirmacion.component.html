@@ -1,0 +1,80 @@
+<!-- Backdrop -->
+<div
+  class="modal fade"
+  [class.show]="visible"
+  [style.display]="visible ? 'block' : 'none'"
+  tabindex="-1"
+  role="dialog"
+  (click)="onBackdropClick($event)"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title d-flex align-items-center">
+          <i
+            *ngIf="config.icono"
+            class="fas {{ config.icono }} me-2"
+            [ngClass]="{
+              'text-primary': config.tipoBotonConfirmar === 'primary',
+              'text-success': config.tipoBotonConfirmar === 'success',
+              'text-danger': config.tipoBotonConfirmar === 'danger',
+              'text-warning': config.tipoBotonConfirmar === 'warning',
+              'text-info': config.tipoBotonConfirmar === 'info'
+            }"
+          ></i>
+          {{ config.titulo }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          [disabled]="procesando"
+          (click)="cancelar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <p class="mb-2">{{ config.mensaje }}</p>
+        <p *ngIf="config.mensajeSecundario" class="text-muted small mb-0">
+          {{ config.mensajeSecundario }}
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          [disabled]="procesando"
+          (click)="cancelar()"
+        >
+          {{ config.textoBotonCancelar || "Cancelar" }}
+        </button>
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="'btn-' + (config.tipoBotonConfirmar || 'primary')"
+          [disabled]="procesando"
+          (click)="confirmar()"
+        >
+          <span
+            *ngIf="procesando"
+            class="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          <i
+            *ngIf="!procesando && config.icono"
+            class="fas {{ config.icono }} me-1"
+          ></i>
+          {{ config.textoBotonConfirmar || "Confirmar" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop overlay -->
+<div class="modal-backdrop fade" [class.show]="visible" *ngIf="visible"></div>

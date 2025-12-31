@@ -4,3 +4,4 @@ export * from './asignaciones/asignaciones.service';
 export * from './asignaciones/asignacion-helper.service';
 export * from './estados/estado-necesidades.service';
 export * from './estados/estado-necesidades-helper.service';
+export * from './transicion-estados.service';

@@ -1,0 +1,22 @@
+/* Asegurar que el modal se muestre correctamente */
+.modal.show {
+  opacity: 1;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+
+/* Cursor no permitido cuando está procesando */
+.modal-content button:disabled {
+  cursor: not-allowed;
+}
+
+/* Animación suave */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+  transform: none;
+}

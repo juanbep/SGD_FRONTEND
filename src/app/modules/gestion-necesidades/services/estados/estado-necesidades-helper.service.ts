@@ -67,28 +67,32 @@ export class EstadoNecesidadesHelperService {
     );
   }
 
-  // ========== MÉTODOS ESPECÍFICOS ==========
+  // ========== MÉTODOS ESPECÍFICOS (ACTUALIZADOS) ==========
 
   async enviarBorradorARevisionSecretario(
     oidCalendario: number,
-    oidPrograma: number
+    oidPrograma: number,
+    oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.enviarBorradorARevisionSecretario(
         oidCalendario,
-        oidPrograma
+        oidPrograma,
+        oidNecesidades
       )
     );
   }
 
   async devolverRevisionSecretarioABorrador(
     oidCalendario: number,
-    oidPrograma: number
+    oidPrograma: number,
+    oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.devolverRevisionSecretarioABorrador(
         oidCalendario,
-        oidPrograma
+        oidPrograma,
+        oidNecesidades
       )
     );
   }
@@ -96,13 +100,15 @@ export class EstadoNecesidadesHelperService {
   async enviarRevisionSecretarioARevisionJefe(
     oidCalendario: number,
     oidPrograma: number,
-    oidDepartamento: number
+    oidDepartamento: number,
+    oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.enviarRevisionSecretarioARevisionJefe(
         oidCalendario,
         oidPrograma,
-        oidDepartamento
+        oidDepartamento,
+        oidNecesidades
       )
     );
   }
@@ -110,25 +116,29 @@ export class EstadoNecesidadesHelperService {
   async devolverRevisionJefeARevisionSecretario(
     oidCalendario: number,
     oidPrograma: number,
-    oidDepartamento: number
+    oidDepartamento: number,
+    oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.devolverRevisionJefeARevisionSecretario(
         oidCalendario,
         oidPrograma,
-        oidDepartamento
+        oidDepartamento,
+        oidNecesidades
       )
     );
   }
 
   async enviarRevisionJefeANoAsignada(
     oidCalendario: number,
-    oidDepartamento: number
+    oidDepartamento: number,
+    oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.enviarRevisionJefeANoAsignada(
         oidCalendario,
-        oidDepartamento
+        oidDepartamento,
+        oidNecesidades
       )
     );
   }

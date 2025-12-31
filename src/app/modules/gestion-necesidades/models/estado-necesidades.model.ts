@@ -35,6 +35,12 @@ export enum EstadoNecesidad {
   NO_ASIGNADA = 'NO_ASIGNADA',
 }
 
+// ========== DTO PARA TRANSICIÓN MASIVA CON OIDs OPCIONALES ==========
+
+export interface TransicionEstadoDTO {
+  oidNecesidades?: number[]; // Opcional: si se envía, solo afecta esas necesidades
+}
+
 // ========== RESPONSE TYPE ==========
 
 export type CambioEstadoResponse = BaseResponse<CambioEstadoData>;

@@ -76,12 +76,12 @@ export class FiltrosNecesidadesComponent implements OnInit {
     this.cargarCalendarios();
   }
 
-  // ===== INICIALIZAR FILTROS =====
+  // ===== INICIALIZAR FILTROS (MODIFICACIÓN TEMPORAL)=====
   private inicializarFiltros(): void {
     // Obtener oidPrograma del usuario logueado
-    const oidPrograma = getUserProgramaId();
+    const oidPrograma = 2;
 
-    if (!oidPrograma || oidPrograma === 0) {
+    if (!oidPrograma) {
       console.error('No se pudo obtener el programa del usuario logueado');
       this.toastr.error(
         'No se pudo obtener el programa del usuario',
@@ -92,6 +92,22 @@ export class FiltrosNecesidadesComponent implements OnInit {
 
     this.filters.oidPrograma = oidPrograma;
   }
+
+  // private inicializarFiltros(): void {
+  //   // Obtener oidPrograma del usuario logueado
+  //   const oidPrograma = getUserProgramaId();
+
+  //   if (!oidPrograma || oidPrograma === 0) {
+  //     console.error('No se pudo obtener el programa del usuario logueado');
+  //     this.toastr.error(
+  //       'No se pudo obtener el programa del usuario',
+  //       'Error de autenticación'
+  //     );
+  //     return;
+  //   }
+
+  //   this.filters.oidPrograma = oidPrograma;
+  // }
 
   // ===== CARGAR CALENDARIOS =====
   async cargarCalendarios(): Promise<void> {

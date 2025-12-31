@@ -252,6 +252,39 @@
   color: #e52724 !important;
 }
 
+/* Estilos para la barra de acciones masivas */
+.alert {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para checkboxes */
+.form-check-input {
+  width: 18px;
+  height: 18px;
+}
+
+.form-check-input:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Animación suave para botones deshabilitados */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mejorar visibilidad de badges en botones */
+.btn .badge {
+  font-size: 0.75rem;
+  padding: 0.2em 0.4em;
+}
+
+/* Estilo para el indicador de sin acciones */
+.text-muted.small {
+  font-size: 0.85rem;
+}
+
 /* ===== RESPONSIVIDAD ===== */
 
 @media (max-width: 768px) {
