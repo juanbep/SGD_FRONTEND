@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NecesidadResponse } from '../../models';
-import { getBadgeClassEstado } from '../../utils/necesidades.utils';
+import { NecesidadResponse } from '../../../models';
+import { getBadgeClassEstado } from '../../../utils/necesidades.utils';
 
 @Component({
   selector: 'app-modal-eliminar-necesidad',

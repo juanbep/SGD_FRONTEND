@@ -6,12 +6,14 @@ import {
   OnChanges,
   SimpleChanges,
   Output,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { UserProfileModalComponent } from '../user-profile-modal/user-profile-modal.component';
 import { getUserData } from '../../../auth/utils/user-storage.utils';
 import { UserData } from '../../../auth/models';
+import { RoleRoutingService } from '../../../gestion-necesidades/services/role-routing.service';
 
 interface MenuItem {
   role: string[];
@@ -36,6 +38,8 @@ export class SideBarV2Component implements OnInit, OnChanges {
 
   @Input() isSidebarCollapsed = false;
   @Output() sidebarToggle = new EventEmitter<void>();
+
+  private roleRoutingService = inject(RoleRoutingService);
 
   menuItems: MenuItem[] = [
     // {
@@ -192,18 +196,6 @@ export class SideBarV2Component implements OnInit, OnChanges {
           label: 'Explorar actividades',
           url: '/app/gestion-actividades-docente/list',
         },
-        // {
-        //   role: [
-        //     'JEFE DE DEPARTAMENTO',
-        //     'ESTUDIANTE',
-        //     'COORDINADOR',
-        //     'DECANO',
-        //     'DOCENTE',
-        //   ],
-        //   icon: 'fas fa-lock',
-        //   label: 'Crear actividades',
-        //   url: '/app/gestion-actividades-docente/create',
-        // },
         {
           role: [
             'JEFE DE DEPARTAMENTO',
@@ -293,20 +285,35 @@ export class SideBarV2Component implements OnInit, OnChanges {
   ];
 
   ngOnInit(): void {
-    // Usa la utilidad para obtener los datos del usuario
+    // Obtener datos del usuario
     this.currentUser = getUserData();
     this.userRoles =
       this.currentUser?.roles.map((role: { nombre: any }) => role.nombre) || [];
+
+    this.actualizarURLsSegunRol();
+  }
+
+  private actualizarURLsSegunRol(): void {
+    this.menuItems.forEach((item) => {
+      if (item.children) {
+        item.children.forEach((child) => {
+          // Actualizar URL de "Gestionar Necesidades"
+          if (child.label === 'Gestionar Necesidades') {
+            child.url = this.roleRoutingService.getRutaNecesidades(
+              this.userRoles
+            );
+          }
+        });
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['isSidebarCollapsed']) {
-      // Cerrar modal de usuario si está abierto
       if (this.isUserModalOpen) {
         this.isUserModalOpen = false;
       }
 
-      // Cerrar todos los submenús cuando se colapsa el sidebar
       if (this.isSidebarCollapsed) {
         this.menuItems.forEach((item) => {
           if (item.isOpen) {

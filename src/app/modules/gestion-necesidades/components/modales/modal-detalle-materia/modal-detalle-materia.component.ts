@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Materia } from '../../models';
+import { Materia } from '../../../models';
 import { CommonModule } from '@angular/common';
 
 @Component({

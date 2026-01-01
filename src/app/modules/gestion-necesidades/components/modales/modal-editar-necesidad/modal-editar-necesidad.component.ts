@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NecesidadResponse, UpdateNecesidadDTO } from '../../models';
+import { NecesidadResponse, UpdateNecesidadDTO } from '../../../models';
 import {
   getBadgeClassEstado,
   GRUPOS_DISPONIBLES,
-} from '../../utils/necesidades.utils';
+} from '../../../utils/necesidades.utils';
 
 @Component({
   selector: 'app-modal-editar-necesidad',

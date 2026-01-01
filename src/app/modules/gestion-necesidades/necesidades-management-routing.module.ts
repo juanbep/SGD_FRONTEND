@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-//import { RoleGuard } from '../../guards/role.guard';
-import { NecesidadesManagementComponent } from './pages/necesidades-management/necesidades-management.component';
+import { RoleGuard } from '../../guards/role.guard';
 import { ViewNecesidadDetailComponent } from './pages/view-necesidad-detail/view-necesidad-detail.component';
 import { AsignacionesManagementComponent } from './pages/asignaciones-management/asignaciones-management.component';
 import { CrearNecesidadesDesdePlanComponent } from './pages/crear-necesidades-desde-plan/crear-necesidades-desde-plan.component';
@@ -11,33 +10,72 @@ const routes: Routes = [
   {
     path: '',
     children: [
-      // ===== RUTA PRINCIPAL - GESTIÓN DE NECESIDADES =====
+      // ===== RUTAS PRINCIPALES - GESTIÓN DE NECESIDADES POR ROL (LAZY LOADING) =====
+      {
+        path: 'management/coordinador',
+        loadComponent: () =>
+          import(
+            './pages/coordinador-necesidades/coordinador-necesidades.component'
+          ).then((m) => m.CoordinadorNecesidadesComponent),
+        canActivate: [RoleGuard],
+        data: { roles: ['COORDINADOR'] },
+      },
+      {
+        path: 'management/secretario',
+        loadComponent: () =>
+          import(
+            './pages/secretario-necesidades/secretario-necesidades.component'
+          ).then((m) => m.SecretarioNecesidadesComponent),
+        canActivate: [RoleGuard],
+        data: { roles: ['SECRETARIO', 'DECANO', 'SECRETARIA/O FACULTAD'] },
+      },
+      {
+        path: 'management/jefe',
+        loadComponent: () =>
+          import('./pages/jefe-necesidades/jefe-necesidades.component').then(
+            (m) => m.JefeNecesidadesComponent
+          ),
+        canActivate: [RoleGuard],
+        data: { roles: ['JEFE_DEPARTAMENTO', 'JEFE DE DEPARTAMENTO'] },
+      },
+
+      // ===== RUTA FALLBACK - Redirige a coordinador por defecto =====
+      // El sidebar debe apuntar directamente a las rutas específicas
       {
         path: 'management',
-        component: NecesidadesManagementComponent,
-        // canActivate: [RoleGuard],
-        // data: { roles: ['COORDINADOR', 'SECRETARIO', 'DECANO'] }
+        redirectTo: 'management/coordinador',
+        pathMatch: 'full',
       },
+
+      // ===== CREAR NECESIDADES DESDE PLAN - COORDINADOR =====
       {
         path: 'crear-desde-plan/:oidPlan/:oidCalendario',
         component: CrearNecesidadesDesdePlanComponent,
-        // canActivate: [RoleGuard],
-        // data: { roles: ['COORDINADOR'] }
+        canActivate: [RoleGuard],
+        data: { roles: ['COORDINADOR'] },
       },
+
       // ===== DETALLE DE NECESIDAD =====
       {
         path: 'view',
         component: ViewNecesidadDetailComponent,
-        // canActivate: [RoleGuard],
-        // data: { roles: ['COORDINADOR', 'SECRETARIO', 'DECANO'] }
+        canActivate: [RoleGuard],
+        data: {
+          roles: [
+            'COORDINADOR',
+            'SECRETARIO',
+            'DECANO',
+            'SECRETARIA/O FACULTAD',
+          ],
+        },
       },
 
       // ===== GESTIÓN DE ASIGNACIONES - JEFE DEPARTAMENTO =====
       {
         path: 'asignaciones',
         component: AsignacionesManagementComponent,
-        // canActivate: [RoleGuard],
-        // data: { roles: ['JEFE_DEPARTAMENTO'] }
+        canActivate: [RoleGuard],
+        data: { roles: ['JEFE_DEPARTAMENTO', 'JEFE DE DEPARTAMENTO'] },
       },
 
       // ===== REDIRECCIÓN POR DEFECTO =====

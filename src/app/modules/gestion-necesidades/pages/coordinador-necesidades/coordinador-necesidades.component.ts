@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -6,23 +5,23 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
-import { ToastrService } from 'ngx-toastr';
 import {
   NecesidadesService,
   NecesidadHelperService,
   TransicionEstadosService,
 } from '../../services';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import {
+  ModalConfirmacionConfig,
+  ModalConfirmacionComponent,
+} from '../../components/modales/modal-confirmacion/modal-confirmacion.component';
 import {
   Materia,
   NecesidadFilters,
   NecesidadResponse,
   UpdateNecesidadDTO,
 } from '../../models';
-import { getBadgeClassEstado } from '../../utils/necesidades.utils';
-import { FiltrosNecesidadesComponent } from '../filtros-necesidades/filtros-necesidades.component';
 import {
   buildSortString,
   getPaginationInfo,
@@ -33,18 +32,19 @@ import {
   toggleSort,
   trackByOid,
 } from '../../shared/table.utils';
-import { ModalDetalleMateriaComponent } from '../modales/modal-detalle-materia/modal-detalle-materia.component';
-import { ModalEditarDepartamentoComponent } from '../modales/modal-editar-departamento/modal-editar-departamento.component';
-import {
-  ModalConfirmacionComponent,
-  ModalConfirmacionConfig,
-} from '../modales/modal-confirmacion/modal-confirmacion.component';
-import { ModalSeleccionarPlanComponent } from '../modales/modal-seleccionar-plan/modal-seleccionar-plan.component';
-import { ModalEliminarNecesidadComponent } from '../modales/modal-eliminar-necesidad/modal-eliminar-necesidad.component';
-import { ModalEditarNecesidadComponent } from '../modales/modal-editar-necesidad/modal-editar-necesidad.component';
+import { getBadgeClassEstado } from '../../utils/necesidades.utils';
+import { ModalEditarNecesidadComponent } from '../../components/modales/modal-editar-necesidad/modal-editar-necesidad.component';
+import { ModalDetalleMateriaComponent } from '../../components/modales/modal-detalle-materia/modal-detalle-materia.component';
+import { ModalSeleccionarPlanComponent } from '../../components/modales/modal-seleccionar-plan/modal-seleccionar-plan.component';
+import { ModalEliminarNecesidadComponent } from '../../components/modales/modal-eliminar-necesidad/modal-eliminar-necesidad.component';
+import { ModalEditarDepartamentoComponent } from '../../components/modales/modal-editar-departamento/modal-editar-departamento.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FiltrosNecesidadesComponent } from '../../components/filtros-necesidades/filtros-necesidades.component';
 
 @Component({
-  selector: 'app-list-necesidades',
+  selector: 'app-coordinador-necesidades',
   standalone: true,
   imports: [
     CommonModule,
@@ -58,10 +58,10 @@ import { ModalEditarNecesidadComponent } from '../modales/modal-editar-necesidad
     ModalEditarDepartamentoComponent,
     ModalConfirmacionComponent,
   ],
-  templateUrl: './list-necesidades.component.html',
-  styleUrl: './list-necesidades.component.css',
+  templateUrl: './coordinador-necesidades.component.html',
+  styleUrl: './coordinador-necesidades.component.css',
 })
-export class ListNecesidadesComponent implements OnInit {
+export class CoordinadorNecesidadesComponent implements OnInit {
   // ===== SERVICIOS =====
   private necesidadesService = inject(NecesidadesService);
   private necesidadesHelper = inject(NecesidadHelperService);
@@ -72,13 +72,10 @@ export class ListNecesidadesComponent implements OnInit {
   // ===== REFERENCIA AL INPUT FILE =====
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  // ===== ROL DEL USUARIO =====
-  usuarioRol: 'COORDINADOR' | 'SECRETARIO' | 'DECANO' | 'JEFE' = 'COORDINADOR'; // TODO: Obtener del servicio de autenticación
-
   // ===== SELECCIÓN MÚLTIPLE =====
   necesidadesSeleccionadas: Set<number> = new Set();
 
-  // ===== ESTADOS PARA TRANSICIONES =====
+  // ===== ESTADO PARA TRANSICIÓN =====
   transicionandoEstado = false;
   mostrarModalTransicion = false;
   configModalTransicion: ModalConfirmacionConfig = {
@@ -90,7 +87,7 @@ export class ListNecesidadesComponent implements OnInit {
     icono: 'fa-exchange-alt',
   };
 
-  // Contexto de la transición pendiente
+  // CONTEXTO DE LA TRANSICIÓN PENDIENTE
   private contextoTransicion: {
     estadoOrigen: string;
     estadoDestino: string;
@@ -141,7 +138,7 @@ export class ListNecesidadesComponent implements OnInit {
   Math = Math;
 
   ngOnInit(): void {
-    // Los filtros se cargan automáticamente desde el componente hijo
+    // LOS FILTROS SE CARGAN AUTOMÁTICAMENTE DESDE EL COMPONENTE HIJO
   }
 
   // ===== MANEJADORES DE EVENTOS DEL COMPONENTE DE FILTROS =====
@@ -222,8 +219,9 @@ export class ListNecesidadesComponent implements OnInit {
     });
   }
 
+  // ===== EDITAR DEPARTAMENTO =====
   editarDepartamento(necesidad: NecesidadResponse): void {
-    // Validar que solo se pueda editar si está en BORRADOR
+    // VALIDAR QUE SOLO SE PUEDA EDITAR SI ESTÁ EN ESTADO BORRADO
     if (necesidad.estado !== 'BORRADOR') {
       this.toastr.warning(
         'Solo se pueden editar departamentos de necesidades en estado BORRADOR',
@@ -299,7 +297,7 @@ export class ListNecesidadesComponent implements OnInit {
     this.materiaSeleccionada = null;
   }
 
-  // ===== ACCIONES =====
+  // ===== ACCIONES CRUD =====
   crearNuevaNecesidad(): void {
     this.mostrarModalSeleccionarPlan = true;
   }
@@ -309,7 +307,6 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   onPlanSeleccionado(oidPlan: number): void {
-    // Obtener el calendario actual de los filtros
     const oidCalendario = this.filtrosActuales.oidCalendario;
 
     if (!oidCalendario) {
@@ -317,7 +314,6 @@ export class ListNecesidadesComponent implements OnInit {
       return;
     }
 
-    // Navegar a la vista de creación con parámetros
     this.router.navigate([
       '/app/gestion-necesidades/crear-desde-plan',
       oidPlan,
@@ -326,7 +322,6 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   modificarNecesidad(necesidad: NecesidadResponse): void {
-    // Validar que solo se pueda editar si está en BORRADOR
     if (necesidad.estado !== 'BORRADOR') {
       this.toastr.warning(
         'Solo se pueden modificar necesidades en estado BORRADOR',
@@ -378,7 +373,6 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   eliminarNecesidad(necesidad: NecesidadResponse): void {
-    // Validar que solo se pueda eliminar si está en BORRADOR
     if (necesidad.estado !== 'BORRADOR') {
       this.toastr.warning(
         'Solo se pueden eliminar necesidades en estado BORRADOR',
@@ -455,7 +449,6 @@ export class ListNecesidadesComponent implements OnInit {
   }
 
   // ===== MÉTODOS DE SELECCIÓN MÚLTIPLE =====
-
   toggleSeleccion(necesidad: NecesidadResponse): void {
     const oid = necesidad.oidNecesidad;
 
@@ -468,12 +461,11 @@ export class ListNecesidadesComponent implements OnInit {
 
   toggleTodasSeleccionadas(): void {
     if (this.todasSeleccionadas()) {
-      // Si todas están seleccionadas, limpiar
       this.limpiarSeleccion();
     } else {
-      // Solo seleccionar las que NO están deshabilitadas
+      // SOLO SELECCIONAR LAS QUE ESTÁN EN ESTADO BORRADOR
       this.necesidades.forEach((necesidad) => {
-        if (!this.checkboxDeshabilitado(necesidad)) {
+        if (necesidad.estado === 'BORRADOR') {
           this.necesidadesSeleccionadas.add(necesidad.oidNecesidad);
         }
       });
@@ -487,15 +479,13 @@ export class ListNecesidadesComponent implements OnInit {
   todasSeleccionadas(): boolean {
     if (this.necesidades.length === 0) return false;
 
-    // Obtener solo las necesidades que pueden ser seleccionadas
+    // OBTENER SOLO LAS NECESIADES EN ESTADO BORRADOR
     const seleccionables = this.necesidades.filter(
-      (n) => !this.checkboxDeshabilitado(n)
+      (n) => n.estado === 'BORRADOR'
     );
 
-    // Si no hay ninguna seleccionable, retornar false
     if (seleccionables.length === 0) return false;
 
-    // Verificar si todas las seleccionables están marcadas
     return seleccionables.every((necesidad) =>
       this.necesidadesSeleccionadas.has(necesidad.oidNecesidad)
     );
@@ -520,45 +510,15 @@ export class ListNecesidadesComponent implements OnInit {
     return this.necesidadesSeleccionadas.size;
   }
 
-  // ===== GETTERS DE PERMISOS POR ROL =====
-
-  get puedeCrearNecesidades(): boolean {
-    return this.usuarioRol === 'COORDINADOR';
+  // ===== VALIDACIONES PARA CHECKBOXES =====
+  checkboxDeshabilitado(necesidad: NecesidadResponse): boolean {
+    // COORDINADOR SOLO PUEDE SELECCIONAR NECESIDADES EN ESTADO BORRADOR
+    return necesidad.estado !== 'BORRADOR';
   }
 
-  get puedeModificarBorrador(): boolean {
-    return this.usuarioRol === 'COORDINADOR';
-  }
-
-  get puedeEnviarARevisionSecretario(): boolean {
-    return this.usuarioRol === 'COORDINADOR';
-  }
-
-  get puedeEnviarARevisionJefe(): boolean {
-    return this.usuarioRol === 'SECRETARIO' || this.usuarioRol === 'DECANO';
-  }
-
-  get puedeDevolverASecretario(): boolean {
-    return this.usuarioRol === 'DECANO' || this.usuarioRol === 'JEFE';
-  }
-
-  get puedeDevolverABorrador(): boolean {
-    return this.usuarioRol === 'SECRETARIO' || this.usuarioRol === 'DECANO';
-  }
-
-  get puedeLiberarParaAsignacion(): boolean {
-    return this.usuarioRol === 'JEFE';
-  }
-
-  // Getter para saber si el usuario puede realizar transiciones de estado
-  get puedeRealizarTransiciones(): boolean {
-    return (
-      this.puedeEnviarARevisionSecretario ||
-      this.puedeEnviarARevisionJefe ||
-      this.puedeDevolverASecretario ||
-      this.puedeDevolverABorrador ||
-      this.puedeLiberarParaAsignacion
-    );
+  get checkboxSeleccionarTodasDeshabilitado(): boolean {
+    // DESHABILITAR SI NO HAY NECESIDADES EN ESTADO BORRADOR
+    return !this.necesidades.some((n) => n.estado === 'BORRADOR');
   }
 
   // ===== PAGINACIÓN =====
@@ -574,8 +534,7 @@ export class ListNecesidadesComponent implements OnInit {
     this.filtrosActuales.size = value;
   }
 
-  // ===== MÉTODOS DE TRANSICIÓN DE ESTADO (SIMPLIFICADOS) =====
-
+  // ===== TRANSICIÓN DE ESTADO - COORDINADOR =====
   /**
    * COORDINADOR: BORRADOR → EN_REVISION_SECRETARIO
    */
@@ -585,54 +544,6 @@ export class ListNecesidadesComponent implements OnInit {
       'EN_REVISION_SECRETARIO',
       'Enviar a Revisión Secretario',
       false
-    );
-  }
-
-  /**
-   * SECRETARIO/DECANO: EN_REVISION_SECRETARIO → BORRADOR
-   */
-  devolverABorrador(): void {
-    this.iniciarTransicion(
-      'EN_REVISION_SECRETARIO',
-      'BORRADOR',
-      'Devolver a Borrador',
-      false
-    );
-  }
-
-  /**
-   * SECRETARIO/DECANO: EN_REVISION_SECRETARIO → EN_REVISION_JEFE
-   */
-  enviarARevisionJefe(): void {
-    this.iniciarTransicion(
-      'EN_REVISION_SECRETARIO',
-      'EN_REVISION_JEFE',
-      'Enviar a Revisión Jefe',
-      true
-    );
-  }
-
-  /**
-   * DECANO/JEFE: EN_REVISION_JEFE → EN_REVISION_SECRETARIO
-   */
-  devolverASecretario(): void {
-    this.iniciarTransicion(
-      'EN_REVISION_JEFE',
-      'EN_REVISION_SECRETARIO',
-      'Devolver a Secretario',
-      true
-    );
-  }
-
-  /**
-   * JEFE: EN_REVISION_JEFE → NO_ASIGNADA
-   */
-  liberarParaAsignacion(): void {
-    this.iniciarTransicion(
-      'EN_REVISION_JEFE',
-      'NO_ASIGNADA',
-      'Liberar para Asignación',
-      true
     );
   }
 
@@ -654,7 +565,7 @@ export class ListNecesidadesComponent implements OnInit {
       return;
     }
 
-    // Guardar contexto
+    // GUARDAR CONTEXTO
     this.contextoTransicion = {
       estadoOrigen,
       estadoDestino,
@@ -662,7 +573,7 @@ export class ListNecesidadesComponent implements OnInit {
       requiereDepartamento,
     };
 
-    // Determinar mensajes según si hay selección o no
+    // DETERMINAR MENSAJES SEGÚN SI HAY SELECCIÓN O NO
     const usarSeleccion = this.haySeleccionadas;
 
     let mensaje: string;
@@ -678,14 +589,14 @@ export class ListNecesidadesComponent implements OnInit {
       mensajeSecundario = `Esta acción afectará a TODAS las necesidades del calendario y programa que estén en estado "${estadoOrigen}".`;
     }
 
-    // Configurar modal
+    // CONFIGURAR MODAL
     this.configModalTransicion = {
       titulo: tituloAccion,
       mensaje: mensaje,
       mensajeSecundario: mensajeSecundario,
       textoBotonConfirmar: 'Sí, cambiar estado',
       textoBotonCancelar: 'Cancelar',
-      tipoBotonConfirmar: this.getTipoBotonPorEstado(estadoDestino),
+      tipoBotonConfirmar: 'primary',
       icono: usarSeleccion ? 'fa-check-square' : 'fa-exclamation-triangle',
     };
 
@@ -701,18 +612,14 @@ export class ListNecesidadesComponent implements OnInit {
     this.transicionandoEstado = true;
 
     try {
-      // Decidir qué enviar al backend
       let oidNecesidades: number[] | undefined;
 
       if (this.haySeleccionadas) {
-        // Hay checkboxes marcados: enviar solo esos OIDs
         oidNecesidades = Array.from(this.necesidadesSeleccionadas);
       } else {
-        // No hay checkboxes marcados: enviar undefined (backend procesa TODAS)
         oidNecesidades = undefined;
       }
 
-      // Ejecutar transición
       const resultado = await this.transicionService.ejecutarTransicionMasiva(
         estadoOrigen,
         estadoDestino,
@@ -724,10 +631,8 @@ export class ListNecesidadesComponent implements OnInit {
         oidNecesidades
       );
 
-      // Mostrar resultado
       this.transicionService.mostrarResultado(resultado, tituloAccion);
 
-      // Si fue exitoso, recargar
       if (resultado.exitoso) {
         this.limpiarSeleccion();
         this.cargarNecesidades();
@@ -741,54 +646,6 @@ export class ListNecesidadesComponent implements OnInit {
     }
   }
 
-  /**
-   * Determina el color del botón según el estado destino
-   */
-  private getTipoBotonPorEstado(
-    estadoDestino: string
-  ): 'primary' | 'success' | 'danger' | 'warning' | 'info' {
-    switch (estadoDestino) {
-      case 'EN_REVISION_SECRETARIO':
-        return 'primary';
-      case 'EN_REVISION_JEFE':
-        return 'success';
-      case 'NO_ASIGNADA':
-        return 'info';
-      case 'BORRADOR':
-        return 'warning';
-      default:
-        return 'primary';
-    }
-  }
-
-  /**
-   * Determina si un checkbox debe estar deshabilitado según el rol y estado
-   * COORDINADOR: No puede seleccionar necesidades que ya envió a revisión
-   */
-  checkboxDeshabilitado(necesidad: NecesidadResponse): boolean {
-    if (this.usuarioRol === 'COORDINADOR') {
-      // El coordinador solo puede seleccionar necesidades en BORRADOR
-      return necesidad.estado !== 'BORRADOR';
-    }
-
-    // Otros roles pueden seleccionar cualquier necesidad
-    return false;
-  }
-
-  /**
-   * Determina si el checkbox "Seleccionar todas" debe estar deshabilitado
-   */
-  get checkboxSeleccionarTodasDeshabilitado(): boolean {
-    if (this.usuarioRol === 'COORDINADOR') {
-      // Si no hay necesidades en BORRADOR, deshabilitar
-      return !this.necesidades.some((n) => n.estado === 'BORRADOR');
-    }
-    return false;
-  }
-
-  /**
-   * Cierra el modal de transición
-   */
   cerrarModalTransicion(): void {
     if (!this.transicionandoEstado) {
       this.mostrarModalTransicion = false;

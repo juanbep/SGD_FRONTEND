@@ -10,9 +10,9 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { PlanHelperService } from '../../../gestion-planes/services';
 import { ToastrService } from 'ngx-toastr';
-import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
+import { PlanHelperService } from '../../../../gestion-planes/services';
+import { getUserProgramaId } from '../../../../auth/utils/user-storage.utils';
 
 @Component({
   selector: 'app-modal-seleccionar-plan',

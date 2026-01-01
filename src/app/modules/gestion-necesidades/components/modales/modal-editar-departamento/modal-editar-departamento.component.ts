@@ -14,11 +14,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { UpdateMateriaDto } from '../../../gestion-planes/models';
-import { DepartamentoHelperService } from '../../../gestion-planes/services';
-import { MateriaService } from '../../../gestion-planes/services/materia/materia.service';
+import { UpdateMateriaDto } from '../../../../gestion-planes/models';
+import { DepartamentoHelperService } from '../../../../gestion-planes/services';
+import { MateriaService } from '../../../../gestion-planes/services/materia/materia.service';
 import { ToastrService } from 'ngx-toastr';
-import { NecesidadResponse } from '../../models';
+import { NecesidadResponse } from '../../../models';
 
 @Component({
   selector: 'app-modal-editar-departamento',
