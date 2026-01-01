@@ -1,19 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { NecesidadFilters } from '../../models';
-import { ToastrService } from 'ngx-toastr';
-import { CalendarioHelperService } from '../../../academic-calendar-management/services';
-import { EstadoCalendario } from '../../../academic-calendar-management/models';
-import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
   ESTADOS_NECESIDAD_DISPONIBLES,
   filtrarCalendariosDeshabilitados,
@@ -23,19 +8,32 @@ import {
   seleccionarCalendarioAutomatico,
   SEMESTRES_DISPONIBLES,
 } from '../../utils/necesidades.utils';
+import { NecesidadFilters } from '../../models';
+import { EstadoCalendario } from '../../../academic-calendar-management/models';
+import { ToastrService } from 'ngx-toastr';
+import {
+  DepartamentoHelperService,
+  ProgramaHelperService,
+} from '../../../gestion-planes/services';
+import { CalendarioHelperService } from '../../../academic-calendar-management/services';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
-  selector: 'app-filtros-necesidades-coordinador',
+  selector: 'app-filtros-necesidades-secretario',
   standalone: true,
   imports: [CommonModule, FormsModule, NgSelectModule],
-  templateUrl: './filtros-necesidades-coordinador.component.html',
-  styleUrl: './filtros-necesidades-coordinador.component.css',
+  templateUrl: './filtros-necesidades-secretario.component.html',
+  styleUrl: './filtros-necesidades-secretario.component.css',
 })
-export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
+export class FiltrosNecesidadesSecretarioComponent implements OnInit {
   @Output() onAplicarFiltros = new EventEmitter<NecesidadFilters>();
   @Output() onLimpiarFiltros = new EventEmitter<void>();
 
   private calendarioHelper = inject(CalendarioHelperService);
+  private programaHelper = inject(ProgramaHelperService);
+  private departamentoHelper = inject(DepartamentoHelperService);
   private toastr = inject(ToastrService);
 
   // ===== DROPDOWNS =====
@@ -43,6 +41,16 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
     value: number;
     label: string;
     estado: EstadoCalendario;
+  }[] = [];
+
+  programas: {
+    value: number;
+    label: string;
+  }[] = [];
+
+  departamentos: {
+    value: number;
+    label: string;
   }[] = [];
 
   // Usar constantes importadas
@@ -54,6 +62,8 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
 
   // ===== LOADING STATES =====
   loadingCalendarios = false;
+  loadingProgramas = false;
+  loadingDepartamentos = false;
 
   // ===== FILTROS LOCALES =====
   filters: NecesidadFilters = {
@@ -70,28 +80,12 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
   filtroGrupo: string = 'TODOS';
   filtroCupo: number | null = null;
   filtroEstado: string = 'TODOS';
+  filtroDepartamento: number | string = 'TODOS';
 
   ngOnInit(): void {
-    this.inicializarFiltros();
     this.cargarCalendarios();
-  }
-
-  // ===== INICIALIZAR FILTROS (MODIFICACIÓN TEMPORAL)=====
-
-  private inicializarFiltros(): void {
-    //Obtener oidPrograma del usuario logueado
-    const oidPrograma = getUserProgramaId();
-
-    if (!oidPrograma || oidPrograma === 0) {
-      console.error('No se pudo obtener el programa del usuario logueado');
-      this.toastr.error(
-        'No se pudo obtener el programa del usuario',
-        'Error de autenticación'
-      );
-      return;
-    }
-
-    this.filters.oidPrograma = oidPrograma;
+    this.cargarProgramas();
+    //this.cargarDepartamentos();
   }
 
   // ===== CARGAR CALENDARIOS =====
@@ -108,11 +102,6 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
       this.filters.oidCalendario = seleccionarCalendarioAutomatico(
         this.calendarios
       );
-
-      // Emitir filtros automáticamente si hay calendario y programa seleccionados
-      if (this.filters.oidCalendario && this.filters.oidPrograma) {
-        this.aplicarFiltros();
-      }
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
       this.toastr.error('Error al cargar la lista de calendarios');
@@ -122,6 +111,45 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
     }
   }
 
+  // ===== CARGAR PROGRAMAS =====
+  async cargarProgramas(): Promise<void> {
+    try {
+      this.loadingProgramas = true;
+      const programasData = await this.programaHelper.getAllForDropdown();
+
+      this.programas = programasData.map((p) => ({
+        value: p.value,
+        label: p.label,
+      }));
+    } catch (error) {
+      console.error('Error al cargar programas:', error);
+      this.toastr.error('Error al cargar la lista de programas');
+      this.programas = [];
+    } finally {
+      this.loadingProgramas = false;
+    }
+  }
+
+  // ===== CARGAR DEPARTAMENTOS =====
+  // async cargarDepartamentos(): Promise<void> {
+  //   try {
+  //     this.loadingDepartamentos = true;
+  //     const departamentosData =
+  //       await this.departamentoHelper.getAllForDropdown();
+
+  //     this.departamentos = departamentosData.map((d) => ({
+  //       value: d.oidDepartamento,
+  //       label: d.nombre,
+  //     }));
+  //   } catch (error) {
+  //     console.error('Error al cargar departamentos:', error);
+  //     this.toastr.error('Error al cargar la lista de departamentos');
+  //     this.departamentos = [];
+  //   } finally {
+  //     this.loadingDepartamentos = false;
+  //   }
+  // }
+
   // ===== APLICAR FILTROS =====
   aplicarFiltros(): void {
     // Validaciones
@@ -130,8 +158,8 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
       return;
     }
 
-    if (!this.filters.oidPrograma || this.filters.oidPrograma === 0) {
-      this.toastr.error('No se ha identificado el programa del usuario');
+    if (!this.filters.oidPrograma || this.filters.oidPrograma === '') {
+      this.toastr.warning('Debe seleccionar un programa');
       return;
     }
 
@@ -163,6 +191,14 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
       filtrosCompletos.idMateria = this.filtroOid.trim();
     }
 
+    if (
+      this.filtroDepartamento &&
+      this.filtroDepartamento !== 'TODOS' &&
+      this.filtroDepartamento !== ''
+    ) {
+      filtrosCompletos.oidDepartamento = this.filtroDepartamento;
+    }
+
     this.onAplicarFiltros.emit(filtrosCompletos);
   }
 
@@ -175,11 +211,16 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
     this.filtroGrupo = 'TODOS';
     this.filtroCupo = null;
     this.filtroEstado = 'TODOS';
+    this.filtroDepartamento = 'TODOS';
 
     // Re-seleccionar el calendario activo usando utilidad
     this.filters.oidCalendario = seleccionarCalendarioAutomatico(
       this.calendarios
     );
+
+    // IMPORTANTE: No limpiar el programa seleccionado
+    // El secretario debe mantener el programa seleccionado
+    // this.filters.oidPrograma = '';
 
     this.onLimpiarFiltros.emit();
   }
@@ -193,7 +234,8 @@ export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
       this.filtroSemestre !== 'TODOS' ||
       this.filtroGrupo !== 'TODOS' ||
       this.filtroCupo !== null ||
-      this.filtroEstado !== 'TODOS'
+      this.filtroEstado !== 'TODOS' ||
+      this.filtroDepartamento !== 'TODOS'
     );
   }
 }
