@@ -109,9 +109,9 @@ export class ModalEditarDepartamentoComponent implements OnInit {
     }
 
     this.guardando = true;
+    this.departamentoForm.get('oidDepartamento')?.disable();
 
     try {
-      // Construir el DTO con TODOS los campos de la materia, cambiando solo el departamento
       const updateDto: UpdateMateriaDto = {
         idMateria: materia.idMateria,
         oidMateria: materia.oidMateria,
@@ -119,7 +119,7 @@ export class ModalEditarDepartamentoComponent implements OnInit {
         nombre: materia.nombre,
         semestre: materia.semestre,
         horasSemana: materia.horasSemana,
-        oidDepartamento: nuevoOidDepartamento, // ← ÚNICO CAMPO MODIFICADO
+        oidDepartamento: nuevoOidDepartamento,
         oidPlan: materia.oidPlan,
         idCorrequisito: materia.idCorrequisito,
       };
@@ -131,7 +131,6 @@ export class ModalEditarDepartamentoComponent implements OnInit {
         });
       });
 
-      // Obtener el nombre del nuevo departamento
       const nuevoDepartamento = this.departamentos.find(
         (d) => d.value === nuevoOidDepartamento
       );
@@ -154,11 +153,13 @@ export class ModalEditarDepartamentoComponent implements OnInit {
       this.toastr.error(mensajeError, 'Error');
     } finally {
       this.guardando = false;
+      this.departamentoForm.get('oidDepartamento')?.enable();
     }
   }
 
   cerrar(): void {
     if (!this.guardando) {
+      this.departamentoForm.get('oidDepartamento')?.enable();
       this.onCerrar.emit();
     }
   }

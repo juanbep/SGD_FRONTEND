@@ -25,13 +25,13 @@ import {
 } from '../../utils/necesidades.utils';
 
 @Component({
-  selector: 'app-filtros-necesidades',
+  selector: 'app-filtros-necesidades-coordinador',
   standalone: true,
   imports: [CommonModule, FormsModule, NgSelectModule],
-  templateUrl: './filtros-necesidades.component.html',
-  styleUrl: './filtros-necesidades.component.css',
+  templateUrl: './filtros-necesidades-coordinador.component.html',
+  styleUrl: './filtros-necesidades-coordinador.component.css',
 })
-export class FiltrosNecesidadesComponent implements OnInit {
+export class FiltrosNecesidadesCoordinadorComponent implements OnInit {
   @Output() onAplicarFiltros = new EventEmitter<NecesidadFilters>();
   @Output() onLimpiarFiltros = new EventEmitter<void>();
 

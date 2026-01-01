@@ -97,7 +97,7 @@ export class TransicionEstadosService {
    * Ejecuta una transición masiva (todas del calendario+programa o solo las seleccionadas)
    * @param oidNecesidades - (Opcional) Si se envía, solo afecta esas necesidades
    */
-  async ejecutarTransicionMasiva(
+  async ejecutarCambioDeEstado(
     estadoOrigen: string,
     estadoDestino: string,
     oidCalendario: number,

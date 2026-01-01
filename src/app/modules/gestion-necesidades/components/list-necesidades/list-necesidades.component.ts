@@ -22,7 +22,7 @@ import {
   UpdateNecesidadDTO,
 } from '../../models';
 import { getBadgeClassEstado } from '../../utils/necesidades.utils';
-import { FiltrosNecesidadesComponent } from '../filtros-necesidades/filtros-necesidades.component';
+import { FiltrosNecesidadesCoordinadorComponent } from '../filtros-necesidades-coordinador/filtros-necesidades-coordinador.component';
 import {
   buildSortString,
   getPaginationInfo,
@@ -50,7 +50,7 @@ import { ModalEditarNecesidadComponent } from '../modales/modal-editar-necesidad
     CommonModule,
     FormsModule,
     NgSelectModule,
-    FiltrosNecesidadesComponent,
+    FiltrosNecesidadesCoordinadorComponent,
     ModalDetalleMateriaComponent,
     ModalSeleccionarPlanComponent,
     ModalEliminarNecesidadComponent,
@@ -713,7 +713,7 @@ export class ListNecesidadesComponent implements OnInit {
       }
 
       // Ejecutar transición
-      const resultado = await this.transicionService.ejecutarTransicionMasiva(
+      const resultado = await this.transicionService.ejecutarCambioDeEstado(
         estadoOrigen,
         estadoDestino,
         Number(this.filtrosActuales.oidCalendario),

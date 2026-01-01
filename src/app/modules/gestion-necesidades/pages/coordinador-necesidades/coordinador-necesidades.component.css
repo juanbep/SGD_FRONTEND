@@ -1,0 +1,320 @@
+/* ===== ESTILOS PARA CARD DE TABLA ===== */
+
+.btn i,
+.btn .spinner-border {
+  color: inherit !important;
+}
+
+.card-header {
+  background-color: #001282 !important;
+  color: white !important;
+}
+
+.card-header h6,
+.card-header .btn,
+.card-header .text-muted,
+.card-header .small.text-muted {
+  color: white !important;
+}
+
+.btn-link.text-primary {
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.btn-link.text-primary:hover {
+  color: #f8ae15 !important;
+  text-decoration: none !important;
+}
+
+/* ===== ESTILOS PARA BADGES ===== */
+
+.badge.bg-primary {
+  background-color: #f8ae15 !important;
+  color: #212529 !important;
+  font-weight: 700;
+  padding: 0.4em 0.65em;
+}
+
+.badge.bg-warning {
+  background-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.badge.bg-success {
+  background-color: #249337 !important;
+  color: white !important;
+}
+
+.badge.bg-info {
+  background-color: #16a8e1 !important;
+  color: white !important;
+}
+
+.badge.bg-secondary {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+.badge.bg-light.text-dark {
+  background-color: #0051c6 !important;
+  color: white !important;
+  border: none;
+  font-weight: 600;
+}
+
+/* ===== ESTILOS PARA BOTONES ===== */
+
+.btn-outline-secondary {
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background-color: #f8ae15 !important;
+  border-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.btn-outline-success {
+  border-color: #249337 !important;
+  color: #249337 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-success:hover {
+  background-color: #249337 !important;
+  border-color: #249337 !important;
+  color: white !important;
+}
+
+.btn-outline-primary {
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+  color: white !important;
+}
+
+.btn-outline-danger {
+  border-color: #ad0000 !important;
+  color: #ad0000 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: #ad0000 !important;
+  border-color: #ad0000 !important;
+  color: white !important;
+}
+
+.btn-outline-info {
+  border-color: #16a8e1 !important;
+  color: #16a8e1 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-info:hover {
+  background-color: #16a8e1 !important;
+  border-color: #16a8e1 !important;
+  color: white !important;
+}
+
+.btn-outline-warning {
+  border-color: #f8ae15 !important;
+  color: #f8ae15 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-warning:hover {
+  background-color: #f8ae15 !important;
+  border-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.btn-success {
+  background-color: #249337 !important;
+  border-color: #249337 !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  background-color: #1e7a2d !important;
+  border-color: #1e7a2d !important;
+}
+
+/* ===== ESTILOS PARA TABLA ===== */
+
+.table thead th {
+  color: #001282 !important;
+}
+
+.table thead th .fas {
+  color: #0051c6 !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 81, 198, 0.08) !important;
+}
+
+.table tbody td:last-child {
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table tbody td {
+  vertical-align: middle;
+}
+
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #f8f9fa;
+}
+
+.table-responsive {
+  border-radius: 0.375rem;
+}
+
+/* ===== ESTILOS PARA ORDENAMIENTO ===== */
+
+.sortable-header {
+  cursor: pointer !important;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.sortable-header:hover {
+  background-color: rgba(0, 81, 198, 0.15) !important;
+}
+
+.sortable-header i.fa-sort,
+.sortable-header i.fa-sort-up,
+.sortable-header i.fa-sort-down {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.sortable-header i.fa-sort-up.text-primary,
+.sortable-header i.fa-sort-down.text-primary {
+  opacity: 1;
+  color: #0051c6 !important;
+}
+
+/* ===== ESTILOS PARA ACCIONES ===== */
+
+.action-buttons-wrapper {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+
+/* ===== ESTILOS PARA PAGINACIÓN ===== */
+
+.pagination .page-link {
+  color: #001282 !important;
+  background-color: white !important;
+}
+
+.pagination .page-link:hover:not(:disabled) {
+  background-color: #ad0000 !important;
+  border-color: #ad0000 !important;
+  color: white !important;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #001282 !important;
+  border-color: #001282 !important;
+  color: white !important;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d !important;
+  background-color: #f8f9fa !important;
+}
+
+/* ===== ESTILOS PARA ESTADOS DE CARGA ===== */
+
+.spinner-border {
+  color: #001282 !important;
+}
+
+.text-danger .fas {
+  color: #e52724 !important;
+}
+
+/* Estilos para la barra de acciones masivas */
+.alert {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para checkboxes */
+.form-check-input {
+  width: 18px;
+  height: 18px;
+}
+
+.form-check-input:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Animación suave para botones deshabilitados */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mejorar visibilidad de badges en botones */
+.btn .badge {
+  font-size: 0.75rem;
+  padding: 0.2em 0.4em;
+}
+
+/* Estilo para el indicador de sin acciones */
+.text-muted.small {
+  font-size: 0.85rem;
+}
+
+/* ===== RESPONSIVIDAD ===== */
+
+@media (max-width: 768px) {
+  .action-buttons-wrapper {
+    gap: 0.25rem;
+  }
+
+  .action-buttons-wrapper .btn-sm {
+    padding: 0.3rem 0.45rem;
+  }
+
+  .action-buttons-wrapper .btn-sm i {
+    font-size: 0.85rem;
+  }
+
+  .pagination-sm .page-link {
+    padding: 0.25rem 0.4rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .action-buttons-wrapper {
+    gap: 0.15rem;
+  }
+
+  .action-buttons-wrapper .btn-sm {
+    padding: 0.25rem 0.4rem;
+  }
+
+  .action-buttons-wrapper .btn-sm i {
+    font-size: 0.8rem;
+  }
+}

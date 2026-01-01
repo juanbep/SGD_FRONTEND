@@ -41,7 +41,7 @@ import { ModalEditarDepartamentoComponent } from '../../components/modales/modal
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FiltrosNecesidadesComponent } from '../../components/filtros-necesidades/filtros-necesidades.component';
+import { FiltrosNecesidadesCoordinadorComponent } from '../../components/filtros-necesidades-coordinador/filtros-necesidades-coordinador.component';
 
 @Component({
   selector: 'app-coordinador-necesidades',
@@ -50,7 +50,7 @@ import { FiltrosNecesidadesComponent } from '../../components/filtros-necesidade
     CommonModule,
     FormsModule,
     NgSelectModule,
-    FiltrosNecesidadesComponent,
+    FiltrosNecesidadesCoordinadorComponent,
     ModalDetalleMateriaComponent,
     ModalSeleccionarPlanComponent,
     ModalEliminarNecesidadComponent,
@@ -553,6 +553,15 @@ export class CoordinadorNecesidadesComponent implements OnInit {
     tituloAccion: string,
     requiereDepartamento: boolean
   ): void {
+    // Validar que haya necesidades seleccionadas
+    if (!this.haySeleccionadas) {
+      this.toastr.warning(
+        'Debe seleccionar al menos una necesidad',
+        'Sin selección'
+      );
+      return;
+    }
+
     // Validaciones
     if (!this.transicionService.validarFiltrosBasicos(this.filtrosActuales)) {
       return;
@@ -565,7 +574,7 @@ export class CoordinadorNecesidadesComponent implements OnInit {
       return;
     }
 
-    // GUARDAR CONTEXTO
+    // Guardar contexto
     this.contextoTransicion = {
       estadoOrigen,
       estadoDestino,
@@ -573,23 +582,19 @@ export class CoordinadorNecesidadesComponent implements OnInit {
       requiereDepartamento,
     };
 
-    // DETERMINAR MENSAJES SEGÚN SI HAY SELECCIÓN O NO
-    const usarSeleccion = this.haySeleccionadas;
+    // Mensajes simplificados
+    const mensaje = `¿Está seguro de cambiar el estado de ${
+      this.totalSeleccionadas === 1
+        ? 'la necesidad seleccionada'
+        : `las ${this.totalSeleccionadas} necesidades seleccionadas`
+    }?`;
+    const mensajeSecundario = `${
+      this.totalSeleccionadas === 1
+        ? 'La necesidad pasará'
+        : 'Las necesidades pasarán'
+    } de "${estadoOrigen}" a "${estadoDestino}".`;
 
-    let mensaje: string;
-    let mensajeSecundario: string;
-
-    if (usarSeleccion) {
-      // HAY SELECCIÓN
-      mensaje = `¿Está seguro de cambiar el estado de las ${this.totalSeleccionadas} necesidades SELECCIONADAS?`;
-      mensajeSecundario = `Las necesidades seleccionadas pasarán de "${estadoOrigen}" a "${estadoDestino}".`;
-    } else {
-      // NO HAY SELECCIÓN = TODAS
-      mensaje = `⚠️ ¿Está seguro de cambiar el estado de TODAS las ${this.totalElements} necesidades?`;
-      mensajeSecundario = `Esta acción afectará a TODAS las necesidades del calendario y programa que estén en estado "${estadoOrigen}".`;
-    }
-
-    // CONFIGURAR MODAL
+    // Configurar modal
     this.configModalTransicion = {
       titulo: tituloAccion,
       mensaje: mensaje,
@@ -597,7 +602,7 @@ export class CoordinadorNecesidadesComponent implements OnInit {
       textoBotonConfirmar: 'Sí, cambiar estado',
       textoBotonCancelar: 'Cancelar',
       tipoBotonConfirmar: 'primary',
-      icono: usarSeleccion ? 'fa-check-square' : 'fa-exclamation-triangle',
+      icono: 'fa-check-square',
     };
 
     this.mostrarModalTransicion = true;
@@ -612,15 +617,10 @@ export class CoordinadorNecesidadesComponent implements OnInit {
     this.transicionandoEstado = true;
 
     try {
-      let oidNecesidades: number[] | undefined;
+      // Siempre enviar el array de OIDs seleccionados
+      const oidNecesidades = Array.from(this.necesidadesSeleccionadas);
 
-      if (this.haySeleccionadas) {
-        oidNecesidades = Array.from(this.necesidadesSeleccionadas);
-      } else {
-        oidNecesidades = undefined;
-      }
-
-      const resultado = await this.transicionService.ejecutarTransicionMasiva(
+      const resultado = await this.transicionService.ejecutarCambioDeEstado(
         estadoOrigen,
         estadoDestino,
         Number(this.filtrosActuales.oidCalendario),
@@ -628,7 +628,7 @@ export class CoordinadorNecesidadesComponent implements OnInit {
         requiereDepartamento
           ? Number(this.filtrosActuales.oidDepartamento)
           : undefined,
-        oidNecesidades
+        oidNecesidades // Siempre enviar el array
       );
 
       this.transicionService.mostrarResultado(resultado, tituloAccion);

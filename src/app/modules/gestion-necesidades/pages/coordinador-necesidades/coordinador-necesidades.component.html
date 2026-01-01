@@ -1,36 +1,30 @@
 <div class="view-container">
   <!-- Componente de Filtros -->
-  <app-filtros-necesidades
+  <app-filtros-necesidades-coordinador
     (onAplicarFiltros)="onFiltrosAplicados($event)"
     (onLimpiarFiltros)="onFiltrosLimpiados()"
-  ></app-filtros-necesidades>
+  ></app-filtros-necesidades-coordinador>
 
   <!-- ========== BARRA DE ACCIONES MASIVAS - COORDINADOR ========== -->
-  <div
-    class="alert mb-3"
-    [ngClass]="haySeleccionadas ? 'alert-success' : 'alert-warning'"
-    *ngIf="totalElements > 0"
-  >
+  <div class="alert alert-info mb-3" *ngIf="totalElements > 0">
     <div
       class="d-flex justify-content-between align-items-center flex-wrap gap-3"
     >
       <!-- Info -->
       <div class="d-flex align-items-center gap-2">
-        <i
-          class="fas"
-          [ngClass]="
-            haySeleccionadas ? 'fa-check-square' : 'fa-exclamation-triangle'
-          "
-        ></i>
-        <span *ngIf="!haySeleccionadas">
-          <strong>{{ totalElements }}</strong> necesidades
-          <span class="text-muted small"
-            >(sin selección = se procesarán TODAS)</span
-          >
+        <i class="fas fa-info-circle"></i>
+        <span *ngIf="!haySeleccionadas" class="text-muted">
+          Seleccione al menos una necesidad en estado BORRADOR para enviar a
+          revisión
         </span>
         <span *ngIf="haySeleccionadas">
-          <strong>{{ totalSeleccionadas }}</strong> de
-          <strong>{{ totalElements }}</strong> seleccionadas
+          <i class="fas fa-check-square text-success me-2"></i>
+          <strong>{{ totalSeleccionadas }}</strong>
+          {{
+            totalSeleccionadas === 1
+              ? "necesidad seleccionada"
+              : "necesidades seleccionadas"
+          }}
         </span>
 
         <button
@@ -39,7 +33,7 @@
           class="btn btn-sm btn-link text-danger p-0"
           (click)="limpiarSeleccion()"
         >
-          <i class="fas fa-times"></i> Limpiar
+          <i class="fas fa-times"></i> Limpiar selección
         </button>
       </div>
 
@@ -49,10 +43,21 @@
           type="button"
           class="btn btn-primary"
           (click)="enviarARevisionSecretario()"
-          [disabled]="transicionandoEstado || loading"
+          [disabled]="!haySeleccionadas || transicionandoEstado || loading"
+          [title]="
+            !haySeleccionadas
+              ? 'Seleccione al menos una necesidad'
+              : 'Enviar necesidades seleccionadas'
+          "
         >
           <i class="fas fa-paper-plane me-1"></i>
-          {{ haySeleccionadas ? "Enviar seleccionadas" : "Enviar TODAS" }}
+          Enviar a Revisión
+          <span
+            *ngIf="haySeleccionadas"
+            class="badge bg-light text-primary ms-2"
+          >
+            {{ totalSeleccionadas }}
+          </span>
         </button>
       </div>
     </div>
