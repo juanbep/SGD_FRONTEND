@@ -121,6 +121,11 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
         value: p.value,
         label: p.label,
       }));
+
+      // SELECCIONAR AUTOMÁTICAMENTE EL PRIMER PROGRAMA
+      if (this.programas.length > 0) {
+        this.filters.oidPrograma = this.programas[0].value;
+      }
     } catch (error) {
       console.error('Error al cargar programas:', error);
       this.toastr.error('Error al cargar la lista de programas');
@@ -138,8 +143,8 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
   //       await this.departamentoHelper.getAllForDropdown();
 
   //     this.departamentos = departamentosData.map((d) => ({
-  //       value: d.oidDepartamento,
-  //       label: d.nombre,
+  //       value: d.value,
+  //       label: d.label,
   //     }));
   //   } catch (error) {
   //     console.error('Error al cargar departamentos:', error);

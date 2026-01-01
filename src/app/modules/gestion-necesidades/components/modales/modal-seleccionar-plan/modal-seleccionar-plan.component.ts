@@ -60,10 +60,10 @@ export class ModalSeleccionarPlanComponent implements OnChanges {
 
   // ===== CARGAR PLANES =====
   async cargarPlanes(): Promise<void> {
-    if (!this.oidPrograma || this.oidPrograma === 0) {
-      this.toastr.error('No se ha identificado el programa del usuario');
-      return;
-    }
+    // if (!this.oidPrograma || this.oidPrograma === 0) {
+    //   this.toastr.error('No se ha identificado el programa del usuario');
+    //   return;
+    // }
 
     try {
       this.loadingPlanes = true;
