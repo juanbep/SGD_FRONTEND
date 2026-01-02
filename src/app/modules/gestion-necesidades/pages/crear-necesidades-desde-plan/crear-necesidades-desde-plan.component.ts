@@ -7,6 +7,7 @@ import { CrearLoteComponent } from './crear-lote/crear-lote.component';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DepartamentoService } from '../../../gestion-planes/services';
+import { hasRole } from '../../../auth/utils/user-storage.utils';
 
 type TabActivo = 'individual' | 'lote';
 
@@ -41,6 +42,7 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
   // ===== PARÁMETROS DE RUTA =====
   oidPlan: number = 0;
   oidCalendario: number = 0;
+  origenNavegacion: string = '';
 
   // ===== TABS =====
   activeTab: TabActivo = 'individual';
@@ -81,6 +83,7 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
 
   // ===== OBTENER PARÁMETROS DE RUTA =====
   private obtenerParametrosRuta(): void {
+    // Obtener parámetros de la ruta (oidPlan, oidCalendario)
     this.route.params.subscribe((params) => {
       this.oidPlan = Number(params['oidPlan']);
       this.oidCalendario = Number(params['oidCalendario']);
@@ -93,6 +96,10 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
         this.volverALista();
         return;
       }
+    });
+
+    this.route.queryParams.subscribe((queryParams) => {
+      this.origenNavegacion = queryParams['origen'] || '';
     });
   }
 
@@ -167,6 +174,20 @@ export class CrearNecesidadesDesdePlanComponent implements OnInit {
 
   // ===== NAVEGACIÓN =====
   volverALista(): void {
-    this.router.navigate(['/app/gestion-necesidades/management']);
+    let rutaDestino = '/app/gestion-necesidades/management';
+
+    if (this.origenNavegacion === 'secretario') {
+      rutaDestino = '/app/gestion-necesidades/management/secretario';
+    } else if (this.origenNavegacion === 'coordinador') {
+      rutaDestino = '/app/gestion-necesidades/management/coordinador';
+    } else {
+      if (hasRole('SECRETARIO')) {
+        rutaDestino = '/app/gestion-necesidades/management/secretario';
+      } else if (hasRole('COORDINADOR')) {
+        rutaDestino = '/app/gestion-necesidades/management/coordinador';
+      }
+    }
+
+    this.router.navigate([rutaDestino]);
   }
 }

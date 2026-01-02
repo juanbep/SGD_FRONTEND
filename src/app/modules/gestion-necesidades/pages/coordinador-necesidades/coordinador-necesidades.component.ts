@@ -42,6 +42,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FiltrosNecesidadesCoordinadorComponent } from '../../components/filtros-necesidades-coordinador/filtros-necesidades-coordinador.component';
+import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
 
 @Component({
   selector: 'app-coordinador-necesidades',
@@ -137,7 +138,19 @@ export class CoordinadorNecesidadesComponent implements OnInit {
 
   Math = Math;
 
+  oidProgramaUsuario: number = 0;
+
   ngOnInit(): void {
+    this.oidProgramaUsuario = getUserProgramaId();
+
+    if (!this.oidProgramaUsuario || this.oidProgramaUsuario === 0) {
+      console.error('No se pudo obtener el programa del usuario logueado');
+      this.toastr.error(
+        'No se pudo obtener el programa del usuario',
+        'Error de autenticación'
+      );
+      return;
+    }
     // LOS FILTROS SE CARGAN AUTOMÁTICAMENTE DESDE EL COMPONENTE HIJO
   }
 
@@ -314,11 +327,11 @@ export class CoordinadorNecesidadesComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([
-      '/app/gestion-necesidades/crear-desde-plan',
-      oidPlan,
-      oidCalendario,
-    ]);
+    // Agregar queryParams con el origen
+    this.router.navigate(
+      ['/app/gestion-necesidades/crear-desde-plan', oidPlan, oidCalendario],
+      { queryParams: { origen: 'coordinador' } }
+    );
   }
 
   modificarNecesidad(necesidad: NecesidadResponse): void {

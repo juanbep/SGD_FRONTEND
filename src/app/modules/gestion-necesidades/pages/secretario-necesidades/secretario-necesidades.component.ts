@@ -298,6 +298,17 @@ export class SecretarioNecesidadesComponent implements OnInit {
 
   // ===== ACCIONES CRUD =====
   crearNuevaNecesidad(): void {
+    // Validar que haya un programa seleccionado
+    if (
+      !this.filtrosActuales.oidPrograma ||
+      this.filtrosActuales.oidPrograma === ''
+    ) {
+      this.toastr.warning(
+        'Debe seleccionar un programa antes de agregar necesidades'
+      );
+      return;
+    }
+
     this.mostrarModalSeleccionarPlan = true;
   }
 
@@ -313,11 +324,11 @@ export class SecretarioNecesidadesComponent implements OnInit {
       return;
     }
 
-    this.router.navigate([
-      '/app/gestion-necesidades/crear-desde-plan',
-      oidPlan,
-      oidCalendario,
-    ]);
+    // Agregar queryParams con el origen
+    this.router.navigate(
+      ['/app/gestion-necesidades/crear-desde-plan', oidPlan, oidCalendario],
+      { queryParams: { origen: 'secretario' } }
+    );
   }
 
   modificarNecesidad(necesidad: NecesidadResponse): void {

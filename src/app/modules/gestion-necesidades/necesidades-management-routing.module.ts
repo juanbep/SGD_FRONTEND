@@ -52,7 +52,7 @@ const routes: Routes = [
         path: 'crear-desde-plan/:oidPlan/:oidCalendario',
         component: CrearNecesidadesDesdePlanComponent,
         canActivate: [RoleGuard],
-        data: { roles: ['COORDINADOR'] },
+        data: { roles: ['COORDINADOR', 'SECRETARIO', 'SECRETARIA/O FACULTAD'] },
       },
 
       // ===== DETALLE DE NECESIDAD =====

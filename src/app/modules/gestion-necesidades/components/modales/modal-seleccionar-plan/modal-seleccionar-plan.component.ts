@@ -23,6 +23,7 @@ import { getUserProgramaId } from '../../../../auth/utils/user-storage.utils';
 })
 export class ModalSeleccionarPlanComponent implements OnChanges {
   @Input() mostrar: boolean = false;
+  @Input() oidPrograma: number | string = 0; // Recibir oidPrograma del padre
   @Output() onCerrar = new EventEmitter<void>();
   @Output() onPlanSeleccionado = new EventEmitter<number>();
 
@@ -34,42 +35,41 @@ export class ModalSeleccionarPlanComponent implements OnChanges {
   planSeleccionado: number | null = null;
   loadingPlanes = false;
 
-  // OID Programa del usuario
-  private oidPrograma: number = 0;
-
   ngOnChanges(changes: SimpleChanges): void {
     // Cuando se abra el modal, cargar planes
     if (changes['mostrar'] && this.mostrar) {
-      this.obtenerProgramaUsuario();
       this.cargarPlanes();
     }
-  }
 
-  // ===== OBTENER PROGRAMA DEL USUARIO =====
-  private obtenerProgramaUsuario(): void {
-    this.oidPrograma = getUserProgramaId();
-
-    if (!this.oidPrograma || this.oidPrograma === 0) {
-      console.error('No se pudo obtener el programa del usuario logueado');
-      this.toastr.error(
-        'No se pudo obtener el programa del usuario',
-        'Error de autenticación'
-      );
+    // Si cambia el oidPrograma mientras el modal está abierto, recargar planes
+    if (
+      changes['oidPrograma'] &&
+      this.mostrar &&
+      !changes['oidPrograma'].firstChange
+    ) {
+      this.cargarPlanes();
     }
   }
 
   // ===== CARGAR PLANES =====
   async cargarPlanes(): Promise<void> {
-    // if (!this.oidPrograma || this.oidPrograma === 0) {
-    //   this.toastr.error('No se ha identificado el programa del usuario');
-    //   return;
-    // }
+    // Validar que se haya recibido un oidPrograma válido
+    if (
+      !this.oidPrograma ||
+      this.oidPrograma === 0 ||
+      this.oidPrograma === ''
+    ) {
+      this.toastr.warning('No se ha seleccionado un programa');
+      this.planesDisponibles = [];
+      return;
+    }
 
     try {
       this.loadingPlanes = true;
 
+      // Usar el oidPrograma recibido como parámetro
       const planes = await this.planHelperService.getPlanesActivosByPrograma(
-        this.oidPrograma
+        Number(this.oidPrograma)
       );
 
       this.planesDisponibles = planes.map((plan) => ({
@@ -77,6 +77,12 @@ export class ModalSeleccionarPlanComponent implements OnChanges {
         label: `Plan ${plan.numero}`,
         estado: plan.estado,
       }));
+
+      if (this.planesDisponibles.length === 0) {
+        this.toastr.info(
+          'No hay planes activos disponibles para este programa'
+        );
+      }
     } catch (error) {
       console.error('Error al cargar planes:', error);
       this.toastr.error('Error al cargar la lista de planes');

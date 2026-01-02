@@ -521,6 +521,7 @@
 <!-- Modal de Seleccionar Plan -->
 <app-modal-seleccionar-plan
   [mostrar]="mostrarModalSeleccionarPlan"
+  [oidPrograma]="oidProgramaUsuario"
   (onCerrar)="cerrarModalSeleccionarPlan()"
   (onPlanSeleccionado)="onPlanSeleccionado($event)"
 ></app-modal-seleccionar-plan>

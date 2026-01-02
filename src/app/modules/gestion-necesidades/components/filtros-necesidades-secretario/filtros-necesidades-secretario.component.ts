@@ -85,6 +85,7 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
   ngOnInit(): void {
     this.cargarCalendarios();
     this.cargarProgramas();
+    this.cargarDatosIniciales();
     //this.cargarDepartamentos();
   }
 
@@ -154,6 +155,16 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
   //     this.loadingDepartamentos = false;
   //   }
   // }
+
+  async cargarDatosIniciales(): Promise<void> {
+    // Cargar en paralelo
+    await Promise.all([this.cargarCalendarios(), this.cargarProgramas()]);
+
+    // Una vez que ambos estén cargados, si hay calendario y programa, aplicar filtros automáticamente
+    if (this.filters.oidCalendario && this.filters.oidPrograma) {
+      this.aplicarFiltros();
+    }
+  }
 
   // ===== APLICAR FILTROS =====
   aplicarFiltros(): void {
