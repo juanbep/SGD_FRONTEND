@@ -6,19 +6,24 @@
   ></app-filtros-necesidades-coordinador>
 
   <!-- ========== BARRA DE ACCIONES MASIVAS - COORDINADOR ========== -->
-  <div class="alert alert-info mb-3" *ngIf="totalElements > 0">
+  <div
+    *ngIf="totalElements > 0"
+    class="bulk-actions-bar"
+    [class.has-selection]="haySeleccionadas"
+  >
     <div
       class="d-flex justify-content-between align-items-center flex-wrap gap-3"
     >
       <!-- Info -->
-      <div class="d-flex align-items-center gap-2">
-        <i class="fas fa-info-circle"></i>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <i class="fas fa-info-circle info-icon"></i>
+
         <span *ngIf="!haySeleccionadas" class="text-muted">
-          Seleccione al menos una necesidad en estado BORRADOR para enviar a
-          revisión
+          Seleccione al menos una necesidad en estado
+          <strong>EN REVISIÓN SECRETARIO</strong>
         </span>
-        <span *ngIf="haySeleccionadas">
-          <i class="fas fa-check-square text-success me-2"></i>
+
+        <span *ngIf="haySeleccionadas" class="selection-info">
           <strong>{{ totalSeleccionadas }}</strong>
           {{
             totalSeleccionadas === 1
@@ -30,34 +35,27 @@
         <button
           *ngIf="haySeleccionadas"
           type="button"
-          class="btn btn-sm btn-link text-danger p-0"
+          class="btn btn-sm btn-link text-danger btn-clear-selection"
           (click)="limpiarSeleccion()"
         >
-          <i class="fas fa-times"></i> Limpiar selección
+          Limpiar selección
         </button>
       </div>
 
-      <!-- Botón Enviar a Revisión Secretario -->
-      <div class="btn-group btn-group-sm">
+      <!-- Botones de Acción -->
+      <div class="btn-group btn-group-sm action-buttons">
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-success"
           (click)="enviarARevisionSecretario()"
           [disabled]="!haySeleccionadas || transicionandoEstado || loading"
-          [title]="
-            !haySeleccionadas
-              ? 'Seleccione al menos una necesidad'
-              : 'Enviar necesidades seleccionadas'
-          "
+          title="Enviar a revisión jefe"
         >
           <i class="fas fa-paper-plane me-1"></i>
-          Enviar a Revisión
-          <span
-            *ngIf="haySeleccionadas"
-            class="badge bg-light text-primary ms-2"
-          >
+          ENVIAR A REVISIÓN SECRETARIO
+          <!-- <span *ngIf="haySeleccionadas" class="badge ms-2">
             {{ totalSeleccionadas }}
-          </span>
+          </span> -->
         </button>
       </div>
     </div>
