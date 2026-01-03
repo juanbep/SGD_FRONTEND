@@ -316,31 +316,59 @@
               <!-- ACCIONES -->
               <td class="text-center">
                 <div class="action-buttons-wrapper">
-                  <!-- Asignar Docente - Solo en NO_ASIGNADA -->
-                  <button
-                    *ngIf="puedeAsignarDocente(necesidad)"
-                    type="button"
-                    class="btn btn-sm btn-outline-success"
-                    title="Asignar docente"
-                    (click)="asignarDocente(necesidad)"
-                  >
-                    <i class="fas fa-user-plus"></i>
-                  </button>
+                  <!-- BOTONES PARA EN_REVISION_JEFE -->
+                  <ng-container *ngIf="necesidad.estado === 'EN_REVISION_JEFE'">
+                    <!-- Modificar -->
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary"
+                      title="Modificar necesidad"
+                      (click)="modificarNecesidad(necesidad)"
+                    >
+                      <i class="fas fa-edit"></i>
+                    </button>
 
-                  <!-- Gestionar Asignaciones - Solo en ASIGNADA -->
-                  <button
-                    *ngIf="puedeGestionarAsignaciones(necesidad)"
-                    type="button"
-                    class="btn btn-sm btn-outline-primary"
-                    title="Gestionar asignaciones"
-                    (click)="gestionarAsignaciones(necesidad)"
-                  >
-                    <i class="fas fa-users-cog"></i>
-                  </button>
+                    <!-- Eliminar -->
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-danger"
+                      title="Eliminar necesidad"
+                      (click)="eliminarNecesidad(necesidad)"
+                    >
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </ng-container>
 
-                  <!-- Mensaje cuando no hay acciones disponibles -->
+                  <!-- BOTONES PARA NO_ASIGNADA -->
+                  <ng-container *ngIf="puedeAsignarDocente(necesidad)">
+                    <!-- Asignar Docente -->
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-success"
+                      title="Asignar docente"
+                      (click)="asignarDocente(necesidad)"
+                    >
+                      <i class="fas fa-user-plus"></i>
+                    </button>
+                  </ng-container>
+
+                  <!-- BOTONES PARA ASIGNADA -->
+                  <ng-container *ngIf="puedeGestionarAsignaciones(necesidad)">
+                    <!-- Gestionar Asignaciones -->
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-primary"
+                      title="Gestionar asignaciones"
+                      (click)="gestionarAsignaciones(necesidad)"
+                    >
+                      <i class="fas fa-users-cog"></i>
+                    </button>
+                  </ng-container>
+
+                  <!-- MENSAJE PARA OTROS ESTADOS -->
                   <span
                     *ngIf="
+                      necesidad.estado !== 'EN_REVISION_JEFE' &&
                       !puedeAsignarDocente(necesidad) &&
                       !puedeGestionarAsignaciones(necesidad)
                     "
@@ -468,7 +496,6 @@
   [mostrar]="mostrarModalDetalleMateria"
   (onCerrar)="cerrarModalDetalleMateria()"
 ></app-modal-detalle-materia>
-
 <!-- Modal de Confirmación de Transición -->
 <app-modal-confirmacion
   [visible]="mostrarModalTransicion"
@@ -477,3 +504,20 @@
   (onConfirmar)="confirmarTransicion()"
   (onCancelar)="cerrarModalTransicion()"
 ></app-modal-confirmacion>
+<!-- Modal de Eliminar Necesidad -->
+<app-modal-eliminar-necesidad
+  [necesidad]="necesidadAEliminar"
+  [visible]="mostrarModalEliminar"
+  [eliminando]="eliminando"
+  (onConfirmar)="confirmarEliminacion()"
+  (onCancelar)="cerrarModalEliminar()"
+></app-modal-eliminar-necesidad>
+<!-- Modal de Editar Necesidad -->
+<app-modal-editar-necesidad
+  *ngIf="necesidadAEditar"
+  [necesidad]="necesidadAEditar"
+  [visible]="mostrarModalEditar"
+  [editando]="editando"
+  (onCerrar)="cerrarModalEditar()"
+  (onGuardar)="confirmarEdicion($event)"
+></app-modal-editar-necesidad>

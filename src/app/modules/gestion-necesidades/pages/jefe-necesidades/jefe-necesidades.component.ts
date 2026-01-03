@@ -1,9 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { NecesidadesService, TransicionEstadosService } from '../../services';
+import {
+  NecesidadesService,
+  NecesidadHelperService,
+  TransicionEstadosService,
+} from '../../services';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { ModalConfirmacionConfig, ModalConfirmacionComponent } from '../../components/modales/modal-confirmacion/modal-confirmacion.component';
-import { Materia, NecesidadFilters, NecesidadResponse } from '../../models';
+import {
+  ModalConfirmacionConfig,
+  ModalConfirmacionComponent,
+} from '../../components/modales/modal-confirmacion/modal-confirmacion.component';
+import {
+  Materia,
+  NecesidadFilters,
+  NecesidadResponse,
+  UpdateNecesidadDTO,
+} from '../../models';
 import {
   buildSortString,
   getPaginationInfo,
@@ -20,7 +32,9 @@ import { FiltrosNecesidadesJefeComponent } from '../../components/filtros-necesi
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ModalDetalleMateriaComponent } from "../../components/modales/modal-detalle-materia/modal-detalle-materia.component";
+import { ModalDetalleMateriaComponent } from '../../components/modales/modal-detalle-materia/modal-detalle-materia.component';
+import { ModalEditarNecesidadComponent } from '../../components/modales/modal-editar-necesidad/modal-editar-necesidad.component';
+import { ModalEliminarNecesidadComponent } from '../../components/modales/modal-eliminar-necesidad/modal-eliminar-necesidad.component';
 
 @Component({
   selector: 'app-jefe-necesidades',
@@ -31,8 +45,10 @@ import { ModalDetalleMateriaComponent } from "../../components/modales/modal-det
     NgSelectModule,
     FiltrosNecesidadesJefeComponent,
     ModalDetalleMateriaComponent,
-    ModalConfirmacionComponent
-],
+    ModalConfirmacionComponent,
+    ModalEditarNecesidadComponent,
+    ModalEliminarNecesidadComponent,
+  ],
   templateUrl: './jefe-necesidades.component.html',
   styleUrl: './jefe-necesidades.component.css',
 })
@@ -40,6 +56,7 @@ export class JefeNecesidadesComponent implements OnInit {
   // ===== SERVICIOS =====
   private necesidadesService = inject(NecesidadesService);
   private transicionService = inject(TransicionEstadosService);
+  private necesidadesHelper = inject(NecesidadHelperService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
 
@@ -89,6 +106,13 @@ export class JefeNecesidadesComponent implements OnInit {
   // ===== MODALES =====
   mostrarModalDetalleMateria = false;
   materiaSeleccionada: Materia | null = null;
+  // ===== MODALES DE EDICIÓN Y ELIMINACIÓN =====
+  mostrarModalEliminar = false;
+  mostrarModalEditar = false;
+  necesidadAEliminar: NecesidadResponse | null = null;
+  necesidadAEditar: NecesidadResponse | null = null;
+  eliminando = false;
+  editando = false;
 
   Math = Math;
 
@@ -237,6 +261,112 @@ export class JefeNecesidadesComponent implements OnInit {
   cerrarModalDetalleMateria(): void {
     this.mostrarModalDetalleMateria = false;
     this.materiaSeleccionada = null;
+  }
+
+  // ===== EDITAR NECESIDAD - SOLO EN_REVISION_JEFE =====
+  modificarNecesidad(necesidad: NecesidadResponse): void {
+    if (necesidad.estado !== 'EN_REVISION_JEFE') {
+      this.toastr.warning(
+        'Solo se pueden modificar necesidades en estado EN REVISIÓN JEFE',
+        'Operación no permitida'
+      );
+      return;
+    }
+
+    this.necesidadAEditar = necesidad;
+    this.mostrarModalEditar = true;
+  }
+
+  async confirmarEdicion(dto: UpdateNecesidadDTO): Promise<void> {
+    if (!this.necesidadAEditar) return;
+
+    this.editando = true;
+
+    try {
+      const resultado = await this.necesidadesHelper.update(dto);
+
+      if (resultado) {
+        this.toastr.success(
+          `Necesidad "${this.necesidadAEditar.nombreMateria} - Grupo ${dto.grupo}" actualizada correctamente`,
+          'Actualización exitosa'
+        );
+        this.cerrarModalEditar();
+        this.cargarNecesidades();
+      } else {
+        this.toastr.error('No se pudo actualizar la necesidad', 'Error');
+      }
+    } catch (error: any) {
+      console.error('Error al actualizar:', error);
+      const mensajeError =
+        error?.error?.mensaje ||
+        error?.message ||
+        'Error al actualizar la necesidad.';
+      this.toastr.error(mensajeError, 'Error al actualizar');
+    } finally {
+      this.editando = false;
+      this.cerrarModalEditar();
+    }
+  }
+
+  cerrarModalEditar(): void {
+    if (!this.editando) {
+      this.mostrarModalEditar = false;
+      this.necesidadAEditar = null;
+    }
+  }
+
+  // ===== ELIMINAR NECESIDAD - SOLO EN_REVISION_JEFE =====
+  eliminarNecesidad(necesidad: NecesidadResponse): void {
+    if (necesidad.estado !== 'EN_REVISION_JEFE') {
+      this.toastr.warning(
+        'Solo se pueden eliminar necesidades en estado EN REVISIÓN JEFE',
+        'Operación no permitida'
+      );
+      return;
+    }
+
+    this.necesidadAEliminar = necesidad;
+    this.mostrarModalEliminar = true;
+  }
+
+  async confirmarEliminacion(): Promise<void> {
+    if (!this.necesidadAEliminar) return;
+
+    this.eliminando = true;
+
+    try {
+      const resultado = await this.necesidadesHelper.delete(
+        this.necesidadAEliminar.oidNecesidad
+      );
+
+      if (resultado) {
+        this.toastr.success(
+          `Necesidad "${this.necesidadAEliminar.nombreMateria} - Grupo ${this.necesidadAEliminar.grupo}" eliminada exitosamente`,
+          'Eliminación exitosa'
+        );
+        this.cerrarModalEliminar();
+        this.cargarNecesidades();
+      } else {
+        this.toastr.error('No se pudo eliminar la necesidad', 'Error');
+      }
+    } catch (error: any) {
+      console.error('Error al eliminar necesidad:', error);
+      const mensajeError =
+        error?.error?.mensaje ||
+        error?.message ||
+        'Error al eliminar la necesidad.';
+      this.toastr.error(mensajeError, 'Error al eliminar');
+    } finally {
+      this.eliminando = false;
+      this.cerrarModalEliminar();
+    }
+  }
+
+  cerrarModalEliminar(): void {
+    if (!this.eliminando) {
+      this.mostrarModalEliminar = false;
+      this.necesidadAEliminar = null;
+    }
   }
 
   // ===== ACCIONES PARA ASIGNACIONES (PENDIENTES DE IMPLEMENTAR) =====

@@ -72,7 +72,7 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
   filtroSemestre: number | string = 'TODOS';
   filtroGrupo: string = 'TODOS';
   filtroCupo: number | null = null;
-  filtroEstado: string = 'TODOS';
+  filtroEstado: string = 'EN_REVISION_JEFE';
 
   ngOnInit(): void {
     this.inicializarFiltros();
@@ -95,6 +95,7 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
     }
 
     this.filters.oidDepartamento = oidDepartamento;
+    this.filters.oidPrograma = 0;
   }
 
   // ===== CARGAR CALENDARIOS =====
@@ -129,11 +130,18 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
   async cargarProgramas(): Promise<void> {
     try {
       this.loadingProgramas = true;
-      this.programas = await this.programaHelper.getAllForDropdown();
+      const programasData = await this.programaHelper.getAllForDropdown();
+
+      this.programas = [
+        { value: 0, label: 'TODOS', nombreCorto: 'TODOS' },
+        ...programasData,
+      ];
     } catch (error) {
       console.error('Error al cargar programas:', error);
       this.toastr.error('Error al cargar la lista de programas');
-      this.programas = [];
+      this.programas = [
+        { value: 0, label: 'TODOS', nombreCorto: 'TODOS' },
+      ];
     } finally {
       this.loadingProgramas = false;
     }
@@ -159,12 +167,8 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
       oidDepartamento: this.filters.oidDepartamento,
     };
 
-    // Agregar filtro de programa (omitir si es "TODOS")
-    if (
-      this.filters.oidPrograma &&
-      this.filters.oidPrograma !== 'TODOS' &&
-      this.filters.oidPrograma !== ''
-    ) {
+    // Agregar filtro de programa (omitir si es 0 = TODOS)
+    if (this.filters.oidPrograma && this.filters.oidPrograma !== 0) {
       filtrosCompletos.oidPrograma = this.filters.oidPrograma;
     }
 
@@ -196,14 +200,14 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
 
   // ===== LIMPIAR FILTROS =====
   limpiarFiltros(): void {
-    this.filters.oidPrograma = 'TODOS';
+    this.filters.oidPrograma = 0; // TODOS
     this.filtroOid = '';
     this.filtroCodigo = '';
     this.filtroNombre = '';
     this.filtroSemestre = 'TODOS';
     this.filtroGrupo = 'TODOS';
     this.filtroCupo = null;
-    this.filtroEstado = 'TODOS';
+    this.filtroEstado = 'EN_REVISION_JEFE'; // Mantener EN_REVISION_JEFE
 
     // Re-seleccionar el calendario activo usando utilidad
     this.filters.oidCalendario = seleccionarCalendarioAutomatico(
@@ -216,14 +220,14 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
   // ===== VALIDAR SI HAY FILTROS ACTIVOS =====
   hasFiltrosActivos(): boolean {
     return (
-      this.filters.oidPrograma !== 'TODOS' ||
+      this.filters.oidPrograma !== 0 ||
       this.filtroOid !== '' ||
       this.filtroCodigo !== '' ||
       this.filtroNombre !== '' ||
       this.filtroSemestre !== 'TODOS' ||
       this.filtroGrupo !== 'TODOS' ||
       this.filtroCupo !== null ||
-      this.filtroEstado !== 'TODOS'
+      this.filtroEstado !== 'EN_REVISION_JEFE' // Cambiar comparación
     );
   }
 }
