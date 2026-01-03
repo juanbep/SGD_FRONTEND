@@ -108,7 +108,6 @@ export class TransicionEstadosService {
     try {
       let resultado: CambioEstadoData | null = null;
       const transicion = `${estadoOrigen}_${estadoDestino}`;
-
       switch (transicion) {
         case 'BORRADOR_EN_REVISION_SECRETARIO':
           resultado =
@@ -129,14 +128,14 @@ export class TransicionEstadosService {
           break;
 
         case 'EN_REVISION_SECRETARIO_EN_REVISION_JEFE':
-          if (!oidDepartamento) {
-            throw new Error('Departamento requerido para esta transición');
-          }
+          // if (!oidDepartamento) {
+          //   console.log("aquí está el fucking error")
+          //   throw new Error('Departamento requerido para esta transición');
+          // }
           resultado =
             await this.estadoNecesidadesHelper.enviarRevisionSecretarioARevisionJefe(
               oidCalendario,
               oidPrograma,
-              oidDepartamento,
               oidNecesidades
             );
           break;

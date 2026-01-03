@@ -457,6 +457,15 @@ export class SecretarioNecesidadesComponent implements OnInit {
 
   // ===== MÉTODOS DE SELECCIÓN MÚLTIPLE =====
   toggleSeleccion(necesidad: NecesidadResponse): void {
+    // Validar que solo se puedan seleccionar necesidades en EN_REVISION_SECRETARIO
+    if (necesidad.estado !== 'EN_REVISION_SECRETARIO') {
+      this.toastr.warning(
+        'Solo se pueden seleccionar necesidades en estado EN REVISIÓN SECRETARIO',
+        'Selección no permitida'
+      );
+      return;
+    }
+
     const oid = necesidad.oidNecesidad;
 
     if (this.necesidadesSeleccionadas.has(oid)) {
@@ -470,8 +479,18 @@ export class SecretarioNecesidadesComponent implements OnInit {
     if (this.todasSeleccionadas()) {
       this.limpiarSeleccion();
     } else {
-      // Seleccionar todas las necesidades de la página actual
-      this.necesidades.forEach((necesidad) => {
+      // Seleccionar solo las necesidades en estado EN_REVISION_SECRETARIO
+      const necesidadesSeleccionables = this.getNecesidadesSeleccionables();
+
+      if (necesidadesSeleccionables.length === 0) {
+        this.toastr.info(
+          'No hay necesidades en estado EN REVISIÓN SECRETARIO para seleccionar',
+          'Sin necesidades'
+        );
+        return;
+      }
+
+      necesidadesSeleccionables.forEach((necesidad) => {
         this.necesidadesSeleccionadas.add(necesidad.oidNecesidad);
       });
     }
@@ -482,16 +501,23 @@ export class SecretarioNecesidadesComponent implements OnInit {
   }
 
   todasSeleccionadas(): boolean {
-    if (this.necesidades.length === 0) return false;
+    // Verificar solo las necesidades seleccionables
+    const necesidadesSeleccionables = this.getNecesidadesSeleccionables();
 
-    return this.necesidades.every((necesidad) =>
+    if (necesidadesSeleccionables.length === 0) return false;
+
+    return necesidadesSeleccionables.every((necesidad) =>
       this.necesidadesSeleccionadas.has(necesidad.oidNecesidad)
     );
   }
 
   algunaSeleccionada(): boolean {
-    if (this.necesidades.length === 0) return false;
-    return this.necesidades.some((necesidad) =>
+    // Verificar solo las necesidades seleccionables
+    const necesidadesSeleccionables = this.getNecesidadesSeleccionables();
+
+    if (necesidadesSeleccionables.length === 0) return false;
+
+    return necesidadesSeleccionables.some((necesidad) =>
       this.necesidadesSeleccionadas.has(necesidad.oidNecesidad)
     );
   }
@@ -542,7 +568,25 @@ export class SecretarioNecesidadesComponent implements OnInit {
       'EN_REVISION_SECRETARIO',
       'EN_REVISION_JEFE',
       'Enviar a Revisión Jefe',
-      true // Requiere departamento
+      false // Requiere departamento
+    );
+  }
+
+  /**
+   * Verifica si hay necesidades en estado EN_REVISION_SECRETARIO en la página actual
+   */
+  hayNecesidadesEnRevisionSecretario(): boolean {
+    return this.necesidades.some(
+      (necesidad) => necesidad.estado === 'EN_REVISION_SECRETARIO'
+    );
+  }
+
+  /**
+   * Obtiene solo las necesidades que están en estado EN_REVISION_SECRETARIO
+   */
+  private getNecesidadesSeleccionables(): NecesidadResponse[] {
+    return this.necesidades.filter(
+      (necesidad) => necesidad.estado === 'EN_REVISION_SECRETARIO'
     );
   }
 
@@ -618,7 +662,6 @@ export class SecretarioNecesidadesComponent implements OnInit {
     try {
       // Siempre enviar el array de OIDs seleccionados
       const oidNecesidades = Array.from(this.necesidadesSeleccionadas);
-
       const resultado = await this.transicionService.ejecutarCambioDeEstado(
         estadoOrigen,
         estadoDestino,

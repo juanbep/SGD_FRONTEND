@@ -112,7 +112,6 @@ export class EstadoNecesidadesService {
   enviarRevisionSecretarioARevisionJefe(
     oidCalendario: number,
     oidPrograma: number,
-    oidDepartamento: number,
     oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
     const body = oidNecesidades ? { oidNecesidades } : null;
@@ -120,7 +119,7 @@ export class EstadoNecesidadesService {
     return this.cambiarEstadoConBody(
       'en-revision-secretario',
       'en-revision-jefe',
-      { oidCalendario, oidPrograma, oidDepartamento },
+      { oidCalendario, oidPrograma },
       body
     );
   }

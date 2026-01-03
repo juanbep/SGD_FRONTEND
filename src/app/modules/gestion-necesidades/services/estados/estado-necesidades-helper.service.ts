@@ -100,14 +100,12 @@ export class EstadoNecesidadesHelperService {
   async enviarRevisionSecretarioARevisionJefe(
     oidCalendario: number,
     oidPrograma: number,
-    oidDepartamento: number,
     oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.enviarRevisionSecretarioARevisionJefe(
         oidCalendario,
         oidPrograma,
-        oidDepartamento,
         oidNecesidades
       )
     );
