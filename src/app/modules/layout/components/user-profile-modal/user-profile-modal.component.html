@@ -26,6 +26,14 @@
     <!-- Información institucional -->
     <div class="info-section">
       <div class="info-item">
+        <i class="fas fa-university"></i>
+        <div class="info-text">
+          <span class="label">Facultad</span>
+          <span class="value">{{ currentUser?.departamento?.facultad }}</span>
+        </div>
+      </div>
+
+      <div class="info-item">
         <i class="fas fa-building"></i>
         <div class="info-text">
           <span class="label">Departamento</span>
@@ -33,11 +41,11 @@
         </div>
       </div>
 
-      <div class="info-item">
-        <i class="fas fa-university"></i>
+      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.programa">
+        <i class="fas fa-book"></i>
         <div class="info-text">
-          <span class="label">Facultad</span>
-          <span class="value">{{ currentUser?.departamento?.facultad }}</span>
+          <span class="label">Programa</span>
+          <span class="value">{{ currentUser?.usuarioDetalle?.programa }}</span>
         </div>
       </div>
 
@@ -54,24 +62,6 @@
     <div class="divider-small"></div>
 
     <div class="info-section" *ngIf="currentUser?.usuarioDetalle">
-      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.departamento">
-        <i class="fas fa-sitemap"></i>
-        <div class="info-text">
-          <span class="label">Departamento (Detalle)</span>
-          <span class="value">{{
-            currentUser?.usuarioDetalle?.departamento
-          }}</span>
-        </div>
-      </div>
-
-      <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.programa">
-        <i class="fas fa-book"></i>
-        <div class="info-text">
-          <span class="label">Programa</span>
-          <span class="value">{{ currentUser?.usuarioDetalle?.programa }}</span>
-        </div>
-      </div>
-
       <div class="info-item" *ngIf="currentUser?.usuarioDetalle?.categoria">
         <i class="fas fa-id-badge"></i>
         <div class="info-text">
@@ -137,7 +127,9 @@
         <i class="fas fa-user-shield"></i>
         <div class="info-text">
           <span class="label">Departamento jefatura</span>
-          <span class="value">{{ currentUser?.departamentoJefatura }}</span>
+          <span class="value">{{
+            currentUser?.departamentoJefatura?.nombre
+          }}</span>
         </div>
       </div>
     </div>

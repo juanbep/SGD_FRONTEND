@@ -23,7 +23,7 @@ import { getUserProgramaId } from '../../../../auth/utils/user-storage.utils';
 })
 export class ModalSeleccionarPlanComponent implements OnChanges {
   @Input() mostrar: boolean = false;
-  @Input() oidPrograma: number | string = 0; // Recibir oidPrograma del padre
+  @Input() oidPrograma?: number | string = 0; // Recibir oidPrograma del padre
   @Output() onCerrar = new EventEmitter<void>();
   @Output() onPlanSeleccionado = new EventEmitter<number>();
 

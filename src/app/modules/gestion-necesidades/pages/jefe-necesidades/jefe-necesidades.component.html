@@ -1,3 +1,479 @@
 <div class="view-container">
-  <p>jefe-necesidades works!</p>
+  <!-- Componente de Filtros -->
+  <app-filtros-necesidades-jefe
+    (onAplicarFiltros)="onFiltrosAplicados($event)"
+    (onLimpiarFiltros)="onFiltrosLimpiados()"
+  ></app-filtros-necesidades-jefe>
+
+  <!-- ========== BARRA DE ACCIONES MASIVAS - JEFE ========== -->
+  <div
+    *ngIf="totalElements > 0"
+    class="bulk-actions-bar"
+    [class.has-selection]="haySeleccionadas"
+  >
+    <div
+      class="d-flex justify-content-between align-items-center flex-wrap gap-3"
+    >
+      <!-- Info -->
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        <i class="fas fa-info-circle info-icon"></i>
+
+        <span *ngIf="!haySeleccionadas" class="text-muted">
+          Seleccione al menos una necesidad en estado
+          <strong>EN REVISIÓN JEFE</strong>
+        </span>
+
+        <span *ngIf="haySeleccionadas" class="selection-info">
+          <strong>{{ totalSeleccionadas }}</strong>
+          {{
+            totalSeleccionadas === 1
+              ? "necesidad seleccionada"
+              : "necesidades seleccionadas"
+          }}
+        </span>
+
+        <button
+          *ngIf="haySeleccionadas"
+          type="button"
+          class="btn btn-sm btn-link text-danger btn-clear-selection"
+          (click)="limpiarSeleccion()"
+        >
+          Limpiar selección
+        </button>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="btn-group btn-group-sm action-buttons">
+        <!-- Botón Devolver a Secretario -->
+        <button
+          type="button"
+          class="btn btn-warning"
+          (click)="devolverASecretario()"
+          [disabled]="!haySeleccionadas || transicionandoEstado || loading"
+          title="Devolver a revisión secretario"
+        >
+          <i class="fas fa-undo me-1"></i>
+          DEVOLVER A SECRETARIO
+        </button>
+
+        <!-- Botón Aprobar -->
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="aprobarNecesidades()"
+          [disabled]="!haySeleccionadas || transicionandoEstado || loading"
+          title="Aprobar necesidades"
+        >
+          <i class="fas fa-check-circle me-1"></i>
+          APROBAR NECESIDADES
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card de Tabla -->
+  <div class="card">
+    <div
+      class="card-header d-flex justify-content-between align-items-center flex-wrap"
+    >
+      <h6 class="mb-0 d-flex align-items-center">
+        <i class="fas fa-table me-2" style="color: #f8ae15"></i>Necesidades del
+        Departamento
+        <span class="badge bg-primary ms-2">{{ totalElements }}</span>
+      </h6>
+
+      <div
+        class="d-flex align-items-center gap-2 ms-auto mt-2 mt-lg-0 flex-wrap"
+      >
+        <!-- Botón Actualizar -->
+        <button
+          type="button"
+          class="btn btn-link text-decoration-none text-primary d-flex align-items-center"
+          (click)="cargarNecesidades(true)"
+          [disabled]="loading"
+        >
+          <i class="fas fa-sync-alt me-1" [class.fa-spin]="loading"></i>
+          <span class="d-none d-lg-inline">
+            {{ loading ? "Cargando..." : "Actualizar" }}
+          </span>
+        </button>
+      </div>
+
+      <!-- Selector de tamaño de página -->
+      <div class="d-flex align-items-center ms-3 mt-2 mt-lg-0">
+        <label class="form-label mb-0 me-2 small">Mostrar:</label>
+        <ng-select
+          [items]="pageSizeOptions"
+          [(ngModel)]="size"
+          (change)="onPageSizeChange()"
+          [clearable]="false"
+          [searchable]="false"
+          placeholder="10"
+          class="page-size-select"
+        >
+        </ng-select>
+        <span class="ms-2 small text-muted">por página</span>
+      </div>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive" style="max-height: 600px">
+        <table class="table table-hover mb-0">
+          <thead class="table-light sticky-top">
+            <tr>
+              <!-- COLUMNA DE CHECKBOX -->
+              <th class="text-center" style="width: 45px">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [checked]="todasSeleccionadas()"
+                  [indeterminate]="
+                    algunaSeleccionada() && !todasSeleccionadas()
+                  "
+                  [disabled]="checkboxSeleccionarTodasDeshabilitado"
+                  (change)="toggleTodasSeleccionadas()"
+                  [title]="
+                    checkboxSeleccionarTodasDeshabilitado
+                      ? 'No hay necesidades en EN_REVISION_JEFE en esta página'
+                      : 'Seleccionar todas las de esta página'
+                  "
+                  [style.cursor]="
+                    checkboxSeleccionarTodasDeshabilitado
+                      ? 'not-allowed'
+                      : 'pointer'
+                  "
+                />
+              </th>
+
+              <!-- OID NECESIDAD ordenable -->
+              <th
+                class="fw-bold sortable-header"
+                style="width: 120px; cursor: pointer"
+                (click)="onSort('oidNecesidad')"
+                title="Ordenar por OID Necesidad"
+              >
+                <i class="fas fa-key me-1"></i>OID
+                <i [ngClass]="getSortIcon('oidNecesidad')" class="ms-1"></i>
+              </th>
+
+              <!-- NOMBRE MATERIA + BOTÓN DETALLES -->
+              <th class="fw-bold" style="min-width: 220px">
+                <i class="fas fa-book me-1"></i>Materia
+              </th>
+
+              <!-- PROGRAMA -->
+              <th class="fw-bold" style="min-width: 180px">
+                <i class="fas fa-graduation-cap me-1"></i>Programa
+              </th>
+
+              <!-- SEMESTRE -->
+              <th class="fw-bold text-center" style="width: 90px">
+                <i class="fas fa-calendar-week me-1"></i>Sem.
+              </th>
+
+              <!-- GRUPO -->
+              <th class="fw-bold text-center" style="width: 110px">
+                <i class="fas fa-users me-1"></i>Grupo
+              </th>
+
+              <!-- CUPO -->
+              <th class="fw-bold text-center" style="width: 80px">
+                <i class="fas fa-user-friends me-1"></i>Cupo
+              </th>
+
+              <!-- ESTADO ASIGNACIÓN -->
+              <th class="fw-bold text-center" style="width: 150px">
+                <i class="fas fa-clipboard-check me-1"></i>Asignación
+              </th>
+
+              <!-- ESTADO -->
+              <th class="fw-bold text-center" style="width: 180px">
+                <i class="fas fa-flag me-1"></i>Estado
+              </th>
+
+              <!-- FECHA CREACIÓN ordenable -->
+              <th
+                class="fw-bold sortable-header text-center"
+                style="width: 140px; cursor: pointer"
+                (click)="onSort('fechaCreacion')"
+                title="Ordenar por Fecha de Creación"
+              >
+                <i class="fas fa-calendar-plus me-1"></i>Creación
+                <i [ngClass]="getSortIcon('fechaCreacion')" class="ms-1"></i>
+              </th>
+
+              <!-- ACCIONES -->
+              <th class="fw-bold text-center" style="width: 180px">
+                <i class="fas fa-cogs me-1"></i>Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="necesidades && necesidades.length > 0; else noData">
+            <tr
+              *ngFor="let necesidad of necesidades; trackBy: trackByNecesidad"
+            >
+              <!-- COLUMNA DE CHECKBOX -->
+              <td class="text-center">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [checked]="estaSeleccionada(necesidad)"
+                  [disabled]="checkboxDeshabilitado(necesidad)"
+                  (change)="toggleSeleccion(necesidad)"
+                  [title]="
+                    checkboxDeshabilitado(necesidad)
+                      ? 'No se puede seleccionar (estado: ' +
+                        necesidad.estado +
+                        ')'
+                      : 'Seleccionar necesidad'
+                  "
+                  [style.cursor]="
+                    checkboxDeshabilitado(necesidad) ? 'not-allowed' : 'pointer'
+                  "
+                />
+              </td>
+
+              <!-- OID NECESIDAD -->
+              <td>
+                <small class="text-muted">{{ necesidad.oidNecesidad }}</small>
+              </td>
+
+              <!-- NOMBRE MATERIA + BOTÓN DETALLES -->
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="fw-semibold flex-grow-1">{{
+                    necesidad.nombreMateria
+                  }}</span>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-info"
+                    title="Ver detalles de la materia"
+                    (click)="verDetallesMateria(necesidad.materia)"
+                  >
+                    <i class="fas fa-info-circle"></i>
+                  </button>
+                </div>
+              </td>
+
+              <!-- PROGRAMA -->
+              <td>
+                <span class="text-muted small">
+                  <!-- {{ necesidad.nombrePrograma || "N/A" }} -->
+                  QUITAR
+                </span>
+              </td>
+
+              <!-- SEMESTRE -->
+              <td class="text-center">
+                <span class="badge bg-light text-dark">{{
+                  necesidad.semestreMateria
+                }}</span>
+              </td>
+
+              <!-- GRUPO -->
+              <td class="text-center">
+                <span class="badge bg-info">{{ necesidad.grupo }}</span>
+              </td>
+
+              <!-- CUPO -->
+              <td class="text-center">{{ necesidad.cupo }}</td>
+
+              <!-- ESTADO ASIGNACIÓN -->
+              <td class="text-center">
+                <span
+                  class="badge"
+                  [ngClass]="
+                    getBadgeClassAsignacion(getEstadoAsignacion(necesidad))
+                  "
+                >
+                  {{
+                    getEstadoAsignacion(necesidad) === "ASIGNADA"
+                      ? "Asignada"
+                      : getEstadoAsignacion(necesidad) === "SIN_ASIGNAR"
+                      ? "Sin asignar"
+                      : "N/A"
+                  }}
+                </span>
+              </td>
+
+              <!-- ESTADO -->
+              <td class="text-center">
+                <span
+                  class="badge"
+                  [ngClass]="getBadgeClassEstado(necesidad.estado)"
+                >
+                  {{ necesidad.estadoDescripcion || necesidad.estado }}
+                </span>
+              </td>
+
+              <!-- FECHA CREACIÓN -->
+              <td class="text-center">
+                <small class="text-muted">{{
+                  necesidad.fechaCreacion | date : "dd/MM/yyyy HH:mm"
+                }}</small>
+              </td>
+
+              <!-- ACCIONES -->
+              <td class="text-center">
+                <div class="action-buttons-wrapper">
+                  <!-- Asignar Docente - Solo en NO_ASIGNADA -->
+                  <button
+                    *ngIf="puedeAsignarDocente(necesidad)"
+                    type="button"
+                    class="btn btn-sm btn-outline-success"
+                    title="Asignar docente"
+                    (click)="asignarDocente(necesidad)"
+                  >
+                    <i class="fas fa-user-plus"></i>
+                  </button>
+
+                  <!-- Gestionar Asignaciones - Solo en ASIGNADA -->
+                  <button
+                    *ngIf="puedeGestionarAsignaciones(necesidad)"
+                    type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    title="Gestionar asignaciones"
+                    (click)="gestionarAsignaciones(necesidad)"
+                  >
+                    <i class="fas fa-users-cog"></i>
+                  </button>
+
+                  <!-- Mensaje cuando no hay acciones disponibles -->
+                  <span
+                    *ngIf="
+                      !puedeAsignarDocente(necesidad) &&
+                      !puedeGestionarAsignaciones(necesidad)
+                    "
+                    class="text-muted small"
+                  >
+                    <i class="fas fa-eye"></i> Solo lectura
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <ng-template #noData>
+            <tbody>
+              <tr>
+                <td colspan="11" class="text-center py-5">
+                  <div
+                    *ngIf="loading"
+                    class="d-flex justify-content-center align-items-center"
+                  >
+                    <div
+                      class="spinner-border spinner-border-sm me-3"
+                      role="status"
+                    >
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <span class="text-muted">Cargando necesidades...</span>
+                  </div>
+                  <div *ngIf="!loading && error" class="text-danger">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                    <div class="fw-bold">Error al cargar necesidades</div>
+                    <div class="small">{{ error }}</div>
+                    <button
+                      class="btn btn-outline-primary btn-sm mt-3"
+                      (click)="reintentar()"
+                    >
+                      <i class="fas fa-redo me-1"></i>Reintentar
+                    </button>
+                  </div>
+                  <div *ngIf="!loading && !error" class="text-muted">
+                    <i class="fas fa-clipboard-list fa-2x mb-3"></i>
+                    <div class="fw-bold">No hay necesidades disponibles</div>
+                    <div class="small">
+                      No se encontraron necesidades para este calendario y
+                      departamento
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer con Paginación -->
+    <div class="card-footer" *ngIf="necesidades && necesidades.length > 0">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="text-muted small">Mostrando {{ getInfoPaginacion() }}</div>
+
+        <nav aria-label="Paginación necesidades">
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="page === 0">
+              <button
+                class="page-link"
+                (click)="irAPagina(0)"
+                [disabled]="page === 0"
+              >
+                <i class="fas fa-angle-double-left"></i>
+              </button>
+            </li>
+            <li class="page-item" [class.disabled]="page === 0">
+              <button
+                class="page-link"
+                (click)="irAPagina(page - 1)"
+                [disabled]="page === 0"
+              >
+                <i class="fas fa-angle-left"></i>
+              </button>
+            </li>
+            <li
+              class="page-item"
+              *ngFor="let p of getPaginasVisibles()"
+              [class.active]="p === page"
+            >
+              <button class="page-link" (click)="irAPagina(p)">
+                {{ p + 1 }}
+              </button>
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="page >= getTotalPaginas() - 1"
+            >
+              <button
+                class="page-link"
+                (click)="irAPagina(page + 1)"
+                [disabled]="page >= getTotalPaginas() - 1"
+              >
+                <i class="fas fa-angle-right"></i>
+              </button>
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="page >= getTotalPaginas() - 1"
+            >
+              <button
+                class="page-link"
+                (click)="irAPagina(getTotalPaginas() - 1)"
+                [disabled]="page >= getTotalPaginas() - 1"
+              >
+                <i class="fas fa-angle-double-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- ========== MODALES ========== -->
+
+<!-- Modal de Detalles de Materia -->
+<app-modal-detalle-materia
+  [materia]="materiaSeleccionada"
+  [mostrar]="mostrarModalDetalleMateria"
+  (onCerrar)="cerrarModalDetalleMateria()"
+></app-modal-detalle-materia>
+
+<!-- Modal de Confirmación de Transición -->
+<app-modal-confirmacion
+  [visible]="mostrarModalTransicion"
+  [config]="configModalTransicion"
+  [procesando]="transicionandoEstado"
+  (onConfirmar)="confirmarTransicion()"
+  (onCancelar)="cerrarModalTransicion()"
+></app-modal-confirmacion>
