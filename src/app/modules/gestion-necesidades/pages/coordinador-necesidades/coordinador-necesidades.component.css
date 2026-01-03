@@ -1,5 +1,4 @@
 /* ===== ESTILOS PARA CARD DE TABLA ===== */
-
 .btn i,
 .btn .spinner-border {
   color: inherit !important;
@@ -252,7 +251,7 @@
   color: #e52724 !important;
 }
 
-/* ===== BARRA DE ACCIONES MASIVAS - SECRETARIO ===== */
+/* ===== BARRA DE ACCIONES MASIVAS - COORDINADOR ===== */
 
 .bulk-actions-bar {
   background-color: #ffffff;

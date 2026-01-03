@@ -99,7 +99,7 @@ export interface NecesidadFilters {
   size?: number;
   sort?: string;
   oidCalendario: number | string; // Obligatorio
-  oidPrograma: number | string; // Obligatorio
+  oidPrograma?: number | string; // Obligatorio
   oidDepartamento?: number | string;
   estado?: string;
   idMateria?: number | string;
