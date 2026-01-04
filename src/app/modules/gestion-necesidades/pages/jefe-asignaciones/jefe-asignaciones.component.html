@@ -4,7 +4,7 @@
   (onLimpiarFiltros)="onFiltrosLimpiados()"
 ></app-filtros-necesidades-jefe>
 
-<!-- ========== BARRA DE ACCIONES MASIVAS - JEFE ========== -->
+<!-- ========== BARRA DE ACCIONES MASIVAS - ASIGNACIONES ========== -->
 <div
   *ngIf="totalElements > 0"
   class="bulk-actions-bar"
@@ -19,7 +19,7 @@
 
       <span *ngIf="!haySeleccionadas" class="text-muted">
         Seleccione al menos una necesidad en estado
-        <strong>EN REVISIÓN JEFE</strong>
+        <strong>NO ASIGNADA</strong> para devolverla a revisión
       </span>
 
       <span *ngIf="haySeleccionadas" class="selection-info">
@@ -43,28 +43,16 @@
 
     <!-- Botones de Acción -->
     <div class="btn-group btn-group-sm action-buttons">
-      <!-- Botón Devolver a Secretario -->
+      <!-- Botón Devolver a Revisión Jefe -->
       <button
         type="button"
         class="btn btn-warning"
-        (click)="devolverASecretario()"
+        (click)="devolverARevisionJefe()"
         [disabled]="!haySeleccionadas || transicionandoEstado || loading"
-        title="Devolver a revisión secretario"
+        title="Devolver a revisión jefe"
       >
         <i class="fas fa-undo me-1"></i>
-        DEVOLVER A SECRETARIO
-      </button>
-
-      <!-- Botón Aprobar -->
-      <button
-        type="button"
-        class="btn btn-success"
-        (click)="aprobarNecesidades()"
-        [disabled]="!haySeleccionadas || transicionandoEstado || loading"
-        title="Aprobar necesidades"
-      >
-        <i class="fas fa-check-circle me-1"></i>
-        APROBAR NECESIDADES
+        DEVOLVER A REVISIÓN
       </button>
     </div>
   </div>
@@ -76,8 +64,8 @@
     class="card-header d-flex justify-content-between align-items-center flex-wrap"
   >
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-table me-2" style="color: #f8ae15"></i>Necesidades del
-      Departamento
+      <i class="fas fa-user-check me-2" style="color: #f8ae15"></i>Asignaciones
+      de Necesidades
       <span class="badge bg-primary ms-2">{{ totalElements }}</span>
     </h6>
 
@@ -129,7 +117,7 @@
                 (change)="toggleTodasSeleccionadas()"
                 [title]="
                   checkboxSeleccionarTodasDeshabilitado
-                    ? 'No hay necesidades en EN_REVISION_JEFE en esta página'
+                    ? 'No hay necesidades en NO_ASIGNADA en esta página'
                     : 'Seleccionar todas las de esta página'
                 "
                 [style.cursor]="
@@ -157,9 +145,9 @@
             </th>
 
             <!-- PROGRAMA -->
-            <!-- <th class="fw-bold" style="min-width: 180px">
-                <i class="fas fa-graduation-cap me-1"></i>Programa
-              </th> -->
+            <th class="fw-bold" style="min-width: 180px">
+              <i class="fas fa-graduation-cap me-1"></i>Programa
+            </th>
 
             <!-- SEMESTRE -->
             <th class="fw-bold text-center" style="width: 90px">
@@ -181,9 +169,9 @@
               <i class="fas fa-clipboard-check me-1"></i>Asignación
             </th>
 
-            <!-- ESTADO -->
-            <th class="fw-bold text-center" style="width: 180px">
-              <i class="fas fa-flag me-1"></i>Estado
+            <!-- DOCENTES ASIGNADOS -->
+            <th class="fw-bold text-center" style="width: 150px">
+              <i class="fas fa-chalkboard-teacher me-1"></i>Docentes
             </th>
 
             <!-- FECHA CREACIÓN ordenable -->
@@ -249,11 +237,12 @@
             </td>
 
             <!-- PROGRAMA -->
-            <!-- <td>
-                <span class="text-muted small">
-                  {{ necesidad.nombrePrograma || "N/A" }}
-                </span>
-              </td> -->
+            <td>
+              <span class="text-muted small">
+                <!-- {{ necesidad.nombrePrograma || "N/A" }} -->
+                QUITAR
+              </span>
+            </td>
 
             <!-- SEMESTRE -->
             <td class="text-center">
@@ -288,13 +277,11 @@
               </span>
             </td>
 
-            <!-- ESTADO -->
+            <!-- DOCENTES ASIGNADOS -->
             <td class="text-center">
-              <span
-                class="badge"
-                [ngClass]="getBadgeClassEstado(necesidad.estado)"
-              >
-                {{ necesidad.estadoDescripcion || necesidad.estado }}
+              <!-- TODO: Mostrar lista de docentes cuando esté implementado -->
+              <span class="text-muted small">
+                <i class="fas fa-user-slash"></i> Sin datos
               </span>
             </td>
 
@@ -308,39 +295,17 @@
             <!-- ACCIONES -->
             <td class="text-center">
               <div class="action-buttons-wrapper">
-                <!-- BOTONES PARA EN_REVISION_JEFE -->
-                <ng-container *ngIf="necesidad.estado === 'EN_REVISION_JEFE'">
-                  <!-- Modificar -->
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-outline-primary"
-                    title="Modificar necesidad"
-                    (click)="modificarNecesidad(necesidad)"
-                  >
-                    <i class="fas fa-edit"></i>
-                  </button>
-
-                  <!-- Eliminar -->
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-outline-danger"
-                    title="Eliminar necesidad"
-                    (click)="eliminarNecesidad(necesidad)"
-                  >
-                    <i class="fas fa-trash-alt"></i>
-                  </button>
-                </ng-container>
-
                 <!-- BOTONES PARA NO_ASIGNADA -->
                 <ng-container *ngIf="puedeAsignarDocente(necesidad)">
                   <!-- Asignar Docente -->
                   <button
                     type="button"
-                    class="btn btn-sm btn-outline-success"
+                    class="btn btn-sm btn-success"
                     title="Asignar docente"
                     (click)="asignarDocente(necesidad)"
                   >
-                    <i class="fas fa-user-plus"></i>
+                    <i class="fas fa-user-plus me-1"></i>
+                    <span class="d-none d-lg-inline">Asignar</span>
                   </button>
                 </ng-container>
 
@@ -353,14 +318,14 @@
                     title="Gestionar asignaciones"
                     (click)="gestionarAsignaciones(necesidad)"
                   >
-                    <i class="fas fa-users-cog"></i>
+                    <i class="fas fa-users-cog me-1"></i>
+                    <span class="d-none d-lg-inline">Gestionar</span>
                   </button>
                 </ng-container>
 
                 <!-- MENSAJE PARA OTROS ESTADOS -->
                 <span
                   *ngIf="
-                    necesidad.estado !== 'EN_REVISION_JEFE' &&
                     !puedeAsignarDocente(necesidad) &&
                     !puedeGestionarAsignaciones(necesidad)
                   "
@@ -401,10 +366,10 @@
                 </div>
                 <div *ngIf="!loading && !error" class="text-muted">
                   <i class="fas fa-clipboard-list fa-2x mb-3"></i>
-                  <div class="fw-bold">No hay necesidades disponibles</div>
+                  <div class="fw-bold">No hay necesidades para asignar</div>
                   <div class="small">
-                    No se encontraron necesidades para este calendario y
-                    departamento
+                    No se encontraron necesidades en estado NO_ASIGNADA o
+                    ASIGNADA para este calendario y departamento
                   </div>
                 </div>
               </td>
@@ -487,6 +452,7 @@
   [mostrar]="mostrarModalDetalleMateria"
   (onCerrar)="cerrarModalDetalleMateria()"
 ></app-modal-detalle-materia>
+
 <!-- Modal de Confirmación de Transición -->
 <app-modal-confirmacion
   [visible]="mostrarModalTransicion"
@@ -495,20 +461,3 @@
   (onConfirmar)="confirmarTransicion()"
   (onCancelar)="cerrarModalTransicion()"
 ></app-modal-confirmacion>
-<!-- Modal de Eliminar Necesidad -->
-<app-modal-eliminar-necesidad
-  [necesidad]="necesidadAEliminar"
-  [visible]="mostrarModalEliminar"
-  [eliminando]="eliminando"
-  (onConfirmar)="confirmarEliminacion()"
-  (onCancelar)="cerrarModalEliminar()"
-></app-modal-eliminar-necesidad>
-<!-- Modal de Editar Necesidad -->
-<app-modal-editar-necesidad
-  *ngIf="necesidadAEditar"
-  [necesidad]="necesidadAEditar"
-  [visible]="mostrarModalEditar"
-  [editando]="editando"
-  (onCerrar)="cerrarModalEditar()"
-  (onGuardar)="confirmarEdicion($event)"
-></app-modal-editar-necesidad>

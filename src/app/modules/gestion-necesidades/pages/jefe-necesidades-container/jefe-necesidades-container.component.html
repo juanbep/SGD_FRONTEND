@@ -1,0 +1,60 @@
+<div class="view-container">
+  <!-- Encabezado con Tabs -->
+  <div class="tabs-header mb-3">
+    <h4 class="page-title mb-3">
+      <i class="fas fa-briefcase me-2" style="color: #0051c6"></i>
+      Gestión de Necesidades - Jefe de Departamento
+    </h4>
+
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs custom-tabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          [class.active]="tabActiva === 'revision'"
+          type="button"
+          role="tab"
+          (click)="cambiarTab('revision')"
+        >
+          <i class="fas fa-clipboard-check me-2"></i>
+          Revisión de Necesidades
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          [class.active]="tabActiva === 'asignaciones'"
+          type="button"
+          role="tab"
+          (click)="cambiarTab('asignaciones')"
+        >
+          <i class="fas fa-user-check me-2"></i>
+          Gestión de Asignaciones
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Contenido de Tabs -->
+  <div class="tab-content">
+    <!-- Tab 1: Revisión de Necesidades -->
+    <div
+      class="tab-pane fade"
+      [class.show]="tabActiva === 'revision'"
+      [class.active]="tabActiva === 'revision'"
+      role="tabpanel"
+    >
+      <app-jefe-necesidades></app-jefe-necesidades>
+    </div>
+
+    <!-- Tab 2: Gestión de Asignaciones -->
+    <div
+      class="tab-pane fade"
+      [class.show]="tabActiva === 'asignaciones'"
+      [class.active]="tabActiva === 'asignaciones'"
+      role="tabpanel"
+    >
+      <app-jefe-asignaciones></app-jefe-asignaciones>
+    </div>
+  </div>
+</div>

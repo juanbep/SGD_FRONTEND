@@ -1,0 +1,93 @@
+/* ===== ESTILOS PARA TÍTULO DE PÁGINA ===== */
+.page-title {
+  color: #001282;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== ESTILOS PARA TABS PERSONALIZADAS ===== */
+.custom-tabs {
+  border-bottom: 2px solid #dee2e6;
+}
+
+.custom-tabs .nav-link {
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #6c757d;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+.custom-tabs .nav-link:hover {
+  color: #0051c6;
+  border-bottom-color: #f8ae15;
+  background-color: rgba(0, 81, 198, 0.05);
+}
+
+.custom-tabs .nav-link.active {
+  color: #001282;
+  border-bottom-color: #0051c6;
+  background-color: transparent;
+}
+
+.custom-tabs .nav-link i {
+  font-size: 1rem;
+}
+
+/* ===== CONTENIDO DE TABS ===== */
+.tab-content {
+  padding-top: 1rem;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active.show {
+  display: block;
+}
+
+/* ===== ESTILOS PARA ALERT TEMPORAL ===== */
+.alert-info {
+  background-color: #e7f3ff;
+  border-color: #0051c6;
+  color: #001282;
+}
+
+.alert-info .fa-info-circle {
+  color: #0051c6;
+}
+
+/* ===== RESPONSIVIDAD ===== */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .custom-tabs .nav-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .custom-tabs .nav-link i {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-title {
+    font-size: 1.1rem;
+  }
+
+  .custom-tabs .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .custom-tabs .nav-link span {
+    display: none;
+  }
+}

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '../../guards/role.guard';
 import { ViewNecesidadDetailComponent } from './pages/view-necesidad-detail/view-necesidad-detail.component';
-import { AsignacionesManagementComponent } from './pages/asignaciones-management/asignaciones-management.component';
 import { CrearNecesidadesDesdePlanComponent } from './pages/crear-necesidades-desde-plan/crear-necesidades-desde-plan.component';
 
 const routes: Routes = [
@@ -32,9 +31,9 @@ const routes: Routes = [
       {
         path: 'management/jefe',
         loadComponent: () =>
-          import('./pages/jefe-necesidades/jefe-necesidades.component').then(
-            (m) => m.JefeNecesidadesComponent
-          ),
+          import(
+            './pages/jefe-necesidades-container/jefe-necesidades-container.component'
+          ).then((m) => m.JefeNecesidadesContainerComponent),
         canActivate: [RoleGuard],
         data: { roles: ['JEFE_DEPARTAMENTO', 'JEFE DE DEPARTAMENTO'] },
       },
@@ -71,12 +70,12 @@ const routes: Routes = [
       },
 
       // ===== GESTIÓN DE ASIGNACIONES - JEFE DEPARTAMENTO =====
-      {
-        path: 'asignaciones',
-        component: AsignacionesManagementComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['JEFE_DEPARTAMENTO', 'JEFE DE DEPARTAMENTO'] },
-      },
+      // {
+      //   path: 'asignaciones',
+      //   component: AsignacionesManagementComponent,
+      //   canActivate: [RoleGuard],
+      //   data: { roles: ['JEFE_DEPARTAMENTO', 'JEFE DE DEPARTAMENTO'] },
+      // },
 
       // ===== REDIRECCIÓN POR DEFECTO =====
       {
