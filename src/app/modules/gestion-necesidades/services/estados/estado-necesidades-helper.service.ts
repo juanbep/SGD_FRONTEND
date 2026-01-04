@@ -39,7 +39,7 @@ export class EstadoNecesidadesHelperService {
 
   // ========== MÉTODO POR OID ==========
 
-  async cambiarEstadoPorOid(
+  /*async cambiarEstadoPorOid(
     data: CambioEstadoPorOidDTO,
     oidCalendario: number,
     oidDepartamento: number
@@ -51,9 +51,9 @@ export class EstadoNecesidadesHelperService {
         oidDepartamento
       )
     );
-  }
+  }*/
 
-  cambiarEstadoPorOidObservable(
+  /*cambiarEstadoPorOidObservable(
     data: CambioEstadoPorOidDTO,
     oidCalendario: number,
     oidDepartamento: number
@@ -65,7 +65,7 @@ export class EstadoNecesidadesHelperService {
         oidDepartamento
       )
     );
-  }
+  }*/
 
   // ========== MÉTODOS ESPECÍFICOS (ACTUALIZADOS) ==========
 
@@ -134,6 +134,20 @@ export class EstadoNecesidadesHelperService {
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.enviarRevisionJefeANoAsignada(
+        oidCalendario,
+        oidDepartamento,
+        oidNecesidades
+      )
+    );
+  }
+
+  async enviarNoAsignadaARevisionJefe(
+    oidCalendario: number,
+    oidDepartamento: number,
+    oidNecesidades?: number[]
+  ): Promise<CambioEstadoData | null> {
+    return this.baseHelper.getDataFromResponse(
+      this.estadoService.enviarNoAsignadaARevisionJefe(
         oidCalendario,
         oidDepartamento,
         oidNecesidades

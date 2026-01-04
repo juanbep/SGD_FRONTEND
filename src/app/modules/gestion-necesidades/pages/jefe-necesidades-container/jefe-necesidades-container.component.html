@@ -44,7 +44,9 @@
       [class.active]="tabActiva === 'revision'"
       role="tabpanel"
     >
-      <app-jefe-necesidades></app-jefe-necesidades>
+      <app-jefe-necesidades
+        [isActive]="tabActiva === 'revision'"
+      ></app-jefe-necesidades>
     </div>
 
     <!-- Tab 2: Gestión de Asignaciones -->
@@ -54,7 +56,9 @@
       [class.active]="tabActiva === 'asignaciones'"
       role="tabpanel"
     >
-      <app-jefe-asignaciones></app-jefe-asignaciones>
+      <app-jefe-asignaciones
+        [isActive]="tabActiva === 'asignaciones'"
+      ></app-jefe-asignaciones>
     </div>
   </div>
 </div>

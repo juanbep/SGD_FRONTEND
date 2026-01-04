@@ -165,6 +165,18 @@ export class TransicionEstadosService {
             );
           break;
 
+        case 'NO_ASIGNADA_EN_REVISION_JEFE':
+          if (!oidDepartamento) {
+            throw new Error('Departamento requerido para esta transición');
+          }
+          resultado =
+            await this.estadoNecesidadesHelper.enviarNoAsignadaARevisionJefe(
+              oidCalendario,
+              oidDepartamento,
+              oidNecesidades
+            );
+          break;
+
         default:
           throw new Error(`Transición no soportada: ${transicion}`);
       }

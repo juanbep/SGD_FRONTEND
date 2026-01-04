@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FiltrosNecesidadesJefeComponent } from '../../components/filtros-necesidades-jefe/filtros-necesidades-jefe.component';
@@ -38,7 +45,7 @@ import { getBadgeClassEstado } from '../../utils/necesidades.utils';
   templateUrl: './jefe-asignaciones.component.html',
   styleUrl: './jefe-asignaciones.component.css',
 })
-export class JefeAsignacionesComponent implements OnInit {
+export class JefeAsignacionesComponent implements OnInit, OnChanges {
   // ===== SERVICIOS =====
   private necesidadesService = inject(NecesidadesService);
   private transicionService = inject(TransicionEstadosService);
@@ -46,6 +53,8 @@ export class JefeAsignacionesComponent implements OnInit {
 
   // ===== SELECCIÓN MÚLTIPLE =====
   necesidadesSeleccionadas: Set<number> = new Set();
+
+  @Input() isActive: boolean = false;
 
   // ===== ESTADO PARA TRANSICIÓN =====
   transicionandoEstado = false;
@@ -108,6 +117,16 @@ export class JefeAsignacionesComponent implements OnInit {
       return;
     }
     // LOS FILTROS SE CARGAN AUTOMÁTICAMENTE DESDE EL COMPONENTE HIJO
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Cuando la tab se activa, recargar datos
+    if (changes['isActive'] && changes['isActive'].currentValue === true) {
+      // Solo recargar si ya se inicializó
+      if (this.filtrosActuales.oidCalendario) {
+        this.cargarNecesidades();
+      }
+    }
   }
 
   // ===== MANEJADORES DE EVENTOS DEL COMPONENTE DE FILTROS =====

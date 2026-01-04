@@ -1,4 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   NecesidadesService,
   NecesidadHelperService,
@@ -52,13 +59,15 @@ import { ModalEliminarNecesidadComponent } from '../../components/modales/modal-
   templateUrl: './jefe-necesidades.component.html',
   styleUrl: './jefe-necesidades.component.css',
 })
-export class JefeNecesidadesComponent implements OnInit {
+export class JefeNecesidadesComponent implements OnInit, OnChanges {
   // ===== SERVICIOS =====
   private necesidadesService = inject(NecesidadesService);
   private transicionService = inject(TransicionEstadosService);
   private necesidadesHelper = inject(NecesidadHelperService);
   private toastr = inject(ToastrService);
   private router = inject(Router);
+
+  @Input() isActive: boolean = false;
 
   // ===== SELECCIÓN MÚLTIPLE =====
   necesidadesSeleccionadas: Set<number> = new Set();
@@ -130,6 +139,16 @@ export class JefeNecesidadesComponent implements OnInit {
       return;
     }
     // LOS FILTROS SE CARGAN AUTOMÁTICAMENTE DESDE EL COMPONENTE HIJO
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Cuando la tab se activa, recargar datos
+    if (changes['isActive'] && changes['isActive'].currentValue === true) {
+      // Solo recargar si ya se inicializó
+      if (this.filtrosActuales.oidCalendario) {
+        this.cargarNecesidades();
+      }
+    }
   }
 
   // ===== MANEJADORES DE EVENTOS DEL COMPONENTE DE FILTROS =====

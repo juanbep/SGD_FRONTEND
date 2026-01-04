@@ -48,7 +48,7 @@ export class EstadoNecesidadesService {
    * @param oidCalendario ID del calendario
    * @param oidDepartamento ID del departamento
    */
-  cambiarEstadoPorOid(
+  /*cambiarEstadoPorOid(
     data: CambioEstadoPorOidDTO,
     oidCalendario: number,
     oidDepartamento: number
@@ -60,7 +60,7 @@ export class EstadoNecesidadesService {
     return this.http
       .patch<CambioEstadoResponse>(`${this.apiUrl}/por-oid`, data, { params })
       .pipe(catchError(this.handleError));
-  }
+  }*/
 
   // ========== MÉTODOS ESPECÍFICOS POR TRANSICIÓN (ACTUALIZADOS) ==========
 
@@ -161,6 +161,49 @@ export class EstadoNecesidadesService {
       { oidCalendario, oidDepartamento },
       body
     );
+  }
+
+  /**
+   * NO_ASIGNADA → EN_REVISION_JEFE
+   * Enviar necesidades desde no asignadas a revisión jefe
+   */
+  enviarNoAsignadaARevisionJefe(
+    oidCalendario: number,
+    oidDepartamento: number,
+    oidNecesidades?: number[]
+  ): Observable<CambioEstadoResponse> {
+    const body = {
+      oidNecesidades: oidNecesidades || [],
+      estadoOrigen: 'NO_ASIGNADA',
+      estadoDestino: 'EN_REVISION_JEFE',
+    };
+
+    return this.cambiarEstadoPorOid({ oidCalendario, oidDepartamento }, body);
+  }
+
+  /**
+   * Método privado para cambiar estado por OID con body completo
+   */
+  private cambiarEstadoPorOid(
+    params: CambioEstadoParams,
+    body: {
+      oidNecesidades: number[];
+      estadoOrigen: string;
+      estadoDestino: string;
+    }
+  ): Observable<CambioEstadoResponse> {
+    const httpParams = this.buildHttpParams(params);
+
+    // TEMPORAL: Ver qué se está enviando
+    console.log('🔍 URL:', `${this.apiUrl}/por-oid`);
+    console.log('🔍 Params:', httpParams.toString());
+    console.log('🔍 Body:', body);
+
+    return this.http
+      .patch<CambioEstadoResponse>(`${this.apiUrl}/por-oid`, body, {
+        params: httpParams,
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
