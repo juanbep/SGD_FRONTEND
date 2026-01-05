@@ -1,100 +1,138 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Observable, catchError, throwError } from 'rxjs';
 import {
-  Seleccionado,
-  CrearSeleccionadoRequest,
-  ActualizarSeleccionadoRequest,
-  SeleccionadoFiltros,
-  ApiResponse,
-  PaginatedResponse,
+  SeleccionadosListResponse,
+  CreateSeleccionadoResponse,
+  UpdateSeleccionadoResponse,
   DeleteSeleccionadoResponse,
-} from '../models/seleccionado.model';
+  GetSeleccionadoResponse,
+  CreateSeleccionadoDTO,
+  UpdateSeleccionadoDTO,
+  DeleteSeleccionadoDTO,
+  SeleccionadoFilters,
+} from '../models';
 import { environment } from '../../../../environments/environments_sgd';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SeleccionadoService {
-  private readonly API_URL = `${environment.baseUrl}/seleccionado`;
+export class SeleccionadosService {
+  private readonly apiUrl = `${environment.baseUrl}/seleccionado`;
 
   constructor(private http: HttpClient) {}
 
-  // ========================================
-  // CREATE
-  // ========================================
-  crear(
-    request: CrearSeleccionadoRequest
-  ): Observable<ApiResponse<Seleccionado>> {
-    return this.http.post<ApiResponse<Seleccionado>>(this.API_URL, request);
+  // READ - Lista con filtros
+  getSeleccionados(
+    filters: SeleccionadoFilters
+  ): Observable<SeleccionadosListResponse> {
+    let params = this.buildHttpParams(filters);
+
+    return this.http
+      .get<SeleccionadosListResponse>(this.apiUrl, { params })
+      .pipe(catchError(this.handleError));
   }
 
-  // ========================================
-  // READ - LISTAR CON FILTROS (PAGINADO)
-  // ========================================
-  listar(
-    filtros: SeleccionadoFiltros
-  ): Observable<ApiResponse<PaginatedResponse<Seleccionado>>> {
-    let params = new HttpParams()
-      .set('page', filtros.page.toString())
-      .set('size', filtros.size.toString())
-      .set('oidCalendario', filtros.oidCalendario.toString())
-      .set('oidDepartamento', filtros.oidDepartamento.toString());
+  // GET BY ID
+  getSeleccionadoById(
+    oidSeleccionado: number
+  ): Observable<GetSeleccionadoResponse> {
+    return this.http
+      .get<GetSeleccionadoResponse>(`${this.apiUrl}/${oidSeleccionado}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  // CREATE
+  createSeleccionado(
+    seleccionadoData: CreateSeleccionadoDTO
+  ): Observable<CreateSeleccionadoResponse> {
+    return this.http
+      .post<CreateSeleccionadoResponse>(this.apiUrl, seleccionadoData)
+      .pipe(catchError(this.handleError));
+  }
+
+  // UPDATE
+  updateSeleccionado(
+    seleccionadoData: UpdateSeleccionadoDTO
+  ): Observable<UpdateSeleccionadoResponse> {
+    const { oidSeleccionado, ...updateData } = seleccionadoData;
+
+    return this.http
+      .put<UpdateSeleccionadoResponse>(
+        `${this.apiUrl}/${oidSeleccionado}`,
+        updateData
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  // DELETE
+  deleteSeleccionado(
+    deleteData: DeleteSeleccionadoDTO
+  ): Observable<DeleteSeleccionadoResponse> {
+    return this.http
+      .delete<DeleteSeleccionadoResponse>(
+        `${this.apiUrl}/${deleteData.oidSeleccionado}`
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  private buildHttpParams(filters: SeleccionadoFilters): HttpParams {
+    let params = new HttpParams();
+
+    // Paginación
+    if (filters.page !== undefined) {
+      params = params.set('page', filters.page.toString());
+    }
+    if (filters.size !== undefined) {
+      params = params.set('size', filters.size.toString());
+    }
+
+    // Filtros obligatorios
+    if (
+      filters.oidCalendario !== undefined &&
+      filters.oidCalendario !== null &&
+      filters.oidCalendario !== ''
+    ) {
+      params = params.set('oidCalendario', filters.oidCalendario.toString());
+    }
+    if (
+      filters.oidDepartamento !== undefined &&
+      filters.oidDepartamento !== null &&
+      filters.oidDepartamento !== ''
+    ) {
+      params = params.set(
+        'oidDepartamento',
+        filters.oidDepartamento.toString()
+      );
+    }
 
     // Filtros opcionales
-    if (filtros.identificacion) {
-      params = params.set('identificacion', filtros.identificacion);
+    if (filters.identificacion?.trim()) {
+      params = params.set('identificacion', filters.identificacion.trim());
     }
-    if (filtros.nombreCompleto) {
-      params = params.set('nombreCompleto', filtros.nombreCompleto);
+    if (filters.nombreCompleto?.trim()) {
+      params = params.set('nombreCompleto', filters.nombreCompleto.trim());
     }
-    if (filtros.correo) {
-      params = params.set('correo', filtros.correo);
+    if (filters.correo?.trim()) {
+      params = params.set('correo', filters.correo.trim());
     }
-    if (filtros.contratacion) {
-      params = params.set('contratacion', filtros.contratacion);
+    if (filters.contratacion?.trim()) {
+      params = params.set('contratacion', filters.contratacion.trim());
     }
-    if (filtros.dedicacion) {
-      params = params.set('dedicacion', filtros.dedicacion);
+    if (filters.dedicacion?.trim()) {
+      params = params.set('dedicacion', filters.dedicacion.trim());
     }
 
-    return this.http.get<ApiResponse<PaginatedResponse<Seleccionado>>>(
-      this.API_URL,
-      { params }
-    );
+    // Ordenamiento
+    if (filters.sort) {
+      params = params.set('sort', filters.sort);
+    }
+
+    return params;
   }
 
-  // ========================================
-  // READ - OBTENER POR ID
-  // ========================================
-  obtenerPorId(oidSeleccionado: number): Observable<ApiResponse<Seleccionado>> {
-    return this.http.get<ApiResponse<Seleccionado>>(
-      `${this.API_URL}/${oidSeleccionado}`
-    );
-  }
-
-  // ========================================
-  // UPDATE
-  // ========================================
-  actualizar(
-    oidSeleccionado: number,
-    request: ActualizarSeleccionadoRequest
-  ): Observable<ApiResponse<Seleccionado>> {
-    return this.http.put<ApiResponse<Seleccionado>>(
-      `${this.API_URL}/${oidSeleccionado}`,
-      request
-    );
-  }
-
-  // ========================================
-  // DELETE
-  // ========================================
-  eliminar(
-    oidSeleccionado: number
-  ): Observable<ApiResponse<DeleteSeleccionadoResponse>> {
-    return this.http.delete<ApiResponse<DeleteSeleccionadoResponse>>(
-      `${this.API_URL}/${oidSeleccionado}`
-    );
+  private handleError(error: any): Observable<never> {
+    console.error('Error en SeleccionadosService:', error);
+    return throwError(() => error);
   }
 }
