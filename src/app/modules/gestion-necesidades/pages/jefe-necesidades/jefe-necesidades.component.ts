@@ -268,8 +268,18 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
     return trackByOid(index, item);
   }
 
-  // ===== UTILIDADES PARA TEMPLATE =====
-  getBadgeClassEstado = getBadgeClassEstado;
+  // ===== PAGINACIÓN =====
+  get page(): number {
+    return this.filtrosActuales.page || 0;
+  }
+
+  get size(): number {
+    return this.filtrosActuales.size || 10;
+  }
+
+  set size(value: number) {
+    this.filtrosActuales.size = value;
+  }
 
   // ===== MODAL DE DETALLES DE MATERIA =====
   verDetallesMateria(materia: Materia): void {
@@ -388,6 +398,26 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
     }
   }
 
+  // ===== UTILIDADES =====
+  reintentar(): void {
+    this.cargarNecesidades(true);
+  }
+
+  private handleError(error: any, operacion: string): void {
+    const codigoBackend = error?.error?.codigo || error.status || '—';
+    const mensajeBackend =
+      error?.error?.mensaje ||
+      error?.message ||
+      `Error al ${operacion}. Intenta de nuevo.`;
+
+    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
+
+    this.toastr.error(
+      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
+      'Error'
+    );
+  }
+
   // ===== ACCIONES PARA ASIGNACIONES (PENDIENTES DE IMPLEMENTAR) =====
   asignarDocente(necesidad: NecesidadResponse): void {
     // TODO: Implementar cuando se cree el modal de asignación de docentes
@@ -467,6 +497,9 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
     return this.necesidadesSeleccionadas.size;
   }
 
+  // ===== UTILIDADES PARA TEMPLATE =====
+  getBadgeClassEstado = getBadgeClassEstado;
+
   // ===== VALIDACIONES PARA CHECKBOXES =====
   checkboxDeshabilitado(necesidad: NecesidadResponse): boolean {
     // JEFE SOLO PUEDE SELECCIONAR NECESIDADES EN ESTADO EN_REVISION_JEFE
@@ -476,19 +509,6 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
   get checkboxSeleccionarTodasDeshabilitado(): boolean {
     // DESHABILITAR SI NO HAY NECESIDADES EN ESTADO EN_REVISION_JEFE
     return !this.necesidades.some((n) => n.estado === 'EN_REVISION_JEFE');
-  }
-
-  // ===== PAGINACIÓN =====
-  get page(): number {
-    return this.filtrosActuales.page || 0;
-  }
-
-  get size(): number {
-    return this.filtrosActuales.size || 10;
-  }
-
-  set size(value: number) {
-    this.filtrosActuales.size = value;
   }
 
   // ===== TRANSICIONES DE ESTADO - JEFE =====
@@ -648,26 +668,6 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
       this.mostrarModalTransicion = false;
       this.contextoTransicion = null;
     }
-  }
-
-  // ===== UTILIDADES =====
-  reintentar(): void {
-    this.cargarNecesidades(true);
-  }
-
-  private handleError(error: any, operacion: string): void {
-    const codigoBackend = error?.error?.codigo || error.status || '—';
-    const mensajeBackend =
-      error?.error?.mensaje ||
-      error?.message ||
-      `Error al ${operacion}. Intenta de nuevo.`;
-
-    this.error = `Status Code: ${codigoBackend} - ${mensajeBackend}`;
-
-    this.toastr.error(
-      `Status Code: ${codigoBackend} - ${mensajeBackend}`,
-      'Error'
-    );
   }
 
   // ===== HELPER PARA MOSTRAR INFO DE ASIGNACIÓN =====

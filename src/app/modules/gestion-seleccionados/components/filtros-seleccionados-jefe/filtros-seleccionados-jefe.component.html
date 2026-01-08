@@ -1,0 +1,159 @@
+<!-- Card de Filtros -->
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h6 class="mb-0 d-flex align-items-center">
+      <i class="fas fa-filter me-2" style="color: #f8ae15"></i>Filtros de
+      Búsqueda
+    </h6>
+    <button
+      type="button"
+      class="btn btn-outline-secondary d-flex align-items-center"
+      (click)="limpiarFiltros()"
+      [disabled]="!hasFiltrosActivos()"
+    >
+      <i class="fas fa-times"></i>
+      <span class="d-none d-lg-inline ms-1">Limpiar</span>
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <!-- Filtro por Calendario -->
+      <div class="col-xl-4 col-lg-6 col-md-6">
+        <label for="filtroCalendario" class="form-label fw-bold">
+          <i class="fas fa-calendar-alt me-1"></i>Calendario:
+        </label>
+        <ng-select
+          id="filtroCalendario"
+          [items]="calendarios"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filters.oidCalendario"
+          placeholder="Seleccione calendario"
+          [clearable]="false"
+          [searchable]="true"
+          [loading]="loadingCalendarios"
+          [disabled]="loadingCalendarios"
+          (change)="aplicarFiltros()"
+          notFoundText="No hay calendarios disponibles"
+          loadingText="Cargando calendarios..."
+        >
+          <ng-template ng-label-tmp let-item="item">
+            <div class="d-flex align-items-center">
+              <span>{{ item.label }}</span>
+              <span class="badge ms-2" [ngClass]="getBadgeClass(item.estado)">
+                {{ item.estado }}
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>{{ item.label }}</span>
+              <span class="badge" [ngClass]="getBadgeClass(item.estado)">
+                {{ item.estado }}
+              </span>
+            </div>
+          </ng-template>
+        </ng-select>
+        <small class="text-muted">Período académico</small>
+      </div>
+
+      <!-- Filtro por Identificación -->
+      <div class="col-xl-2 col-lg-3 col-md-6">
+        <label for="filtroIdentificacion" class="form-label fw-bold">
+          <i class="fas fa-id-card me-1"></i>Identificación:
+        </label>
+        <input
+          type="text"
+          id="filtroIdentificacion"
+          class="form-control"
+          placeholder="Ej: 12345678..."
+          [(ngModel)]="filtroIdentificacion"
+        />
+        <small class="text-muted">Cédula del docente</small>
+      </div>
+
+      <!-- Filtro por Nombre Completo -->
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <label for="filtroNombreCompleto" class="form-label fw-bold">
+          <i class="fas fa-user me-1"></i>Nombre:
+        </label>
+        <input
+          type="text"
+          id="filtroNombreCompleto"
+          class="form-control"
+          placeholder="Buscar por nombre..."
+          [(ngModel)]="filtroNombreCompleto"
+        />
+        <small class="text-muted">Nombre del docente</small>
+      </div>
+
+      <!-- Filtro por Correo -->
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <label for="filtroCorreo" class="form-label fw-bold">
+          <i class="fas fa-envelope me-1"></i>Correo:
+        </label>
+        <input
+          type="text"
+          id="filtroCorreo"
+          class="form-control"
+          placeholder="Buscar por correo..."
+          [(ngModel)]="filtroCorreo"
+        />
+        <small class="text-muted">Email del docente</small>
+      </div>
+
+      <!-- Filtro por Tipo de Contratación -->
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <label for="filtroContratacion" class="form-label fw-bold">
+          <i class="fas fa-briefcase me-1"></i>Contratación:
+        </label>
+        <ng-select
+          id="filtroContratacion"
+          [items]="tiposContratacion"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filtroContratacion"
+          placeholder="Todos"
+          [clearable]="false"
+          [searchable]="false"
+        >
+        </ng-select>
+        <small class="text-muted">Tipo de contratación</small>
+      </div>
+
+      <!-- Filtro por Dedicación -->
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <label for="filtroDedicacion" class="form-label fw-bold">
+          <i class="fas fa-clock me-1"></i>Dedicación:
+        </label>
+        <ng-select
+          id="filtroDedicacion"
+          [items]="tiposDedicacion"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filtroDedicacion"
+          placeholder="Todos"
+          [clearable]="false"
+          [searchable]="false"
+        >
+        </ng-select>
+        <small class="text-muted">Tipo de dedicación</small>
+      </div>
+    </div>
+
+    <!-- Botón de Búsqueda -->
+    <div class="row mt-3">
+      <div class="col-12 d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          class="btn btn-primary d-flex align-items-center"
+          (click)="aplicarFiltros()"
+        >
+          <i class="fas fa-search me-2"></i>
+          <span>Buscar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

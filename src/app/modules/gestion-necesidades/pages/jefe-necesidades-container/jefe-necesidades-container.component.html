@@ -32,6 +32,19 @@
           Gestión de Asignaciones
         </button>
       </li>
+      <!-- NUEVA TAB: Seleccionados -->
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          [class.active]="tabActiva === 'seleccionados'"
+          type="button"
+          role="tab"
+          (click)="cambiarTab('seleccionados')"
+        >
+          <i class="fas fa-user-friends me-2"></i>
+          Gestión de Seleccionados
+        </button>
+      </li>
     </ul>
   </div>
 
@@ -59,6 +72,18 @@
       <app-jefe-asignaciones
         [isActive]="tabActiva === 'asignaciones'"
       ></app-jefe-asignaciones>
+    </div>
+
+    <!-- Tab 3: Gestión de Seleccionados (NUEVA) -->
+    <div
+      class="tab-pane fade"
+      [class.show]="tabActiva === 'seleccionados'"
+      [class.active]="tabActiva === 'seleccionados'"
+      role="tabpanel"
+    >
+      <app-jefe-seleccionados
+        [isActive]="tabActiva === 'seleccionados'"
+      ></app-jefe-seleccionados>
     </div>
   </div>
 </div>
