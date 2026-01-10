@@ -256,7 +256,6 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
           `Seleccionado creado correctamente`,
           'Creación exitosa'
         );
-        this.cerrarModalCrear();
         this.cargarSeleccionados();
       } else {
         this.toastr.error('No se pudo crear el seleccionado', 'Error');
@@ -270,13 +269,12 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
       this.toastr.error(mensajeError, 'Error al crear');
     } finally {
       this.creando = false;
+      this.cerrarModalCrear();
     }
   }
 
   cerrarModalCrear(): void {
-    if (!this.creando) {
-      this.mostrarModalCrear = false;
-    }
+    this.mostrarModalCrear = false;
   }
 
   // ===== ELIMINAR SELECCIONADO =====
