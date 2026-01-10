@@ -1,0 +1,127 @@
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="visible">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header bg-danger text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          Confirmar Eliminación
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          [disabled]="eliminando"
+          (click)="cancelar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <div class="alert alert-danger d-flex align-items-start" role="alert">
+          <i class="fas fa-exclamation-circle fa-2x me-3 mt-1"></i>
+          <div>
+            <h6 class="alert-heading mb-2">¿Está seguro?</h6>
+            <p class="mb-0">
+              Esta acción <strong>eliminará permanentemente</strong> el
+              seleccionado. Esta operación no se puede deshacer.
+            </p>
+          </div>
+        </div>
+
+        <div class="info-section mt-3">
+          <h6 class="section-title mb-3">
+            <i class="fas fa-info-circle me-2"></i>
+            Información del Seleccionado
+          </h6>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="info-item">
+                <span class="info-label">OID:</span>
+                <span class="info-value">{{
+                  seleccionado?.oidSeleccionado || "N/A"
+                }}</span>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="info-item">
+                <span class="info-label">Nombre Completo:</span>
+                <span class="info-value fw-bold">{{
+                  getNombreCompleto()
+                }}</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="info-item">
+                <span class="info-label">Identificación:</span>
+                <span class="info-value">{{ getIdentificacion() }}</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="info-item">
+                <span class="info-label">Departamento:</span>
+                <span class="info-value">{{ getDepartamento() }}</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="info-item">
+                <span class="info-label">Tipo:</span>
+                <span class="info-value">{{
+                  seleccionado?.tipo || "N/A"
+                }}</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="info-item">
+                <span class="info-label">Dedicación:</span>
+                <span class="info-value">{{
+                  seleccionado?.dedicacion || "N/A"
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 py-3">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          [disabled]="eliminando"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          [disabled]="eliminando"
+          (click)="confirmar()"
+        >
+          <ng-container *ngIf="!eliminando">
+            <i class="fas fa-trash-alt me-2"></i>
+            Eliminar
+          </ng-container>
+          <ng-container *ngIf="eliminando">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Eliminando...
+          </ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="visible"></div>

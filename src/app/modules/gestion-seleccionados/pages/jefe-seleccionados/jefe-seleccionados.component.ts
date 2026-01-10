@@ -31,6 +31,8 @@ import {
   trackByOid,
 } from '../../../gestion-necesidades/shared/table.utils';
 import { getUserDepartmentId } from '../../../auth/utils/user-storage.utils';
+import { ModalCrearSeleccionadoComponent } from '../../components/modal-crear-seleccionado/modal-crear-seleccionado.component';
+import { ModalEliminarSeleccionadoComponent } from '../../components/modal-eliminar-seleccionado/modal-eliminar-seleccionado.component';
 
 @Component({
   selector: 'app-jefe-seleccionados',
@@ -40,6 +42,8 @@ import { getUserDepartmentId } from '../../../auth/utils/user-storage.utils';
     FormsModule,
     NgSelectModule,
     FiltrosSeleccionadosJefeComponent,
+    ModalCrearSeleccionadoComponent,
+    ModalEliminarSeleccionadoComponent,
   ],
   templateUrl: './jefe-seleccionados.component.html',
   styleUrl: './jefe-seleccionados.component.css',
@@ -75,14 +79,11 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
 
   // ===== MODALES =====
   mostrarModalCrear = false;
-  mostrarModalEditar = false;
   mostrarModalEliminar = false;
 
-  seleccionadoAEditar: SeleccionadoResponse | null = null;
   seleccionadoAEliminar: SeleccionadoResponse | null = null;
 
   creando = false;
-  editando = false;
   eliminando = false;
 
   Math = Math;
@@ -275,49 +276,6 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
   cerrarModalCrear(): void {
     if (!this.creando) {
       this.mostrarModalCrear = false;
-    }
-  }
-
-  // ===== EDITAR SELECCIONADO =====
-  editarSeleccionado(seleccionado: SeleccionadoResponse): void {
-    this.seleccionadoAEditar = seleccionado;
-    this.mostrarModalEditar = true;
-  }
-
-  async confirmarEdicion(dto: UpdateSeleccionadoDTO): Promise<void> {
-    if (!this.seleccionadoAEditar) return;
-
-    this.editando = true;
-
-    try {
-      const resultado = await this.seleccionadosHelper.update(dto);
-
-      if (resultado) {
-        this.toastr.success(
-          `Seleccionado actualizado correctamente`,
-          'Actualización exitosa'
-        );
-        this.cerrarModalEditar();
-        this.cargarSeleccionados();
-      } else {
-        this.toastr.error('No se pudo actualizar el seleccionado', 'Error');
-      }
-    } catch (error: any) {
-      console.error('Error al actualizar:', error);
-      const mensajeError =
-        error?.error?.mensaje ||
-        error?.message ||
-        'Error al actualizar el seleccionado.';
-      this.toastr.error(mensajeError, 'Error al actualizar');
-    } finally {
-      this.editando = false;
-    }
-  }
-
-  cerrarModalEditar(): void {
-    if (!this.editando) {
-      this.mostrarModalEditar = false;
-      this.seleccionadoAEditar = null;
     }
   }
 

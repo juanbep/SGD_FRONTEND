@@ -1,0 +1,175 @@
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="visible">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg">
+      <!-- Header -->
+      <div class="modal-header text-white border-0 py-3">
+        <h5 class="modal-title fw-bold mb-0">
+          <i class="fas fa-user-plus me-2" style="color: #f8ae15"></i>
+          Crear Seleccionado
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          [disabled]="creando"
+          (click)="cancelar()"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body p-4">
+        <div class="row g-4">
+          <div class="col-12">
+            <div class="info-section">
+              <h6 class="section-title mb-3">
+                <i class="fas fa-info-circle me-2"></i>
+                Información del Seleccionado
+              </h6>
+
+              <form [formGroup]="seleccionadoForm">
+                <!-- Fila 1: Usuario -->
+                <div class="row g-3">
+                  <div class="col-12">
+                    <div class="info-item">
+                      <label class="info-label" for="oidUsuario">
+                        Usuario (Docente) <span class="text-danger">*</span>
+                      </label>
+                      <ng-select
+                        id="oidUsuario"
+                        [items]="usuarios"
+                        bindLabel="label"
+                        bindValue="value"
+                        formControlName="oidUsuario"
+                        [placeholder]="
+                          loadingUsuarios
+                            ? 'Cargando usuarios...'
+                            : 'Seleccione un usuario'
+                        "
+                        [clearable]="false"
+                        [searchable]="true"
+                        [loading]="loadingUsuarios"
+                        [class.is-invalid]="oidUsuarioInvalid"
+                        notFoundText="No hay usuarios disponibles"
+                        loadingText="Cargando usuarios..."
+                      >
+                        <ng-template ng-option-tmp let-item="item">
+                          <div>
+                            <strong>{{ item.label }}</strong>
+                            <br />
+                            <small class="text-muted">
+                              CC: {{ item.identificacion }}
+                            </small>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                      <div class="invalid-feedback" *ngIf="oidUsuarioInvalid">
+                        Debe seleccionar un usuario
+                      </div>
+                      <small class="text-muted">
+                        Seleccione el docente que desea agregar como
+                        seleccionado
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fila 2: Tipo y Dedicación -->
+                <div class="row g-3 mt-1">
+                  <!-- Tipo -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label" for="tipo">
+                        Tipo
+                        <small class="text-muted">(Opcional)</small>
+                      </label>
+                      <ng-select
+                        id="tipo"
+                        [items]="tiposDisponibles"
+                        bindLabel="label"
+                        bindValue="value"
+                        formControlName="tipo"
+                        placeholder="Seleccione un tipo"
+                        [clearable]="true"
+                        [searchable]="false"
+                      >
+                      </ng-select>
+                      <small class="text-muted">
+                        Tipo de contratación del seleccionado
+                      </small>
+                    </div>
+                  </div>
+
+                  <!-- Dedicación -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <label class="info-label" for="dedicacion">
+                        Dedicación
+                        <small class="text-muted">(Opcional)</small>
+                      </label>
+                      <ng-select
+                        id="dedicacion"
+                        [items]="dedicacionesDisponibles"
+                        bindLabel="label"
+                        bindValue="value"
+                        formControlName="dedicacion"
+                        placeholder="Seleccione una dedicación"
+                        [clearable]="true"
+                        [searchable]="false"
+                      >
+                      </ng-select>
+                      <small class="text-muted">
+                        Tiempo de dedicación del seleccionado
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Nota informativa -->
+                <div class="alert alert-info mt-3" role="alert">
+                  <i class="fas fa-info-circle me-2"></i>
+                  <strong>Nota:</strong> Los campos "Tipo" y "Dedicación" son
+                  opcionales. Si no se especifican, se pueden editar
+                  posteriormente.
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer border-0 py-3">
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4"
+          [disabled]="creando"
+          (click)="cancelar()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success px-4"
+          [disabled]="creando"
+          (click)="confirmar()"
+        >
+          <ng-container *ngIf="!creando">
+            <i class="fas fa-check me-2"></i>
+            Crear Seleccionado
+          </ng-container>
+          <ng-container *ngIf="creando">
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+            Creando...
+          </ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop fade show" *ngIf="visible"></div>

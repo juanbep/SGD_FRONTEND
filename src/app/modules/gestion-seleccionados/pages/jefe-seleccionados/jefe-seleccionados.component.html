@@ -185,16 +185,6 @@
             <!-- ACCIONES -->
             <td class="text-center">
               <div class="action-buttons-wrapper">
-                <!-- Editar -->
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary"
-                  title="Editar seleccionado"
-                  (click)="editarSeleccionado(seleccionado)"
-                >
-                  <i class="fas fa-edit"></i>
-                </button>
-
                 <!-- Eliminar -->
                 <button
                   type="button"
@@ -319,31 +309,20 @@
 
 <!-- Modal de Crear Seleccionado -->
 <!-- TODO: Implementar componente modal-crear-seleccionado -->
-<!-- <app-modal-crear-seleccionado
+<app-modal-crear-seleccionado
   [visible]="mostrarModalCrear"
   [creando]="creando"
   [oidCalendario]="filtrosActuales.oidCalendario"
   (onConfirmar)="confirmarCreacion($event)"
   (onCancelar)="cerrarModalCrear()"
-></app-modal-crear-seleccionado> -->
-
-<!-- Modal de Editar Seleccionado -->
-<!-- TODO: Implementar componente modal-editar-seleccionado -->
-<!-- <app-modal-editar-seleccionado
-  *ngIf="seleccionadoAEditar"
-  [seleccionado]="seleccionadoAEditar"
-  [visible]="mostrarModalEditar"
-  [editando]="editando"
-  (onCerrar)="cerrarModalEditar()"
-  (onGuardar)="confirmarEdicion($event)"
-></app-modal-editar-seleccionado> -->
+></app-modal-crear-seleccionado>
 
 <!-- Modal de Eliminar Seleccionado -->
 <!-- TODO: Implementar componente modal-eliminar-seleccionado -->
-<!-- <app-modal-eliminar-seleccionado
+<app-modal-eliminar-seleccionado
   [seleccionado]="seleccionadoAEliminar"
   [visible]="mostrarModalEliminar"
   [eliminando]="eliminando"
   (onConfirmar)="confirmarEliminacion()"
   (onCancelar)="cerrarModalEliminar()"
-></app-modal-eliminar-seleccionado> -->
+></app-modal-eliminar-seleccionado>
