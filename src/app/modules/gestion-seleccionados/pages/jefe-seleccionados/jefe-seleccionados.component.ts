@@ -300,7 +300,6 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
           `Seleccionado eliminado exitosamente`,
           'Eliminación exitosa'
         );
-        this.cerrarModalEliminar();
         this.cargarSeleccionados();
       } else {
         this.toastr.error('No se pudo eliminar el seleccionado', 'Error');
@@ -314,14 +313,13 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
       this.toastr.error(mensajeError, 'Error al eliminar');
     } finally {
       this.eliminando = false;
+      this.cerrarModalEliminar();
     }
   }
 
   cerrarModalEliminar(): void {
-    if (!this.eliminando) {
-      this.mostrarModalEliminar = false;
-      this.seleccionadoAEliminar = null;
-    }
+    this.mostrarModalEliminar = false;
+    this.seleccionadoAEliminar = null;
   }
 
   // ===== UTILIDADES =====
