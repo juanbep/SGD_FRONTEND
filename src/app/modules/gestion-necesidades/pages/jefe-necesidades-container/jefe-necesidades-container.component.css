@@ -1,43 +1,69 @@
-/* ===== ESTILOS PARA TÍTULO DE PÁGINA ===== */
 .page-title {
-  color: #001282;
+  color: #001282 !important;
   font-weight: 700;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  margin: 0;
+  border-bottom: 3px solid #001282;
+  padding-bottom: 0.5rem;
+  display: inline-block;
 }
 
-/* ===== ESTILOS PARA TABS PERSONALIZADAS ===== */
-.custom-tabs {
-  border-bottom: 2px solid #dee2e6;
+.page-title i {
+  color: #0051c6 !important;
 }
 
-.custom-tabs .nav-link {
-  border: none;
-  border-bottom: 3px solid transparent;
+.tabs-principales {
+  border-bottom: 2px solid #001282;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.tabs-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+}
+
+.tab-item {
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
   color: #6c757d;
   font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.3s ease;
-  background-color: transparent;
+  font-size: 0.9375rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
-.custom-tabs .nav-link:hover {
+.tab-item i {
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+.tab-item:hover {
+  background-color: rgba(0, 81, 198, 0.1);
   color: #0051c6;
-  border-bottom-color: #f8ae15;
-  background-color: rgba(0, 81, 198, 0.05);
 }
 
-.custom-tabs .nav-link.active {
-  color: #001282;
-  border-bottom-color: #0051c6;
-  background-color: transparent;
+.tab-item:hover i {
+  color: #0051c6;
 }
 
-.custom-tabs .nav-link i {
-  font-size: 1rem;
+.tab-item.active {
+  background-color: #001282;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 18, 130, 0.2);
 }
 
-/* ===== CONTENIDO DE TABS ===== */
+.tab-item.active i {
+  color: #f8ae15;
+}
+
+/* Tab content */
 .tab-content {
   padding-top: 1rem;
 }
@@ -50,44 +76,18 @@
   display: block;
 }
 
-/* ===== ESTILOS PARA ALERT TEMPORAL ===== */
-.alert-info {
-  background-color: #e7f3ff;
-  border-color: #0051c6;
-  color: #001282;
-}
-
-.alert-info .fa-info-circle {
-  color: #0051c6;
-}
-
-/* ===== RESPONSIVIDAD ===== */
 @media (max-width: 768px) {
+  .tabs-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tab-item {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .page-title {
-    font-size: 1.25rem;
-  }
-
-  .custom-tabs .nav-link {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .custom-tabs .nav-link i {
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .page-title {
-    font-size: 1.1rem;
-  }
-
-  .custom-tabs .nav-link {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.85rem;
-  }
-
-  .custom-tabs .nav-link span {
-    display: none;
+    font-size: 1.5rem;
   }
 }

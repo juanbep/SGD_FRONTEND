@@ -1,52 +1,41 @@
 <div class="view-container">
-  <!-- Encabezado con Tabs -->
-  <div class="tabs-header mb-3">
-    <h4 class="page-title mb-3">
-      <i class="fas fa-briefcase me-2" style="color: #0051c6"></i>
+  <!-- Encabezado -->
+  <div class="page-header mb-4">
+    <h3 class="page-title">
+      <i class="fas fa-briefcase me-2"></i>
       Gestión de Necesidades - Jefe de Departamento
-    </h4>
-
-    <!-- Navigation Tabs -->
-    <ul class="nav nav-tabs custom-tabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button
-          class="nav-link"
-          [class.active]="tabActiva === 'revision'"
-          type="button"
-          role="tab"
-          (click)="cambiarTab('revision')"
-        >
-          <i class="fas fa-clipboard-check me-2"></i>
-          Revisión de Necesidades
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button
-          class="nav-link"
-          [class.active]="tabActiva === 'asignaciones'"
-          type="button"
-          role="tab"
-          (click)="cambiarTab('asignaciones')"
-        >
-          <i class="fas fa-user-check me-2"></i>
-          Gestión de Asignaciones
-        </button>
-      </li>
-      <!-- NUEVA TAB: Seleccionados -->
-      <li class="nav-item" role="presentation">
-        <button
-          class="nav-link"
-          [class.active]="tabActiva === 'seleccionados'"
-          type="button"
-          role="tab"
-          (click)="cambiarTab('seleccionados')"
-        >
-          <i class="fas fa-user-friends me-2"></i>
-          Gestión de Seleccionados
-        </button>
-      </li>
-    </ul>
+    </h3>
   </div>
+
+  <!-- Pestañas Principales -->
+  <nav class="tabs-principales mb-4">
+    <div class="tabs-wrapper">
+      <a
+        class="tab-item"
+        [class.active]="tabActiva === 'revision'"
+        (click)="cambiarTab('revision')"
+      >
+        <i class="fas fa-clipboard-check me-2"></i>
+        Revisión de Necesidades
+      </a>
+      <a
+        class="tab-item"
+        [class.active]="tabActiva === 'asignaciones'"
+        (click)="cambiarTab('asignaciones')"
+      >
+        <i class="fas fa-user-check me-2"></i>
+        Gestión de Asignaciones
+      </a>
+      <a
+        class="tab-item"
+        [class.active]="tabActiva === 'seleccionados'"
+        (click)="cambiarTab('seleccionados')"
+      >
+        <i class="fas fa-user-friends me-2"></i>
+        Gestión de Seleccionados
+      </a>
+    </div>
+  </nav>
 
   <!-- Contenido de Tabs -->
   <div class="tab-content">
@@ -74,7 +63,7 @@
       ></app-jefe-asignaciones>
     </div>
 
-    <!-- Tab 3: Gestión de Seleccionados (NUEVA) -->
+    <!-- Tab 3: Gestión de Seleccionados -->
     <div
       class="tab-pane fade"
       [class.show]="tabActiva === 'seleccionados'"
