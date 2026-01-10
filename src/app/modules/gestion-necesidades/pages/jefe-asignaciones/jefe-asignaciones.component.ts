@@ -307,7 +307,6 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
           `Docente "${resultado.nombreDocente}" asignado correctamente a ${this.necesidadAAsignar.nombreMateria} - Grupo ${resultado.grupo}`,
           'Asignación exitosa'
         );
-        this.cerrarModalAsignarDocente();
         this.cargarNecesidades(); // Recargar tabla
       } else {
         this.toastr.error('No se pudo crear la asignación', 'Error');
@@ -321,6 +320,7 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
       this.toastr.error(mensajeError, 'Error al asignar');
     } finally {
       this.asignandoDocente = false;
+      this.cerrarModalAsignarDocente();
     }
   }
 

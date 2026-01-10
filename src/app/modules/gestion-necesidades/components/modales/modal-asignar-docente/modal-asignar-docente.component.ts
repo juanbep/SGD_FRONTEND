@@ -33,6 +33,7 @@ export class ModalAsignarDocenteComponent implements OnInit, OnChanges {
   @Output() onCancelar = new EventEmitter<void>();
 
   private seleccionadoHelper = inject(SeleccionadoHelperService);
+  intentoConfirmar: boolean = false;
 
   // Datos
   seleccionados: SeleccionadoResponse[] = [];
@@ -87,6 +88,8 @@ export class ModalAsignarDocenteComponent implements OnInit, OnChanges {
   }
 
   confirmar(): void {
+    this.intentoConfirmar = true;
+
     if (!this.oidSeleccionadoSeleccionado) {
       return;
     }
@@ -103,6 +106,7 @@ export class ModalAsignarDocenteComponent implements OnInit, OnChanges {
   resetModal(): void {
     this.oidSeleccionadoSeleccionado = null;
     this.errorCarga = null;
+    this.intentoConfirmar = false;
   }
 
   // Getter para mostrar nombre completo en el dropdown
