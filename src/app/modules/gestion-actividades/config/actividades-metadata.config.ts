@@ -109,7 +109,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         validaciones: { minLength: 3, maxLength: 200 },
       },
       {
-        nombre: 'CODIGOVRI',
+        nombre: 'VRI',
         tipoValor: 'VARCHAR',
         label: 'Código VRI',
         tipoCampo: 'text',
@@ -481,7 +481,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         placeholder: 'Ej: Resolución 123 de 2024',
       },
       {
-        nombre: 'ID',
+        nombre: 'IDSEMILLERO',
         tipoValor: 'INT',
         label: 'ID',
         tipoCampo: 'number',
@@ -503,7 +503,7 @@ export const ACTIVIDADES_METADATA: Record<string, SubtipoActividadConfig> = {
         validaciones: { minLength: 3, maxLength: 200 },
       },
       {
-        nombre: 'ROL',
+        nombre: 'ROLSEMILLERO',
         tipoValor: 'VARCHAR',
         label: 'Rol',
         tipoCampo: 'text',

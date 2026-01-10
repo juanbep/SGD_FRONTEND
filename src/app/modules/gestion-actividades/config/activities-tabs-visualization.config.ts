@@ -19,12 +19,12 @@ export const TABS_VISUALIZACION_ACTIVIDADES: TabPrincipalVisualizacion[] = [
     label: 'Docencia',
     icon: 'fa-chalkboard-teacher',
     subTabs: [
-      {
-        id: 'docencia-directa',
-        label: 'Docencia Directa',
-        icon: 'fa-chalkboard',
-        oidTipoActividad: 9,
-      },
+      // {
+      //   id: 'docencia-directa',
+      //   label: 'Docencia Directa',
+      //   icon: 'fa-chalkboard',
+      //   oidTipoActividad: 9,
+      // },
       {
         id: 'trabajos-docencia',
         label: 'Trabajos de Docencia',

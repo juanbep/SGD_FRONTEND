@@ -18,11 +18,11 @@ interface SubTab {
 })
 export class DocenciaComponent {
   readonly subTabs: SubTab[] = [
-    {
-      id: 'docencia-directa',
-      label: 'Docencia Directa',
-      icon: 'fa-chalkboard',
-    },
+    // {
+    //   id: 'docencia-directa',
+    //   label: 'Docencia Directa',
+    //   icon: 'fa-chalkboard',
+    // },
     {
       id: 'trabajos-docencia',
       label: 'Trabajos de Docencia',
