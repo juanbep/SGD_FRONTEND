@@ -28,7 +28,7 @@
               </h6>
 
               <form [formGroup]="seleccionadoForm">
-                <!-- Fila 1: Usuario -->
+                <!-- Usuario (Docente) -->
                 <div class="row g-3">
                   <div class="col-12">
                     <div class="info-item">
@@ -68,69 +68,30 @@
                       </div>
                       <small class="text-muted">
                         Seleccione el docente que desea agregar como
-                        seleccionado
+                        seleccionado para este calendario
                       </small>
                     </div>
                   </div>
                 </div>
 
-                <!-- Fila 2: Tipo y Dedicación -->
-                <div class="row g-3 mt-1">
-                  <!-- Tipo -->
-                  <div class="col-md-6">
-                    <div class="info-item">
-                      <label class="info-label" for="tipo">
-                        Tipo
-                        <small class="text-muted">(Opcional)</small>
-                      </label>
-                      <ng-select
-                        id="tipo"
-                        [items]="tiposDisponibles"
-                        bindLabel="label"
-                        bindValue="value"
-                        formControlName="tipo"
-                        placeholder="Seleccione un tipo"
-                        [clearable]="true"
-                        [searchable]="false"
-                      >
-                      </ng-select>
+                <!-- Mensaje informativo -->
+                <div class="alert alert-info mt-3 mb-0" role="alert">
+                  <div class="d-flex align-items-start">
+                    <i class="fas fa-info-circle fa-lg me-3 mt-1"></i>
+                    <div>
+                      <strong>Información:</strong>
+                      <p class="mb-1 mt-1">
+                        Al crear el seleccionado, se agregará el docente a la
+                        lista de usuarios disponibles para asignaciones en este
+                        calendario académico.
+                      </p>
                       <small class="text-muted">
-                        Tipo de contratación del seleccionado
+                        Los campos adicionales como tipo de contratación y
+                        dedicación se tomarán automáticamente del perfil del
+                        usuario.
                       </small>
                     </div>
                   </div>
-
-                  <!-- Dedicación -->
-                  <div class="col-md-6">
-                    <div class="info-item">
-                      <label class="info-label" for="dedicacion">
-                        Dedicación
-                        <small class="text-muted">(Opcional)</small>
-                      </label>
-                      <ng-select
-                        id="dedicacion"
-                        [items]="dedicacionesDisponibles"
-                        bindLabel="label"
-                        bindValue="value"
-                        formControlName="dedicacion"
-                        placeholder="Seleccione una dedicación"
-                        [clearable]="true"
-                        [searchable]="false"
-                      >
-                      </ng-select>
-                      <small class="text-muted">
-                        Tiempo de dedicación del seleccionado
-                      </small>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Nota informativa -->
-                <div class="alert alert-info mt-3" role="alert">
-                  <i class="fas fa-info-circle me-2"></i>
-                  <strong>Nota:</strong> Los campos "Tipo" y "Dedicación" son
-                  opcionales. Si no se especifican, se pueden editar
-                  posteriormente.
                 </div>
               </form>
             </div>

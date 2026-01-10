@@ -58,9 +58,6 @@ export class ModalCrearSeleccionadoComponent implements OnInit {
   // Datos
   usuarios: { value: number; label: string; identificacion: string }[] = [];
 
-  readonly tiposDisponibles = TIPOS_DISPONIBLES;
-  readonly dedicacionesDisponibles = DEDICACIONES_DISPONIBLES;
-
   ngOnInit(): void {
     this.inicializarFormulario();
     this.cargarUsuarios();
@@ -69,8 +66,6 @@ export class ModalCrearSeleccionadoComponent implements OnInit {
   inicializarFormulario(): void {
     this.seleccionadoForm = this.fb.group({
       oidUsuario: [null, [Validators.required]],
-      tipo: [null],
-      dedicacion: [null],
     });
   }
 
@@ -99,7 +94,7 @@ export class ModalCrearSeleccionadoComponent implements OnInit {
     if (this.seleccionadoForm.invalid) {
       this.seleccionadoForm.markAllAsTouched();
       this.toastr.warning(
-        'Por favor, completa todos los campos obligatorios',
+        'Por favor, seleccione un usuario',
         'Formulario Incompleto'
       );
       return;
@@ -110,8 +105,6 @@ export class ModalCrearSeleccionadoComponent implements OnInit {
     const nuevoSeleccionado: CreateSeleccionadoDTO = {
       oidCalendario: Number(this.oidCalendario),
       oidUsuario: formValue.oidUsuario,
-      tipo: formValue.tipo || null,
-      dedicacion: formValue.dedicacion || null,
     };
 
     this.onConfirmar.emit(nuevoSeleccionado);
