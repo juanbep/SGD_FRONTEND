@@ -3,9 +3,9 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
       <!-- Header -->
-      <div class="modal-header bg-danger text-white border-0 py-3">
-        <h5 class="modal-title fw-bold mb-0">
-          <i class="fas fa-exclamation-triangle me-2"></i>
+      <div class="modal-header bg-danger text-white border-0">
+        <h5 class="modal-title fw-bold d-flex align-items-center">
+          <i class="fas fa-trash-alt modal-header-icon me-3"></i>
           Confirmar Eliminación
         </h5>
         <button
@@ -19,82 +19,119 @@
 
       <!-- Body -->
       <div class="modal-body p-4">
-        <div class="alert alert-danger d-flex align-items-start" role="alert">
-          <i class="fas fa-exclamation-circle fa-2x me-3 mt-1"></i>
+        <!-- Alerta de peligro más compacta -->
+        <div
+          class="alert alert-danger d-flex align-items-center mb-3"
+          role="alert"
+        >
+          <i class="fas fa-exclamation-circle fa-lg me-3"></i>
           <div>
-            <h6 class="alert-heading mb-2">¿Está seguro?</h6>
-            <p class="mb-0">
-              Esta acción <strong>eliminará permanentemente</strong> el
-              seleccionado. Esta operación no se puede deshacer.
-            </p>
+            <strong>¡Atención!</strong> Esta acción no se puede deshacer.
           </div>
         </div>
 
-        <div class="info-section mt-3">
-          <h6 class="section-title mb-3">
-            <i class="fas fa-info-circle me-2"></i>
-            Información del Seleccionado
-          </h6>
+        <!-- Pregunta principal más destacada -->
+        <p class="text-center fw-bold text-dark mb-3 fs-6">
+          ¿Está seguro que desea eliminar el siguiente seleccionado?
+        </p>
 
-          <div class="row g-3">
-            <div class="col-12">
-              <div class="info-item">
-                <span class="info-label">OID:</span>
-                <span class="info-value">{{
-                  seleccionado?.oidSeleccionado || "N/A"
-                }}</span>
+        <!-- Card con información del seleccionado - diseño más compacto -->
+        <div class="card border-primary mb-3">
+          <div class="card-header bg-primary-subtle border-primary">
+            <h6 class="mb-0 text-primary fw-bold">
+              <i class="fas fa-info-circle me-2"></i>Información del
+              Seleccionado
+            </h6>
+          </div>
+          <div class="card-body py-2">
+            <!-- Layout en 2 columnas para aprovechar espacio -->
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-hashtag text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">OID</small>
+                    <strong>{{
+                      seleccionado?.oidSeleccionado || "N/A"
+                    }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-id-card text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Identificación</small>
+                    <strong>{{ getIdentificacion() }}</strong>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="col-12">
-              <div class="info-item">
-                <span class="info-label">Nombre Completo:</span>
-                <span class="info-value fw-bold">{{
-                  getNombreCompleto()
-                }}</span>
+            <!-- Nombre completo en fila completa -->
+            <div class="mt-2 pt-2 border-top">
+              <div class="d-flex align-items-start mb-2">
+                <i class="fas fa-user text-primary me-2 mt-1"></i>
+                <div>
+                  <small class="text-muted d-block">Nombre Completo</small>
+                  <strong>{{ getNombreCompleto() }}</strong>
+                </div>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="info-item">
-                <span class="info-label">Identificación:</span>
-                <span class="info-value">{{ getIdentificacion() }}</span>
+            <!-- Departamento en fila completa -->
+            <div class="mt-2 pt-2 border-top">
+              <div class="d-flex align-items-start mb-2">
+                <i class="fas fa-building text-primary me-2 mt-1"></i>
+                <div>
+                  <small class="text-muted d-block">Departamento</small>
+                  <strong>{{ getDepartamento() }}</strong>
+                </div>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="info-item">
-                <span class="info-label">Departamento:</span>
-                <span class="info-value">{{ getDepartamento() }}</span>
+            <!-- Tipo y Dedicación en 2 columnas -->
+            <div class="row g-2 mt-2 pt-2 border-top">
+              <div class="col-6">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-tag text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Tipo</small>
+                    <strong>{{ seleccionado?.tipo || "N/A" }}</strong>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="info-item">
-                <span class="info-label">Tipo:</span>
-                <span class="info-value">{{
-                  seleccionado?.tipo || "N/A"
-                }}</span>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="info-item">
-                <span class="info-label">Dedicación:</span>
-                <span class="info-value">{{
-                  seleccionado?.dedicacion || "N/A"
-                }}</span>
+              <div class="col-6">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-clock text-primary me-2"></i>
+                  <div>
+                    <small class="text-muted d-block">Dedicación</small>
+                    <strong>{{ seleccionado?.dedicacion || "N/A" }}</strong>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Alerta de advertencia final -->
+        <div
+          class="alert alert-warning mb-0 d-flex align-items-center"
+          role="alert"
+        >
+          <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
+          <small>
+            Este seleccionado será eliminado
+            <strong>permanentemente</strong> del calendario.
+          </small>
         </div>
       </div>
 
       <!-- Footer -->
-      <div class="modal-footer border-0 py-3">
+      <div class="modal-footer border-0">
         <button
           type="button"
-          class="btn btn-outline-secondary px-4"
+          class="btn btn-secondary"
           [disabled]="eliminando"
           (click)="cancelar()"
         >
@@ -103,13 +140,13 @@
         </button>
         <button
           type="button"
-          class="btn btn-danger px-4"
+          class="btn btn-danger"
           [disabled]="eliminando"
           (click)="confirmar()"
         >
           <ng-container *ngIf="!eliminando">
-            <i class="fas fa-trash-alt me-2"></i>
-            Eliminar
+            <i class="fas fa-trash me-2"></i>
+            Eliminar Seleccionado
           </ng-container>
           <ng-container *ngIf="eliminando">
             <span
