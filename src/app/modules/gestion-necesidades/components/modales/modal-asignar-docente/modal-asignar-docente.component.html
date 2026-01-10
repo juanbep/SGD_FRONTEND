@@ -1,0 +1,172 @@
+<!-- Modal de Asignar Docente -->
+<div
+  class="modal fade"
+  [class.show]="visible"
+  [style.display]="visible ? 'block' : 'none'"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalAsignarDocenteLabel"
+  [attr.aria-hidden]="!visible"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header bg-primary text-white">
+        <h5
+          class="modal-title d-flex align-items-center"
+          id="modalAsignarDocenteLabel"
+        >
+          <i class="fas fa-user-plus me-2"></i>
+          Asignar Docente a Necesidad
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          [disabled]="asignando"
+          (click)="cancelar()"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <!-- Información de la Necesidad -->
+        <div
+          class="alert alert-info d-flex align-items-start"
+          *ngIf="necesidad"
+        >
+          <i class="fas fa-info-circle me-2 mt-1"></i>
+          <div>
+            <strong>Necesidad a asignar:</strong>
+            <br />
+            <span class="fw-semibold">{{ necesidad.nombreMateria }}</span> -
+            Grupo
+            <span class="badge bg-info ms-1">{{ necesidad.grupo }}</span>
+            <br />
+            <small class="text-muted">
+              Semestre {{ necesidad.semestreMateria }} | Cupo:
+              {{ necesidad.cupo }}
+            </small>
+          </div>
+        </div>
+
+        <!-- Selector de Docente -->
+        <div class="mb-3">
+          <label for="selectDocente" class="form-label fw-bold">
+            <i class="fas fa-chalkboard-teacher me-1"></i>
+            Seleccione el docente:
+            <span class="text-danger">*</span>
+          </label>
+
+          <!-- Loading State -->
+          <div *ngIf="loadingSeleccionados" class="text-center py-3">
+            <div
+              class="spinner-border spinner-border-sm text-primary me-2"
+              role="status"
+            >
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <span class="text-muted">Cargando docentes disponibles...</span>
+          </div>
+
+          <!-- Error State -->
+          <div
+            *ngIf="errorCarga && !loadingSeleccionados"
+            class="alert alert-warning"
+          >
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            {{ errorCarga }}
+          </div>
+
+          <!-- Dropdown de Seleccionados -->
+          <ng-select
+            *ngIf="!loadingSeleccionados && !errorCarga"
+            id="selectDocente"
+            [items]="seleccionados"
+            bindValue="oidSeleccionado"
+            [(ngModel)]="oidSeleccionadoSeleccionado"
+            placeholder="Buscar por nombre o identificación..."
+            [clearable]="true"
+            [searchable]="true"
+            [disabled]="asignando"
+            notFoundText="No se encontraron docentes"
+          >
+            <ng-template ng-label-tmp let-item="item">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-user-circle me-2 text-primary"></i>
+                <span>{{ getNombreCompleto(item) }}</span>
+              </div>
+            </ng-template>
+
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              <div class="d-flex flex-column">
+                <div class="fw-semibold">
+                  <i class="fas fa-user me-1"></i>
+                  {{ getNombreCompleto(item) }}
+                </div>
+                <small class="text-muted">
+                  <i class="fas fa-id-card me-1"></i>
+                  ID: {{ getIdentificacion(item) }}
+                  <span *ngIf="item.tipo" class="ms-2">
+                    | <i class="fas fa-tag me-1"></i>{{ item.tipo }}
+                  </span>
+                  <span *ngIf="item.dedicacion" class="ms-2">
+                    | <i class="fas fa-clock me-1"></i>{{ item.dedicacion }}
+                  </span>
+                </small>
+              </div>
+            </ng-template>
+          </ng-select>
+
+          <small class="form-text text-muted">
+            Seleccione el docente que será asignado a esta necesidad
+          </small>
+        </div>
+
+        <!-- Mensaje de Confirmación -->
+        <div
+          class="alert alert-light border"
+          *ngIf="oidSeleccionadoSeleccionado && seleccionadoActual"
+        >
+          <i class="fas fa-check-circle text-success me-2"></i>
+          <strong>Docente seleccionado:</strong>
+          {{ getNombreCompleto(seleccionadoActual) }}
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancelar()"
+          [disabled]="asignando"
+        >
+          <i class="fas fa-times me-1"></i>
+          Cancelar
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="confirmar()"
+          [disabled]="!puedeConfirmar"
+        >
+          <span
+            *ngIf="asignando"
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+          <i *ngIf="!asignando" class="fas fa-check me-1"></i>
+          {{ asignando ? "Asignando..." : "Confirmar Asignación" }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div
+  class="modal-backdrop fade"
+  [class.show]="visible"
+  *ngIf="visible"
+  (click)="cancelar()"
+></div>

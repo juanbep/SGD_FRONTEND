@@ -56,11 +56,11 @@ export class DetalleCalendarioComponent implements OnInit {
     anioCalendario: false, // Año
     numeroCalendario: false, // Periodo
     estado: true, // Estado
-    semanasClase: false, // Semanas clase
-    semanasPreparacion: false, // Semanas preparación
-    horasPlanta: false, // Horas Planta
+    semanasClase: true, // Semanas clase
+    semanasPreparacion: true, // Semanas preparación
+    horasPlanta: true, // Horas Planta
     horasCatedra: false, // Horas Cátedra
-    horasOcasionales: false, // Horas Ocasionales
+    horasOcasionales: true, // Horas Ocasionales
     horasBecarioPracticante: false, // Horas Becario/Practicante
     observacion: true, // Observación
   };

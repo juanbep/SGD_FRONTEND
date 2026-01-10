@@ -476,3 +476,14 @@
   (onConfirmar)="confirmarTransicion()"
   (onCancelar)="cerrarModalTransicion()"
 ></app-modal-confirmacion>
+
+<!-- Modal de Asignar Docente -->
+<app-modal-asignar-docente
+  [necesidad]="necesidadAAsignar"
+  [visible]="mostrarModalAsignarDocente"
+  [asignando]="asignandoDocente"
+  [oidCalendario]="filtrosActuales.oidCalendario"
+  [oidDepartamento]="filtrosActuales.oidDepartamento"
+  (onConfirmar)="confirmarAsignacion($event)"
+  (onCancelar)="cerrarModalAsignarDocente()"
+></app-modal-asignar-docente>

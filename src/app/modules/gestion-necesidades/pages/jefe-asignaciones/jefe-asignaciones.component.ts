@@ -16,8 +16,17 @@ import {
   ModalConfirmacionConfig,
 } from '../../components/modales/modal-confirmacion/modal-confirmacion.component';
 import { ToastrService } from 'ngx-toastr';
-import { NecesidadesService, TransicionEstadosService } from '../../services';
-import { Materia, NecesidadFilters, NecesidadResponse } from '../../models';
+import {
+  AsignacionHelperService,
+  NecesidadesService,
+  TransicionEstadosService,
+} from '../../services';
+import {
+  CreateAsignacionDTO,
+  Materia,
+  NecesidadFilters,
+  NecesidadResponse,
+} from '../../models';
 import {
   buildSortString,
   getPaginationInfo,
@@ -30,6 +39,7 @@ import {
 } from '../../shared/table.utils';
 import { getUserDepartmentJefaturaId } from '../../../auth/utils/user-storage.utils';
 import { getBadgeClassEstado } from '../../utils/necesidades.utils';
+import { ModalAsignarDocenteComponent } from '../../components/modales/modal-asignar-docente/modal-asignar-docente.component';
 
 @Component({
   selector: 'app-jefe-asignaciones',
@@ -41,6 +51,7 @@ import { getBadgeClassEstado } from '../../utils/necesidades.utils';
     FiltrosNecesidadesJefeComponent,
     ModalDetalleMateriaComponent,
     ModalConfirmacionComponent,
+    ModalAsignarDocenteComponent,
   ],
   templateUrl: './jefe-asignaciones.component.html',
   styleUrl: './jefe-asignaciones.component.css',
@@ -49,6 +60,7 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
   // ===== SERVICIOS =====
   private necesidadesService = inject(NecesidadesService);
   private transicionService = inject(TransicionEstadosService);
+  private asignacionHelper = inject(AsignacionHelperService);
   private toastr = inject(ToastrService);
 
   // ===== SELECCIÓN MÚLTIPLE =====
@@ -100,6 +112,11 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
   // ===== MODALES =====
   mostrarModalDetalleMateria = false;
   materiaSeleccionada: Materia | null = null;
+
+  // ===== MODAL DE ASIGNACIÓN DE DOCENTE =====
+  mostrarModalAsignarDocente = false;
+  necesidadAAsignar: NecesidadResponse | null = null;
+  asignandoDocente = false;
 
   Math = Math;
 
@@ -260,11 +277,58 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
 
   // ===== ACCIONES PARA ASIGNACIONES =====
   asignarDocente(necesidad: NecesidadResponse): void {
-    // TODO: Implementar cuando se cree el modal de asignación de docentes
-    this.toastr.info(
-      `Asignar docente a ${necesidad.nombreMateria} - Grupo ${necesidad.grupo}`,
-      'Funcionalidad en desarrollo'
-    );
+    if (necesidad.estado !== 'NO_ASIGNADA') {
+      this.toastr.warning(
+        'Solo se pueden asignar docentes a necesidades en estado NO ASIGNADA',
+        'Operación no permitida'
+      );
+      return;
+    }
+
+    this.necesidadAAsignar = necesidad;
+    this.mostrarModalAsignarDocente = true;
+  }
+
+  async confirmarAsignacion(oidSeleccionado: number): Promise<void> {
+    if (!this.necesidadAAsignar) return;
+
+    this.asignandoDocente = true;
+
+    try {
+      const dto: CreateAsignacionDTO = {
+        oidNecesidad: this.necesidadAAsignar.oidNecesidad,
+        oidSeleccionado: oidSeleccionado,
+      };
+
+      const resultado = await this.asignacionHelper.create(dto);
+
+      if (resultado) {
+        this.toastr.success(
+          `Docente "${resultado.nombreDocente}" asignado correctamente a ${this.necesidadAAsignar.nombreMateria} - Grupo ${resultado.grupo}`,
+          'Asignación exitosa'
+        );
+        this.cerrarModalAsignarDocente();
+        this.cargarNecesidades(); // Recargar tabla
+      } else {
+        this.toastr.error('No se pudo crear la asignación', 'Error');
+      }
+    } catch (error: any) {
+      console.error('Error al asignar docente:', error);
+      const mensajeError =
+        error?.error?.mensaje ||
+        error?.message ||
+        'Error al asignar docente a la necesidad.';
+      this.toastr.error(mensajeError, 'Error al asignar');
+    } finally {
+      this.asignandoDocente = false;
+    }
+  }
+
+  cerrarModalAsignarDocente(): void {
+    if (!this.asignandoDocente) {
+      this.mostrarModalAsignarDocente = false;
+      this.necesidadAAsignar = null;
+    }
   }
 
   gestionarAsignaciones(necesidad: NecesidadResponse): void {
@@ -454,7 +518,7 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
         Number(this.filtrosActuales.oidCalendario),
         this.filtrosActuales.oidPrograma
           ? Number(this.filtrosActuales.oidPrograma)
-          : 0, //validar y ajustar esta parte, no se le puede pasar 0 por defecto ///////////////////////////////////////////
+          : undefined,
         requiereDepartamento
           ? Number(this.filtrosActuales.oidDepartamento)
           : undefined,
