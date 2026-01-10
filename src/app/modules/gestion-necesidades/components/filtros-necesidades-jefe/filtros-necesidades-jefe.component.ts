@@ -40,11 +40,11 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
     estado: EstadoCalendario;
   }[] = [];
 
-  programas: {
-    value: number;
-    label: string;
-    nombreCorto: string;
-  }[] = [];
+  // programas: {
+  //   value: number;
+  //   label: string;
+  //   nombreCorto: string;
+  // }[] = [];
 
   // Usar constantes importadas
   readonly semestresDisponibles = SEMESTRES_DISPONIBLES;
@@ -55,14 +55,14 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
 
   // ===== LOADING STATES =====
   loadingCalendarios = false;
-  loadingProgramas = false;
+  //loadingProgramas = false;
 
   // ===== FILTROS LOCALES =====
   filters: NecesidadFilters = {
     page: 0,
     size: 10,
     oidCalendario: '',
-    oidPrograma: 'TODOS',
+    //oidPrograma: 'TODOS',
     oidDepartamento: '',
   };
 
@@ -77,7 +77,7 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
   ngOnInit(): void {
     this.inicializarFiltros();
     this.cargarCalendarios();
-    this.cargarProgramas();
+    //this.cargarProgramas();
   }
 
   // ===== INICIALIZAR FILTROS =====
@@ -95,7 +95,7 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
     }
 
     this.filters.oidDepartamento = oidDepartamento;
-    this.filters.oidPrograma = 0;
+    //this.filters.oidPrograma = 0;
   }
 
   // ===== CARGAR CALENDARIOS =====
@@ -127,25 +127,25 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
   }
 
   // ===== CARGAR PROGRAMAS =====
-  async cargarProgramas(): Promise<void> {
-    try {
-      this.loadingProgramas = true;
-      const programasData = await this.programaHelper.getAllForDropdown();
+  // async cargarProgramas(): Promise<void> {
+  //   try {
+  //     this.loadingProgramas = true;
+  //     const programasData = await this.programaHelper.getAllForDropdown();
 
-      this.programas = [
-        { value: 0, label: 'TODOS', nombreCorto: 'TODOS' },
-        ...programasData,
-      ];
-    } catch (error) {
-      console.error('Error al cargar programas:', error);
-      this.toastr.error('Error al cargar la lista de programas');
-      this.programas = [
-        { value: 0, label: 'TODOS', nombreCorto: 'TODOS' },
-      ];
-    } finally {
-      this.loadingProgramas = false;
-    }
-  }
+  //     this.programas = [
+  //       { value: 0, label: 'TODOS', nombreCorto: 'TODOS' },
+  //       ...programasData,
+  //     ];
+  //   } catch (error) {
+  //     console.error('Error al cargar programas:', error);
+  //     this.toastr.error('Error al cargar la lista de programas');
+  //     this.programas = [
+  //       { value: 0, label: 'TODOS', nombreCorto: 'TODOS' },
+  //     ];
+  //   } finally {
+  //     this.loadingProgramas = false;
+  //   }
+  // }
 
   // ===== APLICAR FILTROS =====
   aplicarFiltros(): void {
@@ -168,9 +168,9 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
     };
 
     // Agregar filtro de programa (omitir si es 0 = TODOS)
-    if (this.filters.oidPrograma && this.filters.oidPrograma !== 0) {
-      filtrosCompletos.oidPrograma = this.filters.oidPrograma;
-    }
+    // if (this.filters.oidPrograma && this.filters.oidPrograma !== 0) {
+    //   filtrosCompletos.oidPrograma = this.filters.oidPrograma;
+    // }
 
     // Agregar filtros opcionales
     if (this.filtroEstado && this.filtroEstado !== 'TODOS') {
@@ -200,7 +200,7 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
 
   // ===== LIMPIAR FILTROS =====
   limpiarFiltros(): void {
-    this.filters.oidPrograma = 0; // TODOS
+    //this.filters.oidPrograma = 0; // TODOS
     this.filtroOid = '';
     this.filtroCodigo = '';
     this.filtroNombre = '';
@@ -220,7 +220,7 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
   // ===== VALIDAR SI HAY FILTROS ACTIVOS =====
   hasFiltrosActivos(): boolean {
     return (
-      this.filters.oidPrograma !== 0 ||
+      //this.filters.oidPrograma !== 0 ||
       this.filtroOid !== '' ||
       this.filtroCodigo !== '' ||
       this.filtroNombre !== '' ||

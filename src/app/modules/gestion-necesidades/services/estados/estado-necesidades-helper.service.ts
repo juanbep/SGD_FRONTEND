@@ -71,7 +71,7 @@ export class EstadoNecesidadesHelperService {
 
   async enviarBorradorARevisionSecretario(
     oidCalendario: number,
-    oidPrograma: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
@@ -85,7 +85,7 @@ export class EstadoNecesidadesHelperService {
 
   async devolverRevisionSecretarioABorrador(
     oidCalendario: number,
-    oidPrograma: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
@@ -99,7 +99,7 @@ export class EstadoNecesidadesHelperService {
 
   async enviarRevisionSecretarioARevisionJefe(
     oidCalendario: number,
-    oidPrograma: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
@@ -113,15 +113,15 @@ export class EstadoNecesidadesHelperService {
 
   async devolverRevisionJefeARevisionSecretario(
     oidCalendario: number,
-    oidPrograma: number,
     oidDepartamento: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Promise<CambioEstadoData | null> {
     return this.baseHelper.getDataFromResponse(
       this.estadoService.devolverRevisionJefeARevisionSecretario(
         oidCalendario,
-        oidPrograma,
         oidDepartamento,
+        oidPrograma,
         oidNecesidades
       )
     );

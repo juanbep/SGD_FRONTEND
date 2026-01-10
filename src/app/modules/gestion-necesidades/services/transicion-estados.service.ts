@@ -27,11 +27,8 @@ export class TransicionEstadosService {
    * Valida que los filtros necesarios estén presentes
    */
   validarFiltrosBasicos(filtros: NecesidadFilters): boolean {
-    if (!filtros.oidCalendario || !filtros.oidPrograma) {
-      this.toastr.error(
-        'Debe seleccionar un calendario y programa',
-        'Validación'
-      );
+    if (!filtros.oidCalendario) {
+      this.toastr.error('Debe seleccionar un calendario', 'Validación');
       return false;
     }
     return true;
@@ -101,7 +98,7 @@ export class TransicionEstadosService {
     estadoOrigen: string,
     estadoDestino: string,
     oidCalendario: number,
-    oidPrograma: number,
+    oidPrograma?: number,
     oidDepartamento?: number,
     oidNecesidades?: number[]
   ): Promise<ResultadoTransicion> {
@@ -147,8 +144,8 @@ export class TransicionEstadosService {
           resultado =
             await this.estadoNecesidadesHelper.devolverRevisionJefeARevisionSecretario(
               oidCalendario,
-              oidPrograma,
               oidDepartamento,
+              oidPrograma,
               oidNecesidades
             );
           break;

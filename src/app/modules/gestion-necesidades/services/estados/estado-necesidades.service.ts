@@ -73,7 +73,7 @@ export class EstadoNecesidadesService {
    */
   enviarBorradorARevisionSecretario(
     oidCalendario: number,
-    oidPrograma: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
     const body = oidNecesidades ? { oidNecesidades } : null;
@@ -92,7 +92,7 @@ export class EstadoNecesidadesService {
    */
   devolverRevisionSecretarioABorrador(
     oidCalendario: number,
-    oidPrograma: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
     const body = oidNecesidades ? { oidNecesidades } : null;
@@ -111,7 +111,7 @@ export class EstadoNecesidadesService {
    */
   enviarRevisionSecretarioARevisionJefe(
     oidCalendario: number,
-    oidPrograma: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
     const body = oidNecesidades ? { oidNecesidades } : null;
@@ -130,8 +130,8 @@ export class EstadoNecesidadesService {
    */
   devolverRevisionJefeARevisionSecretario(
     oidCalendario: number,
-    oidPrograma: number,
     oidDepartamento: number,
+    oidPrograma?: number,
     oidNecesidades?: number[]
   ): Observable<CambioEstadoResponse> {
     const body = oidNecesidades ? { oidNecesidades } : null;

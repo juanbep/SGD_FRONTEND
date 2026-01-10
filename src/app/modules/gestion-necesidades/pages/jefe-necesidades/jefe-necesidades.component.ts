@@ -639,13 +639,11 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
         estadoOrigen,
         estadoDestino,
         Number(this.filtrosActuales.oidCalendario),
-        this.filtrosActuales.oidPrograma
-          ? Number(this.filtrosActuales.oidPrograma)
-          : 0, //validar y ajustar esta parte, no se le puede pasar 0 por defecto ///////////////////////////////////////////
+        undefined, // no se envía oidPrograma
         requiereDepartamento
           ? Number(this.filtrosActuales.oidDepartamento)
           : undefined,
-        oidNecesidades // Siempre enviar el array
+        oidNecesidades
       );
 
       this.transicionService.mostrarResultado(resultado, tituloAccion);
