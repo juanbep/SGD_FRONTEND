@@ -481,8 +481,8 @@
   [necesidad]="necesidadAAsignar"
   [visible]="mostrarModalAsignarDocente"
   [asignando]="asignandoDocente"
-  [oidCalendario]="filtrosActuales.oidCalendario"
-  [oidDepartamento]="filtrosActuales.oidDepartamento"
+  [oidCalendario]="filtrosActuales.oidCalendario || ''"
+  [oidDepartamento]="filtrosActuales.oidDepartamento || ''"
   (onConfirmar)="confirmarAsignacion($event)"
   (onCancelar)="cerrarModalAsignarDocente()"
 ></app-modal-asignar-docente>

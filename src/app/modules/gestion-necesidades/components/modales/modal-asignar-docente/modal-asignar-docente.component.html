@@ -8,7 +8,7 @@
       <div class="modal-header text-white border-0 py-3">
         <h5 class="modal-title fw-bold mb-0">
           <i class="fas fa-user-plus me-2" style="color: #f8ae15"></i>
-          Asignar Docente a Necesidad
+          Asignar Docentes a Necesidad
         </h5>
         <button
           type="button"
@@ -23,7 +23,7 @@
       <div class="modal-body p-4">
         <div class="row g-4">
           <div class="col-12">
-            <!-- Información de la Necesidad (solo lectura) -->
+            <!-- Información de la Necesidad -->
             <div class="info-section mb-4">
               <h6 class="section-title mb-3">
                 <i class="fas fa-info-circle me-2"></i>
@@ -31,7 +31,6 @@
               </h6>
 
               <div class="row g-3" *ngIf="necesidad">
-                <!-- Columna izquierda -->
                 <div class="col-md-6">
                   <div class="info-item">
                     <label class="info-label">Materia</label>
@@ -51,7 +50,6 @@
                   </div>
                 </div>
 
-                <!-- Columna derecha -->
                 <div class="col-md-6">
                   <div class="info-item">
                     <label class="info-label">Grupo</label>
@@ -77,130 +75,159 @@
               </div>
             </div>
 
-            <!-- Formulario de selección de docente -->
+            <!-- Formulario de selección de docentes -->
             <div class="info-section">
               <h6 class="section-title mb-3">
                 <i class="fas fa-chalkboard-teacher me-2"></i>
-                Seleccionar Docente
+                Seleccionar Docentes
+                <span class="badge bg-primary ms-2"
+                  >{{ contadorSeleccion }} docentes</span
+                >
               </h6>
 
-              <div class="row g-3">
-                <div class="col-12">
-                  <div class="info-item">
-                    <label for="selectDocente" class="info-label">
-                      Docente a Asignar
-                      <span class="text-danger">*</span>
-                    </label>
+              <!-- Loading State -->
+              <div *ngIf="loadingSeleccionados" class="loading-state mb-3">
+                <div
+                  class="spinner-border spinner-border-sm text-primary me-2"
+                  role="status"
+                >
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+                <span class="text-muted">Cargando docentes disponibles...</span>
+              </div>
 
-                    <!-- Loading State -->
-                    <div *ngIf="loadingSeleccionados" class="loading-state">
-                      <div
-                        class="spinner-border spinner-border-sm text-primary me-2"
-                        role="status"
-                      >
-                        <span class="visually-hidden">Cargando...</span>
-                      </div>
-                      <span class="text-muted"
-                        >Cargando docentes disponibles...</span
-                      >
-                    </div>
+              <!-- Error State -->
+              <div
+                *ngIf="errorCarga && !loadingSeleccionados"
+                class="alert alert-warning mb-3"
+              >
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <small>{{ errorCarga }}</small>
+              </div>
 
-                    <!-- Error State -->
-                    <div
-                      *ngIf="errorCarga && !loadingSeleccionados"
-                      class="alert alert-warning mb-0"
+              <!-- Dropdown + Botón Agregar -->
+              <div
+                *ngIf="!loadingSeleccionados && !errorCarga"
+                class="row g-2 mb-3"
+              >
+                <div class="col-md-9">
+                  <label for="selectDocente" class="info-label mb-2">
+                    Seleccionar docente
+                    <span class="text-danger">*</span>
+                  </label>
+                  <select
+                    id="selectDocente"
+                    class="form-select"
+                    [(ngModel)]="oidSeleccionadoTemp"
+                    [disabled]="asignando || alcanzaMaximo"
+                  >
+                    <option [ngValue]="null">
+                      -- Seleccione un docente --
+                    </option>
+                    <option
+                      *ngFor="let docente of getSeleccionadosDisponibles()"
+                      [ngValue]="docente.oidSeleccionado"
                     >
-                      <i class="fas fa-exclamation-triangle me-2"></i>
-                      <small>{{ errorCarga }}</small>
-                    </div>
+                      {{ getNombreCompleto(docente) }} -
+                      {{ getIdentificacion(docente) }}
+                    </option>
+                  </select>
+                  <small class="text-muted d-block mt-1">
+                    Seleccione el docente de la lista desplegable
+                  </small>
+                </div>
 
-                    <!-- Dropdown de Seleccionados -->
-                    <ng-select
-                      *ngIf="!loadingSeleccionados && !errorCarga"
-                      id="selectDocente"
-                      [items]="seleccionados"
-                      bindValue="oidSeleccionado"
-                      [(ngModel)]="oidSeleccionadoSeleccionado"
-                      placeholder="Buscar por nombre o identificación..."
-                      [clearable]="true"
-                      [searchable]="true"
-                      [disabled]="asignando"
-                      notFoundText="No se encontraron docentes"
-                      [class.is-invalid]="
-                        !oidSeleccionadoSeleccionado && intentoConfirmar
+                <div class="col-md-3 d-flex align-items-end">
+                  <button
+                    type="button"
+                    class="btn btn-primary w-100"
+                    (click)="agregarDocente()"
+                    [disabled]="!puedeAgregar || asignando"
+                    title="Agregar docente a la lista"
+                  >
+                    <i class="fas fa-plus me-1"></i>
+                    Agregar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mensaje de límite -->
+              <div *ngIf="alcanzaMaximo" class="alert alert-warning mb-3">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <small>
+                  <strong>Límite alcanzado:</strong> Solo puedes asignar hasta
+                  {{ MAX_DOCENTES }} docentes por necesidad.
+                </small>
+              </div>
+
+              <!-- Tabla de docentes seleccionados -->
+              <div
+                *ngIf="docentesSeleccionados.length > 0"
+                class="table-responsive"
+              >
+                <table class="table table-sm table-bordered mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="fw-bold" style="width: 40px">#</th>
+                      <th class="fw-bold">Docente</th>
+                      <th class="fw-bold" style="width: 130px">
+                        Identificación
+                      </th>
+                      <th class="fw-bold text-center" style="width: 100px">
+                        Tipo
+                      </th>
+                      <th class="fw-bold text-center" style="width: 80px">
+                        Acción
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      *ngFor="
+                        let docente of docentesSeleccionados;
+                        let i = index
                       "
                     >
-                      <ng-template ng-label-tmp let-item="item">
-                        <div class="d-flex align-items-center">
-                          <i class="fas fa-user-circle me-2 text-primary"></i>
-                          <span>{{ getNombreCompleto(item) }}</span>
-                        </div>
-                      </ng-template>
+                      <td class="text-center">{{ i + 1 }}</td>
+                      <td>
+                        <i class="fas fa-user-circle text-primary me-2"></i>
+                        <strong>{{ getNombreCompleto(docente) }}</strong>
+                      </td>
+                      <td>{{ getIdentificacion(docente) }}</td>
+                      <td class="text-center">
+                        <span class="badge bg-secondary" *ngIf="docente.tipo">{{
+                          docente.tipo
+                        }}</span>
+                        <span class="text-muted" *ngIf="!docente.tipo"
+                          >N/A</span
+                        >
+                      </td>
+                      <td class="text-center">
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="eliminarDocente(docente.oidSeleccionado)"
+                          [disabled]="asignando"
+                          title="Eliminar de la lista"
+                        >
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-                      <ng-template
-                        ng-option-tmp
-                        let-item="item"
-                        let-index="index"
-                      >
-                        <div class="d-flex flex-column py-1">
-                          <div class="fw-semibold">
-                            <i class="fas fa-user me-1"></i>
-                            {{ getNombreCompleto(item) }}
-                          </div>
-                          <small class="text-muted">
-                            <i class="fas fa-id-card me-1"></i>
-                            ID: {{ getIdentificacion(item) }}
-                            <span *ngIf="item.tipo" class="ms-2">
-                              | <i class="fas fa-tag me-1"></i>{{ item.tipo }}
-                            </span>
-                            <span *ngIf="item.dedicacion" class="ms-2">
-                              | <i class="fas fa-clock me-1"></i
-                              >{{ item.dedicacion }}
-                            </span>
-                          </small>
-                        </div>
-                      </ng-template>
-                    </ng-select>
-
-                    <div
-                      class="invalid-feedback d-block"
-                      *ngIf="!oidSeleccionadoSeleccionado && intentoConfirmar"
-                    >
-                      Por favor, seleccione un docente
-                    </div>
-
-                    <small
-                      class="text-muted"
-                      *ngIf="!loadingSeleccionados && !errorCarga"
-                    >
-                      Seleccione el docente que será asignado a esta necesidad
-                    </small>
-                  </div>
-                </div>
-
-                <!-- Confirmación visual del docente seleccionado -->
-                <div
-                  class="col-12"
-                  *ngIf="oidSeleccionadoSeleccionado && seleccionadoActual"
-                >
-                  <div
-                    class="alert alert-success mb-0 d-flex align-items-start"
-                    role="alert"
-                  >
-                    <i class="fas fa-check-circle me-2 mt-1"></i>
-                    <div>
-                      <strong>Docente seleccionado:</strong>
-                      <br />
-                      <span class="fw-semibold">{{
-                        getNombreCompleto(seleccionadoActual)
-                      }}</span>
-                      <br />
-                      <small class="text-muted">
-                        ID: {{ getIdentificacion(seleccionadoActual) }}
-                      </small>
-                    </div>
-                  </div>
-                </div>
+              <!-- Mensaje si no hay docentes seleccionados -->
+              <div
+                *ngIf="docentesSeleccionados.length === 0 && intentoConfirmar"
+                class="alert alert-danger mb-0 mt-3"
+              >
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <small>
+                  <strong>Error:</strong> Debe agregar al menos un docente antes
+                  de confirmar.
+                </small>
               </div>
 
               <!-- Alerta informativa -->
@@ -210,9 +237,10 @@
               >
                 <i class="fas fa-info-circle me-2 mt-1"></i>
                 <small>
-                  <strong>Nota:</strong> Al confirmar la asignación, se creará
-                  automáticamente una actividad docente y la necesidad cambiará
-                  a estado <strong>ASIGNADA</strong>.
+                  <strong>Nota:</strong> Puedes asignar hasta
+                  {{ MAX_DOCENTES }} docentes a esta necesidad. Se crearán
+                  automáticamente las actividades docentes correspondientes y la
+                  necesidad cambiará a estado <strong>ASIGNADA</strong>.
                 </small>
               </div>
             </div>
@@ -239,7 +267,7 @@
         >
           <ng-container *ngIf="!asignando">
             <i class="fas fa-check me-2"></i>
-            Confirmar Asignación
+            Confirmar Asignaciones ({{ docentesSeleccionados.length }})
           </ng-container>
           <ng-container *ngIf="asignando">
             <span

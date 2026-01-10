@@ -289,35 +289,66 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
     this.mostrarModalAsignarDocente = true;
   }
 
-  async confirmarAsignacion(oidSeleccionado: number): Promise<void> {
-    if (!this.necesidadAAsignar) return;
+  async confirmarAsignacion(oidSeleccionados: number[]): Promise<void> {
+    if (!this.necesidadAAsignar || oidSeleccionados.length === 0) return;
 
     this.asignandoDocente = true;
 
+    let exitosos = 0;
+    let fallidos = 0;
+    const errores: string[] = [];
+
     try {
-      const dto: CreateAsignacionDTO = {
-        oidNecesidad: this.necesidadAAsignar.oidNecesidad,
-        oidSeleccionado: oidSeleccionado,
-      };
+      // Hacer múltiples peticiones secuenciales
+      for (const oidSeleccionado of oidSeleccionados) {
+        try {
+          const dto: CreateAsignacionDTO = {
+            oidNecesidad: this.necesidadAAsignar.oidNecesidad,
+            oidSeleccionado: oidSeleccionado,
+          };
 
-      const resultado = await this.asignacionHelper.create(dto);
+          const resultado = await this.asignacionHelper.create(dto);
 
-      if (resultado) {
+          if (resultado) {
+            exitosos++;
+          } else {
+            fallidos++;
+          }
+        } catch (error: any) {
+          fallidos++;
+          const mensajeError =
+            error?.error?.mensaje || error?.message || 'Error desconocido';
+          errores.push(mensajeError);
+        }
+      }
+
+      // Mostrar resultado final
+      if (exitosos > 0 && fallidos === 0) {
         this.toastr.success(
-          `Docente "${resultado.nombreDocente}" asignado correctamente a ${this.necesidadAAsignar.nombreMateria} - Grupo ${resultado.grupo}`,
+          `${exitosos} ${
+            exitosos === 1 ? 'docente asignado' : 'docentes asignados'
+          } correctamente a ${this.necesidadAAsignar.nombreMateria} - Grupo ${
+            this.necesidadAAsignar.grupo
+          }`,
           'Asignación exitosa'
         );
-        this.cargarNecesidades(); // Recargar tabla
+      } else if (exitosos > 0 && fallidos > 0) {
+        this.toastr.warning(
+          `${exitosos} exitoso(s), ${fallidos} fallido(s). Revisa los detalles.`,
+          'Asignación parcial'
+        );
       } else {
-        this.toastr.error('No se pudo crear la asignación', 'Error');
+        this.toastr.error(
+          `No se pudo asignar ningún docente. ${errores[0] || ''}`,
+          'Error en asignación'
+        );
       }
+
+      // Recargar tabla
+      this.cargarNecesidades();
     } catch (error: any) {
-      console.error('Error al asignar docente:', error);
-      const mensajeError =
-        error?.error?.mensaje ||
-        error?.message ||
-        'Error al asignar docente a la necesidad.';
-      this.toastr.error(mensajeError, 'Error al asignar');
+      console.error('Error general en asignación:', error);
+      this.toastr.error('Error inesperado al asignar docentes', 'Error');
     } finally {
       this.asignandoDocente = false;
       this.cerrarModalAsignarDocente();

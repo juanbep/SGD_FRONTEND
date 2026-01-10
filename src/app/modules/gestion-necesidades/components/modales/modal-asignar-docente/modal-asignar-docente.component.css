@@ -237,6 +237,35 @@ small.text-muted {
   min-height: calc(100% - 1rem);
 }
 
+/* Tabla de docentes seleccionados */
+.table-sm {
+  font-size: 0.875rem;
+}
+
+.table-bordered {
+  border: 1px solid #dee2e6;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #495057;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Badge contador */
+.badge.bg-primary {
+  background-color: #0051c6 !important;
+}
+
 /* Responsivo */
 @media (max-width: 768px) {
   .modal-dialog {
