@@ -55,19 +55,19 @@ const routes: Routes = [
       },
 
       // ===== DETALLE DE NECESIDAD =====
-      {
-        path: 'view',
-        component: ViewNecesidadDetailComponent,
-        canActivate: [RoleGuard],
-        data: {
-          roles: [
-            'COORDINADOR',
-            'SECRETARIO',
-            'DECANO',
-            'SECRETARIA/O FACULTAD',
-          ],
-        },
-      },
+      // {
+      //   path: 'view',
+      //   component: ViewNecesidadDetailComponent,
+      //   canActivate: [RoleGuard],
+      //   data: {
+      //     roles: [
+      //       'COORDINADOR',
+      //       'SECRETARIO',
+      //       'DECANO',
+      //       'SECRETARIA/O FACULTAD',
+      //     ],
+      //   },
+      // },
 
       // ===== GESTIÓN DE ASIGNACIONES - JEFE DEPARTAMENTO =====
       // {

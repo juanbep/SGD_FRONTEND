@@ -233,7 +233,7 @@ export class SideBarV2Component implements OnInit, OnChanges {
       isOpen: false,
       children: [
         {
-          role: ['DOCENTE'],
+          role: ['COORDINADOR'],
           icon: 'fas fa-folder-open',
           label: 'Gestionar Planes',
           url: '/app/gestion-planes/management',
@@ -250,12 +250,12 @@ export class SideBarV2Component implements OnInit, OnChanges {
           label: 'Gestionar Necesidades',
           url: '/app/gestion-necesidades/management',
         },
-        {
-          role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
-          icon: 'fas fa-eye',
-          label: 'Ver Necesidades',
-          url: '/app/gestion-necesidades/view',
-        },
+        // {
+        //   role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
+        //   icon: 'fas fa-eye',
+        //   label: 'Ver Necesidades',
+        //   url: '/app/gestion-necesidades/view',
+        // },
       ],
     },
     {

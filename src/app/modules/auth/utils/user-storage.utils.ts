@@ -22,10 +22,19 @@ export function getUserData(): UserData | null {
 }
 
 /**
- * Obtiene el OID del departamento del usuario con rol jefe departamento logueado
+ * Obtiene el OID del departamento del usuario logueado
  * @returns number | 0
  */
 export function getUserDepartmentId(): number | 0 {
+  const userData = getUserData();
+  return userData?.departamento?.oidDepartamento || 0;
+}
+
+/**
+ * Obtiene el OID del departamento del usuario con rol jefe departamento logueado
+ * @returns number | 0
+ */
+export function getUserDepartmentJefaturaId(): number | 0 {
   const userData = getUserData();
   return userData?.departamentoJefatura?.oidDepartamento || 0;
 }

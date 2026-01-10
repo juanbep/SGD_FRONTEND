@@ -16,7 +16,7 @@ import {
   seleccionarCalendarioAutomatico,
   SEMESTRES_DISPONIBLES,
 } from '../../utils/necesidades.utils';
-import { getUserDepartmentId } from '../../../auth/utils/user-storage.utils';
+import { getUserDepartmentJefaturaId } from '../../../auth/utils/user-storage.utils';
 
 @Component({
   selector: 'app-filtros-necesidades-jefe',
@@ -83,7 +83,7 @@ export class FiltrosNecesidadesJefeComponent implements OnInit {
   // ===== INICIALIZAR FILTROS =====
   private inicializarFiltros(): void {
     // Obtener oidDepartamento del usuario logueado
-    const oidDepartamento = getUserDepartmentId();
+    const oidDepartamento = getUserDepartmentJefaturaId();
 
     if (!oidDepartamento || oidDepartamento === 0) {
       console.error('No se pudo obtener el departamento del usuario logueado');

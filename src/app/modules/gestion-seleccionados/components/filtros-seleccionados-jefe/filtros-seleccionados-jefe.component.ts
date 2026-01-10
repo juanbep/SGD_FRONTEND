@@ -12,7 +12,7 @@ import {
   ordenarCalendariosPorAnio,
   seleccionarCalendarioAutomatico,
 } from '../../../gestion-necesidades/utils/necesidades.utils';
-import { getUserDepartmentId } from '../../../auth/utils/user-storage.utils';
+import { getUserDepartmentJefaturaId } from '../../../auth/utils/user-storage.utils';
 
 // Constantes para dropdowns
 const TIPOS_CONTRATACION_DISPONIBLES = [
@@ -80,7 +80,7 @@ export class FiltrosSeleccionadosJefeComponent implements OnInit {
 
   // ===== INICIALIZAR FILTROS =====
   private inicializarFiltros(): void {
-    const oidDepartamento = getUserDepartmentId();
+    const oidDepartamento = getUserDepartmentJefaturaId(); // TRAE LOS SELECCIONADOS DEL DEPARTAMENTO DEL JEFE
 
     if (!oidDepartamento || oidDepartamento === 0) {
       console.error('No se pudo obtener el departamento del usuario logueado');

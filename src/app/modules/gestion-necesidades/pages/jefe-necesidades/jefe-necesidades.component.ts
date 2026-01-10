@@ -33,7 +33,7 @@ import {
   toggleSort,
   trackByOid,
 } from '../../shared/table.utils';
-import { getUserDepartmentId } from '../../../auth/utils/user-storage.utils';
+import { getUserDepartmentJefaturaId } from '../../../auth/utils/user-storage.utils';
 import { getBadgeClassEstado } from '../../utils/necesidades.utils';
 import { FiltrosNecesidadesJefeComponent } from '../../components/filtros-necesidades-jefe/filtros-necesidades-jefe.component';
 import { CommonModule } from '@angular/common';
@@ -128,7 +128,7 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
   oidDepartamentoUsuario: number = 0;
 
   ngOnInit(): void {
-    this.oidDepartamentoUsuario = getUserDepartmentId();
+    this.oidDepartamentoUsuario = getUserDepartmentJefaturaId();
 
     if (!this.oidDepartamentoUsuario || this.oidDepartamentoUsuario === 0) {
       console.error('No se pudo obtener el departamento del usuario logueado');
