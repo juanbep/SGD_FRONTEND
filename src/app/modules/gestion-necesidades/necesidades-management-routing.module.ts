@@ -35,7 +35,7 @@ const routes: Routes = [
             './pages/jefe-necesidades-container/jefe-necesidades-container.component'
           ).then((m) => m.JefeNecesidadesContainerComponent),
         canActivate: [RoleGuard],
-        data: { roles: ['JEFE_DEPARTAMENTO', 'JEFE DE DEPARTAMENTO'] },
+        data: { roles: ['JEFE_DEPARTAMENTO'] },
       },
 
       // ===== RUTA FALLBACK - Redirige a coordinador por defecto =====

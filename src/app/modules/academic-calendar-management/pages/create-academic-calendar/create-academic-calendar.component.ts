@@ -158,7 +158,7 @@ export class CreateAcademicCalendarComponent implements OnInit {
     );
 
     setTimeout(() => {
-      this.router.navigate(['/app/gestion-calendario-academico']);
+      this.router.navigate(['/app/gestion-calendario-academico/listar']);
     }, 1000);
   }
 

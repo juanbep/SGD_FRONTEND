@@ -7,17 +7,16 @@ import { ViewPlanDetailComponent } from './pages/view-plan-detail/view-plan-deta
 
 const routes: Routes = [
   {
-    path: '',
-    children: [
-      {
-        path: 'management',
-        component: PlanesManagementComponent,
-      },
-      {
-        path: 'management/:id', //
-        component: ViewPlanDetailComponent,
-      },
-    ],
+    path: 'management',
+    component: PlanesManagementComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['COORDINADOR'] },
+  },
+  {
+    path: 'management/:id',
+    component: ViewPlanDetailComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['COORDINADOR'] },
   },
 ];
 
