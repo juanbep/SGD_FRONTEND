@@ -190,6 +190,17 @@ export interface ActividadFilters {
   sortDirection?: 'asc' | 'desc';
 }
 
+export interface ActividadDocenciaFilters {
+  page?: number;
+  size?: number;
+  sort?: string;
+  oidCalendario?: number | string;
+  oidDepartamento?: number | string;
+  oidUsuario?: number | string;
+  tipoContratacion?: string;
+  semestre?: number | string;
+}
+
 // ========== RESPONSE TYPES ==========
 
 export type ActividadesListResponse = BaseResponse<

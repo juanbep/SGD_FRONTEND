@@ -13,6 +13,7 @@ import {
   DesasignarUsuarioActividadResponse,
   ActividadFilters,
   CreateActividadesBatchResponse,
+  ActividadDocenciaFilters,
 } from '../../models';
 import { environment } from '../../../../../environments/environments_sgd';
 
@@ -104,6 +105,17 @@ export class ActividadesService {
         `${this.apiUrl}/${oidActividad}/relacion`,
         { params }
       )
+      .pipe(catchError(this.handleError));
+  }
+
+  // READ - Actividades de Docencia con filtros específicos
+  getActividadesDocencia(
+    filters: ActividadDocenciaFilters = {}
+  ): Observable<ActividadesListResponse> {
+    let params = this.buildHttpParamsDocencia(filters);
+
+    return this.http
+      .get<ActividadesListResponse>(`${this.apiUrl}/tipo/docencia`, { params })
       .pipe(catchError(this.handleError));
   }
 
@@ -212,6 +224,63 @@ export class ActividadesService {
     }
     if (filters.sortDirection) {
       params = params.set('direction', filters.sortDirection);
+    }
+
+    return params;
+  }
+
+  private buildHttpParamsDocencia(
+    filters: ActividadDocenciaFilters
+  ): HttpParams {
+    let params = new HttpParams();
+
+    // Paginación (obligatorios)
+    if (filters.page !== undefined) {
+      params = params.set('page', filters.page.toString());
+    }
+    if (filters.size !== undefined) {
+      params = params.set('size', filters.size.toString());
+    }
+
+    // Filtros obligatorios
+    if (
+      filters.oidCalendario !== undefined &&
+      filters.oidCalendario !== null &&
+      filters.oidCalendario !== ''
+    ) {
+      params = params.set('oidCalendario', filters.oidCalendario.toString());
+    }
+    if (
+      filters.oidDepartamento !== undefined &&
+      filters.oidDepartamento !== null &&
+      filters.oidDepartamento !== ''
+    ) {
+      params = params.set(
+        'oidDepartamento',
+        filters.oidDepartamento.toString()
+      );
+    }
+
+    // Filtros opcionales
+    if (
+      filters.oidUsuario !== undefined &&
+      filters.oidUsuario !== null &&
+      filters.oidUsuario !== ''
+    ) {
+      params = params.set('oidUsuario', filters.oidUsuario.toString());
+    }
+
+    if (filters.tipoContratacion?.trim()) {
+      params = params.set('tipoContratacion', filters.tipoContratacion.trim());
+    }
+
+    if (filters.semestre !== undefined && filters.semestre !== null) {
+      params = params.set('semestre', filters.semestre.toString());
+    }
+
+    // Ordenamiento
+    if (filters.sort) {
+      params = params.set('sort', filters.sort);
     }
 
     return params;

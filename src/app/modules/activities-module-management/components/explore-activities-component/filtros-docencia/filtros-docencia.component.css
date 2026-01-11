@@ -1,0 +1,112 @@
+/* Copia exactamente los estilos que me compartiste */
+/* ========== ENCABEZADO DE TARJETA ========== */
+.card-header {
+  background-color: #001282 !important;
+  color: white !important;
+}
+
+.card-header h6,
+.card-header .btn {
+  color: white !important;
+}
+
+/* ========== BADGES DE ESTADO - CALENDARIOS ========== */
+.badge-pendiente {
+  background-color: #f8ae15 !important;
+  color: #212529 !important;
+  font-weight: 600;
+  border-radius: 1rem;
+  padding: 0.35em 0.65em;
+  font-size: 0.75rem;
+}
+
+.badge-activo {
+  background-color: #249337 !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 1rem;
+  padding: 0.35em 0.65em;
+  font-size: 0.75rem;
+}
+
+.badge-deshabilitado {
+  background-color: #6c757d !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 1rem;
+  padding: 0.35em 0.65em;
+  font-size: 0.75rem;
+}
+
+.badge-aprobado {
+  background-color: #16a8e1 !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 1rem;
+  padding: 0.35em 0.65em;
+  font-size: 0.75rem;
+}
+
+/* ========== LABELS Y FORMULARIOS ========== */
+.form-label.fw-bold {
+  color: #001282 !important;
+}
+
+.form-label .fas {
+  color: #0051c6 !important;
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: #f8ae15 !important;
+  box-shadow: 0 0 0 0.25rem rgba(248, 174, 21, 0.25) !important;
+}
+
+/* ========== BOTONES ========== */
+.btn-outline-secondary {
+  border-color: #0051c6 !important;
+  color: #0051c6 !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background-color: #f8ae15 !important;
+  border-color: #f8ae15 !important;
+  color: #212529 !important;
+}
+
+.btn-primary {
+  background-color: #001282 !important;
+  border-color: #001282 !important;
+  color: white !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0051c6 !important;
+  border-color: #0051c6 !important;
+}
+
+.btn i {
+  color: inherit !important;
+}
+
+.btn-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-group .btn {
+  transition: all 0.3s ease;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .btn-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+  }
+}

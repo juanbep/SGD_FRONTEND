@@ -8,11 +8,16 @@ import {
 import { CommonModule } from '@angular/common';
 import { TablaActividadesAcademicasComponent } from '../../explore-activities-component/tabla-actividades-academicas/tabla-actividades-academicas.component';
 import { ActividadResponse } from '../../../models';
+import { TablaActividadesDocenciaComponent } from '../../explore-activities-component/tabla-actividades-docencia/tabla-actividades-docencia.component';
 
 @Component({
   selector: 'app-activities-base',
   standalone: true,
-  imports: [CommonModule, TablaActividadesAcademicasComponent],
+  imports: [
+    CommonModule,
+    TablaActividadesAcademicasComponent,
+    TablaActividadesDocenciaComponent,
+  ], //TablaActividadesDocenciaComponent
   templateUrl: './activities-base.component.html',
   styleUrl: './activities-base.component.css',
 })
@@ -21,9 +26,13 @@ export class ActivitiesBaseComponent {
   @Output() onEditar = new EventEmitter<ActividadResponse>();
   @Output() onEliminar = new EventEmitter<ActividadResponse>();
 
-  // ViewChild para acceder a la tabla
-  @ViewChild(TablaActividadesAcademicasComponent)
-  tabla!: TablaActividadesAcademicasComponent;
+  // ontrol de tabs
+  tabActiva: 'generales' | 'docencia' = 'generales';
+
+  // ViewChild para acceder a las tablas
+  @ViewChild('tablaGenerales')
+  tablaGenerales!: TablaActividadesAcademicasComponent;
+  @ViewChild('tablaDocencia') tablaDocencia!: TablaActividadesDocenciaComponent;
 
   handleEditar(actividadData: ActividadResponse): void {
     this.onEditar.emit(actividadData);
@@ -33,10 +42,23 @@ export class ActivitiesBaseComponent {
     this.onEliminar.emit(actividadData);
   }
 
-  // Método público para recargar tabla
+  // Método público para recargar tabla según tab activo
   recargarTabla(): void {
-    if (this.tabla) {
-      this.tabla.loadActividades();
+    if (this.tabActiva === 'generales' && this.tablaGenerales) {
+      this.tablaGenerales.loadActividades();
     }
+    if (this.tabActiva === 'docencia' && this.tablaDocencia) {
+      this.tablaDocencia.loadActividades();
+    }
+  }
+
+  // Cambia el tab activo
+  cambiarTab(tab: 'generales' | 'docencia'): void {
+    this.tabActiva = tab;
+  }
+
+  // Verifica si un tab está activo
+  isTabActiva(tab: 'generales' | 'docencia'): boolean {
+    return this.tabActiva === tab;
   }
 }

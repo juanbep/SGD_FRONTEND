@@ -1,10 +1,9 @@
 <!-- SECCIÓN DE FILTROS -->
-<app-filtros-actividades
-  [oidDepartamento]="filters.oidDepartamento"
-  [modo]="modo"
+<app-filtros-docencia
+  [oidDepartamento]="oidDepartamentoNumerico"
   (onAplicarFiltros)="aplicarFiltros($event)"
   (onLimpiarFiltros)="limpiarFiltros()"
-></app-filtros-actividades>
+></app-filtros-docencia>
 
 <!-- TABLA DE ACTIVIDADES -->
 <div class="card">
@@ -13,8 +12,8 @@
   >
     <!-- Título -->
     <h6 class="mb-0 d-flex align-items-center">
-      <i class="fas fa-tasks me-2" style="color: #f8ae15"></i>Actividades
-      Académicas
+      <i class="fas fa-chalkboard-teacher me-2" style="color: #f8ae15"></i>
+      Actividades de Docencia
       <span class="badge ms-2" style="background: #f8ae15; color: black">{{
         pagination.totalElements
       }}</span>
@@ -57,7 +56,7 @@
       <table class="table table-hover mb-0">
         <thead class="table-light sticky-top">
           <tr>
-            <th class="fw-bold text-start align-middle">
+            <th class="fw-bold text-center align-middle">
               <i class="fas fa-tags me-1"></i>Tipo Actividad
             </th>
             <!-- COLUMNA SEPARADA: NOMBRE -->
@@ -80,9 +79,9 @@
             <th class="fw-bold text-center align-middle" style="width: 100px">
               <i class="fas fa-calendar-check me-1"></i>Última Actualización
             </th>
-            <th class="fw-bold text-center align-middle" style="width: 100px">
-              <i class="fas fa-users me-1"></i>Responsables
-            </th>
+            <!-- <th class="fw-bold text-center align-middle" style="width: 100px">
+                <i class="fas fa-users me-1"></i>Responsables
+              </th> -->
 
             <!-- COLUMNA DINÁMICA SEGÚN MODO -->
             <th
@@ -171,17 +170,17 @@
             </td>
 
             <!-- Usuarios -->
-            <td class="text-center align-middle">
-              <span
-                class="badge text-dark usuario-badge-clickable"
-                style="background: #ffb000"
-                [title]="'Clic para ver detalles de los usuarios asociados'"
-                (click)="abrirModalUsuarios(actividadData)"
-              >
-                <i class="fas fa-users me-1"></i>
-                {{ actividadData.usuarios.length }} usuario(s)
-              </span>
-            </td>
+            <!-- <td class="text-center align-middle">
+                <span
+                  class="badge text-dark usuario-badge-clickable"
+                  style="background: #ffb000"
+                  [title]="'Clic para ver detalles de los usuarios asociados'"
+                  (click)="abrirModalUsuarios(actividadData)"
+                >
+                  <i class="fas fa-users me-1"></i>
+                  {{ actividadData.usuarios.length }} usuario(s)
+                </span>
+              </td> -->
 
             <!-- ACCIONES - MODO VISUALIZAR -->
             <td *ngIf="modo === 'visualizar'" class="text-center align-middle">
@@ -245,8 +244,10 @@
                   </button>
                 </div>
                 <div *ngIf="!loading && !error" class="text-muted">
-                  <i class="fas fa-tasks fa-2x mb-3"></i>
-                  <div class="fw-bold">No hay actividades disponibles</div>
+                  <i class="fas fa-chalkboard-teacher fa-2x mb-3"></i>
+                  <div class="fw-bold">
+                    No hay actividades de docencia disponibles
+                  </div>
                   <div class="small">
                     No se encontraron registros que coincidan con los filtros
                     aplicados

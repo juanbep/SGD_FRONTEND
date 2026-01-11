@@ -1,0 +1,135 @@
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h6 class="mb-0 d-flex align-items-center">
+      <i class="fas fa-filter me-2" style="color: #f8ae15"></i>Filtros de
+      Actividades de Docencia
+    </h6>
+    <button
+      type="button"
+      class="btn btn-outline-secondary d-flex align-items-center"
+      (click)="limpiarFiltros()"
+    >
+      <i class="fas fa-times"></i>
+      <span class="d-none d-lg-inline ms-1">Limpiar</span>
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <!-- Filtro por Calendario -->
+      <div class="col-xl-4 col-lg-4 col-md-6">
+        <label class="form-label fw-bold">
+          <i class="fas fa-calendar me-1"></i>Calendario:
+        </label>
+        <ng-select
+          [items]="calendariosDropdown"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filters.oidCalendario"
+          [loading]="loadingCalendarios"
+          [disabled]="loadingCalendarios"
+          placeholder="Seleccione un calendario"
+          [clearable]="false"
+          notFoundText="No hay calendarios disponibles"
+          loadingText="Cargando calendarios..."
+        >
+          <ng-template ng-label-tmp let-item="item">
+            <div class="d-flex align-items-center">
+              <span>{{ item.label }}</span>
+              <span
+                class="badge ms-2"
+                [ngClass]="{
+                  'badge-activo': item.estado === 'ACTIVO',
+                  'badge-pendiente': item.estado === 'PENDIENTE',
+                  'badge-deshabilitado': item.estado === 'DESHABILITADO',
+                  'badge-aprobado': item.estado === 'APROBADO'
+                }"
+              >
+                {{ item.estado }}
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>{{ item.label }}</span>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'badge-activo': item.estado === 'ACTIVO',
+                  'badge-pendiente': item.estado === 'PENDIENTE',
+                  'badge-deshabilitado': item.estado === 'DESHABILITADO',
+                  'badge-aprobado': item.estado === 'APROBADO'
+                }"
+              >
+                {{ item.estado }}
+              </span>
+            </div>
+          </ng-template>
+        </ng-select>
+        <small class="text-muted">Filtrar por calendario académico</small>
+      </div>
+
+      <!-- Filtro por Tipo de Contratación -->
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <label class="form-label fw-bold">
+          <i class="fas fa-briefcase me-1"></i>Tipo de Contratación:
+        </label>
+        <ng-select
+          [items]="tiposContratacionDropdown"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filters.tipoContratacion"
+          placeholder="Seleccione un tipo"
+          [clearable]="false"
+          [searchable]="false"
+          notFoundText="No hay tipos disponibles"
+        >
+        </ng-select>
+        <small class="text-muted">Filtrar por tipo de contratación</small>
+      </div>
+
+      <!-- Filtro por Semestre -->
+      <div class="col-xl-2 col-lg-3 col-md-6">
+        <label class="form-label fw-bold">
+          <i class="fas fa-graduation-cap me-1"></i>Semestre:
+        </label>
+        <ng-select
+          [items]="semestresDropdown"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filters.semestre"
+          placeholder="Seleccione semestre"
+          [clearable]="false"
+          [searchable]="false"
+          notFoundText="No hay semestres disponibles"
+        >
+        </ng-select>
+        <small class="text-muted">Filtrar por semestre (1-10)</small>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div
+        class="col-xl-3 col-lg-12 d-flex justify-content-end align-items-end"
+      >
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="aplicarFiltros()"
+          >
+            <i class="fas fa-search me-1"></i>Buscar
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="recargarFiltros()"
+            [disabled]="loadingCalendarios"
+            title="Recargar filtros"
+          >
+            <i class="fas fa-sync-alt" [class.fa-spin]="loadingCalendarios"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
