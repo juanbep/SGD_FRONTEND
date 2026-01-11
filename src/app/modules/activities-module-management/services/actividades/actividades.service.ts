@@ -14,8 +14,10 @@ import {
   ActividadFilters,
   CreateActividadesBatchResponse,
   ActividadDocenciaFilters,
+  ActividadesDocenciaListResponse,
 } from '../../models';
 import { environment } from '../../../../../environments/environments_sgd';
+import { ActividadDocenciaResponse } from '../../models/actividad-docencia-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -111,11 +113,13 @@ export class ActividadesService {
   // READ - Actividades de Docencia con filtros específicos
   getActividadesDocencia(
     filters: ActividadDocenciaFilters = {}
-  ): Observable<ActividadesListResponse> {
+  ): Observable<ActividadesDocenciaListResponse> {
     let params = this.buildHttpParamsDocencia(filters);
 
     return this.http
-      .get<ActividadesListResponse>(`${this.apiUrl}/tipo/docencia`, { params })
+      .get<ActividadesDocenciaListResponse>(`${this.apiUrl}/tipo/docencia`, {
+        params,
+      })
       .pipe(catchError(this.handleError));
   }
 

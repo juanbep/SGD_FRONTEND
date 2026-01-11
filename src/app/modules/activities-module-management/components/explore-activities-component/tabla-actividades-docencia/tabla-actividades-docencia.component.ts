@@ -36,6 +36,8 @@ import { FiltrosDocenciaComponent } from '../filtros-docencia/filtros-docencia.c
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { ActividadDocenciaResponse } from '../../../models/actividad-docencia-response.model';
 
 @Component({
   selector: 'app-tabla-actividades-docencia',
@@ -47,6 +49,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ModalUsuariosComponent,
     ModalDetalleActividadComponent,
     FiltrosDocenciaComponent,
+    NgbPopoverModule,
   ],
   templateUrl: './tabla-actividades-docencia.component.html',
   styleUrl: './tabla-actividades-docencia.component.css',
@@ -61,13 +64,13 @@ export class TablaActividadesDocenciaComponent implements OnInit {
 
   usuario: UserData | null = null;
 
-  actividades: ActividadResponse[] = [];
+  actividades: ActividadDocenciaResponse[] = [];
   loading: boolean = false;
   error: string = '';
   pagination: PaginationConfig = { ...DEFAULT_PAGINATION_CONFIG };
 
   // ========== CONTROL DE MODALES ==========
-  actividadSeleccionada: ActividadResponse | null = null;
+  actividadSeleccionada: ActividadDocenciaResponse | null = null;
   mostrarModalDetalles: boolean = false;
   mostrarModalUsuarios: boolean = false;
   usuariosSeleccionados: UsuarioActividadAsignacion[] = [];
@@ -163,14 +166,6 @@ export class TablaActividadesDocenciaComponent implements OnInit {
     });
   }
 
-  eliminarActividad(actividadData: ActividadResponse): void {
-    this.onEliminar.emit(actividadData);
-  }
-
-  editarActividad(actividadData: ActividadResponse): void {
-    this.onEditar.emit(actividadData);
-  }
-
   // ========== FILTROS ==========
   aplicarFiltros(filtros: ActividadDocenciaFilters): void {
     this.filters = { ...filtros, page: 0, size: this.filters.size };
@@ -182,7 +177,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
   }
 
   // ========== MODALES ==========
-  abrirModalDetalles(actividad: ActividadResponse): void {
+  abrirModalDetalles(actividad: ActividadDocenciaResponse): void {
     this.actividadSeleccionada = actividad;
     this.mostrarModalDetalles = true;
   }
@@ -190,31 +185,6 @@ export class TablaActividadesDocenciaComponent implements OnInit {
   cerrarModalDetalles(): void {
     this.mostrarModalDetalles = false;
     this.actividadSeleccionada = null;
-  }
-
-  abrirModalUsuarios(actividadData: ActividadResponse): void {
-    this.usuariosAsignaciones = actividadData.usuariosActividad;
-    this.usuariosCompletos = actividadData.usuarios;
-    this.oidActividadParaUsuarios = actividadData.actividad.oidActividad;
-    this.oidCalendarioParaUsuarios = actividadData.oidCalendario;
-    this.mostrarModalUsuarios = true;
-  }
-
-  cerrarModalUsuarios(): void {
-    this.mostrarModalUsuarios = false;
-    this.usuariosAsignaciones = [];
-    this.usuariosCompletos = [];
-    this.oidActividadParaUsuarios = null;
-    this.oidCalendarioParaUsuarios = null;
-  }
-
-  // ========== MANEJA LA DESASIGNACIÓN/ASIGNACIÓN DE USUARIOS ==========
-  onUsuarioDesasignadoHandler(): void {
-    this.loadActividades();
-  }
-
-  onUsuarioAsignadoHandler(): void {
-    this.loadActividades();
   }
 
   // ========== PAGINACIÓN ==========
@@ -252,5 +222,13 @@ export class TablaActividadesDocenciaComponent implements OnInit {
 
   getEstadoBadgeClass(oidEstado: number): string {
     return getEstadoBadgeClass(oidEstado);
+  }
+
+  getNombreDocente(actividadData: ActividadDocenciaResponse): string {
+    return actividadData.asignacion?.nombreDocente || 'Sin asignar';
+  }
+
+  tieneDocenteAsignado(actividadData: ActividadDocenciaResponse): boolean {
+    return !!actividadData.asignacion?.nombreDocente;
   }
 }

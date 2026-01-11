@@ -1,4 +1,5 @@
 import { BaseResponse, PaginatedResponse } from '../shared/shared.model';
+import { ActividadDocenciaResponse } from './actividad-docencia-response.model';
 
 // ========== ENTIDADES BASE ==========
 
@@ -203,6 +204,9 @@ export interface ActividadDocenciaFilters {
 
 // ========== RESPONSE TYPES ==========
 
+export type ActividadesDocenciaListResponse = BaseResponse<
+  PaginatedResponse<ActividadDocenciaResponse>
+>;
 export type ActividadesListResponse = BaseResponse<
   PaginatedResponse<ActividadResponse>
 >;
