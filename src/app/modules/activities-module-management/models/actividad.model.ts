@@ -195,7 +195,7 @@ export interface ActividadDocenciaFilters {
   size?: number;
   sort?: string;
   oidCalendario?: number | string;
-  oidDepartamento?: number | string;
+  oidDepartamento?: number;
   oidUsuario?: number | string;
   tipoContratacion?: string;
   semestre?: number | string;

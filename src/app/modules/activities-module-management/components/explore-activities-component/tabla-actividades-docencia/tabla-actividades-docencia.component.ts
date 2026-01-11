@@ -104,7 +104,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
     const oidDepartamento = getUserDepartmentId();
 
     if (oidDepartamento) {
-      // Asegurar que sea número (normalizar el tipo)
+      // Asegurar que SIEMPRE sea número
       this.filters.oidDepartamento =
         typeof oidDepartamento === 'string'
           ? parseInt(oidDepartamento, 10)
@@ -236,15 +236,6 @@ export class TablaActividadesDocenciaComponent implements OnInit {
       this.pagination.currentPage,
       this.pagination.totalPages
     );
-  }
-
-  get oidDepartamentoNumerico(): number | undefined {
-    if (this.filters.oidDepartamento) {
-      return typeof this.filters.oidDepartamento === 'string'
-        ? parseInt(this.filters.oidDepartamento, 10)
-        : this.filters.oidDepartamento;
-    }
-    return undefined;
   }
 
   getInfoPaginacion(): string {
