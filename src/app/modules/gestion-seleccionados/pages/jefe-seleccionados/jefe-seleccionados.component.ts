@@ -65,7 +65,7 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
     page: 0,
     size: 10,
     oidCalendario: '',
-    oidDepartamento: '',
+    oidDepartamento: 0,
   };
 
   sortField: string = 'oidSeleccionado';
@@ -101,6 +101,8 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
       );
       return;
     }
+
+    this.filtrosActuales.oidDepartamento = this.oidDepartamentoUsuario;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
