@@ -212,8 +212,8 @@ export class TablaActividadesDocenciaComponent implements OnInit {
     return getInfoPaginacion(this.pagination);
   }
 
-  trackByOid(index: number, item: ActividadResponse): number {
-    return trackByOidActividad(index, item);
+  trackByOid(index: number, item: ActividadDocenciaResponse): number {
+    return item?.actividad?.oidActividad ?? index;
   }
 
   getEstadoNombre(oidEstado: number): string {
@@ -224,11 +224,47 @@ export class TablaActividadesDocenciaComponent implements OnInit {
     return getEstadoBadgeClass(oidEstado);
   }
 
+  // ===== MÉTODOS PARA DOCENTE ASIGNADO =====
+
+  /**
+   * Obtiene el nombre del docente asignado
+   */
   getNombreDocente(actividadData: ActividadDocenciaResponse): string {
     return actividadData.asignacion?.nombreDocente || 'Sin asignar';
   }
 
+  /**
+   * Verifica si hay docente asignado
+   */
   tieneDocenteAsignado(actividadData: ActividadDocenciaResponse): boolean {
     return !!actividadData.asignacion?.nombreDocente;
+  }
+
+  /**
+   * Calcula el total de horas docencia
+   */
+  getTotalHorasDocencia(actividadData: ActividadDocenciaResponse): number {
+    const horas = actividadData.asignacion?.horasDocencia || 0;
+    const semanas = actividadData.asignacion?.semanasDocencia || 0;
+    return horas * semanas;
+  }
+
+  /**
+   * Calcula el total de horas preparación
+   */
+  getTotalHorasPreparacion(actividadData: ActividadDocenciaResponse): number {
+    const horas = actividadData.asignacion?.horasPreparacion || 0;
+    const semanas = actividadData.asignacion?.semanasPreparacion || 0;
+    return horas * semanas;
+  }
+
+  /**
+   * Calcula el total de horas (docencia + preparación)
+   */
+  getTotalHoras(actividadData: ActividadDocenciaResponse): number {
+    return (
+      this.getTotalHorasDocencia(actividadData) +
+      this.getTotalHorasPreparacion(actividadData)
+    );
   }
 }

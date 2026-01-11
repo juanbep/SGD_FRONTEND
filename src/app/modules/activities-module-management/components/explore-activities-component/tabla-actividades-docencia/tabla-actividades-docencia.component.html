@@ -46,7 +46,7 @@
         <option value="25">25</option>
         <option value="50">50</option>
       </select>
-      <span class="ms-2 small">por página</span>
+      <span class="ms-2 small text-muted">por página</span>
     </div>
   </div>
 
@@ -56,16 +56,17 @@
       <table class="table table-hover mb-0">
         <thead class="table-light sticky-top">
           <tr>
-            <th class="fw-bold text-center align-middle">
+            <th class="fw-bold text-start align-middle">
               <i class="fas fa-tags me-1"></i>Tipo Actividad
             </th>
-            <!-- COLUMNA SEPARADA: NOMBRE -->
             <th class="fw-bold align-middle">
               <i class="fas fa-signature me-1"></i>Nombre
             </th>
-            <!-- COLUMNA SEPARADA: DESCRIPCIÓN -->
-            <th class="fw-bold align-middle">
-              <i class="fas fa-file-alt me-1"></i>Descripción
+            <th class="fw-bold text-center align-middle" style="width: 80px">
+              <i class="fas fa-users-cog me-1"></i>Grupo
+            </th>
+            <th class="fw-bold text-center align-middle" style="width: 80px">
+              <i class="fas fa-user-friends me-1"></i>Cupo
             </th>
             <th class="fw-bold text-center align-middle">
               <i class="fas fa-info-circle me-1"></i>Estado
@@ -76,28 +77,11 @@
             <th class="fw-bold text-center align-middle" style="width: 130px">
               <i class="fas fa-calendar-plus me-1"></i>Fecha Creación
             </th>
+            <th class="fw-bold text-center align-middle" style="width: 300px">
+              <i class="fas fa-chalkboard-teacher me-1"></i>Docente Asignado
+            </th>
             <th class="fw-bold text-center align-middle" style="width: 100px">
-              <i class="fas fa-calendar-check me-1"></i>Última Actualización
-            </th>
-            <!-- <th class="fw-bold text-center align-middle" style="width: 100px">
-                <i class="fas fa-users me-1"></i>Responsables
-              </th> -->
-
-            <!-- COLUMNA DINÁMICA SEGÚN MODO -->
-            <th
-              *ngIf="modo === 'visualizar'"
-              class="fw-bold text-center align-middle"
-              style="width: 100px"
-            >
               <i class="fas fa-search me-1"></i>Vista Detallada
-            </th>
-
-            <th
-              *ngIf="modo === 'gestionar'"
-              class="fw-bold text-center align-middle"
-              style="width: 150px"
-            >
-              <i class="fas fa-cog me-1"></i>Acciones
             </th>
           </tr>
         </thead>
@@ -113,21 +97,26 @@
               </div>
             </td>
 
-            <!-- COLUMNA NOMBRE -->
+            <!-- Nombre -->
             <td class="align-middle">
               <small class="descripcion-actividad">
                 {{ actividadData.actividad.nombreActividad || "Sin nombre" }}
               </small>
             </td>
 
-            <!-- COLUMNA DESCRIPCIÓN -->
-            <td class="align-middle">
-              <small class="descripcion-tipo-actividad">
-                {{
-                  actividadData.actividad.tipoActividad.descripcion ||
-                    "Sin descripción"
-                }}
-              </small>
+            <!-- GRUPO -->
+            <td class="text-center align-middle">
+              <span class="badge badge-grupo">
+                {{ actividadData.necesidad.grupo || "N/A" }}
+              </span>
+            </td>
+
+            <!-- CUPO -->
+            <td class="text-center align-middle">
+              <span class="badge badge-cupo">
+                <i class="fa-solid fa-book-open-reader"></i>
+                {{ actividadData.necesidad.cupo || 0 }}
+              </span>
             </td>
 
             <!-- Estado -->
@@ -148,9 +137,7 @@
 
             <!-- Calendario -->
             <td class="text-center align-middle">
-              <small>
-                {{ actividadData.nombreCalendario }}
-              </small>
+              <small>{{ actividadData.nombreCalendario }}</small>
             </td>
 
             <!-- Fecha Creación -->
@@ -162,28 +149,86 @@
               </small>
             </td>
 
-            <!-- Última actualización -->
+            <!-- Docente Asignado -->
             <td class="text-center align-middle">
-              <small>{{
-                actividadData.actividad.fechaActualizacion | date : "dd/MM/yyyy"
-              }}</small>
+              <div
+                *ngIf="tieneDocenteAsignado(actividadData); else sinDocente"
+                class="docente-container"
+              >
+                <!-- Nombre + Icono en la misma línea -->
+                <div
+                  class="d-flex align-items-center justify-content-center gap-2"
+                >
+                  <small class="fw-bold text-dark docente-nombre-inline">
+                    {{ getNombreDocente(actividadData) }}
+                  </small>
+
+                  <!-- Icono con popover -->
+                  <span
+                    class="badge badge-info-popover"
+                    placement="left"
+                    [ngbPopover]="popoverContent"
+                    popoverTitle="Carga Horaria"
+                    triggers="mouseenter:mouseleave"
+                    container="body"
+                  >
+                    <i class="fas fa-info-circle"></i>
+                  </span>
+                </div>
+
+                <!-- Template del popover -->
+                <ng-template #popoverContent>
+                  <div class="carga-horaria-popover">
+                    <div class="carga-item mb-2">
+                      <strong>Docencia:</strong><br />
+                      <small>
+                        {{ actividadData.asignacion.horasDocencia || 0 }}h/sem ×
+                        {{ actividadData.asignacion.semanasDocencia || 0 }} sem
+                        =
+                        <strong class="text-primary"
+                          >{{ getTotalHorasDocencia(actividadData) }}h</strong
+                        >
+                      </small>
+                    </div>
+
+                    <div class="carga-item mb-2">
+                      <strong>Preparación:</strong><br />
+                      <small>
+                        {{
+                          actividadData.asignacion.horasPreparacion || 0
+                        }}h/sem ×
+                        {{ actividadData.asignacion.semanasPreparacion || 0 }}
+                        sem =
+                        <strong class="text-success"
+                          >{{
+                            getTotalHorasPreparacion(actividadData)
+                          }}h</strong
+                        >
+                      </small>
+                    </div>
+
+                    <hr class="my-2" />
+
+                    <div class="carga-total">
+                      <strong>Total:</strong>
+                      <span class="badge bg-primary ms-2"
+                        >{{ getTotalHoras(actividadData) }}h</span
+                      >
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+
+              <ng-template #sinDocente>
+                <span class="badge badge-sin-asignar">
+                  <i class="fas fa-user-slash me-1"></i>
+                  Sin asignar
+                </span>
+              </ng-template>
             </td>
 
-            <!-- Usuarios -->
-            <!-- <td class="text-center align-middle">
-                <span
-                  class="badge text-dark usuario-badge-clickable"
-                  style="background: #ffb000"
-                  [title]="'Clic para ver detalles de los usuarios asociados'"
-                  (click)="abrirModalUsuarios(actividadData)"
-                >
-                  <i class="fas fa-users me-1"></i>
-                  {{ actividadData.usuarios.length }} usuario(s)
-                </span>
-              </td> -->
-
-            <!-- ACCIONES - MODO VISUALIZAR -->
-            <td *ngIf="modo === 'visualizar'" class="text-center align-middle">
+            <!-- Vista Detallada -->
+            <td class="text-center align-middle">
               <button
                 class="btn btn-sm btn-outline-success"
                 title="Ver detalles"
@@ -192,33 +237,13 @@
                 <i class="fas fa-eye"></i>
               </button>
             </td>
-
-            <!-- ACCIONES - MODO GESTIONAR -->
-            <td *ngIf="modo === 'gestionar'" class="text-center align-middle">
-              <div class="btn-group" role="group">
-                <button
-                  class="btn btn-sm btn-outline-primary"
-                  title="Editar actividad"
-                  (click)="editarActividad(actividadData)"
-                >
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button
-                  class="btn btn-sm btn-outline-danger"
-                  title="Eliminar actividad"
-                  (click)="eliminarActividad(actividadData)"
-                >
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
           </tr>
         </tbody>
 
         <ng-template #noData>
           <tbody>
             <tr>
-              <!-- COLSPAN ACTUALIZADO: ahora son 9 columnas -->
+              <!-- Actualizado colspan a 9 columnas -->
               <td [attr.colspan]="9" class="text-center py-5 align-middle">
                 <div
                   *ngIf="loading"
@@ -340,21 +365,8 @@
 </div>
 
 <!-- Modal de Detalles -->
-<app-modal-detalle-actividad
+<!-- <app-modal-detalle-actividad
   [actividad]="actividadSeleccionada"
   [visible]="mostrarModalDetalles"
   (onCerrar)="cerrarModalDetalles()"
-></app-modal-detalle-actividad>
-
-<!-- Modal de Usuarios -->
-<app-modal-usuarios
-  [usuariosAsignaciones]="usuariosAsignaciones"
-  [usuariosCompletos]="usuariosCompletos"
-  [visible]="mostrarModalUsuarios"
-  [oidActividad]="oidActividadParaUsuarios"
-  [oidCalendario]="oidCalendarioParaUsuarios"
-  [modo]="modo"
-  (onCerrar)="cerrarModalUsuarios()"
-  (onUsuarioDesasignado)="onUsuarioDesasignadoHandler()"
-  (onUsuarioAsignado)="onUsuarioAsignadoHandler()"
-></app-modal-usuarios>
+></app-modal-detalle-actividad> -->
