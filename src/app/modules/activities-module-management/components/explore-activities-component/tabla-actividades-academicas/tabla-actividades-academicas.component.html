@@ -58,7 +58,7 @@
         <table class="table table-hover mb-0">
           <thead class="table-light sticky-top">
             <tr>
-              <th class="fw-bold text-center align-middle">
+              <th class="fw-bold text-start align-middle">
                 <i class="fas fa-tags me-1"></i>Tipo Actividad
               </th>
               <!-- COLUMNA SEPARADA: NOMBRE -->
@@ -107,8 +107,8 @@
           <tbody *ngIf="actividades && actividades.length > 0; else noData">
             <tr *ngFor="let actividadData of actividades; trackBy: trackByOid">
               <!-- Tipo Actividad -->
-              <td class="text-center align-middle">
-                <div class="badge bg-primary tipo-badge">
+              <td class="text-start align-middle">
+                <div class="badge tipo-badge">
                   {{
                     actividadData.actividad.tipoActividad.nombre || "Sin nombre"
                   }}

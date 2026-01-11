@@ -195,6 +195,9 @@
   font-size: 0.75rem;
   padding: 0.5rem 0.75rem;
   font-weight: 500;
+  background-color: #e1e9f6 !important;
+  color: #001282 !important;
+  border: 1px solid #c5d4ed;
 }
 
 .usuario-badge-clickable {
