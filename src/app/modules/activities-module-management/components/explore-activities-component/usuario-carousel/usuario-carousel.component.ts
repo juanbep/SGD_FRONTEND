@@ -15,6 +15,8 @@ import {
   UsuarioEnActividad,
 } from '../../../models';
 import { CargosActividadHelperService } from '../../../services';
+import { RldService } from '../../../services/rld/rld.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-usuario-carousel',
@@ -29,12 +31,17 @@ export class UsuarioCarouselComponent implements OnChanges, OnInit {
   @Input() modo: 'visualizar' | 'gestionar' = 'visualizar';
   @Input() desasignando = false;
   @Output() onDesasignarUsuario = new EventEmitter<number>();
+  @Input() oidCalendario: number | null = null;
 
   private cargosHelper = inject(CargosActividadHelperService);
+  private rldService = inject(RldService);
+  private toastr = inject(ToastrService);
 
   usuarioEnConfirmacion: number | null = null;
   cargosMap: Map<number, CargoActividad> = new Map();
   cargandoCargos = false;
+
+  descargandoRLD: number | null = null;
 
   async ngOnInit(): Promise<void> {
     await this.cargarCargos();
@@ -83,6 +90,38 @@ export class UsuarioCarouselComponent implements OnChanges, OnInit {
       console.error('Error cargando cargos:', error);
     } finally {
       this.cargandoCargos = false;
+    }
+  }
+
+  async descargarRLD(usuario: UsuarioEnActividad): Promise<void> {
+    if (!this.oidCalendario) {
+      this.toastr.error(
+        'No se puede descargar el RLD sin un calendario asignado'
+      );
+      return;
+    }
+
+    if (this.descargandoRLD) {
+      return; // Ya hay una descarga en proceso
+    }
+
+    this.descargandoRLD = usuario.oidUsuario;
+
+    try {
+      await this.rldService.descargarRLD(
+        usuario.oidUsuario,
+        this.oidCalendario
+      );
+      this.toastr.success(
+        `RLD de ${usuario.nombres} ${usuario.apellidos} descargado correctamente`
+      );
+    } catch (error: any) {
+      console.error('Error al descargar RLD:', error);
+      const mensaje =
+        error?.error?.mensaje || 'Error al descargar el RLD del docente';
+      this.toastr.error(mensaje);
+    } finally {
+      this.descargandoRLD = null;
     }
   }
 

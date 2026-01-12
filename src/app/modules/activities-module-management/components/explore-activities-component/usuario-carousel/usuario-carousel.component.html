@@ -176,9 +176,26 @@
 
         <div *ngIf="modo === 'gestionar'" class="card-footer-minimal">
           <button
+            class="btn-descargar-rld"
+            (click)="descargarRLD(usuario)"
+            [disabled]="desasignando || descargandoRLD !== null"
+          >
+            <i
+              [class.fas]="descargandoRLD !== usuario.oidUsuario"
+              [class.fa-file-arrow-down]="descargandoRLD !== usuario.oidUsuario"
+              [class.spinner-border]="descargandoRLD === usuario.oidUsuario"
+              [class.spinner-border-sm]="descargandoRLD === usuario.oidUsuario"
+            ></i>
+            <span *ngIf="descargandoRLD !== usuario.oidUsuario"
+              >DESCARGAR RLD</span
+            >
+            <span *ngIf="descargandoRLD === usuario.oidUsuario">...</span>
+          </button>
+
+          <button
             class="btn-desasignar"
             (click)="mostrarConfirmacion(usuario.oidUsuario)"
-            [disabled]="desasignando"
+            [disabled]="desasignando || descargandoRLD === usuario.oidUsuario"
           >
             <i class="fas fa-user-times"></i>
             Desasignar
