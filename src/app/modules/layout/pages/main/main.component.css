@@ -2,3 +2,14 @@
   position: relative;
   overflow: hidden;
 }
+
+.home-image {
+  max-width: 400px;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .home-image {
+    max-width: 100%;
+  }
+}

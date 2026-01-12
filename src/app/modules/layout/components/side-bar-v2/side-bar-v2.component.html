@@ -1,6 +1,6 @@
 <div class="sidebar" [ngClass]="{ 'sidebar-collapsed': isSidebarCollapsed }">
   <div class="sidebar-header">
-    <a href="#" class="sidebar-logo">
+    <a [routerLink]="['/app/home']" class="sidebar-logo">
       <ng-container *ngIf="isSidebarCollapsed; else expandedLogo">
         <img
           src="assets/icons/logo_unicauca.svg"

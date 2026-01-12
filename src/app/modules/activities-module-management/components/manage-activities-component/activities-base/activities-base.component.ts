@@ -2,7 +2,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -21,18 +23,28 @@ import { TablaActividadesDocenciaComponent } from '../../explore-activities-comp
   templateUrl: './activities-base.component.html',
   styleUrl: './activities-base.component.css',
 })
-export class ActivitiesBaseComponent {
+export class ActivitiesBaseComponent implements OnChanges {
   @Input() modo: 'visualizar' | 'gestionar' = 'visualizar';
   @Output() onEditar = new EventEmitter<ActividadResponse>();
   @Output() onEliminar = new EventEmitter<ActividadResponse>();
 
-  // ontrol de tabs
+  // Control de tabs
   tabActiva: 'generales' | 'docencia' = 'generales';
 
   // ViewChild para acceder a las tablas
   @ViewChild('tablaGenerales')
   tablaGenerales!: TablaActividadesAcademicasComponent;
   @ViewChild('tablaDocencia') tablaDocencia!: TablaActividadesDocenciaComponent;
+
+  // Detectar cambios en el modo
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['modo']) {
+      // Si cambia a modo 'gestionar' y estaba en tab 'docencia', volver a 'actividades generales'
+      if (this.modo === 'gestionar' && this.tabActiva === 'docencia') {
+        this.tabActiva = 'generales';
+      }
+    }
+  }
 
   handleEditar(actividadData: ActividadResponse): void {
     this.onEditar.emit(actividadData);
@@ -54,6 +66,10 @@ export class ActivitiesBaseComponent {
 
   // Cambia el tab activo
   cambiarTab(tab: 'generales' | 'docencia'): void {
+    // Solo permite cambiar a 'docencia' si está en modo 'visualizar'
+    if (tab === 'docencia' && this.modo !== 'visualizar') {
+      return;
+    }
     this.tabActiva = tab;
   }
 

@@ -35,7 +35,7 @@ export class EstadisticasPageComponent implements OnInit {
       // Validar que se obtuvo el departamento
       if (!this.oidDepartamentoUsuario || this.oidDepartamentoUsuario === 0) {
         this.toastr.error('No se pudo obtener el departamento del usuario');
-        this.router.navigate(['/app']);
+        this.router.navigate(['/app/home']);
         return;
       }
 
@@ -49,13 +49,13 @@ export class EstadisticasPageComponent implements OnInit {
     } catch (error) {
       console.error('Error al cargar datos:', error);
       this.toastr.error('Error al cargar los datos necesarios');
-      this.router.navigate(['/app']);
+      this.router.navigate(['/app/home']);
     }
   }
 
   cerrarModal(): void {
     this.modalVisible = false;
     // Navega de regreso al dashboard o página anterior
-    this.router.navigate(['/app']);
+    this.router.navigate(['/app/home']);
   }
 }

@@ -3,32 +3,27 @@
   <ng-content select="[header-content]"></ng-content>
 
   <!-- TABS NAVIGATION -->
-  <ul class="nav nav-tabs mb-3" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button
-        class="nav-link"
+  <nav class="tabs-principales mb-4">
+    <div class="tabs-wrapper">
+      <a
+        class="tab-item"
         [class.active]="isTabActiva('generales')"
-        type="button"
-        role="tab"
         (click)="cambiarTab('generales')"
       >
         <i class="fas fa-tasks me-2"></i>
         Actividades Generales
-      </button>
-    </li>
-    <li class="nav-item" role="presentation">
-      <button
-        class="nav-link"
+      </a>
+      <a
+        *ngIf="modo === 'visualizar'"
+        class="tab-item"
         [class.active]="isTabActiva('docencia')"
-        type="button"
-        role="tab"
         (click)="cambiarTab('docencia')"
       >
         <i class="fas fa-chalkboard-teacher me-2"></i>
         Actividades de Docencia
-      </button>
-    </li>
-  </ul>
+      </a>
+    </div>
+  </nav>
 
   <!-- TABS CONTENT -->
   <div class="tab-content">
