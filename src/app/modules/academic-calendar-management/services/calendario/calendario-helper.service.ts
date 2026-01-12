@@ -67,6 +67,41 @@ export class CalendarioHelperService {
     return result !== null;
   }
 
+  // Métodos auxiliares
+  async getCalendarioNombre(id: number): Promise<string | null> {
+    const calendario = await this.getById(id);
+    if (calendario) {
+      return `${calendario.anioCalendario} - ${calendario.numeroCalendario}`;
+    }
+    return null;
+  }
+
+  async checkCalendarioExists(id: number): Promise<boolean> {
+    const calendario = await this.getById(id);
+    return calendario !== null;
+  }
+
+  async getAllForDropdown(): Promise<
+    { value: number; label: string; estado: EstadoCalendario }[]
+  > {
+    const calendarios = await this.getAll({ size: 100 });
+    return calendarios.map((calendario) => ({
+      value: calendario.oidcalendario,
+      label: `${calendario.anioCalendario} - ${calendario.numeroCalendario}`,
+      estado: calendario.estado,
+    }));
+  }
+
+  async getCalendariosByEstado(
+    estado: EstadoCalendario
+  ): Promise<Calendario[]> {
+    return this.getAll({ estado, size: 100 });
+  }
+
+  async getCalendariosActivos(): Promise<Calendario[]> {
+    return this.getAll({ estado: 'ACTIVO', size: 100 });
+  }
+
   // Descargar PDF del calendario
   async downloadPdf(
     calendarioId: number,
@@ -120,40 +155,5 @@ export class CalendarioHelperService {
       console.error('Error al abrir PDF:', error);
       throw error;
     }
-  }
-
-  // Métodos auxiliares
-  async getCalendarioNombre(id: number): Promise<string | null> {
-    const calendario = await this.getById(id);
-    if (calendario) {
-      return `${calendario.anioCalendario} - ${calendario.numeroCalendario}`;
-    }
-    return null;
-  }
-
-  async checkCalendarioExists(id: number): Promise<boolean> {
-    const calendario = await this.getById(id);
-    return calendario !== null;
-  }
-
-  async getAllForDropdown(): Promise<
-    { value: number; label: string; estado: EstadoCalendario }[]
-  > {
-    const calendarios = await this.getAll({ size: 100 });
-    return calendarios.map((calendario) => ({
-      value: calendario.oidcalendario,
-      label: `${calendario.anioCalendario} - ${calendario.numeroCalendario}`,
-      estado: calendario.estado,
-    }));
-  }
-
-  async getCalendariosByEstado(
-    estado: EstadoCalendario
-  ): Promise<Calendario[]> {
-    return this.getAll({ estado, size: 100 });
-  }
-
-  async getCalendariosActivos(): Promise<Calendario[]> {
-    return this.getAll({ estado: 'ACTIVO', size: 100 });
   }
 }

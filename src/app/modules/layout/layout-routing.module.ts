@@ -43,13 +43,20 @@ const routes: Routes = [
           ).then((m) => m.SupportManagementRoutingModule),
         title: 'Gestión de Soportes',
       },
+      // {
+      //   path: 'gestion-estadisticas',
+      //   loadChildren: () =>
+      //     import(
+      //       '../statistics-management/statistics-management-routing.module'
+      //     ).then((m) => m.StatisticsManagementRoutingModule),
+      //   title: 'Gestión de Estadísticas',
+      // },
       {
         path: 'gestion-estadisticas',
         loadChildren: () =>
           import(
-            '../statistics-management/statistics-management-routing.module'
-          ).then((m) => m.StatisticsManagementRoutingModule),
-        title: 'Gestión de Estadísticas',
+            '../gestion-estadisticas/gestion-estadisticas-managemente-routing.module'
+          ).then((m) => m.GestionEstadisticasManagementeRoutingModule),
       },
       {
         path: 'gestion-calendario-academico',

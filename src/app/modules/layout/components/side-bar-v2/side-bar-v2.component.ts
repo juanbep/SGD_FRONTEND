@@ -276,7 +276,7 @@ export class SideBarV2Component implements OnInit, OnChanges {
           ],
           icon: 'fas fa-chart-bar',
           label: 'Estadísticas',
-          url: '/app/gestion-estadisticas/estadisticas',
+          url: '/app/gestion-estadisticas',
         },
       ],
     },

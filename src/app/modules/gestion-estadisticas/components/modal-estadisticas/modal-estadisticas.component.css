@@ -1,0 +1,66 @@
+.modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.modal-body {
+  background-color: #f8f9fa;
+}
+
+.graficos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.grafico-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.grafico-item:hover {
+  background-color: #f8f9fa;
+}
+
+.form-check-input {
+  cursor: pointer;
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.form-check-input:checked {
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+.form-check-label {
+  cursor: pointer;
+  user-select: none;
+  margin-left: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5568d3 0%, #633d8a 100%);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #cccccc;
+  opacity: 0.6;
+}
+
+.alert-info {
+  background-color: #e7f3ff;
+  border-color: #b3d9ff;
+  color: #004085;
+}
