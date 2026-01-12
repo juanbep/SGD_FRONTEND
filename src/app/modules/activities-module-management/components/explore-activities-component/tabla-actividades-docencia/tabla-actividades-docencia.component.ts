@@ -46,7 +46,6 @@ import { ActividadDocenciaResponse } from '../../../models/actividad-docencia-re
     CommonModule,
     FormsModule,
     NgSelectModule,
-    ModalUsuariosComponent,
     ModalDetalleActividadComponent,
     FiltrosDocenciaComponent,
     NgbPopoverModule,

@@ -148,7 +148,7 @@ export class FiltrosActividadesComponent implements OnInit {
       const tiposFiltrados = tiposCompletos
         .filter((tipo) => {
           // En modo gestionar, excluir el tipo 9
-          if (this.modo === 'gestionar' && tipo.value === 9) {
+          if (tipo.value === 9) {
             return false;
           }
           return true;

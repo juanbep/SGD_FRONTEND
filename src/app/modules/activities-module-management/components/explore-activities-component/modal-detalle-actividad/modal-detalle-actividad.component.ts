@@ -5,6 +5,7 @@ import {
   getEstadoBadgeClass,
   getEstadoNombre,
 } from '../../../utils/actividad-utils';
+import { ActividadDocenciaResponse } from '../../../models/actividad-docencia-response.model';
 
 @Component({
   selector: 'app-modal-detalle-actividad',
@@ -14,7 +15,8 @@ import {
   styleUrl: './modal-detalle-actividad.component.css',
 })
 export class ModalDetalleActividadComponent {
-  @Input() actividad: ActividadResponse | null = null;
+  @Input() actividad: ActividadResponse | ActividadDocenciaResponse | null =
+    null;
   @Input() visible: boolean = false;
   @Output() onCerrar = new EventEmitter<void>();
 
