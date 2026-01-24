@@ -22,6 +22,7 @@ interface MenuItem {
   url?: string;
   children?: MenuItem[];
   isOpen?: boolean;
+  isExternal?: boolean;
 }
 
 @Component({
@@ -280,6 +281,21 @@ export class SideBarV2Component implements OnInit, OnChanges {
         },
       ],
     },
+    {
+      role: [
+        'JEFE DE DEPARTAMENTO',
+        'COORDINADOR',
+        'DOCENTE',
+        'ESTUDIANTE',
+        'DECANO',
+        'SECRETARIA/O FACULTAD',
+        'CPD',
+      ],
+      icon: 'assets/icons/sidebar/icon-evaluacion-docente.svg',
+      label: 'Evaluación Docente',
+      url: 'https://kubetest.unicauca.edu.co/sed-front',
+      isExternal: true,
+    },
   ];
 
   ngOnInit(): void {
@@ -298,7 +314,7 @@ export class SideBarV2Component implements OnInit, OnChanges {
           // Actualizar URL de "Gestionar Necesidades"
           if (child.label === 'Gestionar Necesidades') {
             child.url = this.roleRoutingService.getRutaNecesidades(
-              this.userRoles
+              this.userRoles,
             );
           }
         });

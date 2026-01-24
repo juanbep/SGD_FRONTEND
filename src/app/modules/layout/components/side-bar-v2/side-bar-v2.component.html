@@ -21,24 +21,45 @@
     <ul>
       <ng-container *ngFor="let item of menuItems">
         <li class="sidebar-menu-item" *ngIf="hasRole(item.role)">
+          <!-- Enlace Externo Directo -->
           <a
-            href="#"
+            *ngIf="item.isExternal && item.url; else menuWithChildren"
+            [href]="item.url"
+            target="_blank"
+            rel="noopener noreferrer"
             class="sidebar-item"
-            [ngClass]="{
-              'has-children': item.children,
-              'menu-item-active': item.isOpen
-            }"
             [title]="isSidebarCollapsed ? item.label : ''"
-            (click)="toggleMenuItem(item); $event.preventDefault()"
           >
             <img [src]="item.icon" class="icon-svg" />
             <span class="sidebar-item-text">{{ item.label }}</span>
             <i
-              *ngIf="item.children && !isSidebarCollapsed"
-              class="fas fa-chevron-down sidebar-item-arrow"
-              [ngClass]="{ rotated: item.isOpen }"
+              *ngIf="!isSidebarCollapsed"
+              class="fas fa-external-link-alt ml-1"
+              style="font-size: 0.75rem"
             ></i>
           </a>
+
+          <!-- Menú con Children o Sin URL Externa -->
+          <ng-template #menuWithChildren>
+            <a
+              href="#"
+              class="sidebar-item"
+              [ngClass]="{
+                'has-children': item.children,
+                'menu-item-active': item.isOpen,
+              }"
+              [title]="isSidebarCollapsed ? item.label : ''"
+              (click)="toggleMenuItem(item); $event.preventDefault()"
+            >
+              <img [src]="item.icon" class="icon-svg" />
+              <span class="sidebar-item-text">{{ item.label }}</span>
+              <i
+                *ngIf="item.children && !isSidebarCollapsed"
+                class="fas fa-chevron-down sidebar-item-arrow"
+                [ngClass]="{ rotated: item.isOpen }"
+              ></i>
+            </a>
+          </ng-template>
 
           <ul
             *ngIf="item.children && !isSidebarCollapsed && item.isOpen"
