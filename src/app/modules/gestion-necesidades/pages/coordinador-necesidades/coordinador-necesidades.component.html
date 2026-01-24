@@ -1,4 +1,27 @@
 <div class="view-container">
+  <header class="title-two">Gestión de Necesidades</header>
+
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/plan-info.svg'" alt="Icono del plan" />
+    <span class="text-body-heavy">
+      A continuación encontrará todos las necesidades en estado borrador, puede agregar nuevas necesidades 
+      a partir de un plan específico, los planes se gestionan desde la vista gestión planes. 
+    </span>
+  </section>
+
+  <section class="messages-container mt-4">
+    <img
+      [src]="'assets/icons/messages/plan-actions.svg'"
+      alt="Icono de acciones"
+    />
+    <span class="text-body-heavy">
+      Seleccione las necesidades en estado borrador que desea enviar a "revision secretario" marcando la casilla
+      al lado de la columna id, puede seleccionar una o varias necesidades de una misma página de la tabla. 
+    </span>
+  </section>
+
+  <div><br /></div>
+
   <!-- Componente de Filtros -->
   <app-filtros-necesidades-coordinador
     (onAplicarFiltros)="onFiltrosAplicados($event)"
@@ -85,7 +108,7 @@
         />
 
         <!-- Botón Descargar Planilla -->
-        <button
+        <!-- <button
           type="button"
           class="btn btn-sm d-flex align-items-center"
           style="background-color: #249337; color: white; border-color: #249337"
@@ -100,10 +123,10 @@
           <span class="d-none d-lg-inline">{{
             descargando ? "Descargando..." : "Descargar"
           }}</span>
-        </button>
+        </button> -->
 
         <!-- Botón Cargar Planilla -->
-        <button
+        <!-- <button
           type="button"
           class="btn btn-sm d-flex align-items-center"
           style="background-color: #16a8e1; color: white; border-color: #16a8e1"
@@ -120,7 +143,7 @@
           <span class="d-none d-lg-inline">{{
             cargandoArchivo ? "Cargando..." : "Cargar"
           }}</span>
-        </button>
+        </button> -->
 
         <!-- Botón Agregar Necesidades -->
         <button
@@ -360,7 +383,7 @@
               <!-- FECHA CREACIÓN -->
               <td class="text-center">
                 <small class="text-muted">{{
-                  necesidad.fechaCreacion | date : "dd/MM/yyyy HH:mm"
+                  necesidad.fechaCreacion | date: "dd/MM/yyyy HH:mm"
                 }}</small>
               </td>
 

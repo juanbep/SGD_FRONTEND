@@ -1,12 +1,28 @@
 <div class="view-container">
-  <!-- Encabezado -->
-  <div class="page-header mb-4">
-    <h3 class="page-title">
-      <i class="fas fa-briefcase me-2"></i>
-      Gestión de Necesidades - Jefe de Departamento
-    </h3>
-  </div>
+  <header class="title-two">Gestión de Necesidades</header>
 
+  <section class="messages-container">
+    <img [src]="'assets/icons/messages/plan-info.svg'" alt="Icono del plan" />
+    <span class="text-body-heavy">
+      A continuación encontrará todos las necesidades en estado "revisión jefe",
+      puede gestionar la asignacion de estas necesidades en la pestaña "Gestoin
+      Asignaciones" . Previamente debe haber aprobado la necesidad.
+    </span>
+  </section>
+
+  <section class="messages-container mt-4">
+    <img
+      [src]="'assets/icons/messages/plan-actions.svg'"
+      alt="Icono de acciones"
+    />
+    <span class="text-body-heavy">
+      Seleccione las necesidades en estado "revisión jefe" que desea aprobar
+      marcando la casilla al lado de la columna id, puede seleccionar una o
+      varias necesidades de una misma página de la tabla.
+    </span>
+  </section>
+
+  <div><br /></div>
   <!-- Pestañas Principales -->
   <nav class="tabs-principales mb-4">
     <div class="tabs-wrapper">

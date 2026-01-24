@@ -165,14 +165,14 @@
             </th>
 
             <!-- ESTADO ASIGNACIÓN -->
-            <th class="fw-bold text-center" style="width: 150px">
+            <!-- <th class="fw-bold text-center" style="width: 150px">
               <i class="fas fa-clipboard-check me-1"></i>Asignación
-            </th>
+            </th> -->
 
             <!-- DOCENTES ASIGNADOS -->
-            <th class="fw-bold text-center" style="width: 150px">
+            <!-- <th class="fw-bold text-center" style="width: 150px">
               <i class="fas fa-chalkboard-teacher me-1"></i>Docentes
-            </th>
+            </th> -->
 
             <!-- ESTADO -->
             <th class="fw-bold text-center" style="width: 180px">
@@ -264,7 +264,7 @@
             <td class="text-center">{{ necesidad.cupo }}</td>
 
             <!-- ESTADO ASIGNACIÓN -->
-            <td class="text-center">
+            <!-- <td class="text-center">
               <span
                 class="badge"
                 [ngClass]="
@@ -279,15 +279,15 @@
                     : "N/A"
                 }}
               </span>
-            </td>
+            </td> -->
 
+            <!-- TODO: Mostrar lista de docentes cuando esté implementado -->
             <!-- DOCENTES ASIGNADOS -->
-            <td class="text-center">
-              <!-- TODO: Mostrar lista de docentes cuando esté implementado -->
+            <!-- <td class="text-center">
               <span class="text-muted small">
                 <i class="fas fa-user-slash"></i> Sin datos
               </span>
-            </td>
+            </td> -->
 
             <!-- ESTADO -->
             <td class="text-center">
@@ -302,7 +302,7 @@
             <!-- FECHA CREACIÓN -->
             <td class="text-center">
               <small class="text-muted">{{
-                necesidad.fechaCreacion | date : "dd/MM/yyyy HH:mm"
+                necesidad.fechaCreacion | date: "dd/MM/yyyy HH:mm"
               }}</small>
             </td>
 

@@ -65,7 +65,7 @@ export class EditAcademicCalendarComponent implements OnInit {
   readonly tituloCalendario = computed(() => {
     const cal = this.calendario();
     return cal
-      ? `Calendario académico ${cal.anioCalendario}-${cal.numeroCalendario}`
+      ? `Editar Calendario académico ${cal.anioCalendario}-${cal.numeroCalendario}`
       : 'Cargando...';
   });
 
