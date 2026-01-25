@@ -56,7 +56,8 @@ export class StepInfoBasicaComponent implements OnInit, OnChanges {
   @Output() crearCalendario = new EventEmitter<CreateCalendarioPaso1DTO>();
 
   // ===== CONSTANTES PARA LÍMITES DE AÑO =====
-  readonly ANIO_MINIMO = new Date().getFullYear();
+  //readonly ANIO_MINIMO = new Date().getFullYear();
+  readonly ANIO_MINIMO = 2022;
   readonly ANIO_MAXIMO = 2100;
 
   // ===== SIGNALS PARA MODAL =====

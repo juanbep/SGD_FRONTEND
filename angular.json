@@ -47,6 +47,10 @@
                 {
                   "replace": "src/environments/environments.ts",
                   "with": "src/environments/environments.prod.ts"
+                },
+                {
+                  "replace": "src/environments/environments_sgd.ts",
+                  "with": "src/environments/environments_sgd.prod.ts"
                 }
               ],
               "budgets": [

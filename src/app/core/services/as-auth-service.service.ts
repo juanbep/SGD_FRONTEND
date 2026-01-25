@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environments } from '../../../environments/environments';
+import { environment} from '../../../environments/environments_sgd';
 import { Observable } from 'rxjs';
 import { SimpleResponse } from '../models/response/simple-response.model';
 import { UsuarioResponse } from '../models/response/usuario-response.model';
@@ -31,9 +31,9 @@ export class AsAuthServiceService {
     { email: 'vsandres@unicauca.edu.co', pass: 'admin', idUser: 45 },
   ];
 
-  private apiUrl = environments.baseUrlAuth;
-  private baseUrl = environments.baseUrl;
-  private baseUrlUserInfo = environments.baseUrlLogin; //
+  private apiUrl = environment.baseUrlAuth;
+  private baseUrl = environment.baseUrl;
+  private baseUrlUserInfo = environment.baseUrlLogin; //
 
   constructor(private http: HttpClient) {}
 
