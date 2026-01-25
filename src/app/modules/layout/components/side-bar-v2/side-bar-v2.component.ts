@@ -57,32 +57,32 @@ export class SideBarV2Component implements OnInit, OnChanges {
     //     },
     //   ],
     // },
-    {
-      role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
-      icon: 'assets/icons/sidebar/icon-user.svg',
-      label: 'Gestion usuarios',
-      isOpen: false,
-      children: [
-        {
-          role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
-          icon: 'fas fa-user',
-          label: 'Usuarios',
-          url: '/app/gestion-usuarios/usuarios',
-        },
-        // {
-        //   role: ['JEFE DE DEPARTAMENTO', 'DECANO'],
-        //   icon: 'fas fa-lock',
-        //   label: 'Actividades',
-        //   url: '/app/gestion-usuarios/actividades/usuarios',
-        // },
-        // {
-        //   role: ['JEFE DE DEPARTAMENTO'],
-        //   icon: 'fas fa-lock',
-        //   label: 'Actividades pendiente de asignar evaluador',
-        //   url: '/app/gestion-usuarios/actividades-pendientes-asignar-evaluador',
-        // },
-      ],
-    },
+    // {
+    //   role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
+    //   icon: 'assets/icons/sidebar/icon-user.svg',
+    //   label: 'Gestion usuarios',
+    //   isOpen: false,
+    //   children: [
+    //     {
+    //       role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
+    //       icon: 'fas fa-user',
+    //       label: 'Usuarios',
+    //       url: '/app/gestion-usuarios/usuarios',
+    //     },
+    //     {
+    //       role: ['JEFE DE DEPARTAMENTO', 'DECANO'],
+    //       icon: 'fas fa-lock',
+    //       label: 'Actividades',
+    //       url: '/app/gestion-usuarios/actividades/usuarios',
+    //     },
+    //     {
+    //       role: ['JEFE DE DEPARTAMENTO'],
+    //       icon: 'fas fa-lock',
+    //       label: 'Actividades pendiente de asignar evaluador',
+    //       url: '/app/gestion-usuarios/actividades-pendientes-asignar-evaluador',
+    //     },
+    //   ],
+    // },
     // {
     //   role: [
     //     'JEFE DE DEPARTAMENTO',

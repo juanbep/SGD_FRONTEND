@@ -8,7 +8,7 @@ export const routes: Routes = [
   {
     path: 'app',
     resolve: {
-      catalog: CatalogResolverService,
+      //catalog: CatalogResolverService,
       currentUser: CurrentUserResolverService,
     },
     canActivate: [AuthGuard],
