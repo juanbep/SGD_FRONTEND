@@ -16,7 +16,7 @@ declare var bootstrap: any;
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    ConfirmDialogComponent,
+    //ConfirmDialogComponent,
     LoadingOverleyComponent,
   ],
   templateUrl: './email.component.html',

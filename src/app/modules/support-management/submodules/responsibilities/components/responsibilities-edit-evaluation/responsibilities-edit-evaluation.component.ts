@@ -30,7 +30,7 @@ import {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    ConfirmDialogComponent,
+    //ConfirmDialogComponent,
     LoadingOverleyComponent,
   ],
   templateUrl: './responsibilities-edit-evaluation.component.html',
