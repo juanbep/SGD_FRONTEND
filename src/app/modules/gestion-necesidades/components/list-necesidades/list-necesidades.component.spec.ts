@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListNecesidadesComponent } from './list-necesidades.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ListNecesidadesComponent', () => {
   let component: ListNecesidadesComponent;
@@ -8,7 +10,11 @@ describe('ListNecesidadesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListNecesidadesComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ListNecesidadesComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListNecesidadesComponent);

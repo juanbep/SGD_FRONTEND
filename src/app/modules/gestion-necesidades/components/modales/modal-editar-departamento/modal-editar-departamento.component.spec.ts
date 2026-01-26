@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalEditarDepartamentoComponent } from './modal-editar-departamento.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalEditarDepartamentoComponent', () => {
   let component: ModalEditarDepartamentoComponent;
@@ -8,9 +10,12 @@ describe('ModalEditarDepartamentoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalEditarDepartamentoComponent]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalEditarDepartamentoComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModalEditarDepartamentoComponent);
     component = fixture.componentInstance;

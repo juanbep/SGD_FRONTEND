@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderComponent } from './header.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../environments/environments';
+import { environment } from '../../../../../environments/environments_sgd';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -12,7 +12,7 @@ describe('HeaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
         HeaderComponent,
       ],
     }).compileComponents();

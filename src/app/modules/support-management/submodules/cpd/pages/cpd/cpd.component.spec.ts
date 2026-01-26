@@ -3,7 +3,7 @@ import { CpdComponent } from './cpd.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../../../environments/environments';
+import { environment } from '../../../../../../../environments/environments_sgd';
 
 describe('CpdComponent', () => {
   let component: CpdComponent;
@@ -15,7 +15,7 @@ describe('CpdComponent', () => {
         HttpClientModule,
         ToastrModule.forRoot(),
         CpdComponent,
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
       ],
     }).compileComponents();
 

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalEstadisticasComponent } from './modal-estadisticas.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalEstadisticasComponent', () => {
   let component: ModalEstadisticasComponent;
@@ -8,9 +10,12 @@ describe('ModalEstadisticasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalEstadisticasComponent]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalEstadisticasComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModalEstadisticasComponent);
     component = fixture.componentInstance;

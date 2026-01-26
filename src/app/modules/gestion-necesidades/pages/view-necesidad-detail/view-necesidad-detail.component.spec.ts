@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewNecesidadDetailComponent } from './view-necesidad-detail.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ViewNecesidadDetailComponent', () => {
   let component: ViewNecesidadDetailComponent;
@@ -8,7 +10,11 @@ describe('ViewNecesidadDetailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewNecesidadDetailComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ViewNecesidadDetailComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewNecesidadDetailComponent);

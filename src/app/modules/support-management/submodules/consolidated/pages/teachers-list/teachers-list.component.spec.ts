@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { provideRouter } from '@angular/router';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../../../environments/environments';
+import { environment } from '../../../../../../../environments/environments_sgd';
 
 describe('TeachersListComponent', () => {
   let component: TeachersListComponent;
@@ -16,7 +16,7 @@ describe('TeachersListComponent', () => {
         HttpClientModule,
         ToastrModule.forRoot(),
         TeachersListComponent,
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
       ],
       providers: [
         provideRouter([]), // Provide an empty router for testing

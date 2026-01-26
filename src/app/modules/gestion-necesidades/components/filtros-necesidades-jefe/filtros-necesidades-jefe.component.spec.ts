@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FiltrosNecesidadesJefeComponent } from './filtros-necesidades-jefe.component';
+import { ToastrModule } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('FiltrosNecesidadesJefeComponent', () => {
   let component: FiltrosNecesidadesJefeComponent;
@@ -8,9 +10,12 @@ describe('FiltrosNecesidadesJefeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FiltrosNecesidadesJefeComponent]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        FiltrosNecesidadesJefeComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FiltrosNecesidadesJefeComponent);
     component = fixture.componentInstance;

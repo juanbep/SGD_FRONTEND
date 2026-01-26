@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivitiesPendingDefinitionEvaluatorComponent } from './activities-pending-definition-evaluator.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ActivitiesPendingDefinitionEvaluatorComponent', () => {
   let component: ActivitiesPendingDefinitionEvaluatorComponent;
@@ -8,11 +10,15 @@ describe('ActivitiesPendingDefinitionEvaluatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ActivitiesPendingDefinitionEvaluatorComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ActivitiesPendingDefinitionEvaluatorComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(
-      ActivitiesPendingDefinitionEvaluatorComponent
+      ActivitiesPendingDefinitionEvaluatorComponent,
     );
     component = fixture.componentInstance;
     fixture.detectChanges();

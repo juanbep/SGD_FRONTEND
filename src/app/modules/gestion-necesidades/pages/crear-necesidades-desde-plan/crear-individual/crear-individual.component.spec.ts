@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CrearIndividualComponent } from './crear-individual.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('CrearIndividualComponent', () => {
   let component: CrearIndividualComponent;
@@ -8,9 +10,12 @@ describe('CrearIndividualComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CrearIndividualComponent]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        CrearIndividualComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CrearIndividualComponent);
     component = fixture.componentInstance;

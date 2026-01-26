@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalCrearSeleccionadoComponent } from './modal-crear-seleccionado.component';
+import { ToastrModule } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ModalCrearSeleccionadoComponent', () => {
   let component: ModalCrearSeleccionadoComponent;
@@ -8,9 +10,12 @@ describe('ModalCrearSeleccionadoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalCrearSeleccionadoComponent]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalCrearSeleccionadoComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModalCrearSeleccionadoComponent);
     component = fixture.componentInstance;

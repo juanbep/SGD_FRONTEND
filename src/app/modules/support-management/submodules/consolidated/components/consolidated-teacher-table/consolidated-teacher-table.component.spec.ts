@@ -3,7 +3,7 @@ import { ConsolidatedTeacherTableComponent } from './consolidated-teacher-table.
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../../../environments/environments';
+import { environment } from '../../../../../../../environments/environments_sgd';
 import { provideRouter } from '@angular/router';
 
 describe('ConsolidatedTeacherTableComponent', () => {
@@ -16,7 +16,7 @@ describe('ConsolidatedTeacherTableComponent', () => {
         HttpClientModule,
         ToastrModule.forRoot(),
         ConsolidatedTeacherTableComponent,
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
       ],
       providers: [
         provideRouter([]), // Provide an empty router for testing

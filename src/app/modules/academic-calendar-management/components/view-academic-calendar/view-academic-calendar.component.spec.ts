@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewAcademicCalendarComponent } from './view-academic-calendar.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ViewAcademicCalendarComponent', () => {
   let component: ViewAcademicCalendarComponent;
@@ -8,7 +10,11 @@ describe('ViewAcademicCalendarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewAcademicCalendarComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ViewAcademicCalendarComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewAcademicCalendarComponent);

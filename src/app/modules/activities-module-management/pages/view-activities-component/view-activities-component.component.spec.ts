@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewActivitiesComponentComponent } from './view-activities-component.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ViewActivitiesComponentComponent', () => {
   let component: ViewActivitiesComponentComponent;
@@ -8,7 +10,11 @@ describe('ViewActivitiesComponentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ViewActivitiesComponentComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ViewActivitiesComponentComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewActivitiesComponentComponent);

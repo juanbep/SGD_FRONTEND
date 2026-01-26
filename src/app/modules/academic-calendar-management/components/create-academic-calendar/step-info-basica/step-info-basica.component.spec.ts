@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StepInfoBasicaComponent } from './step-info-basica.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('StepInfoBasicaComponent', () => {
   let component: StepInfoBasicaComponent;
@@ -8,7 +10,11 @@ describe('StepInfoBasicaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StepInfoBasicaComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        StepInfoBasicaComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(StepInfoBasicaComponent);

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FiltrosDocenciaComponent } from './filtros-docencia.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('FiltrosDocenciaComponent', () => {
   let component: FiltrosDocenciaComponent;
@@ -8,9 +10,12 @@ describe('FiltrosDocenciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FiltrosDocenciaComponent]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        FiltrosDocenciaComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FiltrosDocenciaComponent);
     component = fixture.componentInstance;

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserInfoComponent } from './user-info.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../environments/environments';
+import { environment } from '../../../../../environments/environments_sgd';
 
 describe('UserInfoComponent', () => {
   let component: UserInfoComponent;
@@ -12,7 +12,7 @@ describe('UserInfoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
         UserInfoComponent,
       ],
     }).compileComponents();

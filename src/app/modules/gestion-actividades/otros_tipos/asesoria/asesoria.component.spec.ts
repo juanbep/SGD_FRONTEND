@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AsesoriaComponent } from './asesoria.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('AsesoriaComponent', () => {
   let component: AsesoriaComponent;
@@ -8,7 +10,7 @@ describe('AsesoriaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AsesoriaComponent],
+      imports: [HttpClientModule, ToastrModule.forRoot(), AsesoriaComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AsesoriaComponent);

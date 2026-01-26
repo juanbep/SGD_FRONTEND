@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoricalConsolidatedComponent } from './historical-consolidated.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('HistoricalConsolidatedComponent', () => {
   let component: HistoricalConsolidatedComponent;
@@ -8,7 +10,11 @@ describe('HistoricalConsolidatedComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HistoricalConsolidatedComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        HistoricalConsolidatedComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HistoricalConsolidatedComponent);

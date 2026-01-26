@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RldManagementComponent } from './rld-management.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('RldManagementComponent', () => {
   let component: RldManagementComponent;
@@ -8,7 +10,11 @@ describe('RldManagementComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RldManagementComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        RldManagementComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RldManagementComponent);

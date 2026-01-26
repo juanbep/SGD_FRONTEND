@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ManagementActivitiesComponentComponent } from './management-activities-component.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ManagementActivitiesComponentComponent', () => {
   let component: ManagementActivitiesComponentComponent;
@@ -8,7 +10,11 @@ describe('ManagementActivitiesComponentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ManagementActivitiesComponentComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ManagementActivitiesComponentComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ManagementActivitiesComponentComponent);

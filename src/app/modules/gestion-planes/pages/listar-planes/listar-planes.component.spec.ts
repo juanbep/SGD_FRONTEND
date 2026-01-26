@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListarPlanesComponent } from './listar-planes.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ListarPlanesComponent', () => {
   let component: ListarPlanesComponent;
@@ -8,7 +10,11 @@ describe('ListarPlanesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListarPlanesComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ListarPlanesComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListarPlanesComponent);

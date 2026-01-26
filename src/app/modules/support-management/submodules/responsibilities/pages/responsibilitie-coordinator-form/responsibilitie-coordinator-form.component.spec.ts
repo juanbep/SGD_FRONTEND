@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResponsibilitieCoordinatorFormComponent } from './responsibilitie-coordinator-form.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ResponsibilitieCoordinatorFormComponent', () => {
   let component: ResponsibilitieCoordinatorFormComponent;
@@ -8,7 +10,11 @@ describe('ResponsibilitieCoordinatorFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResponsibilitieCoordinatorFormComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ResponsibilitieCoordinatorFormComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ResponsibilitieCoordinatorFormComponent);

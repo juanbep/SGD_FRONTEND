@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalEliminarFechaComponent } from './modal-eliminar-fecha.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalEliminarFechaComponent', () => {
   let component: ModalEliminarFechaComponent;
@@ -8,7 +10,11 @@ describe('ModalEliminarFechaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalEliminarFechaComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalEliminarFechaComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalEliminarFechaComponent);

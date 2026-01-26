@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListMateriasComponent } from './list-materias.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ListMateriasComponent', () => {
   let component: ListMateriasComponent;
@@ -8,7 +10,11 @@ describe('ListMateriasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListMateriasComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ListMateriasComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListMateriasComponent);

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EliminarMateriaModalComponent } from './eliminar-materia-modal.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('EliminarMateriaModalComponent', () => {
   let component: EliminarMateriaModalComponent;
@@ -8,7 +10,11 @@ describe('EliminarMateriaModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EliminarMateriaModalComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        EliminarMateriaModalComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(EliminarMateriaModalComponent);

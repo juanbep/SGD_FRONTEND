@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SideBarComponent } from './side-bar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../environments/environments';
+import { environment } from '../../../../../environments/environments_sgd';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SideBarComponent', () => {
@@ -13,7 +13,7 @@ describe('SideBarComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
         RouterTestingModule,
         SideBarComponent,
       ],

@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalEliminarSeleccionadoComponent } from './modal-eliminar-seleccionado.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalEliminarSeleccionadoComponent', () => {
   let component: ModalEliminarSeleccionadoComponent;
@@ -8,9 +10,12 @@ describe('ModalEliminarSeleccionadoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalEliminarSeleccionadoComponent]
-    })
-    .compileComponents();
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalEliminarSeleccionadoComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ModalEliminarSeleccionadoComponent);
     component = fixture.componentInstance;

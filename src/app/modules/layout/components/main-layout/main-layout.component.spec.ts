@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainLayoutComponent } from './main-layout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../environments/environments';
+import { environment } from '../../../../../environments/environments_sgd';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MainLayoutComponent', () => {
@@ -13,7 +13,7 @@ describe('MainLayoutComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
         RouterTestingModule,
         MainLayoutComponent,
       ],

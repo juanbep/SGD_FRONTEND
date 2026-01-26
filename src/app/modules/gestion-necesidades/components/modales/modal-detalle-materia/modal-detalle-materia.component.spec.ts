@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalDetalleMateriaComponent } from './modal-detalle-materia.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalDetalleMateriaComponent', () => {
   let component: ModalDetalleMateriaComponent;
@@ -8,7 +10,11 @@ describe('ModalDetalleMateriaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalDetalleMateriaComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalDetalleMateriaComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalDetalleMateriaComponent);

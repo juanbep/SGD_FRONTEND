@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FiltrosSeleccionadosJefeComponent } from './filtros-seleccionados-jefe.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('FiltrosSeleccionadosJefeComponent', () => {
   let component: FiltrosSeleccionadosJefeComponent;
@@ -8,7 +10,8 @@ describe('FiltrosSeleccionadosJefeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FiltrosSeleccionadosJefeComponent]
+      imports: [ HttpClientModule,
+              ToastrModule.forRoot(),FiltrosSeleccionadosJefeComponent]
     })
     .compileComponents();
 

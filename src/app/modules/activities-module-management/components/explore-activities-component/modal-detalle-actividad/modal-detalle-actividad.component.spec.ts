@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalDetalleActividadComponent } from './modal-detalle-actividad.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalDetalleActividadComponent', () => {
   let component: ModalDetalleActividadComponent;
@@ -8,7 +10,11 @@ describe('ModalDetalleActividadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModalDetalleActividadComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ModalDetalleActividadComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalDetalleActividadComponent);

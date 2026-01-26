@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { provideRouter } from '@angular/router';
 import { AngularFireModule } from '@angular/fire/compat';
-import { environments } from '../../../../../../../environments/environments';
+import { environment } from '../../../../../../../environments/environments_sgd';
 
 describe('ActivitiesComponent', () => {
   let component: ActivitiesComponent;
@@ -15,7 +15,7 @@ describe('ActivitiesComponent', () => {
       imports: [
         ActivitiesComponent,
         ToastrModule.forRoot(),
-        AngularFireModule.initializeApp(environments.firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
       ],
       providers: [provideHttpClient(), provideRouter([])],
     }).compileComponents();

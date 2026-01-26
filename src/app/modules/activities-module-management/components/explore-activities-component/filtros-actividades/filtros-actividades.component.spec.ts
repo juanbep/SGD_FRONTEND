@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FiltrosActividadesComponent } from './filtros-actividades.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('FiltrosActividadesComponent', () => {
   let component: FiltrosActividadesComponent;
@@ -8,7 +10,11 @@ describe('FiltrosActividadesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FiltrosActividadesComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        FiltrosActividadesComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FiltrosActividadesComponent);

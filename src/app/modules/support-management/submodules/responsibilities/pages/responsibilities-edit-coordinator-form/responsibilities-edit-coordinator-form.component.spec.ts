@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ResponsibilitiesEditCoordinatorFormComponent } from './responsibilities-edit-coordinator-form.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ResponsibilitiesEditCoordinatorFormComponent', () => {
   let component: ResponsibilitiesEditCoordinatorFormComponent;
@@ -8,11 +10,15 @@ describe('ResponsibilitiesEditCoordinatorFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResponsibilitiesEditCoordinatorFormComponent],
+      imports: [
+        HttpClientModule,
+        ToastrModule.forRoot(),
+        ResponsibilitiesEditCoordinatorFormComponent,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(
-      ResponsibilitiesEditCoordinatorFormComponent
+      ResponsibilitiesEditCoordinatorFormComponent,
     );
     component = fixture.componentInstance;
     fixture.detectChanges();
