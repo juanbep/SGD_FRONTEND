@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewActivitiesComponentComponent } from './view-activities-component.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ViewActivitiesComponentComponent', () => {
@@ -11,7 +11,7 @@ describe('ViewActivitiesComponentComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ViewActivitiesComponentComponent,
       ],

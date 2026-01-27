@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalSeleccionarCalendarioComponent } from './modal-seleccionar-calendario.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalSeleccionarCalendarioComponent', () => {
@@ -11,7 +11,7 @@ describe('ModalSeleccionarCalendarioComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ModalSeleccionarCalendarioComponent,
       ],

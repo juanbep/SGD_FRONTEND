@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FiltrosDocenciaComponent } from './filtros-docencia.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('FiltrosDocenciaComponent', () => {
@@ -11,7 +11,7 @@ describe('FiltrosDocenciaComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         FiltrosDocenciaComponent,
       ],

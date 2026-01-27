@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewPlanDetailComponent } from './view-plan-detail.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ViewPlanDetailComponent', () => {
   let component: ViewPlanDetailComponent;
@@ -11,8 +12,9 @@ describe('ViewPlanDetailComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
+        RouterTestingModule,
         ViewPlanDetailComponent,
       ],
     }).compileComponents();

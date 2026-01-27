@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TrabajosInvestigacionComponent } from './trabajos-investigacion.component';
 import { ToastrModule } from 'ngx-toastr';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('TrabajosInvestigacionComponent', () => {
   let component: TrabajosInvestigacionComponent;
@@ -11,7 +11,7 @@ describe('TrabajosInvestigacionComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         TrabajosInvestigacionComponent,
       ],

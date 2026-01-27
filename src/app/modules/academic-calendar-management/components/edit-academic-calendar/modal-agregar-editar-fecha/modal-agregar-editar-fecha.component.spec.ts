@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalAgregarEditarFechaComponent } from './modal-agregar-editar-fecha.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ModalAgregarFechaComponent', () => {
   let component: ModalAgregarEditarFechaComponent;
@@ -11,8 +12,9 @@ describe('ModalAgregarFechaComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
+        RouterTestingModule,
         ModalAgregarEditarFechaComponent,
       ],
     }).compileComponents();

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivitiesUploadSelfAssessmentComponent } from './activities-upload-self-assessment.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ActivitiesUploadSelfAssessmentComponent', () => {
@@ -10,7 +10,7 @@ describe('ActivitiesUploadSelfAssessmentComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ActivitiesUploadSelfAssessmentComponent,
       ],

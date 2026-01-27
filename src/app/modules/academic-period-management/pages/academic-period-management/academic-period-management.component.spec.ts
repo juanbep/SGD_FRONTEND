@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AcademicPeriodManagementComponent } from './academic-period-management.component';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AcademicPeriodManagementComponent', () => {
   let component: AcademicPeriodManagementComponent;
@@ -10,8 +11,9 @@ describe('AcademicPeriodManagementComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
+        RouterTestingModule,
         AcademicPeriodManagementComponent,
       ],
     }).compileComponents();

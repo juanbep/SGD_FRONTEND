@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CrearNecesidadesDesdePlanComponent } from './crear-necesidades-desde-plan.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('CrearNecesidadesDesdePlanComponent', () => {
   let component: CrearNecesidadesDesdePlanComponent;
@@ -11,8 +12,9 @@ describe('CrearNecesidadesDesdePlanComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
+        RouterTestingModule,
         CrearNecesidadesDesdePlanComponent,
       ],
     }).compileComponents();

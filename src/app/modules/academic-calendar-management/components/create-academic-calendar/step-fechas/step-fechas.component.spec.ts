@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StepFechasComponent } from './step-fechas.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('StepFechasComponent', () => {
   let component: StepFechasComponent;
@@ -11,8 +12,9 @@ describe('StepFechasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule, 
+        HttpClientTestingModule, 
         ToastrModule.forRoot(), 
+        RouterTestingModule,
         StepFechasComponent],
     }).compileComponents();
 

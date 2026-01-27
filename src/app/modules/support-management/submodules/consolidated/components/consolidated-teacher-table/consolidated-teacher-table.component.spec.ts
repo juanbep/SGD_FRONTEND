@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConsolidatedTeacherTableComponent } from './consolidated-teacher-table.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../../../../../../../environments/environments_sgd';
@@ -13,7 +13,7 @@ describe('ConsolidatedTeacherTableComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ConsolidatedTeacherTableComponent,
         AngularFireModule.initializeApp(environment.firebaseConfig),

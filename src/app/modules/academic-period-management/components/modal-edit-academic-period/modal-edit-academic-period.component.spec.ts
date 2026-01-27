@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalEditAcademicPeriodComponent } from './modal-edit-academic-period.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalEditAcademicPeriodComponent', () => {
@@ -10,7 +10,7 @@ describe('ModalEditAcademicPeriodComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ModalEditAcademicPeriodComponent,
       ],

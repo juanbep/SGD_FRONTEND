@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActivitiesPendingDefinitionEvaluatorComponent } from './activities-pending-definition-evaluator.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ActivitiesPendingDefinitionEvaluatorComponent', () => {
@@ -11,7 +11,7 @@ describe('ActivitiesPendingDefinitionEvaluatorComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ActivitiesPendingDefinitionEvaluatorComponent,
       ],

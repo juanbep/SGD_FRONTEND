@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ModalEliminarNecesidadComponent } from './modal-eliminar-necesidad.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ModalEliminarNecesidadComponent', () => {
@@ -11,7 +11,7 @@ describe('ModalEliminarNecesidadComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ModalEliminarNecesidadComponent,
       ],

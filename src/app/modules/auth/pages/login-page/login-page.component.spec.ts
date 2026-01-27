@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginPageComponent } from './login-page.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from '../../../../../environments/environments_sgd';
 import { ToastrModule } from 'ngx-toastr';
@@ -12,7 +12,7 @@ describe('LoginPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
         ToastrModule.forRoot(),
         LoginPageComponent,

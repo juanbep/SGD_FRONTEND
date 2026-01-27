@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AcademicCalendarManagementComponent } from './academic-calendar-management.component';
 import { ToastrModule } from 'ngx-toastr';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AcademicCalendarManagementComponent', () => {
   let component: AcademicCalendarManagementComponent;
@@ -11,7 +11,7 @@ describe('AcademicCalendarManagementComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         AcademicCalendarManagementComponent,
       ],

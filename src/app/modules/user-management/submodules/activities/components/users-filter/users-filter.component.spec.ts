@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UsersFilterComponent } from './users-filter.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('UsersFilterComponent', () => {
@@ -9,7 +9,7 @@ describe('UsersFilterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), UsersFilterComponent],
+      imports: [HttpClientTestingModule, ToastrModule.forRoot(), UsersFilterComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UsersFilterComponent);

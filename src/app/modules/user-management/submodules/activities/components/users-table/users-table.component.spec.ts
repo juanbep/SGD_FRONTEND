@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UsersTableComponent } from './users-table.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('UsersTableComponent', () => {
@@ -9,7 +9,7 @@ describe('UsersTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), UsersTableComponent],
+      imports: [HttpClientTestingModule, ToastrModule.forRoot(), UsersTableComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UsersTableComponent);

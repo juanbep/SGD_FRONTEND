@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { SelfEvaluationReviewModalComponent } from './self-evaluation-review-modal.component';
 
@@ -10,7 +10,7 @@ describe('SelfEvaluationReviewModalComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         SelfEvaluationReviewModalComponent,
       ],

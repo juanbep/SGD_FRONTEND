@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CrearLoteComponent } from './crear-lote.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('CrearLoteComponent', () => {
@@ -10,7 +10,7 @@ describe('CrearLoteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), CrearLoteComponent],
+      imports: [HttpClientTestingModule, ToastrModule.forRoot(), CrearLoteComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CrearLoteComponent);

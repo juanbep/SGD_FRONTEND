@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ViewDetailsSourceTwoComponent } from './view-details-source-two.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('ViewDetailsSourceTwoComponent', () => {
@@ -10,7 +10,7 @@ describe('ViewDetailsSourceTwoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         ViewDetailsSourceTwoComponent,
       ],

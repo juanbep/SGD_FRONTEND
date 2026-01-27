@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpdInfoFormComponent } from './cpd-info-form.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('CpdInfoFormComponent', () => {
@@ -9,7 +9,7 @@ describe('CpdInfoFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, ToastrModule.forRoot(), CpdInfoFormComponent],
+      imports: [HttpClientTestingModule, ToastrModule.forRoot(), CpdInfoFormComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CpdInfoFormComponent);

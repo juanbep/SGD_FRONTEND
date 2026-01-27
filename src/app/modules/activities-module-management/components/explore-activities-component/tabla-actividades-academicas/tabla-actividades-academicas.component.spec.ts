@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TablaActividadesAcademicasComponent } from './tabla-actividades-academicas.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 
 describe('TablaActividadesAcademicasComponent', () => {
@@ -11,7 +11,7 @@ describe('TablaActividadesAcademicasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         ToastrModule.forRoot(),
         TablaActividadesAcademicasComponent,
       ],
