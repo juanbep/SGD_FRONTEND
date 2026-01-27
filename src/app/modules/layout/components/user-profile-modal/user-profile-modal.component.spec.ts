@@ -3,6 +3,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserProfileModalComponent } from './user-profile-modal.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import { of } from 'rxjs';
+import { AuthServiceService } from '../../../auth/service/auth-service.service';
+
+// Mock AuthService
+const mockAuthService = jasmine.createSpyObj(
+  'AuthServiceService',
+  ['getUser', 'logout'],
+  {
+    user$: of(null),
+    currentUser: null,
+  },
+);
 
 describe('UserProfileModalComponent', () => {
   let component: UserProfileModalComponent;
@@ -15,6 +27,7 @@ describe('UserProfileModalComponent', () => {
         ToastrModule.forRoot(),
         UserProfileModalComponent,
       ],
+      providers: [{ provide: AuthServiceService, useValue: mockAuthService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserProfileModalComponent);
