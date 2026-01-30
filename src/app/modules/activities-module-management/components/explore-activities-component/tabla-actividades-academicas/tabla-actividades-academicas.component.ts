@@ -80,8 +80,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
 
   // ========== OID_CALENDARIO Y OID_DEPARTAMENTO SON OBLIGATORIOS ==========
   filters: ActividadFilters = {
-    page: 0,
-    size: 10,
     searchTerm: '',
     oidEstadoActividad: '',
     oidCalendario: '',
@@ -98,7 +96,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   cargarDatosUsuario(): void {
     if (!isUserDataAvailable()) {
       this.toastr.error(
-        'No se encontró información del usuario. Por favor, inicie sesión nuevamente.'
+        'No se encontró información del usuario. Por favor, inicie sesión nuevamente.',
       );
       return;
     }
@@ -140,11 +138,11 @@ export class TablaActividadesAcademicasComponent implements OnInit {
           this.actividades = response.data.content;
           this.pagination = actualizarPaginacion(
             this.pagination,
-            response.data
+            response.data,
           );
           if (this.filters.page === 0) {
             this.toastr.success(
-              response.mensaje || 'Actividades cargadas correctamente'
+              response.mensaje || 'Actividades cargadas correctamente',
             );
           }
         } else {
@@ -173,7 +171,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   // ========== FILTROS PARA CARGAR LA LISTA DE ACTIVIDADES ==========
 
   aplicarFiltros(filtros: ActividadFilters): void {
-    this.filters = { ...filtros, page: 0 };
+    this.filters = { ...filtros, page: 0, size: 5 };
     this.loadActividades();
   }
 
@@ -238,7 +236,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   getPaginasVisibles(): number[] {
     return getPaginasVisibles(
       this.pagination.currentPage,
-      this.pagination.totalPages
+      this.pagination.totalPages,
     );
   }
 

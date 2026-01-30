@@ -98,7 +98,7 @@ export class FiltrosDocenciaComponent implements OnInit {
       error: (error) => {
         console.error('Error cargando filtros iniciales:', error);
         this.toastr.error(
-          'Error al cargar los filtros. Intente recargar la página.'
+          'Error al cargar los filtros. Intente recargar la página.',
         );
       },
     });
@@ -111,13 +111,13 @@ export class FiltrosDocenciaComponent implements OnInit {
         await this.calendarioHelper.getAllForDropdown();
 
       const calendariosFiltrados = calendariosCompletos.filter(
-        (calendario) => calendario.estado !== 'DESHABILITADO'
+        (calendario) => calendario.estado !== 'DESHABILITADO',
       );
 
       this.calendariosDropdown =
         ordenarCalendariosPorAnio(calendariosFiltrados);
       this.filters.oidCalendario = seleccionarCalendarioAutomatico(
-        this.calendariosDropdown
+        this.calendariosDropdown,
       );
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
@@ -132,7 +132,7 @@ export class FiltrosDocenciaComponent implements OnInit {
     if (!this.filters.oidCalendario) {
       this.toastr.warning(
         'Debe seleccionar un calendario',
-        'Filtros incompletos'
+        'Filtros incompletos',
       );
       return;
     }
@@ -145,9 +145,9 @@ export class FiltrosDocenciaComponent implements OnInit {
       oidDepartamento: this.filters.oidDepartamento,
     };
 
-    // Solo agregar si tienen valor
+    // Agregar tipoContratacion con comillas dobles para el backend
     if (this.filters.tipoContratacion && this.filters.tipoContratacion !== '') {
-      filtrosLimpios.tipoContratacion = this.filters.tipoContratacion;
+      filtrosLimpios.tipoContratacion = `"${this.filters.tipoContratacion}"`;
     }
 
     if (this.filters.semestre && this.filters.semestre !== '') {
@@ -168,7 +168,7 @@ export class FiltrosDocenciaComponent implements OnInit {
     };
 
     this.filters.oidCalendario = seleccionarCalendarioAutomatico(
-      this.calendariosDropdown
+      this.calendariosDropdown,
     );
 
     this.onLimpiarFiltros.emit();

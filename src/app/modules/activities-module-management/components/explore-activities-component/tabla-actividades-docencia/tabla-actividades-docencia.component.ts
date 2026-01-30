@@ -83,7 +83,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
   // ========== FILTROS ESPECÍFICOS DE DOCENCIA ==========
   filters: ActividadDocenciaFilters = {
     page: 0,
-    size: 10,
+    size: 5,
     oidCalendario: '',
     oidDepartamento: undefined,
     tipoContratacion: '',
@@ -98,7 +98,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
   cargarDatosUsuario(): void {
     if (!isUserDataAvailable()) {
       this.toastr.error(
-        'No se encontró información del usuario. Por favor, inicie sesión nuevamente.'
+        'No se encontró información del usuario. Por favor, inicie sesión nuevamente.',
       );
       return;
     }
@@ -139,12 +139,12 @@ export class TablaActividadesDocenciaComponent implements OnInit {
           this.actividades = response.data.content;
           this.pagination = actualizarPaginacion(
             this.pagination,
-            response.data
+            response.data,
           );
           if (this.filters.page === 0) {
             this.toastr.success(
               response.mensaje ||
-                'Actividades de docencia cargadas correctamente'
+                'Actividades de docencia cargadas correctamente',
             );
           }
         } else {
@@ -154,11 +154,12 @@ export class TablaActividadesDocenciaComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        this.error = error.message || 'Error al cargar actividades de docencia';
-        this.toastr.error(
-          'Error al cargar actividades de docencia',
-          this.error
-        );
+        const mensajeBackend =
+          error.error?.mensaje ||
+          error.message ||
+          'Error al cargar actividades de docencia';
+        this.error = mensajeBackend;
+        this.toastr.error(mensajeBackend);
         this.loading = false;
         this.actividades = [];
       },
@@ -203,7 +204,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
   getPaginasVisibles(): number[] {
     return getPaginasVisibles(
       this.pagination.currentPage,
-      this.pagination.totalPages
+      this.pagination.totalPages,
     );
   }
 
