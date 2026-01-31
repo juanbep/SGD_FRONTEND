@@ -1,14 +1,11 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
-import { CatalogResolverService } from './resolvers/catalog.resolver.service';
 import { CurrentUserResolverService } from './resolvers/currentUser.resolver.service';
-import { ActivePeriodResolvers } from './resolvers/active-period.resolvers.service';
 
 export const routes: Routes = [
   {
     path: 'app',
     resolve: {
-      //catalog: CatalogResolverService,
       currentUser: CurrentUserResolverService,
     },
     canActivate: [AuthGuard],
