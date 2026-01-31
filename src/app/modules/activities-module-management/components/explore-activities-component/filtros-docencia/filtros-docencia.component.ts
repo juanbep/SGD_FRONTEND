@@ -46,6 +46,8 @@ export class FiltrosDocenciaComponent implements OnInit {
     { value: 'PLANTA', label: 'PLANTA' },
     { value: 'OCASIONAL', label: 'OCASIONAL' },
     { value: 'CATEDRA', label: 'CÁTEDRA' },
+    { value: 'BECARIOS_Y_PRACTICANTES', label: 'BECARIOS Y PRACTICANTES' },
+    { value: 'BECARIOS_POSTGRADO', label: 'BECARIO POSTGRADO' },
   ];
 
   semestresDropdown = [
@@ -147,7 +149,7 @@ export class FiltrosDocenciaComponent implements OnInit {
 
     // Agregar tipoContratacion con comillas dobles para el backend
     if (this.filters.tipoContratacion && this.filters.tipoContratacion !== '') {
-      filtrosLimpios.tipoContratacion = `"${this.filters.tipoContratacion}"`;
+      filtrosLimpios.tipoContratacion = `${this.filters.tipoContratacion}`;
     }
 
     if (this.filters.semestre && this.filters.semestre !== '') {
