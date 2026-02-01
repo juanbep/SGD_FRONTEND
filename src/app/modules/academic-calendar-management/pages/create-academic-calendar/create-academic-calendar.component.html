@@ -20,7 +20,6 @@
   <div class="wizard-content card shadow-sm p-4 mb-4">
     <app-step-info-basica
       *ngIf="pasoActual() === 1"
-      [datosIniciales]="datosCalendarioCreado()"
       [calendarioYaCreado]="calendarioYaCreado()"
       (formularioValido)="alCambiarValidezPaso1($event)"
     ></app-step-info-basica>

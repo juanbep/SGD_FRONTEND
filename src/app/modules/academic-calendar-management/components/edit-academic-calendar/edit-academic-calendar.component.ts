@@ -114,40 +114,8 @@ export class EditAcademicCalendarComponent implements OnInit {
     });
   }
 
-  // ===== ELIMINAR FECHA =====
-  async confirmarEliminarFecha(): Promise<void> {
-    const fecha = this.fechaAEliminar();
-    if (!fecha) return;
-
-    try {
-      const resultado = await this.fechaHelper.delete(fecha.oidFecha);
-
-      if (resultado) {
-        const calendarioActual = this.calendario();
-        if (calendarioActual?.fechas) {
-          const fechasActualizadas = calendarioActual.fechas.filter(
-            (f) => f.oidFecha !== fecha.oidFecha
-          );
-
-          this.calendario.set({
-            ...calendarioActual,
-            fechas: fechasActualizadas,
-          });
-        }
-
-        this.toastr.success('Fecha eliminada con éxito');
-        this.cerrarModalEliminar();
-      }
-    } catch (error: any) {
-      this.cerrarModalEliminar();
-      const mensaje = error?.error?.mensaje || 'Error al eliminar la fecha';
-      this.toastr.error(mensaje);
-    }
-  }
-
   // ===== AGREGAR FECHA =====
   async confirmarAgregarFecha(createDto: CreateFechaDto): Promise<void> {
-    // Prevención de doble clic
     if (this.guardandoFecha()) return;
 
     this.guardandoFecha.set(true);
@@ -156,22 +124,10 @@ export class EditAcademicCalendarComponent implements OnInit {
       const nuevaFecha = await this.fechaHelper.create(createDto);
 
       if (nuevaFecha) {
-        const calendarioActual = this.calendario();
-        if (calendarioActual) {
-          // Agregar la nueva fecha al array de fechas
-          const fechasActualizadas = [
-            ...(calendarioActual.fechas || []),
-            nuevaFecha,
-          ];
-
-          this.calendario.set({
-            ...calendarioActual,
-            fechas: fechasActualizadas,
-          });
-        }
-
         this.toastr.success('Fecha agregada con éxito');
         this.cerrarModalAgregar();
+
+        this.recargarFechasCalendario();
       }
     } catch (error: any) {
       const mensaje = error?.error?.mensaje || 'Error al agregar la fecha';
@@ -191,20 +147,10 @@ export class EditAcademicCalendarComponent implements OnInit {
       const fechaActualizada = await this.fechaHelper.update(updateDto);
 
       if (fechaActualizada) {
-        const calendarioActual = this.calendario();
-        if (calendarioActual) {
-          const fechasActualizadas = calendarioActual.fechas?.map((f) =>
-            f.oidFecha === fechaActualizada.oidFecha ? fechaActualizada : f
-          );
-
-          this.calendario.set({
-            ...calendarioActual,
-            fechas: fechasActualizadas,
-          });
-        }
-
         this.toastr.success('Fecha actualizada con éxito');
         this.cerrarModalAgregar();
+
+        this.recargarFechasCalendario();
       }
     } catch (error: any) {
       const mensaje = error?.error?.mensaje || 'Error al actualizar la fecha';
@@ -212,6 +158,55 @@ export class EditAcademicCalendarComponent implements OnInit {
     } finally {
       this.guardandoFecha.set(false);
     }
+  }
+
+  // ===== ELIMINAR FECHA =====
+  async confirmarEliminarFecha(): Promise<void> {
+    const fecha = this.fechaAEliminar();
+    if (!fecha) return;
+
+    try {
+      const resultado = await this.fechaHelper.delete(fecha.oidFecha);
+
+      if (resultado) {
+        this.toastr.success('Fecha eliminada con éxito');
+        this.cerrarModalEliminar();
+
+        this.recargarFechasCalendario();
+      }
+    } catch (error: any) {
+      this.cerrarModalEliminar();
+      const mensaje = error?.error?.mensaje || 'Error al eliminar la fecha';
+      this.toastr.error(mensaje);
+    }
+  }
+
+  private recargarFechasCalendario(): void {
+    const calendarioActual = this.calendario();
+    if (!calendarioActual?.oidcalendario) return;
+
+    this.cargandoListaFechas.set(true);
+
+    this.calendarioService
+      .getCalendarioAcademicoById(calendarioActual.oidcalendario)
+      .subscribe({
+        next: (response) => {
+          if (response.codigo === 200 && response.data) {
+            // Actualizar solo las fechas, mantener el resto del calendario
+            this.calendario.set({
+              ...calendarioActual,
+              fechas: response.data.fechas || [],
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Error al recargar fechas:', error);
+          const mensaje =
+            error?.error?.mensaje || 'Error al recargar las fechas';
+          this.toastr.warning(mensaje);
+        },
+        complete: () => this.cargandoListaFechas.set(false),
+      });
   }
 
   // ===== HANDLER PARA ACTUALIZACIÓN CALENDARIO DESDE COMPONENTE HIJO =====
@@ -250,7 +245,7 @@ export class EditAcademicCalendarComponent implements OnInit {
       fecha.fechaInicial,
       fecha.fechaFin,
       fecha.uniqueDate,
-      fecha.oidNombreFecha
+      fecha.oidNombreFecha,
     );
   };
 

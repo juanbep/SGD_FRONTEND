@@ -43,22 +43,20 @@ export class CreateAcademicCalendarComponent implements OnInit {
   readonly paso1Valido = signal<boolean>(false);
   readonly oidCalendarioCreado = signal<number | null>(null);
   readonly creandoCalendario = signal<boolean>(false);
-  readonly datosCalendarioCreado = signal<InfoBasicaData | null>(null);
 
   // ===== COMPUTED =====
   readonly puedeAvanzarPaso1 = computed(
-    () => this.oidCalendarioCreado() !== null
+    () => this.oidCalendarioCreado() !== null,
   );
   readonly calendarioYaCreado = computed(
-    () => this.oidCalendarioCreado() !== null
+    () => this.oidCalendarioCreado() !== null,
   );
 
   // ===== CONSTANTES =====
   readonly TITULOS_PASOS = ['Información Básica', 'Fechas del Calendario'];
 
   ngOnInit(): void {
-    this.cargarOidDeStorage();
-    this.cargarDatosCalendarioCreado();
+    // Ya no se necesita cargar nada del storage
   }
 
   // ===== CREAR CALENDARIO EN PASO 1 =====
@@ -75,30 +73,14 @@ export class CreateAcademicCalendarComponent implements OnInit {
         horasPlanta: dto.horasPlanta,
         horasOcasionales: dto.horasOcasionales,
         observacion: dto.observacion,
-        //semanasClase: 0,
-        //semanasPreparacion: 0,
-        //horasCatedra: 0,
-        //horasBecarioPracticante: 0,
       });
 
       if (calendarioCreado && calendarioCreado.oidcalendario) {
         this.oidCalendarioCreado.set(calendarioCreado.oidcalendario);
 
-        const datosCreado: InfoBasicaData = {
-          anioCalendario: dto.anioCalendario,
-          numeroCalendario: dto.numeroCalendario,
-          horasPlanta: dto.horasPlanta,
-          horasOcasionales: dto.horasOcasionales,
-          observacion: dto.observacion,
-        };
-        this.datosCalendarioCreado.set(datosCreado);
-
-        this.guardarOidEnStorage(calendarioCreado.oidcalendario);
-        this.guardarDatosCalendarioEnStorage(datosCreado);
-
         this.toastr.success(
           `Calendario ${dto.anioCalendario}-${dto.numeroCalendario} creado exitosamente`,
-          '¡Éxito!'
+          '¡Éxito!',
         );
       } else {
         throw new Error('No se recibió el OID del calendario creado');
@@ -150,11 +132,10 @@ export class CreateAcademicCalendarComponent implements OnInit {
 
   // ===== FINALIZAR =====
   finalizar(): void {
-    this.limpiarStorage();
     this.toastr.success(
       'El calendario ha sido creado exitosamente',
       '¡Proceso completado!',
-      { timeOut: 3000 }
+      { timeOut: 3000 },
     );
 
     setTimeout(() => {
@@ -162,62 +143,8 @@ export class CreateAcademicCalendarComponent implements OnInit {
     }, 1000);
   }
 
-  // ===== STORAGE =====
-  private guardarOidEnStorage(oid: number): void {
-    try {
-      localStorage.setItem(
-        'calendario_en_progreso',
-        JSON.stringify({ oidCalendario: oid })
-      );
-    } catch (error) {
-      console.error('Error al guardar OID:', error);
-    }
-  }
-
-  private guardarDatosCalendarioEnStorage(datos: InfoBasicaData): void {
-    try {
-      localStorage.setItem('paso1_datos_calendario', JSON.stringify(datos));
-    } catch (error) {
-      console.error('Error al guardar datos calendario:', error);
-    }
-  }
-
-  private cargarOidDeStorage(): void {
-    try {
-      const stored = localStorage.getItem('calendario_en_progreso');
-      if (stored) {
-        const { oidCalendario } = JSON.parse(stored);
-        if (oidCalendario) {
-          this.oidCalendarioCreado.set(oidCalendario);
-        }
-      }
-    } catch (error) {
-      console.error('Error al cargar OID:', error);
-    }
-  }
-
-  private cargarDatosCalendarioCreado(): void {
-    try {
-      const stored = localStorage.getItem('paso1_datos_calendario');
-      if (stored) {
-        const datos: InfoBasicaData = JSON.parse(stored);
-        this.datosCalendarioCreado.set(datos);
-        this.toastr.info('Se ha recuperado un calendario en progreso');
-      }
-    } catch (error) {
-      console.error('Error al cargar datos calendario:', error);
-    }
-  }
-
-  private limpiarStorage(): void {
-    localStorage.removeItem('calendario_en_progreso');
-    localStorage.removeItem('paso1_datos_calendario');
-    localStorage.removeItem('paso1_borrador');
-  }
-
   cancel(): void {
     if (confirm('¿Estás seguro de cancelar? Se perderán los cambios.')) {
-      this.limpiarStorage();
       this.router.navigate(['/app/gestion-calendario-academico/gestionar']);
     }
   }
