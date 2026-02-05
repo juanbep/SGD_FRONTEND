@@ -310,9 +310,11 @@
 <!-- Modal de Crear Seleccionado -->
 <!-- TODO: Implementar componente modal-crear-seleccionado -->
 <app-modal-crear-seleccionado
+  *ngIf="mostrarModalCrear"
   [visible]="mostrarModalCrear"
   [creando]="creando"
   [oidCalendario]="filtrosActuales.oidCalendario"
+  [oidDepartamento]="filtrosActuales.oidDepartamento"
   (onConfirmar)="confirmarCreacion($event)"
   (onCancelar)="cerrarModalCrear()"
 ></app-modal-crear-seleccionado>

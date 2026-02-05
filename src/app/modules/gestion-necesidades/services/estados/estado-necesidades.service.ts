@@ -194,11 +194,6 @@ export class EstadoNecesidadesService {
   ): Observable<CambioEstadoResponse> {
     const httpParams = this.buildHttpParams(params);
 
-    // TEMPORAL: Ver qué se está enviando
-    console.log('🔍 URL:', `${this.apiUrl}/por-oid`);
-    console.log('🔍 Params:', httpParams.toString());
-    console.log('🔍 Body:', body);
-
     return this.http
       .patch<CambioEstadoResponse>(`${this.apiUrl}/por-oid`, body, {
         params: httpParams,
@@ -216,11 +211,6 @@ export class EstadoNecesidadesService {
     body: { oidNecesidades: number[] } | null
   ): Observable<CambioEstadoResponse> {
     const httpParams = this.buildHttpParams(params);
-
-    // TEMPORAL: Ver qué se está enviando
-    console.log('🔍 URL:', `${this.apiUrl}/${estadoOrigen}/${estadoDestino}`);
-    console.log('🔍 Params:', httpParams.toString());
-    console.log('🔍 Body:', body);
 
     return this.http
       .patch<CambioEstadoResponse>(

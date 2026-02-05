@@ -17,6 +17,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SeleccionadosService } from '../../services/seleccionado.service';
 
 // Constantes para dropdowns
 const TIPOS_DISPONIBLES = [
@@ -40,7 +41,10 @@ const DEDICACIONES_DISPONIBLES = [
 export class ModalCrearSeleccionadoComponent implements OnInit {
   @Input() visible: boolean = false;
   @Input() oidCalendario!: number | string;
+  @Input() oidDepartamento!: number | string;
   @Input() creando: boolean = false;
+  @Input() seleccionadosActuales: any[] = [];
+  private seleccionadosService = inject(SeleccionadosService);
   @Output() onConfirmar = new EventEmitter<CreateSeleccionadoDTO>();
   @Output() onCancelar = new EventEmitter<void>();
 
@@ -73,11 +77,17 @@ export class ModalCrearSeleccionadoComponent implements OnInit {
     this.loadingUsuarios = true;
     this.seleccionadoForm.get('oidUsuario')?.disable();
 
-    // Cargar todos los usuarios con rol DOCENTE
-    this.usuarioHelper
-      .getAllForDropdown()
-      .then((usuarios) => {
-        this.usuarios = usuarios;
+    // Cargar seleccionados y usuarios en paralelo
+    Promise.all([
+      this.usuarioHelper.getAllForDropdown(),
+      this.obtenerSeleccionados(),
+    ])
+      .then(([usuarios, idsSeleccionados]) => {
+        // Filtrar usuarios que NO están seleccionados
+        this.usuarios = usuarios.filter(
+          (usuario) => !idsSeleccionados.includes(usuario.value),
+        );
+
         this.loadingUsuarios = false;
         this.seleccionadoForm.get('oidUsuario')?.enable();
       })
@@ -90,12 +100,37 @@ export class ModalCrearSeleccionadoComponent implements OnInit {
       });
   }
 
+  private obtenerSeleccionados(): Promise<number[]> {
+    return new Promise((resolve) => {
+      const filtros = {
+        oidCalendario: this.oidCalendario,
+        oidDepartamento: this.oidDepartamento,
+        page: 0,
+        size: 1000,
+      };
+
+      this.seleccionadosService.getSeleccionados(filtros).subscribe({
+        next: (response) => {
+          if (response.codigo >= 200 && response.codigo < 300) {
+            const ids = response.data.content.map(
+              (sel: any) => sel.usuario.oidUsuario,
+            );
+            resolve(ids);
+          } else {
+            resolve([]);
+          }
+        },
+        error: () => resolve([]),
+      });
+    });
+  }
+
   confirmar(): void {
     if (this.seleccionadoForm.invalid) {
       this.seleccionadoForm.markAllAsTouched();
       this.toastr.warning(
         'Por favor, seleccione un usuario',
-        'Formulario Incompleto'
+        'Formulario Incompleto',
       );
       return;
     }
