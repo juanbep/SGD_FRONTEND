@@ -147,7 +147,7 @@ export class StepInfoBasicaComponent implements OnInit, OnChanges {
     this.formularioValido.emit(this.formulario.valid);
   }
 
-  // ===== NUEVO: Actualizar estado del formulario (habilitar/deshabilitar) =====
+  // ===== Actualizar estado del formulario (habilitar/deshabilitar) =====
   private actualizarEstadoFormulario(): void {
     if (!this.formulario) return;
 

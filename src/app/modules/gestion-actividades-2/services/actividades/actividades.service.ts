@@ -54,7 +54,7 @@ export class ActividadesService {
       .pipe(catchError(this.handleError));
   }
 
-  // NUEVO: CREATE - Múltiples actividades en lote
+  // Múltiples actividades en lote
   createActividadesEnLote(
     actividadesData: CreateActividadDTO[]
   ): Observable<CreateActividadesBatchResponse> {

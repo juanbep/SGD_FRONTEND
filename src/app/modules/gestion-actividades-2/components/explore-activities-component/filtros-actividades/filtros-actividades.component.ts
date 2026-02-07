@@ -22,6 +22,11 @@ import {
   ordenarCalendariosPorAnio,
   seleccionarCalendarioAutomatico,
 } from '../../../utils/actividad-utils';
+import { DepartamentoHelperService } from '../../../../gestion-planes/services';
+import {
+  getUserRoles,
+  isUserDataAvailable,
+} from '../../../../auth/utils/user-storage.utils';
 
 @Component({
   selector: 'app-filtros-actividades',
@@ -41,6 +46,7 @@ export class FiltrosActividadesComponent implements OnInit {
   private usuariosConActividadesHelper = inject(
     UsuariosConActividadesHelperService,
   );
+  private departamentoHelper = inject(DepartamentoHelperService);
   private toastr = inject(ToastrService);
 
   // Dropdowns
@@ -55,11 +61,13 @@ export class FiltrosActividadesComponent implements OnInit {
     especial?: boolean;
   }[] = [];
   usuariosDropdown: { value: number | string; label: string }[] = [];
+  departamentosDropdown: { value: number; label: string }[] = [];
 
   // Loading states
   loadingCalendarios = false;
   loadingTiposActividad = false;
   loadingUsuarios = false;
+  loadingDepartamentos = false;
 
   // Estados para el dropdown
   readonly estadosDropdown = ESTADOS_ACTIVIDAD_FILTRO;
@@ -77,23 +85,44 @@ export class FiltrosActividadesComponent implements OnInit {
   };
 
   filtroResponsable: string = '';
+  esSecretario: boolean = false;
 
   ngOnInit(): void {
+    this.detectarRolSecretario();
     this.filters.oidDepartamento = this.oidDepartamento;
     this.cargarFiltrosIniciales();
   }
 
+  private detectarRolSecretario(): void {
+    if (isUserDataAvailable()) {
+      const roles = getUserRoles();
+      const rolesSecretario = [
+        'SECRETARIA/O FACULTAD',
+        'SECRETARIO',
+        'SECRETARIA',
+      ];
+      this.esSecretario = roles.some((rol) => rolesSecretario.includes(rol));
+    }
+  }
+
   /**
-   * Carga calendarios, tipos y usuarios en paralelo
+   * Carga calendarios, tipos, departamentos (si es secretario) y usuarios en paralelo
    */
   private cargarFiltrosIniciales(): void {
     const cargaCalendarios$ = from(this.loadCalendarios());
     const cargaTipos$ = from(this.loadTiposActividad());
 
-    forkJoin({
+    // Si es secretario en modo visualizar, cargar departamentos
+    const observables: any = {
       calendarios: cargaCalendarios$,
       tipos: cargaTipos$,
-    }).subscribe({
+    };
+
+    if (this.esSecretario && this.modo === 'visualizar') {
+      observables.departamentos = from(this.loadDepartamentos());
+    }
+
+    forkJoin(observables).subscribe({
       next: () => {
         // Cargar usuarios solo si hay departamento
         if (this.filters.oidDepartamento) {
@@ -112,6 +141,33 @@ export class FiltrosActividadesComponent implements OnInit {
         );
       },
     });
+  }
+
+  async loadDepartamentos(): Promise<void> {
+    try {
+      this.loadingDepartamentos = true;
+      const departamentosCompletos =
+        await this.departamentoHelper.getAllForDropdown();
+
+      this.departamentosDropdown = departamentosCompletos.map((dept) => ({
+        value: dept.value,
+        label: dept.label,
+      }));
+
+      // Si no hay departamento seleccionado, seleccionar el primero automáticamente
+      if (
+        !this.filters.oidDepartamento &&
+        this.departamentosDropdown.length > 0
+      ) {
+        this.filters.oidDepartamento = this.departamentosDropdown[0].value;
+      }
+    } catch (error) {
+      console.error('Error al cargar departamentos:', error);
+      this.toastr.error('Error al cargar la lista de departamentos');
+      this.departamentosDropdown = [];
+    } finally {
+      this.loadingDepartamentos = false;
+    }
   }
 
   async loadCalendarios(): Promise<void> {
@@ -210,6 +266,19 @@ export class FiltrosActividadesComponent implements OnInit {
     }
   }
 
+  // Cuando el secretario cambia de departamento
+  onDepartamentoChange(): void {
+    // Limpiar el filtro de responsable
+    this.filtroResponsable = '';
+
+    // Recargar usuarios del nuevo departamento
+    if (this.filters.oidDepartamento) {
+      this.loadUsuarios();
+    } else {
+      this.usuariosDropdown = [];
+    }
+  }
+
   aplicarFiltros(): void {
     const filtrosCompletos = {
       ...this.filters,
@@ -236,6 +305,10 @@ export class FiltrosActividadesComponent implements OnInit {
     this.filters.oidCalendario = seleccionarCalendarioAutomatico(
       this.calendariosDropdown,
     );
+
+    if (this.filters.oidDepartamento) {
+      this.loadUsuarios();
+    }
 
     this.onLimpiarFiltros.emit();
   }

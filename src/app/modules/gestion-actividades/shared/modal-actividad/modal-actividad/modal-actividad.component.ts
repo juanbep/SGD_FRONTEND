@@ -208,7 +208,6 @@ export class ModalActividadComponent implements OnInit {
     }
   }
 
-  // ========== NUEVO MÉTODO ==========
   private async cargarUsuarios(): Promise<void> {
     this.cargandoUsuarios.set(true);
     try {
@@ -256,7 +255,6 @@ export class ModalActividadComponent implements OnInit {
     }
   }
 
-  // ========== NUEVO MÉTODO ==========
   async agregarUsuario(): Promise<void> {
     if (
       !this.usuarioSeleccionado ||

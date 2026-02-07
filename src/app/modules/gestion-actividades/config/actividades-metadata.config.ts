@@ -15,8 +15,8 @@ export interface AtributoMetadata {
   mostrarEnTabla: boolean;
   orden: number;
   placeholder?: string;
-  esRepetible?: boolean; // NUEVO
-  grupoRepetible?: string; // NUEVO
+  esRepetible?: boolean;
+  grupoRepetible?: string; 
   opcionesSelect?: {
     endpoint?: string;
     estatico?: { value: string; label: string }[];

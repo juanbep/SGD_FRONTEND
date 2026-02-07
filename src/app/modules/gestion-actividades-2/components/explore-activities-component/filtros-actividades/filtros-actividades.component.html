@@ -41,7 +41,7 @@
                   'badge-activo': item.estado === 'ACTIVO',
                   'badge-pendiente': item.estado === 'PENDIENTE',
                   'badge-deshabilitado': item.estado === 'DESHABILITADO',
-                  'badge-aprobado': item.estado === 'APROBADO'
+                  'badge-aprobado': item.estado === 'APROBADO',
                 }"
               >
                 {{ item.estado }}
@@ -58,7 +58,7 @@
                   'badge-activo': item.estado === 'ACTIVO',
                   'badge-pendiente': item.estado === 'PENDIENTE',
                   'badge-deshabilitado': item.estado === 'DESHABILITADO',
-                  'badge-aprobado': item.estado === 'APROBADO'
+                  'badge-aprobado': item.estado === 'APROBADO',
                 }"
               >
                 {{ item.estado }}
@@ -67,6 +67,31 @@
           </ng-template>
         </ng-select>
         <small class="text-muted">Filtrar por calendario académico</small>
+      </div>
+
+      <!-- Filtro por Departamento (solo para Secretario en modo visualizar) -->
+      <div
+        class="col-xl-3 col-lg-4 col-md-6"
+        *ngIf="esSecretario && modo === 'visualizar'"
+      >
+        <label class="form-label fw-bold">
+          <i class="fas fa-building me-1"></i>Departamento:
+        </label>
+        <ng-select
+          [items]="departamentosDropdown"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filters.oidDepartamento"
+          (change)="onDepartamentoChange()"
+          [loading]="loadingDepartamentos"
+          [disabled]="loadingDepartamentos"
+          placeholder="Seleccione un departamento"
+          [clearable]="false"
+          notFoundText="No hay departamentos disponibles"
+          loadingText="Cargando departamentos..."
+        >
+        </ng-select>
+        <small class="text-muted">Filtrar por departamento académico</small>
       </div>
 
       <!-- Filtro por Tipo de Actividad -->
