@@ -13,10 +13,10 @@ import { forkJoin, from } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CalendarioHelperService } from '../../../../academic-calendar-management/services/calendario/calendario-helper.service';
 import { TiposActividadHelperService } from '../../../services/tiposActividades/tipos-actividad-helper.service';
-import { UsuariosConActividadesHelperService } from '../../../../sgd-users-management/services';
+import { UsuariosConActividadesHelperService } from '../../../../gestion-usuarios/services';
 import { EstadoCalendario } from '../../../../academic-calendar-management/models';
 import { ActividadFilters } from '../../../models';
-import { UsuariosConActividadesFilters } from '../../../../sgd-users-management/models';
+import { UsuariosConActividadesFilters } from '../../../../gestion-usuarios/models';
 import {
   ESTADOS_ACTIVIDAD_FILTRO,
   ordenarCalendariosPorAnio,
@@ -39,7 +39,7 @@ export class FiltrosActividadesComponent implements OnInit {
   private calendarioHelper = inject(CalendarioHelperService);
   private tiposActividadHelper = inject(TiposActividadHelperService);
   private usuariosConActividadesHelper = inject(
-    UsuariosConActividadesHelperService
+    UsuariosConActividadesHelperService,
   );
   private toastr = inject(ToastrService);
 
@@ -108,7 +108,7 @@ export class FiltrosActividadesComponent implements OnInit {
       error: (error) => {
         console.error('Error cargando filtros iniciales:', error);
         this.toastr.error(
-          'Error al cargar los filtros. Intente recargar la página.'
+          'Error al cargar los filtros. Intente recargar la página.',
         );
       },
     });
@@ -121,13 +121,13 @@ export class FiltrosActividadesComponent implements OnInit {
         await this.calendarioHelper.getAllForDropdown();
 
       const calendariosFiltrados = calendariosCompletos.filter(
-        (calendario) => calendario.estado !== 'DESHABILITADO'
+        (calendario) => calendario.estado !== 'DESHABILITADO',
       );
 
       this.calendariosDropdown =
         ordenarCalendariosPorAnio(calendariosFiltrados);
       this.filters.oidCalendario = seleccionarCalendarioAutomatico(
-        this.calendariosDropdown
+        this.calendariosDropdown,
       );
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
@@ -234,7 +234,7 @@ export class FiltrosActividadesComponent implements OnInit {
 
     this.filtroResponsable = '';
     this.filters.oidCalendario = seleccionarCalendarioAutomatico(
-      this.calendariosDropdown
+      this.calendariosDropdown,
     );
 
     this.onLimpiarFiltros.emit();

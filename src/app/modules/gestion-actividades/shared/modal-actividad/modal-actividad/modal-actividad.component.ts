@@ -26,7 +26,7 @@ import {
   AtributoMetadata,
   SubtipoActividadConfig,
 } from '../../../config/actividades-metadata.config';
-import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
+import { UsuarioDepartamentoHelperService } from '../../../../gestion-usuarios/services';
 import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
 import {
   CargosActividadHelperService,

@@ -7,7 +7,7 @@ import {
   Output,
 } from '@angular/core';
 import { CreateSeleccionadoDTO } from '../../models';
-import { UsuarioHelperService } from '../../../sgd-users-management/services';
+import { UsuarioHelperService } from '../../../gestion-usuarios/services';
 import { ToastrService } from 'ngx-toastr';
 import {
   FormBuilder,

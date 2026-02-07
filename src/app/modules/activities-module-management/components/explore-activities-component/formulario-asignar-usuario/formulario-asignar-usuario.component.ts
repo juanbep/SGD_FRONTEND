@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
 import { UsuarioActividadAsignacion, ValidarCupoData } from '../../../models';
-import { UsuarioDepartamentoHelperService } from '../../../../sgd-users-management/services';
+import { UsuarioDepartamentoHelperService } from '../../../../gestion-usuarios/services';
 import {
   CargosActividadHelperService,
   UsuarioActividadCalendarioHelperService,
