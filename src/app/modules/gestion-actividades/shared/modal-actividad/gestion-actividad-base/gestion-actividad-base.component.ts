@@ -15,15 +15,14 @@ import {
 } from '../../../models/actividad.model';
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
 import { CalendarioHelperService } from '../../../../gestion-calendarios/services';
-import { ModalUsuariosComponent } from '../../../../activities-module-management/components/explore-activities-component/modal-usuarios/modal-usuarios.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { ActividadHelperService } from '../../../../activities-module-management/services';
+import { ActividadHelperService } from '../../../../gestion-actividades-2/services';
 import { ToastrService } from 'ngx-toastr';
 import {
   ESTADOS_ACTIVIDAD,
   getEstadoBadgeClass,
   getEstadoNombre,
-} from '../../../../activities-module-management/utils/actividad-utils';
+} from '../../../../gestion-actividades-2/utils/actividad-utils';
 import { loadJson, saveJson } from '../../../utils/storage-utils';
 
 export interface Calendario {

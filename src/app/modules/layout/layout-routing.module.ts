@@ -77,7 +77,7 @@ const routes: Routes = [
       {
         path: 'gestion-actividades-docente',
         loadChildren: () =>
-          import('../activities-module-management/activities-management-routing.module').then(
+          import('../gestion-actividades-2/activities-management-routing.module').then(
             (m) => m.ActivitiesManagementRoutingModule,
           ),
         title: 'Gestión de Activades Docente',

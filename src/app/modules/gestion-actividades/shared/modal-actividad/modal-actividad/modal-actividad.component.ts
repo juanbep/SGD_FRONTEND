@@ -31,14 +31,14 @@ import { getUserDepartmentId } from '../../../../auth/utils/user-storage.utils';
 import {
   CargosActividadHelperService,
   UsuarioActividadCalendarioHelperService,
-} from '../../../../activities-module-management/services';
+} from '../../../../gestion-actividades-2/services';
 import {
   ESTADOS_ACTIVIDAD,
   ESTADOS_ACTIVIDAD_DROPDOWN,
-} from '../../../../activities-module-management/utils/actividad-utils';
+} from '../../../../gestion-actividades-2/utils/actividad-utils';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ToastrService } from 'ngx-toastr';
-import { ValidarCupoData } from '../../../../activities-module-management/models';
+import { ValidarCupoData } from '../../../../gestion-actividades-2/models';
 
 interface UsuarioSelect {
   oid: number;
