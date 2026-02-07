@@ -1,0 +1,421 @@
+<!-- Header del paso -->
+<div class="step-header mb-4">
+  <h5 class="mb-2">
+    <i class="fas fa-info-circle me-2 text-primary"></i>
+    Paso 1: Información Básica
+  </h5>
+  <p class="text-muted mb-0">
+    Completa la información básica del calendario académico. Los campos con (*)
+    son obligatorios.
+  </p>
+</div>
+
+<!-- Mensaje cuando el calendario ya está creado -->
+<div
+  *ngIf="calendarioYaCreado"
+  class="alert alert-success d-flex align-items-center mb-4"
+  role="alert"
+>
+  <i class="fas fa-check-circle fa-2x me-3"></i>
+  <div>
+    <strong>Calendario creado exitosamente</strong>
+    <p class="mb-0 mt-1">
+      El calendario ya ha sido creado. Puedes avanzar al siguiente paso para
+      gestionar las fechas.
+    </p>
+  </div>
+</div>
+
+<!-- Mensaje informativo (solo si NO está creado) -->
+<div
+  *ngIf="!calendarioYaCreado"
+  class="alert alert-info d-flex align-items-start"
+  role="alert"
+>
+  <i class="fas fa-lightbulb fa-2x me-3"></i>
+  <div>
+    <strong>Información importante:</strong>
+    <ul class="mb-0 mt-2">
+      <li>Al crear el calendario, podrás avanzar al siguiente paso</li>
+      <li>
+        Verifica que no exista ya un calendario con el mismo año y periodo
+      </li>
+      <li>
+        Las fechas predeterminadas se agregan al calendario automáticamente
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Formulario -->
+<form [formGroup]="formulario" class="wizard-form">
+  <div class="row">
+    <!-- Año Calendario -->
+    <div class="col-md-6 mb-3">
+      <label for="anioCalendario" class="form-label fw-bold">
+        <i class="fas fa-calendar me-2 text-primary"></i>
+        Año académico *
+      </label>
+      <div class="input-group">
+        <input
+          type="number"
+          id="anioCalendario"
+          class="form-control"
+          formControlName="anioCalendario"
+          [class.is-invalid]="
+            anioCalendarioControl?.invalid && anioCalendarioControl?.touched
+          "
+          placeholder="Ej: {{ ANIO_MINIMO }}"
+          [min]="ANIO_MINIMO"
+          [max]="ANIO_MAXIMO"
+        />
+      </div>
+
+      <!-- Mensajes de validación debajo del input -->
+      <div
+        *ngIf="anioCalendarioControl?.invalid && anioCalendarioControl?.touched"
+      >
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="anioCalendarioControl?.hasError('required')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El año académico es requerido
+        </small>
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="anioCalendarioControl?.hasError('min')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El año no puede ser menor a {{ ANIO_MINIMO }}
+        </small>
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="anioCalendarioControl?.hasError('max')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El año no puede ser mayor a {{ ANIO_MAXIMO }}
+        </small>
+      </div>
+
+      <small
+        class="form-text text-muted d-block mt-1"
+        *ngIf="
+          !anioCalendarioControl?.invalid || !anioCalendarioControl?.touched
+        "
+      >
+        <i class="fas fa-info-circle me-1"></i>
+        Año al que corresponde el calendario académico
+      </small>
+    </div>
+
+    <!-- Periodo Académico -->
+    <div class="col-md-6 mb-3">
+      <label for="numeroCalendario" class="form-label fw-bold">
+        <i class="fas fa-list-ol me-2 text-primary"></i>
+        Periodo académico *
+      </label>
+      <input
+        type="number"
+        id="numeroCalendario"
+        class="form-control"
+        formControlName="numeroCalendario"
+        [class.is-invalid]="
+          numeroCalendarioControl?.invalid && numeroCalendarioControl?.touched
+        "
+        placeholder="Ej: 1"
+        [min]="1"
+        step="1"
+      />
+
+      <!-- Mensajes de validación -->
+      <div
+        *ngIf="
+          numeroCalendarioControl?.invalid && numeroCalendarioControl?.touched
+        "
+      >
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="numeroCalendarioControl?.hasError('required')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El periodo académico es requerido
+        </small>
+        <small
+          class="text-danger d-block mt-1"
+          *ngIf="numeroCalendarioControl?.hasError('min')"
+        >
+          <i class="fas fa-exclamation-circle me-1"></i>
+          El periodo debe ser mayor o igual a 1
+        </small>
+      </div>
+
+      <small
+        class="form-text text-muted d-block mt-1"
+        *ngIf="
+          !numeroCalendarioControl?.invalid || !numeroCalendarioControl?.touched
+        "
+      >
+        <i class="fas fa-info-circle me-1"></i>
+        Número del periodo académico (1, 2, 3, etc.)
+      </small>
+    </div>
+  </div>
+
+  <!-- NUEVA FILA: Horas Planta y Horas Ocasionales -->
+  <div class="row">
+    <!-- Horas Planta -->
+    <div class="col-md-6 mb-3">
+      <label for="horasPlanta" class="form-label fw-bold">
+        <i class="fas fa-clock me-2 text-primary"></i>
+        Horas Planta *
+      </label>
+      <input
+        type="number"
+        id="horasPlanta"
+        class="form-control"
+        formControlName="horasPlanta"
+        [class.is-invalid]="
+          horasPlantaControl?.invalid && horasPlantaControl?.touched
+        "
+        placeholder="Ej: 25"
+        [min]="HORAS_P_MINIMO"
+        [max]="HORAS_P_MAXIMO"
+        step="0.1"
+      />
+      <div
+        class="invalid-feedback"
+        *ngIf="horasPlantaControl?.invalid && horasPlantaControl?.touched"
+      >
+        <span *ngIf="horasPlantaControl?.hasError('required')">
+          Las horas planta son requeridas
+        </span>
+        <span
+          *ngIf="
+            horasPlantaControl?.hasError('min') ||
+            horasPlantaControl?.hasError('max')
+          "
+        >
+          Las horas planta deben estar entre {{ HORAS_P_MINIMO }} y
+          {{ HORAS_P_MAXIMO }}
+        </span>
+      </div>
+      <small class="form-text text-muted">
+        <i class="fas fa-info-circle me-1"></i>
+        Horas asignadas a docentes de planta
+      </small>
+    </div>
+
+    <!-- Horas Ocasionales -->
+    <div class="col-md-6 mb-3">
+      <label for="horasOcasionales" class="form-label fw-bold">
+        <i class="fas fa-user-clock me-2 text-primary"></i>
+        Horas Ocasionales *
+      </label>
+      <input
+        type="number"
+        id="horasOcasionales"
+        class="form-control"
+        formControlName="horasOcasionales"
+        [class.is-invalid]="
+          horasOcasionalesControl?.invalid && horasOcasionalesControl?.touched
+        "
+        placeholder="Ej: 20.8"
+        [min]="HORAS_O_MINIMO"
+        [max]="HORAS_O_MAXIMO"
+        step="0.1"
+      />
+      <div
+        class="invalid-feedback"
+        *ngIf="
+          horasOcasionalesControl?.invalid && horasOcasionalesControl?.touched
+        "
+      >
+        <span *ngIf="horasOcasionalesControl?.hasError('required')">
+          Las horas ocasionales son requeridas
+        </span>
+        <span
+          *ngIf="
+            horasOcasionalesControl?.hasError('min') ||
+            horasOcasionalesControl?.hasError('max')
+          "
+        >
+          Las horas ocasionales deben estar entre {{ HORAS_O_MINIMO }} y
+          {{ HORAS_O_MAXIMO }}
+        </span>
+      </div>
+      <small class="form-text text-muted">
+        <i class="fas fa-info-circle me-1"></i>
+        Horas asignadas a docentes ocasionales
+      </small>
+    </div>
+  </div>
+
+  <!-- Observación / Acuerdo académico (toda la fila) -->
+  <div class="row">
+    <div class="col-12 mb-3">
+      <label for="observacion" class="form-label fw-bold">
+        <i class="fas fa-comment-alt me-2 text-primary"></i>
+        Observación / Acuerdo académico
+      </label>
+      <textarea
+        id="observacion"
+        class="form-control"
+        formControlName="observacion"
+        rows="4"
+        [class.is-invalid]="
+          observacionControl?.invalid && observacionControl?.touched
+        "
+        placeholder="Ej: Calendario aprobado según Acuerdo N° 123 del Consejo Académico..."
+        maxlength="500"
+      ></textarea>
+      <div class="d-flex justify-content-between">
+        <small class="form-text text-muted">
+          <i class="fas fa-info-circle me-1"></i>
+          Información adicional o referencia al acuerdo académico
+        </small>
+        <small class="text-muted">
+          {{ observacionControl?.value?.length || 0 }} / 500
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista previa minimalista (esquina superior derecha) -->
+  <div class="position-relative">
+    <div
+      class="position-absolute top-0 end-0 bg-light border rounded px-3 py-2 shadow-sm"
+      style="z-index: 10"
+    >
+      <small class="text-muted d-block mb-1">
+        <i class="fas fa-tag me-1"></i>
+        Vista previa:
+      </small>
+      <div style="font-size: 0.95rem; font-weight: 600; color: #000066">
+        <span
+          *ngIf="anioCalendarioControl?.value && numeroCalendarioControl?.value"
+        >
+          Calendario {{ anioCalendarioControl?.value }}-{{
+            numeroCalendarioControl?.value
+          }}
+        </span>
+        <span
+          *ngIf="
+            !anioCalendarioControl?.value || !numeroCalendarioControl?.value
+          "
+          class="text-muted"
+        >
+          Calendario XXXX-X
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón para consultar calendarios existentes -->
+  <div class="row">
+    <div class="col-12 mb-3">
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+        (click)="abrirModalCalendarios()"
+      >
+        <i class="fas fa-list me-2"></i>
+        Consultar calendarios existentes
+      </button>
+      <small class="form-text text-muted d-block mt-1">
+        <i class="fas fa-info-circle me-1"></i>
+        Verifica qué calendarios ya están creados en el sistema
+      </small>
+    </div>
+  </div>
+
+  <!-- Indicador de validación -->
+  <div
+    *ngIf="validandoCalendario"
+    class="alert alert-warning d-flex align-items-center"
+  >
+    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+    <span>Verificando que no exista un calendario duplicado...</span>
+  </div>
+</form>
+
+<!-- Modal de Calendarios Existentes -->
+<div
+  *ngIf="mostrarModalCalendarios()"
+  class="modal fade show d-block"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #000066">
+        <h5 class="modal-title text-white">
+          <i class="fas fa-calendar-alt me-2"></i>
+          Calendarios Existentes
+        </h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          (click)="cerrarModalCalendarios()"
+        ></button>
+      </div>
+
+      <div class="modal-body" style="max-height: 400px; overflow-y: auto">
+        <div *ngIf="cargandoCalendarios()" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="text-muted mt-2 mb-0">Cargando calendarios...</p>
+        </div>
+
+        <div
+          *ngIf="!cargandoCalendarios() && calendariosExistentes().length === 0"
+          class="text-center py-4"
+        >
+          <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+          <p class="text-muted mb-0">No hay calendarios creados aún</p>
+        </div>
+
+        <div
+          *ngIf="!cargandoCalendarios() && calendariosExistentes().length > 0"
+        >
+          <p class="text-muted mb-3">
+            <i class="fas fa-info-circle me-1"></i>
+            Total de calendarios:
+            <strong>{{ calendariosExistentes().length }}</strong>
+          </p>
+
+          <div class="list-group">
+            <div
+              *ngFor="let calendario of calendariosExistentes()"
+              class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <i class="fas fa-calendar me-2 text-primary"></i>
+                <strong
+                  >Calendario {{ calendario.anio }}-{{
+                    calendario.periodo
+                  }}</strong
+                >
+              </div>
+              <span class="badge bg-secondary">
+                Periodo {{ calendario.periodo }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cerrarModalCalendarios()"
+        >
+          <i class="fas fa-times me-2"></i>
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="mostrarModalCalendarios()" class="modal-backdrop fade show"></div>

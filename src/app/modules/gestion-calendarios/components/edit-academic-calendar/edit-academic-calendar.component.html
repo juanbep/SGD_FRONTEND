@@ -1,0 +1,122 @@
+<div class="view-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="page-title">{{ tituloCalendario() }}</h3>
+    <a
+      class="btn btn-outline-secondary"
+      [routerLink]="['/app/gestion-calendario-academico/gestionar']"
+    >
+      <i class="fas fa-arrow-left me-2"></i>Volver
+    </a>
+  </div>
+
+  <app-detalle-calendario
+    [calendario]="calendario()"
+    (calendarioActualizado)="onCalendarioActualizado($event)"
+  ></app-detalle-calendario>
+
+  <div class="mb-4"></div>
+
+  <div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0 fw-bold d-flex align-items-center">
+        <i class="fas fa-calendar-check me-2" style="color: #f8ae15"></i>
+        Fechas del calendario
+      </h5>
+      <button
+        type="button"
+        class="btn btn-light btn-sm"
+        (click)="abrirModalAgregar()"
+      >
+        <i class="fas fa-plus me-2"></i>Agregar fecha
+      </button>
+    </div>
+
+    <div
+      class="card-body p-0"
+      *ngIf="fechasCalendario().length > 0; else sinFechas"
+    >
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width: 50%"><i class="fas fa-tag me-2"></i>Nombre</th>
+              <th class="text-center align-middle" style="width: 40%">
+                <i class="fas fa-calendar-day me-2"></i>Fecha
+              </th>
+              <th class="text-center align-middle" style="width: 10%">
+                <i class="fas fa-cogs me-2"></i>Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fecha of fechasCalendario()">
+              <td [ngClass]="{ 'fw-bold': fecha.tipo === 'RESALTADAS' }">
+                {{ fecha.nombre }}
+              </td>
+              <td class="text-center align-middle">
+                {{ formatoFecha(fecha) }}
+              </td>
+              <td class="text-center align-middle">
+                <div class="action-buttons-wrapper">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                    (click)="abrirModalEditar(fecha)"
+                    title="Editar"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="abrirModalEliminar(fecha)"
+                    title="Eliminar"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #sinFechas>
+      <div class="card-body">
+        <div
+          class="alert alert-info d-flex align-items-center mb-0"
+          role="alert"
+        >
+          <i class="fas fa-info-circle fa-2x me-3"></i>
+          <div>
+            <h6 class="alert-heading mb-1">No hay fechas registradas</h6>
+            <p class="mb-0">
+              Este calendario aún no tiene fechas asociadas. Puede agregar
+              fechas haciendo clic en el botón "Agregar fecha".
+            </p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <app-modal-eliminar-fecha
+    [fecha]="fechaAEliminar()"
+    [visible]="modalEliminarVisible()"
+    (onConfirmar)="confirmarEliminarFecha()"
+    (onCancelar)="cerrarModalEliminar()"
+  ></app-modal-eliminar-fecha>
+  <app-modal-agregar-fecha
+    [visible]="modalAgregarVisible()"
+    [oidCalendario]="calendario()?.oidcalendario || 0"
+    [anioCalendario]="calendario()?.anioCalendario || 0"
+    [numeroCalendario]="calendario()?.numeroCalendario || 0"
+    [guardando]="guardandoFecha()"
+    [fechaAEditar]="fechaAEditar()"
+    (onConfirmar)="confirmarAgregarFecha($event)"
+    (onConfirmarEdicion)="confirmarEditarFecha($event)"
+    (onCancelar)="cerrarModalAgregar()"
+    (onCrearNombreFecha)="handleCrearNombreFecha($event)"
+  ></app-modal-agregar-fecha>
+</div>

@@ -1,0 +1,41 @@
+<div class="view-container">
+  <header class="title-two">Gestionar Calendarios Académicos</header>
+
+  <section class="messages-container">
+    <img
+      [src]="'assets/icons/messages/calendar-edit.svg'"
+      alt="Icono de profesor"
+    />
+    <span class="text-body-heavy">
+      En esta sección puede gestionar los calendarios académicos: editar o
+      eliminar registros existentes.
+    </span>
+  </section>
+
+  <section class="messages-container mt-4">
+    <img
+      [src]="'assets/icons/messages/warning.svg'"
+      alt="Icono de advertencia"
+    />
+    <span class="text-body-heavy text-warning">
+      La eliminación de un calendario es permanente y no se puede deshacer.
+    </span>
+  </section>
+
+  <div><br /></div>
+
+  <!-- Componente en modo gestionar -->
+  <app-list-academic-calendars
+    [modo]="'gestionar'"
+    (onEditar)="onEditarCalendario($event)"
+    (onEliminar)="onEliminarCalendario($event)"
+  ></app-list-academic-calendars>
+</div>
+
+<!-- Modal Eliminar Calendario -->
+<app-modal-eliminar-calendario
+  [calendario]="calendarioAEliminar()"
+  [visible]="modalEliminarVisible()"
+  (onConfirmar)="confirmarEliminarCalendario()"
+  (onCancelar)="cerrarModalEliminar()"
+></app-modal-eliminar-calendario>

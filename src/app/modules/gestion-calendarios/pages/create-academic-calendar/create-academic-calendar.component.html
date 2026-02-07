@@ -1,0 +1,87 @@
+<div class="view-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="page-title">
+      <i class="fas fa-calendar-plus me-2"></i>
+      Crear Nuevo Calendario Académico
+    </h3>
+    <button class="btn btn-outline-secondary" (click)="cancel()">
+      <i class="fas fa-times me-2"></i>Cancelar
+    </button>
+  </div>
+
+  <app-stepper
+    class="mb-4"
+    [pasoActual]="pasoActual()"
+    [pasosCompletados]="pasosCompletados()"
+    [titulosPasos]="TITULOS_PASOS"
+    (irAPaso)="irAPaso($event)"
+  ></app-stepper>
+
+  <div class="wizard-content card shadow-sm p-4 mb-4">
+    <app-step-info-basica
+      *ngIf="pasoActual() === 1"
+      [calendarioYaCreado]="calendarioYaCreado()"
+      (formularioValido)="alCambiarValidezPaso1($event)"
+    ></app-step-info-basica>
+
+    <app-step-fechas
+      *ngIf="pasoActual() === 2"
+      [oidCalendario]="oidCalendarioCreado()"
+    ></app-step-fechas>
+  </div>
+
+  <div class="wizard-footer d-flex justify-content-between">
+    <button
+      class="btn btn-secondary"
+      (click)="pasoAnterior()"
+      [disabled]="pasoActual() === 1"
+    >
+      <i class="fas fa-arrow-left me-2"></i>Anterior
+    </button>
+
+    <button
+      *ngIf="pasoActual() === 1"
+      class="btn btn-success"
+      (click)="
+        alCrearCalendarioPaso1(stepInfoBasica.obtenerDatosParaCreacion())
+      "
+      [disabled]="
+        !paso1Valido() || creandoCalendario() || oidCalendarioCreado() !== null
+      "
+    >
+      <span [hidden]="creandoCalendario()">
+        <i class="fas fa-check-circle me-2"></i>
+        {{
+          oidCalendarioCreado() !== null
+            ? "Calendario Creado ✓"
+            : "Crear Calendario"
+        }}
+      </span>
+      <span [hidden]="!creandoCalendario()">
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+        ></span>
+        Creando...
+      </span>
+    </button>
+
+    <button
+      *ngIf="pasoActual() === 1"
+      class="btn btn-primary"
+      (click)="siguientePaso()"
+      [disabled]="!puedeAvanzarPaso1()"
+    >
+      Siguiente
+      <i class="fas fa-arrow-right ms-2"></i>
+    </button>
+
+    <button
+      *ngIf="pasoActual() === 2"
+      class="btn btn-success"
+      (click)="finalizar()"
+    >
+      <i class="fas fa-check me-2"></i>Finalizar
+    </button>
+  </div>
+</div>

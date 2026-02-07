@@ -1,0 +1,17 @@
+<div class="wizard-stepper">
+  <div class="stepper-container">
+    <div
+      *ngFor="let titulo of titulosPasos; let i = index"
+      class="stepper-item"
+      [class.active]="esPasoActivo(i)"
+      [class.completed]="esPasoCompletado(i)"
+      (click)="seleccionarPaso(i + 1)"
+    >
+      <div class="stepper-circle">
+        <i class="fas fa-check" *ngIf="esPasoCompletado(i)"></i>
+        <span *ngIf="!esPasoCompletado(i)">{{ i + 1 }}</span>
+      </div>
+      <div class="stepper-label">{{ titulo }}</div>
+    </div>
+  </div>
+</div>

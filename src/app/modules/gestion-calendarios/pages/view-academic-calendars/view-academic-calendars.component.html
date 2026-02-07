@@ -1,0 +1,30 @@
+<div class="view-container">
+  <header class="title-two">Consulta de Calendarios Académicos</header>
+
+  <section class="messages-container">
+    <img
+      [src]="'assets/icons/messages/calendar-view.svg'"
+      alt="Icono de profesor"
+    />
+    <span class="text-body-heavy">
+      A continuación encontrará todos los calendarios académicos con opciones de
+      filtrado y búsqueda.
+    </span>
+  </section>
+
+  <section class="messages-container mt-4">
+    <img
+      [src]="'assets/icons/messages/calendar-search.svg'"
+      alt="Icono de profesor"
+    />
+    <span class="text-body-heavy">
+      Utilice la opción "Ver" para consultar los detalles de cada calendario
+      académico.
+    </span>
+  </section>
+  <div><br /></div>
+  <!-- Componente en modo visualizar -->
+  <app-list-academic-calendars
+    [modo]="'visualizar'"
+  ></app-list-academic-calendars>
+</div>
