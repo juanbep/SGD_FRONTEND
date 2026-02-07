@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { NecesidadFilters } from '../../models';
 import { ToastrService } from 'ngx-toastr';
-import { CalendarioHelperService } from '../../../academic-calendar-management/services';
-import { EstadoCalendario } from '../../../academic-calendar-management/models';
+import { CalendarioHelperService } from '../../../gestion-calendarios/services';
+import { EstadoCalendario } from '../../../gestion-calendarios/models';
 import { getUserProgramaId } from '../../../auth/utils/user-storage.utils';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';

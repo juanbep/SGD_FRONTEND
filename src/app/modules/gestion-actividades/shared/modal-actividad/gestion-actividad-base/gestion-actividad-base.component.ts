@@ -14,7 +14,7 @@ import {
   CreateActividadDto,
 } from '../../../models/actividad.model';
 import { SubtipoActividadConfig } from '../../../config/actividades-metadata.config';
-import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
+import { CalendarioHelperService } from '../../../../gestion-calendarios/services';
 import { ModalUsuariosComponent } from '../../../../activities-module-management/components/explore-activities-component/modal-usuarios/modal-usuarios.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ActividadHelperService } from '../../../../activities-module-management/services';

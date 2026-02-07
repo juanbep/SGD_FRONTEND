@@ -1,6 +1,6 @@
 // ========== CONSTANTES PARA DROPDOWNS ==========
 
-import { EstadoCalendario } from '../../academic-calendar-management/models';
+import { EstadoCalendario } from '../../gestion-calendarios/models';
 
 export const SEMESTRES_DISPONIBLES: {
   value: number | string;

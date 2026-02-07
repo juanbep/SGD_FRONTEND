@@ -3,9 +3,9 @@ import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SeleccionadoFilters } from '../../models';
-import { CalendarioHelperService } from '../../../academic-calendar-management/services';
+import { CalendarioHelperService } from '../../../gestion-calendarios/services';
 import { ToastrService } from 'ngx-toastr';
-import { EstadoCalendario } from '../../../academic-calendar-management/models';
+import { EstadoCalendario } from '../../../gestion-calendarios/models';
 import {
   filtrarCalendariosDeshabilitados,
   getBadgeClass,

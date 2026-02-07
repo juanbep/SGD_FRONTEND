@@ -14,9 +14,9 @@ import {
   seleccionarCalendarioAutomatico,
 } from '../../../utils/actividad-utils';
 import { ActividadDocenciaFilters } from '../../../models';
-import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
+import { CalendarioHelperService } from '../../../../gestion-calendarios/services';
 import { ToastrService } from 'ngx-toastr';
-import { EstadoCalendario } from '../../../../academic-calendar-management/models';
+import { EstadoCalendario } from '../../../../gestion-calendarios/models';
 import { forkJoin, from } from 'rxjs';
 
 @Component({

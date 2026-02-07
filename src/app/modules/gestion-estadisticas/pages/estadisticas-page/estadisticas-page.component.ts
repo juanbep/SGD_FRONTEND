@@ -4,7 +4,7 @@ import { ModalEstadisticasComponent } from '../../components/modal-estadisticas/
 import { getUserDepartmentId } from '../../../auth/utils/user-storage.utils';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CalendarioHelperService } from '../../../academic-calendar-management/services';
+import { CalendarioHelperService } from '../../../gestion-calendarios/services';
 
 @Component({
   selector: 'app-estadisticas-page',

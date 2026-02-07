@@ -1,4 +1,4 @@
-import { EstadoCalendario } from '../../academic-calendar-management/models';
+import { EstadoCalendario } from '../../gestion-calendarios/models';
 import { ActividadResponse, PaginationConfig } from '../models';
 
 /**

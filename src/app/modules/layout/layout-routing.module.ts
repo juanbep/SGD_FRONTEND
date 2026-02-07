@@ -61,7 +61,7 @@ const routes: Routes = [
       {
         path: 'gestion-calendario-academico',
         loadChildren: () =>
-          import('../academic-calendar-management/academic-calendar-management-routing.module').then(
+          import('../gestion-calendarios/academic-calendar-management-routing.module').then(
             (m) => m.AcademicCalendarManagementRoutingModule,
           ),
         title: 'Gestión de calendario académico',

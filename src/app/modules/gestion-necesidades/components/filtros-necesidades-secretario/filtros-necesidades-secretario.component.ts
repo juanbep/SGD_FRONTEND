@@ -9,13 +9,13 @@ import {
   SEMESTRES_DISPONIBLES,
 } from '../../utils/necesidades.utils';
 import { NecesidadFilters } from '../../models';
-import { EstadoCalendario } from '../../../academic-calendar-management/models';
+import { EstadoCalendario } from '../../../gestion-calendarios/models';
 import { ToastrService } from 'ngx-toastr';
 import {
   DepartamentoHelperService,
   ProgramaHelperService,
 } from '../../../gestion-planes/services';
-import { CalendarioHelperService } from '../../../academic-calendar-management/services';
+import { CalendarioHelperService } from '../../../gestion-calendarios/services';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';

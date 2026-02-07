@@ -3,10 +3,10 @@ import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NecesidadFilters } from '../../models';
-import { CalendarioHelperService } from '../../../academic-calendar-management/services';
+import { CalendarioHelperService } from '../../../gestion-calendarios/services';
 import { ProgramaHelperService } from '../../../gestion-planes/services';
 import { ToastrService } from 'ngx-toastr';
-import { EstadoCalendario } from '../../../academic-calendar-management/models';
+import { EstadoCalendario } from '../../../gestion-calendarios/models';
 import {
   ESTADOS_NECESIDAD_DISPONIBLES,
   filtrarCalendariosDeshabilitados,

@@ -11,10 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { forkJoin, from } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { CalendarioHelperService } from '../../../../academic-calendar-management/services/calendario/calendario-helper.service';
+import { CalendarioHelperService } from '../../../../gestion-calendarios/services/calendario/calendario-helper.service';
 import { TiposActividadHelperService } from '../../../services/tiposActividades/tipos-actividad-helper.service';
 import { UsuariosConActividadesHelperService } from '../../../../gestion-usuarios/services';
-import { EstadoCalendario } from '../../../../academic-calendar-management/models';
+import { EstadoCalendario } from '../../../../gestion-calendarios/models';
 import { ActividadFilters } from '../../../models';
 import { UsuariosConActividadesFilters } from '../../../../gestion-usuarios/models';
 import {
