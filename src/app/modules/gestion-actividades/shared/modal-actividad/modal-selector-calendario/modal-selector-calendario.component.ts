@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarioHelperService } from '../../../../academic-calendar-management/services';
+import { CalendarioHelperService } from '../../../../gestion-calendarios/services';
 
 export interface Calendario {
   value: number; // oidcalendario

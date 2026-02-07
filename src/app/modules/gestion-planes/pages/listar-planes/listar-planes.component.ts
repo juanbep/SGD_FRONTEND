@@ -135,7 +135,6 @@ export class ListarPlanesComponent implements OnInit {
     });
   }
 
-  // ===== ORDENAMIENTO ===== ⭐ NUEVO
   onSort(campo: string): void {
     if (this.sortField === campo) {
       // Si es el mismo campo, cambiar dirección

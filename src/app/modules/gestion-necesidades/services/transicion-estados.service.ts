@@ -126,7 +126,6 @@ export class TransicionEstadosService {
 
         case 'EN_REVISION_SECRETARIO_EN_REVISION_JEFE':
           // if (!oidDepartamento) {
-          //   console.log("aquí está el fucking error")
           //   throw new Error('Departamento requerido para esta transición');
           // }
           resultado =

@@ -61,8 +61,6 @@ export class ManagementActivitiesComponentComponent {
     this.editando = true;
 
     try {
-      const resultado = await this.actividadHelperService.update(dto);
-
       this.toastr.success(
         `Actividad "${this.actividadAEditar.actividad.nombreActividad}" actualizada correctamente`,
         'Actualización exitosa'
@@ -70,7 +68,6 @@ export class ManagementActivitiesComponentComponent {
       this.cerrarModalEditar();
       this.activitiesBase.recargarTabla();
     } catch (error: any) {
-      console.error('❌ Error al actualizar:', error);
       const mensajeError =
         error?.error?.mensaje ||
         error?.message ||
