@@ -170,8 +170,8 @@ export class SecretarioNecesidadesComponent implements OnInit {
       return;
     }
 
-    if (!this.filtrosActuales.oidDepartamento) {
-      console.error('No se ha especificado el departamento');
+    if (!this.filtrosActuales.oidPrograma) {
+      console.error('No se ha especificado el programa');
       this.necesidades = [];
       this.totalElements = 0;
       this.limpiarSeleccion();
@@ -296,13 +296,13 @@ export class SecretarioNecesidadesComponent implements OnInit {
 
   // ===== ACCIONES CRUD =====
   crearNuevaNecesidad(): void {
-    // Validar que haya un programa seleccionado
+    // Validar que haya un departamento seleccionado
     if (
-      !this.filtrosActuales.oidPrograma ||
-      this.filtrosActuales.oidPrograma === ''
+      !this.filtrosActuales.oidDepartamento ||
+      this.filtrosActuales.oidDepartamento === ''
     ) {
       this.toastr.warning(
-        'Debe seleccionar un programa antes de agregar necesidades',
+        'Debe seleccionar un departamento antes de agregar necesidades',
       );
       return;
     }
