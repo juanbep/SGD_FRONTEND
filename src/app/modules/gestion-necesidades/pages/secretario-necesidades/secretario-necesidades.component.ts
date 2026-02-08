@@ -296,13 +296,13 @@ export class SecretarioNecesidadesComponent implements OnInit {
 
   // ===== ACCIONES CRUD =====
   crearNuevaNecesidad(): void {
-    // Validar que haya un departamento seleccionado
+    // Validar que haya un programa seleccionado
     if (
-      !this.filtrosActuales.oidDepartamento ||
-      this.filtrosActuales.oidDepartamento === ''
+      !this.filtrosActuales.oidPrograma ||
+      this.filtrosActuales.oidPrograma === ''
     ) {
       this.toastr.warning(
-        'Debe seleccionar un departamento antes de agregar necesidades',
+        'Debe seleccionar un programa antes de agregar necesidades',
       );
       return;
     }
