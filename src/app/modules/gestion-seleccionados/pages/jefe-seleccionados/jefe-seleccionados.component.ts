@@ -97,7 +97,7 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
       console.error('No se pudo obtener el departamento del usuario logueado');
       this.toastr.error(
         'No se pudo obtener el departamento del usuario',
-        'Error de autenticación'
+        'Error de autenticación',
       );
       return;
     }
@@ -135,7 +135,7 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
   }
 
   // ===== CARGAR SELECCIONADOS =====
-  cargarSeleccionados(mostrarToast: boolean = false): void {
+  cargarSeleccionados(mostrarToast: boolean = true): void {
     if (!this.filtrosActuales.oidCalendario) {
       this.seleccionados = [];
       this.totalElements = 0;
@@ -167,18 +167,18 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
 
             if (mostrarToast) {
               if (this.totalElements > 0) {
-                this.toastr.success(
-                  'Lista de seleccionados actualizada correctamente'
-                );
+                // this.toastr.success(
+                //   'Lista de seleccionados actualizada correctamente'
+                // );
               } else {
                 this.toastr.info(
-                  'No se encontraron seleccionados para este calendario y departamento'
+                  'No se encontraron seleccionados para este calendario y departamento',
                 );
               }
             }
           } else {
             this.toastr.warning(
-              response.mensaje || 'Respuesta inesperada del servidor'
+              response.mensaje || 'Respuesta inesperada del servidor',
             );
           }
           this.loading = false;
@@ -256,7 +256,7 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
       if (resultado) {
         this.toastr.success(
           `Seleccionado creado correctamente`,
-          'Creación exitosa'
+          'Creación exitosa',
         );
         this.cargarSeleccionados();
       } else {
@@ -292,13 +292,13 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
 
     try {
       const resultado = await this.seleccionadosHelper.delete(
-        this.seleccionadoAEliminar.oidSeleccionado
+        this.seleccionadoAEliminar.oidSeleccionado,
       );
 
       if (resultado) {
         this.toastr.success(
           `Seleccionado eliminado exitosamente`,
-          'Eliminación exitosa'
+          'Eliminación exitosa',
         );
         this.cargarSeleccionados();
       } else {
@@ -338,7 +338,7 @@ export class JefeSeleccionadosComponent implements OnInit, OnChanges {
 
     this.toastr.error(
       `Status Code: ${codigoBackend} - ${mensajeBackend}`,
-      'Error'
+      'Error',
     );
   }
 

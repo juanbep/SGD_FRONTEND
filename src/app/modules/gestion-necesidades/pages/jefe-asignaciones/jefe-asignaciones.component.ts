@@ -168,7 +168,7 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
   }
 
   // ===== CARGAR NECESIDADES =====
-  cargarNecesidades(mostrarToast: boolean = false): void {
+  cargarNecesidades(mostrarToast: boolean = true): void {
     if (!this.filtrosActuales.oidCalendario) {
       this.necesidades = [];
       this.totalElements = 0;
@@ -201,9 +201,9 @@ export class JefeAsignacionesComponent implements OnInit, OnChanges {
 
           if (mostrarToast) {
             if (this.totalElements > 0) {
-              this.toastr.success(
-                'Lista de asignaciones actualizada correctamente'
-              );
+              // this.toastr.success(
+              //   'Lista de asignaciones actualizada correctamente'
+              // );
             } else {
               this.toastr.info('No se encontraron necesidades para asignar');
             }

@@ -173,7 +173,7 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
   }
 
   // ===== CARGAR NECESIDADES =====
-  cargarNecesidades(mostrarToast: boolean = false): void {
+  cargarNecesidades(mostrarToast: boolean = true): void {
     if (!this.filtrosActuales.oidCalendario) {
       this.necesidades = [];
       this.totalElements = 0;
@@ -206,12 +206,12 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
 
           if (mostrarToast) {
             if (this.totalElements > 0) {
-              this.toastr.success(
-                'Lista de necesidades actualizada correctamente'
-              );
+              // this.toastr.success(
+              //   'Lista de necesidades actualizada correctamente'
+              // );
             } else {
               this.toastr.info(
-                'No se encontraron necesidades para este calendario y departamento'
+                'No se encontraron necesidades'
               );
             }
           }
