@@ -21,19 +21,19 @@ export class FechaHelperService {
 
   async getById(id: number): Promise<Fecha | null> {
     return this.baseHelper.getDataFromResponse(
-      this.fechaService.getFechaById(id)
+      this.fechaService.getFechaById(id),
     );
   }
 
   getByIdObservable(id: number): Observable<Fecha | null> {
     return this.baseHelper.getDataFromResponseObservable(
-      this.fechaService.getFechaById(id)
+      this.fechaService.getFechaById(id),
     );
   }
 
   async getAll(filters: FechaFilters = {}): Promise<Fecha[]> {
     const response = await this.baseHelper.getDataFromResponse(
-      this.fechaService.getFechas(filters)
+      this.fechaService.getFechas(filters),
     );
     return response?.content || [];
   }
@@ -47,21 +47,22 @@ export class FechaHelperService {
   // CRUD helpers
   async create(data: CreateFechaDto): Promise<Fecha | null> {
     return this.baseHelper.getDataFromResponse(
-      this.fechaService.createFecha(data)
+      this.fechaService.createFecha(data),
     );
   }
 
   async update(data: UpdateFechaDto): Promise<Fecha | null> {
     return this.baseHelper.getDataFromResponse(
-      this.fechaService.updateFecha(data)
+      this.fechaService.updateFecha(data),
     );
   }
 
   async delete(id: number): Promise<boolean> {
     const result = await this.baseHelper.getDataFromResponse(
-      this.fechaService.deleteFecha({ oidFecha: id })
+      this.fechaService.deleteFecha({ oidFecha: id }),
     );
-    return result === true || result === null; // trampita mientras se acomoda por parte del backend
+    // Retorna true si result tiene algún valor
+    return result !== null && result !== undefined;
   }
 
   // Métodos de conveniencia específicos del dominio
@@ -116,7 +117,7 @@ export class FechaHelperService {
   }
 
   async getFechasResaltadasByCalendario(
-    calendarioId: number
+    calendarioId: number,
   ): Promise<Fecha[]> {
     return this.getAll({
       oidCalendario: calendarioId,
@@ -126,7 +127,7 @@ export class FechaHelperService {
   }
 
   async getFechasNoResaltadasByCalendario(
-    calendarioId: number
+    calendarioId: number,
   ): Promise<Fecha[]> {
     return this.getAll({
       oidCalendario: calendarioId,
@@ -143,7 +144,7 @@ export class FechaHelperService {
 
   async validateFechaEnRango(
     fechaId: number,
-    fechaReferencia: Date
+    fechaReferencia: Date,
   ): Promise<boolean> {
     const fecha = await this.getById(fechaId);
     if (!fecha) return false;
@@ -156,7 +157,7 @@ export class FechaHelperService {
 
   async getFechasActivasEnRango(
     fechaInicio: string,
-    fechaFin: string
+    fechaFin: string,
   ): Promise<Fecha[]> {
     return this.getAll({
       fechaInicialDesde: fechaInicio,
@@ -168,7 +169,7 @@ export class FechaHelperService {
   async getFechasPorRango(
     calendarioId: number,
     fechaDesde: string,
-    fechaHasta: string
+    fechaHasta: string,
   ): Promise<Fecha[]> {
     return this.getAll({
       oidCalendario: calendarioId,
@@ -216,7 +217,7 @@ export class FechaHelperService {
 
     const diferenciaMilisegundos = fechaFin.getTime() - fechaInicial.getTime();
     const diferenciaDias = Math.ceil(
-      diferenciaMilisegundos / (1000 * 60 * 60 * 24)
+      diferenciaMilisegundos / (1000 * 60 * 60 * 24),
     );
 
     return diferenciaDias + 1; // +1 para incluir ambos días
