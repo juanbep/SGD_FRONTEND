@@ -51,6 +51,9 @@ export class EditAcademicCalendarComponent implements OnInit {
   @ViewChild(ModalAgregarEditarFechaComponent)
   modalAgregarEditarRef!: ModalAgregarEditarFechaComponent;
 
+  // OIDs de nombres de fechas que NO se pueden eliminar
+  private readonly FECHAS_NO_ELIMINABLES = [1, 3, 7, 10, 26, 27, 28];
+
   // ===== SIGNALS =====
   readonly calendario = signal<Calendario | null>(null);
   readonly isLoading = signal<boolean>(false);
@@ -247,6 +250,10 @@ export class EditAcademicCalendarComponent implements OnInit {
       fecha.uniqueDate,
       fecha.oidNombreFecha,
     );
+  };
+
+  readonly esFechaEliminable = (fecha: Fecha): boolean => {
+    return !this.FECHAS_NO_ELIMINABLES.includes(fecha.oidNombreFecha);
   };
 
   // ===== CONTROL DE MODALES =====
