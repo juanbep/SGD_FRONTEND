@@ -94,9 +94,9 @@ export class ListAcademicCalendarsComponent implements OnInit {
           this.calendarios = response.data.content;
           this.totalElements = response.data.totalElements;
           this.cargarAniosDisponibles();
-          this.toastr.success(
-            response.mensaje || 'Calendarios cargados correctamente'
-          );
+          // this.toastr.success(
+          //   response.mensaje || 'Calendarios cargados correctamente'
+          // );
         } else {
           this.toastr.warning(
             response.mensaje || 'Respuesta inesperada del servidor'

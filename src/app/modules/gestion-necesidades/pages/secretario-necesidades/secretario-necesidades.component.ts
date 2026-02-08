@@ -162,7 +162,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
   }
 
   // ===== CARGAR NECESIDADES =====
-  cargarNecesidades(mostrarToast: boolean = false): void {
+  cargarNecesidades(mostrarToast: boolean = true): void {
     if (!this.filtrosActuales.oidCalendario) {
       this.necesidades = [];
       this.totalElements = 0;
@@ -170,8 +170,8 @@ export class SecretarioNecesidadesComponent implements OnInit {
       return;
     }
 
-    if (!this.filtrosActuales.oidPrograma) {
-      console.error('No se ha especificado el programa');
+    if (!this.filtrosActuales.oidDepartamento) {
+      console.error('No se ha especificado el departamento');
       this.necesidades = [];
       this.totalElements = 0;
       this.limpiarSeleccion();
@@ -195,18 +195,16 @@ export class SecretarioNecesidadesComponent implements OnInit {
 
           if (mostrarToast) {
             if (this.totalElements > 0) {
-              this.toastr.success(
-                'Lista de necesidades actualizada correctamente'
-              );
+              // this.toastr.success(
+              //   'Lista de necesidades actualizada correctamente'
+              // );
             } else {
-              this.toastr.info(
-                'No se encontraron necesidades para este calendario'
-              );
+              this.toastr.info('No se encontraron necesidades');
             }
           }
         } else {
           this.toastr.warning(
-            response.mensaje || 'Respuesta inesperada del servidor'
+            response.mensaje || 'Respuesta inesperada del servidor',
           );
         }
         this.loading = false;
@@ -224,7 +222,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
     if (necesidad.estado !== 'EN_REVISION_SECRETARIO') {
       this.toastr.warning(
         'Solo se pueden editar departamentos de necesidades en estado EN REVISIÓN SECRETARIO',
-        'Operación no permitida'
+        'Operación no permitida',
       );
       return;
     }
@@ -304,7 +302,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
       this.filtrosActuales.oidPrograma === ''
     ) {
       this.toastr.warning(
-        'Debe seleccionar un programa antes de agregar necesidades'
+        'Debe seleccionar un programa antes de agregar necesidades',
       );
       return;
     }
@@ -327,7 +325,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
     // Agregar queryParams con el origen
     this.router.navigate(
       ['/app/gestion-necesidades/crear-desde-plan', oidPlan, oidCalendario],
-      { queryParams: { origen: 'secretario' } }
+      { queryParams: { origen: 'secretario' } },
     );
   }
 
@@ -336,7 +334,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
     if (necesidad.estado !== 'EN_REVISION_SECRETARIO') {
       this.toastr.warning(
         'Solo se pueden modificar necesidades en estado EN REVISIÓN SECRETARIO',
-        'Operación no permitida'
+        'Operación no permitida',
       );
       return;
     }
@@ -356,7 +354,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
       if (resultado) {
         this.toastr.success(
           `Necesidad "${this.necesidadAEditar.nombreMateria} - Grupo ${dto.grupo}" actualizada correctamente`,
-          'Actualización exitosa'
+          'Actualización exitosa',
         );
         this.cerrarModalEditar();
         this.cargarNecesidades();
@@ -388,7 +386,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
     if (necesidad.estado !== 'EN_REVISION_SECRETARIO') {
       this.toastr.warning(
         'Solo se pueden eliminar necesidades en estado EN REVISIÓN SECRETARIO',
-        'Operación no permitida'
+        'Operación no permitida',
       );
       return;
     }
@@ -404,13 +402,13 @@ export class SecretarioNecesidadesComponent implements OnInit {
 
     try {
       const resultado = await this.necesidadesHelper.delete(
-        this.necesidadAEliminar.oidNecesidad
+        this.necesidadAEliminar.oidNecesidad,
       );
 
       if (resultado) {
         this.toastr.success(
           `Necesidad "${this.necesidadAEliminar.nombreMateria} - Grupo ${this.necesidadAEliminar.grupo}" eliminada exitosamente`,
-          'Eliminación exitosa'
+          'Eliminación exitosa',
         );
         this.cerrarModalEliminar();
         this.cargarNecesidades();
@@ -461,7 +459,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
     if (necesidad.estado !== 'EN_REVISION_SECRETARIO') {
       this.toastr.warning(
         'Solo se pueden seleccionar necesidades en estado EN REVISIÓN SECRETARIO',
-        'Selección no permitida'
+        'Selección no permitida',
       );
       return;
     }
@@ -485,7 +483,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
       if (necesidadesSeleccionables.length === 0) {
         this.toastr.info(
           'No hay necesidades en estado EN REVISIÓN SECRETARIO para seleccionar',
-          'Sin necesidades'
+          'Sin necesidades',
         );
         return;
       }
@@ -507,7 +505,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
     if (necesidadesSeleccionables.length === 0) return false;
 
     return necesidadesSeleccionables.every((necesidad) =>
-      this.necesidadesSeleccionadas.has(necesidad.oidNecesidad)
+      this.necesidadesSeleccionadas.has(necesidad.oidNecesidad),
     );
   }
 
@@ -518,7 +516,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
     if (necesidadesSeleccionables.length === 0) return false;
 
     return necesidadesSeleccionables.some((necesidad) =>
-      this.necesidadesSeleccionadas.has(necesidad.oidNecesidad)
+      this.necesidadesSeleccionadas.has(necesidad.oidNecesidad),
     );
   }
 
@@ -556,7 +554,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
       'EN_REVISION_SECRETARIO',
       'BORRADOR',
       'Devolver a Borrador',
-      false
+      false,
     );
   }
 
@@ -568,7 +566,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
       'EN_REVISION_SECRETARIO',
       'EN_REVISION_JEFE',
       'Enviar a Revisión Jefe',
-      false // Requiere departamento
+      false, // Requiere departamento
     );
   }
 
@@ -577,7 +575,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
    */
   hayNecesidadesEnRevisionSecretario(): boolean {
     return this.necesidades.some(
-      (necesidad) => necesidad.estado === 'EN_REVISION_SECRETARIO'
+      (necesidad) => necesidad.estado === 'EN_REVISION_SECRETARIO',
     );
   }
 
@@ -586,7 +584,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
    */
   private getNecesidadesSeleccionables(): NecesidadResponse[] {
     return this.necesidades.filter(
-      (necesidad) => necesidad.estado === 'EN_REVISION_SECRETARIO'
+      (necesidad) => necesidad.estado === 'EN_REVISION_SECRETARIO',
     );
   }
 
@@ -594,13 +592,13 @@ export class SecretarioNecesidadesComponent implements OnInit {
     estadoOrigen: string,
     estadoDestino: string,
     tituloAccion: string,
-    requiereDepartamento: boolean
+    requiereDepartamento: boolean,
   ): void {
     // Validar que haya necesidades seleccionadas
     if (!this.haySeleccionadas) {
       this.toastr.warning(
         'Debe seleccionar al menos una necesidad',
-        'Sin selección'
+        'Sin selección',
       );
       return;
     }
@@ -670,7 +668,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
         requiereDepartamento
           ? Number(this.filtrosActuales.oidDepartamento)
           : undefined,
-        oidNecesidades
+        oidNecesidades,
       );
 
       this.transicionService.mostrarResultado(resultado, tituloAccion);
@@ -689,7 +687,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
   }
 
   private getTipoBotonPorEstado(
-    estadoDestino: string
+    estadoDestino: string,
   ): 'primary' | 'success' | 'danger' | 'warning' | 'info' {
     switch (estadoDestino) {
       case 'EN_REVISION_JEFE':
@@ -724,7 +722,7 @@ export class SecretarioNecesidadesComponent implements OnInit {
 
     this.toastr.error(
       `Status Code: ${codigoBackend} - ${mensajeBackend}`,
-      'Error'
+      'Error',
     );
   }
 }

@@ -43,10 +43,10 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
     estado: EstadoCalendario;
   }[] = [];
 
-  programas: {
-    value: number;
-    label: string;
-  }[] = [];
+  // programas: {
+  //   value: number;
+  //   label: string;
+  // }[] = [];
 
   departamentos: {
     value: number;
@@ -62,7 +62,7 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
 
   // ===== LOADING STATES =====
   loadingCalendarios = false;
-  loadingProgramas = false;
+  //loadingProgramas = false;
   loadingDepartamentos = false;
 
   // ===== FILTROS LOCALES =====
@@ -70,7 +70,8 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
     page: 0,
     size: 10,
     oidCalendario: '',
-    oidPrograma: '',
+    //oidPrograma: '',
+    oidDepartamento: '',
   };
 
   filtroOid: string = '';
@@ -80,13 +81,9 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
   filtroGrupo: string = 'TODOS';
   filtroCupo: number | null = null;
   filtroEstado: string = 'TODOS';
-  filtroDepartamento: number | string = 'TODOS';
 
   ngOnInit(): void {
-    this.cargarCalendarios();
-    this.cargarProgramas();
     this.cargarDatosIniciales();
-    //this.cargarDepartamentos();
   }
 
   // ===== CARGAR CALENDARIOS =====
@@ -101,7 +98,7 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
         filtrarCalendariosDeshabilitados(calendariosCompletos);
       this.calendarios = ordenarCalendariosPorAnio(calendariosFiltrados);
       this.filters.oidCalendario = seleccionarCalendarioAutomatico(
-        this.calendarios
+        this.calendarios,
       );
     } catch (error) {
       console.error('Error al cargar calendarios:', error);
@@ -113,55 +110,60 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
   }
 
   // ===== CARGAR PROGRAMAS =====
-  async cargarProgramas(): Promise<void> {
-    try {
-      this.loadingProgramas = true;
-      const programasData = await this.programaHelper.getAllForDropdown();
-
-      this.programas = programasData.map((p) => ({
-        value: p.value,
-        label: p.label,
-      }));
-
-      // SELECCIONAR AUTOMÁTICAMENTE EL PRIMER PROGRAMA
-      if (this.programas.length > 0) {
-        this.filters.oidPrograma = this.programas[0].value;
-      }
-    } catch (error) {
-      console.error('Error al cargar programas:', error);
-      this.toastr.error('Error al cargar la lista de programas');
-      this.programas = [];
-    } finally {
-      this.loadingProgramas = false;
-    }
-  }
-
-  // ===== CARGAR DEPARTAMENTOS =====
-  // async cargarDepartamentos(): Promise<void> {
+  // async cargarProgramas(): Promise<void> {
   //   try {
-  //     this.loadingDepartamentos = true;
-  //     const departamentosData =
-  //       await this.departamentoHelper.getAllForDropdown();
+  //     this.loadingProgramas = true;
+  //     const programasData = await this.programaHelper.getAllForDropdown();
 
-  //     this.departamentos = departamentosData.map((d) => ({
-  //       value: d.value,
-  //       label: d.label,
+  //     this.programas = programasData.map((p) => ({
+  //       value: p.value,
+  //       label: p.label,
   //     }));
+
+  //     // SELECCIONAR AUTOMÁTICAMENTE EL PRIMER PROGRAMA
+  //     if (this.programas.length > 0) {
+  //       this.filters.oidPrograma = this.programas[0].value;
+  //     }
   //   } catch (error) {
-  //     console.error('Error al cargar departamentos:', error);
-  //     this.toastr.error('Error al cargar la lista de departamentos');
-  //     this.departamentos = [];
+  //     console.error('Error al cargar programas:', error);
+  //     this.toastr.error('Error al cargar la lista de programas');
+  //     this.programas = [];
   //   } finally {
-  //     this.loadingDepartamentos = false;
+  //     this.loadingProgramas = false;
   //   }
   // }
 
-  async cargarDatosIniciales(): Promise<void> {
-    // Cargar en paralelo
-    await Promise.all([this.cargarCalendarios(), this.cargarProgramas()]);
+  // ===== CARGAR DEPARTAMENTOS =====
+  async cargarDepartamentos(): Promise<void> {
+    try {
+      this.loadingDepartamentos = true;
+      const departamentosData =
+        await this.departamentoHelper.getAllForDropdown();
 
-    // Una vez que ambos estén cargados, si hay calendario y programa, aplicar filtros automáticamente
-    if (this.filters.oidCalendario && this.filters.oidPrograma) {
+      this.departamentos = departamentosData.map((d) => ({
+        value: d.value,
+        label: d.label,
+      }));
+
+      // Seleccionar automáticamente el primer departamento
+      if (this.departamentos.length > 0) {
+        this.filters.oidDepartamento = this.departamentos[0].value;
+      }
+    } catch (error) {
+      console.error('Error al cargar departamentos:', error);
+      this.toastr.error('Error al cargar la lista de departamentos');
+      this.departamentos = [];
+    } finally {
+      this.loadingDepartamentos = false;
+    }
+  }
+
+  async cargarDatosIniciales(): Promise<void> {
+    // Cargar en paralelo calendarios y departamentos
+    await Promise.all([this.cargarCalendarios(), this.cargarDepartamentos()]);
+
+    // Una vez que ambos estén cargados, si hay calendario y departamento, aplicar filtros automáticamente
+    if (this.filters.oidCalendario && this.filters.oidDepartamento) {
       this.aplicarFiltros();
     }
   }
@@ -174,8 +176,8 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
       return;
     }
 
-    if (!this.filters.oidPrograma || this.filters.oidPrograma === '') {
-      this.toastr.warning('Debe seleccionar un programa');
+    if (!this.filters.oidDepartamento || this.filters.oidDepartamento === '') {
+      this.toastr.warning('Debe seleccionar un departamento');
       return;
     }
 
@@ -183,7 +185,7 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
       page: this.filters.page,
       size: this.filters.size,
       oidCalendario: this.filters.oidCalendario,
-      oidPrograma: this.filters.oidPrograma,
+      oidDepartamento: this.filters.oidDepartamento,
     };
 
     // Agregar filtros opcionales
@@ -207,14 +209,6 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
       filtrosCompletos.idMateria = this.filtroOid.trim();
     }
 
-    if (
-      this.filtroDepartamento &&
-      this.filtroDepartamento !== 'TODOS' &&
-      this.filtroDepartamento !== ''
-    ) {
-      filtrosCompletos.oidDepartamento = this.filtroDepartamento;
-    }
-
     this.onAplicarFiltros.emit(filtrosCompletos);
   }
 
@@ -227,16 +221,10 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
     this.filtroGrupo = 'TODOS';
     this.filtroCupo = null;
     this.filtroEstado = 'TODOS';
-    this.filtroDepartamento = 'TODOS';
 
-    // Re-seleccionar el calendario activo usando utilidad
     this.filters.oidCalendario = seleccionarCalendarioAutomatico(
-      this.calendarios
+      this.calendarios,
     );
-
-    // IMPORTANTE: No limpiar el programa seleccionado
-    // El secretario debe mantener el programa seleccionado
-    // this.filters.oidPrograma = '';
 
     this.onLimpiarFiltros.emit();
   }
@@ -250,8 +238,7 @@ export class FiltrosNecesidadesSecretarioComponent implements OnInit {
       this.filtroSemestre !== 'TODOS' ||
       this.filtroGrupo !== 'TODOS' ||
       this.filtroCupo !== null ||
-      this.filtroEstado !== 'TODOS' ||
-      this.filtroDepartamento !== 'TODOS'
+      this.filtroEstado !== 'TODOS'
     );
   }
 }

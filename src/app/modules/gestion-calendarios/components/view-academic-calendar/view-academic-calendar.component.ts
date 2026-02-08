@@ -108,7 +108,7 @@ export class ViewAcademicCalendarComponent implements OnInit {
       next: (calendario) => {
         if (calendario) {
           this.calendario.set(calendario);
-          this.toastr.success('Calendario cargado correctamente');
+          // this.toastr.success('Calendario cargado correctamente');
         } else {
           this.error.set('Calendario no encontrado');
           this.toastr.warning('Calendario no encontrado');

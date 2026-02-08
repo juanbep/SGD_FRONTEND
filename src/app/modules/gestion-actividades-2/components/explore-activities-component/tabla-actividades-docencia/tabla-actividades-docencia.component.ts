@@ -142,10 +142,10 @@ export class TablaActividadesDocenciaComponent implements OnInit {
             response.data,
           );
           if (this.filters.page === 0) {
-            this.toastr.success(
-              response.mensaje ||
-                'Actividades de docencia cargadas correctamente',
-            );
+            // this.toastr.success(
+            //   response.mensaje ||
+            //     'Actividades de docencia cargadas correctamente',
+            // );
           }
         } else {
           this.error = response.mensaje || 'Respuesta inesperada del servidor';
