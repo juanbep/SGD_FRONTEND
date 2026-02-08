@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   background: transparent;
-  z-index: 999;
+  z-index: 1010;
 }
 
 .user-profile-popover {
@@ -17,7 +17,7 @@
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 1010;
   overflow: hidden;
   display: flex;
   flex-direction: column;

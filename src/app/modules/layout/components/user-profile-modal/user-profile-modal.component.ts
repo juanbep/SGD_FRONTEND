@@ -1,4 +1,13 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserData } from '../../../auth/models';
 import { AuthServiceService } from '../../../auth/service/auth-service.service';
@@ -16,6 +25,24 @@ export class UserProfileModalComponent {
   @Input() isSidebarCollapsed = false;
   @Output() close = new EventEmitter<void>();
   private authServiceService = inject(AuthServiceService);
+
+  @ViewChild('userPopover') userPopover!: ElementRef;
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.isOpen) return;
+
+    const clickedElement = event.target as HTMLElement;
+
+    const clickedInsidePopover =
+      this.userPopover?.nativeElement.contains(clickedElement);
+
+    const clickedOnTrigger = clickedElement.closest('.user-profile-trigger');
+
+    if (!clickedInsidePopover && !clickedOnTrigger) {
+      this.closeModal();
+    }
+  }
 
   closeModal() {
     this.close.emit();
