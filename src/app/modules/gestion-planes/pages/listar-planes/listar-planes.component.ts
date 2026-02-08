@@ -121,9 +121,14 @@ export class ListarPlanesComponent implements OnInit {
         if (response.codigo >= 200 && response.codigo < 300) {
           this.planes = response.data.content;
           this.totalElements = response.data.totalElements;
+
+          // Validar si no se encontraron actividades
+          if (this.planes.length === 0) {
+            this.toastr.info('No se encontraron planes');
+          }
         } else {
           this.toastr.warning(
-            response.mensaje || 'Respuesta inesperada del servidor'
+            response.mensaje || 'Respuesta inesperada del servidor',
           );
         }
         this.loading = false;
@@ -290,7 +295,7 @@ export class ListarPlanesComponent implements OnInit {
 
     this.toastr.error(
       `Status Code: ${codigoBackend} - ${mensajeBackend}`,
-      'Error'
+      'Error',
     );
   }
 
