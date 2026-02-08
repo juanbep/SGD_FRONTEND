@@ -1,0 +1,15 @@
+<div class="fab-container">
+  <div class="tooltip-ayuda" [class.show]="mostrarTooltip">
+    <span>¿Necesitas ayuda?</span>
+    <div class="tooltip-arrow"></div>
+  </div>
+
+  <button
+    class="fab-button"
+    (click)="abrirModal()"
+    (mouseenter)="onMouseEnter()"
+    title="Información sobre el flujo de necesidades"
+  >
+    <img [src]="'assets/icons/robot.svg'" alt="Ayuda" class="robot-icon" />
+  </button>
+</div>

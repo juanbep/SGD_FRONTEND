@@ -1,0 +1,166 @@
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="modalInfoFlujo" tabindex="-1" aria-labelledby="modalInfoFlujoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      
+      <!-- Header -->
+      <div class="modal-header border-0 pb-2">
+        <h5 class="modal-title fw-bold" id="modalInfoFlujoLabel">
+          <i class="bi bi-diagram-3 me-2 text-primary"></i>
+          Flujo de Gestión de Necesidades
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <!-- Body con Carousel -->
+      <div class="modal-body px-4 pb-4">
+        
+        <!-- Introducción -->
+        <div class="intro-section text-center mb-4">
+          <p class="text-muted mb-1">
+            El proceso de gestión de necesidades docentes sigue un flujo estructurado por roles.
+          </p>
+          <small class="text-muted">
+            <i class="bi bi-arrow-left-right me-1"></i>
+            Usa las flechas para navegar entre las etapas
+          </small>
+        </div>
+
+        <!-- Carousel -->
+        <div id="carouselFlujoNecesidades" class="carousel slide" data-bs-ride="false" data-bs-interval="false">
+          
+          <!-- Slides -->
+          <div class="carousel-inner">
+            
+            <!-- Slide 1: Coordinador -->
+            <div class="carousel-item active">
+              <div class="slide-content slide-coordinador">
+                <div class="slide-icon">
+                  <i class="bi bi-person-badge"></i>
+                </div>
+                <div class="slide-badge">Paso 1 de 3</div>
+                <h4 class="slide-title">Coordinador</h4>
+                <p class="slide-description">
+                  Identifica y crea las necesidades docentes del programa académico para el periodo correspondiente.
+                </p>
+                <div class="slide-tasks">
+                  <h6 class="tasks-title">Responsabilidades:</h6>
+                  <ul class="tasks-list">
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Analiza la carga académica del programa
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Identifica asignaturas sin docente asignado
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Registra las necesidades en el sistema
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Envía las necesidades al siguiente nivel
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 2: Secretario -->
+            <div class="carousel-item">
+              <div class="slide-content slide-secretario">
+                <div class="slide-icon">
+                  <i class="bi bi-clipboard-check"></i>
+                </div>
+                <div class="slide-badge">Paso 2 de 3</div>
+                <h4 class="slide-title">Secretario</h4>
+                <p class="slide-description">
+                  Revisa, valida y consolida todas las necesidades reportadas por los coordinadores de programa.
+                </p>
+                <div class="slide-tasks">
+                  <h6 class="tasks-title">Responsabilidades:</h6>
+                  <ul class="tasks-list">
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Verifica la información de cada necesidad
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Valida requisitos y disponibilidad presupuestal
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Consolida el listado completo de necesidades
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Envía para aprobación final
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide 3: Jefe -->
+            <div class="carousel-item">
+              <div class="slide-content slide-jefe">
+                <div class="slide-icon">
+                  <i class="bi bi-award"></i>
+                </div>
+                <div class="slide-badge">Paso 3 de 3</div>
+                <h4 class="slide-title">Jefe</h4>
+                <p class="slide-description">
+                  Aprueba las necesidades validadas y realiza las asignaciones de docentes correspondientes.
+                </p>
+                <div class="slide-tasks">
+                  <h6 class="tasks-title">Responsabilidades:</h6>
+                  <ul class="tasks-list">
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Revisa el consolidado de necesidades
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Aprueba o rechaza según disponibilidad
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Asigna docentes a las necesidades aprobadas
+                    </li>
+                    <li>
+                      <i class="bi bi-check-circle-fill"></i>
+                      Finaliza el proceso de gestión
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Indicadores (puntos) -->
+          <div class="carousel-indicators-custom">
+            <button type="button" data-bs-target="#carouselFlujoNecesidades" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Coordinador"></button>
+            <button type="button" data-bs-target="#carouselFlujoNecesidades" data-bs-slide-to="1" aria-label="Secretario"></button>
+            <button type="button" data-bs-target="#carouselFlujoNecesidades" data-bs-slide-to="2" aria-label="Jefe"></button>
+          </div>
+
+          <!-- Controles (flechas) -->
+          <div class="carousel-controls-custom">
+            <button class="control-btn control-prev" type="button" data-bs-target="#carouselFlujoNecesidades" data-bs-slide="prev">
+              <i class="bi bi-arrow-left"></i>
+              <span>Anterior</span>
+            </button>
+            <button class="control-btn control-next" type="button" data-bs-target="#carouselFlujoNecesidades" data-bs-slide="next">
+              <span>Siguiente</span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div> 
+    </div>
+  </div>
+</div>
