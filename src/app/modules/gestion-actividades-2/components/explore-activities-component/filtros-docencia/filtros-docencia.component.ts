@@ -18,6 +18,11 @@ import { CalendarioHelperService } from '../../../../gestion-calendarios/service
 import { ToastrService } from 'ngx-toastr';
 import { EstadoCalendario } from '../../../../gestion-calendarios/models';
 import { forkJoin, from } from 'rxjs';
+import { DepartamentoHelperService } from '../../../../gestion-planes/services';
+import {
+  getUserRoles,
+  isUserDataAvailable,
+} from '../../../../auth/utils/user-storage.utils';
 
 @Component({
   selector: 'app-filtros-docencia',
@@ -28,10 +33,12 @@ import { forkJoin, from } from 'rxjs';
 })
 export class FiltrosDocenciaComponent implements OnInit {
   @Input() oidDepartamento?: number;
+  @Input() modo: 'visualizar' | 'gestionar' = 'visualizar';
   @Output() onAplicarFiltros = new EventEmitter<ActividadDocenciaFilters>();
   @Output() onLimpiarFiltros = new EventEmitter<void>();
 
   private calendarioHelper = inject(CalendarioHelperService);
+  private departamentoHelper = inject(DepartamentoHelperService);
   private toastr = inject(ToastrService);
 
   // Dropdowns
@@ -40,6 +47,8 @@ export class FiltrosDocenciaComponent implements OnInit {
     label: string;
     estado: EstadoCalendario;
   }[] = [];
+
+  departamentosDropdown: { value: number; label: string }[] = [];
 
   tiposContratacionDropdown = [
     { value: '', label: 'TODOS' },
@@ -66,6 +75,7 @@ export class FiltrosDocenciaComponent implements OnInit {
 
   // Loading states
   loadingCalendarios = false;
+  loadingDepartamentos = false;
 
   // Filtros locales
   filters: ActividadDocenciaFilters = {
@@ -77,20 +87,42 @@ export class FiltrosDocenciaComponent implements OnInit {
     semestre: '',
   };
 
+  esSecretario: boolean = false;
+
   ngOnInit(): void {
+    this.detectarRolSecretario();
     this.filters.oidDepartamento = this.oidDepartamento;
     this.cargarFiltrosIniciales();
   }
 
+  private detectarRolSecretario(): void {
+    if (isUserDataAvailable()) {
+      const roles = getUserRoles();
+      const rolesSecretario = [
+        'SECRETARIA/O FACULTAD',
+        'SECRETARIO',
+        'SECRETARIA',
+      ];
+      this.esSecretario = roles.some((rol) => rolesSecretario.includes(rol));
+    }
+  }
+
   /**
-   * Carga calendarios
+   * Carga calendarios y departamentos (si es secretario)
    */
   private cargarFiltrosIniciales(): void {
     const cargaCalendarios$ = from(this.loadCalendarios());
 
-    forkJoin({
+    // Si es secretario en modo visualizar, cargar departamentos
+    const observables: any = {
       calendarios: cargaCalendarios$,
-    }).subscribe({
+    };
+
+    if (this.esSecretario && this.modo === 'visualizar') {
+      observables.departamentos = from(this.loadDepartamentos());
+    }
+
+    forkJoin(observables).subscribe({
       next: () => {
         // Emitir filtros automáticamente si hay calendario seleccionado
         if (this.filters.oidCalendario) {
@@ -104,6 +136,33 @@ export class FiltrosDocenciaComponent implements OnInit {
         );
       },
     });
+  }
+
+  async loadDepartamentos(): Promise<void> {
+    try {
+      this.loadingDepartamentos = true;
+      const departamentosCompletos =
+        await this.departamentoHelper.getAllForDropdown();
+
+      this.departamentosDropdown = departamentosCompletos.map((dept) => ({
+        value: dept.value,
+        label: dept.label,
+      }));
+
+      // Si no hay departamento seleccionado, seleccionar el primero automáticamente
+      if (
+        !this.filters.oidDepartamento &&
+        this.departamentosDropdown.length > 0
+      ) {
+        this.filters.oidDepartamento = this.departamentosDropdown[0].value;
+      }
+    } catch (error) {
+      console.error('Error al cargar departamentos:', error);
+      this.toastr.error('Error al cargar la lista de departamentos');
+      this.departamentosDropdown = [];
+    } finally {
+      this.loadingDepartamentos = false;
+    }
   }
 
   async loadCalendarios(): Promise<void> {

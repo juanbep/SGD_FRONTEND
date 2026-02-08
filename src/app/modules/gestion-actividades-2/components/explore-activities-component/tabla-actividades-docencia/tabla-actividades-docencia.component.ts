@@ -141,6 +141,12 @@ export class TablaActividadesDocenciaComponent implements OnInit {
             this.pagination,
             response.data,
           );
+
+          // Validar si no se encontraron actividades
+          if (this.actividades.length === 0) {
+            this.toastr.info('No se encontraron actividades de docencia');
+          }
+
           if (this.filters.page === 0) {
             // this.toastr.success(
             //   response.mensaje ||

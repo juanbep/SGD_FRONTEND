@@ -1,9 +1,11 @@
 <!-- SECCIÓN DE FILTROS -->
 <app-filtros-docencia
   [oidDepartamento]="filters.oidDepartamento"
+  [modo]="modo"
   (onAplicarFiltros)="aplicarFiltros($event)"
   (onLimpiarFiltros)="limpiarFiltros()"
-></app-filtros-docencia>
+>
+</app-filtros-docencia>
 
 <!-- TABLA DE ACTIVIDADES -->
 <div class="card">
@@ -143,9 +145,7 @@
             <!-- Fecha Creación -->
             <td class="text-center align-middle">
               <small>
-                {{
-                  actividadData.actividad.fechaCreacion | date : "dd/MM/yyyy"
-                }}
+                {{ actividadData.actividad.fechaCreacion | date: "dd/MM/yyyy" }}
               </small>
             </td>
 
