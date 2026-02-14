@@ -166,13 +166,13 @@ export class SideBarV2Component implements OnInit, OnChanges {
           url: '/app/gestion-calendario-academico/listar',
         },
         {
-          role: ['SECRETARIA/O FACULTAD', 'SECRETARIO'],
+          role: ['SECRETARIA/O FACULTAD', 'SECRETARIO', 'DECANO'],
           icon: 'fas fa-plus',
           label: 'Crear calendario',
           url: '/app/gestion-calendario-academico/crear',
         },
         {
-          role: ['SECRETARIA/O FACULTAD', 'SECRETARIO'],
+          role: ['SECRETARIA/O FACULTAD', 'SECRETARIO', 'DECANO'],
           icon: 'fas fa-sliders-h',
           label: 'Gestionar calendarios',
           url: '/app/gestion-calendario-academico/gestionar',

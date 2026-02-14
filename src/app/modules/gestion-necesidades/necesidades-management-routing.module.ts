@@ -26,7 +26,7 @@ const routes: Routes = [
             './pages/secretario-necesidades/secretario-necesidades.component'
           ).then((m) => m.SecretarioNecesidadesComponent),
         canActivate: [RoleGuard],
-        data: { roles: ['SECRETARIO', 'DECANO', 'SECRETARIA/O FACULTAD'] },
+        data: { roles: ['SECRETARIO', 'SECRETARIA/O FACULTAD'] },
       },
       {
         path: 'management/jefe',

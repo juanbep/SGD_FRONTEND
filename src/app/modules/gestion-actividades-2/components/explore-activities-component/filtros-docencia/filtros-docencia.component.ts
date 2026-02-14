@@ -87,23 +87,26 @@ export class FiltrosDocenciaComponent implements OnInit {
     semestre: '',
   };
 
-  esSecretario: boolean = false;
+  filtroDepartamento: boolean = false;
 
   ngOnInit(): void {
-    this.detectarRolSecretario();
+    this.verFiltroDepartamentos();
     this.filters.oidDepartamento = this.oidDepartamento;
     this.cargarFiltrosIniciales();
   }
 
-  private detectarRolSecretario(): void {
+  private verFiltroDepartamentos(): void {
     if (isUserDataAvailable()) {
       const roles = getUserRoles();
-      const rolesSecretario = [
+      const filtroDepartamento = [
         'SECRETARIA/O FACULTAD',
         'SECRETARIO',
         'SECRETARIA',
+        'DECANO',
       ];
-      this.esSecretario = roles.some((rol) => rolesSecretario.includes(rol));
+      this.filtroDepartamento = roles.some((rol) =>
+        filtroDepartamento.includes(rol),
+      );
     }
   }
 
@@ -118,7 +121,7 @@ export class FiltrosDocenciaComponent implements OnInit {
       calendarios: cargaCalendarios$,
     };
 
-    if (this.esSecretario && this.modo === 'visualizar') {
+    if (this.filtroDepartamento && this.modo === 'visualizar') {
       observables.departamentos = from(this.loadDepartamentos());
     }
 

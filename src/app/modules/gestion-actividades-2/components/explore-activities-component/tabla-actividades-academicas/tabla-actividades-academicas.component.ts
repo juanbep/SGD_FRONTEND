@@ -24,6 +24,7 @@ import { UserData } from '../../../../auth/models';
 import {
   getUserData,
   getUserDepartmentId,
+  getUserRoles,
   isUserDataAvailable,
 } from '../../../../auth/utils/user-storage.utils';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -60,6 +61,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
   private toastr = inject(ToastrService);
 
   usuario: UserData | null = null;
+  rolEspecial: boolean = false;
 
   actividades: ActividadResponse[] = [];
   loading: boolean = false;
@@ -101,19 +103,40 @@ export class TablaActividadesAcademicasComponent implements OnInit {
       return;
     }
 
+    // Verificar si tiene roles especiales
+    this.rolEspecial = this.verificarRolesEspeciales();
+
     const oidDepartamento = getUserDepartmentId();
 
     if (oidDepartamento) {
-      // Asegurar que sea número (normalizar el tipo)
       this.filters.oidDepartamento =
         typeof oidDepartamento === 'string'
           ? parseInt(oidDepartamento, 10)
           : oidDepartamento;
 
       this.usuario = getUserData();
-    } else {
+    } else if (!this.rolEspecial) {
+      // Solo mostrar warning si NO es un rol especial
       this.toastr.warning('No se pudo obtener el departamento del usuario');
     }
+
+    this.usuario = getUserData();
+  }
+
+  private verificarRolesEspeciales(): boolean {
+    if (!isUserDataAvailable()) {
+      return false;
+    }
+
+    const roles = getUserRoles();
+    const rolesEspeciales = [
+      'SECRETARIA/O FACULTAD',
+      'SECRETARIO',
+      'SECRETARIA',
+      'DECANO',
+    ];
+
+    return roles.some((rol) => rolesEspeciales.includes(rol));
   }
 
   // ========== CARGAR ACTIVIDADES CON VALIDACIÓN OBLIGATORIA ==========
@@ -124,7 +147,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
       return;
     }
 
-    if (!this.filters.oidDepartamento) {
+    if (!this.rolEspecial && !this.filters.oidDepartamento) {
       this.toastr.error('No se pudo obtener el departamento del usuario');
       return;
     }

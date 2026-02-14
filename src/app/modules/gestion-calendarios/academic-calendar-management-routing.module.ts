@@ -17,19 +17,19 @@ const routes: Routes = [
     path: 'gestionar',
     component: AcademicCalendarManagementComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['SECRETARIA/O FACULTAD', 'SECRETARIO'] },
+    data: { roles: ['SECRETARIA/O FACULTAD', 'SECRETARIO', 'DECANO'] },
   },
   {
     path: 'crear',
     component: CreateAcademicCalendarComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['SECRETARIA/O FACULTAD', 'SECRETARIO'] },
+    data: { roles: ['SECRETARIA/O FACULTAD', 'SECRETARIO', 'DECANO'] },
   },
   {
     path: 'editar/:id',
     component: EditAcademicCalendarComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['SECRETARIA/O FACULTAD', 'SECRETARIO'] },
+    data: { roles: ['SECRETARIA/O FACULTAD', 'SECRETARIO', 'DECANO'] },
   },
   {
     path: 'ver/:id',

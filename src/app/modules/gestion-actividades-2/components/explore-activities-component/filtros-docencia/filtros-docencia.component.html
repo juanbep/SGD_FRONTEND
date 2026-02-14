@@ -18,7 +18,7 @@
       <!-- Filtro por Calendario -->
       <div
         [ngClass]="
-          esSecretario && modo === 'visualizar'
+          filtroDepartamento && modo === 'visualizar'
             ? 'col-xl-3 col-lg-4 col-md-6'
             : 'col-xl-4 col-lg-4 col-md-6'
         "
@@ -78,7 +78,7 @@
       <!-- Filtro por Departamento (solo para Secretario en modo visualizar) -->
       <div
         class="col-xl-3 col-lg-4 col-md-6"
-        *ngIf="esSecretario && modo === 'visualizar'"
+        *ngIf="filtroDepartamento && modo === 'visualizar'"
       >
         <label class="form-label fw-bold">
           <i class="fas fa-building me-1"></i>Departamento:
@@ -102,7 +102,7 @@
       <!-- Filtro por Tipo de Contratación -->
       <div
         [ngClass]="
-          esSecretario && modo === 'visualizar'
+          filtroDepartamento && modo === 'visualizar'
             ? 'col-xl-2 col-lg-4 col-md-6'
             : 'col-xl-3 col-lg-4 col-md-6'
         "
@@ -146,7 +146,7 @@
       <!-- Botones de Acción -->
       <div
         [ngClass]="
-          esSecretario && modo === 'visualizar'
+          filtroDepartamento && modo === 'visualizar'
             ? 'col-xl-2 col-lg-12 d-flex justify-content-end align-items-end'
             : 'col-xl-3 col-lg-12 d-flex justify-content-end align-items-end'
         "

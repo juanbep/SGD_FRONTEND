@@ -27,6 +27,7 @@ import {
 import {
   getUserData,
   getUserDepartmentId,
+  getUserRoles,
   isUserDataAvailable,
 } from '../../../../auth/utils/user-storage.utils';
 import { UserData } from '../../../../auth/models';
@@ -62,6 +63,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
   private toastr = inject(ToastrService);
 
   usuario: UserData | null = null;
+  rolEspecial: boolean = false;
 
   actividades: ActividadDocenciaResponse[] = [];
   loading: boolean = false;
@@ -103,19 +105,40 @@ export class TablaActividadesDocenciaComponent implements OnInit {
       return;
     }
 
+    // Verificar si tiene roles especiales
+    this.rolEspecial = this.verificarRolesEspeciales();
+
     const oidDepartamento = getUserDepartmentId();
 
     if (oidDepartamento) {
-      // Asegurar que SIEMPRE sea número
       this.filters.oidDepartamento =
         typeof oidDepartamento === 'string'
           ? parseInt(oidDepartamento, 10)
           : oidDepartamento;
 
       this.usuario = getUserData();
-    } else {
+    } else if (!this.rolEspecial) {
+      // Solo mostrar warning si NO es un rol especial
       this.toastr.warning('No se pudo obtener el departamento del usuario');
     }
+
+    this.usuario = getUserData();
+  }
+
+  private verificarRolesEspeciales(): boolean {
+    if (!isUserDataAvailable()) {
+      return false;
+    }
+
+    const roles = getUserRoles();
+    const rolesEspeciales = [
+      'SECRETARIA/O FACULTAD',
+      'SECRETARIO',
+      'SECRETARIA',
+      'DECANO',
+    ];
+
+    return roles.some((rol) => rolesEspeciales.includes(rol));
   }
 
   // ========== CARGAR ACTIVIDADES DE DOCENCIA ==========
@@ -125,7 +148,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
       return;
     }
 
-    if (!this.filters.oidDepartamento) {
+    if (!this.rolEspecial && !this.filters.oidDepartamento) {
       this.toastr.error('No se pudo obtener el departamento del usuario');
       return;
     }

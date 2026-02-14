@@ -85,23 +85,26 @@ export class FiltrosActividadesComponent implements OnInit {
   };
 
   filtroResponsable: string = '';
-  esSecretario: boolean = false;
+  filtroDepartamentos: boolean = false;
 
   ngOnInit(): void {
-    this.detectarRolSecretario();
+    this.verFiltroDepartamentos();
     this.filters.oidDepartamento = this.oidDepartamento;
     this.cargarFiltrosIniciales();
   }
 
-  private detectarRolSecretario(): void {
+  private verFiltroDepartamentos(): void {
     if (isUserDataAvailable()) {
       const roles = getUserRoles();
-      const rolesSecretario = [
+      const rolesFiltroDepartamentos = [
         'SECRETARIA/O FACULTAD',
         'SECRETARIO',
         'SECRETARIA',
+        'DECANO',
       ];
-      this.esSecretario = roles.some((rol) => rolesSecretario.includes(rol));
+      this.filtroDepartamentos = roles.some((rol) =>
+        rolesFiltroDepartamentos.includes(rol),
+      );
     }
   }
 
@@ -118,7 +121,7 @@ export class FiltrosActividadesComponent implements OnInit {
       tipos: cargaTipos$,
     };
 
-    if (this.esSecretario && this.modo === 'visualizar') {
+    if (this.filtroDepartamentos && this.modo === 'visualizar') {
       observables.departamentos = from(this.loadDepartamentos());
     }
 
