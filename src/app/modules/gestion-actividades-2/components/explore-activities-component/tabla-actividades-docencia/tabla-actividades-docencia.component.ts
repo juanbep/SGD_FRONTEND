@@ -119,7 +119,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
       this.usuario = getUserData();
     } else if (!this.rolEspecial) {
       // Solo mostrar warning si NO es un rol especial
-      this.toastr.warning('No se pudo obtener el departamento del usuario');
+      // this.toastr.warning('No se pudo obtener el departamento del usuario');
     }
 
     this.usuario = getUserData();

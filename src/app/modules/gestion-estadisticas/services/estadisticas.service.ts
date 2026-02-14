@@ -5,7 +5,7 @@ import { environment } from '../../../../environments/environments_sgd';
 
 export interface EstadisticasRequest {
   oidCalendario: number;
-  oidDepartamento: number;
+  oidDepartamento: number | undefined;
   graficos: string[];
 }
 

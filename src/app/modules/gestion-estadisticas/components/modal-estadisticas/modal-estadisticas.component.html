@@ -18,26 +18,46 @@
 
       <!-- Body -->
       <div class="modal-body px-4 py-3">
-        <!-- Selector de Calendario -->
+        <!-- Selector de Calendario con ng-select -->
         <div class="info-section">
           <label class="form-label fw-semibold">
             <i class="fas fa-calendar-alt me-2"></i>
             Calendario
             <span class="text-danger">*</span>
           </label>
-          <select
-            class="form-select"
+          <ng-select
             [(ngModel)]="oidCalendarioSeleccionado"
+            [items]="calendarios"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Seleccione un calendario"
+            [clearable]="false"
+            [searchable]="true"
             [disabled]="generando"
+            notFoundText="No se encontraron calendarios"
           >
-            <option [ngValue]="null">Seleccione un calendario</option>
-            <option
-              *ngFor="let calendario of calendarios"
-              [ngValue]="calendario.value"
-            >
-              {{ calendario.label }}
-            </option>
-          </select>
+          </ng-select>
+        </div>
+
+        <!-- Selector de Departamento con ng-select (solo para roles especiales) -->
+        <div class="info-section" *ngIf="rolEspecial">
+          <label class="form-label fw-semibold">
+            <i class="fas fa-building me-2"></i>
+            Departamento
+            <span class="text-danger">*</span>
+          </label>
+          <ng-select
+            [(ngModel)]="oidDepartamentoSeleccionado"
+            [items]="departamentos"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Seleccione un departamento"
+            [clearable]="false"
+            [searchable]="true"
+            [disabled]="generando"
+            notFoundText="No se encontraron departamentos"
+          >
+          </ng-select>
         </div>
 
         <!-- Checkboxes de Gráficos -->
@@ -50,7 +70,7 @@
             </label>
             <button
               type="button"
-              class="btn btn-sm btn-outline-secondary"
+              class="btn btn-sm btn-outline-secondary btn-hover"
               (click)="toggleTodas()"
               [disabled]="generando"
             >
@@ -71,13 +91,13 @@
               class="form-check grafico-item"
             >
               <input
-                class="form-check-input"
+                class="form-check-input checkbox-hover"
                 type="checkbox"
                 [id]="grafico.valor"
                 [(ngModel)]="grafico.seleccionado"
                 [disabled]="generando"
               />
-              <label class="form-check-label" [for]="grafico.valor">
+              <label class="form-check-label label-hover" [for]="grafico.valor">
                 {{ grafico.label }}
               </label>
             </div>
@@ -98,7 +118,7 @@
       <div class="modal-footer border-0 py-3">
         <button
           type="button"
-          class="btn btn-outline-secondary px-4"
+          class="btn btn-outline-secondary px-4 btn-hover"
           (click)="cerrar()"
           [disabled]="generando"
         >
@@ -107,7 +127,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-primary px-4"
+          class="btn btn-primary px-4 btn-hover"
           (click)="generarEstadisticas()"
           [disabled]="generando"
         >

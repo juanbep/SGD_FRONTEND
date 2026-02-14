@@ -1,8 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { EstadisticasService } from '../../services/estadisticas.service';
+import {
+  getUserRoles,
+  isUserDataAvailable,
+} from '../../../auth/utils/user-storage.utils';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export interface OpcionGrafico {
   valor: string;
@@ -13,14 +25,15 @@ export interface OpcionGrafico {
 @Component({
   selector: 'app-modal-estadisticas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgSelectModule],
   templateUrl: './modal-estadisticas.component.html',
   styleUrl: './modal-estadisticas.component.css',
 })
-export class ModalEstadisticasComponent {
+export class ModalEstadisticasComponent implements OnInit {
   @Input() visible: boolean = false;
   @Input() calendarios: any[] = []; // Array de calendarios disponibles
   @Input() oidDepartamento: number | null = null; // Viene del usuario logueado
+  @Input() departamentos: any[] = []; // Array de departamentos disponibles
 
   @Output() onCerrar = new EventEmitter<void>();
 
@@ -28,7 +41,9 @@ export class ModalEstadisticasComponent {
   private toastr = inject(ToastrService);
 
   oidCalendarioSeleccionado: number | null = null;
+  oidDepartamentoSeleccionado: number | null = null;
   generando: boolean = false;
+  rolEspecial: boolean = false;
 
   graficos: OpcionGrafico[] = [
     {
@@ -63,21 +78,30 @@ export class ModalEstadisticasComponent {
     },
   ];
 
-  get graficosSeleccionados(): string[] {
-    return this.graficos.filter((g) => g.seleccionado).map((g) => g.valor);
+  ngOnInit(): void {
+    this.verificarRolesEspeciales();
+
+    // Si NO es secretario, usar el departamento del usuario
+    if (!this.rolEspecial) {
+      this.oidDepartamentoSeleccionado = this.oidDepartamento;
+    }
   }
 
-  get todasSeleccionadas(): boolean {
-    return this.graficos.every((g) => g.seleccionado);
-  }
+  private verificarRolesEspeciales(): void {
+    if (!isUserDataAvailable()) {
+      this.rolEspecial = false;
+      return;
+    }
 
-  get algunaSeleccionada(): boolean {
-    return this.graficos.some((g) => g.seleccionado);
-  }
+    const roles = getUserRoles();
+    const rolesEspeciales = [
+      'SECRETARIA/O FACULTAD',
+      'SECRETARIO',
+      'SECRETARIA',
+      'DECANO',
+    ];
 
-  toggleTodas(): void {
-    const nuevoEstado = !this.todasSeleccionadas;
-    this.graficos.forEach((g) => (g.seleccionado = nuevoEstado));
+    this.rolEspecial = roles.some((rol) => rolesEspeciales.includes(rol));
   }
 
   async generarEstadisticas(): Promise<void> {
@@ -87,8 +111,8 @@ export class ModalEstadisticasComponent {
       return;
     }
 
-    if (!this.oidDepartamento) {
-      this.toastr.error('No se pudo obtener el departamento del usuario');
+    if (!this.oidDepartamentoSeleccionado) {
+      this.toastr.error('Debe seleccionar un departamento');
       return;
     }
 
@@ -102,7 +126,7 @@ export class ModalEstadisticasComponent {
     try {
       await this.estadisticasService.generarEstadisticas({
         oidCalendario: this.oidCalendarioSeleccionado,
-        oidDepartamento: this.oidDepartamento,
+        oidDepartamento: this.oidDepartamentoSeleccionado,
         graficos: this.graficosSeleccionados,
       });
 
@@ -118,7 +142,24 @@ export class ModalEstadisticasComponent {
     }
   }
 
+  toggleTodas(): void {
+    const nuevoEstado = !this.todasSeleccionadas;
+    this.graficos.forEach((g) => (g.seleccionado = nuevoEstado));
+  }
+
   cerrar(): void {
     this.onCerrar.emit();
+  }
+
+  get graficosSeleccionados(): string[] {
+    return this.graficos.filter((g) => g.seleccionado).map((g) => g.valor);
+  }
+
+  get todasSeleccionadas(): boolean {
+    return this.graficos.every((g) => g.seleccionado);
+  }
+
+  get algunaSeleccionada(): boolean {
+    return this.graficos.some((g) => g.seleccionado);
   }
 }

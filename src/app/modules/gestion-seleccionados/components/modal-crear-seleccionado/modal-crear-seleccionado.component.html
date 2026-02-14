@@ -6,7 +6,7 @@
       <div class="modal-header text-white border-0 py-3">
         <h5 class="modal-title fw-bold mb-0">
           <i class="fas fa-user-plus me-2" style="color: #f8ae15"></i>
-          Crear Seleccionado
+          Agregar Docente
         </h5>
         <button
           type="button"
@@ -24,7 +24,7 @@
             <div class="info-section">
               <h6 class="section-title mb-3">
                 <i class="fas fa-info-circle me-2"></i>
-                Información del Seleccionado
+                Información del Docente
               </h6>
 
               <form [formGroup]="seleccionadoForm">
@@ -67,8 +67,8 @@
                         Debe seleccionar un usuario
                       </div>
                       <small class="text-muted">
-                        Seleccione el docente que desea agregar como
-                        seleccionado para este calendario
+                        Seleccione el docente que desea agregar como disponible
+                        para este calendario
                       </small>
                     </div>
                   </div>
@@ -81,9 +81,8 @@
                     <div>
                       <strong>Información:</strong>
                       <p class="mb-1 mt-1">
-                        Al crear el seleccionado, se agregará el docente a la
-                        lista de usuarios disponibles para asignaciones en este
-                        calendario académico.
+                        Al seleccionar un docente, este se agregará a la lista
+                        de docentes disponibles para este calendario académico.
                       </p>
                       <small class="text-muted">
                         Los campos adicionales como tipo de contratación y
