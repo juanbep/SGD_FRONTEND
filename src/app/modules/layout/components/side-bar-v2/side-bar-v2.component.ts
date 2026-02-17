@@ -14,15 +14,17 @@ import { UserProfileModalComponent } from '../user-profile-modal/user-profile-mo
 import { getUserData } from '../../../auth/utils/user-storage.utils';
 import { UserData } from '../../../auth/models';
 import { RoleRoutingService } from '../../../gestion-necesidades/services/role-routing.service';
+import { ConfiguracionHelperService } from '../../services/configuracion-helper.service';
 
-interface MenuItem {
+export interface MenuItem {
   role: string[];
   icon: string;
   label: string;
   url?: string;
-  children?: MenuItem[];
   isOpen?: boolean;
   isExternal?: boolean;
+  configKey?: string;
+  children?: MenuItem[];
 }
 
 @Component({
@@ -41,100 +43,9 @@ export class SideBarV2Component implements OnInit, OnChanges {
   @Output() sidebarToggle = new EventEmitter<void>();
 
   private roleRoutingService = inject(RoleRoutingService);
+  private configuracionHelper = inject(ConfiguracionHelperService);
 
   menuItems: MenuItem[] = [
-    // {
-    //   role: ['SECRETARIA/O FACULTAD'],
-    //   icon: 'assets/icons/sidebar/icon-calendar.svg',
-    //   label: 'Periodo académico',
-    //   isOpen: false,
-    //   children: [
-    //     {
-    //       role: ['SECRETARIA/O FACULTAD'],
-    //       icon: 'fas fa-chart-pie',
-    //       label: 'Gestión periodo académico',
-    //       url: '/app/gestion-periodo-academico',
-    //     },
-    //   ],
-    // },
-    // {
-    //   role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
-    //   icon: 'assets/icons/sidebar/icon-user.svg',
-    //   label: 'Gestion usuarios',
-    //   isOpen: false,
-    //   children: [
-    //     {
-    //       role: ['JEFE DE DEPARTAMENTO', 'SECRETARIA/O FACULTAD', 'DECANO'],
-    //       icon: 'fas fa-user',
-    //       label: 'Usuarios',
-    //       url: '/app/gestion-usuarios/usuarios',
-    //     },
-    //     {
-    //       role: ['JEFE DE DEPARTAMENTO', 'DECANO'],
-    //       icon: 'fas fa-lock',
-    //       label: 'Actividades',
-    //       url: '/app/gestion-usuarios/actividades/usuarios',
-    //     },
-    //     {
-    //       role: ['JEFE DE DEPARTAMENTO'],
-    //       icon: 'fas fa-lock',
-    //       label: 'Actividades pendiente de asignar evaluador',
-    //       url: '/app/gestion-usuarios/actividades-pendientes-asignar-evaluador',
-    //     },
-    //   ],
-    // },
-    // {
-    //   role: [
-    //     'JEFE DE DEPARTAMENTO',
-    //     'COORDINADOR',
-    //     'DOCENTE',
-    //     'ESTUDIANTE',
-    //     'DECANO',
-    //     'SECRETARIA/O FACULTAD',
-    //     'CPD',
-    //   ],
-    //   icon: 'assets/icons/sidebar/icon-evaluation.svg',
-    //   label: 'Evaluación Docente',
-    //   isOpen: false,
-    //   children: [
-    //     {
-    //       role: ['DOCENTE'],
-    //       icon: 'fas fa-user',
-    //       label: 'Mis actividades',
-    //       url: '/app/gestion-soportes/actividades',
-    //     },
-    //     {
-    //       role: [
-    //         'JEFE DE DEPARTAMENTO',
-    //         'ESTUDIANTE',
-    //         'COORDINADOR',
-    //         'DECANO',
-    //         'DOCENTE',
-    //       ],
-    //       icon: 'fas fa-lock',
-    //       label: 'Mis responsabilidades',
-    //       url: '/app/gestion-soportes/responsabilidades',
-    //     },
-    //     {
-    //       role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
-    //       icon: 'fas fa-lock',
-    //       label: 'Consolidado',
-    //       url: '/app/gestion-soportes/consolidado/lista-docentes',
-    //     },
-    //     {
-    //       role: ['CPD', 'SECRETARIA/O FACULTAD', 'DECANO'],
-    //       icon: 'fas fa-lock',
-    //       label: 'CPD',
-    //       url: '/app/gestion-soportes/cpd/lista-docentes',
-    //     },
-    //     {
-    //       role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR', 'CPD'],
-    //       icon: 'fas fa-lock',
-    //       label: 'Histórico consolidado',
-    //       url: '/app/gestion-soportes/historico-consolidados',
-    //     },
-    //   ],
-    // },
     {
       role: [
         'JEFE DE DEPARTAMENTO',
@@ -247,12 +158,18 @@ export class SideBarV2Component implements OnInit, OnChanges {
           label: 'Gestionar Necesidades',
           url: '/app/gestion-necesidades/management',
         },
-        // {
-        //   role: ['JEFE DE DEPARTAMENTO', 'COORDINADOR'],
-        //   icon: 'fas fa-eye',
-        //   label: 'Ver Necesidades',
-        //   url: '/app/gestion-necesidades/view',
-        // },
+        {
+          role: [
+            'JEFE DE DEPARTAMENTO',
+            'SECRETARIA/O FACULTAD',
+            'SECRETARIO',
+            'COORDINADOR',
+            'DECANO'
+          ],
+          icon: 'fa-solid fa-download',
+          label: 'Descargar Necesidades',
+          url: '/app/gestion-necesidades/download',
+        },
       ],
     },
     {
@@ -293,18 +210,91 @@ export class SideBarV2Component implements OnInit, OnChanges {
       ],
       icon: 'assets/icons/sidebar/icon-evaluacion-docente.svg',
       label: 'Evaluación Docente',
-      url: 'https://kubetest.unicauca.edu.co/sed-front',
+      url: '', // Se carga dinámicamente
       isExternal: true,
+      configKey: 'sed-url',
     },
   ];
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Obtener datos del usuario
     this.currentUser = getUserData();
     this.userRoles =
       this.currentUser?.roles.map((role: { nombre: any }) => role.nombre) || [];
 
+    // Cargar URLs desde configuración
+    await this.cargarURLsParametrizables();
+
+    // Actualizar URLs según rol
     this.actualizarURLsSegunRol();
+  }
+
+  /**
+   * Carga las URLs configurables desde la base de datos
+   */
+  private async cargarURLsParametrizables(): Promise<void> {
+    try {
+      // Recopilar todas las claves de configuración necesarias
+      const configKeys = this.recopilarConfigKeys(this.menuItems);
+
+      if (configKeys.length === 0) return;
+
+      // Obtener los valores de las configuraciones
+      const valores =
+        await this.configuracionHelper.getMultipleValoresByClaves(configKeys);
+
+      // Crear un mapa clave -> valor
+      const configMap = new Map<string, string>();
+      configKeys.forEach((key, index) => {
+        if (valores[index]) {
+          configMap.set(key, valores[index]!);
+        }
+      });
+
+      // Aplicar las URLs a los items del menú
+      this.aplicarURLsConfiguradas(this.menuItems, configMap);
+    } catch (error) {
+      console.error('Error al cargar URLs parametrizables:', error);
+      // Mantener URLs por defecto en caso de error
+    }
+  }
+
+  /**
+   * Recopila todas las claves de configuración de los items del menú
+   */
+  private recopilarConfigKeys(items: MenuItem[]): string[] {
+    const keys: string[] = [];
+
+    items.forEach((item) => {
+      if (item.configKey) {
+        keys.push(item.configKey);
+      }
+
+      if (item.children && item.children.length > 0) {
+        keys.push(...this.recopilarConfigKeys(item.children));
+      }
+    });
+
+    // Eliminar duplicados
+    return [...new Set(keys)];
+  }
+
+  /**
+   * Aplica las URLs configuradas a los items del menú
+   */
+  private aplicarURLsConfiguradas(
+    items: MenuItem[],
+    configMap: Map<string, string>,
+  ): void {
+    items.forEach((item) => {
+      if (item.configKey && configMap.has(item.configKey)) {
+        item.url = configMap.get(item.configKey)!;
+      }
+
+      if (item.children && item.children.length > 0) {
+        this.aplicarURLsConfiguradas(item.children, configMap);
+      }
+    });
   }
 
   private actualizarURLsSegunRol(): void {

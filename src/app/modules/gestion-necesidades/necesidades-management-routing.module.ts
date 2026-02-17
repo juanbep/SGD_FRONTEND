@@ -13,29 +13,46 @@ const routes: Routes = [
       {
         path: 'management/coordinador',
         loadComponent: () =>
-          import(
-            './pages/coordinador-necesidades/coordinador-necesidades.component'
-          ).then((m) => m.CoordinadorNecesidadesComponent),
+          import('./pages/coordinador-necesidades/coordinador-necesidades.component').then(
+            (m) => m.CoordinadorNecesidadesComponent,
+          ),
         canActivate: [RoleGuard],
         data: { roles: ['COORDINADOR'] },
       },
       {
         path: 'management/secretario',
         loadComponent: () =>
-          import(
-            './pages/secretario-necesidades/secretario-necesidades.component'
-          ).then((m) => m.SecretarioNecesidadesComponent),
+          import('./pages/secretario-necesidades/secretario-necesidades.component').then(
+            (m) => m.SecretarioNecesidadesComponent,
+          ),
         canActivate: [RoleGuard],
         data: { roles: ['SECRETARIO', 'SECRETARIA/O FACULTAD'] },
       },
       {
         path: 'management/jefe',
         loadComponent: () =>
-          import(
-            './pages/jefe-necesidades-container/jefe-necesidades-container.component'
-          ).then((m) => m.JefeNecesidadesContainerComponent),
+          import('./pages/jefe-necesidades-container/jefe-necesidades-container.component').then(
+            (m) => m.JefeNecesidadesContainerComponent,
+          ),
         canActivate: [RoleGuard],
         data: { roles: ['JEFE_DEPARTAMENTO', 'JEFE DE DEPARTAMENTO'] },
+      },
+      {
+        path: 'download',
+        loadComponent: () =>
+          import('./pages/descarga-necesidades/descarga-necesidades.component').then(
+            (m) => m.DescargaNecesidadesComponent,
+          ),
+        canActivate: [RoleGuard],
+        data: {
+          roles: [
+            'JEFE DE DEPARTAMENTO',
+            'SECRETARIA/O FACULTAD',
+            'SECRETARIO',
+            'COORDINADOR',
+            'DECANO',
+          ],
+        },
       },
 
       // ===== RUTA FALLBACK - Redirige a coordinador por defecto =====

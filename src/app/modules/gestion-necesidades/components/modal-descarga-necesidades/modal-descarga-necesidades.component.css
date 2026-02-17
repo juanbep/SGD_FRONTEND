@@ -1,0 +1,45 @@
+.info-section {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.btn-hover:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.checkbox-hover {
+  cursor: pointer;
+}
+
+.checkbox-hover:hover:not(:disabled) {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+.label-hover {
+  cursor: pointer;
+  user-select: none;
+}
+
+.label-hover:hover {
+  color: #f8ae15;
+  transition: color 0.2s ease;
+}
+
+.modal-content {
+  border-radius: 12px;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.modal-title {
+  color: #2c3e50;
+}
