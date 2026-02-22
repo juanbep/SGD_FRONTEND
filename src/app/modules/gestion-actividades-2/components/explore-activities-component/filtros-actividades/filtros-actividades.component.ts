@@ -24,6 +24,7 @@ import {
 } from '../../../utils/actividad-utils';
 import { DepartamentoHelperService } from '../../../../gestion-planes/services';
 import {
+  getUserData,
   getUserRoles,
   isUserDataAvailable,
 } from '../../../../auth/utils/user-storage.utils';
@@ -86,9 +87,12 @@ export class FiltrosActividadesComponent implements OnInit {
 
   filtroResponsable: string = '';
   filtroDepartamentos: boolean = false;
+  esDocente: boolean = false;
+  oidUsuarioDocente: number | null = null;
 
   ngOnInit(): void {
     this.verFiltroDepartamentos();
+    this.verificarRolDocente();
     this.filters.oidDepartamento = this.oidDepartamento;
     this.cargarFiltrosIniciales();
   }
@@ -105,6 +109,18 @@ export class FiltrosActividadesComponent implements OnInit {
       this.filtroDepartamentos = roles.some((rol) =>
         rolesFiltroDepartamentos.includes(rol),
       );
+    }
+  }
+
+  private verificarRolDocente(): void {
+    if (!isUserDataAvailable()) return;
+
+    const roles = getUserRoles();
+    this.esDocente = roles.some((rol) => rol.toUpperCase() === 'DOCENTE');
+
+    if (this.esDocente) {
+      const userData = getUserData();
+      this.oidUsuarioDocente = userData?.oidUsuario ?? null;
     }
   }
 
@@ -128,7 +144,7 @@ export class FiltrosActividadesComponent implements OnInit {
     forkJoin(observables).subscribe({
       next: () => {
         // Cargar usuarios solo si hay departamento
-        if (this.filters.oidDepartamento) {
+        if (!this.esDocente && this.filters.oidDepartamento) {
           this.loadUsuarios();
         }
 
@@ -256,6 +272,10 @@ export class FiltrosActividadesComponent implements OnInit {
         label: `${ud.usuario.nombres} ${ud.usuario.apellidos}`.trim(),
       }));
 
+      if (usuariosMapeados.length === 0) {
+        this.toastr.info('No se encontraron usuarios para este departamento');
+      }
+
       this.usuariosDropdown = [
         { value: '', label: 'TODOS' },
         ...usuariosMapeados,
@@ -283,11 +303,13 @@ export class FiltrosActividadesComponent implements OnInit {
   }
 
   aplicarFiltros(): void {
+    const responsable = this.esDocente
+      ? this.oidUsuarioDocente
+      : this.filtroResponsable || null;
+
     const filtrosCompletos = {
       ...this.filters,
-      ...(this.filtroResponsable
-        ? { oidUsuarioResponsable: this.filtroResponsable }
-        : {}),
+      ...(responsable ? { oidUsuarioResponsable: responsable } : {}),
     };
     this.onAplicarFiltros.emit(filtrosCompletos);
   }
@@ -309,7 +331,7 @@ export class FiltrosActividadesComponent implements OnInit {
       this.calendariosDropdown,
     );
 
-    if (this.filters.oidDepartamento) {
+    if (!this.esDocente && this.filters.oidDepartamento) {
       this.loadUsuarios();
     }
 

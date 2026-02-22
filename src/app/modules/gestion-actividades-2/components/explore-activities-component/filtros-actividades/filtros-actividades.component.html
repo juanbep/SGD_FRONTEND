@@ -155,8 +155,8 @@
         <small class="text-muted">Filtrar por estado de la actividad</small>
       </div>
 
-      <!-- Filtro por Responsable -->
-      <div class="col-xl-3 col-lg-4 col-md-6">
+      <!-- Filtro por Responsable — oculto si el usuario es Docente -->
+      <div class="col-xl-3 col-lg-4 col-md-6" *ngIf="!esDocente">
         <label class="form-label fw-bold">
           <i class="fas fa-user me-1"></i>Responsable:
         </label>

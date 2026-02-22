@@ -20,9 +20,12 @@ import { EstadoCalendario } from '../../../../gestion-calendarios/models';
 import { forkJoin, from } from 'rxjs';
 import { DepartamentoHelperService } from '../../../../gestion-planes/services';
 import {
+  getUserData,
   getUserRoles,
   isUserDataAvailable,
 } from '../../../../auth/utils/user-storage.utils';
+import { UsuariosConActividadesHelperService } from '../../../../gestion-usuarios/services';
+import { UsuariosConActividadesFilters } from '../../../../gestion-usuarios/models';
 
 @Component({
   selector: 'app-filtros-docencia',
@@ -39,6 +42,9 @@ export class FiltrosDocenciaComponent implements OnInit {
 
   private calendarioHelper = inject(CalendarioHelperService);
   private departamentoHelper = inject(DepartamentoHelperService);
+  private usuariosConActividadesHelper = inject(
+    UsuariosConActividadesHelperService,
+  );
   private toastr = inject(ToastrService);
 
   // Dropdowns
@@ -49,6 +55,7 @@ export class FiltrosDocenciaComponent implements OnInit {
   }[] = [];
 
   departamentosDropdown: { value: number; label: string }[] = [];
+  usuariosDropdown: { value: number | string; label: string }[] = [];
 
   tiposContratacionDropdown = [
     { value: '', label: 'TODOS' },
@@ -76,6 +83,7 @@ export class FiltrosDocenciaComponent implements OnInit {
   // Loading states
   loadingCalendarios = false;
   loadingDepartamentos = false;
+  loadingUsuarios = false;
 
   // Filtros locales
   filters: ActividadDocenciaFilters = {
@@ -88,9 +96,14 @@ export class FiltrosDocenciaComponent implements OnInit {
   };
 
   filtroDepartamento: boolean = false;
+  filtroResponsable: string = '';
+
+  esDocente: boolean = false;
+  oidUsuarioDocente: number | null = null;
 
   ngOnInit(): void {
     this.verFiltroDepartamentos();
+    this.verificarRolDocente();
     this.filters.oidDepartamento = this.oidDepartamento;
     this.cargarFiltrosIniciales();
   }
@@ -107,6 +120,16 @@ export class FiltrosDocenciaComponent implements OnInit {
       this.filtroDepartamento = roles.some((rol) =>
         filtroDepartamento.includes(rol),
       );
+    }
+  }
+
+  private verificarRolDocente(): void {
+    if (!isUserDataAvailable()) return;
+    const roles = getUserRoles();
+    this.esDocente = roles.some((rol) => rol.toUpperCase() === 'DOCENTE');
+    if (this.esDocente) {
+      const userData = getUserData();
+      this.oidUsuarioDocente = userData?.oidUsuario ?? null;
     }
   }
 
@@ -127,6 +150,11 @@ export class FiltrosDocenciaComponent implements OnInit {
 
     forkJoin(observables).subscribe({
       next: () => {
+        // Cargar usuarios solo si NO es Docente y tiene departamento
+        if (!this.esDocente && this.filters.oidDepartamento) {
+          this.loadUsuarios();
+        }
+
         // Emitir filtros automáticamente si hay calendario seleccionado
         if (this.filters.oidCalendario) {
           this.aplicarFiltros();
@@ -192,6 +220,60 @@ export class FiltrosDocenciaComponent implements OnInit {
     }
   }
 
+  async loadUsuarios(): Promise<void> {
+    console.log('[loadUsuarios] esDocente:', this.esDocente);
+    console.log(
+      '[loadUsuarios] oidDepartamento:',
+      this.filters.oidDepartamento,
+    );
+    try {
+      this.loadingUsuarios = true;
+
+      const oidDepartamento = this.filters.oidDepartamento;
+      if (!oidDepartamento) {
+        this.usuariosDropdown = [];
+        return;
+      }
+
+      const filtros: UsuariosConActividadesFilters = {
+        oidDepartamento,
+        filtro: 'NO_DOCENCIA',
+      };
+
+      const usuariosDepartamento =
+        await this.usuariosConActividadesHelper.getAll(filtros);
+
+      const usuariosMapeados = usuariosDepartamento.map((ud) => ({
+        value: ud.usuario.oidUsuario,
+        label: `${ud.usuario.nombres} ${ud.usuario.apellidos}`.trim(),
+      }));
+
+      if (usuariosMapeados.length === 0) {
+        this.toastr.info('No se encontraron usuarios para este departamento');
+      }
+
+      this.usuariosDropdown = [
+        { value: '', label: 'TODOS' },
+        ...usuariosMapeados,
+      ];
+    } catch (error) {
+      console.error('Error al cargar usuarios del departamento:', error);
+      this.toastr.error('Error al cargar la lista de usuarios responsables');
+      this.usuariosDropdown = [];
+    } finally {
+      this.loadingUsuarios = false;
+    }
+  }
+
+  onDepartamentoChange(): void {
+    this.filtroResponsable = '';
+    if (!this.esDocente && this.filters.oidDepartamento) {
+      this.loadUsuarios();
+    } else {
+      this.usuariosDropdown = [];
+    }
+  }
+
   aplicarFiltros(): void {
     if (!this.filters.oidCalendario) {
       this.toastr.warning(
@@ -218,6 +300,14 @@ export class FiltrosDocenciaComponent implements OnInit {
       filtrosLimpios.semestre = this.filters.semestre;
     }
 
+    const responsable = this.esDocente
+      ? this.oidUsuarioDocente
+      : this.filtroResponsable || null;
+
+    if (responsable) {
+      filtrosLimpios.oidUsuario = responsable;
+    }
+
     this.onAplicarFiltros.emit(filtrosLimpios);
   }
 
@@ -231,14 +321,59 @@ export class FiltrosDocenciaComponent implements OnInit {
       semestre: '',
     };
 
+    this.filtroResponsable = '';
     this.filters.oidCalendario = seleccionarCalendarioAutomatico(
       this.calendariosDropdown,
     );
+
+    // Recargar usuarios solo si NO es Docente
+    if (!this.esDocente && this.filters.oidDepartamento) {
+      this.loadUsuarios();
+    }
 
     this.onLimpiarFiltros.emit();
   }
 
   recargarFiltros(): void {
     this.cargarFiltrosIniciales();
+  }
+
+  // ========== HELPERS DE LAYOUT DE GRID ==========
+
+  private get conDepartamento(): boolean {
+    return this.filtroDepartamento && this.modo === 'visualizar';
+  }
+
+  get clasesCalendario(): string {
+    if (!this.conDepartamento && this.esDocente)
+      return 'col-xl-4 col-lg-4 col-md-6';
+    if (this.conDepartamento && !this.esDocente)
+      return 'col-xl-2 col-lg-4 col-md-6';
+    return 'col-xl-3 col-lg-4 col-md-6';
+  }
+
+  get clasesDepartamento(): string {
+    return this.esDocente
+      ? 'col-xl-3 col-lg-4 col-md-6'
+      : 'col-xl-2 col-lg-4 col-md-6';
+  }
+
+  get clasesContratacion(): string {
+    return !this.conDepartamento && this.esDocente
+      ? 'col-xl-3 col-lg-4 col-md-6'
+      : 'col-xl-2 col-lg-4 col-md-6';
+  }
+
+  get clasesResponsable(): string {
+    return this.conDepartamento
+      ? 'col-xl-2 col-lg-4 col-md-6'
+      : 'col-xl-3 col-lg-4 col-md-6';
+  }
+
+  get clasesBotones(): string {
+    const base = 'd-flex justify-content-end align-items-end';
+    return !this.conDepartamento && this.esDocente
+      ? `col-xl-3 col-lg-12 ${base}`
+      : `col-xl-2 col-lg-12 ${base}`;
   }
 }

@@ -16,13 +16,7 @@
   <div class="card-body">
     <div class="row g-3">
       <!-- Filtro por Calendario -->
-      <div
-        [ngClass]="
-          filtroDepartamento && modo === 'visualizar'
-            ? 'col-xl-3 col-lg-4 col-md-6'
-            : 'col-xl-4 col-lg-4 col-md-6'
-        "
-      >
+      <div [ngClass]="clasesCalendario">
         <label class="form-label fw-bold">
           <i class="fas fa-calendar me-1"></i>Calendario:
         </label>
@@ -49,12 +43,10 @@
                   'badge-deshabilitado': item.estado === 'DESHABILITADO',
                   'badge-aprobado': item.estado === 'APROBADO',
                 }"
+                >{{ item.estado }}</span
               >
-                {{ item.estado }}
-              </span>
             </div>
           </ng-template>
-
           <ng-template ng-option-tmp let-item="item">
             <div class="d-flex justify-content-between align-items-center">
               <span>{{ item.label }}</span>
@@ -66,18 +58,17 @@
                   'badge-deshabilitado': item.estado === 'DESHABILITADO',
                   'badge-aprobado': item.estado === 'APROBADO',
                 }"
+                >{{ item.estado }}</span
               >
-                {{ item.estado }}
-              </span>
             </div>
           </ng-template>
         </ng-select>
         <small class="text-muted">Filtrar por calendario académico</small>
       </div>
 
-      <!-- Filtro por Departamento (solo para Secretario en modo visualizar) -->
+      <!-- Filtro por Departamento (solo Secretario en modo visualizar) -->
       <div
-        class="col-xl-3 col-lg-4 col-md-6"
+        [ngClass]="clasesDepartamento"
         *ngIf="filtroDepartamento && modo === 'visualizar'"
       >
         <label class="form-label fw-bold">
@@ -88,6 +79,7 @@
           bindLabel="label"
           bindValue="value"
           [(ngModel)]="filters.oidDepartamento"
+          (change)="onDepartamentoChange()"
           [loading]="loadingDepartamentos"
           [disabled]="loadingDepartamentos"
           placeholder="Seleccione un departamento"
@@ -100,13 +92,7 @@
       </div>
 
       <!-- Filtro por Tipo de Contratación -->
-      <div
-        [ngClass]="
-          filtroDepartamento && modo === 'visualizar'
-            ? 'col-xl-2 col-lg-4 col-md-6'
-            : 'col-xl-3 col-lg-4 col-md-6'
-        "
-      >
+      <div [ngClass]="clasesContratacion">
         <label class="form-label fw-bold">
           <i class="fas fa-briefcase me-1"></i>Tipo de Contratación:
         </label>
@@ -143,14 +129,30 @@
         <small class="text-muted">Filtrar por semestre (1-10)</small>
       </div>
 
+      <!-- ← NUEVO: Filtro por Responsable (oculto para Docente) -->
+      <div [ngClass]="clasesResponsable" *ngIf="!esDocente">
+        <label class="form-label fw-bold">
+          <i class="fas fa-user me-1"></i>Responsable:
+        </label>
+        <ng-select
+          [items]="usuariosDropdown"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="filtroResponsable"
+          [loading]="loadingUsuarios"
+          [disabled]="loadingUsuarios || !filters.oidDepartamento"
+          placeholder="Buscar responsable..."
+          [clearable]="false"
+          notFoundText="No se encontraron usuarios"
+          loadingText="Cargando usuarios..."
+          [searchable]="true"
+        >
+        </ng-select>
+        <small class="text-muted">Filtrar por usuario responsable</small>
+      </div>
+
       <!-- Botones de Acción -->
-      <div
-        [ngClass]="
-          filtroDepartamento && modo === 'visualizar'
-            ? 'col-xl-2 col-lg-12 d-flex justify-content-end align-items-end'
-            : 'col-xl-3 col-lg-12 d-flex justify-content-end align-items-end'
-        "
-      >
+      <div [ngClass]="clasesBotones">
         <div class="btn-group" role="group">
           <button
             type="button"

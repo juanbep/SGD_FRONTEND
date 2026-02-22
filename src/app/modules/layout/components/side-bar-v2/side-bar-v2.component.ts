@@ -58,7 +58,7 @@ export class SideBarV2Component implements OnInit, OnChanges {
         'CPD',
       ],
       icon: 'assets/icons/sidebar/icon-calendar-management.svg',
-      label: 'Calendario académico',
+      label: 'Calendario Académico',
       isOpen: false,
       children: [
         {
