@@ -36,7 +36,8 @@ import {
   getPaginasVisibles,
   trackByOidActividad,
 } from '../../../utils/actividad-utils';
-import { FiltrosActividadesComponent } from '../filtros-actividades/filtros-actividades.component';
+import { FiltrosActividadesComponent } from '../filtros-base/filtros-actividades/filtros-actividades.component';
+
 
 @Component({
   selector: 'app-tabla-actividades-academicas',

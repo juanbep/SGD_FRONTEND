@@ -33,12 +33,12 @@ import {
 import { UserData } from '../../../../auth/models';
 import { ModalUsuariosComponent } from '../modal-usuarios/modal-usuarios.component';
 import { ModalDetalleActividadComponent } from '../modal-detalle-actividad/modal-detalle-actividad.component';
-import { FiltrosDocenciaComponent } from '../filtros-docencia/filtros-docencia.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActividadDocenciaResponse } from '../../../models/actividad-docencia-response.model';
+import { FiltrosDocenciaComponent } from '../filtros-base/filtros-docencia/filtros-docencia.component';
 
 @Component({
   selector: 'app-tabla-actividades-docencia',
