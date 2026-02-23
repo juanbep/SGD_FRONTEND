@@ -24,7 +24,6 @@ import { UserData } from '../../../../auth/models';
 import {
   getUserData,
   getUserDepartmentId,
-  getUserRoles,
   isUserDataAvailable,
 } from '../../../../auth/utils/user-storage.utils';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -37,7 +36,7 @@ import {
   trackByOidActividad,
 } from '../../../utils/actividad-utils';
 import { FiltrosActividadesComponent } from '../filtros-base/filtros-actividades/filtros-actividades.component';
-
+import { esRolEspecial } from '../../../utils/filtros-actividades.utils';
 
 @Component({
   selector: 'app-tabla-actividades-academicas',
@@ -105,7 +104,7 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
 
     // Verificar si tiene roles especiales
-    this.rolEspecial = this.verificarRolesEspeciales();
+    this.rolEspecial = esRolEspecial();
 
     const oidDepartamento = getUserDepartmentId();
 
@@ -122,22 +121,6 @@ export class TablaActividadesAcademicasComponent implements OnInit {
     }
 
     this.usuario = getUserData();
-  }
-
-  private verificarRolesEspeciales(): boolean {
-    if (!isUserDataAvailable()) {
-      return false;
-    }
-
-    const roles = getUserRoles();
-    const rolesEspeciales = [
-      'SECRETARIA/O FACULTAD',
-      'SECRETARIO',
-      'SECRETARIA',
-      'DECANO',
-    ];
-
-    return roles.some((rol) => rolesEspeciales.includes(rol));
   }
 
   // ========== CARGAR ACTIVIDADES CON VALIDACIÓN OBLIGATORIA ==========

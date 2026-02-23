@@ -22,16 +22,13 @@ import {
   getEstadoNombre,
   getInfoPaginacion,
   getPaginasVisibles,
-  trackByOidActividad,
 } from '../../../utils/actividad-utils';
 import {
   getUserData,
   getUserDepartmentId,
-  getUserRoles,
   isUserDataAvailable,
 } from '../../../../auth/utils/user-storage.utils';
 import { UserData } from '../../../../auth/models';
-import { ModalUsuariosComponent } from '../modal-usuarios/modal-usuarios.component';
 import { ModalDetalleActividadComponent } from '../modal-detalle-actividad/modal-detalle-actividad.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -39,6 +36,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActividadDocenciaResponse } from '../../../models/actividad-docencia-response.model';
 import { FiltrosDocenciaComponent } from '../filtros-base/filtros-docencia/filtros-docencia.component';
+import { esRolEspecial } from '../../../utils/filtros-actividades.utils';
 
 @Component({
   selector: 'app-tabla-actividades-docencia',
@@ -106,7 +104,7 @@ export class TablaActividadesDocenciaComponent implements OnInit {
     }
 
     // Verificar si tiene roles especiales
-    this.rolEspecial = this.verificarRolesEspeciales();
+    this.rolEspecial = esRolEspecial();
 
     const oidDepartamento = getUserDepartmentId();
 
@@ -123,22 +121,6 @@ export class TablaActividadesDocenciaComponent implements OnInit {
     }
 
     this.usuario = getUserData();
-  }
-
-  private verificarRolesEspeciales(): boolean {
-    if (!isUserDataAvailable()) {
-      return false;
-    }
-
-    const roles = getUserRoles();
-    const rolesEspeciales = [
-      'SECRETARIA/O FACULTAD',
-      'SECRETARIO',
-      'SECRETARIA',
-      'DECANO',
-    ];
-
-    return roles.some((rol) => rolesEspeciales.includes(rol));
   }
 
   // ========== CARGAR ACTIVIDADES DE DOCENCIA ==========

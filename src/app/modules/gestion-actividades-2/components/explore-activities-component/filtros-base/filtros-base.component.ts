@@ -5,13 +5,13 @@ import { UsuariosConActividadesHelperService } from '../../../../gestion-usuario
 import { ToastrService } from 'ngx-toastr';
 import { EstadoCalendario } from '../../../../gestion-calendarios/models';
 import {
+  esRolEspecial,
   getClasesBotones,
   getClasesCalendario,
   getClasesContratacion,
   getClasesDepartamento,
   getClasesResponsable,
   obtenerRolDocente,
-  verificarFiltroDepartamentos,
 } from '../../../utils/filtros-actividades.utils';
 import {
   ordenarCalendariosPorAnio,
@@ -68,7 +68,7 @@ export abstract class FiltrosBaseComponent implements OnInit {
 
   // ========== LIFECYCLE ==========
   ngOnInit(): void {
-    this.filtroDepartamento = verificarFiltroDepartamentos();
+    this.filtroDepartamento = esRolEspecial();
     const { esDocente, oidUsuarioDocente } = obtenerRolDocente();
     this.esDocente = esDocente;
     this.oidUsuarioDocente = oidUsuarioDocente;

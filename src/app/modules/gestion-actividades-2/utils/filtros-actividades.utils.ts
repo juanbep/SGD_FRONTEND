@@ -9,17 +9,7 @@ export interface RolDocenteResult {
   oidUsuarioDocente: number | null;
 }
 
-export function obtenerRolDocente(): RolDocenteResult {
-  if (!isUserDataAvailable())
-    return { esDocente: false, oidUsuarioDocente: null };
-  const roles = getUserRoles();
-  const esDocente = roles.some((rol) => rol.toUpperCase() === 'DOCENTE');
-  if (!esDocente) return { esDocente: false, oidUsuarioDocente: null };
-  const userData = getUserData();
-  return { esDocente: true, oidUsuarioDocente: userData?.oidUsuario ?? null };
-}
-
-export function verificarFiltroDepartamentos(): boolean {
+export function esRolEspecial(): boolean {
   if (!isUserDataAvailable()) return false;
   const roles = getUserRoles();
   const rolesEspeciales = [
@@ -29,6 +19,16 @@ export function verificarFiltroDepartamentos(): boolean {
     'DECANO',
   ];
   return roles.some((rol) => rolesEspeciales.includes(rol));
+}
+
+export function obtenerRolDocente(): RolDocenteResult {
+  if (!isUserDataAvailable())
+    return { esDocente: false, oidUsuarioDocente: null };
+  const roles = getUserRoles();
+  const esDocente = roles.some((rol) => rol.toUpperCase() === 'DOCENTE');
+  if (!esDocente) return { esDocente: false, oidUsuarioDocente: null };
+  const userData = getUserData();
+  return { esDocente: true, oidUsuarioDocente: userData?.oidUsuario ?? null };
 }
 
 export const TIPOS_CONTRATACION_DROPDOWN = [
