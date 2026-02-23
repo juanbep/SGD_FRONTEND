@@ -55,15 +55,17 @@ export class ManagementActivitiesComponentComponent {
     this.actividadAEditar = null;
   }
 
-  async confirmarEdicion(dto: UpdateActividadDTO): Promise<void> {
+  async confirmarEdicion(actividadData: UpdateActividadDTO): Promise<void> {
     if (!this.actividadAEditar) return;
 
     this.editando = true;
 
     try {
+      await this.actividadHelperService.update(actividadData);
+
       this.toastr.success(
         `Actividad "${this.actividadAEditar.actividad.nombreActividad}" actualizada correctamente`,
-        'Actualización exitosa'
+        'Actualización exitosa',
       );
       this.cerrarModalEditar();
       this.activitiesBase.recargarTabla();
@@ -90,12 +92,12 @@ export class ManagementActivitiesComponentComponent {
 
     try {
       await this.actividadHelperService.delete(
-        this.actividadAEliminar.actividad.oidActividad
+        this.actividadAEliminar.actividad.oidActividad,
       );
 
       this.toastr.success(
         `Actividad "${this.actividadAEliminar.actividad.nombreActividad}" eliminada exitosamente`,
-        'Eliminación exitosa'
+        'Eliminación exitosa',
       );
       this.cerrarModalEliminar();
 

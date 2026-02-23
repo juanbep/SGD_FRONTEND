@@ -1,7 +1,7 @@
 <div *ngIf="visible && actividad" class="modal fade show d-block" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content border-0 shadow-lg">
-      <!-- Header azul -->
+      <!-- Header -->
       <div class="modal-header text-white border-0 py-3">
         <h5 class="modal-title fw-bold mb-0">
           <i class="fas fa-edit me-2" style="color: #f8ae15"></i>
@@ -18,6 +18,7 @@
       <!-- Body -->
       <div class="modal-body p-4">
         <form [formGroup]="form">
+          <!-- Información General -->
           <div class="info-section mb-4">
             <h6 class="section-title mb-3">
               <i class="fas fa-info-circle me-2"></i>
@@ -25,63 +26,65 @@
             </h6>
 
             <div class="row g-3">
-              <!-- Nombre -->
+              <!-- Nombre (editable) -->
               <div class="col-12">
-                <label class="info-label">Nombre *</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="nombreActividad"
-                />
+                <div class="info-item">
+                  <label class="info-label">Nombre *</label>
+                  <input
+                    type="text"
+                    class="form-control edit-field"
+                    formControlName="nombreActividad"
+                  />
+                </div>
               </div>
 
-              <!-- Tipo de actividad (SOLO LECTURA) -->
+              <!-- Tipo de actividad (solo lectura → info-value) -->
               <div class="col-md-6">
-                <label class="info-label">Tipo de actividad</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [value]="actividad.actividad.tipoActividad.nombre"
-                  readonly
-                  disabled
-                />
+                <div class="info-item">
+                  <label class="info-label">Tipo de actividad</label>
+                  <p class="info-value">
+                    {{ actividad.actividad.tipoActividad.nombre }}
+                  </p>
+                </div>
               </div>
 
-              <!-- Calendario (SOLO LECTURA) -->
+              <!-- Calendario (solo lectura → info-value) -->
               <div class="col-md-6">
-                <label class="info-label">Calendario</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  [value]="actividad.nombreCalendario"
-                  readonly
-                  disabled
-                />
+                <div class="info-item">
+                  <label class="info-label">Calendario</label>
+                  <p class="info-value">
+                    {{ actividad.nombreCalendario || "No asignado" }}
+                  </p>
+                </div>
               </div>
 
-              <!-- Estado -->
+              <!-- Estado (editable) -->
               <div class="col-md-6">
-                <label class="info-label">Estado *</label>
-                <ng-select
-                  [items]="estadosDropdown"
-                  bindLabel="label"
-                  bindValue="value"
-                  formControlName="oidEstadoActividad"
-                  [clearable]="false"
-                  placeholder="Seleccione..."
-                >
-                </ng-select>
+                <div class="info-item">
+                  <label class="info-label">Estado *</label>
+                  <ng-select
+                    class="edit-select"
+                    [items]="estadosDropdown"
+                    bindLabel="label"
+                    bindValue="value"
+                    formControlName="oidEstadoActividad"
+                    [clearable]="false"
+                    placeholder="Seleccione..."
+                  ></ng-select>
+                </div>
               </div>
 
-              <!-- Semanas -->
+              <!-- Semanas (editable) -->
               <div class="col-md-6">
-                <label class="info-label">Semanas *</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  formControlName="semanas"
-                  min="1"
-                />
+                <div class="info-item">
+                  <label class="info-label">Semanas *</label>
+                  <input
+                    type="number"
+                    class="form-control edit-field"
+                    formControlName="semanas"
+                    min="1"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -94,24 +97,27 @@
             </h6>
 
             <div
-              class="row g-3"
-              *ngFor="let attr of atributosArray.controls; let i = index"
+              class="row g-3 align-items-center pb-2 mb-1"
+              [class.border-bottom]="!last"
+              *ngFor="
+                let attr of atributosArray.controls;
+                let i = index;
+                let last = last
+              "
               [formGroupName]="i"
             >
-              <div class="col-md-4">
-                <label class="info-label">Atributo</label>
+              <div class="col-md-4 d-flex align-items-center">
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control-plaintext info-label mb-0"
                   formControlName="nombre"
                   readonly
                 />
               </div>
               <div class="col-md-8">
-                <label class="info-label">Valor</label>
                 <input
                   type="text"
-                  class="form-control"
+                  class="form-control edit-field"
                   formControlName="valor"
                 />
               </div>
@@ -124,7 +130,7 @@
       <div class="modal-footer border-0 py-3">
         <button
           type="button"
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary px-4"
           (click)="cerrar()"
         >
           <i class="fas fa-times me-2"></i>
@@ -132,7 +138,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-corp-primary px-4"
           (click)="guardar()"
           [disabled]="form.invalid"
         >
