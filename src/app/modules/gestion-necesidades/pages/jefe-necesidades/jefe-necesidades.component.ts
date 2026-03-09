@@ -210,9 +210,9 @@ export class JefeNecesidadesComponent implements OnInit, OnChanges {
               //   'Lista de necesidades actualizada correctamente'
               // );
             } else {
-              this.toastr.info(
-                'No se encontraron necesidades'
-              );
+              // this.toastr.info(
+              //   'No se encontraron necesidades'
+              // );
             }
           }
         } else {
